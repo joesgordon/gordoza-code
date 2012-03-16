@@ -1,0 +1,128 @@
+package org.jutils.ui;
+
+import javax.swing.text.*;
+
+/*******************************************************************************
+ *
+ ******************************************************************************/
+public class ContentSequence implements CharSequence
+{
+    /**  */
+    private int start = 0;
+    /**  */
+    private int end = -1;
+    /**  */
+    private AbstractDocument.Content content = null;
+
+    /***************************************************************************
+     * @param content Content
+     **************************************************************************/
+    public ContentSequence( AbstractDocument.Content content )
+    {
+        this( content, 0, content.length() );
+    }
+
+    /***************************************************************************
+     * @param content Content
+     * @param start int
+     * @param end int
+     **************************************************************************/
+    public ContentSequence( AbstractDocument.Content content, int start, int end )
+    {
+        if( content == null )
+        {
+            throw new NullPointerException( "Content cannot be null!" );
+        }
+        if( start < 0 )
+        {
+            throw new ArrayIndexOutOfBoundsException(
+                "Start cannot be negative!" );
+        }
+        if( start > content.length() - 1 )
+        {
+            throw new ArrayIndexOutOfBoundsException(
+                "Start is after content length! " + start + " > " +
+                    content.length() );
+        }
+        if( end > content.length() )
+        {
+            throw new ArrayIndexOutOfBoundsException(
+                "End is after content length! " + start + " > " +
+                    content.length() );
+        }
+
+        this.content = content;
+        this.start = start;
+        this.end = end;
+    }
+
+    /***************************************************************************
+     * @param index int
+     * @return char
+     **************************************************************************/
+    public char charAt( int index )
+    {
+        if( ( start + index - 1 ) > end )
+        {
+            throw new ArrayIndexOutOfBoundsException(
+                "End is after content length! " + start + " > " +
+                    content.length() );
+        }
+        Segment seg = new Segment();
+        try
+        {
+            content.getChars( start + index, 1, seg );
+        }
+        catch( BadLocationException ex )
+        {
+            throw new ArrayIndexOutOfBoundsException( "Location " + index +
+                " does not exist in Content!" );
+        }
+
+        // System.out.println( "charAt( " + index + " ) = " + seg.first() );
+
+        return seg.first();
+    }
+
+    /***************************************************************************
+     * @param newStart int
+     * @param newEnd int
+     * @return CharSequence
+     **************************************************************************/
+    public CharSequence subSequence( int newStart, int newEnd )
+    {
+        // System.out.println( "subSequence( " + newStart + ", " + newEnd + " )"
+        // );
+        return new ContentSequence( content, start + newStart, start + newEnd );
+    }
+
+    /***************************************************************************
+     * @return String
+     **************************************************************************/
+    public String toString()
+    {
+        Segment seg = new Segment();
+        int length = end - start;
+        try
+        {
+            content.getChars( start, length, seg );
+        }
+        catch( BadLocationException ex )
+        {
+            throw new ArrayIndexOutOfBoundsException( "Location " + length +
+                " does not exist in Content! Contact you local programmer, he screwed up!" );
+        }
+        // System.out.println( "toString()=" + seg.toString() );
+
+        return seg.toString();
+    }
+
+    /***************************************************************************
+     * @return int
+     **************************************************************************/
+    public int length()
+    {
+        // System.out.println( "length() = " + ( end - start) );
+        return end - start;
+    }
+}
