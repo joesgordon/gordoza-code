@@ -8,6 +8,9 @@ import java.io.IOException;
  ******************************************************************************/
 public class BufferedStream implements IStream
 {
+    /** Default size of 8 MB. */
+    public static final int DEFAULT_SIZE = 0x800000;
+
     /** The stream to do all actual reads/writes */
     private final IStream stream;
     /** The buffer to be used */
@@ -32,7 +35,7 @@ public class BufferedStream implements IStream
     public BufferedStream( IStream stream )
     {
         // Default size of 8 MB
-        this( stream, 0x800000 );
+        this( stream, DEFAULT_SIZE );
     }
 
     /***************************************************************************
@@ -54,7 +57,7 @@ public class BufferedStream implements IStream
      * @return
      * @throws IOException
      **************************************************************************/
-    private boolean isCached( long pos ) throws IOException
+    private boolean isCached( long pos )
     {
         return ( pos >= streamPosition && pos < ( streamPosition + buffer.length ) ) ||
             empty;
@@ -64,7 +67,7 @@ public class BufferedStream implements IStream
      * @param pos
      * @throws IOException
      **************************************************************************/
-    private void load( long pos ) throws IOException
+    private void loadBufferFromFile( long pos ) throws IOException
     {
         // printDebug( "pre-load" );
 
@@ -112,7 +115,7 @@ public class BufferedStream implements IStream
         {
             long pos = getPosition();
 
-            load( pos );
+            loadBufferFromFile( pos );
 
             bufferIndex = ( int )( pos - streamPosition );
         }
@@ -125,7 +128,14 @@ public class BufferedStream implements IStream
     public byte read() throws IOException
     {
         // printDebug( "read-pre" );
+
+        if( getPosition() >= getLength() )
+        {
+            throw new EOFException( "Tried to read past end of stream" );
+        }
+
         ensureCache();
+
         // printDebug( "read-post" );
 
         return buffer[bufferIndex++];
@@ -205,18 +215,31 @@ public class BufferedStream implements IStream
     {
         // printDebug( "seek-pre" );
 
+        // ---------------------------------------------------------------------
+        // Seek back if the position requested is less than zero.
+        // ---------------------------------------------------------------------
+        if( pos < 0 )
+        {
+            pos += streamPosition + bufferIndex;
+        }
+
+        // ---------------------------------------------------------------------
+        // If the position is not cached or the cache is empty, just set the
+        // offset positions so that ensureCache will process correctly upon the
+        // next read/write. Else, just set the buffer index.
+        // ---------------------------------------------------------------------
         if( !isCached( pos ) || empty )
         {
-            double d = pos / buffer.length;
-
-            streamPosition = ( int )( d * buffer.length );
+            streamPosition = pos;
+            bufferIndex = 0;
             empty = true;
         }
         else
         {
+            bufferIndex = ( int )( pos - streamPosition );
             empty = false;
         }
-        bufferIndex = ( int )( pos - streamPosition );
+
         // printDebug( "seek-post" );
     }
 
@@ -264,7 +287,7 @@ public class BufferedStream implements IStream
     @Override
     public long getLength() throws IOException
     {
-        return stream.getLength();
+        return Math.max( stream.getLength(), streamPosition + bufferLength );
     }
 
     /***************************************************************************

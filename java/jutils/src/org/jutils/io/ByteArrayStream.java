@@ -1,8 +1,12 @@
 package org.jutils.io;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.util.Arrays;
 
+/**
+ * 
+ */
 public class ByteArrayStream implements IStream
 {
     public static int DEFAULT_SIZE = 1024;
@@ -16,6 +20,9 @@ public class ByteArrayStream implements IStream
     /** The number of bytes by which the buffer size will increase as needed. */
     private int sizeIncrement;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public ByteArrayStream()
     {
         this( new byte[DEFAULT_SIZE], 0 );
@@ -41,45 +48,64 @@ public class ByteArrayStream implements IStream
 
     private void ensureWrite( int length )
     {
-        int newPos = position + length;
-        int diff = newPos - buffer.length;
+        int nextPos = position + length;
+        int diff = nextPos - buffer.length;
         int inc = sizeIncrement > diff ? sizeIncrement : diff;
 
-        if( newPos > buffer.length )
+        if( nextPos > buffer.length )
         {
             buffer = Arrays.copyOf( buffer, buffer.length + inc );
         }
 
-        if( newPos > bufferSize )
+        if( nextPos > bufferSize )
         {
-            bufferSize = newPos;
+            bufferSize = nextPos;
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void close() throws IOException
     {
         ;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public long getPosition() throws IOException
     {
         return position;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public byte read() throws IOException
     {
+        if( position > bufferSize )
+        {
+            throw new EOFException( "Tried to read past end of stream" );
+        }
         return buffer[position++];
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public int read( byte[] buf ) throws IOException
     {
         return read( buf, 0, buf.length );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public int read( byte[] buf, int off, int len ) throws IOException
     {
@@ -95,12 +121,18 @@ public class ByteArrayStream implements IStream
         return bytesRead;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void readFully( byte[] buf ) throws IOException
     {
         readFully( buf, 0, buf.length );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void readFully( byte[] buf, int off, int len ) throws IOException
     {
@@ -113,9 +145,17 @@ public class ByteArrayStream implements IStream
         System.arraycopy( buffer, position, buf, off, len );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void seek( long pos ) throws IOException
     {
+        if( pos < 0 )
+        {
+            pos += position;
+        }
+
         if( pos < buffer.length )
         {
             this.position = ( int )pos;
@@ -132,12 +172,18 @@ public class ByteArrayStream implements IStream
         return buffer.length - position;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public long getLength() throws IOException
     {
         return buffer.length;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void write( byte b ) throws IOException
     {
@@ -147,12 +193,18 @@ public class ByteArrayStream implements IStream
 
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void write( byte[] buf ) throws IOException
     {
         write( buf, 0, buf.length );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void write( byte[] buf, int off, int len ) throws IOException
     {
