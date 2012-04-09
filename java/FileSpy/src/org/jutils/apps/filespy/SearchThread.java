@@ -137,7 +137,17 @@ public class SearchThread implements IStoppable
         }
         else
         {
-            matched = true;
+            // -----------------------------------------------------------------
+            // Don't match directories if looking for contents:
+            // +--------------------------+
+            // | Dir | Contents | Matched |
+            // | .0. | ....0... | ...1... |
+            // | .0. | ....1... | ...1... |
+            // | .1. | ....0... | ...1... |
+            // | .1. | ....1... | ...0... |
+            // +--------------------------+
+            // -----------------------------------------------------------------
+            matched = !file.isDirectory() || params.contents == null;
         }
 
         if( matched )

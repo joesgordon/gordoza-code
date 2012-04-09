@@ -66,6 +66,8 @@ public final class IconConstants
 
     public final static String IM_USER_OFFLINE_32 = "im-invisible-user32.png";
 
+    public final static String IMPORT_16 = "document-import16.png";
+
     public final static String LAUNCH_16 = "launch16.png";
 
     public final static String NEW_FILE_16 = "newFile16.png";
@@ -89,6 +91,8 @@ public final class IconConstants
     public final static String REFRESH_24 = "refresh24.png";
 
     public final static String SAVE_16 = "save16.png";
+
+    public final static String SAVE_AS_16 = "saveAs16.png";
 
     public final static String SORT_DOWN_16 = "sortDown16.png";
 

@@ -4,25 +4,40 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class LeInputStream extends CountingInputStream implements DataInput
 {
+    /**  */
     private ByteBuffer buffer;
+    /**  */
     private byte[] bytes;
 
+    /***************************************************************************
+     * @param stream
+     **************************************************************************/
     public LeInputStream( InputStream stream )
     {
         super( stream );
         bytes = new byte[8];
-        buffer = ByteBuffer.allocate( 256 );
+
+        buffer = ByteBuffer.wrap( bytes );
         buffer.order( ByteOrder.LITTLE_ENDIAN );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public boolean readBoolean() throws IOException
     {
         return readByte() != 0;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public byte readByte() throws IOException
     {
@@ -41,6 +56,9 @@ public class LeInputStream extends CountingInputStream implements DataInput
         return ( byte )b;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public char readChar() throws IOException
     {
@@ -54,10 +72,13 @@ public class LeInputStream extends CountingInputStream implements DataInput
         return ( char )b;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public double readDouble() throws IOException
     {
-        int bytesRead = super.read( bytes );
+        int bytesRead = super.read( bytes, 0, 8 );
 
         if( bytesRead != 8 )
         {
@@ -67,12 +88,13 @@ public class LeInputStream extends CountingInputStream implements DataInput
         }
 
         buffer.clear();
-        buffer.put( bytes );
-        buffer.position( 0 );
 
         return buffer.getDouble();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public float readFloat() throws IOException
     {
@@ -86,12 +108,13 @@ public class LeInputStream extends CountingInputStream implements DataInput
         }
 
         buffer.clear();
-        buffer.put( bytes );
-        buffer.position( 0 );
 
         return buffer.getFloat();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void readFully( byte[] b ) throws IOException
     {
@@ -105,6 +128,9 @@ public class LeInputStream extends CountingInputStream implements DataInput
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void readFully( byte[] b, int off, int len ) throws IOException
     {
@@ -118,6 +144,9 @@ public class LeInputStream extends CountingInputStream implements DataInput
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public int readInt() throws IOException
     {
@@ -131,22 +160,26 @@ public class LeInputStream extends CountingInputStream implements DataInput
         }
 
         buffer.clear();
-        buffer.put( bytes );
-        buffer.position( 0 );
 
         return buffer.getInt();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public String readLine() throws IOException
     {
         throw new RuntimeException( "Not Implemented" );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public long readLong() throws IOException
     {
-        int bytesRead = super.read( bytes );
+        int bytesRead = super.read( bytes, 0, 8 );
 
         if( bytesRead != 8 )
         {
@@ -156,12 +189,13 @@ public class LeInputStream extends CountingInputStream implements DataInput
         }
 
         buffer.clear();
-        buffer.put( bytes );
-        buffer.position( 0 );
 
         return buffer.getLong();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public short readShort() throws IOException
     {
@@ -175,18 +209,22 @@ public class LeInputStream extends CountingInputStream implements DataInput
         }
 
         buffer.clear();
-        buffer.put( bytes );
-        buffer.position( 0 );
 
         return buffer.getShort();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public String readUTF() throws IOException
     {
         throw new RuntimeException( "Not Implemented" );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public int readUnsignedByte() throws IOException
     {
@@ -200,10 +238,13 @@ public class LeInputStream extends CountingInputStream implements DataInput
         return b;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public int readUnsignedShort() throws IOException
     {
-        int bytesRead = super.read( bytes );
+        int bytesRead = super.read( bytes, 0, 2 );
 
         if( bytesRead != 2 )
         {
@@ -213,7 +254,6 @@ public class LeInputStream extends CountingInputStream implements DataInput
         }
 
         buffer.clear();
-        buffer.put( bytes );
         buffer.position( 0 );
 
         int s = buffer.getShort();
@@ -226,6 +266,9 @@ public class LeInputStream extends CountingInputStream implements DataInput
         return s;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public int skipBytes( int n ) throws IOException
     {

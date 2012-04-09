@@ -7,6 +7,7 @@ import javax.swing.*;
 import org.jutils.Utils;
 import org.jutils.ui.*;
 import org.jutils.ui.UValidationTextField.TextValidator;
+import org.jutils.ui.event.ItemActionListener;
 
 public class HexConvFrame extends FrameRunner
 {
@@ -164,5 +165,27 @@ public class HexConvFrame extends FrameRunner
         }
 
         protected abstract boolean validate( String text );
+    }
+
+    public interface IConverter<T, V>
+    {
+        public V convertTo( T item );
+
+        public T convertFrom( V item );
+    }
+
+    public interface IConverterView<T>
+    {
+        public String getTypeName();
+
+        public void addChangeListener( ItemActionListener<T> l );
+
+        public void setChangeListenersEnabled( boolean enabled );
+
+        public T getItem();
+
+        public void setItem( T item );
+
+        public Component getView();
     }
 }
