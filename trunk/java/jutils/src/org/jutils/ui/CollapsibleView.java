@@ -8,14 +8,25 @@ import javax.swing.*;
 
 import org.jutils.IconConstants;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class CollapsibleView
 {
-    private JPanel panel;
-    private GradientPanel titlePanel;
-    private JLabel titleField;
-    private JSeparator separator;
-    private JPanel componentPanel;
+    /**  */
+    private final JPanel panel;
+    /**  */
+    private final GradientPanel titlePanel;
+    /**  */
+    private final JLabel titleField;
+    /**  */
+    private final JSeparator separator;
+    /**  */
+    private final JPanel componentPanel;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public CollapsibleView()
     {
         GridBagConstraints constraints;

@@ -33,6 +33,11 @@ public class ByteArrayStream implements IStream
         this( buf, buf.length );
     }
 
+    public ByteArrayStream( int size )
+    {
+        this( new byte[size], size );
+    }
+
     public ByteArrayStream( byte[] buf, int size )
     {
         this( buf, size, DEFAULT_SIZE );
@@ -109,7 +114,7 @@ public class ByteArrayStream implements IStream
     @Override
     public int read( byte[] buf, int off, int len ) throws IOException
     {
-        int bytesRead = ( int )available();
+        int bytesRead = ( int )getAvailableByteCount();
 
         if( len < bytesRead )
         {
@@ -136,10 +141,11 @@ public class ByteArrayStream implements IStream
     @Override
     public void readFully( byte[] buf, int off, int len ) throws IOException
     {
-        if( len > available() )
+        if( len > getAvailableByteCount() )
         {
             throw new IOException( "Cannot fill with " + len +
-                " bytes as only " + available() + " bytes are available." );
+                " bytes as only " + getAvailableByteCount() +
+                " bytes are available." );
         }
 
         System.arraycopy( buffer, position, buf, off, len );
@@ -167,9 +173,32 @@ public class ByteArrayStream implements IStream
         }
     }
 
-    public long available()
+    /***************************************************************************
+     * Returns the number of bytes available for reading/writing in the current
+     * buffer.
+     * @return
+     **************************************************************************/
+    private long getAvailableByteCount()
     {
         return buffer.length - position;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void skip( long count ) throws IOException
+    {
+        seek( getPosition() + count );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public long getAvailable() throws IOException
+    {
+        return getLength() - getPosition();
     }
 
     /***************************************************************************
@@ -213,5 +242,17 @@ public class ByteArrayStream implements IStream
         System.arraycopy( buf, off, buffer, position, len );
 
         position += len;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public byte[] toByteArray()
+    {
+        byte[] bytes = new byte[bufferSize];
+
+        System.arraycopy( buffer, 0, bytes, 0, bufferSize );
+
+        return bytes;
     }
 }

@@ -1,8 +1,9 @@
 package chatterbox.io;
 
-import java.io.*;
+import java.io.IOException;
 
 import org.jutils.io.IDataSerializer;
+import org.jutils.io.IDataStream;
 
 import chatterbox.data.messages.UserLeftMessage;
 import chatterbox.model.IUser;
@@ -31,7 +32,7 @@ public class UserLeftMessageSerializer implements
      * 
      **************************************************************************/
     @Override
-    public UserLeftMessage read( DataInput stream ) throws IOException
+    public UserLeftMessage read( IDataStream stream ) throws IOException
     {
         String conversationId;
         IUser user;
@@ -46,7 +47,7 @@ public class UserLeftMessageSerializer implements
      * 
      **************************************************************************/
     @Override
-    public void write( UserLeftMessage message, DataOutput stream )
+    public void write( UserLeftMessage message, IDataStream stream )
         throws IOException
     {
         stringSerializer.write( message.getConversationId(), stream );

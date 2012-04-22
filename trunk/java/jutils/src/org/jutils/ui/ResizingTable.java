@@ -24,21 +24,7 @@ public class ResizingTable<T extends TableModel> extends JTable
         super( model );
         this.model = model;
 
-        model.addTableModelListener( new TableModelListener()
-        {
-            @Override
-            public void tableChanged( TableModelEvent e )
-            {
-                SwingUtilities.invokeLater( new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        resizeTable();
-                    }
-                } );
-            }
-        } );
+        model.addTableModelListener( new TableChangedListener<T>( this ) );
     }
 
     /***************************************************************************
@@ -109,6 +95,30 @@ public class ResizingTable<T extends TableModel> extends JTable
         for( int i = 0; i < colCount; i++ )
         {
             colModel.getColumn( i ).setPreferredWidth( widths[i] );
+        }
+    }
+
+    private static class TableChangedListener<T extends TableModel> implements
+        TableModelListener
+    {
+        private ResizingTable<T> resizingTable;
+
+        public TableChangedListener( ResizingTable<T> resizingTable )
+        {
+            this.resizingTable = resizingTable;
+        }
+
+        @Override
+        public void tableChanged( TableModelEvent e )
+        {
+            SwingUtilities.invokeLater( new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    resizingTable.resizeTable();
+                }
+            } );
         }
     }
 }

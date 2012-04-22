@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.nio.ByteOrder;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -18,8 +19,8 @@ import org.cc.edit.ui.nodes.AppModelNode;
 import org.cc.edit.ui.undo.ButtonLister;
 import org.cc.edit.ui.undo.ItemPanel;
 import org.jutils.IconConstants;
-import org.jutils.io.LeInputStream;
-import org.jutils.io.LeOutputStream;
+import org.jutils.io.DataStream;
+import org.jutils.io.FileStream;
 import org.jutils.ui.*;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
@@ -245,12 +246,12 @@ public class CceFrame extends UFrame
             if( fc.showSaveDialog( CceFrame.this ) == JFileChooser.APPROVE_OPTION )
             {
                 File file = fc.getSelectedFile();
-                FileOutputStream out;
+                FileStream out;
 
                 try
                 {
-                    out = new FileOutputStream( file );
-                    LeOutputStream leout = new LeOutputStream( out );
+                    out = new FileStream( file );
+                    DataStream leout = new DataStream( out );
                     AppModelSerializer serializer = new AppModelSerializer();
                     serializer.write( model, leout );
                 }
@@ -283,13 +284,13 @@ public class CceFrame extends UFrame
             if( fc.showOpenDialog( CceFrame.this ) == JFileChooser.APPROVE_OPTION )
             {
                 File file = fc.getSelectedFile();
-                FileInputStream out = null;
-                LeInputStream leout = null;
+                FileStream out = null;
+                DataStream leout = null;
 
                 try
                 {
-                    out = new FileInputStream( file );
-                    leout = new LeInputStream( out );
+                    out = new FileStream( file );
+                    leout = new DataStream( out, ByteOrder.LITTLE_ENDIAN );
                     AppModelSerializer serializer = new AppModelSerializer();
                     setData( serializer.read( leout ) );
                 }
@@ -301,14 +302,22 @@ public class CceFrame extends UFrame
                 }
                 catch( IOException ex )
                 {
-                    long l = 0;
+                    String posStr = "????";
                     if( leout != null )
                     {
-                        l = leout.getOffset();
+                        try
+                        {
+                            long l = leout.getPosition();
+                            posStr = String.format( "0x%016X", l );
+                        }
+                        catch( IOException e1 )
+                        {
+                        }
                     }
+
                     JOptionPane.showMessageDialog( CceFrame.this,
-                        ex.getMessage() + " @ 0x" + Long.toHexString( l ),
-                        "ERROR", JOptionPane.ERROR_MESSAGE );
+                        ex.getMessage() + " @ 0x" + posStr, "ERROR",
+                        JOptionPane.ERROR_MESSAGE );
                 }
             }
         }

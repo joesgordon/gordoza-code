@@ -1,10 +1,11 @@
 package org.cc.edit.io;
 
-import java.io.*;
+import java.io.IOException;
 
 import org.cc.data.ClosedTask;
 import org.cc.data.VersionedFile;
 import org.jutils.io.IDataSerializer;
+import org.jutils.io.IDataStream;
 
 public class ClosedTaskSerializer implements IDataSerializer<ClosedTask>
 {
@@ -19,7 +20,7 @@ public class ClosedTaskSerializer implements IDataSerializer<ClosedTask>
     }
 
     @Override
-    public ClosedTask read( DataInput stream ) throws IOException
+    public ClosedTask read( IDataStream stream ) throws IOException
     {
         ClosedTask t = new ClosedTask();
 
@@ -30,7 +31,7 @@ public class ClosedTaskSerializer implements IDataSerializer<ClosedTask>
     }
 
     @Override
-    public void write( ClosedTask t, DataOutput stream ) throws IOException
+    public void write( ClosedTask t, IDataStream stream ) throws IOException
     {
         strSerializer.write( t.getName(), stream );
         vfsSerializer.write( t.getFiles(), stream );

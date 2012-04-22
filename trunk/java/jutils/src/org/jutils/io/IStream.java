@@ -72,6 +72,14 @@ public interface IStream
         IOException;
 
     /***************************************************************************
+     * Closes this stream and releases any system resources associated with the
+     * stream. A closed stream cannot perform input or output operations and
+     * cannot be reopened.
+     * @throws IOException If an I/O error occurs.
+     **************************************************************************/
+    public void close() throws IOException;
+
+    /***************************************************************************
      * Sets the file-pointer offset, measured from the beginning of this file,
      * at which the next read or write occurs. The offset may be set beyond the
      * end of the stream. Setting the offset beyond the end of the file does not
@@ -85,12 +93,20 @@ public interface IStream
     public void seek( long pos ) throws IOException;
 
     /***************************************************************************
-     * Closes this stream and releases any system resources associated with the
-     * stream. A closed stream cannot perform input or output operations and
-     * cannot be reopened.
+     * Skips the number of bytes given or rewinds if negative. Calls<br><br>
+     * {@code seek( getPosition() + count )}
+     * @param count the number of bytes to be skipped.
      * @throws IOException If an I/O error occurs.
      **************************************************************************/
-    public void close() throws IOException;
+    public void skip( long count ) throws IOException;
+
+    /***************************************************************************
+     * Returns the number of bytes available in this stream. Returns<br><br>
+     * {@code getLength() + getPosition() )}
+     * @return the number of bytes available in this stream.
+     * @throws IOException If an I/O error occurs.
+     **************************************************************************/
+    public long getAvailable() throws IOException;
 
     /***************************************************************************
      * Returns the current offset in this file.

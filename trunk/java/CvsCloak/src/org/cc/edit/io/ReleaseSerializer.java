@@ -1,10 +1,11 @@
 package org.cc.edit.io;
 
-import java.io.*;
+import java.io.IOException;
 
 import org.cc.data.ClosedTask;
 import org.cc.data.Release;
 import org.jutils.io.IDataSerializer;
+import org.jutils.io.IDataStream;
 
 public class ReleaseSerializer implements IDataSerializer<Release>
 {
@@ -19,7 +20,7 @@ public class ReleaseSerializer implements IDataSerializer<Release>
     }
 
     @Override
-    public Release read( DataInput stream ) throws IOException
+    public Release read( IDataStream stream ) throws IOException
     {
         Release item = new Release();
 
@@ -31,7 +32,7 @@ public class ReleaseSerializer implements IDataSerializer<Release>
     }
 
     @Override
-    public void write( Release t, DataOutput stream ) throws IOException
+    public void write( Release t, IDataStream stream ) throws IOException
     {
         ss.write( t.getName(), stream );
         ss.write( t.getBaseline(), stream );

@@ -1,10 +1,11 @@
 package org.cc.edit.io;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jutils.io.IDataSerializer;
+import org.jutils.io.IDataStream;
 
 public class ListSerializer<T> implements IDataSerializer<List<T>>
 {
@@ -16,7 +17,7 @@ public class ListSerializer<T> implements IDataSerializer<List<T>>
     }
 
     @Override
-    public List<T> read( DataInput stream ) throws IOException
+    public List<T> read( IDataStream stream ) throws IOException
     {
         List<T> list = new ArrayList<T>();
         int count = stream.readInt();
@@ -30,7 +31,7 @@ public class ListSerializer<T> implements IDataSerializer<List<T>>
     }
 
     @Override
-    public void write( List<T> t, DataOutput stream ) throws IOException
+    public void write( List<T> t, IDataStream stream ) throws IOException
     {
         if( t == null )
         {

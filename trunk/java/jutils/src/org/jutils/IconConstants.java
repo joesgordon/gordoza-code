@@ -68,6 +68,8 @@ public final class IconConstants
 
     public final static String IMPORT_16 = "document-import16.png";
 
+    public final static String EXPORT_16 = "document-export16.png";
+
     public final static String LAUNCH_16 = "launch16.png";
 
     public final static String NEW_FILE_16 = "newFile16.png";

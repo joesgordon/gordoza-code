@@ -1,8 +1,10 @@
 package org.cc.edit.io;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 import org.jutils.io.IDataSerializer;
+import org.jutils.io.IDataStream;
 
 public class FileSerializer implements IDataSerializer<File>
 {
@@ -14,13 +16,13 @@ public class FileSerializer implements IDataSerializer<File>
     }
 
     @Override
-    public File read( DataInput stream ) throws IOException
+    public File read( IDataStream stream ) throws IOException
     {
         return new File( ss.read( stream ) );
     }
 
     @Override
-    public void write( File t, DataOutput stream ) throws IOException
+    public void write( File t, IDataStream stream ) throws IOException
     {
         ss.write( t.getAbsolutePath(), stream );
     }

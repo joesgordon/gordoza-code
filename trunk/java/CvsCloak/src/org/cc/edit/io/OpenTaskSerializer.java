@@ -1,9 +1,10 @@
 package org.cc.edit.io;
 
-import java.io.*;
+import java.io.IOException;
 
 import org.cc.data.*;
 import org.jutils.io.IDataSerializer;
+import org.jutils.io.IDataStream;
 
 /*******************************************************************************
  * 
@@ -33,7 +34,7 @@ public class OpenTaskSerializer implements IDataSerializer<OpenTask>
      * 
      **************************************************************************/
     @Override
-    public OpenTask read( DataInput stream ) throws IOException
+    public OpenTask read( IDataStream stream ) throws IOException
     {
         OpenTask t = new OpenTask();
 
@@ -49,7 +50,7 @@ public class OpenTaskSerializer implements IDataSerializer<OpenTask>
      * 
      **************************************************************************/
     @Override
-    public void write( OpenTask t, DataOutput stream ) throws IOException
+    public void write( OpenTask t, IDataStream stream ) throws IOException
     {
         strSerializer.write( t.getName(), stream );
         stream.writeBoolean( t.isApproved() );

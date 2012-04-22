@@ -1,9 +1,10 @@
 package org.cc.edit.io;
 
-import java.io.*;
+import java.io.IOException;
 
 import org.cc.data.VersionedFile;
 import org.jutils.io.IDataSerializer;
+import org.jutils.io.IDataStream;
 
 /*******************************************************************************
  * 
@@ -24,7 +25,7 @@ public class VersionedFileSerializer implements IDataSerializer<VersionedFile>
      * 
      **************************************************************************/
     @Override
-    public VersionedFile read( DataInput stream ) throws IOException
+    public VersionedFile read( IDataStream stream ) throws IOException
     {
         VersionedFile t = new VersionedFile();
 
@@ -38,7 +39,7 @@ public class VersionedFileSerializer implements IDataSerializer<VersionedFile>
      * 
      **************************************************************************/
     @Override
-    public void write( VersionedFile t, DataOutput stream ) throws IOException
+    public void write( VersionedFile t, IDataStream stream ) throws IOException
     {
         strSerializer.write( t.getRepositoryPath(), stream );
         strSerializer.write( t.getVersion(), stream );

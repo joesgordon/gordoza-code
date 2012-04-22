@@ -1,8 +1,10 @@
 package chatterbox.io;
 
-import java.io.*;
+import java.io.IOException;
+import java.nio.charset.Charset;
 
 import org.jutils.io.IDataSerializer;
+import org.jutils.io.IDataStream;
 
 public class StringSerializer implements IDataSerializer<String>
 {
@@ -12,7 +14,7 @@ public class StringSerializer implements IDataSerializer<String>
     }
 
     @Override
-    public String read( DataInput stream ) throws IOException
+    public String read( IDataStream stream ) throws IOException
     {
         int length = stream.readInt();
         byte[] bytes = new byte[length];
@@ -22,10 +24,10 @@ public class StringSerializer implements IDataSerializer<String>
     }
 
     @Override
-    public void write( String string, DataOutput stream ) throws IOException
+    public void write( String string, IDataStream stream ) throws IOException
     {
         stream.writeInt( string.length() );
-        stream.writeBytes( string );
+        stream.write( string.getBytes( Charset.forName( "US-ASCII" ) ) );
     }
 
 }

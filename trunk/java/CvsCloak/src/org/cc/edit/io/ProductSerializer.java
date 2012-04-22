@@ -1,10 +1,11 @@
 package org.cc.edit.io;
 
-import java.io.*;
+import java.io.IOException;
 
 import org.cc.data.Product;
 import org.cc.data.Release;
 import org.jutils.io.IDataSerializer;
+import org.jutils.io.IDataStream;
 
 /*******************************************************************************
  * 
@@ -33,7 +34,7 @@ public class ProductSerializer implements IDataSerializer<Product>
      * 
      **************************************************************************/
     @Override
-    public Product read( DataInput stream ) throws IOException
+    public Product read( IDataStream stream ) throws IOException
     {
         Product item = new Product();
 
@@ -48,7 +49,7 @@ public class ProductSerializer implements IDataSerializer<Product>
      * 
      **************************************************************************/
     @Override
-    public void write( Product t, DataOutput stream ) throws IOException
+    public void write( Product t, IDataStream stream ) throws IOException
     {
         strSerializer.write( t.getName(), stream );
         moduleSerializer.write( t.getModules(), stream );

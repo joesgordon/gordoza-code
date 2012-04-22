@@ -869,39 +869,36 @@ public class SearchPanel
     /***************************************************************************
      * @param e ActionEvent
      **************************************************************************/
-    private void listener_resultsTable_mouseClicked( MouseEvent e )
+    private void openSelectedFile()
     {
-        if( e.getClickCount() == 2 )
+        File file = resultsTable.getSelectedFile();
+        if( file != null )
         {
-            File file = resultsTable.getSelectedFile();
-            if( file != null )
+            if( file.isDirectory() )
             {
-                if( file.isDirectory() )
+                // showFile( file );
+                if( explorer == null )
                 {
-                    // showFile( file );
-                    if( explorer == null )
-                    {
-                        JExplorerMain r = new JExplorerMain();
-                        r.run();
-                        explorer = ( JExplorerFrame )r.getFrame();
-                        explorer.setDefaultCloseOperation( JFrame.HIDE_ON_CLOSE );
-                    }
-                    else
-                    {
-                        explorer.setVisible( true );
-                    }
+                    JExplorerMain r = new JExplorerMain();
+                    r.run();
+                    explorer = ( JExplorerFrame )r.getFrame();
+                    explorer.setDefaultCloseOperation( JFrame.HIDE_ON_CLOSE );
                 }
                 else
                 {
-                    try
-                    {
-                        Desktop.getDesktop().open( file );
-                    }
-                    catch( Exception ex )
-                    {
-                        JOptionPane.showMessageDialog( view, ex.getMessage(),
-                            "ERROR", JOptionPane.ERROR_MESSAGE );
-                    }
+                    explorer.setVisible( true );
+                }
+            }
+            else
+            {
+                try
+                {
+                    Desktop.getDesktop().open( file );
+                }
+                catch( Exception ex )
+                {
+                    JOptionPane.showMessageDialog( view, ex.getMessage(),
+                        "ERROR", JOptionPane.ERROR_MESSAGE );
                 }
             }
         }
@@ -1156,7 +1153,10 @@ public class SearchPanel
 
         public void mouseClicked( MouseEvent e )
         {
-            adaptee.listener_resultsTable_mouseClicked( e );
+            if( e.getClickCount() == 2 && !e.isPopupTrigger() )
+            {
+                adaptee.openSelectedFile();
+            }
         }
     }
 }

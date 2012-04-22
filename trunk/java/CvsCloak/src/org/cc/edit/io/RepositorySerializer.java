@@ -1,9 +1,10 @@
 package org.cc.edit.io;
 
-import java.io.*;
+import java.io.IOException;
 
 import org.cc.data.*;
 import org.jutils.io.IDataSerializer;
+import org.jutils.io.IDataStream;
 
 /*******************************************************************************
  * 
@@ -39,7 +40,7 @@ public class RepositorySerializer implements IDataSerializer<Repository>
      * 
      **************************************************************************/
     @Override
-    public Repository read( DataInput stream ) throws IOException
+    public Repository read( IDataStream stream ) throws IOException
     {
         Repository item = new Repository( fileSerializer.read( stream ) );
 
@@ -55,7 +56,7 @@ public class RepositorySerializer implements IDataSerializer<Repository>
      * 
      **************************************************************************/
     @Override
-    public void write( Repository t, DataOutput stream ) throws IOException
+    public void write( Repository t, IDataStream stream ) throws IOException
     {
         fileSerializer.write( t.getLocation(), stream );
         stringSerializer.write( t.getTrunkName(), stream );

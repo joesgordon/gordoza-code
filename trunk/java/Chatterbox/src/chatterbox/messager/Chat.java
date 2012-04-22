@@ -1,10 +1,12 @@
 package chatterbox.messager;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.*;
 import java.util.*;
 
 import org.jutils.concurrent.Stoppable;
+import org.jutils.io.ByteArrayStream;
+import org.jutils.io.DataStream;
 
 import chatterbox.data.ChatHeader;
 import chatterbox.data.ChatMessageType;
@@ -227,8 +229,8 @@ public class Chat extends AbstractChat
      **************************************************************************/
     public void sendMessage( UserAvailableMessage message ) throws IOException
     {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream( 1024 );
-        DataOutputStream out = new DataOutputStream( stream );
+        ByteArrayStream stream = new ByteArrayStream( 1024 );
+        DataStream out = new DataStream( stream );
 
         // Get the message bytes.
         userAvailableMessageSerializer.write( message, out );
@@ -243,8 +245,8 @@ public class Chat extends AbstractChat
      **************************************************************************/
     public void sendMessage( UserLeftMessage message ) throws IOException
     {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream( 1024 );
-        DataOutputStream out = new DataOutputStream( stream );
+        ByteArrayStream stream = new ByteArrayStream( 1024 );
+        DataStream out = new DataStream( stream );
 
         // Get the message bytes.
         userLeftMessageSerializer.write( message, out );
@@ -259,8 +261,8 @@ public class Chat extends AbstractChat
      **************************************************************************/
     public void sendMessage( IChatMessage message ) throws IOException
     {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream( 1024 );
-        DataOutputStream out = new DataOutputStream( stream );
+        ByteArrayStream stream = new ByteArrayStream( 1024 );
+        DataStream out = new DataStream( stream );
 
         // Get the message bytes.
         chatMessageSerializer.write( message, out );
@@ -278,13 +280,13 @@ public class Chat extends AbstractChat
     {
         ChatHeader header;
         DatagramPacket packet;
-        ByteArrayOutputStream stream;
-        DataOutputStream out;
+        ByteArrayStream stream;
+        DataStream out;
 
         // Put the header bytes before the message.
         header = new ChatHeader( messageType, msgBytes.length );
-        stream = new ByteArrayOutputStream( msgBytes.length + 64 );
-        out = new DataOutputStream( stream );
+        stream = new ByteArrayStream( msgBytes.length + 64 );
+        out = new DataStream( stream );
         headerSerializer.write( header, out );
         stream.write( msgBytes );
         msgBytes = stream.toByteArray();
