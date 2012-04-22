@@ -1,13 +1,14 @@
 package org.cc.edit.io;
 
-import java.io.*;
+import java.io.IOException;
 
 import org.jutils.io.IDataSerializer;
+import org.jutils.io.IDataStream;
 
 public class StringSerializer implements IDataSerializer<String>
 {
     @Override
-    public String read( DataInput stream ) throws IOException
+    public String read( IDataStream stream ) throws IOException
     {
         String str = null;
         int numChars = stream.readInt();
@@ -29,7 +30,7 @@ public class StringSerializer implements IDataSerializer<String>
     }
 
     @Override
-    public void write( String t, DataOutput stream ) throws IOException
+    public void write( String t, IDataStream stream ) throws IOException
     {
         if( t == null )
         {

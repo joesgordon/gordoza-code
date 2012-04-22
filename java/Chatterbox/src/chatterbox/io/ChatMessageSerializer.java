@@ -1,9 +1,10 @@
 package chatterbox.io;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.*;
 
 import org.jutils.io.IDataSerializer;
+import org.jutils.io.IDataStream;
 
 import chatterbox.data.DefaultMessage;
 import chatterbox.model.*;
@@ -36,7 +37,7 @@ public class ChatMessageSerializer implements IDataSerializer<IChatMessage>
      * 
      **************************************************************************/
     @Override
-    public IChatMessage read( DataInput stream ) throws IOException
+    public IChatMessage read( IDataStream stream ) throws IOException
     {
         String conversationId;
         long sendTime;
@@ -63,7 +64,7 @@ public class ChatMessageSerializer implements IDataSerializer<IChatMessage>
      * 
      **************************************************************************/
     @Override
-    public void write( IChatMessage message, DataOutput stream )
+    public void write( IChatMessage message, IDataStream stream )
         throws IOException
     {
         List<IMessageAttributeSet> attributes = message.getAttributeSets();

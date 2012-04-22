@@ -1,9 +1,10 @@
 package org.cc.edit.io;
 
-import java.io.*;
+import java.io.IOException;
 
 import org.cc.data.*;
 import org.jutils.io.IDataSerializer;
+import org.jutils.io.IDataStream;
 
 /*******************************************************************************
  * 
@@ -35,7 +36,7 @@ public class BaselineSerializer implements IDataSerializer<Baseline>
      * 
      **************************************************************************/
     @Override
-    public Baseline read( DataInput stream ) throws IOException
+    public Baseline read( IDataStream stream ) throws IOException
     {
         Baseline item = new Baseline();
 
@@ -54,7 +55,7 @@ public class BaselineSerializer implements IDataSerializer<Baseline>
      * 
      **************************************************************************/
     @Override
-    public void write( Baseline t, DataOutput stream ) throws IOException
+    public void write( Baseline t, IDataStream stream ) throws IOException
     {
         ss.write( t.getName(), stream );
         lockInfoSerializer.write( t.getLockInfo(), stream );

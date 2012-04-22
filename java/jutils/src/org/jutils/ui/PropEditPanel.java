@@ -359,7 +359,7 @@ public class PropEditPanel
             {
                 color = c;
 
-                String desc = "0x" + String.format( "%06X", c.getRGB() );
+                String desc = String.format( "0x%06X", c.getRGB() );
 
                 setText( desc );
                 setToolTipText( desc );

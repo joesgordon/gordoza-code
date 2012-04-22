@@ -2,7 +2,7 @@ package org.jutils.ui.hex;
 
 public class ByteBuffer implements IByteBuffer
 {
-    private byte[] buf;
+    private final byte[] buf;
 
     public ByteBuffer( byte[] buffer )
     {

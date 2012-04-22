@@ -100,6 +100,24 @@ public class FileStream implements IStream
      * 
      **************************************************************************/
     @Override
+    public void skip( long count ) throws IOException
+    {
+        seek( getPosition() + count );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public long getAvailable() throws IOException
+    {
+        return getLength() - getPosition();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
     public long getPosition() throws IOException
     {
         return raf.getFilePointer();

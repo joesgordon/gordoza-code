@@ -1,11 +1,12 @@
 package chatterbox.messager;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.*;
 import java.util.Arrays;
 
 import org.jutils.concurrent.IStoppable;
 import org.jutils.concurrent.IStopper;
+import org.jutils.io.*;
 
 import chatterbox.data.ChatHeader;
 import chatterbox.data.messages.UserAvailableMessage;
@@ -57,7 +58,7 @@ public class ChatReceiveRunner implements IStoppable
     public void run( IStopper stopper )
     {
         byte[] messageBytes;
-        ByteArrayInputStream byteStream;
+        ByteArrayStream byteStream;
 
         while( stopper.continueProcessing() )
         {
@@ -66,7 +67,7 @@ public class ChatReceiveRunner implements IStoppable
                 socket.receive( rxPacket );
                 messageBytes = Arrays.copyOf( rxPacket.getData(),
                     rxPacket.getLength() );
-                byteStream = new ByteArrayInputStream( messageBytes );
+                byteStream = new ByteArrayStream( messageBytes );
 
                 try
                 {
@@ -97,9 +98,9 @@ public class ChatReceiveRunner implements IStoppable
      * @param stream
      * @throws IOException
      **************************************************************************/
-    private void parseMessage( ByteArrayInputStream stream ) throws IOException
+    private void parseMessage( IStream stream ) throws IOException
     {
-        DataInputStream inStream = new DataInputStream( stream );
+        DataStream inStream = new DataStream( stream );
         ChatHeader header = headerSerializer.read( inStream );
 
         switch( header.getMessageType() )

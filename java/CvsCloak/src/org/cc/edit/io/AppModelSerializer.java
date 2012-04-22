@@ -1,10 +1,11 @@
 package org.cc.edit.io;
 
-import java.io.*;
+import java.io.IOException;
 
 import org.cc.data.Repository;
 import org.cc.data.VersioningSystem;
 import org.jutils.io.IDataSerializer;
+import org.jutils.io.IDataStream;
 
 /*******************************************************************************
  * 
@@ -33,7 +34,7 @@ public class AppModelSerializer implements IDataSerializer<VersioningSystem>
      * 
      **************************************************************************/
     @Override
-    public VersioningSystem read( DataInput stream ) throws IOException
+    public VersioningSystem read( IDataStream stream ) throws IOException
     {
         VersioningSystem item = new VersioningSystem();
 
@@ -56,7 +57,7 @@ public class AppModelSerializer implements IDataSerializer<VersioningSystem>
      * 
      **************************************************************************/
     @Override
-    public void write( VersioningSystem t, DataOutput stream )
+    public void write( VersioningSystem t, IDataStream stream )
         throws IOException
     {
         boolean hasDefault = t.getDefaultRepository() != null;

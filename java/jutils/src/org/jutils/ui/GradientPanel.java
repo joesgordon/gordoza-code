@@ -5,24 +5,40 @@ import java.awt.*;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class GradientPanel extends JPanel
 {
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public GradientPanel()
     {
         this( null, null );
     }
 
+    /***************************************************************************
+     * @param lm
+     **************************************************************************/
     public GradientPanel( LayoutManager lm )
     {
         this( lm, null );
     }
 
+    /***************************************************************************
+     * @param lm
+     * @param background
+     **************************************************************************/
     public GradientPanel( LayoutManager lm, Color background )
     {
         super( lm );
         setBackground( background );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public void setBackground( Color bg )
     {
         if( bg != null )
@@ -35,12 +51,12 @@ public class GradientPanel extends JPanel
         }
     }
 
-    /**
+    /***************************************************************************
      * Determines and answers the header's background color. Tries to lookup a
      * special color from the L&amp;F. In case it is absent, it uses the
      * standard internal frame background.
      * @return the color of the header's background
-     */
+     **************************************************************************/
     protected Color getDefaultBackground()
     {
         Color c = UIManager.getColor( "ProgressBar.foreground" );
@@ -48,6 +64,9 @@ public class GradientPanel extends JPanel
             : UIManager.getColor( "InternalFrame.activeTitleBackground" );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public void paintComponent( Graphics g )
     {
         super.paintComponent( g );

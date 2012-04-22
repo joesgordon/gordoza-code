@@ -1,9 +1,10 @@
 package org.cc.edit.io;
 
-import java.io.*;
+import java.io.IOException;
 
 import org.cc.data.LockInfo;
 import org.jutils.io.IDataSerializer;
+import org.jutils.io.IDataStream;
 
 /**
  * 
@@ -25,7 +26,7 @@ public class LockInfoSerializer implements IDataSerializer<LockInfo>
      * 
      */
     @Override
-    public LockInfo read( DataInput stream ) throws IOException
+    public LockInfo read( IDataStream stream ) throws IOException
     {
         LockInfo info = null;
         boolean locked = stream.readBoolean();
@@ -46,7 +47,7 @@ public class LockInfoSerializer implements IDataSerializer<LockInfo>
      * 
      */
     @Override
-    public void write( LockInfo t, DataOutput stream ) throws IOException
+    public void write( LockInfo t, IDataStream stream ) throws IOException
     {
         stream.writeBoolean( t != null );
         if( t != null )

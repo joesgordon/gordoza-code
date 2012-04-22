@@ -76,13 +76,17 @@ public class BufferedStream implements IStream
             writeBuffer();
         }
 
-        streamPosition = pos;
         long len = stream.getLength() - pos;
 
         if( len <= 0 )
         {
-            throw new EOFException();
+            String msg = String.format(
+                "Attempted to set the position to 0x%016X which is past the length of the stream 0x%016X",
+                streamPosition, stream.getLength() );
+            throw new EOFException( msg );
         }
+
+        streamPosition = pos;
 
         if( len > buffer.length )
         {
@@ -270,6 +274,24 @@ public class BufferedStream implements IStream
         }
 
         stream.close();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void skip( long count ) throws IOException
+    {
+        seek( getPosition() + count );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public long getAvailable() throws IOException
+    {
+        return getLength() - getPosition();
     }
 
     /***************************************************************************
