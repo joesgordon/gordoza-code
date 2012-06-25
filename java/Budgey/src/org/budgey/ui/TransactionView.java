@@ -1,17 +1,12 @@
 package org.budgey.ui;
 
-import java.awt.Component;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 import org.budgey.data.Money;
 import org.budgey.data.Transaction;
@@ -70,9 +65,9 @@ public class TransactionView
         panel.add( new JLabel( "Second Party:" ), new GridBagConstraints( 0, 0,
             1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
             new Insets( 4, 4, 2, 2 ), 0, 0 ) );
-        panel.add( secondPartyField, new GridBagConstraints( 0, 1, 1, 1, 0.0,
-            0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-            new Insets( 2, 4, 4, 4 ), 0, 0 ) );
+        panel.add( secondPartyField.getView(), new GridBagConstraints( 0, 1, 1,
+            1, 0.0, 0.0, GridBagConstraints.WEST,
+            GridBagConstraints.HORIZONTAL, new Insets( 2, 4, 4, 4 ), 0, 0 ) );
 
         panel.add( new JLabel( "Tag:" ), new GridBagConstraints( 0, 2, 1, 1,
             0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
@@ -84,9 +79,9 @@ public class TransactionView
         panel.add( new JLabel( "Amount:" ), new GridBagConstraints( 0, 4, 1, 1,
             0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
             new Insets( 4, 4, 2, 2 ), 0, 0 ) );
-        panel.add( amountField, new GridBagConstraints( 0, 5, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
-                2, 4, 4, 4 ), 0, 0 ) );
+        panel.add( amountField.getView(), new GridBagConstraints( 0, 5, 1, 1,
+            0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+            new Insets( 2, 4, 4, 4 ), 0, 0 ) );
 
         panel.add( new JLabel( "Date:" ), new GridBagConstraints( 0, 6, 1, 1,
             0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
@@ -130,7 +125,7 @@ public class TransactionView
 
         secondPartyField.setText( transaction.getSecondParty() );
         tagField.setText( transaction.getTag() );
-        amountField.setText( transaction.getAmount().toString() );
+        amountField.setData( transaction.getAmount() );
         dateField.setDate( new GregorianCalendar() );
     }
 
@@ -147,7 +142,7 @@ public class TransactionView
      **************************************************************************/
     public void requestFocus()
     {
-        secondPartyField.requestFocus();
+        secondPartyField.getView().requestFocus();
     }
 
     /***************************************************************************

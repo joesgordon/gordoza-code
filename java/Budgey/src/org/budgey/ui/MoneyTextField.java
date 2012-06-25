@@ -1,16 +1,22 @@
 package org.budgey.ui;
 
+import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.JComponent;
+import javax.swing.JFormattedTextField.AbstractFormatter;
 import javax.swing.text.DefaultFormatterFactory;
 
 import org.budgey.data.Money;
 import org.jutils.ui.UValidationTextField;
+import org.jutils.ui.UValidationTextField.TextValidator;
+import org.jutils.ui.model.IJcompView;
 
-public class MoneyTextField extends UValidationTextField
+public class MoneyTextField implements IJcompView
 {
+    private UValidationTextField field;
     private MoneyFormatter formatter;
     private static final Pattern p;
 
@@ -21,13 +27,20 @@ public class MoneyTextField extends UValidationTextField
 
     public MoneyTextField()
     {
+        super();
         formatter = new MoneyFormatter();
-        setFormatterFactory( new DefaultFormatterFactory( formatter ) );
+        field = new UValidationTextField( new DefaultFormatterFactory(
+            formatter ) );
     }
 
     public MoneyFormatter getFormatter()
     {
         return formatter;
+    }
+
+    public JComponent getView()
+    {
+        return field.getView();
     }
 
     public static class MoneyFormatter extends AbstractFormatter
@@ -77,5 +90,20 @@ public class MoneyTextField extends UValidationTextField
         {
             return value == null ? new Money( 0 ).toString() : value.toString();
         }
+    }
+
+    public void setData( Money amount )
+    {
+        field.setText( amount.toString() );
+    }
+
+    public void setValidator( TextValidator tv )
+    {
+        field.setValidator( tv );
+    }
+
+    public void addActionListener( ActionListener l )
+    {
+        field.addActionListener( l );
     }
 }

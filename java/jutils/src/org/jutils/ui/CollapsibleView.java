@@ -103,6 +103,11 @@ public class CollapsibleView
         componentPanel.add( comp, BorderLayout.CENTER );
     }
 
+    public void setTitle( String title )
+    {
+        titleField.setText( title );
+    }
+
     public JComponent getView()
     {
         return panel;

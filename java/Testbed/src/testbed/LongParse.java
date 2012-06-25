@@ -6,7 +6,6 @@ import java.util.List;
 
 public class LongParse
 {
-
     public static void main( String[] args )
     {
         List<IHexLongParser> parsers = new ArrayList<LongParse.IHexLongParser>();

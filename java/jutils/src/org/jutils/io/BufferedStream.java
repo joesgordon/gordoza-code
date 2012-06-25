@@ -29,6 +29,8 @@ public class BufferedStream implements IStream
     /**  */
     private boolean writeOnNextFlush = false;
 
+    private long streamLength;
+
     /***************************************************************************
      * @param stream
      **************************************************************************/
@@ -50,6 +52,7 @@ public class BufferedStream implements IStream
         this.bufferIndex = 0;
         this.streamPosition = 0;
         this.empty = true;
+        this.streamLength = -1;
     }
 
     /***************************************************************************
@@ -70,13 +73,14 @@ public class BufferedStream implements IStream
     private void loadBufferFromFile( long pos ) throws IOException
     {
         // printDebug( "pre-load" );
+        streamLength = stream.getLength();
 
         if( writeOnNextFlush )
         {
             writeBuffer();
         }
 
-        long len = stream.getLength() - pos;
+        long len = streamLength - pos;
 
         if( len <= 0 )
         {
@@ -309,7 +313,11 @@ public class BufferedStream implements IStream
     @Override
     public long getLength() throws IOException
     {
-        return Math.max( stream.getLength(), streamPosition + bufferLength );
+        if( streamLength < 0 )
+        {
+            streamLength = stream.getLength();
+        }
+        return Math.max( streamLength, streamPosition + bufferLength );
     }
 
     /***************************************************************************
