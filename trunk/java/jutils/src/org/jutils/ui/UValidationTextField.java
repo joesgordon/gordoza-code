@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.*;
+import javax.swing.JFormattedTextField.AbstractFormatterFactory;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -17,18 +18,20 @@ import com.jgoodies.looks.Options;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class UValidationTextField extends UFormattedTextField
+public final class UValidationTextField
 {
+    private final UFormattedTextField field;
     /**  */
-    public Color validBackground;
+    private final List<ValidityChangedListener> validityChangedListeners;
+
     /**  */
-    public Color errorBackground;
+    private Color validBackground;
     /**  */
-    public TextValidator validator;
+    private Color invalidBackground;
     /**  */
-    public List<ValidityChangedListener> validityChangedListeners;
+    private TextValidator validator;
     /**  */
-    public boolean valid;
+    private boolean valid;
 
     /***************************************************************************
      * 
@@ -43,7 +46,7 @@ public class UValidationTextField extends UFormattedTextField
      **************************************************************************/
     public UValidationTextField( AbstractFormatterFactory factory )
     {
-        super( factory );
+        this( factory, "" );
     }
 
     /***************************************************************************
@@ -59,24 +62,32 @@ public class UValidationTextField extends UFormattedTextField
      **************************************************************************/
     public UValidationTextField( AbstractFormatterFactory factory, String str )
     {
-        super( str );
+        field = new UFormattedTextField( str );
 
-        setFormatterFactory( factory );
+        field.setFormatterFactory( factory );
 
         if( validBackground == null )
         {
-            validBackground = this.getBackground();
+            validBackground = field.getBackground();
         }
-        errorBackground = Color.red;
+
+        invalidBackground = Color.red;
         validator = null;
         valid = true;
         validityChangedListeners = new LinkedList<ValidityChangedListener>();
-        getDocument().addDocumentListener( new ValidationDocumentListener() );
 
-        super.setBackground( validBackground );
+        field.getDocument().addDocumentListener(
+            new ValidationDocumentListener() );
+
+        field.setBackground( validBackground );
     }
 
     // TODO add function setting the invalid tool tip text.
+
+    public JComponent getView()
+    {
+        return field;
+    }
 
     /***************************************************************************
      * 
@@ -94,7 +105,7 @@ public class UValidationTextField extends UFormattedTextField
         if( validator != null )
         {
             boolean oldValidity = valid;
-            valid = validator.validateText( getText() );
+            valid = validator.validateText( field.getText() );
 
             if( oldValidity != valid )
             {
@@ -107,22 +118,22 @@ public class UValidationTextField extends UFormattedTextField
     /***************************************************************************
      * 
      **************************************************************************/
-    protected void setComponentValid( boolean valid )
+    private void setComponentValid( boolean valid )
     {
         if( valid )
         {
-            super.setBackground( validBackground );
+            field.setBackground( validBackground );
         }
         else
         {
-            super.setBackground( errorBackground );
+            field.setBackground( invalidBackground );
         }
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    protected void fireValidityChanged()
+    private void fireValidityChanged()
     {
         for( ValidityChangedListener vcl : validityChangedListeners )
         {
@@ -149,14 +160,19 @@ public class UValidationTextField extends UFormattedTextField
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
-    public void setBackground( Color bg )
+    public void setValidBackground( Color bg )
     {
         validBackground = bg;
-        if( valid )
-        {
-            super.setBackground( bg );
-        }
+        validateText();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public void setInvalidBackground( Color bg )
+    {
+        invalidBackground = bg;
+        validateText();
     }
 
     /***************************************************************************
@@ -301,32 +317,32 @@ public class UValidationTextField extends UFormattedTextField
                 panel.add( jl1, new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
                     GridBagConstraints.EAST, GridBagConstraints.NONE,
                     new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-                panel.add( uvtf1a, new GridBagConstraints( 1, 0, 4, 1, 1.0,
-                    0.0, GridBagConstraints.WEST,
+                panel.add( uvtf1a.getView(), new GridBagConstraints( 1, 0, 4,
+                    1, 1.0, 0.0, GridBagConstraints.WEST,
                     GridBagConstraints.HORIZONTAL, new Insets( 2, 2, 2, 2 ), 0,
                     0 ) );
 
                 panel.add( jl2, new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
                     GridBagConstraints.EAST, GridBagConstraints.NONE,
                     new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-                panel.add( uvtf2a, new GridBagConstraints( 1, 1, 4, 1, 1.0,
-                    0.0, GridBagConstraints.WEST,
+                panel.add( uvtf2a.getView(), new GridBagConstraints( 1, 1, 4,
+                    1, 1.0, 0.0, GridBagConstraints.WEST,
                     GridBagConstraints.HORIZONTAL, new Insets( 2, 2, 2, 2 ), 0,
                     0 ) );
 
                 panel.add( jl3, new GridBagConstraints( 0, 2, 1, 1, 0.0, 0.0,
                     GridBagConstraints.EAST, GridBagConstraints.NONE,
                     new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-                panel.add( uvtf3b, new GridBagConstraints( 1, 2, 4, 1, 1.0,
-                    0.0, GridBagConstraints.WEST,
+                panel.add( uvtf3b.getView(), new GridBagConstraints( 1, 2, 4,
+                    1, 1.0, 0.0, GridBagConstraints.WEST,
                     GridBagConstraints.HORIZONTAL, new Insets( 2, 2, 2, 2 ), 0,
                     0 ) );
 
                 panel.add( jl4, new GridBagConstraints( 0, 3, 1, 1, 0.0, 0.0,
                     GridBagConstraints.EAST, GridBagConstraints.NONE,
                     new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-                panel.add( uvtf4c, new GridBagConstraints( 1, 3, 4, 1, 1.0,
-                    0.0, GridBagConstraints.WEST,
+                panel.add( uvtf4c.getView(), new GridBagConstraints( 1, 3, 4,
+                    1, 1.0, 0.0, GridBagConstraints.WEST,
                     GridBagConstraints.HORIZONTAL, new Insets( 2, 2, 2, 2 ), 0,
                     0 ) );
 
@@ -384,5 +400,24 @@ public class UValidationTextField extends UFormattedTextField
     public static interface TextValidator
     {
         public boolean validateText( String text );
+    }
+
+    /***************************************************************************
+     * @param name
+     **************************************************************************/
+    public void setText( String text )
+    {
+        field.setText( text );
+        validateText();
+    }
+
+    public void addActionListener( ActionListener l )
+    {
+        field.addActionListener( l );
+    }
+
+    public void setColumns( int columns )
+    {
+        field.setColumns( columns );
     }
 }

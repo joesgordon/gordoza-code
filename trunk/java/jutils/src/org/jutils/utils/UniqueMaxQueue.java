@@ -1,6 +1,7 @@
 package org.jutils.utils;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedList;
 
 /*******************************************************************************
  *
@@ -89,16 +90,14 @@ public class UniqueMaxQueue<T> extends LinkedList<T>
     @Override
     public boolean addAll( Collection<? extends T> c )
     {
-        Iterator<? extends T> it = c.iterator();
+        boolean changed = false;
 
-        for( int i = 0; i < maxSize && it.hasNext(); i++ )
+        for( T t : c )
         {
-            if( !add( it.next() ) )
-            {
-                return false;
-            }
+            changed = changed || add( t );
         }
-        return true;
+
+        return changed;
     }
 
     /***************************************************************************

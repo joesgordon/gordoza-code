@@ -1,16 +1,13 @@
 package org.budgey.ui;
 
-import java.awt.Component;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.budgey.data.Account;
-import org.jutils.ui.UValidationTextField;
+import org.jutils.ui.*;
 import org.jutils.ui.UValidationTextField.TextValidator;
 import org.jutils.ui.UValidationTextField.ValidityChangedListener;
 import org.jutils.ui.event.ItemActionList;
@@ -64,16 +61,16 @@ public class AccountConfigPanel
         panel.add( new JLabel( "Name:" ), new GridBagConstraints( 0, 0, 1, 1,
             0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
             new Insets( 4, 4, 2, 2 ), 0, 0 ) );
-        panel.add( nameField, new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
-                2, 4, 4, 4 ), 0, 0 ) );
+        panel.add( nameField.getView(), new GridBagConstraints( 0, 1, 1, 1,
+            0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+            new Insets( 2, 4, 4, 4 ), 0, 0 ) );
 
         panel.add( new JLabel( "Starting Balance:" ), new GridBagConstraints(
             0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST,
             GridBagConstraints.NONE, new Insets( 4, 4, 2, 2 ), 0, 0 ) );
-        panel.add( startingBalanceField, new GridBagConstraints( 0, 3, 1, 1,
-            0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-            new Insets( 2, 4, 4, 4 ), 0, 0 ) );
+        panel.add( startingBalanceField.getView(), new GridBagConstraints( 0,
+            3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST,
+            GridBagConstraints.HORIZONTAL, new Insets( 2, 4, 4, 4 ), 0, 0 ) );
 
         return panel;
     }

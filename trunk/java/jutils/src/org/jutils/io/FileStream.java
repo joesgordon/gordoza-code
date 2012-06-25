@@ -19,7 +19,7 @@ public class FileStream implements IStream
     public FileStream( File file ) throws FileNotFoundException
     {
         this.file = file;
-        this.raf = new RandomAccessFile( file, "r" );
+        this.raf = new RandomAccessFile( file, "rw" );
     }
 
     /***************************************************************************

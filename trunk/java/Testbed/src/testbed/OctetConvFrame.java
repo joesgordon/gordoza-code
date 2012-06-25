@@ -62,7 +62,7 @@ public class OctetConvFrame extends FrameRunner
         constraints = new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 6, 6, 6 ), 0, 0 );
-        panel.add( octField, constraints );
+        panel.add( octField.getView(), constraints );
 
         constraints = new GridBagConstraints( 0, 2, 1, 1, 0.0, 0.0,
             GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 6, 6,
@@ -72,7 +72,7 @@ public class OctetConvFrame extends FrameRunner
         constraints = new GridBagConstraints( 0, 3, 1, 1, 0.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 6, 6, 6 ), 0, 0 );
-        panel.add( decField, constraints );
+        panel.add( decField.getView(), constraints );
 
         constraints = new GridBagConstraints( 0, 4, 1, 1, 0.0, 0.0,
             GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 12,
@@ -82,7 +82,7 @@ public class OctetConvFrame extends FrameRunner
         constraints = new GridBagConstraints( 0, 5, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 6, 6, 6 ), 0, 0 );
-        panel.add( hexField, constraints );
+        panel.add( hexField.getView(), constraints );
 
         return panel;
     }
