@@ -5,9 +5,10 @@ import java.nio.ByteBuffer;
 
 import javax.swing.*;
 
-import org.jutils.Utils;
+import org.jutils.NumberParsingUtils;
 import org.jutils.ui.*;
-import org.jutils.ui.UValidationTextField.TextValidator;
+import org.jutils.ui.UValidationTextField.ITextValidator;
+import org.jutils.ui.model.FormatException;
 
 public class OctetConvFrame extends FrameRunner
 {
@@ -172,7 +173,7 @@ public class OctetConvFrame extends FrameRunner
 
             try
             {
-                long i = Utils.parseHexLong( text );
+                long i = NumberParsingUtils.parseHexLong( text );
 
                 setDecField( i );
                 setOctetField( i );
@@ -246,7 +247,7 @@ public class OctetConvFrame extends FrameRunner
         }
     }
 
-    private abstract class FieldValidator implements TextValidator
+    private abstract class FieldValidator implements ITextValidator
     {
         private boolean enabled;
 
@@ -261,16 +262,15 @@ public class OctetConvFrame extends FrameRunner
         }
 
         @Override
-        public final boolean validateText( String text )
+        public final void validateText( String text ) throws FormatException
         {
             if( enabled )
             {
-                return validate( text );
+                validate( text );
             }
-
-            return true;
         }
 
-        protected abstract boolean validate( String text );
+        protected abstract boolean validate( String text )
+            throws FormatException;
     }
 }

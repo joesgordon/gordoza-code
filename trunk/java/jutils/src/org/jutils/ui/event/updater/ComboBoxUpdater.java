@@ -3,18 +3,24 @@ package org.jutils.ui.event.updater;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ComboBoxUpdater implements ActionListener
-{
-    private IDataUpdater updater;
+import javax.swing.JComboBox;
 
-    public ComboBoxUpdater( IDataUpdater dataUpdater )
+public class ComboBoxUpdater<T> implements ActionListener
+{
+    private final IDataUpdater<T> updater;
+    private final JComboBox comboBox;
+
+    public ComboBoxUpdater( JComboBox comboBox, IDataUpdater<T> dataUpdater )
     {
-        updater = dataUpdater;
+        this.comboBox = comboBox;
+        this.updater = dataUpdater;
     }
 
     @Override
     public void actionPerformed( ActionEvent e )
     {
-        updater.updateData();
+        @SuppressWarnings( "unchecked")
+        T selectedObject = ( T )comboBox.getSelectedItem();
+        updater.updateData( selectedObject );
     }
 }

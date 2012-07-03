@@ -22,7 +22,7 @@ public class DateTimePanel extends JPanel
     /**  */
     private CalendarField dateField;
     /**  */
-    private DataUpdaterList updaterList;
+    private DataUpdaterList<Calendar> updaterList;
 
     /***************************************************************************
      * 
@@ -31,7 +31,7 @@ public class DateTimePanel extends JPanel
     {
         super.setLayout( new GridBagLayout() );
 
-        updaterList = new DataUpdaterList();
+        updaterList = new DataUpdaterList<Calendar>();
         timeModel = new SpinnerDateModel( new Date(), null, null,
             Calendar.AM_PM );
         JSpinner spinner = new USpinner( timeModel );
@@ -41,7 +41,7 @@ public class DateTimePanel extends JPanel
 
         dateField = new CalendarField();
 
-        spinner.addChangeListener( new TimeListener() );
+        spinner.addChangeListener( new TimeListener( this, updaterList ) );
 
         add( spinner, new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
@@ -54,7 +54,7 @@ public class DateTimePanel extends JPanel
     /***************************************************************************
      * @param updater
      **************************************************************************/
-    public void addDataUpdater( IDataUpdater updater )
+    public void addDataUpdater( IDataUpdater<Calendar> updater )
     {
         updaterList.addListener( updater );
         dateField.addDataUpdater( updater );
@@ -85,12 +85,22 @@ public class DateTimePanel extends JPanel
         dateField.setDate( cal );
     }
 
-    private class TimeListener implements ChangeListener
+    private static class TimeListener implements ChangeListener
     {
+        private final DateTimePanel field;
+        private final DataUpdaterList<Calendar> updaterList;
+
+        public TimeListener( DateTimePanel field,
+            DataUpdaterList<Calendar> updaterList )
+        {
+            this.field = field;
+            this.updaterList = updaterList;
+        }
+
         @Override
         public void stateChanged( ChangeEvent e )
         {
-            updaterList.fireListeners();
+            updaterList.fireListeners( field.getDate() );
         }
     }
 

@@ -4,10 +4,11 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import org.jutils.Utils;
+import org.jutils.NumberParsingUtils;
 import org.jutils.ui.*;
-import org.jutils.ui.UValidationTextField.TextValidator;
+import org.jutils.ui.UValidationTextField.ITextValidator;
 import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.model.FormatException;
 
 public class HexConvFrame extends FrameRunner
 {
@@ -90,7 +91,7 @@ public class HexConvFrame extends FrameRunner
     private class DecValidator extends FieldValidator
     {
         @Override
-        public boolean validate( String text )
+        public void validate( String text ) throws FormatException
         {
             hexListener.setEnabled( false );
             try
@@ -100,46 +101,38 @@ public class HexConvFrame extends FrameRunner
             }
             catch( NumberFormatException ex )
             {
-                System.err.println( ex.getMessage() );
-                // ex.printStackTrace();
-                return false;
+                throw new FormatException( ex.getMessage() );
             }
             finally
             {
                 hexListener.setEnabled( true );
             }
-
-            return true;
         }
     }
 
     private class HexValidator extends FieldValidator
     {
         @Override
-        public boolean validate( String text )
+        public void validate( String text ) throws FormatException
         {
             decListener.setEnabled( false );
             try
             {
-                long i = Utils.parseHexLong( text );
+                long i = NumberParsingUtils.parseHexLong( text );
                 decField.setText( "" + i );
             }
             catch( NumberFormatException ex )
             {
-                System.err.println( ex.getMessage() );
-                // ex.printStackTrace();
-                return false;
+                throw new FormatException( ex.getMessage() );
             }
             finally
             {
                 decListener.setEnabled( true );
             }
-
-            return true;
         }
     }
 
-    private abstract class FieldValidator implements TextValidator
+    private abstract class FieldValidator implements ITextValidator
     {
         private boolean enabled;
 
@@ -154,17 +147,15 @@ public class HexConvFrame extends FrameRunner
         }
 
         @Override
-        public final boolean validateText( String text )
+        public final void validateText( String text ) throws FormatException
         {
             if( enabled )
             {
-                return validate( text );
+                validate( text );
             }
-
-            return true;
         }
 
-        protected abstract boolean validate( String text );
+        protected abstract void validate( String text ) throws FormatException;
     }
 
     public interface IConverter<T, V>

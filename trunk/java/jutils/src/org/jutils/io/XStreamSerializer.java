@@ -2,32 +2,28 @@ package org.jutils.io;
 
 import java.io.*;
 
+import com.thoughtworks.xstream.XStreamException;
+
 /*******************************************************************************
  * 
  ******************************************************************************/
 public class XStreamSerializer<T>
 {
     /***************************************************************************
-     * @param writer
+     * 
      **************************************************************************/
-    public XStreamSerializer()
+    public T read( InputStream stream ) throws IOException, XStreamException
     {
-        ;
+        @SuppressWarnings( "unchecked")
+        T data = ( T )XStreamUtils.readObjectXStream( stream );
+        return data;
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    @SuppressWarnings( "unchecked")
-    public T read( InputStream stream ) throws IOException
-    {
-        return ( T )XStreamUtils.readObjectXStream( stream );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public void write( T t, OutputStream stream ) throws IOException
+    public void write( T t, OutputStream stream ) throws IOException,
+        XStreamException
     {
         XStreamUtils.writeObjectXStream( t, stream );
     }

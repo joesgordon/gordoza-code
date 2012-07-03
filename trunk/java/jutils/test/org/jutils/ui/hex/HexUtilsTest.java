@@ -3,7 +3,7 @@ package org.jutils.ui.hex;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.jutils.Utils;
+import org.jutils.NumberParsingUtils;
 
 public class HexUtilsTest
 {
@@ -37,7 +37,7 @@ public class HexUtilsTest
         {
             str = Long.toHexString( i );
             // num = Long.parseLong( str, 16 );
-            num = Utils.parseHexLong( str );
+            num = NumberParsingUtils.parseHexLong( str );
             // num = new BigInteger( str, 16 ).longValue();
             // num = parseHexLong2( str );
 

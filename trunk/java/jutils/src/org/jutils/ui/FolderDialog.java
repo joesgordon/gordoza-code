@@ -17,10 +17,14 @@ import com.jgoodies.looks.Options;
 /*******************************************************************************
  *
  ******************************************************************************/
-public class FolderDialog extends JDialog
+public class FolderDialog
 {
     /**  */
-    private DirTree tree;
+    private final JDialog dialog;
+    /**  */
+    private final DirTree tree;
+    /**  */
+    private final JLabel messageLabel;
 
     /***************************************************************************
      * @param owner
@@ -46,27 +50,29 @@ public class FolderDialog extends JDialog
      **************************************************************************/
     public FolderDialog( Frame owner, String title, String message )
     {
-        super( owner, title, true );
+        this.dialog = new JDialog( owner, title, true );
+        this.tree = new DirTree();
+        this.messageLabel = new JLabel();
 
-        setDefaultCloseOperation( DISPOSE_ON_CLOSE );
+        dialog.setDefaultCloseOperation( JDialog.DISPOSE_ON_CLOSE );
 
-        setContentPane( createContentPanel( message ) );
+        dialog.setContentPane( createContentPanel( message ) );
 
-        setSize( 300, 300 );
-        pack();
-        setLocationRelativeTo( owner );
+        dialog.setSize( 300, 300 );
+        dialog.validate();
+        dialog.setLocationRelativeTo( owner );
     }
 
-    /**
+    /***************************************************************************
      * @param message
      * @return
-     */
+     **************************************************************************/
     private JPanel createContentPanel( String message )
     {
         JPanel mainPanel = new JPanel( new GridBagLayout() );
-        JLabel messageLabel = new JLabel( message );
-        tree = new DirTree();
         JScrollPane scrollPane = new JScrollPane( tree );
+
+        messageLabel.setText( message );
 
         scrollPane.setMinimumSize( new Dimension(
             messageLabel.getPreferredSize().width,
@@ -86,6 +92,9 @@ public class FolderDialog extends JDialog
         return mainPanel;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private JPanel createButtonPanel()
     {
         ButtonBarBuilder2 builder = new ButtonBarBuilder2();
@@ -93,15 +102,28 @@ public class FolderDialog extends JDialog
         JButton cancelButton = new JButton();
 
         okButton.setText( "OK" );
-        okButton.addActionListener( new OkListener() );
+        okButton.addActionListener( new OkListener( this ) );
         cancelButton.setText( "Cancel" );
-        cancelButton.addActionListener( new CancelListener() );
+        cancelButton.addActionListener( new CancelListener( this ) );
 
         builder.addButton( okButton );
         builder.addRelatedGap();
         builder.addButton( cancelButton );
 
         return builder.getPanel();
+    }
+
+    /***************************************************************************
+     * @param visible
+     **************************************************************************/
+    public void setVisible( boolean visible )
+    {
+        if( visible && !dialog.isVisible() )
+        {
+            dialog.validate();
+            dialog.setLocationRelativeTo( dialog.getParent() );
+        }
+        dialog.setVisible( visible );
     }
 
     /***************************************************************************
@@ -125,8 +147,6 @@ public class FolderDialog extends JDialog
                 }
 
                 FolderDialog dialog = new FolderDialog( null );
-                dialog.validate();
-                dialog.setLocationRelativeTo( null );
 
                 dialog.setSelectedPaths( new File( IOUtils.USERS_DIR,
                     "garbage_jfdkslfjsdl" ).getAbsolutePath() );
@@ -137,19 +157,6 @@ public class FolderDialog extends JDialog
                 LogUtils.printDebug( "DEBUG: Paths: " + paths );
             }
         } );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public Dimension getPreferredSize()
-    {
-        Dimension dim = super.getPreferredSize();
-
-        dim.width = Math.max( dim.width, dim.height );
-        dim.height = dim.width;
-
-        return dim;
     }
 
     /***************************************************************************
@@ -184,26 +191,55 @@ public class FolderDialog extends JDialog
         return tree.getSelectedPaths();
     }
 
+    public void setSize( int width, int height )
+    {
+        dialog.setSize( width, height );
+    }
+
+    public void setTitle( String title )
+    {
+        dialog.setTitle( title );
+    }
+
+    public void setMessage( String message )
+    {
+        messageLabel.setText( message );
+    }
+
     /***************************************************************************
      * 
      **************************************************************************/
-    private class CancelListener implements ActionListener
+    private static class CancelListener implements ActionListener
     {
+        private final FolderDialog dialog;
+
+        public CancelListener( FolderDialog dialog )
+        {
+            this.dialog = dialog;
+        }
+
         public void actionPerformed( ActionEvent e )
         {
-            tree.clearSelection();
-            dispose();
+            dialog.tree.clearSelection();
+            dialog.dialog.dispose();
         }
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private class OkListener implements ActionListener
+    private static class OkListener implements ActionListener
     {
+        private final FolderDialog dialog;
+
+        public OkListener( FolderDialog dialog )
+        {
+            this.dialog = dialog;
+        }
+
         public void actionPerformed( ActionEvent e )
         {
-            dispose();
+            dialog.dialog.dispose();
         }
     }
 }
