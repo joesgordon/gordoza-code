@@ -11,7 +11,7 @@ import javax.swing.text.DefaultFormatterFactory;
 
 import org.budgey.data.Money;
 import org.jutils.ui.UValidationTextField;
-import org.jutils.ui.UValidationTextField.TextValidator;
+import org.jutils.ui.UValidationTextField.ITextValidator;
 import org.jutils.ui.model.IJcompView;
 
 public class MoneyTextField implements IJcompView
@@ -97,7 +97,7 @@ public class MoneyTextField implements IJcompView
         field.setText( amount.toString() );
     }
 
-    public void setValidator( TextValidator tv )
+    public void setValidator( ITextValidator tv )
     {
         field.setValidator( tv );
     }

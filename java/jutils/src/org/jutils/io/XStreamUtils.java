@@ -3,6 +3,7 @@ package org.jutils.io;
 import java.io.*;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.XStreamException;
 
 public class XStreamUtils
 {
@@ -12,7 +13,7 @@ public class XStreamUtils
      * @throws IOException
      **************************************************************************/
     public static void writeObjectXStream( Object obj, File file )
-        throws IOException
+        throws IOException, XStreamException
     {
         FileOutputStream stream = new FileOutputStream( file );
         writeObjectXStream( obj, stream );
@@ -25,7 +26,7 @@ public class XStreamUtils
      * @throws IOException
      **************************************************************************/
     public static void writeObjectXStream( Object obj, OutputStream outStream )
-        throws IOException
+        throws IOException, XStreamException
     {
         XStream xstream = new XStream();
 
@@ -37,7 +38,8 @@ public class XStreamUtils
      * @return Object
      * @throws IOException
      **************************************************************************/
-    public static Object readObjectXStream( File file ) throws IOException
+    public static Object readObjectXStream( File file )
+        throws FileNotFoundException, IOException, XStreamException
     {
         FileInputStream fis = new FileInputStream( file );
         Object obj = readObjectXStream( fis );
@@ -51,7 +53,7 @@ public class XStreamUtils
      * @throws IOException
      **************************************************************************/
     public static Object readObjectXStream( InputStream inputStream )
-        throws IOException
+        throws IOException, XStreamException
     {
         XStream xstream = new XStream();
 

@@ -1,8 +1,8 @@
 package org.jutils.ui.model;
 
-import javax.swing.JComponent;
+import java.awt.Component;
 
 public interface IJcompView
 {
-    public JComponent getView();
+    public Component getView();
 }

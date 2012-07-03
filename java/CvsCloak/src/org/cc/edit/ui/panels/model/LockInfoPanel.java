@@ -1,8 +1,7 @@
 package org.cc.edit.ui.panels.model;
 
 import java.awt.*;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -37,10 +36,10 @@ public class LockInfoPanel extends InfoPanel<LockInfo>
         timeField = new DateTimePanel();
 
         userField.getDocument().addDocumentListener(
-            new DocumentUpdater( new UserUpdater() ) );
+            new DocumentUpdater( userField, new UserUpdater() ) );
 
         reasonField.getDocument().addDocumentListener(
-            new DocumentUpdater( new ReasonUpdater() ) );
+            new DocumentUpdater( reasonField, new ReasonUpdater() ) );
 
         timeField.addDataUpdater( new DateUpdater() );
 
@@ -83,36 +82,36 @@ public class LockInfoPanel extends InfoPanel<LockInfo>
     /***************************************************************************
      * 
      **************************************************************************/
-    private class DateUpdater implements IDataUpdater
+    private class DateUpdater implements IDataUpdater<Calendar>
     {
         @Override
-        public void updateData()
+        public void updateData( Calendar cal )
         {
-            getData().setTime( timeField.getDate().getTimeInMillis() / 1000 );
+            getData().setTime( ( long )( cal.getTimeInMillis() / 1000.0 ) );
         }
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private class UserUpdater implements IDataUpdater
+    private class UserUpdater implements IDataUpdater<String>
     {
         @Override
-        public void updateData()
+        public void updateData( String data )
         {
-            getData().setUser( userField.getText() );
+            getData().setUser( data );
         }
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private class ReasonUpdater implements IDataUpdater
+    private class ReasonUpdater implements IDataUpdater<String>
     {
         @Override
-        public void updateData()
+        public void updateData( String data )
         {
-            getData().setReason( reasonField.getText() );
+            getData().setReason( data );
         }
     }
 }

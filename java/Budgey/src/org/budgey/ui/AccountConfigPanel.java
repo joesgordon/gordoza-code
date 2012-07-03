@@ -8,10 +8,11 @@ import javax.swing.JPanel;
 
 import org.budgey.data.Account;
 import org.jutils.ui.*;
-import org.jutils.ui.UValidationTextField.TextValidator;
+import org.jutils.ui.UValidationTextField.ITextValidator;
 import org.jutils.ui.UValidationTextField.ValidityChangedListener;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.model.FormatException;
 
 /*******************************************************************************
  * 
@@ -122,10 +123,10 @@ public class AccountConfigPanel
     /***************************************************************************
      * 
      **************************************************************************/
-    private class NameValidator implements TextValidator
+    private class NameValidator implements ITextValidator
     {
         @Override
-        public boolean validateText( String text )
+        public void validateText( String text ) throws FormatException
         {
             boolean valid = text.length() > 0;
 
@@ -134,8 +135,10 @@ public class AccountConfigPanel
                 account.setName( text );
                 nameListeners.fireListeners( AccountConfigPanel.this, text );
             }
-
-            return valid;
+            else
+            {
+                throw new FormatException( "Field may not be empty" );
+            }
         }
     }
 }

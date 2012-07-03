@@ -11,8 +11,9 @@ import javax.swing.*;
 import org.budgey.data.Money;
 import org.budgey.data.Transaction;
 import org.jutils.ui.UValidationTextField;
-import org.jutils.ui.UValidationTextField.TextValidator;
+import org.jutils.ui.UValidationTextField.ITextValidator;
 import org.jutils.ui.calendar.CalendarField;
+import org.jutils.ui.model.FormatException;
 
 /*******************************************************************************
  * 
@@ -148,10 +149,10 @@ public class TransactionView
     /***************************************************************************
      * 
      **************************************************************************/
-    private class SecondPartyValidtor implements TextValidator
+    private class SecondPartyValidtor implements ITextValidator
     {
         @Override
-        public boolean validateText( String text )
+        public void validateText( String text ) throws FormatException
         {
             boolean valid = text.length() > 0;
 
@@ -159,43 +160,42 @@ public class TransactionView
             {
                 transaction.setSecondParty( text );
             }
-
-            return valid;
+            else
+            {
+                throw new FormatException( "Field may not be empty" );
+            }
         }
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private class AmountValidtor implements TextValidator
+    private class AmountValidtor implements ITextValidator
     {
         @Override
-        public boolean validateText( String text )
+        public void validateText( String text ) throws FormatException
         {
             boolean valid = false;
             Money m = null;
 
-            if( transaction == null )
-            {
-                return false;
-            }
+            // if( transaction == null )
+            // {
+            // return false;
+            // }
 
             try
             {
                 m = amountField.getFormatter().stringToValue( text );
-                valid = true;
             }
-            catch( ParseException e )
+            catch( ParseException ex )
             {
-                ;
+                throw new FormatException( ex.getMessage() );
             }
 
             if( valid )
             {
                 transaction.setAmount( m );
             }
-
-            return valid;
         }
     }
 }

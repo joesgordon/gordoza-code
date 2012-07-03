@@ -2,30 +2,30 @@ package org.jutils.ui.event.updater;
 
 import java.util.LinkedList;
 
-public class DataUpdaterList
+public class DataUpdaterList<T>
 {
-    private LinkedList<IDataUpdater> listeners;
+    private LinkedList<IDataUpdater<T>> listeners;
 
     public DataUpdaterList()
     {
-        listeners = new LinkedList<IDataUpdater>();
+        listeners = new LinkedList<IDataUpdater<T>>();
     }
 
-    public void addListener( IDataUpdater l )
+    public void addListener( IDataUpdater<T> l )
     {
         listeners.addFirst( l );
     }
 
-    public void removeListener( IDataUpdater l )
+    public void removeListener( IDataUpdater<T> l )
     {
         listeners.remove( l );
     }
 
-    public void fireListeners()
+    public void fireListeners( T data )
     {
-        for( IDataUpdater l : listeners )
+        for( IDataUpdater<T> l : listeners )
         {
-            l.updateData();
+            l.updateData( data );
         }
     }
 

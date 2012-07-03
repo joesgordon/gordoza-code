@@ -2,6 +2,7 @@ package org.jutils.ui.event.updater;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.JTextComponent;
 import javax.swing.undo.UndoManager;
 
 /*******************************************************************************
@@ -12,37 +13,35 @@ import javax.swing.undo.UndoManager;
  ******************************************************************************/
 public class DocumentUpdater implements DocumentListener
 {
-    /**  */
-    private IDataUpdater updater;
+    private final IDataUpdater<String> fupdater;
+    private final JTextComponent field;
 
-    /***************************************************************************
-     * Constructor
-     * @param mgr The manager that keeps track of edits
-     * @param updatable Used to keep the underlying data in sync with edits (can
-     * be <b>null</b>)
-     **************************************************************************/
-    public DocumentUpdater( IDataUpdater updatable )
+    public DocumentUpdater( JTextComponent field, IDataUpdater<String> fupdater )
     {
-        updater = updatable;
-        updater.getClass();
+        this.fupdater = fupdater;
+        this.field = field;
+    }
+
+    public static interface IFieldUpdater
+    {
+        public void update( String text );
     }
 
     @Override
     public void insertUpdate( DocumentEvent e )
     {
-        updater.updateData();
+        fupdater.updateData( field.getText() );
     }
 
     @Override
     public void removeUpdate( DocumentEvent e )
     {
-        updater.updateData();
+        fupdater.updateData( field.getText() );
     }
 
     @Override
     public void changedUpdate( DocumentEvent e )
     {
-        updater.updateData();
+        fupdater.updateData( field.getText() );
     }
-
 }

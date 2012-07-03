@@ -23,15 +23,16 @@ import org.jutils.ui.event.updater.IDataUpdater;
 public class CalendarField extends JPanel
 {
     /**  */
-    private UFormattedTextField dateTextField = new UFormattedTextField();
+    private final UFormattedTextField dateTextField = new UFormattedTextField();
     /**  */
-    private JButton calendarButton = new JButton();
+    private final JButton calendarButton = new JButton();
+    /**  */
+    private final DataUpdaterList<Calendar> updaterList;
+
     /**  */
     private Calendar curDate = null;
     /**  */
     private String actionCommand = null;
-    /**  */
-    private DataUpdaterList updaterList;
 
     /***************************************************************************
      *
@@ -40,7 +41,7 @@ public class CalendarField extends JPanel
     {
         this.setLayout( new GridBagLayout() );
 
-        updaterList = new DataUpdaterList();
+        updaterList = new DataUpdaterList<Calendar>();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat( "MM/dd/yyyy" );
         DateFormatter formatter = new DateFormatter( dateFormat );
@@ -51,7 +52,8 @@ public class CalendarField extends JPanel
         dateTextField.setFormatterFactory( new DefaultFormatterFactory(
             formatter ) );
         dateTextField.setMinimumSize( dateTextField.getPreferredSize() );
-        dateTextField.getDocument().addDocumentListener( new DateListener() );
+        dateTextField.getDocument().addDocumentListener(
+            new DateListener( this, updaterList ) );
 
         calendarButton.setText( "" );
         calendarButton.addActionListener( new CalendarButtonListener() );
@@ -69,7 +71,7 @@ public class CalendarField extends JPanel
     /***************************************************************************
      * @param updater
      **************************************************************************/
-    public void addDataUpdater( IDataUpdater updater )
+    public void addDataUpdater( IDataUpdater<Calendar> updater )
     {
         updaterList.addListener( updater );
     }
@@ -256,22 +258,32 @@ public class CalendarField extends JPanel
      **************************************************************************/
     private class DateListener implements DocumentListener
     {
+        private final CalendarField field;
+        private final DataUpdaterList<Calendar> updaterList;
+
+        public DateListener( CalendarField field,
+            DataUpdaterList<Calendar> updaterList )
+        {
+            this.field = field;
+            this.updaterList = updaterList;
+        }
+
         @Override
         public void insertUpdate( DocumentEvent e )
         {
-            updaterList.fireListeners();
+            updaterList.fireListeners( field.getDate() );
         }
 
         @Override
         public void removeUpdate( DocumentEvent e )
         {
-            updaterList.fireListeners();
+            updaterList.fireListeners( field.getDate() );
         }
 
         @Override
         public void changedUpdate( DocumentEvent e )
         {
-            updaterList.fireListeners();
+            updaterList.fireListeners( field.getDate() );
         }
     }
 

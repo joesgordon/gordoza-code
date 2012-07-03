@@ -49,6 +49,10 @@ public class LockInfo
         return time;
     }
 
+    /**
+     * Sets the number of seconds since epoch.
+     * @param t
+     */
     public void setTime( long t )
     {
         time = t;
