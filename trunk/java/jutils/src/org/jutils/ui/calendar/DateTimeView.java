@@ -11,25 +11,28 @@ import org.jutils.ui.FrameRunner;
 import org.jutils.ui.USpinner;
 import org.jutils.ui.event.updater.DataUpdaterList;
 import org.jutils.ui.event.updater.IDataUpdater;
+import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class DateTimePanel extends JPanel
+public class DateTimeView implements IDataView<Calendar>
 {
     /**  */
-    private SpinnerDateModel timeModel;
+    private final SpinnerDateModel timeModel;
     /**  */
-    private CalendarField dateField;
+    private final CalendarField dateField;
     /**  */
-    private DataUpdaterList<Calendar> updaterList;
+    private final DataUpdaterList<Calendar> updaterList;
+    /**  */
+    private final JPanel view;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public DateTimePanel()
+    public DateTimeView()
     {
-        super.setLayout( new GridBagLayout() );
+        view = new JPanel( new GridBagLayout() );
 
         updaterList = new DataUpdaterList<Calendar>();
         timeModel = new SpinnerDateModel( new Date(), null, null,
@@ -43,10 +46,10 @@ public class DateTimePanel extends JPanel
 
         spinner.addChangeListener( new TimeListener( this, updaterList ) );
 
-        add( spinner, new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+        view.add( spinner, new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 0, 0, 2 ), 0, 0 ) );
-        add( dateField, new GridBagConstraints( 1, 0, 1, 1, 1.0, 1.0,
+        view.add( dateField, new GridBagConstraints( 1, 0, 1, 1, 1.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 2, 0, 0 ), 0, 0 ) );
     }
@@ -85,12 +88,42 @@ public class DateTimePanel extends JPanel
         dateField.setDate( cal );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Component getView()
+    {
+        return view;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Calendar getData()
+    {
+        return getDate();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void setData( Calendar data )
+    {
+        setDate( data );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class TimeListener implements ChangeListener
     {
-        private final DateTimePanel field;
+        private final DateTimeView field;
         private final DataUpdaterList<Calendar> updaterList;
 
-        public TimeListener( DateTimePanel field,
+        public TimeListener( DateTimeView field,
             DataUpdaterList<Calendar> updaterList )
         {
             this.field = field;
@@ -105,34 +138,37 @@ public class DateTimePanel extends JPanel
     }
 
     /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class Runner extends FrameRunner
+    {
+        @Override
+        protected JFrame createFrame()
+        {
+            DateTimeView p = new DateTimeView();
+            p.setDate( new GregorianCalendar() );
+
+            JFrame frame = new JFrame();
+            frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+            frame.setContentPane( ( Container )p.getView() );
+            frame.setSize( 300, 300 );
+
+            return frame;
+        }
+
+        @Override
+        protected boolean validate()
+        {
+            return true;
+        }
+    }
+
+    /***************************************************************************
      * The main function.
      * @param args Unused arguments.
      **************************************************************************/
     public static void main( String[] args )
     {
         SwingUtilities.invokeLater( new Runner() );
-    }
-}
-
-class Runner extends FrameRunner
-{
-    @Override
-    protected JFrame createFrame()
-    {
-        DateTimePanel p = new DateTimePanel();
-        p.setDate( new GregorianCalendar() );
-
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-        frame.setContentPane( p );
-        frame.setSize( 300, 300 );
-
-        return frame;
-    }
-
-    @Override
-    protected boolean validate()
-    {
-        return true;
     }
 }

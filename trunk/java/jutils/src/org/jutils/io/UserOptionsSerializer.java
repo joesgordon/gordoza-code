@@ -3,6 +3,8 @@ package org.jutils.io;
 import java.io.File;
 import java.io.IOException;
 
+import com.thoughtworks.xstream.XStreamException;
+
 // TODO add a way for the errors to become warnings.
 /**
  * @param <T>
@@ -32,20 +34,24 @@ public class UserOptionsSerializer<T>
 
     public T read()
     {
-        T data = null;
+        options = null;
 
         try
         {
             @SuppressWarnings( "unchecked")
             T t = ( T )XStreamUtils.readObjectXStream( file );
-            data = t;
+            options = t;
         }
         catch( IOException ex )
         {
-            data = creator.createDefaultOptions();
+            options = creator.createDefaultOptions();
+        }
+        catch( XStreamException ex )
+        {
+            options = creator.createDefaultOptions();
         }
 
-        return data;
+        return options;
     }
 
     public void write()
@@ -63,6 +69,9 @@ public class UserOptionsSerializer<T>
             XStreamUtils.writeObjectXStream( data, file );
         }
         catch( IOException ex )
+        {
+        }
+        catch( XStreamException ex )
         {
         }
     }
