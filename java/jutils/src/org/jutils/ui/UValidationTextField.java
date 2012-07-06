@@ -11,11 +11,12 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.jutils.ui.model.FormatException;
+import org.jutils.ui.model.IValidationView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public final class UValidationTextField
+public final class UValidationTextField implements IValidationView
 {
     private final UFormattedTextField field;
     /**  */

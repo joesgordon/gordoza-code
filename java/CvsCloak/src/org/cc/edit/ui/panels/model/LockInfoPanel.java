@@ -8,7 +8,7 @@ import javax.swing.JTextField;
 
 import org.cc.data.LockInfo;
 import org.cc.edit.ui.InfoPanel;
-import org.jutils.ui.calendar.DateTimePanel;
+import org.jutils.ui.calendar.DateTimeView;
 import org.jutils.ui.event.updater.DocumentUpdater;
 import org.jutils.ui.event.updater.IDataUpdater;
 
@@ -22,7 +22,7 @@ public class LockInfoPanel extends InfoPanel<LockInfo>
     /**  */
     private JTextField reasonField;
     /**  */
-    private DateTimePanel timeField;
+    private DateTimeView timeField;
 
     /***************************************************************************
      * 
@@ -33,7 +33,7 @@ public class LockInfoPanel extends InfoPanel<LockInfo>
 
         userField = new JTextField( 10 );
         reasonField = new JTextField( 10 );
-        timeField = new DateTimePanel();
+        timeField = new DateTimeView();
 
         userField.getDocument().addDocumentListener(
             new DocumentUpdater( userField, new UserUpdater() ) );
@@ -60,7 +60,7 @@ public class LockInfoPanel extends InfoPanel<LockInfo>
         add( new JLabel( "Time :" ), new GridBagConstraints( 0, 4, 1, 1, 0.0,
             0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(
                 0, 0, 0, 0 ), 0, 0 ) );
-        add( timeField, new GridBagConstraints( 0, 5, 1, 1, 1.0, 0.0,
+        add( timeField.getView(), new GridBagConstraints( 0, 5, 1, 1, 1.0, 0.0,
             GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
                 0, 4, 4, 4 ), 0, 0 ) );
     }
