@@ -26,17 +26,17 @@ import org.jutils.ui.model.ComboBoxListModel;
 public class AppModelPanel extends InfoPanel<VersioningSystem>
 {
     /**  */
-    private ComboBoxListModel<File> defaultRepoModel;
+    private final ComboBoxListModel<File> defaultRepoModel;
     /**  */
-    private JComboBox defaultField;
+    private final JComboBox defaultField;
     /**  */
-    private NullableLockInfoPanel lockPanel;
+    private final NullableLockInfoPanel lockPanel;
     /**  */
-    private ListInfoPanel<Repository> reposPanel;
+    private final ListInfoPanel<Repository> reposPanel;
     /**  */
-    private ItemActionList<Repository> repoAddedListeners;
+    private final ItemActionList<Repository> repoAddedListeners;
     /**  */
-    private ItemActionList<Repository> repoRemovedListeners;
+    private final ItemActionList<Repository> repoRemovedListeners;
 
     /***************************************************************************
      * 
@@ -53,8 +53,8 @@ public class AppModelPanel extends InfoPanel<VersioningSystem>
         lockPanel = new NullableLockInfoPanel();
         reposPanel = new ListInfoPanel<Repository>();
 
-        ComboBoxUpdater defaultUpdater = new ComboBoxUpdater(
-            new DefaultRepoUpdater() );
+        ComboBoxUpdater<File> defaultUpdater = new ComboBoxUpdater<File>(
+            defaultField, new DefaultRepoUpdater( this ) );
 
         defaultField.addActionListener( defaultUpdater );
 
@@ -188,13 +188,19 @@ public class AppModelPanel extends InfoPanel<VersioningSystem>
         }
     }
 
-    private class DefaultRepoUpdater implements IDataUpdater
+    private static class DefaultRepoUpdater implements IDataUpdater<File>
     {
-        @Override
-        public void updateData()
+        private final AppModelPanel panel;
+
+        public DefaultRepoUpdater( AppModelPanel panel )
         {
-            VersioningSystem vs = getData();
-            File selected = defaultRepoModel.getSelected();
+            this.panel = panel;
+        }
+
+        @Override
+        public void updateData( File selected )
+        {
+            VersioningSystem vs = panel.getData();
             String path = selected.getAbsolutePath();
             vs.setDefaultRepository( path );
         }
