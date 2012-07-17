@@ -12,8 +12,7 @@ import java.util.Arrays;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-import org.jutils.IconConstants;
-import org.jutils.Utils;
+import org.jutils.*;
 import org.jutils.ui.*;
 import org.jutils.ui.hex.HexEditorFilePanel;
 
@@ -253,10 +252,10 @@ public class JHexFrame extends UFrame
                 {
                     int b;
 
-                    b = Utils.digitFromHex( strBytes.charAt( i * 2 ) ) & 0x0F;
+                    b = NumberParsingUtils.digitFromHex( strBytes.charAt( i * 2 ) ) & 0x0F;
                     bytes[i] = ( byte )( b << 4 );
 
-                    b = Utils.digitFromHex( strBytes.charAt( i * 2 + 1 ) ) & 0x0F;
+                    b = NumberParsingUtils.digitFromHex( strBytes.charAt( i * 2 + 1 ) ) & 0x0F;
                     bytes[i] |= ( byte )b;
                 }
                 System.out.println( Utils.arrayToString( bytes ) );

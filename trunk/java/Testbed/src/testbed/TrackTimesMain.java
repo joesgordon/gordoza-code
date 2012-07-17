@@ -79,14 +79,21 @@ public class TrackTimesMain
         List<Person> people = new ArrayList<Person>();
         BufferedReader br = new BufferedReader( new FileReader( inFile ) );
 
-        String line;
-        while( ( line = br.readLine() ) != null )
+        try
         {
-            Person p = new Person();
+            String line;
+            while( ( line = br.readLine() ) != null )
+            {
+                Person p = new Person();
 
-            p.name = line.trim();
+                p.name = line.trim();
 
-            people.add( p );
+                people.add( p );
+            }
+        }
+        finally
+        {
+            br.close();
         }
 
         return people;
@@ -97,27 +104,34 @@ public class TrackTimesMain
         List<RunTime> times = new ArrayList<RunTime>();
         BufferedReader br = new BufferedReader( new FileReader( inFile ) );
 
-        String line;
-        while( ( line = br.readLine() ) != null )
+        try
         {
-            RunTime rt = new RunTime();
+            String line;
+            while( ( line = br.readLine() ) != null )
+            {
+                RunTime rt = new RunTime();
 
-            rt.name = line.substring( 12, 32 );
-            rt.name = rt.name.trim();
+                rt.name = line.substring( 12, 32 );
+                rt.name = rt.name.trim();
 
-            rt.age = line.substring( 32, 34 );
-            rt.age = rt.age.trim();
+                rt.age = line.substring( 32, 34 );
+                rt.age = rt.age.trim();
 
-            rt.city = line.substring( 35, 48 );
-            rt.city = rt.city.trim();
+                rt.city = line.substring( 35, 48 );
+                rt.city = rt.city.trim();
 
-            rt.state = line.substring( 48, 50 );
-            rt.state = rt.state.trim();
+                rt.state = line.substring( 48, 50 );
+                rt.state = rt.state.trim();
 
-            rt.time = line.substring( 53 );
-            rt.time = rt.time.trim();
+                rt.time = line.substring( 53 );
+                rt.time = rt.time.trim();
 
-            times.add( rt );
+                times.add( rt );
+            }
+        }
+        finally
+        {
+            br.close();
         }
 
         return times;

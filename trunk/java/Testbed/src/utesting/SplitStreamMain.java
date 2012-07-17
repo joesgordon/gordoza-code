@@ -89,15 +89,20 @@ public class SplitStreamMain
             baseFile ) );
         int intRead = -1;
 
-        for( int i = 0; i < CT_LIMIT; i++ )
+        try
         {
-            intRead = stream.readInt();
-            if( i != intRead )
+            for( int i = 0; i < CT_LIMIT; i++ )
             {
-                throw new IOException( i + " != " + intRead );
+                intRead = stream.readInt();
+                if( i != intRead )
+                {
+                    throw new IOException( i + " != " + intRead );
+                }
             }
         }
-
-        stream.close();
+        finally
+        {
+            stream.close();
+        }
     }
 }
