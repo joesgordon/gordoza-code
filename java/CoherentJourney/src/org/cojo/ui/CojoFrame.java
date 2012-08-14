@@ -1,19 +1,19 @@
-package org.cc.ui;
+package org.cojo.ui;
 
 import java.awt.BorderLayout;
 import java.util.*;
 
 import javax.swing.*;
 
-import org.cc.data.*;
-import org.cc.model.*;
+import org.cojo.data.*;
+import org.cojo.model.*;
 import org.jutils.IconConstants;
 import org.jutils.ui.*;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class CcFrame extends UFrame
+public class CojoFrame extends UFrame
 {
     private CrsPanel crsPanel;
     private CrPanel crPanel;
@@ -21,7 +21,7 @@ public class CcFrame extends UFrame
     /***************************************************************************
      * 
      **************************************************************************/
-    public CcFrame()
+    public CojoFrame()
     {
         JPanel contentPanel = new JPanel( new BorderLayout() );
 
@@ -30,7 +30,7 @@ public class CcFrame extends UFrame
 
         setContentPane( contentPanel );
         setTitle( "CoherentJourney v1.0" );
-        
+
         setJMenuBar( createMenuBar() );
 
         setDefaultData();
@@ -138,8 +138,7 @@ public class CcFrame extends UFrame
         newButton.setIcon( IconConstants.getIcon( IconConstants.NEW_FILE_16 ) );
         newButton.setFocusable( false );
 
-        openButton.setIcon( IconConstants
-            .getIcon( IconConstants.OPEN_FOLDER_16 ) );
+        openButton.setIcon( IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
         openButton.setFocusable( false );
 
         saveButton.setIcon( IconConstants.getIcon( IconConstants.SAVE_16 ) );

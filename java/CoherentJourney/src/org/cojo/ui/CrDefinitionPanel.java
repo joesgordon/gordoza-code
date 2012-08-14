@@ -1,4 +1,4 @@
-package org.cc.ui;
+package org.cojo.ui;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
-import org.cc.model.IChangeRequest;
+import org.cojo.model.IChangeRequest;
 import org.jutils.IconConstants;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;

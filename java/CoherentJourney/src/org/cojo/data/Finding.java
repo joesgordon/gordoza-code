@@ -1,7 +1,7 @@
-package org.cc.data;
+package org.cojo.data;
 
-import org.cc.model.IFinding;
-import org.cc.model.IUser;
+import org.cojo.model.IFinding;
+import org.cojo.model.IUser;
 
 public class Finding implements IFinding
 {

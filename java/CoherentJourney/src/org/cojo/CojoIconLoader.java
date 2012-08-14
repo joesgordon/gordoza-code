@@ -1,25 +1,25 @@
-package org.cc;
+package org.cojo;
 
 import org.jutils.IconLoader;
 
-public class CcIconLoader extends IconLoader
+public class CojoIconLoader extends IconLoader
 {
     public static final String PRINT_16 = "printer16.png";
     public static final String HELP_16 = "help16.png";
     public static final String SWITCH_16 = "switch16.png";
 
-    private static CcIconLoader loader;
+    private static CojoIconLoader loader;
 
-    private CcIconLoader()
+    private CojoIconLoader()
     {
-        super( CcIconLoader.class, "icons" );
+        super( CojoIconLoader.class, "icons" );
     }
 
-    public static CcIconLoader getloader()
+    public static CojoIconLoader getloader()
     {
         if( loader == null )
         {
-            loader = new CcIconLoader();
+            loader = new CojoIconLoader();
         }
         return loader;
     }

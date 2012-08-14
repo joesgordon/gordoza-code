@@ -1,21 +1,19 @@
-package org.cc.ui.tableModels;
+package org.cojo.ui.tableModels;
 
 import java.util.Arrays;
 
-import org.cc.model.ISoftwareTask;
+import org.cojo.model.CrState;
+import org.cojo.model.IChangeRequest;
 import org.jutils.ui.model.ItemTableModel;
 
-public class StfTableModel extends ItemTableModel<ISoftwareTask>
+public class CrTableModel extends ItemTableModel<IChangeRequest>
 {
-    public static final String[] COLUMN_HEADING = { "#", "Title", "Lead",
-        "Est Hours", "Act Hours" };
+    public static final String[] COLUMN_HEADING = { "#", "Title", "State" };
     public static final Class<?>[] COLUMN_CLASSES = { Integer.class,
-        String.class, String.class, Integer.class, Integer.class };
+        String.class, CrState.class };
 
-    public StfTableModel()
+    public CrTableModel()
     {
-        super();
-
         setColumnNames( Arrays.asList( COLUMN_HEADING ) );
         setColumnClasses( Arrays.asList( COLUMN_CLASSES ) );
     }
@@ -23,7 +21,7 @@ public class StfTableModel extends ItemTableModel<ISoftwareTask>
     @Override
     public Object getValueAt( int row, int col )
     {
-        ISoftwareTask cr = getRow( row );
+        IChangeRequest cr = getRow( row );
 
         switch( col )
         {
@@ -32,11 +30,7 @@ public class StfTableModel extends ItemTableModel<ISoftwareTask>
             case 1:
                 return cr.getTitle();
             case 2:
-                return cr.getLead().getName();
-            case 3:
-                return cr.getEstimatedHours();
-            case 4:
-                return cr.getActualHours();
+                return cr.getState();
         }
 
         throw new IllegalArgumentException( "Unknown column: " + col );

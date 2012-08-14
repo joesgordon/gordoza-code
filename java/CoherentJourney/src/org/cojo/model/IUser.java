@@ -1,4 +1,4 @@
-package org.cc.model;
+package org.cojo.model;
 
 public interface IUser
 {

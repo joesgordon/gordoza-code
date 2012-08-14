@@ -1,12 +1,12 @@
-package org.cc.ui;
+package org.cojo.ui;
 
 import java.awt.BorderLayout;
 import java.util.List;
 
 import javax.swing.*;
 
-import org.cc.model.IChangeRequest;
-import org.cc.ui.tableModels.CrTableModel;
+import org.cojo.model.IChangeRequest;
+import org.cojo.ui.tableModels.CrTableModel;
 import org.jutils.IconConstants;
 
 /***************************************************************************
