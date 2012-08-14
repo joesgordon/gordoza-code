@@ -1,8 +1,8 @@
-package org.cc.data;
+package org.cojo.data;
 
 import java.util.List;
 
-import org.cc.model.*;
+import org.cojo.model.*;
 
 /*******************************************************************************
  * 

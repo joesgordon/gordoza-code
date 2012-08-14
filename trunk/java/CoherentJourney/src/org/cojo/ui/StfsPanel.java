@@ -1,4 +1,4 @@
-package org.cc.ui;
+package org.cojo.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Frame;
@@ -7,9 +7,9 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.*;
 
-import org.cc.model.IChangeRequest;
-import org.cc.model.ISoftwareTask;
-import org.cc.ui.tableModels.StfTableModel;
+import org.cojo.model.IChangeRequest;
+import org.cojo.model.ISoftwareTask;
+import org.cojo.ui.tableModels.StfTableModel;
 import org.jutils.IconConstants;
 import org.jutils.Utils;
 

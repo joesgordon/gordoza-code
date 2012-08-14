@@ -1,9 +1,9 @@
-package org.cc.ui.tableModels;
+package org.cojo.ui.tableModels;
 
 import java.util.Arrays;
 import java.util.Date;
 
-import org.cc.model.IFinding;
+import org.cojo.model.IFinding;
 import org.jutils.ui.model.ItemTableModel;
 
 public class FindingTableModel extends ItemTableModel<IFinding>

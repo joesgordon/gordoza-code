@@ -1,4 +1,4 @@
-package org.cc.ui;
+package org.cojo.ui;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;

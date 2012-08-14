@@ -1,11 +1,11 @@
-package org.cc.ui;
+package org.cojo.ui;
 
 import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
-import org.cc.model.IChangeRequest;
+import org.cojo.model.IChangeRequest;
 import org.jutils.IconConstants;
 
 public class NotesPanel extends JPanel

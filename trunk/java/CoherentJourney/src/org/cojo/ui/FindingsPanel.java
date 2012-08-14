@@ -1,4 +1,4 @@
-package org.cc.ui;
+package org.cojo.ui;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -7,8 +7,8 @@ import java.util.List;
 
 import javax.swing.*;
 
-import org.cc.model.IFinding;
-import org.cc.ui.tableModels.FindingTableModel;
+import org.cojo.model.IFinding;
+import org.cojo.ui.tableModels.FindingTableModel;
 import org.jutils.IconConstants;
 import org.jutils.Utils;
 

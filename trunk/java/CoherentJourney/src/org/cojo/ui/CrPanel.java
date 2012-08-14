@@ -1,11 +1,11 @@
-package org.cc.ui;
+package org.cojo.ui;
 
 import java.awt.*;
 
 import javax.swing.*;
 
-import org.cc.CcIconLoader;
-import org.cc.model.IChangeRequest;
+import org.cojo.CojoIconLoader;
+import org.cojo.model.IChangeRequest;
 import org.jutils.IconConstants;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
@@ -71,18 +71,18 @@ public class CrPanel extends JPanel
         saveButton.setToolTipText( "Save CR" );
         saveButton.setFocusable( false );
 
-        printButton.setIcon( CcIconLoader.getloader().getIcon(
-            CcIconLoader.PRINT_16 ) );
+        printButton.setIcon( CojoIconLoader.getloader().getIcon(
+            CojoIconLoader.PRINT_16 ) );
         printButton.setToolTipText( "Print CR" );
         printButton.setFocusable( false );
 
-        stateButton.setIcon( CcIconLoader.getloader().getIcon(
-            CcIconLoader.SWITCH_16 ) );
+        stateButton.setIcon( CojoIconLoader.getloader().getIcon(
+            CojoIconLoader.SWITCH_16 ) );
         stateButton.setToolTipText( "Change State" );
         stateButton.setFocusable( false );
 
-        helpButton.setIcon( CcIconLoader.getloader().getIcon(
-            CcIconLoader.HELP_16 ) );
+        helpButton.setIcon( CojoIconLoader.getloader().getIcon(
+            CojoIconLoader.HELP_16 ) );
         helpButton.setToolTipText( "Get help" );
         helpButton.setFocusable( false );
 

@@ -1,6 +1,6 @@
-package org.cc.data;
+package org.cojo.data;
 
-import org.cc.model.IUser;
+import org.cojo.model.IUser;
 
 public class User implements IUser
 {

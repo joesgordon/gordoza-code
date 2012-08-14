@@ -1,4 +1,4 @@
-package org.cc.ui;
+package org.cojo.ui;
 
 import java.awt.*;
 import java.util.Date;
@@ -6,7 +6,7 @@ import java.util.Date;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
-import org.cc.model.IFinding;
+import org.cojo.model.IFinding;
 
 /**
  * 
