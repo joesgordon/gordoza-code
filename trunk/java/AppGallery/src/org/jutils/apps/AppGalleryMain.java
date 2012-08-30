@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import org.jutils.IconConstants;
+import org.jutils.ui.ExitListener;
 import org.jutils.ui.FrameRunner;
 
 /*******************************************************************************
@@ -46,7 +47,7 @@ public class AppGalleryMain extends FrameRunner
         menu.addSeparator();
         menu.add( exitItem );
 
-        exitItem.addActionListener( frame.new ExitListener() );
+        exitItem.addActionListener( new ExitListener( frame ) );
 
         return menu;
     }

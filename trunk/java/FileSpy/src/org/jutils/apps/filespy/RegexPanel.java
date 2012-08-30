@@ -9,7 +9,6 @@ import javax.swing.*;
 
 import org.jutils.Utils;
 import org.jutils.ui.SearchableTextArea;
-import org.jutils.ui.UFrame;
 
 import com.jgoodies.forms.builder.ButtonStackBuilder;
 import com.jgoodies.looks.Options;
@@ -321,7 +320,7 @@ public class RegexPanel extends JPanel
                 {
                     exception.printStackTrace();
                 }
-                JFrame frame = new UFrame();
+                JFrame frame = new JFrame();
                 frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
                 frame.setTitle( "Regex Friend" );
                 frame.setContentPane( new RegexPanel() );

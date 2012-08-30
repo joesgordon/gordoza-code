@@ -1,28 +1,22 @@
 package org.jutils.apps;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 import org.jutils.IconConstants;
 import org.jutils.apps.filespy.FileSpyMain;
 import org.jutils.apps.jexplorer.JExplorerMain;
 import org.jutils.apps.jhex.JHexMain;
 import org.jutils.ui.FrameRunner;
-import org.jutils.ui.UFrame;
 
 /*******************************************************************************
  * This class defines the frame that will display the main applications
  * contained in JUtils.
  ******************************************************************************/
-public class AppGalleryFrame extends UFrame
+public class AppGalleryFrame extends JFrame
 {
     /***************************************************************************
      * Creates a new AppGallery frame.

@@ -13,7 +13,7 @@ import org.jutils.ui.*;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class CojoFrame extends UFrame
+public class CojoFrame extends JFrame
 {
     private CrsPanel crsPanel;
     private CrPanel crPanel;
@@ -115,7 +115,7 @@ public class CojoFrame extends UFrame
         JMenuItem exitMenuItem = new JMenuItem( "Exit",
             IconConstants.getIcon( IconConstants.CLOSE_16 ) );
 
-        exitMenuItem.addActionListener( new ExitListener() );
+        exitMenuItem.addActionListener( new ExitListener( this ) );
 
         fileMenu.add( exitMenuItem );
 

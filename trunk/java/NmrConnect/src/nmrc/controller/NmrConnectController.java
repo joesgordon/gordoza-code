@@ -92,9 +92,10 @@ public class NmrConnectController
         try
         {
             FileReader reader = new FileReader( file );
+            LineNumberReader lnReader = new LineNumberReader( reader );
             PeakFileReader pfReader = new PeakFileReader( reader );
 
-            peakFile = pfReader.read();
+            peakFile = pfReader.read( lnReader );
             reader.close();
         }
         catch( IOException ex )
@@ -117,9 +118,10 @@ public class NmrConnectController
         {
             InputStream stream = shiftxUrl.openStream();
             InputStreamReader reader = new InputStreamReader( stream );
+            LineNumberReader lnReader = new LineNumberReader( reader );
             ShiftxFileReader shiftxReader = new ShiftxFileReader( reader );
 
-            records = shiftxReader.read();
+            records = shiftxReader.read( lnReader );
             stream.close();
 
         }

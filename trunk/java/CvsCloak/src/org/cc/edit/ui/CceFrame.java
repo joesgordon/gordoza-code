@@ -28,7 +28,7 @@ import org.jutils.ui.event.ItemActionListener;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class CceFrame extends UFrame
+public class CceFrame extends JFrame
 {
     /**  */
     private JTree tree;
@@ -82,7 +82,7 @@ public class CceFrame extends UFrame
 
         openMenuItem.addActionListener( new OpenListener() );
         saveMenuItem.addActionListener( new SaveListener() );
-        exitMenuItem.addActionListener( new ExitListener() );
+        exitMenuItem.addActionListener( new ExitListener( this ) );
 
         fileMenu.add( openMenuItem );
         fileMenu.add( saveMenuItem );

@@ -1,6 +1,7 @@
 package nmrc.io;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.LineNumberReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,10 +14,8 @@ import org.jutils.io.IReader;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class PeakReader implements IReader<IPeakRecord>
+public class PeakReader implements IReader<IPeakRecord, LineNumberReader>
 {
-    /**  */
-    private LineNumberReader reader;
     /**  */
     private EmptyDoubleParser doubleParser;
     /**  */
@@ -25,9 +24,8 @@ public class PeakReader implements IReader<IPeakRecord>
     /***************************************************************************
      * @param reader
      **************************************************************************/
-    public PeakReader( Reader reader )
+    public PeakReader()
     {
-        this.reader = new LineNumberReader( reader );
         doubleParser = new EmptyDoubleParser();
         index = 0;
     }
@@ -36,16 +34,7 @@ public class PeakReader implements IReader<IPeakRecord>
      * 
      **************************************************************************/
     @Override
-    public Reader getStream()
-    {
-        return reader;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public IPeakRecord read() throws IOException
+    public IPeakRecord read( LineNumberReader reader ) throws IOException
     {
         PeakRecord peak = null;
         String line = reader.readLine();

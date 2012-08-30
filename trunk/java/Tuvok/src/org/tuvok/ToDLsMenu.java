@@ -5,6 +5,8 @@ import java.awt.PopupMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import org.jutils.ui.ExitListener;
+
 /*******************************************************************************
  *
  ******************************************************************************/
@@ -33,7 +35,7 @@ public class ToDLsMenu extends PopupMenu
         loadTaskMenuItem.setLabel( "Load Task" );
 
         exitMenuItem.setLabel( "Quit" );
-        exitMenuItem.addActionListener( new ToDLsMenu_exitMenuItem_actionAdapter() );
+        exitMenuItem.addActionListener( new ExitListener( frame ) );
 
         this.add( openMenuItem );
         this.add( loadTaskMenuItem );
@@ -53,18 +55,6 @@ public class ToDLsMenu extends PopupMenu
         public void actionPerformed( ActionEvent e )
         {
             frame.setVisible( true );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private class ToDLsMenu_exitMenuItem_actionAdapter implements
-        ActionListener
-    {
-        public void actionPerformed( ActionEvent e )
-        {
-            frame.doDefaultCloseOperation();
         }
     }
 }

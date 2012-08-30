@@ -21,7 +21,7 @@ import org.jutils.ui.event.ItemActionListener;
 /*******************************************************************************
  *
  ******************************************************************************/
-public class NmrConnectFrame extends UFrame
+public class NmrConnectFrame extends JFrame
 {
     // -------------------------------------------------------------------------
     // Widgets.
@@ -118,7 +118,7 @@ public class NmrConnectFrame extends UFrame
         JMenuItem exitMenuItem = new JMenuItem( "Exit",
             IconConstants.getIcon( IconConstants.CLOSE_16 ) );
 
-        exitMenuItem.addActionListener( new ExitListener() );
+        exitMenuItem.addActionListener( new ExitListener( this ) );
 
         fileMenu.add( exitMenuItem );
 

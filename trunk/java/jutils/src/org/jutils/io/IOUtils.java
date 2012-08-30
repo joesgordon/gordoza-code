@@ -59,13 +59,41 @@ public final class IOUtils
         return f;
     }
 
+    /***************************************************************************
+     * @param filename
+     * @return
+     **************************************************************************/
     public static File getUsersFile( String filename )
     {
         return new File( USERS_DIR, filename );
     }
 
+    /***************************************************************************
+     * @param filename
+     * @return
+     **************************************************************************/
     public static File getInstallFile( String filename )
     {
         return new File( INSTALL_DIR, filename );
     }
+
+    /***************************************************************************
+     * @param file
+     * @return
+     **************************************************************************/
+    public static File removeExtension( File file )
+    {
+        String filename = file.getName();
+        File parent = file.getAbsoluteFile().getParentFile();
+
+        int extensionIndex = filename.lastIndexOf( "." );
+
+        if( extensionIndex == -1 )
+        {
+            return file;
+        }
+
+        return new File( parent, filename.substring( 0, extensionIndex ) );
+    }
+
 }

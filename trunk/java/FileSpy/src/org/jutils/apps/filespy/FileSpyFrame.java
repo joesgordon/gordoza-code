@@ -21,7 +21,7 @@ import com.jgoodies.looks.Options;
 /*******************************************************************************
  *
  ******************************************************************************/
-public class FileSpyFrame extends UFrame
+public class FileSpyFrame extends JFrame
 {
     /**  */
     private FileSpyPanel spyPanel = new FileSpyPanel();
@@ -123,7 +123,7 @@ public class FileSpyFrame extends UFrame
         JMenuItem exitMenuItem = new JMenuItem();
         exitMenuItem.setText( "Exit" );
         exitMenuItem.setToolTipText( "Exits the application." );
-        exitMenuItem.addActionListener( new ExitListener() );
+        exitMenuItem.addActionListener( new ExitListener( this ) );
         exitMenuItem.setIcon( IconConstants.getIcon( IconConstants.CLOSE_16 ) );
 
         fileMenu.add( newMenuItem );
