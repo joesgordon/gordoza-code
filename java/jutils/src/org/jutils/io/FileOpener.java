@@ -10,12 +10,12 @@ import org.jutils.Utils;
 
 public class FileOpener<T>
 {
-    private ISerializer<T> serializer;
+    private ISerializer<T, InputStream, OutputStream> serializer;
     private LastDirectorySaver saver;
     private String extension;
 
-    public FileOpener( ISerializer<T> serializer, LastDirectorySaver saver,
-        String ext )
+    public FileOpener( ISerializer<T, InputStream, OutputStream> serializer,
+        LastDirectorySaver saver, String ext )
     {
         this.serializer = serializer;
         this.saver = saver;

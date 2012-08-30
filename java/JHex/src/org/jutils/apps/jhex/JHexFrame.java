@@ -19,7 +19,7 @@ import org.jutils.ui.hex.HexEditorFilePanel;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class JHexFrame extends UFrame
+public class JHexFrame extends JFrame
 {
     // ------------------------------------------------------------------------
     // Main panel widgets
@@ -105,7 +105,7 @@ public class JHexFrame extends UFrame
         saveMenuItem.addActionListener( saveListener );
         saveMenuItem.setIcon( IconConstants.getIcon( IconConstants.SAVE_16 ) );
 
-        exitMenuItem.addActionListener( new ExitListener() );
+        exitMenuItem.addActionListener( new ExitListener( this ) );
         exitMenuItem.setIcon( IconConstants.getIcon( IconConstants.CLOSE_16 ) );
 
         fileMenu.add( openMenuItem );

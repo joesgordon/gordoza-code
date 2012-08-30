@@ -8,25 +8,19 @@ import nmrc.model.IShiftxRecord;
 
 import org.jutils.io.IReader;
 
-public class ShiftxFileReader implements IReader<List<IShiftxRecord>>
+public class ShiftxFileReader implements
+    IReader<List<IShiftxRecord>, LineNumberReader>
 {
     private ShiftxRecordReader recordReader;
-    private BufferedReader reader;
 
     public ShiftxFileReader( Reader reader )
     {
-        this.reader = new BufferedReader( reader );
-        recordReader = new ShiftxRecordReader( this.reader );
+        recordReader = new ShiftxRecordReader();
     }
 
     @Override
-    public Reader getStream()
-    {
-        return reader;
-    }
-
-    @Override
-    public List<IShiftxRecord> read() throws IOException
+    public List<IShiftxRecord> read( LineNumberReader reader )
+        throws IOException
     {
         List<IShiftxRecord> records = new ArrayList<IShiftxRecord>();
         IShiftxRecord record = null;
@@ -35,7 +29,7 @@ public class ShiftxFileReader implements IReader<List<IShiftxRecord>>
 
         // System.out.println( "Read first line: " + reader.readLine() );
 
-        while( ( record = recordReader.read() ) != null )
+        while( ( record = recordReader.read( reader ) ) != null )
         {
             records.add( record );
         }

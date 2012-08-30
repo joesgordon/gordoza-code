@@ -10,25 +10,17 @@ import nmrc.model.IPeakRecord;
 
 import org.jutils.io.IReader;
 
-public class PeakFileReader implements IReader<IPeakFile>
+public class PeakFileReader implements IReader<IPeakFile, LineNumberReader>
 {
     private PeakReader peakReader;
-    private BufferedReader reader;
 
     public PeakFileReader( Reader reader )
     {
-        this.reader = new BufferedReader( reader );
-        peakReader = new PeakReader( this.reader );
+        peakReader = new PeakReader();
     }
 
     @Override
-    public Reader getStream()
-    {
-        return peakReader.getStream();
-    }
-
-    @Override
-    public IPeakFile read() throws IOException
+    public IPeakFile read( LineNumberReader reader ) throws IOException
     {
         String line = reader.readLine();
         PeakFile peakFile = null;
@@ -46,7 +38,7 @@ public class PeakFileReader implements IReader<IPeakFile>
                 i++;
             }
 
-            while( ( peak = peakReader.read() ) != null )
+            while( ( peak = peakReader.read( reader ) ) != null )
             {
                 peaks.add( peak );
             }

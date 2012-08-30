@@ -1,6 +1,7 @@
 package nmrc.io;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import nmrc.model.IAminoAcid;
@@ -11,36 +12,23 @@ import org.jutils.io.IWriter;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class AminoAcidsCsvWriter implements IWriter<List<IAminoAcid>>
+public class AminoAcidsCsvWriter implements
+    IWriter<List<IAminoAcid>, PrintWriter>
 {
-    /**  */
-    private Writer writer;
-    /**  */
-    private PrintWriter outStream;
 
     /***************************************************************************
      * @param writer
      **************************************************************************/
-    public AminoAcidsCsvWriter( Writer writer )
+    public AminoAcidsCsvWriter()
     {
-        this.writer = writer;
-        outStream = new PrintWriter( writer );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public Writer getStream()
-    {
-        return writer;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void write( List<IAminoAcid> aas ) throws IOException
+    public void write( List<IAminoAcid> aas, PrintWriter outStream )
+        throws IOException
     {
         outStream.print( "AA #" );
         outStream.print( "," );
@@ -67,27 +55,27 @@ public class AminoAcidsCsvWriter implements IWriter<List<IAminoAcid>>
         {
             IPeak peak = aa.getPeak();
 
-            writeValue( aa.getShiftX().getAminoAcidNumber() );
+            writeValue( aa.getShiftX().getAminoAcidNumber(), outStream );
             outStream.print( "," );
 
-            writeValue( aa.getShiftX().getAminoAcidName() );
+            writeValue( aa.getShiftX().getAminoAcidName(), outStream );
             outStream.print( "," );
 
             if( peak != null )
             {
-                writeValue( peak.getRecord().getPeakName() );
+                writeValue( peak.getRecord().getPeakName(), outStream );
                 outStream.print( "," );
 
-                writeValue( peak.getAlpha() );
+                writeValue( peak.getAlpha(), outStream );
                 outStream.print( "," );
 
-                writeValue( peak.getBeta() );
+                writeValue( peak.getBeta(), outStream );
                 outStream.print( "," );
 
-                writeValue( peak.getPreviousAlpha() );
+                writeValue( peak.getPreviousAlpha(), outStream );
                 outStream.print( "," );
 
-                writeValue( peak.getPreviousBeta() );
+                writeValue( peak.getPreviousBeta(), outStream );
             }
             else
             {
@@ -106,7 +94,7 @@ public class AminoAcidsCsvWriter implements IWriter<List<IAminoAcid>>
     /***************************************************************************
      * @param value
      **************************************************************************/
-    private void writeValue( Object value )
+    private void writeValue( Object value, PrintWriter outStream )
     {
         String str = "";
 

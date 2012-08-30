@@ -14,7 +14,7 @@ import org.jutils.ui.*;
 /*******************************************************************************
  *
  ******************************************************************************/
-public class ToDLsFrame extends UFrame
+public class ToDLsFrame extends JFrame
 {
     /***************************************************************************
      *
@@ -122,7 +122,7 @@ public class ToDLsFrame extends UFrame
 
         JMenuItem exitMenuItem = new JMenuItem( "Exit" );
         exitMenuItem.setIcon( IconConstants.getIcon( IconConstants.CLOSE_16 ) );
-        exitMenuItem.addActionListener( new ExitListener() );
+        exitMenuItem.addActionListener( new ExitListener( this ) );
 
         fileMenu.add( newMenuItem );
         fileMenu.add( openMenuItem );

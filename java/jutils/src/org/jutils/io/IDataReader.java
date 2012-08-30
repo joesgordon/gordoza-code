@@ -2,7 +2,7 @@ package org.jutils.io;
 
 import java.io.IOException;
 
-public interface IDataReader<T>
+public interface IDataReader<T> extends IReader<T, IDataStream>
 {
     /***************************************************************************
      * @param stream

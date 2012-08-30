@@ -1,23 +1,10 @@
 package org.jutils.io;
 
-import java.io.*;
 
 /*******************************************************************************
  * @param <T>
  ******************************************************************************/
-public interface ISerializer<T>
+public interface ISerializer<T, IN, OUT> extends IReader<T, IN>,
+    IWriter<T, OUT>
 {
-    /***************************************************************************
-     * @param stream
-     * @return
-     * @throws IOException
-     **************************************************************************/
-    public T read( InputStream stream ) throws IOException;
-
-    /***************************************************************************
-     * @param t
-     * @param stream
-     * @throws IOException
-     **************************************************************************/
-    public void write( T item, OutputStream stream ) throws IOException;
 }

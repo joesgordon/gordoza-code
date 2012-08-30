@@ -1,22 +1,16 @@
 package org.jutils.io;
 
 import java.io.IOException;
-import java.io.Writer;
 
 /*******************************************************************************
  * @param <T>
  ******************************************************************************/
-public interface IWriter<T>
+public interface IWriter<T, R>
 {
     /***************************************************************************
      * @param item
      * @return
      * @throws IOException
      **************************************************************************/
-    public void write( T item ) throws IOException;
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public Writer getStream();
+    public void write( T item, R resource ) throws IOException;
 }

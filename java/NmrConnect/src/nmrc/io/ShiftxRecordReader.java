@@ -1,6 +1,7 @@
 package nmrc.io;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.LineNumberReader;
 
 import nmrc.data.ShiftxRecord;
 import nmrc.model.IShiftxRecord;
@@ -11,19 +12,17 @@ import org.jutils.io.IReader;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ShiftxRecordReader implements IReader<IShiftxRecord>
+public class ShiftxRecordReader implements
+    IReader<IShiftxRecord, LineNumberReader>
 {
-    /**  */
-    private LineNumberReader reader;
     /**  */
     private EmptyDoubleParser doubleParser;
 
     /***************************************************************************
      * @param reader
      **************************************************************************/
-    public ShiftxRecordReader( Reader reader )
+    public ShiftxRecordReader()
     {
-        this.reader = new LineNumberReader( reader );
         doubleParser = new EmptyDoubleParser();
     }
 
@@ -31,16 +30,7 @@ public class ShiftxRecordReader implements IReader<IShiftxRecord>
      * 
      **************************************************************************/
     @Override
-    public Reader getStream()
-    {
-        return reader;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public IShiftxRecord read() throws IOException
+    public IShiftxRecord read( LineNumberReader reader ) throws IOException
     {
         IShiftxRecord record = null;
         String line = reader.readLine();

@@ -88,7 +88,7 @@ public class UCheckBox extends JCheckBox
                     exception.printStackTrace();
                 }
                 JPanel panel = new JPanel();
-                UFrame frame = new UFrame();
+                JFrame frame = new JFrame();
                 UCheckBox plainCb = new UCheckBox( "Plain" );
                 UCheckBox disabledCb = new UCheckBox( "Disabled" );
 

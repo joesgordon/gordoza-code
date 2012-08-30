@@ -8,7 +8,6 @@ import javax.swing.*;
 
 import org.jutils.IconConstants;
 import org.jutils.ui.StatusBarPanel;
-import org.jutils.ui.UFrame;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
 
@@ -19,7 +18,7 @@ import chatterbox.view.IConversationView;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ChatFrame extends UFrame implements IChatView
+public class ChatFrame extends JFrame implements IChatView
 {
     private ConversationPanel conversationPanel;
 

@@ -16,11 +16,13 @@ import org.jutils.io.FileComparator;
 import org.jutils.ui.*;
 import org.jutils.ui.explorer.*;
 
+// TODO Remove inheitance from JFrame.
+
 /*******************************************************************************
  * Frame that displays the contents of the filesystem in a explorer like
  * interface.
  ******************************************************************************/
-public class JExplorerFrame extends UFrame
+public class JExplorerFrame extends JFrame
 {
     /**  */
     private static final String FORWARD_TIP = "You must go back before going forward";
@@ -157,7 +159,7 @@ public class JExplorerFrame extends UFrame
         fileMenu.setText( "File" );
 
         exitMenuItem.setText( "Exit" );
-        exitMenuItem.addActionListener( new ExitListener() );
+        exitMenuItem.addActionListener( new ExitListener( this ) );
         exitMenuItem.setIcon( IconConstants.getIcon( IconConstants.CLOSE_16 ) );
         fileMenu.add( exitMenuItem );
 
