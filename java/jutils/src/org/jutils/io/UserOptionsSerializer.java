@@ -6,22 +6,41 @@ import java.io.IOException;
 import com.thoughtworks.xstream.XStreamException;
 
 // TODO add a way for the errors to become warnings.
-/**
- * @param <T>
- */
+
+/*******************************************************************************
+ * Default serializer for user options.
+ * @param <T> The type of options to be serialized.
+ ******************************************************************************/
 public class UserOptionsSerializer<T>
 {
+    /**
+     * The class to use to create default options when the options cannot be
+     * read from file.
+     */
     private final UserOptionsCreator<T> creator;
+    /** The file from which the options will be read and written. */
     private final File file;
 
+    /** The last options read/written. */
     private T options;
 
+    /***************************************************************************
+     * Creates a serializer that will read/write options of type {@code T} to
+     * the given file, using the creator when a default set of options are
+     * required.
+     * @param creator The class to use to create default options when the
+     * options cannot be read from file.
+     * @param file The file from which the options will be read and written.
+     **************************************************************************/
     public UserOptionsSerializer( UserOptionsCreator<T> creator, File file )
     {
         this.creator = creator;
         this.file = file;
     }
 
+    /***************************************************************************
+     * Returns the last options read/written.
+     **************************************************************************/
     public T getOptions()
     {
         if( options == null )
@@ -32,6 +51,9 @@ public class UserOptionsSerializer<T>
         return options;
     }
 
+    /***************************************************************************
+     * Reads the options from file, caching the options before returns them.
+     **************************************************************************/
     public T read()
     {
         options = null;
@@ -54,6 +76,9 @@ public class UserOptionsSerializer<T>
         return options;
     }
 
+    /***************************************************************************
+     * Writes the last read/written options to file.
+     **************************************************************************/
     public void write()
     {
         if( options != null )
@@ -62,8 +87,14 @@ public class UserOptionsSerializer<T>
         }
     }
 
+    /***************************************************************************
+     * Caches the given options and writes to file.
+     * @param data
+     **************************************************************************/
     public void write( T data )
     {
+        this.options = data;
+
         try
         {
             XStreamUtils.writeObjectXStream( data, file );
@@ -76,8 +107,14 @@ public class UserOptionsSerializer<T>
         }
     }
 
+    /***************************************************************************
+     * Interface used to create a default set of options when an error results
+     * during a read from file.
+     * @param <T> The type of options to be created.
+     **************************************************************************/
     public static interface UserOptionsCreator<T>
     {
+        /** Creates a default set of options. */
         public T createDefaultOptions();
     }
 
