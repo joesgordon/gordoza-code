@@ -42,7 +42,7 @@ public class LayeredTestFrame extends JFrame
     private JPanel createPanel2()
     {
         JPanel panel = new JPanel( new BorderLayout() );
-        DirTree dirTree = new DirTree();
+        DirectoryTree dirTree = new DirectoryTree();
         JScrollPane jsp = new JScrollPane( dirTree );
         panel.setBorder( BorderFactory.createRaisedBevelBorder() );
 

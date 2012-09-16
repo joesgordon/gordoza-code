@@ -909,7 +909,7 @@ public class SearchPanel
      **************************************************************************/
     private void listener_browseButton_actionPerformed( ActionEvent e )
     {
-        FolderDialog chooser = new FolderDialog(
+        DirectoryChooser chooser = new DirectoryChooser(
             Utils.getComponentsFrame( view ), "Choose Directories",
             "Choose one or more directories in which to search:" );
         File curFile = new File( searchInComboBox.getSelectedItem().toString() );

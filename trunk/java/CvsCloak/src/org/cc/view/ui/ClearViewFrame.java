@@ -211,7 +211,8 @@ public class ClearViewFrame extends JFrame
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            FolderDialog chooser = new FolderDialog( ClearViewFrame.this );
+            DirectoryChooser chooser = new DirectoryChooser(
+                ClearViewFrame.this );
             chooser.setVisible( true );
             File[] files = chooser.getSelected();
 
