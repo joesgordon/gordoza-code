@@ -17,19 +17,19 @@ import com.jgoodies.looks.Options;
 /*******************************************************************************
  *
  ******************************************************************************/
-public class FolderDialog
+public class DirectoryChooser
 {
     /**  */
     private final JDialog dialog;
     /**  */
-    private final DirTree tree;
+    private final DirectoryTree tree;
     /**  */
     private final JLabel messageLabel;
 
     /***************************************************************************
      * @param owner
      **************************************************************************/
-    public FolderDialog( Frame owner )
+    public DirectoryChooser( Frame owner )
     {
         this( owner, "Choose Directory" );
     }
@@ -38,7 +38,7 @@ public class FolderDialog
      * @param owner Frame
      * @param title String
      **************************************************************************/
-    public FolderDialog( Frame owner, String title )
+    public DirectoryChooser( Frame owner, String title )
     {
         this( owner, title, "Please choose a folder or folders:" );
     }
@@ -48,10 +48,10 @@ public class FolderDialog
      * @param title String
      * @param message String
      **************************************************************************/
-    public FolderDialog( Frame owner, String title, String message )
+    public DirectoryChooser( Frame owner, String title, String message )
     {
         this.dialog = new JDialog( owner, title, true );
-        this.tree = new DirTree();
+        this.tree = new DirectoryTree();
         this.messageLabel = new JLabel();
 
         dialog.setDefaultCloseOperation( JDialog.DISPOSE_ON_CLOSE );
@@ -146,7 +146,7 @@ public class FolderDialog
                     exception.printStackTrace();
                 }
 
-                FolderDialog dialog = new FolderDialog( null );
+                DirectoryChooser dialog = new DirectoryChooser( null );
 
                 dialog.setSelectedPaths( new File( IOUtils.USERS_DIR,
                     "garbage_jfdkslfjsdl" ).getAbsolutePath() );
@@ -211,9 +211,9 @@ public class FolderDialog
      **************************************************************************/
     private static class CancelListener implements ActionListener
     {
-        private final FolderDialog dialog;
+        private final DirectoryChooser dialog;
 
-        public CancelListener( FolderDialog dialog )
+        public CancelListener( DirectoryChooser dialog )
         {
             this.dialog = dialog;
         }
@@ -230,9 +230,9 @@ public class FolderDialog
      **************************************************************************/
     private static class OkListener implements ActionListener
     {
-        private final FolderDialog dialog;
+        private final DirectoryChooser dialog;
 
-        public OkListener( FolderDialog dialog )
+        public OkListener( DirectoryChooser dialog )
         {
             this.dialog = dialog;
         }

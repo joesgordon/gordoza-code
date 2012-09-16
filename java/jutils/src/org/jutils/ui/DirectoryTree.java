@@ -18,7 +18,7 @@ import org.jutils.io.UFile;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class DirTree extends JTree
+public class DirectoryTree extends JTree
 {
     /**  */
     public static final FileSystemView FILE_SYSTEM = FileSystemView.getFileSystemView();
@@ -29,7 +29,7 @@ public class DirTree extends JTree
     /***************************************************************************
      * 
      **************************************************************************/
-    public DirTree()
+    public DirectoryTree()
     {
         this( FILE_SYSTEM.getRoots() );
     }
@@ -37,7 +37,7 @@ public class DirTree extends JTree
     /***************************************************************************
      * @param rootFile File
      **************************************************************************/
-    public DirTree( File rootFile )
+    public DirectoryTree( File rootFile )
     {
         this( new File[] { rootFile } );
     }
@@ -45,7 +45,7 @@ public class DirTree extends JTree
     /***************************************************************************
      * @param rootFiles File[]
      **************************************************************************/
-    public DirTree( File[] rootFiles )
+    public DirectoryTree( File[] rootFiles )
     {
         super( new DefaultMutableTreeNode() );
         root = ( DefaultMutableTreeNode )super.getModel().getRoot();
@@ -368,7 +368,7 @@ class FolderNode extends DefaultMutableTreeNode
     {
         if( desc == null )
         {
-            desc = DirTree.FILE_SYSTEM.getSystemDisplayName( getFolder() );
+            desc = DirectoryTree.FILE_SYSTEM.getSystemDisplayName( getFolder() );
         }
 
         return desc;
@@ -388,7 +388,7 @@ class FolderNode extends DefaultMutableTreeNode
     {
         if( icon == null )
         {
-            icon = DirTree.FILE_SYSTEM.getSystemIcon( getFolder() );
+            icon = DirectoryTree.FILE_SYSTEM.getSystemIcon( getFolder() );
         }
         return icon;
     }

@@ -17,7 +17,7 @@ import org.cc.edit.ui.InfoPanel;
 import org.cc.edit.ui.panels.*;
 import org.jutils.IconConstants;
 import org.jutils.Utils;
-import org.jutils.ui.FolderDialog;
+import org.jutils.ui.DirectoryChooser;
 import org.jutils.ui.event.*;
 
 /*******************************************************************************
@@ -165,7 +165,7 @@ public class RepositoryPanel extends InfoPanel<Repository>
         public void actionPerformed( ActionEvent e )
         {
             Frame frame = Utils.getComponentsFrame( RepositoryPanel.this );
-            FolderDialog fd = new FolderDialog( frame );
+            DirectoryChooser fd = new DirectoryChooser( frame );
             fd.setSelectedPaths( locationField.getText() );
             fd.setVisible( true );
 

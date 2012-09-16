@@ -91,7 +91,7 @@ public class JExplorerFrame extends JFrame
     private JPanel mainPanel = new JPanel();
 
     /** The file tree displaying the directories in the given file system. */
-    private DirTree dirTree = new DirTree();
+    private DirectoryTree dirTree = new DirectoryTree();
 
     /** The scroll pane for the file tree. */
     private JScrollPane treeScrollPane = new JScrollPane( dirTree );

@@ -159,7 +159,7 @@ public class DuakFrame extends JFrame
         public void actionPerformed( ActionEvent e )
         {
             JFrame frame = DuakFrame.this;
-            FolderDialog fd = new FolderDialog( frame );
+            DirectoryChooser fd = new DirectoryChooser( frame );
             fd.setSelected( new File[] { new File( "/Files/JosephsFiles/" ) } );
             fd.setVisible( true );
 

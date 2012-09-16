@@ -14,7 +14,7 @@ import org.cc.edit.ui.InfoPanel;
 import org.cc.edit.ui.panels.ListInfoPanel;
 import org.cc.edit.ui.panels.NullableLockInfoPanel;
 import org.jutils.Utils;
-import org.jutils.ui.FolderDialog;
+import org.jutils.ui.DirectoryChooser;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.updater.ComboBoxUpdater;
 import org.jutils.ui.event.updater.IDataUpdater;
@@ -124,7 +124,7 @@ public class AppModelPanel extends InfoPanel<VersioningSystem>
         public void actionPerformed( ActionEvent event )
         {
             Frame f = Utils.getComponentsFrame( reposPanel );
-            FolderDialog d = new FolderDialog( f );
+            DirectoryChooser d = new DirectoryChooser( f );
 
             if( reposPanel.getData().size() > 1 )
             {

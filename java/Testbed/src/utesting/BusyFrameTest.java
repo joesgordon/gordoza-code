@@ -19,7 +19,7 @@ import org.jutils.ui.*;
 public class BusyFrameTest extends BusyFrame
 {
     /**  */
-    private DirTree tree = new DirTree();
+    private DirectoryTree tree = new DirectoryTree();
     /**  */
     private JScrollPane treeScrollPane = new JScrollPane( tree );
     /**  */
@@ -106,8 +106,9 @@ public class BusyFrameTest extends BusyFrame
      **************************************************************************/
     public void dirButton_actionPerformed( ActionEvent e )
     {
-        FolderDialog fd = new FolderDialog( Utils.getComponentsFrame( this ),
-            "Choose Dir(s)", "Select 1 or more directories:" );
+        DirectoryChooser fd = new DirectoryChooser(
+            Utils.getComponentsFrame( this ), "Choose Dir(s)",
+            "Select 1 or more directories:" );
         fd.setVisible( true );
 
         textArea.setText( fd.getSelectedPaths() );
