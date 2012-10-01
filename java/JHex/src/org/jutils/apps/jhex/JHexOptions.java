@@ -74,7 +74,11 @@ public class JHexOptions extends XObject
         }
         else
         {
-            System.out.println( FILENAME.getAbsolutePath() + " is not a file!" );
+            if( FILENAME.exists() )
+            {
+                System.out.println( FILENAME.getAbsolutePath() +
+                    " is not a file!" );
+            }
             options = new JHexOptions();
         }
 

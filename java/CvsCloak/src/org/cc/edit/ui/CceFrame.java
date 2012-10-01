@@ -43,7 +43,7 @@ public class CceFrame extends JFrame
     /**  */
     private ItemPanel<String> redoPopup;
     /**  */
-    private UndoManager manager;
+    private final UndoManager manager;
     /**  */
     private VersioningSystem model;
 

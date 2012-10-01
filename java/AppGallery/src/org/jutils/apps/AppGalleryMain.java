@@ -1,6 +1,8 @@
 package org.jutils.apps;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -15,6 +17,19 @@ import org.jutils.ui.FrameRunner;
  ******************************************************************************/
 public class AppGalleryMain extends FrameRunner
 {
+    private final List<ILibraryApp> apps;
+
+    private AppGalleryMain()
+    {
+        apps = new ArrayList<ILibraryApp>();
+
+        apps.add( new FileSpyApp() );
+        apps.add( new JHexApp() );
+        apps.add( new JExplorerApp() );
+        apps.add( new BudgeyApp() );
+        apps.add( new DuakApp() );
+    }
+
     /***************************************************************************
      * Create the AppGalley frame.
      * @return
@@ -22,32 +37,40 @@ public class AppGalleryMain extends FrameRunner
     @Override
     protected JFrame createFrame()
     {
-        AppGalleryFrame appFrame = new AppGalleryFrame();
+        JFrame frame = new JFrame();
+        AppGalleryFrame appFrame = new AppGalleryFrame( apps );
 
         Image img = IconConstants.getImage( IconConstants.LAUNCH_16 );
 
-        createTrayIcon( img, "Tuvok", appFrame, createPopupMenu( appFrame ) );
+        frame.setContentPane( appFrame.getView() );
+        frame.setTitle( "JUtils Application Gallery" );
+        frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 
-        appFrame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        createTrayIcon( img, "App Gallery", frame, createPopupMenu( frame ) );
 
-        return appFrame;
+        return frame;
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    private PopupMenu createPopupMenu( AppGalleryFrame frame )
+    private PopupMenu createPopupMenu( JFrame frame )
     {
         PopupMenu menu = new PopupMenu();
+        MenuItem menuItem;
 
-        MenuItem filespyItem = new MenuItem( "FileSpy" );
-        MenuItem exitItem = new MenuItem( "Exit" );
+        for( ILibraryApp app : apps )
+        {
+            menuItem = new MenuItem( app.getName() );
+            menuItem.addActionListener( new AppButtonListener( app ) );
+            menu.add( menuItem );
+        }
 
-        menu.add( filespyItem );
         menu.addSeparator();
-        menu.add( exitItem );
 
-        exitItem.addActionListener( new ExitListener( frame ) );
+        menuItem = new MenuItem( "Exit" );
+        menuItem.addActionListener( new ExitListener( frame ) );
+        menu.add( menuItem );
 
         return menu;
     }

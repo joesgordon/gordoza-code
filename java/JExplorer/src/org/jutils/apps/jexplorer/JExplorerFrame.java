@@ -16,10 +16,10 @@ import org.jutils.io.FileComparator;
 import org.jutils.ui.*;
 import org.jutils.ui.explorer.*;
 
-// TODO Remove inheitance from JFrame.
+// TODO Remove inheritance from JFrame.
 
 /*******************************************************************************
- * Frame that displays the contents of the filesystem in a explorer like
+ * Frame that displays the contents of the file system in a explorer like
  * interface.
  ******************************************************************************/
 public class JExplorerFrame extends JFrame
@@ -426,35 +426,6 @@ public class JExplorerFrame extends JFrame
     }
 
     /***************************************************************************
-     * Callback listener invoked when the back button is clicked.
-     * @param e The ignored (can be null) ActionEvent that occurred.
-     **************************************************************************/
-    public void listener_backButton_actionPerformed( ActionEvent e )
-    {
-        File file = ( File )lastDirs.pollFirst();
-        if( file != null )
-        {
-            nextDirs.push( currentDirectory );
-
-            backButton.setEnabled( !lastDirs.isEmpty() );
-            nextButton.setEnabled( true );
-            nextButton.setToolTipText( currentDirectory.getAbsolutePath() );
-
-            setDirectory( file );
-
-            file = ( File )lastDirs.peekFirst();
-            if( file != null )
-            {
-                backButton.setToolTipText( file.getAbsolutePath() );
-            }
-            else
-            {
-                backButton.setToolTipText( BACKWARD_TIP );
-            }
-        }
-    }
-
-    /***************************************************************************
      * Callback listener invoked when the next button is clicked.
      * @param e The ignored (can be null) ActionEvent that occurred.
      **************************************************************************/
@@ -493,7 +464,7 @@ public class JExplorerFrame extends JFrame
     public void listener_dirTree_valueChanged( TreeSelectionEvent e )
     {
         File[] dirsSelected = dirTree.getSelected();
-        if( dirsSelected.length == 1 )
+        if( dirsSelected != null && dirsSelected.length == 1 )
         {
             File f = dirsSelected[dirsSelected.length - 1];
             setDirectory( f, false );
@@ -520,6 +491,7 @@ public class JExplorerFrame extends JFrame
      **************************************************************************/
     public void listener_refreshButton_actionPerformed( ActionEvent e )
     {
+        // TODO Refresh the view.
         ;
     }
 
@@ -537,20 +509,44 @@ public class JExplorerFrame extends JFrame
             addLastFile();
         }
     }
-}
 
-class JExplorer_backButton_actionAdapter implements ActionListener
-{
-    private JExplorerFrame adaptee;
-
-    public JExplorer_backButton_actionAdapter( JExplorerFrame adaptee )
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class JExplorer_backButton_actionAdapter implements
+        ActionListener
     {
-        this.adaptee = adaptee;
-    }
+        private JExplorerFrame adaptee;
 
-    public void actionPerformed( ActionEvent e )
-    {
-        adaptee.listener_backButton_actionPerformed( e );
+        public JExplorer_backButton_actionAdapter( JExplorerFrame adaptee )
+        {
+            this.adaptee = adaptee;
+        }
+
+        public void actionPerformed( ActionEvent e )
+        {
+            File file = ( File )adaptee.lastDirs.pollFirst();
+            if( file != null )
+            {
+                adaptee.nextDirs.push( adaptee.currentDirectory );
+
+                adaptee.backButton.setEnabled( !adaptee.lastDirs.isEmpty() );
+                adaptee.nextButton.setEnabled( true );
+                adaptee.nextButton.setToolTipText( adaptee.currentDirectory.getAbsolutePath() );
+
+                adaptee.setDirectory( file );
+
+                file = ( File )adaptee.lastDirs.peekFirst();
+                if( file != null )
+                {
+                    adaptee.backButton.setToolTipText( file.getAbsolutePath() );
+                }
+                else
+                {
+                    adaptee.backButton.setToolTipText( BACKWARD_TIP );
+                }
+            }
+        }
     }
 }
 

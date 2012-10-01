@@ -6,5 +6,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/JExplorer"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JHex"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jutils"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Duak"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Budgey"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
