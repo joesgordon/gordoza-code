@@ -26,9 +26,10 @@ public class AccountConfigPanel
     /**  */
     private final ItemActionList<String> nameListeners;
     /**  */
-    private Account account;
-    /**  */
     private final ItemView itemView;
+
+    /**  */
+    private Account account;
 
     /***************************************************************************
      * 
@@ -43,6 +44,9 @@ public class AccountConfigPanel
         itemView.setCancelVisible( false );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public Component getPanel()
     {
         return itemView.getPanel();
@@ -55,8 +59,8 @@ public class AccountConfigPanel
     {
         JPanel panel = new JPanel( new GridBagLayout() );
 
-        nameField.addValidityChanged( new NameValidityChanged() );
-        nameField.setValidator( new NameValidator() );
+        nameField.addValidityChanged( new NameValidityChanged( this ) );
+        nameField.setValidator( new NameValidator( this ) );
         nameField.setColumns( 20 );
 
         panel.add( new JLabel( "Name:" ), new GridBagConstraints( 0, 0, 1, 1,
@@ -85,6 +89,9 @@ public class AccountConfigPanel
         nameField.setText( account.getName() );
     }
 
+    /***************************************************************************
+     * @param l
+     **************************************************************************/
     public void addOkListener( ActionListener l )
     {
         itemView.addOkListener( l );
@@ -111,20 +118,37 @@ public class AccountConfigPanel
     /***************************************************************************
      * 
      **************************************************************************/
-    private class NameValidityChanged implements ValidityChangedListener
+    private static class NameValidityChanged implements ValidityChangedListener
     {
+        private final AccountConfigPanel panel;
+
+        public NameValidityChanged( AccountConfigPanel panel )
+        {
+            this.panel = panel;
+        }
+
         @Override
         public void validityChanged( boolean newValidity )
         {
-            itemView.setOkEnabled( newValidity );
+            if( panel.itemView != null )
+            {
+                panel.itemView.setOkEnabled( newValidity );
+            }
         }
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private class NameValidator implements ITextValidator
+    private static class NameValidator implements ITextValidator
     {
+        private final AccountConfigPanel panel;
+
+        public NameValidator( AccountConfigPanel panel )
+        {
+            this.panel = panel;
+        }
+
         @Override
         public void validateText( String text ) throws FormatException
         {
@@ -132,8 +156,8 @@ public class AccountConfigPanel
 
             if( valid )
             {
-                account.setName( text );
-                nameListeners.fireListeners( AccountConfigPanel.this, text );
+                panel.account.setName( text );
+                panel.nameListeners.fireListeners( panel, text );
             }
             else
             {

@@ -48,6 +48,11 @@ public final class BudgeyIconConstants
         return loader.getIcon( "check24.png" );
     }
 
+    public static Icon getWallet32Icon()
+    {
+        return loader.getIcon( "wallet32.png" );
+    }
+
     public static Icon getCancelIcon()
     {
         return loader.getIcon( "cancel24.png" );
