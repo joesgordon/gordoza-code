@@ -18,8 +18,18 @@ public class FileStream implements IStream
      **************************************************************************/
     public FileStream( File file ) throws FileNotFoundException
     {
+        this( file, false );
+    }
+
+    /***************************************************************************
+     * @param file
+     * @throws FileNotFoundException
+     **************************************************************************/
+    public FileStream( File file, boolean readOnly )
+        throws FileNotFoundException
+    {
         this.file = file;
-        this.raf = new RandomAccessFile( file, "rw" );
+        this.raf = new RandomAccessFile( file, readOnly ? "r" : "rw" );
     }
 
     /***************************************************************************

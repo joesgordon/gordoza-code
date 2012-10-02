@@ -2,48 +2,59 @@ package org.cc.cvs.cmd;
 
 import java.io.*;
 
+// TODO Make into an interface and move written functions into a class
+
 public abstract class AbstractCommand
 {
-    public abstract String getDescription();
-
-    public final void runCommand( IStatusUpdater updater ) throws IOException
+    public final int runCommand( IStatusUpdater updater ) throws IOException
     {
         String cmd = getCommand();
+        int returnValue = -1;
         Process cvsProcess = Runtime.getRuntime().exec( cmd );
 
-        InputStream in = cvsProcess.getErrorStream();
-        parseStream( in, updater );
-
-        in = cvsProcess.getInputStream();
-        parseStream( in, updater );
+        parseStreams( cvsProcess, updater );
 
         try
         {
-            int returnValue = cvsProcess.waitFor();
-            if( returnValue != 0 )
-            {
-                throw new IOException( "Command returned " + returnValue +
-                    ": " + cmd );
-            }
+            cvsProcess.waitFor();
         }
         catch( InterruptedException e )
         {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
+        return returnValue;
+    }
+
+    private void parseStreams( Process proc, IStatusUpdater updater )
+        throws IOException
+    {
+        parseStream( proc.getErrorStream(), updater );
+
+        parseStream( proc.getInputStream(), updater );
     }
 
     private void parseStream( InputStream in, IStatusUpdater updater )
         throws IOException
     {
-        BufferedReader bin = new BufferedReader( new InputStreamReader( in ) );
-
-        String line;
-        while( ( line = bin.readLine() ) != null )
+        try
         {
-            parseLine( line, updater );
+            BufferedReader bin = new BufferedReader( new InputStreamReader( in ) );
+
+            String line;
+            while( ( line = bin.readLine() ) != null )
+            {
+                parseLine( line, updater );
+            }
+        }
+        finally
+        {
+            in.close();
         }
     }
+
+    public abstract String getDescription();
 
     protected abstract String parseLine( String line, IStatusUpdater updater );
 

@@ -35,16 +35,24 @@ public class FileOpener<T>
         if( choice == JFileChooser.APPROVE_OPTION )
         {
             File file = chooser.getSelectedFile();
-            FileInputStream stream;
+            FileInputStream stream = null;
 
             try
             {
-                stream = new FileInputStream( file );
-                item = serializer.read( stream );
+                try
+                {
+                    stream = new FileInputStream( file );
+                    item = serializer.read( stream );
 
-                saver.saveLastOpenDir( file.getParentFile() );
-
-                stream.close();
+                    saver.saveLastOpenDir( file.getParentFile() );
+                }
+                finally
+                {
+                    if( stream != null )
+                    {
+                        stream.close();
+                    }
+                }
             }
             catch( IOException ex )
             {
@@ -73,7 +81,7 @@ public class FileOpener<T>
         if( choice == JFileChooser.APPROVE_OPTION )
         {
             File file = chooser.getSelectedFile();
-            FileOutputStream stream;
+            FileOutputStream stream = null;
 
             if( !file.getName().endsWith( extension ) )
             {
@@ -83,12 +91,21 @@ public class FileOpener<T>
 
             try
             {
-                stream = new FileOutputStream( file );
-                serializer.write( item, stream );
+                try
+                {
+                    stream = new FileOutputStream( file );
+                    serializer.write( item, stream );
 
-                saver.saveLastSaveDir( file.getParentFile() );
-                stream.close();
-                saved = true;
+                    saver.saveLastSaveDir( file.getParentFile() );
+                    saved = true;
+                }
+                finally
+                {
+                    if( stream != null )
+                    {
+                        stream.close();
+                    }
+                }
             }
             catch( IOException ex )
             {
