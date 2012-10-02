@@ -158,9 +158,21 @@ public class NmrConnectController
 
         try
         {
-            FileInputStream stream = new FileInputStream( file );
-            INmrData data = serializer.read( stream );
-            nmrFrame.setData( data );
+            FileInputStream stream = null;
+
+            try
+            {
+                stream = new FileInputStream( file );
+                INmrData data = serializer.read( stream );
+                nmrFrame.setData( data );
+            }
+            finally
+            {
+                if( stream != null )
+                {
+                    stream.close();
+                }
+            }
         }
         catch( IOException ex )
         {
@@ -179,8 +191,20 @@ public class NmrConnectController
 
         try
         {
-            FileOutputStream stream = new FileOutputStream( file );
-            serializer.write( nmrFrame.getData(), stream );
+            FileOutputStream stream = null;
+
+            try
+            {
+                stream = new FileOutputStream( file );
+                serializer.write( nmrFrame.getData(), stream );
+            }
+            finally
+            {
+                if( stream != null )
+                {
+                    stream.close();
+                }
+            }
         }
         catch( IOException ex )
         {
