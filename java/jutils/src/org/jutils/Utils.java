@@ -170,6 +170,22 @@ public final class Utils
      * @param comps
      * @return
      **************************************************************************/
+    public static Dimension setMaxComponentSize( Component... comps )
+    {
+        Dimension dim = getMaxComponentSize( comps );
+
+        for( Component comp : comps )
+        {
+            comp.setPreferredSize( dim );
+        }
+
+        return dim;
+    }
+
+    /***************************************************************************
+     * @param comps
+     * @return
+     **************************************************************************/
     public static Dimension getMaxComponentSize( Component... comps )
     {
         Dimension max = new Dimension( 0, 0 );

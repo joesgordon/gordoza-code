@@ -39,6 +39,22 @@ public class UserOptionsSerializer<T>
     }
 
     /***************************************************************************
+     * Creates the directories for this file if necessary and returns
+     * {@code true} if they exist as of the return of this function.
+     **************************************************************************/
+    public boolean ensureDirectoryExists()
+    {
+        File dir = file.getParentFile();
+
+        if( !dir.isDirectory() )
+        {
+            return dir.mkdirs();
+        }
+
+        return true;
+    }
+
+    /***************************************************************************
      * Returns the last options read/written.
      **************************************************************************/
     public T getOptions()

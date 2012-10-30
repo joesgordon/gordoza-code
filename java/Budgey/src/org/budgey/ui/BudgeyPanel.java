@@ -1,29 +1,16 @@
 package org.budgey.ui;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JToolBar;
+import javax.swing.*;
 
 import org.budgey.BudgeyIconConstants;
-import org.budgey.data.Account;
-import org.budgey.data.Budget;
-import org.budgey.data.Money;
-import org.budgey.data.Transaction;
+import org.budgey.data.*;
 import org.budgey.model.BalanceCalculator;
 import org.jutils.IconConstants;
-import org.jutils.ui.CardPanel;
-import org.jutils.ui.GradientPanel;
-import org.jutils.ui.ShadowBorder;
+import org.jutils.ui.*;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
 
@@ -170,8 +157,8 @@ public class BudgeyPanel extends JPanel
         mainPanel.add( createSummaryPanel(), new GridBagConstraints( 1, 1, 1,
             1, 1.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE,
             new Insets( 4, 4, 4, 4 ), 0, 0 ) );
-        mainPanel.add( sliderPanel, new GridBagConstraints( 0, 2, 2, 1, 1.0,
-            1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+        mainPanel.add( sliderPanel.getView(), new GridBagConstraints( 0, 2, 2,
+            1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
         return mainPanel;

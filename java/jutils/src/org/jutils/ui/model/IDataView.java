@@ -1,6 +1,6 @@
 package org.jutils.ui.model;
 
-public interface IDataView<T> extends IJcompView
+public interface IDataView<T> extends IComponentView
 {
     public T getData();
 

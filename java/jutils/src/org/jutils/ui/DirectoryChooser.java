@@ -8,10 +8,10 @@ import java.io.File;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 
+import org.jutils.Utils;
 import org.jutils.io.IOUtils;
 import org.jutils.io.LogUtils;
 
-import com.jgoodies.forms.builder.ButtonBarBuilder2;
 import com.jgoodies.looks.Options;
 
 /*******************************************************************************
@@ -86,7 +86,7 @@ public class DirectoryChooser
             1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets( 8, 8, 8, 8 ), 0, 0 ) );
         mainPanel.add( createButtonPanel(), new GridBagConstraints( 0, 2, 1, 1,
-            0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE,
+            0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
             new Insets( 8, 8, 8, 8 ), 0, 0 ) );
 
         return mainPanel;
@@ -97,20 +97,51 @@ public class DirectoryChooser
      **************************************************************************/
     private JPanel createButtonPanel()
     {
-        ButtonBarBuilder2 builder = new ButtonBarBuilder2();
-        JButton okButton = new JButton();
-        JButton cancelButton = new JButton();
+        JPanel panel = new JPanel( new GridBagLayout() );
+        GridBagConstraints constraints;
+        JButton newButton;
+        JButton okButton;
+        JButton cancelButton;
 
+        // ---------------------------------------------------------------------
+        //
+        // ---------------------------------------------------------------------
+        newButton = new JButton();
+        newButton.setText( "New Directory" );
+        newButton.addActionListener( new NewDirectoryListener( this ) );
+
+        constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 2, 4,
+                2, 2 ), 4, 0 );
+        panel.add( newButton, constraints );
+
+        // ---------------------------------------------------------------------
+        //
+        // ---------------------------------------------------------------------
+        okButton = new JButton();
         okButton.setText( "OK" );
         okButton.addActionListener( new OkListener( this ) );
+
+        constraints = new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
+            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 2, 2,
+                2, 2 ), 4, 0 );
+        panel.add( okButton, constraints );
+
+        // ---------------------------------------------------------------------
+        //
+        // ---------------------------------------------------------------------
+        cancelButton = new JButton();
         cancelButton.setText( "Cancel" );
         cancelButton.addActionListener( new CancelListener( this ) );
 
-        builder.addButton( okButton );
-        builder.addRelatedGap();
-        builder.addButton( cancelButton );
+        constraints = new GridBagConstraints( 2, 0, 1, 1, 0.0, 0.0,
+            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 2, 2,
+                2, 4 ), 4, 0 );
+        panel.add( cancelButton, constraints );
 
-        return builder.getPanel();
+        Utils.setMaxComponentSize( newButton, okButton, cancelButton );
+
+        return panel;
     }
 
     /***************************************************************************
@@ -211,17 +242,17 @@ public class DirectoryChooser
      **************************************************************************/
     private static class CancelListener implements ActionListener
     {
-        private final DirectoryChooser dialog;
+        private final DirectoryChooser chooser;
 
         public CancelListener( DirectoryChooser dialog )
         {
-            this.dialog = dialog;
+            this.chooser = dialog;
         }
 
         public void actionPerformed( ActionEvent e )
         {
-            dialog.tree.clearSelection();
-            dialog.dialog.dispose();
+            chooser.tree.clearSelection();
+            chooser.dialog.dispose();
         }
     }
 
@@ -230,16 +261,79 @@ public class DirectoryChooser
      **************************************************************************/
     private static class OkListener implements ActionListener
     {
-        private final DirectoryChooser dialog;
+        private final DirectoryChooser chooser;
 
         public OkListener( DirectoryChooser dialog )
         {
-            this.dialog = dialog;
+            this.chooser = dialog;
         }
 
         public void actionPerformed( ActionEvent e )
         {
-            dialog.dialog.dispose();
+            chooser.dialog.dispose();
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class NewDirectoryListener implements ActionListener
+    {
+        private final DirectoryChooser chooser;
+
+        public NewDirectoryListener( DirectoryChooser dialog )
+        {
+            this.chooser = dialog;
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            File[] selectedFiles = chooser.tree.getSelected();
+
+            if( selectedFiles != null && selectedFiles.length == 1 )
+            {
+                String name = JOptionPane.showInputDialog( chooser.dialog,
+                    "Enter the new directory name:", "New Directory Name",
+                    JOptionPane.QUESTION_MESSAGE );
+
+                if( name != null )
+                {
+                    File parentDir = selectedFiles[0];
+                    File newDir = new File( parentDir, name );
+
+                    if( !newDir.exists() )
+                    {
+                        if( !newDir.mkdir() )
+                        {
+                            JOptionPane.showMessageDialog(
+                                chooser.dialog,
+                                "Please check the permissions on the parent directory.",
+                                "Cannot Create New Directory",
+                                JOptionPane.ERROR_MESSAGE );
+                        }
+                        else
+                        {
+                            chooser.tree.refreshSelected();
+                        }
+                    }
+                    else
+                    {
+                        JOptionPane.showMessageDialog( chooser.dialog,
+                            "The directory or file, '" + name +
+                                "', already exists.",
+                            "Cannot Create New Directory",
+                            JOptionPane.ERROR_MESSAGE );
+                    }
+                }
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(
+                    chooser.dialog,
+                    "Please choose only one directory when creating a sub-directory.",
+                    "Cannot Create New Directory", JOptionPane.ERROR_MESSAGE );
+            }
         }
     }
 }

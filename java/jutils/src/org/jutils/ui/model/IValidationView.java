@@ -5,7 +5,7 @@ import java.awt.Color;
 import org.jutils.ui.UValidationTextField.ITextValidator;
 import org.jutils.ui.UValidationTextField.ValidityChangedListener;
 
-public interface IValidationView extends IJcompView
+public interface IValidationView extends IComponentView
 {
     public void addValidityChanged( ValidityChangedListener l );
 

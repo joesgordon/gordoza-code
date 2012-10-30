@@ -12,9 +12,9 @@ import javax.swing.text.DefaultFormatterFactory;
 import org.budgey.data.Money;
 import org.jutils.ui.UValidationTextField;
 import org.jutils.ui.UValidationTextField.ITextValidator;
-import org.jutils.ui.model.IJcompView;
+import org.jutils.ui.model.IComponentView;
 
-public class MoneyTextField implements IJcompView
+public class MoneyTextField implements IComponentView
 {
     private UValidationTextField field;
     private MoneyFormatter formatter;

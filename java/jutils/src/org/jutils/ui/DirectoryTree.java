@@ -25,6 +25,8 @@ public class DirectoryTree extends JTree
 
     /**  */
     private DefaultMutableTreeNode root = null;
+    /**  */
+    private DefaultTreeModel treeModel;
 
     /***************************************************************************
      * 
@@ -47,8 +49,9 @@ public class DirectoryTree extends JTree
      **************************************************************************/
     public DirectoryTree( File[] rootFiles )
     {
-        super( new DefaultMutableTreeNode() );
-        root = ( DefaultMutableTreeNode )super.getModel().getRoot();
+        super( new DefaultTreeModel( new DefaultMutableTreeNode() ) );
+        treeModel = ( DefaultTreeModel )super.getModel();
+        root = ( DefaultMutableTreeNode )treeModel.getRoot();
 
         if( rootFiles != null )
         {
@@ -268,11 +271,6 @@ public class DirectoryTree extends JTree
     {
         File[] selected = getSelected();
 
-        if( selected == null )
-        {
-            selected = new File[0];
-        }
-
         return UFile.getStringFromFiles( selected );
     }
 
@@ -314,19 +312,30 @@ public class DirectoryTree extends JTree
      **************************************************************************/
     public void refreshSelected()
     {
-        ;
+        TreePath[] paths = super.getSelectionPaths();
+
+        if( paths != null )
+        {
+            for( TreePath path : paths )
+            {
+                Object lastComp = path.getLastPathComponent();
+                FolderNode node = ( FolderNode )lastComp;
+
+                node.removeAllChildren();
+                expandFolderPath( path );
+                treeModel.reload( node );
+            }
+        }
     }
 
     /***************************************************************************
      * @param event TreeExpansionEvent
      * @throws ExpandVetoException
      **************************************************************************/
-    private void expandFolderPath( TreePath path ) throws ExpandVetoException
+    private void expandFolderPath( TreePath path )
     {
         Object lastComp = path.getLastPathComponent();
-        FolderNode node = null;
-
-        node = ( FolderNode )lastComp;
+        FolderNode node = ( FolderNode )lastComp;
 
         if( node.getChildCount() == 0 )
         {

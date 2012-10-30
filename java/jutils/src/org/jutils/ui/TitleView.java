@@ -115,4 +115,12 @@ public class TitleView implements IDataView<String>
     {
         titleField.setText( data );
     }
+
+    /***************************************************************************
+     * @param title
+     **************************************************************************/
+    public void setTitle( String title )
+    {
+        setData( title );
+    }
 }
