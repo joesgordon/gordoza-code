@@ -5,28 +5,37 @@ import java.awt.Component;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-public class CardPanel extends JPanel
+import org.jutils.ui.model.IComponentView;
+
+public class CardPanel implements IComponentView
 {
-    private Map<Component, String> stringMap;
-    private CardLayout layout;
+    private final Map<Component, String> stringMap;
+    private final JPanel panel;
+    private final CardLayout layout;
 
     public CardPanel()
     {
-        layout = new CardLayout();
-        stringMap = new HashMap<Component, String>();
+        this.layout = new CardLayout();
+        this.panel = new JPanel( layout );
+        this.stringMap = new HashMap<Component, String>();
+    }
 
-        setLayout( layout );
+    @Override
+    public JComponent getView()
+    {
+        return panel;
     }
 
     public void addCard( Component comp )
     {
-        String str = Integer.toString( getComponentCount() );
+        String str = Integer.toString( panel.getComponentCount() );
 
         stringMap.put( comp, str );
 
-        super.add( comp, str );
+        panel.add( comp, str );
     }
 
     public void showCard( Component comp )
@@ -38,46 +47,16 @@ public class CardPanel extends JPanel
             throw new IllegalArgumentException( "Card not found!" );
         }
 
-        layout.show( this, str );
+        layout.show( panel, str );
     }
 
     public void next()
     {
-        layout.next( this );
+        layout.next( panel );
     }
 
     public void last()
     {
-        layout.last( this );
-    }
-
-    @Override
-    public Component add( Component comp )
-    {
-        throw new RuntimeException();
-    }
-
-    @Override
-    public Component add( Component comp, int i )
-    {
-        throw new RuntimeException();
-    }
-
-    @Override
-    public Component add( String name, Component comp )
-    {
-        throw new RuntimeException();
-    }
-
-    @Override
-    public void add( Component comp, Object constraints )
-    {
-        throw new RuntimeException();
-    }
-
-    @Override
-    public void add( Component comp, Object constraints, int index )
-    {
-        throw new RuntimeException();
+        layout.last( panel );
     }
 }

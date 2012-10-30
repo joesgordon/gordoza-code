@@ -73,7 +73,7 @@ public class ClearViewFrame extends JFrame
         viewPanel.addCard( emptyPanel );
         viewPanel.addCard( controlsPanel );
 
-        return viewPanel;
+        return viewPanel.getView();
     }
 
     /***************************************************************************

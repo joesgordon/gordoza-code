@@ -56,15 +56,22 @@ public final class UFile
      **************************************************************************/
     public static String getStringFromFiles( File[] files )
     {
-        String paths = "";
-        for( int i = 0; i < files.length; i++ )
+        String paths = null;
+
+        if( files != null )
         {
-            if( paths.length() > 0 )
+            paths = "";
+
+            for( int i = 0; i < files.length; i++ )
             {
-                paths += File.pathSeparator;
+                if( paths.length() > 0 )
+                {
+                    paths += File.pathSeparator;
+                }
+                paths += files[i].getAbsolutePath();
             }
-            paths += files[i].getAbsolutePath();
         }
+
         return paths;
     }
 }

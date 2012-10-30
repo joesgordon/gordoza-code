@@ -5,13 +5,13 @@ import java.util.List;
 
 import javax.swing.*;
 
-import org.jutils.ui.model.IJcompView;
+import org.jutils.ui.model.IComponentView;
 
 /*******************************************************************************
  * This class defines the frame that displays the main applications contained in
  * JUtils.
  ******************************************************************************/
-public class AppGalleryFrame implements IJcompView
+public class AppGalleryFrame implements IComponentView
 {
     private final int APPLICATION_GAP = 40;
     private final int COMPONENT_GAP = 10;
