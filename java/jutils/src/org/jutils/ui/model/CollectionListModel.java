@@ -99,10 +99,22 @@ public class CollectionListModel<T> extends AbstractListModel
     /***************************************************************************
      * @param index
      **************************************************************************/
-    public void remove( int index )
+    public T remove( int index )
     {
-        items.remove( index );
+        T t = items.remove( index );
 
-        fireContentsChanged( this, index, getSize() );
+        fireIntervalRemoved( this, index, index );
+
+        return t;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public void clear()
+    {
+        items.clear();
+
+        fireIntervalRemoved( this, 0, getSize() );
     }
 }
