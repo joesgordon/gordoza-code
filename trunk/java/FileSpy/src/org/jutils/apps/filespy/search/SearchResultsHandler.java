@@ -1,20 +1,21 @@
-package org.jutils.apps.filespy;
+package org.jutils.apps.filespy.search;
 
 import java.util.List;
 
 import javax.swing.SwingUtilities;
 
 import org.jutils.apps.filespy.data.SearchRecord;
+import org.jutils.apps.filespy.ui.SearchView;
 import org.jutils.ui.StatusBarPanel;
 import org.jutils.ui.explorer.ExplorerItem;
 
 /*******************************************************************************
  *
  ******************************************************************************/
-public class SearchHandler
+public class SearchResultsHandler
 {
     /**  */
-    private final SearchPanel searchPanel;
+    private final SearchView searchPanel;
     /**  */
     private final StatusBarPanel statusBar;
 
@@ -22,7 +23,7 @@ public class SearchHandler
      * @param panel SearchPanel
      * @param statusBar
      **************************************************************************/
-    public SearchHandler( SearchPanel panel, StatusBarPanel statusBar )
+    public SearchResultsHandler( SearchView panel, StatusBarPanel statusBar )
     {
         this.searchPanel = panel;
         this.statusBar = statusBar;
@@ -33,6 +34,8 @@ public class SearchHandler
      **************************************************************************/
     public void addFile( SearchRecord record )
     {
+        // System.out.println( "Found record for file " +
+        // record.getFile().getAbsolutePath() );
         SwingUtilities.invokeLater( new UiFileAdder( searchPanel, record ) );
     }
 
@@ -52,6 +55,9 @@ public class SearchHandler
         SwingUtilities.invokeLater( new UiErrorHandler( message ) );
     }
 
+    /***************************************************************************
+     * @param message
+     **************************************************************************/
     public void updateStatus( String message )
     {
         SwingUtilities.invokeLater( new StatusUpdater( message, statusBar ) );
@@ -83,11 +89,11 @@ public class SearchHandler
      **************************************************************************/
     private static class UiFilesAdder implements Runnable
     {
-        private final SearchPanel searchPanel;
+        private final SearchView searchPanel;
 
         private final List<? extends ExplorerItem> list;
 
-        public UiFilesAdder( SearchPanel panel,
+        public UiFilesAdder( SearchView panel,
             List<? extends ExplorerItem> list )
         {
             this.searchPanel = panel;
@@ -108,11 +114,11 @@ public class SearchHandler
      **************************************************************************/
     private static class UiFileAdder implements Runnable
     {
-        private final SearchPanel searchPanel;
+        private final SearchView searchPanel;
 
         private final SearchRecord record;
 
-        public UiFileAdder( SearchPanel panel, SearchRecord record )
+        public UiFileAdder( SearchView panel, SearchRecord record )
         {
             searchPanel = panel;
             this.record = record;
@@ -127,6 +133,9 @@ public class SearchHandler
         }
     }
 
+    /***************************************************************************
+     *
+     **************************************************************************/
     private static class StatusUpdater implements Runnable
     {
         /**  */

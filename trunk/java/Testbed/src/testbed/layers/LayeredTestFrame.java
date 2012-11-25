@@ -4,7 +4,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import org.jutils.apps.filespy.RegexPanel;
+import org.jutils.apps.filespy.ui.RegexPanel;
 import org.jutils.ui.*;
 
 public class LayeredTestFrame extends JFrame

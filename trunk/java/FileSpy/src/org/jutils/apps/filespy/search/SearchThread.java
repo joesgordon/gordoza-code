@@ -1,4 +1,4 @@
-package org.jutils.apps.filespy;
+package org.jutils.apps.filespy.search;
 
 import java.io.File;
 import java.util.regex.Matcher;
@@ -15,21 +15,25 @@ import org.jutils.ui.event.IEventListener;
 public class SearchThread implements IStoppable
 {
     /**  */
-    private final SearchHandler searchHandler;
+    private final SearchResultsHandler searchHandler;
     /**  */
     private final SearchParams params;
     /**  */
     private final Pattern filenamePattern;
+    /**  */
+    private final Runnable finalizer;
 
     /***************************************************************************
      * @param handler SearchHandler
      * @param params SearchParams
      **************************************************************************/
-    public SearchThread( SearchHandler handler, SearchParams params )
+    public SearchThread( SearchResultsHandler handler, SearchParams params,
+        Runnable finalizer )
     {
         this.searchHandler = handler;
         this.params = params;
         this.filenamePattern = params.getFilenamePattern();
+        this.finalizer = finalizer;
     }
 
     /***************************************************************************
@@ -41,7 +45,7 @@ public class SearchThread implements IStoppable
         FileContentsSearcher contentsSearcher = new FileContentsSearcher(
             params.getContentsPattern(), searchHandler );
         Consumer<SearchRecord> contentsConsumer = new Consumer<SearchRecord>(
-            contentsSearcher );
+            contentsSearcher, finalizer );
         Stoppable searcher = new Stoppable( contentsConsumer );
         Thread contentsSearcherThread = new Thread( searcher );
 
@@ -65,14 +69,10 @@ public class SearchThread implements IStoppable
         contentsConsumer.stopAcceptingInput();
         contentsSearcherThread.interrupt();
 
-        try
-        {
-            searcher.stopAndWaitFor();
-        }
-        catch( InterruptedException e )
-        {
-            ;
-        }
+        /*
+         * try { searcher.stopAndWaitFor(); } catch( InterruptedException e ) {
+         * ; }
+         */
 
         searchHandler.updateStatus( "" );
 
@@ -190,6 +190,8 @@ public class SearchThread implements IStoppable
             {
                 if( file.canRead() )
                 {
+                    // System.out.println( "Found record for file " +
+                    // record.getFile().getAbsolutePath() );
                     contentsConsumer.addData( record );
                 }
                 else

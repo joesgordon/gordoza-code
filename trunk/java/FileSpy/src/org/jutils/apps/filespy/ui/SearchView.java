@@ -1,4 +1,4 @@
-package org.jutils.apps.filespy;
+package org.jutils.apps.filespy.ui;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -14,10 +14,10 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.text.*;
 
 import org.jutils.*;
+import org.jutils.apps.filespy.FileSpyMain;
 import org.jutils.apps.filespy.data.*;
+import org.jutils.apps.filespy.search.Searcher;
 import org.jutils.apps.jexplorer.JExplorerFrame;
-import org.jutils.apps.jexplorer.JExplorerMain;
-import org.jutils.concurrent.Timeable;
 import org.jutils.io.UFile;
 import org.jutils.ui.*;
 import org.jutils.ui.calendar.CalendarField;
@@ -25,11 +25,12 @@ import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.explorer.*;
 import org.jutils.ui.model.ComboBoxListModel;
+import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
  *
  ******************************************************************************/
-public class SearchPanel
+public class SearchView implements IDataView<SearchParams>
 {
     /**  */
     private final UComboBox filenameComboBox;
@@ -98,19 +99,18 @@ public class SearchPanel
     /**  */
     private final JPanel view;
     /**  */
-    private Timeable searcher = null;
+    private final StatusBarPanel statusBar;
+
     /**  */
-    private SearchThread searchTask = null;
-    /**  */
-    private Thread searchThread = null;
-    /**  */
-    private StatusBarPanel statusBar = null;
+    private Searcher searcher;
 
     /***************************************************************************
      *
      **************************************************************************/
-    public SearchPanel()
+    public SearchView( StatusBarPanel statusBar )
     {
+        this.statusBar = statusBar;
+
         view = new JPanel( new GridBagLayout() );
         filenameComboBox = new UComboBox();
         contentsCheckBox = new JCheckBox();
@@ -138,7 +138,7 @@ public class SearchPanel
         rightResultsPane = new UEditorPane();
         defStyledDocument = new DefaultStyledDocument();
         startIcon = IconConstants.getIcon( IconConstants.FIND_32 );
-        browseListener = new BrowseButtonListener();
+        browseListener = new BrowseButtonListener( this );
         startListener = new StartButtonListener();
 
         KeyListener enterListener = new StartKeyListener();
@@ -164,8 +164,7 @@ public class SearchPanel
             resultsTable.getTableHeader() );
         resultsTable.setAutoCreateRowSorter( true );
         resultsTable.setBackground( Color.white );
-        resultsTable.addMouseListener( new SearchPanel_resultsTable_mouseAdapter(
-            this ) );
+        resultsTable.addMouseListener( new OpenResultsListener( this ) );
 
         leftResultsScroll.setViewportView( resultsTable );
         leftResultsScroll.getViewport().setBackground( Color.white );
@@ -200,12 +199,13 @@ public class SearchPanel
             GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 2,
                 2, 2, 2 ), 0, 0 ) );
 
-        setSearchParams( new SearchParams() );
+        setData( new SearchParams() );
     }
 
     /***************************************************************************
-     * @return
+     * 
      **************************************************************************/
+    @Override
     public JPanel getView()
     {
         return view;
@@ -250,6 +250,9 @@ public class SearchPanel
         return optionsPanel;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private JPanel createSizePanel()
     {
         JPanel advancedPanel = new JPanel( new GridBagLayout() );
@@ -343,6 +346,9 @@ public class SearchPanel
         return advancedPanel;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private JPanel createFileOptionsPanel()
     {
         JPanel fileOptionsPanel = new JPanel( new GridBagLayout() );
@@ -450,10 +456,10 @@ public class SearchPanel
         return browsePanel;
     }
 
-    /**
+    /***************************************************************************
      * @param enterListener
      * @return
-     */
+     **************************************************************************/
     private JPanel createSearchPanel( KeyListener enterListener )
     {
         JPanel searchPanel = new JPanel( new GridBagLayout() );
@@ -510,9 +516,7 @@ public class SearchPanel
      **************************************************************************/
     public void clearPanel()
     {
-        searchTask = null;
         resultsTableModel.clearModel();
-        statusBar = null;
 
         GcThread.createAndStart();
     }
@@ -540,9 +544,10 @@ public class SearchPanel
     }
 
     /***************************************************************************
-     * @return SearchParams
+     * 
      **************************************************************************/
-    public SearchParams getSearchParams()
+    @Override
+    public SearchParams getData()
     {
         SearchParams params = new SearchParams();
         Object obj = filenameComboBox.getSelectedItem();
@@ -683,10 +688,13 @@ public class SearchPanel
     }
 
     /***************************************************************************
-     * @param params SearchParams
+     * 
      **************************************************************************/
-    public void setSearchParams( SearchParams params )
+    @Override
+    public void setData( SearchParams params )
     {
+        params = params != null ? params : new SearchParams();
+
         filenameComboBox.setSelectedItem( params.filename );
 
         setContents( params.contents );
@@ -741,19 +749,9 @@ public class SearchPanel
         resultsTableModel.addFile( record );
     }
 
-    /***************************************************************************
-     * @param e ActionEvent
-     **************************************************************************/
-    private void listener_startButton_actionPerformed( ActionEvent e )
+    private boolean checkParams( SearchParams params )
     {
-        SearchHandler handler = new SearchHandler( this, statusBar );
-        SearchParams params = getSearchParams();
         StringBuffer errBuffer = new StringBuffer();
-
-        // if( true )
-        // {
-        // throw new IllegalStateException( "Test" );
-        // }
 
         // ---------------------------------------------------------------------
         // Check the files
@@ -799,19 +797,29 @@ public class SearchPanel
         {
             JOptionPane.showMessageDialog( view, errBuffer.toString(), "ERROR",
                 JOptionPane.ERROR_MESSAGE );
+            return false;
+        }
+
+        return true;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private void listener_startButton_actionPerformed()
+    {
+        SearchParams params = getData();
+
+        if( !checkParams( params ) )
+        {
             return;
         }
 
-        statusBar.setText( "" );
-        resultsTable.clearTable();
+        searcher = new Searcher( resultsTable, this, statusBar );
 
-        searchTask = new SearchThread( handler, params );
-        searcher = new Timeable( searchTask, new FinishedListener( this ) );
-        searchThread = new Thread( searcher );
-        searchThread.start();
-        startButton.setIcon( IconConstants.getIcon( IconConstants.STOP_16 ) );
-        startButton.setText( "Stop" );
-        startButton.setActionCommand( "Stop" );
+        searcher.search( params, new FinishedListener( this ) );
+
+        setSearchStarted();
 
         FileSpyData configData = FileSpyMain.getConfigData();
         Object contents = contentsComboBox.getSelectedItem();
@@ -841,91 +849,11 @@ public class SearchPanel
     }
 
     /***************************************************************************
-     * @param e ActionEvent
+     * 
      **************************************************************************/
-    private void listener_stopButton_actionPerformed( ActionEvent e )
+    private void listener_stopButton_actionPerformed()
     {
-        // File f = new File( browseComboBox.getSelectedItem().toString() );
-        // if( f.isDirectory() )
-        // {
-        // resultsTable.clearTable();
-        // resultsTable.addFiles( f.listFiles() );
-        // }
-
-        searcher.stop();
-        searchThread.interrupt();
-
-        try
-        {
-            searcher.waitFor();
-        }
-        catch( InterruptedException ex )
-        {
-        }
-    }
-
-    JExplorerFrame explorer = null;
-
-    /***************************************************************************
-     * @param e ActionEvent
-     **************************************************************************/
-    private void openSelectedFile()
-    {
-        File file = resultsTable.getSelectedFile();
-        if( file != null )
-        {
-            if( file.isDirectory() )
-            {
-                // showFile( file );
-                if( explorer == null )
-                {
-                    JExplorerMain r = new JExplorerMain();
-                    r.run();
-                    explorer = ( JExplorerFrame )r.getFrame();
-                    explorer.setDefaultCloseOperation( JFrame.HIDE_ON_CLOSE );
-                }
-                else
-                {
-                    explorer.setVisible( true );
-                }
-            }
-            else
-            {
-                try
-                {
-                    Desktop.getDesktop().open( file );
-                }
-                catch( Exception ex )
-                {
-                    JOptionPane.showMessageDialog( view, ex.getMessage(),
-                        "ERROR", JOptionPane.ERROR_MESSAGE );
-                }
-            }
-        }
-    }
-
-    /***************************************************************************
-     * @param e ActionEvent
-     **************************************************************************/
-    private void listener_browseButton_actionPerformed( ActionEvent e )
-    {
-        DirectoryChooser chooser = new DirectoryChooser(
-            Utils.getComponentsFrame( view ), "Choose Directories",
-            "Choose one or more directories in which to search:" );
-        File curFile = new File( searchInComboBox.getSelectedItem().toString() );
-        String paths = "";
-
-        curFile = curFile.isDirectory() ? curFile : null;
-
-        chooser.setSelectedPaths( searchInComboBox.getSelectedItem().toString() );
-        chooser.setVisible( true );
-
-        paths = chooser.getSelectedPaths();
-
-        if( paths.length() > 0 )
-        {
-            searchInComboBox.setSelectedItem( paths );
-        }
+        searcher.cancel();
     }
 
     /***************************************************************************
@@ -988,22 +916,62 @@ public class SearchPanel
     }
 
     /***************************************************************************
-     * setStatusBar
-     * @param statusBar StatusBarPanel
+     * 
      **************************************************************************/
-    public void setStatusBar( StatusBarPanel statusBar )
+    private void setSearchStarted()
     {
-        this.statusBar = statusBar;
+        startButton.setIcon( IconConstants.getIcon( IconConstants.STOP_16 ) );
+        startButton.setText( "Stop" );
+        startButton.setActionCommand( "Stop" );
+    }
+
+    /***************************************************************************
+     * @param millis
+     **************************************************************************/
+    private void setSearchFinished( long millis )
+    {
+        startButton.setIcon( startIcon );
+        startButton.setText( "Start" );
+        startButton.setActionCommand( "Start" );
+
+        int rowCount = resultsTableModel.getRowCount();
+        String elapsed = Utils.getElapsedString( new Date( millis ) );
+
+        statusBar.setText( rowCount + " file(s) found in " + elapsed + "." );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private class BrowseButtonListener implements ActionListener
+    private static class BrowseButtonListener implements ActionListener
     {
+        private final SearchView panel;
+
+        public BrowseButtonListener( SearchView panel )
+        {
+            this.panel = panel;
+        }
+
         public void actionPerformed( ActionEvent e )
         {
-            listener_browseButton_actionPerformed( e );
+            DirectoryChooser chooser = new DirectoryChooser(
+                Utils.getComponentsFrame( panel.view ), "Choose Directories",
+                "Choose one or more directories in which to search:" );
+            String selectedItemStr = panel.searchInComboBox.getSelectedItem().toString();
+            File curFile = new File( selectedItemStr );
+            String paths = "";
+
+            curFile = curFile.isDirectory() ? curFile : null;
+
+            chooser.setSelectedPaths( selectedItemStr );
+            chooser.setVisible( true );
+
+            paths = chooser.getSelectedPaths();
+
+            if( paths.length() > 0 )
+            {
+                panel.searchInComboBox.setSelectedItem( paths );
+            }
         }
     }
 
@@ -1018,11 +986,11 @@ public class SearchPanel
 
             if( str.compareTo( "Start" ) == 0 )
             {
-                listener_startButton_actionPerformed( e );
+                listener_startButton_actionPerformed();
             }
             else if( str.compareTo( "Stop" ) == 0 )
             {
-                listener_stopButton_actionPerformed( e );
+                listener_stopButton_actionPerformed();
             }
         }
     }
@@ -1036,58 +1004,8 @@ public class SearchPanel
         {
             if( e.getKeyCode() == KeyEvent.VK_ENTER )
             {
-                listener_startButton_actionPerformed( null );
+                listener_startButton_actionPerformed();
             }
-        }
-    }
-
-    /***************************************************************************
-     *
-     **************************************************************************/
-    private static class FinishedListener implements ItemActionListener<Long>
-    {
-        private final SearchPanel panel;
-
-        public FinishedListener( SearchPanel panel )
-        {
-            this.panel = panel;
-        }
-
-        @Override
-        public void actionPerformed( ItemActionEvent<Long> event )
-        {
-            SwingUtilities.invokeLater( new UiFinishedHandler( panel,
-                event.getItem() ) );
-        }
-    }
-
-    /***************************************************************************
-     *
-     **************************************************************************/
-    private static class UiFinishedHandler implements Runnable
-    {
-        private final SearchPanel panel;
-        private final long millis;
-
-        public UiFinishedHandler( SearchPanel panel, long millis )
-        {
-            this.panel = panel;
-            this.millis = millis;
-        }
-
-        public void run()
-        {
-            panel.startButton.setIcon( panel.startIcon );
-            panel.startButton.setText( "Start" );
-            panel.startButton.setActionCommand( "Start" );
-
-            int rowCount = panel.resultsTableModel.getRowCount();
-            String elapsed = Utils.getElapsedString( new Date( millis ) );
-
-            panel.statusBar.setText( rowCount + " file(s) found in " + elapsed +
-                "." );
-
-            panel.searchTask = null;
         }
     }
 
@@ -1097,9 +1015,9 @@ public class SearchPanel
     private static class SearchPanel_listSelectionAdapter implements
         ListSelectionListener
     {
-        private SearchPanel adaptee;
+        private SearchView adaptee;
 
-        SearchPanel_listSelectionAdapter( SearchPanel adaptee )
+        SearchPanel_listSelectionAdapter( SearchView adaptee )
         {
             this.adaptee = adaptee;
         }
@@ -1141,22 +1059,91 @@ public class SearchPanel
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class SearchPanel_resultsTable_mouseAdapter extends
-        MouseAdapter
+    private static class OpenResultsListener extends MouseAdapter
     {
-        private SearchPanel adaptee;
+        private final SearchView panel;
+        private final JExplorerFrame explorer;
 
-        SearchPanel_resultsTable_mouseAdapter( SearchPanel adaptee )
+        public OpenResultsListener( SearchView adaptee )
         {
-            this.adaptee = adaptee;
+            this.panel = adaptee;
+            this.explorer = new JExplorerFrame();
         }
 
         public void mouseClicked( MouseEvent e )
         {
             if( e.getClickCount() == 2 && !e.isPopupTrigger() )
             {
-                adaptee.openSelectedFile();
+                File file = panel.resultsTable.getSelectedFile();
+                if( file != null )
+                {
+                    if( file.isDirectory() )
+                    {
+                        // showFile( file );
+                        if( explorer == null )
+                        {
+                            explorer.setDefaultCloseOperation( JFrame.HIDE_ON_CLOSE );
+                        }
+                        else
+                        {
+                            explorer.setVisible( true );
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            Desktop.getDesktop().open( file );
+                        }
+                        catch( Exception ex )
+                        {
+                            JOptionPane.showMessageDialog( panel.view,
+                                ex.getMessage(), "ERROR",
+                                JOptionPane.ERROR_MESSAGE );
+                        }
+                    }
+                }
+
             }
+        }
+    }
+
+    /***************************************************************************
+     *
+     **************************************************************************/
+    private static class FinishedListener implements ItemActionListener<Long>
+    {
+        private final SearchView panel;
+
+        public FinishedListener( SearchView panel )
+        {
+            this.panel = panel;
+        }
+
+        @Override
+        public void actionPerformed( ItemActionEvent<Long> event )
+        {
+            SearchFinishedHandler runnable = new SearchFinishedHandler( panel,
+                event.getItem() );
+            SwingUtilities.invokeLater( runnable );
+        }
+    }
+
+    private static class SearchFinishedHandler implements Runnable
+    {
+        private final SearchView searchPanel;
+        private final long millis;
+
+        public SearchFinishedHandler( SearchView searchPanel,
+            long durationInMillis )
+        {
+            this.searchPanel = searchPanel;
+            this.millis = durationInMillis;
+        }
+
+        public void run()
+        {
+            searchPanel.setSearchFinished( millis );
         }
     }
 }
