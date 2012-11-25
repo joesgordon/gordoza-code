@@ -1,9 +1,10 @@
-package org.jutils.apps.filespy;
+package org.jutils.apps.filespy.search;
 
 import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jutils.apps.filespy.ByteCharSequence;
 import org.jutils.apps.filespy.data.LineMatch;
 import org.jutils.apps.filespy.data.SearchRecord;
 import org.jutils.concurrent.IConsumer;
@@ -12,10 +13,10 @@ import org.jutils.concurrent.IStopper;
 public class FileContentsSearcher implements IConsumer<SearchRecord>
 {
     private final Pattern contentsPattern;
-    private final SearchHandler searchHandler;
+    private final SearchResultsHandler searchHandler;
 
     public FileContentsSearcher( Pattern contentsPattern,
-        SearchHandler searchHandler )
+        SearchResultsHandler searchHandler )
     {
         this.contentsPattern = contentsPattern;
         this.searchHandler = searchHandler;
@@ -90,6 +91,7 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
         LineNumberReader lineReader = new LineNumberReader( reader );
 
         boolean matched = false;
+        // System.out.println( "Searching file " + file.getAbsolutePath() );
         try
         {
             while( ( line = lineReader.readLine() ) != null &&
@@ -97,13 +99,13 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
             {
                 if( searchString( line, record, lineReader.getLineNumber() ) )
                 {
+                    // ---------------------------------------------------------
+                    // Do not break early because we want to find all the lines
+                    // to display to the user.
+                    // ---------------------------------------------------------
                     matched = true;
                 }
             }
-        }
-        catch( IOException ex )
-        {
-            throw ex;
         }
         finally
         {

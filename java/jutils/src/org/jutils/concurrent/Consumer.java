@@ -15,13 +15,22 @@ public class Consumer<T> implements IStoppable
     private final LinkedBlockingQueue<T> data;
     /**  */
     private final IConsumer<T> consumer;
+    /**  */
+    private final Runnable finalizer;
+
+    public Consumer( IConsumer<T> consumer )
+    {
+        this( consumer, null );
+    }
 
     /***************************************************************************
      * Creates a new Abstract Consumer
      **************************************************************************/
-    public Consumer( IConsumer<T> consumer )
+    public Consumer( IConsumer<T> consumer, Runnable finalizer )
     {
         this.consumer = consumer;
+        this.finalizer = finalizer;
+
         this.acceptInput = true;
         this.data = new LinkedBlockingQueue<T>();
     }
@@ -65,6 +74,11 @@ public class Consumer<T> implements IStoppable
         }
 
         stopAcceptingInput();
+
+        if( finalizer != null )
+        {
+            finalizer.run();
+        }
     }
 
     /***************************************************************************

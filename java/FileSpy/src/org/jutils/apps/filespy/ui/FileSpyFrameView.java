@@ -1,4 +1,4 @@
-package org.jutils.apps.filespy;
+package org.jutils.apps.filespy.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -10,47 +10,55 @@ import java.io.IOException;
 import javax.swing.*;
 
 import org.jutils.IconConstants;
+import org.jutils.apps.filespy.FileSpyMain;
 import org.jutils.apps.filespy.data.FileSpyData;
 import org.jutils.apps.filespy.data.SearchParams;
 import org.jutils.licensing.LicenseDialog;
 import org.jutils.ui.*;
 import org.jutils.ui.explorer.FileConfigurationDialog;
+import org.jutils.ui.model.IView;
 
 import com.jgoodies.looks.Options;
 
 /*******************************************************************************
  *
  ******************************************************************************/
-public class FileSpyFrame extends JFrame
+public class FileSpyFrameView implements IView<JFrame>
 {
     /**  */
-    private FileSpyPanel spyPanel = new FileSpyPanel();
+    private final SearchView spyPanel;
+    /**  */
+    private final JFrame frame;
 
     /***************************************************************************
      *
      **************************************************************************/
-    public FileSpyFrame()
+    public FileSpyFrameView()
     {
-        JPanel contentPane = ( JPanel )getContentPane();
-        contentPane.setLayout( new BorderLayout() );
-
         StatusBarPanel statusBar = new StatusBarPanel();
-        spyPanel.setStatusBar( statusBar );
-        spyPanel.addNewSearch();
+
+        this.frame = new JFrame();
+        this.spyPanel = new SearchView( statusBar );
+
+        JPanel contentPane = new JPanel( new BorderLayout() );
+
+        spyPanel.setData( null );
         statusBar.setText( "" );
 
         contentPane.add( createToolBar(), BorderLayout.NORTH );
-        contentPane.add( spyPanel, java.awt.BorderLayout.CENTER );
+        contentPane.add( spyPanel.getView(), java.awt.BorderLayout.CENTER );
         contentPane.add( statusBar.getView(), BorderLayout.SOUTH );
 
-        setJMenuBar( createMenuBar() );
-        setSize( new Dimension( 725, 500 ) );
-        setTitle( "FileSpy" );
+        frame.setJMenuBar( createMenuBar() );
+        frame.setSize( new Dimension( 725, 500 ) );
+        frame.setTitle( "FileSpy" );
 
-        setIconImages( IconConstants.getImages( IconConstants.PAGEMAG_16,
+        frame.setIconImages( IconConstants.getImages( IconConstants.PAGEMAG_16,
             IconConstants.PAGEMAG_32, IconConstants.PAGEMAG_64,
             IconConstants.PAGEMAG_128 ) );
-        setDefaultCloseOperation( EXIT_ON_CLOSE );
+        frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+
+        frame.setContentPane( contentPane );
     }
 
     /***************************************************************************
@@ -61,7 +69,7 @@ public class FileSpyFrame extends JFrame
         JButton newButton = new JButton();
         newButton.setIcon( IconConstants.getIcon( IconConstants.NEW_FILE_16 ) );
         newButton.setToolTipText( "Creates a new search tab." );
-        newButton.addActionListener( new NewListener() );
+        newButton.addActionListener( new NewListener( spyPanel ) );
         newButton.setFocusable( false );
 
         JButton openButton = new JButton();
@@ -107,7 +115,7 @@ public class FileSpyFrame extends JFrame
 
         JMenuItem newMenuItem = new JMenuItem( "New" );
         newMenuItem.setToolTipText( "Creates a new search tab." );
-        newMenuItem.addActionListener( new NewListener() );
+        newMenuItem.addActionListener( new NewListener( spyPanel ) );
         newMenuItem.setIcon( IconConstants.getIcon( IconConstants.NEW_FILE_16 ) );
 
         JMenuItem openMenuItem = new JMenuItem( "Open" );
@@ -123,7 +131,7 @@ public class FileSpyFrame extends JFrame
         JMenuItem exitMenuItem = new JMenuItem();
         exitMenuItem.setText( "Exit" );
         exitMenuItem.setToolTipText( "Exits the application." );
-        exitMenuItem.addActionListener( new ExitListener( this ) );
+        exitMenuItem.addActionListener( new ExitListener( frame ) );
         exitMenuItem.setIcon( IconConstants.getIcon( IconConstants.CLOSE_16 ) );
 
         fileMenu.add( newMenuItem );
@@ -196,7 +204,7 @@ public class FileSpyFrame extends JFrame
 
         JMenuItem aboutMenuItem = new JMenuItem( "About" );
         aboutMenuItem.setToolTipText( "Presents infomation about this program." );
-        aboutMenuItem.addActionListener( new AboutListener() );
+        aboutMenuItem.addActionListener( new AboutListener( frame ) );
 
         helpMenu.add( aboutMenuItem );
 
@@ -211,24 +219,16 @@ public class FileSpyFrame extends JFrame
         try
         {
             UIManager.setLookAndFeel( laf );
-            SwingUtilities.updateComponentTreeUI( this );
-            this.validate();
+            SwingUtilities.updateComponentTreeUI( frame );
+            frame.validate();
         }
         catch( Exception ex )
         {
             JOptionPane.showMessageDialog(
-                this,
+                frame,
                 "Unable to set the look and feel to " + laf + ". " +
                     ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE );
         }
-    }
-
-    /***************************************************************************
-     * @param e ActionEvent
-     **************************************************************************/
-    private void addNewSearch()
-    {
-        spyPanel.addNewSearch();
     }
 
     /***************************************************************************
@@ -247,7 +247,7 @@ public class FileSpyFrame extends JFrame
         chooser.setFileFilter( new FileSpySearchFilter() );
         chooser.setDialogTitle( "Open Search File" );
 
-        result = chooser.showOpenDialog( this );
+        result = chooser.showOpenDialog( frame );
         if( result == JFileChooser.APPROVE_OPTION )
         {
             try
@@ -269,11 +269,11 @@ public class FileSpyFrame extends JFrame
                         0,
                         fileChosen.getName().length() -
                             FileSpySearchFilter.FILESPY_SEARCH_EXT.length() );
-                    spyPanel.addSearch( params );
+                    spyPanel.setData( params );
                 }
                 catch( IOException ex )
                 {
-                    JOptionPane.showMessageDialog( this, ex.getMessage(),
+                    JOptionPane.showMessageDialog( frame, ex.getMessage(),
                         "I/O ERROR", JOptionPane.ERROR_MESSAGE );
                 }
             }
@@ -285,7 +285,7 @@ public class FileSpyFrame extends JFrame
      **************************************************************************/
     private void saveSearchParams()
     {
-        SearchParams params = spyPanel.getSelectedSearch();
+        SearchParams params = spyPanel.getData();
         JFileChooser chooser = new JFileChooser();
         int result = JFileChooser.ERROR_OPTION;
         File fileChosen = null;
@@ -296,7 +296,7 @@ public class FileSpyFrame extends JFrame
         chooser.setFileFilter( new FileSpySearchFilter() );
         chooser.setDialogTitle( "Save As" );
 
-        result = chooser.showSaveDialog( this );
+        result = chooser.showSaveDialog( frame );
         if( result == JFileChooser.APPROVE_OPTION )
         {
             try
@@ -323,7 +323,7 @@ public class FileSpyFrame extends JFrame
             }
             catch( IOException ex )
             {
-                JOptionPane.showMessageDialog( this, ex.getMessage(),
+                JOptionPane.showMessageDialog( frame, ex.getMessage(),
                     "I/O ERROR", JOptionPane.ERROR_MESSAGE );
             }
         }
@@ -334,7 +334,7 @@ public class FileSpyFrame extends JFrame
      **************************************************************************/
     private void showRegexHelper()
     {
-        JDialog dialog = new JDialog( this );
+        JDialog dialog = new JDialog( frame );
         dialog.setTitle( "Regex Friend" );
         dialog.setContentPane( new RegexPanel() );
         dialog.setSize( new Dimension( 500, 500 ) );
@@ -348,27 +348,33 @@ public class FileSpyFrame extends JFrame
      **************************************************************************/
     private void showFileConfig()
     {
-        FileConfigurationDialog.showDialog( this );
-    }
-
-    /***************************************************************************
-     * @param e ActionEvent
-     **************************************************************************/
-    private void showAbout()
-    {
-        LicenseDialog d = new LicenseDialog( this );
-        d.setLocationRelativeTo( this );
-        d.setVisible( true );
+        FileConfigurationDialog.showDialog( frame );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private class NewListener implements ActionListener
+    @Override
+    public JFrame getView()
     {
+        return frame;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class NewListener implements ActionListener
+    {
+        private final SearchView fsPanel;
+
+        public NewListener( SearchView fsPanel )
+        {
+            this.fsPanel = fsPanel;
+        }
+
         public void actionPerformed( ActionEvent e )
         {
-            addNewSearch();
+            fsPanel.setData( null );
         }
     }
 
@@ -419,11 +425,20 @@ public class FileSpyFrame extends JFrame
     /***************************************************************************
      * 
      **************************************************************************/
-    private class AboutListener implements ActionListener
+    private static class AboutListener implements ActionListener
     {
+        private final JFrame frame;
+
+        public AboutListener( JFrame frame )
+        {
+            this.frame = frame;
+        }
+
         public void actionPerformed( ActionEvent e )
         {
-            showAbout();
+            LicenseDialog d = new LicenseDialog( frame );
+            d.setLocationRelativeTo( frame );
+            d.setVisible( true );
         }
     }
 
@@ -444,32 +459,36 @@ public class FileSpyFrame extends JFrame
             resetLaf( laf );
         }
     }
-}
 
-class FileSpySearchFilter extends javax.swing.filechooser.FileFilter
-{
-    public static final String FILESPY_SEARCH_EXT = ".fss";
-
-    public static final String FILESPY_SEARCH_DESC = "File Spy Search (*" +
-        FILESPY_SEARCH_EXT + ")";
-
-    public FileSpySearchFilter()
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class FileSpySearchFilter extends
+        javax.swing.filechooser.FileFilter
     {
-        ;
-    }
+        public static final String FILESPY_SEARCH_EXT = ".fss";
 
-    public boolean accept( File file )
-    {
-        String name = file.getName();
-        if( file.isDirectory() || name.endsWith( FILESPY_SEARCH_EXT ) )
+        public static final String FILESPY_SEARCH_DESC = "File Spy Search (*" +
+            FILESPY_SEARCH_EXT + ")";
+
+        public FileSpySearchFilter()
         {
-            return true;
+            ;
         }
-        return false;
-    }
 
-    public String getDescription()
-    {
-        return FILESPY_SEARCH_DESC;
+        public boolean accept( File file )
+        {
+            String name = file.getName();
+            if( file.isDirectory() || name.endsWith( FILESPY_SEARCH_EXT ) )
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public String getDescription()
+        {
+            return FILESPY_SEARCH_DESC;
+        }
     }
 }

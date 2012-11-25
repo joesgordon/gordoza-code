@@ -83,10 +83,12 @@ public class UserOptionsSerializer<T>
         catch( IOException ex )
         {
             options = creator.createDefaultOptions();
+            ex.printStackTrace();
         }
         catch( XStreamException ex )
         {
             options = creator.createDefaultOptions();
+            ex.printStackTrace();
         }
 
         return options;
@@ -117,9 +119,11 @@ public class UserOptionsSerializer<T>
         }
         catch( IOException ex )
         {
+            ex.printStackTrace();
         }
         catch( XStreamException ex )
         {
+            ex.printStackTrace();
         }
     }
 

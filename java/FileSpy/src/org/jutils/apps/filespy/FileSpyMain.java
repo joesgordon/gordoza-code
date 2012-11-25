@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import org.jutils.apps.filespy.data.FileSpyData;
+import org.jutils.apps.filespy.ui.FileSpyFrameView;
 import org.jutils.io.IOUtils;
 import org.jutils.ui.FrameRunner;
 import org.jutils.ui.StandardUncaughtExceptionHandler;
@@ -49,7 +50,8 @@ public class FileSpyMain extends FrameRunner
     @Override
     protected JFrame createFrame()
     {
-        FileSpyFrame frame = new FileSpyFrame();
+        FileSpyFrameView frameView = new FileSpyFrameView();
+        JFrame frame = frameView.getView();
         StandardUncaughtExceptionHandler fsue = new StandardUncaughtExceptionHandler(
             frame );
         Thread.setDefaultUncaughtExceptionHandler( fsue );

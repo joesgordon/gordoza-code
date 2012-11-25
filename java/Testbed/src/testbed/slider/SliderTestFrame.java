@@ -7,8 +7,8 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import org.jutils.IconConstants;
-import org.jutils.apps.filespy.RegexPanel;
-import org.jutils.apps.filespy.SearchPanel;
+import org.jutils.apps.filespy.ui.RegexPanel;
+import org.jutils.apps.filespy.ui.SearchView;
 import org.jutils.ui.*;
 
 public class SliderTestFrame extends JFrame
@@ -17,7 +17,6 @@ public class SliderTestFrame extends JFrame
     private JComboBox comboBox;
     private JButton lastButton;
     private JButton nextButton;
-    private StatusBarPanel statusBar;
 
     public SliderTestFrame()
     {
@@ -30,10 +29,10 @@ public class SliderTestFrame extends JFrame
     private Container createContentPane()
     {
         JPanel contentPane = new JPanel( new BorderLayout() );
-        statusBar = new StatusBarPanel();
+        StatusBarPanel statusBar = new StatusBarPanel();
 
         contentPane.add( createToolBar(), BorderLayout.NORTH );
-        contentPane.add( createSliderPanel(), BorderLayout.CENTER );
+        contentPane.add( createSliderPanel( statusBar ), BorderLayout.CENTER );
         contentPane.add( statusBar.getView(), BorderLayout.SOUTH );
 
         return contentPane;
@@ -76,13 +75,13 @@ public class SliderTestFrame extends JFrame
         return toolbar;
     }
 
-    private Component createSliderPanel()
+    private Component createSliderPanel( StatusBarPanel statusBar )
     {
         sliderPanel = new SliderPanel();
 
         sliderPanel.addPanel( createPanel1() );
         sliderPanel.addPanel( createPanel2() );
-        sliderPanel.addPanel( createPanel3() );
+        sliderPanel.addPanel( createPanel3( statusBar ) );
         sliderPanel.addPanel( createPanel4() );
 
         return sliderPanel;
@@ -107,11 +106,9 @@ public class SliderTestFrame extends JFrame
         return panel;
     }
 
-    private JPanel createPanel3()
+    private JPanel createPanel3( StatusBarPanel statusBar )
     {
-        SearchPanel panel = new SearchPanel();
-
-        panel.setStatusBar( statusBar );
+        SearchView panel = new SearchView( statusBar );
 
         return panel.getView();
     }

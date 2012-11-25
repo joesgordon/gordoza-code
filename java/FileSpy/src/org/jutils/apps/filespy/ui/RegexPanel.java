@@ -1,4 +1,4 @@
-package org.jutils.apps.filespy;
+package org.jutils.apps.filespy.ui;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
