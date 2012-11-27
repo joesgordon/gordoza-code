@@ -31,14 +31,14 @@ public abstract class MainRunner implements Runnable
             }
 
             UIManager.setLookAndFeel( lafName );
+
+            createAndShowGui();
         }
-        catch( Exception ex )
+        catch( Throwable ex )
         {
             ex.printStackTrace();
             System.exit( 1 );
         }
-
-        createAndShowGui();
     }
 
     /***************************************************************************
