@@ -1,7 +1,6 @@
 package org.jutils.io;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 import com.thoughtworks.xstream.XStreamException;
 
@@ -76,9 +75,29 @@ public class UserOptionsSerializer<T>
 
         try
         {
-            @SuppressWarnings( "unchecked")
-            T t = ( T )XStreamUtils.readObjectXStream( file );
-            options = t;
+            InputStream stream = null;
+
+            try
+            {
+                stream = new FileInputStream( file );
+
+                @SuppressWarnings( "unchecked")
+                T t = ( T )XStreamUtils.readObjectXStream( stream );
+                options = t;
+            }
+            finally
+            {
+                if( stream != null )
+                {
+                    stream.close();
+                }
+            }
+        }
+        catch( FileNotFoundException ex )
+        {
+            options = creator.createDefaultOptions();
+            System.out.println( "WARNING: User options file does not exist: " +
+                file.getAbsolutePath() );
         }
         catch( IOException ex )
         {
@@ -87,8 +106,12 @@ public class UserOptionsSerializer<T>
         }
         catch( XStreamException ex )
         {
+
+            file.renameTo( new File( file.getAbsoluteFile().getParentFile(),
+                file.getName() + ".broken" ) );
             options = creator.createDefaultOptions();
-            ex.printStackTrace();
+            System.out.println( "WARNING: User options file is out of date: " +
+                file.getAbsolutePath() );
         }
 
         return options;
