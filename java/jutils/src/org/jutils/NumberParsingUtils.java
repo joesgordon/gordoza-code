@@ -1,18 +1,76 @@
 package org.jutils;
 
-public class NumberParsingUtils
+/*******************************************************************************
+ * Static helper class for parsing numbers. This class exists because the java
+ * standard library is, IMHO, broken. If you have a long (int, short, and byte
+ * also exhibit the same behavior) called {@code foo}, you should be able to
+ * execute the following:<code> foo = Long.parseString( Long.toHexString( foo ),
+ * 16 ) </code> And you can. As long as {@code foo} is not negative. If
+ * {@code foo} is negative, the code will throw a NumberFormatException. You
+ * don't believe me, do you? Go ahead. Try it. Oh, no. I'll
+ * wait...<br>...<br>...<br>...<br>...<br>...<br>...<br>...<br>...<br>...<br>...
+ * <br>...<br>...<br>...<br>...<br>...<br><br> See. Broke, didn't it? Well I
+ * tested the code below and it appears to be faster than all the
+ * INTEGRAL_CLASS.parse anyway.
+ ******************************************************************************/
+public final class NumberParsingUtils
 {
-    public static int parseHexInteger( String s )
+    /***************************************************************************
+     * Parses the provided string as a hexadecimal byte of size
+     * {@link Integer#SIZE}.
+     * @param s the string to be parsed.
+     * @return the byte parsed.
+     * @throws NumberFormatException any error in the format of the number.
+     **************************************************************************/
+    public static int parseHexByte( String s ) throws NumberFormatException
+    {
+        return ( int )parseHex( s, 2 );
+    }
+
+    /***************************************************************************
+     * Parses the provided string as a hexadecimal short of size
+     * {@link Integer#SIZE}.
+     * @param s the string to be parsed.
+     * @return the short parsed.
+     * @throws NumberFormatException any error in the format of the number.
+     **************************************************************************/
+    public static int parseHexShort( String s ) throws NumberFormatException
+    {
+        return ( int )parseHex( s, 4 );
+    }
+
+    /***************************************************************************
+     * Parses the provided string as a hexadecimal integer of size
+     * {@link Integer#SIZE}.
+     * @param s the string to be parsed.
+     * @return the integer parsed.
+     * @throws NumberFormatException any error in the format of the number.
+     **************************************************************************/
+    public static int parseHexInteger( String s ) throws NumberFormatException
     {
         return ( int )parseHex( s, 8 );
     }
 
-    public static long parseHexLong( String s )
+    /***************************************************************************
+     * Parses the provided string as a hexadecimal integer of size
+     * {@link Long#SIZE}.
+     * @param s the string to be parsed.
+     * @return the long parsed.
+     * @throws NumberFormatException any error in the format of the number.
+     **************************************************************************/
+    public static long parseHexLong( String s ) throws NumberFormatException
     {
         return parseHex( s, 16 );
     }
 
+    /***************************************************************************
+     * @param s the string to be parsed.
+     * @param maxLen
+     * @return the long parsed.
+     * @throws NumberFormatException any error in the format of the number.
+     **************************************************************************/
     public static long parseHex( String s, int maxLen )
+        throws NumberFormatException
     {
         int len;
 
@@ -51,7 +109,13 @@ public class NumberParsingUtils
         return result;
     }
 
-    public static int digitFromHex( char c )
+    /***************************************************************************
+     * Returns the integer representation of the hexadecimal character.
+     * @param c the character to be parsed.
+     * @return the integer parsed.
+     * @throws NumberFormatException if the character is not [0-9a-fA-F].
+     **************************************************************************/
+    public static int digitFromHex( char c ) throws NumberFormatException
     {
         switch( c )
         {
