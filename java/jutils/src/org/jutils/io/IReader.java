@@ -10,11 +10,11 @@ import java.io.IOException;
 public interface IReader<T, R>
 {
     /***************************************************************************
-     * Reads the type from the provided resource. Implementing classes should
-     * augment the throws clause to also throw a {@link RuntimeException} for
-     * invalid data formats or other non-I/O errors that might arise.
+     * Reads the type from the provided resource.
      * @return the type read from the provided resource.
      * @throws IOException any I/O error that occurs.
+     * @throws RuntimeFormatException any error due to incorrect format or other
+     * non-I/O errors that might arise
      **************************************************************************/
-    public T read( R resource ) throws IOException;
+    public T read( R resource ) throws IOException, RuntimeFormatException;
 }
