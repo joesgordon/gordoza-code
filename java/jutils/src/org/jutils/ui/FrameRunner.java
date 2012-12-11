@@ -18,8 +18,8 @@ public abstract class FrameRunner extends MainRunner
     /***************************************************************************
      * @return
      **************************************************************************/
-    protected TrayIcon createTrayIcon( Image img, String tooltip, JFrame frame,
-        PopupMenu popup )
+    protected final TrayIcon createTrayIcon( Image img, String tooltip,
+        JFrame frame, PopupMenu popup )
     {
         TrayIcon icon = null;
 
