@@ -41,7 +41,7 @@ public abstract class FrameRunner extends MainRunner
             {
                 // Cannot add Icon. Warn user if they want to continue.
                 int ans = JOptionPane.showConfirmDialog( frame,
-                    "Cannot load icon! Continue?", "WARNING",
+                    "Cannot load icon in tray! Continue?", "WARNING",
                     JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE );
                 if( ans == JOptionPane.NO_OPTION )
                 {
