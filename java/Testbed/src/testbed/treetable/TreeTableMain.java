@@ -54,11 +54,11 @@ import org.jutils.ui.FrameRunner;
  * @author Philip Milne
  */
 
-public class TreeTableExample0 extends FrameRunner
+public class TreeTableMain extends FrameRunner
 {
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new TreeTableExample0() );
+        SwingUtilities.invokeLater( new TreeTableMain() );
     }
 
     @Override
