@@ -161,4 +161,19 @@ public class UserOptionsSerializer<T>
         public T createDefaultOptions();
     }
 
+    public static <T> UserOptionsSerializer<T> getUserIO(
+        UserOptionsCreator<T> creator, File file )
+    {
+        File dir = file.getParentFile();
+        if( !dir.isDirectory() )
+        {
+            if( !dir.mkdirs() )
+            {
+                System.out.println( "WARNING: User options directory cannot be created: " +
+                    dir.getAbsolutePath() );
+            }
+        }
+
+        return new UserOptionsSerializer<T>( creator, file );
+    }
 }
