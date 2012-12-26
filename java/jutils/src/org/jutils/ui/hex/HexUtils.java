@@ -9,8 +9,9 @@ import org.jutils.NumberParsingUtils;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class HexUtils
+public final class HexUtils
 {
+    /**  */
     public static final String[] BYTE_STRINGS;
 
     static
@@ -30,16 +31,28 @@ public class HexUtils
     {
     }
 
+    /***************************************************************************
+     * @param b
+     * @return
+     **************************************************************************/
     public static int toUnsigned( byte b )
     {
         return b & 0x0FF;
     }
 
+    /***************************************************************************
+     * @param i
+     * @return
+     **************************************************************************/
     public static byte toSigned( int i )
     {
         return ( byte )i;
     }
 
+    /***************************************************************************
+     * @param i
+     * @return
+     **************************************************************************/
     public static String toHexString( int i )
     {
         String s = Integer.toHexString( i ).toUpperCase();
@@ -52,11 +65,20 @@ public class HexUtils
         return s;
     }
 
+    /***************************************************************************
+     * @param sync
+     * @return
+     **************************************************************************/
     public static String toHexString( List<Byte> sync )
     {
         return toHexString( sync, "" );
     }
 
+    /***************************************************************************
+     * @param sync
+     * @param delim
+     * @return
+     **************************************************************************/
     public static String toHexString( List<Byte> sync, String delim )
     {
         StringBuilder str = new StringBuilder();
@@ -74,12 +96,22 @@ public class HexUtils
         return str.toString();
     }
 
+    /***************************************************************************
+     * @param messyString
+     * @return
+     * @throws PatternSyntaxException
+     **************************************************************************/
     public static String trimHexString( String messyString )
         throws PatternSyntaxException
     {
         return messyString.replaceAll( "[^0-9a-fA-F]", "" );
     }
 
+    /***************************************************************************
+     * @param text
+     * @return
+     * @throws NumberFormatException
+     **************************************************************************/
     public static List<Byte> fromHexString( String text )
         throws NumberFormatException
     {
