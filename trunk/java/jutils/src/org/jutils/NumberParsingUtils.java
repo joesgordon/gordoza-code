@@ -17,7 +17,8 @@ public final class NumberParsingUtils
 {
     /***************************************************************************
      * Parses the provided string as a hexadecimal byte of size
-     * {@link Integer#SIZE}.
+     * {@link Integer#SIZE}. If the string contains &quot;0x&quot; at the
+     * beginning it will be ignored.
      * @param s the string to be parsed.
      * @return the byte parsed.
      * @throws NumberFormatException any error in the format of the number.
@@ -29,7 +30,8 @@ public final class NumberParsingUtils
 
     /***************************************************************************
      * Parses the provided string as a hexadecimal short of size
-     * {@link Integer#SIZE}.
+     * {@link Integer#SIZE}. If the string contains &quot;0x&quot; at the
+     * beginning it will be ignored.
      * @param s the string to be parsed.
      * @return the short parsed.
      * @throws NumberFormatException any error in the format of the number.
@@ -41,7 +43,8 @@ public final class NumberParsingUtils
 
     /***************************************************************************
      * Parses the provided string as a hexadecimal integer of size
-     * {@link Integer#SIZE}.
+     * {@link Integer#SIZE}. If the string contains &quot;0x&quot; at the
+     * beginning it will be ignored.
      * @param s the string to be parsed.
      * @return the integer parsed.
      * @throws NumberFormatException any error in the format of the number.
@@ -53,7 +56,8 @@ public final class NumberParsingUtils
 
     /***************************************************************************
      * Parses the provided string as a hexadecimal integer of size
-     * {@link Long#SIZE}.
+     * {@link Long#SIZE}. If the string contains &quot;0x&quot; at the beginning
+     * it will be ignored.
      * @param s the string to be parsed.
      * @return the long parsed.
      * @throws NumberFormatException any error in the format of the number.
@@ -64,7 +68,8 @@ public final class NumberParsingUtils
     }
 
     /***************************************************************************
-     * @param s the string to be parsed.
+     * @param s the string to be parsed. If the string contains &quot;0x&quot;
+     * at the beginning it will be ignored.
      * @param maxLen
      * @return the long parsed.
      * @throws NumberFormatException any error in the format of the number.
@@ -74,7 +79,6 @@ public final class NumberParsingUtils
     {
         int len;
 
-        s.trim();
         if( s.startsWith( "0x" ) )
         {
             s = s.substring( 2 );
