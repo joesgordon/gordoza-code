@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.JComponent;
 import javax.swing.JFormattedTextField.AbstractFormatterFactory;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -80,7 +79,7 @@ public final class UValidationTextField implements IValidationView
         field.setBackground( validBackground );
     }
 
-    public JComponent getView()
+    public UFormattedTextField getView()
     {
         return field;
     }
