@@ -38,13 +38,14 @@ public class XStreamUtils
      * @return Object
      * @throws IOException
      **************************************************************************/
-    public static Object readObjectXStream( File file )
+    @SuppressWarnings( "unchecked")
+    public static <T> T readObjectXStream( File file )
         throws FileNotFoundException, IOException, XStreamException
     {
         FileInputStream fis = new FileInputStream( file );
         Object obj = readObjectXStream( fis );
         fis.close();
-        return obj;
+        return ( T )obj;
     }
 
     /***************************************************************************
@@ -52,12 +53,13 @@ public class XStreamUtils
      * @return Object
      * @throws IOException
      **************************************************************************/
-    public static Object readObjectXStream( InputStream inputStream )
+    @SuppressWarnings( "unchecked")
+    public static <T> T readObjectXStream( InputStream inputStream )
         throws IOException, XStreamException
     {
         XStream xstream = new XStream();
 
-        return xstream.fromXML( inputStream );
+        return ( T )xstream.fromXML( inputStream );
     }
 
     /***************************************************************************
