@@ -49,8 +49,8 @@ public class CalendarFrame extends JFrame
 
         calPanel.setDate( null );
 
-        contentPane.add( calPanel, new GridBagConstraints( 0, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+        contentPane.add( calPanel.getView(), new GridBagConstraints( 0, 0, 1,
+            1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
             new Insets( 0, 0, 0, 0 ), 0, 0 ) );
     }
 
