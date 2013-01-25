@@ -60,9 +60,9 @@ public class CalendarDialog extends JDialog
         JPanel contentPanel = ( JPanel )this.getContentPane();
         contentPanel.setLayout( new GridBagLayout() );
 
-        contentPanel.add( calendarPanel, new GridBagConstraints( 0, 0, 1, 1,
-            1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-            new Insets( 4, 10, 4, 10 ), 0, 0 ) );
+        contentPanel.add( calendarPanel.getView(), new GridBagConstraints( 0,
+            0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER,
+            GridBagConstraints.NONE, new Insets( 4, 10, 4, 10 ), 0, 0 ) );
         contentPanel.add( createButtonPanel(), new GridBagConstraints( 0, 1, 1,
             1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets( 4, 4, 4, 4 ), 0, 0 ) );

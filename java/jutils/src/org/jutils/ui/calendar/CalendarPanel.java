@@ -12,76 +12,48 @@ import javax.swing.text.DateFormatter;
 import javax.swing.text.DefaultFormatterFactory;
 
 import org.jutils.ui.USpinner;
+import org.jutils.ui.event.ItemActionList;
+import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.model.CyclingSpinnerListModel;
+import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
  *
  ******************************************************************************/
-public class CalendarPanel extends JPanel
+public class CalendarPanel implements IDataView<Long>
 {
-    /**  */
-    private final String[] MONTHS = new String[] { "January", "February",
-        "March", "April", "May", "June", "July", "August", "September",
-        "October", "November", "December" };
+    /** Month strings to be used in the months' spinner box. */
+    private static final String[] MONTHS = new String[] { "January",
+        "February", "March", "April", "May", "June", "July", "August",
+        "September", "October", "November", "December" };
+    /**
+     * Week day single letter abbreviations to be used as the header in the
+     * calendar.
+     */
+    private static final String[] WEEK_DAYS = new String[] { "S", "M", "T",
+        "W", "R", "F", "S" };
+    /** The background of the header labels. */
+    private static final Color HEADER_BACKGROUND = new Color( 0x8D, 0x8D, 0x8D );
+    /** The foreground of the header labels. */
+    private static final Color HEADER_FOREGROUND = new Color( 0xFF, 0xFF, 0xFF );
 
     /**  */
-    private final Color headerBG = new Color( 0x8D, 0x8D, 0x8D );
-
+    private final JPanel view;
     /**  */
-    private final Color headerFG = new Color( 0xFF, 0xFF, 0xFF );
-
+    private final USpinner timeSpinner;
     /**  */
-    private GridBagLayout mainLayout = new GridBagLayout();
-
+    private final USpinner monthSpinner;
     /**  */
-    private JPanel controlsPanel = new JPanel();
-
+    private final USpinner yearSpinner;
     /**  */
-    private GridBagLayout controlsLayout = new GridBagLayout();
-
+    private final JLabel[] weekdayLabels;
     /**  */
-    private USpinner timeSpinner = new USpinner( new SpinnerDateModel() );
-
+    private final DayLabel[] dayLabels;
     /**  */
-    private USpinner monthSpinner = new USpinner( new CyclingSpinnerListModel(
-        MONTHS ) );
-
-    /**  */
-    private USpinner yearSpinner = new USpinner( new SpinnerNumberModel() );
-
-    /**  */
-    private JPanel monthPanel = new JPanel();
-
-    /**  */
-    private GridBagLayout monthLayout = new GridBagLayout();
-
-    /**  */
-    private JLabel sundayLabel = new JLabel();
-
-    /**  */
-    private JLabel mondayLabel = new JLabel();
-
-    /**  */
-    private JLabel tuesdayLabel = new JLabel();
-
-    /**  */
-    private JLabel wednesdayLabel = new JLabel();
-
-    /**  */
-    private JLabel thursdayLabel = new JLabel();
-
-    /**  */
-    private JLabel fridayLabel = new JLabel();
-
-    /**  */
-    private JLabel saturdayLabel = new JLabel();
-
-    /**  */
-    private DayLabel[] dayLabels = new DayLabel[42];
+    private final ItemActionList<Long> dateChangedListeners;
 
     /**  */
     private DayLabel currentSelection = null;
-
     /**  */
     private boolean showTime = false;
 
@@ -90,7 +62,7 @@ public class CalendarPanel extends JPanel
      **************************************************************************/
     public CalendarPanel()
     {
-        this( false, null );
+        this( false );
     }
 
     /***************************************************************************
@@ -115,78 +87,108 @@ public class CalendarPanel extends JPanel
      **************************************************************************/
     public CalendarPanel( boolean showTime, Calendar cal )
     {
-        try
+        this.showTime = showTime;
+
+        this.timeSpinner = new USpinner( new SpinnerDateModel() );
+        this.monthSpinner = new USpinner( new CyclingSpinnerListModel( MONTHS ) );
+        this.yearSpinner = new USpinner( new SpinnerNumberModel() );
+        this.weekdayLabels = new JLabel[WEEK_DAYS.length];
+        this.dayLabels = new DayLabel[42];
+
+        this.dateChangedListeners = new ItemActionList<Long>();
+
+        for( int i = 0; i < weekdayLabels.length; i++ )
         {
-            this.showTime = showTime;
-            jbInit();
-            setDate( cal );
+            weekdayLabels[i] = new JLabel( WEEK_DAYS[i] );
+            initHeaderLabel( weekdayLabels[i] );
         }
-        catch( Exception exception )
-        {
-            exception.printStackTrace();
-        }
-    }
 
-    /***************************************************************************
-     * @param label JLabel
-     * @param text String
-     **************************************************************************/
-    private void initHeaderLabel( JLabel label, String text )
-    {
-        label.setForeground( headerFG );
-        label.setBackground( headerBG );
-        label.setHorizontalAlignment( JLabel.CENTER );
-        // label.setBorder( BorderFactory.createLineBorder( Color.red ) );
-
-        initLabel( label, text );
-    }
-
-    /***************************************************************************
-     * @param label JLabel
-     * @param text String
-     **************************************************************************/
-    private void initDayLabel( DayLabel label, String text )
-    {
-        label.setHorizontalAlignment( JLabel.CENTER );
-        label.addMouseListener( new CalendarPanel_dayLabel_mouseAdapter( this ) );
-        label.addKeyListener( new CalendarPanel_dayLabel_keyAdapter( this ) );
-
-        initLabel( label, text );
-    }
-
-    /***************************************************************************
-     * @param label JLabel
-     * @param text String
-     **************************************************************************/
-    private void initLabel( JLabel label, String text )
-    {
-        label.setText( text );
-        label.setOpaque( true );
-        label.setPreferredSize( new Dimension( 20, 20 ) );
-        label.setMinimumSize( new Dimension( 20, 20 ) );
-    }
-
-    /***************************************************************************
-     *
-     **************************************************************************/
-    private void initLabels()
-    {
         for( int i = 0; i < dayLabels.length; i++ )
         {
             dayLabels[i] = new DayLabel();
-            initDayLabel( dayLabels[i], "" );
+            initDayLabel( dayLabels[i] );
         }
+
+        this.view = createView();
+
+        setDate( cal );
     }
 
     /***************************************************************************
-     * @throws Exception
+     * 
      **************************************************************************/
-    private void jbInit() throws Exception
+    @Override
+    public Component getView()
     {
-        // ----------------------------------------------------------------------
+        return view;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Long getData()
+    {
+        return getDate().getTimeInMillis();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void setData( Long data )
+    {
+        Calendar cal = new GregorianCalendar();
+        if( data != null )
+        {
+            cal.setTimeInMillis( data );
+        }
+        setDate( cal );
+    }
+
+    /***************************************************************************
+     * @param l
+     **************************************************************************/
+    public void addDateChangedListener( ItemActionListener<Long> l )
+    {
+        dateChangedListeners.addListener( l );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private JPanel createView()
+    {
+        JPanel panel = new JPanel( new GridBagLayout() );
+        GridBagConstraints constraints;
+
+        // ---------------------------------------------------------------------
         //
-        // ----------------------------------------------------------------------
-        controlsPanel.setLayout( controlsLayout );
+        // ---------------------------------------------------------------------
+        constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets( 0, 0, 2, 0 ), 0, 0 );
+        panel.add( createControlsPanel(), constraints );
+
+        // ---------------------------------------------------------------------
+        //
+        // ---------------------------------------------------------------------
+        constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
+            GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets( 2,
+                0, 0, 0 ), 0, 0 );
+        panel.add( createMonthPanel(), constraints );
+
+        panel.setMinimumSize( panel.getPreferredSize() );
+
+        return panel;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Component createControlsPanel()
+    {
+        JPanel panel = new JPanel( new GridBagLayout() );
 
         SimpleDateFormat dateFormat = new SimpleDateFormat( "hh:mm:ss a" );
 
@@ -201,71 +203,44 @@ public class CalendarPanel extends JPanel
         JSpinner.NumberEditor editor = new JSpinner.NumberEditor( yearSpinner,
             "#" );
         yearSpinner.setEditor( editor );
-        yearSpinner.addChangeListener( new CalendarPanel_yearSpinner_changeAdapter(
-            this ) );
+        yearSpinner.addChangeListener( new YearChangeListener( this ) );
 
-        monthSpinner.addChangeListener( new CalendarPanel_monthSpinner_changeAdapter(
-            this ) );
+        monthSpinner.addChangeListener( new MonthChangeListener( this ) );
         CyclingSpinnerListModel monthModel = ( CyclingSpinnerListModel )monthSpinner.getModel();
         monthModel.setLinkedModel( yearSpinner.getModel() );
 
         if( showTime )
         {
-            controlsPanel.add( timeSpinner, new GridBagConstraints( 0, 0, 2, 1,
-                0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            panel.add( timeSpinner, new GridBagConstraints( 0, 0, 2, 1, 0.0,
+                0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 new Insets( 2, 0, 2, 0 ), 0, 0 ) );
         }
 
-        controlsPanel.add( monthSpinner, new GridBagConstraints( 0, 1, 1, 1,
-            1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( showTime ? 2 : 0, 0, 0, 2 ), 0, 0 ) );
-        controlsPanel.add( yearSpinner, new GridBagConstraints( 1, 1, 1, 1,
-            0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( showTime ? 2 : 0, 2, 0, 0 ), 15, 0 ) );
+        panel.add( monthSpinner, new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
+                showTime ? 2 : 0, 0, 0, 2 ), 0, 0 ) );
+        panel.add( yearSpinner, new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
+                showTime ? 2 : 0, 2, 0, 0 ), 15, 0 ) );
 
-        // ----------------------------------------------------------------------
-        //
-        // ----------------------------------------------------------------------
-        monthPanel.setLayout( monthLayout );
+        return panel;
+    }
+
+    private Component createMonthPanel()
+    {
+        JPanel monthPanel = new JPanel( new GridBagLayout() );
 
         monthPanel.setBorder( BorderFactory.createLoweredBevelBorder() );
 
         monthPanel.setBackground( Color.white );
 
-        initHeaderLabel( sundayLabel, "S" );
-        initHeaderLabel( mondayLabel, "M" );
-        initHeaderLabel( tuesdayLabel, "T" );
-        initHeaderLabel( wednesdayLabel, "W" );
-        initHeaderLabel( thursdayLabel, "R" );
-        initHeaderLabel( fridayLabel, "F" );
-        initHeaderLabel( saturdayLabel, "S" );
-
-        initLabels();
-
-        monthPanel.add( sundayLabel, new GridBagConstraints( 0, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 5, 5, 0, 0 ), 0, 0 ) );
-        monthPanel.add( sundayLabel, new GridBagConstraints( 0, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 5, 5, 0, 0 ), 0, 0 ) );
-        monthPanel.add( mondayLabel, new GridBagConstraints( 1, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-            new Insets( 5, 0, 0, 0 ), 0, 0 ) );
-        monthPanel.add( tuesdayLabel, new GridBagConstraints( 2, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-            new Insets( 5, 0, 0, 0 ), 0, 0 ) );
-        monthPanel.add( wednesdayLabel, new GridBagConstraints( 3, 0, 1, 1,
-            0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-            new Insets( 5, 0, 0, 0 ), 0, 0 ) );
-        monthPanel.add( thursdayLabel, new GridBagConstraints( 4, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-            new Insets( 5, 0, 0, 0 ), 0, 0 ) );
-        monthPanel.add( fridayLabel, new GridBagConstraints( 5, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-            new Insets( 5, 0, 0, 0 ), 0, 0 ) );
-        monthPanel.add( saturdayLabel, new GridBagConstraints( 6, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-            new Insets( 5, 0, 0, 5 ), 0, 0 ) );
+        for( int i = 0; i < weekdayLabels.length; i++ )
+        {
+            monthPanel.add( weekdayLabels[i], new GridBagConstraints( i, 0, 1,
+                1, 0.0, 0.0, GridBagConstraints.CENTER,
+                GridBagConstraints.BOTH, new Insets( 5, i == 0 ? 5 : 0, 0,
+                    i == 6 ? 5 : 0 ), 0, 0 ) );
+        }
 
         for( int i = 0; i < dayLabels.length; i++ )
         {
@@ -283,20 +258,45 @@ public class CalendarPanel extends JPanel
                     new Insets( top, lft, btm, rht ), 0, 0 ) );
         }
 
-        // ----------------------------------------------------------------------
-        //
-        // ----------------------------------------------------------------------
-        this.setLayout( mainLayout );
+        return monthPanel;
+    }
 
-        this.add( controlsPanel, new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 0, 0, 2, 0 ), 0, 0 ) );
+    /***************************************************************************
+     * @param label JLabel
+     * @param text String
+     **************************************************************************/
+    private void initHeaderLabel( JLabel label )
+    {
+        label.setForeground( HEADER_FOREGROUND );
+        label.setBackground( HEADER_BACKGROUND );
+        label.setHorizontalAlignment( JLabel.CENTER );
+        // label.setBorder( BorderFactory.createLineBorder( Color.red ) );
 
-        this.add( monthPanel, new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets( 2,
-                0, 0, 0 ), 0, 0 ) );
+        initLabel( label );
+    }
 
-        this.setMinimumSize( this.getPreferredSize() );
+    /***************************************************************************
+     * @param label JLabel
+     * @param text String
+     **************************************************************************/
+    private void initDayLabel( DayLabel label )
+    {
+        label.setHorizontalAlignment( JLabel.CENTER );
+        label.addMouseListener( new DayLabelMouseListener( this ) );
+        label.addKeyListener( new DayLabelKeyListener( this ) );
+
+        initLabel( label );
+    }
+
+    /***************************************************************************
+     * @param label JLabel
+     * @param text String
+     **************************************************************************/
+    private void initLabel( JLabel label )
+    {
+        label.setOpaque( true );
+        label.setPreferredSize( new Dimension( 20, 20 ) );
+        label.setMinimumSize( new Dimension( 20, 20 ) );
     }
 
     /***************************************************************************
@@ -395,61 +395,10 @@ public class CalendarPanel extends JPanel
     }
 
     /***************************************************************************
-     * @param e MouseEvent
-     **************************************************************************/
-    void dayLabel_mouseClicked( MouseEvent e )
-    {
-        DayLabel newCurrent = ( DayLabel )e.getComponent();
-
-        if( newCurrent != currentSelection )
-        {
-            currentSelection.setSelected( false );
-            if( newCurrent.isNonDay() )
-            {
-                Calendar cal = newCurrent.getDate();
-                Date dateTime = ( Date )timeSpinner.getValue();
-                Calendar time = new GregorianCalendar();
-                time.setTime( dateTime );
-                cal.set( Calendar.HOUR, time.get( Calendar.HOUR ) );
-                cal.set( Calendar.MINUTE, time.get( Calendar.MINUTE ) );
-                cal.set( Calendar.SECOND, time.get( Calendar.SECOND ) );
-
-                this.setDate( cal );
-            }
-            else
-            {
-                newCurrent.setSelected( true );
-
-                currentSelection = newCurrent;
-            }
-        }
-
-        newCurrent.requestFocus();
-    }
-
-    /***************************************************************************
-     * @param e ActionEvent
-     **************************************************************************/
-    void monthSpinner_stateChanged( ChangeEvent e )
-    {
-        int month = getMonthIndex( monthSpinner.getValue().toString() );
-        int day = currentSelection.getDay();
-        int year = ( ( Number )yearSpinner.getValue() ).intValue();
-
-        Date dateTime = ( Date )timeSpinner.getValue();
-        Calendar time = new GregorianCalendar();
-        time.setTime( dateTime );
-
-        this.setDate( new GregorianCalendar( year, month, day,
-            time.get( Calendar.HOUR ), time.get( Calendar.MINUTE ),
-            time.get( Calendar.SECOND ) ) );
-    }
-
-    /***************************************************************************
      * @param mth String
      * @return int
      **************************************************************************/
-    private int getMonthIndex( String mth )
+    private static int getMonthIndex( String mth )
     {
         for( int i = 0; i < MONTHS.length; i++ )
         {
@@ -459,24 +408,6 @@ public class CalendarPanel extends JPanel
             }
         }
         return -1;
-    }
-
-    /***************************************************************************
-     * @param e ChangeEvent
-     **************************************************************************/
-    void yearSpinner_stateChanged( ChangeEvent e )
-    {
-        int month = getMonthIndex( monthSpinner.getValue().toString() );
-        int day = currentSelection.getDay();
-        int year = ( ( Number )yearSpinner.getValue() ).intValue();
-
-        Date dateTime = ( Date )timeSpinner.getValue();
-        Calendar time = new GregorianCalendar();
-        time.setTime( dateTime );
-
-        this.setDate( new GregorianCalendar( year, month, day,
-            time.get( Calendar.HOUR ), time.get( Calendar.MINUTE ),
-            time.get( Calendar.SECOND ) ) );
     }
 
     /***************************************************************************
@@ -490,98 +421,150 @@ public class CalendarPanel extends JPanel
         System.out.println( dateFormat.format( cal.getTime() ) );
     }
 
+    private void updateFromSpinners()
+    {
+        String mthStr = monthSpinner.getValue().toString();
+        int month = getMonthIndex( mthStr );
+        int day = currentSelection.getDay();
+        int year = ( ( Number )yearSpinner.getValue() ).intValue();
+
+        Date dateTime = ( Date )timeSpinner.getValue();
+        Calendar time = new GregorianCalendar();
+        time.setTime( dateTime );
+
+        time = new GregorianCalendar( year, month, day,
+            time.get( Calendar.HOUR ), time.get( Calendar.MINUTE ),
+            time.get( Calendar.SECOND ) );
+
+        setDate( time );
+        dateChangedListeners.fireListeners( this, time.getTimeInMillis() );
+    }
+
     /***************************************************************************
-     * @param e KeyEvent
+     * 
      **************************************************************************/
-    void dayLabel_keyPressed( KeyEvent e )
+    private static class DayLabelKeyListener extends KeyAdapter
     {
-        if( e.getKeyCode() == KeyEvent.VK_UP )
+        private final CalendarPanel calPanel;
+
+        public DayLabelKeyListener( CalendarPanel adaptee )
         {
-            Calendar cal = this.getDate();
-            cal.add( Calendar.DATE, -7 );
-            this.setDate( cal );
-            this.currentSelection.requestFocus();
+            this.calPanel = adaptee;
         }
-        else if( e.getKeyCode() == KeyEvent.VK_DOWN )
+
+        public void keyPressed( KeyEvent e )
         {
-            Calendar cal = this.getDate();
-            cal.add( Calendar.DATE, 7 );
-            this.setDate( cal );
-            this.currentSelection.requestFocus();
+            if( e.getKeyCode() == KeyEvent.VK_UP )
+            {
+                Calendar cal = calPanel.getDate();
+                cal.add( Calendar.DATE, -7 );
+                calPanel.setDate( cal );
+                calPanel.currentSelection.requestFocus();
+            }
+            else if( e.getKeyCode() == KeyEvent.VK_DOWN )
+            {
+                Calendar cal = calPanel.getDate();
+                cal.add( Calendar.DATE, 7 );
+                calPanel.setDate( cal );
+                calPanel.currentSelection.requestFocus();
+            }
+            else if( e.getKeyCode() == KeyEvent.VK_LEFT )
+            {
+                Calendar cal = calPanel.getDate();
+                cal.add( Calendar.DATE, -1 );
+                calPanel.setDate( cal );
+                calPanel.currentSelection.requestFocus();
+            }
+            else if( e.getKeyCode() == KeyEvent.VK_RIGHT )
+            {
+                Calendar cal = calPanel.getDate();
+                cal.add( Calendar.DATE, 1 );
+                calPanel.setDate( cal );
+                calPanel.currentSelection.requestFocus();
+            }
         }
-        else if( e.getKeyCode() == KeyEvent.VK_LEFT )
+
+        // TODO call listeners.
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class YearChangeListener implements ChangeListener
+    {
+        private final CalendarPanel calPanel;
+
+        public YearChangeListener( CalendarPanel adaptee )
         {
-            Calendar cal = this.getDate();
-            cal.add( Calendar.DATE, -1 );
-            this.setDate( cal );
-            this.currentSelection.requestFocus();
+            this.calPanel = adaptee;
         }
-        else if( e.getKeyCode() == KeyEvent.VK_RIGHT )
+
+        public void stateChanged( ChangeEvent e )
         {
-            Calendar cal = this.getDate();
-            cal.add( Calendar.DATE, 1 );
-            this.setDate( cal );
-            this.currentSelection.requestFocus();
+            calPanel.updateFromSpinners();
         }
     }
-}
 
-class CalendarPanel_dayLabel_keyAdapter extends KeyAdapter
-{
-    private CalendarPanel adaptee;
-
-    CalendarPanel_dayLabel_keyAdapter( CalendarPanel adaptee )
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class MonthChangeListener implements ChangeListener
     {
-        this.adaptee = adaptee;
+        private final CalendarPanel calPanel;
+
+        public MonthChangeListener( CalendarPanel adaptee )
+        {
+            this.calPanel = adaptee;
+        }
+
+        public void stateChanged( ChangeEvent e )
+        {
+            calPanel.updateFromSpinners();
+        }
     }
 
-    public void keyPressed( KeyEvent e )
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class DayLabelMouseListener extends MouseAdapter
     {
-        adaptee.dayLabel_keyPressed( e );
-    }
-}
+        private final CalendarPanel adaptee;
 
-class CalendarPanel_yearSpinner_changeAdapter implements ChangeListener
-{
-    private CalendarPanel adaptee;
+        public DayLabelMouseListener( CalendarPanel adaptee )
+        {
+            this.adaptee = adaptee;
+        }
 
-    CalendarPanel_yearSpinner_changeAdapter( CalendarPanel adaptee )
-    {
-        this.adaptee = adaptee;
-    }
+        public void mouseClicked( MouseEvent e )
+        {
+            DayLabel newCurrent = ( DayLabel )e.getComponent();
 
-    public void stateChanged( ChangeEvent e )
-    {
-        adaptee.yearSpinner_stateChanged( e );
-    }
-}
+            if( newCurrent != adaptee.currentSelection )
+            {
+                adaptee.currentSelection.setSelected( false );
+                if( newCurrent.isNonDay() )
+                {
+                    Calendar cal = newCurrent.getDate();
+                    Date dateTime = ( Date )adaptee.timeSpinner.getValue();
+                    Calendar time = new GregorianCalendar();
+                    time.setTime( dateTime );
+                    cal.set( Calendar.HOUR, time.get( Calendar.HOUR ) );
+                    cal.set( Calendar.MINUTE, time.get( Calendar.MINUTE ) );
+                    cal.set( Calendar.SECOND, time.get( Calendar.SECOND ) );
 
-class CalendarPanel_monthSpinner_changeAdapter implements ChangeListener
-{
-    private CalendarPanel adaptee;
+                    adaptee.setDate( cal );
+                }
+                else
+                {
+                    newCurrent.setSelected( true );
 
-    CalendarPanel_monthSpinner_changeAdapter( CalendarPanel adaptee )
-    {
-        this.adaptee = adaptee;
-    }
+                    adaptee.currentSelection = newCurrent;
+                }
+            }
 
-    public void stateChanged( ChangeEvent e )
-    {
-        adaptee.monthSpinner_stateChanged( e );
-    }
-}
+            newCurrent.requestFocus();
 
-class CalendarPanel_dayLabel_mouseAdapter extends MouseAdapter
-{
-    private CalendarPanel adaptee;
-
-    CalendarPanel_dayLabel_mouseAdapter( CalendarPanel adaptee )
-    {
-        this.adaptee = adaptee;
-    }
-
-    public void mouseClicked( MouseEvent e )
-    {
-        adaptee.dayLabel_mouseClicked( e );
+            // TODO call listeners.
+        }
     }
 }
