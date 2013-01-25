@@ -73,7 +73,7 @@ public class CrsPanel extends JPanel
 
         JButton addButton = new JButton();
 
-        addButton.setIcon( IconConstants.getIcon( IconConstants.EDIT_ADD_16 ) );
+        addButton.setIcon( IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 ) );
         addButton.setToolTipText( "Add a CR" );
         addButton.setFocusable( false );
 

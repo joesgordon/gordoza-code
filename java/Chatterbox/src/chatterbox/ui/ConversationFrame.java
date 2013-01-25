@@ -37,7 +37,7 @@ public class ConversationFrame extends JFrame implements IConversationView
         // ---------------------------------------------------------------------
         JToolBar toolbar = new JToolBar();
         JButton userAddButton = new JButton(
-            IconConstants.getIcon( IconConstants.USER_ADD_24 ) );
+            IconConstants.loader.getIcon( IconConstants.USER_ADD_24 ) );
 
         userAddButton.setFocusable( false );
         userAddButton.addActionListener( new ActionListener()
@@ -77,8 +77,8 @@ public class ConversationFrame extends JFrame implements IConversationView
             }
         } );
 
-        setIconImages( IconConstants.getImages( IconConstants.IM_USER_16,
-            IconConstants.IM_USER_32 ) );
+        setIconImages( IconConstants.loader.getImages(
+            IconConstants.IM_USER_16, IconConstants.IM_USER_32 ) );
 
         setContentPane( contentPanel );
         setConversation( conversation );

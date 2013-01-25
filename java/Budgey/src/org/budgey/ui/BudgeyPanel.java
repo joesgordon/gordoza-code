@@ -78,7 +78,7 @@ public class BudgeyPanel extends JPanel
         transactionAddButton = new JButton(
             BudgeyIconConstants.getCoinsAddIcon() );
         calenderButton = new JButton(
-            IconConstants.getIcon( IconConstants.CALENDAR_32 ) );
+            IconConstants.loader.getIcon( IconConstants.CALENDAR_32 ) );
         configButton = new JButton( BudgeyIconConstants.getCogIcon() );
 
         accountField = new JLabel( "Account Name" );

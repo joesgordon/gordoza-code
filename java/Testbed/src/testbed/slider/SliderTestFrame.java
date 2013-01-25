@@ -42,13 +42,14 @@ public class SliderTestFrame extends JFrame
     {
         UToolBar toolbar = new UToolBar();
 
-        lastButton = new JButton( IconConstants.getIcon( IconConstants.BACK_24 ) );
+        lastButton = new JButton(
+            IconConstants.loader.getIcon( IconConstants.BACK_24 ) );
         lastButton.setFocusable( false );
         lastButton.addActionListener( new LastListener() );
         toolbar.add( lastButton );
 
         nextButton = new JButton(
-            IconConstants.getIcon( IconConstants.FORWARD_24 ) );
+            IconConstants.loader.getIcon( IconConstants.FORWARD_24 ) );
         nextButton.setFocusable( false );
         nextButton.addActionListener( new NextListener() );
         toolbar.add( nextButton );

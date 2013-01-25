@@ -37,7 +37,7 @@ public class ToDLsMain extends FrameRunner
     {
         ToDLsFrame frame = new ToDLsFrame();
         ToDLsMenu popup = new ToDLsMenu( frame );
-        Image img = IconConstants.getImage( IconConstants.CALENDAR_16 );
+        Image img = IconConstants.loader.getImage( IconConstants.CALENDAR_16 );
 
         createTrayIcon( img, "Tuvok", frame, popup );
 

@@ -27,12 +27,12 @@ public class CvIconLoader
 
     public static Icon getRevertIcon()
     {
-        return IconConstants.getIcon( IconConstants.UNDO_16 );
+        return IconConstants.loader.getIcon( IconConstants.UNDO_16 );
     }
 
     public static Icon getRemoveIcon()
     {
-        return IconConstants.getIcon( IconConstants.EDIT_DELETE_16 );
+        return IconConstants.loader.getIcon( IconConstants.EDIT_DELETE_16 );
     }
 
     public static Icon getFileIcon()
@@ -42,7 +42,7 @@ public class CvIconLoader
 
     public static Icon getRefreshIcon()
     {
-        return IconConstants.getIcon( IconConstants.REFRESH_16 );
+        return IconConstants.loader.getIcon( IconConstants.REFRESH_16 );
     }
 
     public static Icon getUpdateIcon()
@@ -57,6 +57,6 @@ public class CvIconLoader
 
     public static Icon getAddIcon()
     {
-        return IconConstants.getIcon( IconConstants.EDIT_ADD_16 );
+        return IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 );
     }
 }

@@ -65,17 +65,18 @@ public class AminoAcidsPanel extends JPanel
         };
 
         // ---------------------------------------------------------------------
-        // 
+        //
         // ---------------------------------------------------------------------
         JToolBar toolbar = new JToolBar();
 
-        saveButton = new JButton( IconConstants.getIcon( IconConstants.SAVE_16 ) );
+        saveButton = new JButton(
+            IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
         sortButton = new JButton(
-            IconConstants.getIcon( IconConstants.SORT_DOWN_16 ) );
+            IconConstants.loader.getIcon( IconConstants.SORT_DOWN_16 ) );
         assignButton = new JButton(
-            IconConstants.getIcon( IconConstants.EDIT_ADD_16 ) );
+            IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 ) );
         unassignButton = new JButton(
-            IconConstants.getIcon( IconConstants.EDIT_DELETE_16 ) );
+            IconConstants.loader.getIcon( IconConstants.EDIT_DELETE_16 ) );
 
         saveButton.setFocusable( false );
         saveButton.setEnabled( false );
@@ -114,7 +115,7 @@ public class AminoAcidsPanel extends JPanel
         table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
 
         // ---------------------------------------------------------------------
-        // 
+        //
         // ---------------------------------------------------------------------
         setLayout( new BorderLayout() );
 

@@ -57,7 +57,7 @@ public class CalendarField extends JPanel
 
         calendarButton.setText( "" );
         calendarButton.addActionListener( new CalendarButtonListener() );
-        calendarButton.setIcon( IconConstants.getIcon( IconConstants.CALENDAR_16 ) );
+        calendarButton.setIcon( IconConstants.loader.getIcon( IconConstants.CALENDAR_16 ) );
         calendarButton.setMargin( new Insets( 0, 0, 0, 0 ) );
 
         add( dateTextField, new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,

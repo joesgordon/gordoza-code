@@ -55,19 +55,19 @@ public class BudgeyFrame extends JFrame
         UToolBar toolbar = new UToolBar();
 
         JButton newButton = new JButton(
-            IconConstants.getIcon( IconConstants.NEW_FILE_16 ) );
+            IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
         newButton.setFocusable( false );
         newButton.addActionListener( new NewButtonListener() );
         toolbar.add( newButton );
 
         JButton openButton = new JButton(
-            IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
         openButton.setFocusable( false );
         openButton.addActionListener( new OpenButtonListener() );
         toolbar.add( openButton );
 
         JButton saveButton = new JButton(
-            IconConstants.getIcon( IconConstants.SAVE_16 ) );
+            IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
         saveButton.setFocusable( false );
         saveButton.addActionListener( new SaveButtonListener() );
         toolbar.add( saveButton );

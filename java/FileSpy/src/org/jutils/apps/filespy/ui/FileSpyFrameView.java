@@ -53,9 +53,9 @@ public class FileSpyFrameView implements IView<JFrame>
         frame.setSize( new Dimension( 725, 500 ) );
         frame.setTitle( "FileSpy" );
 
-        frame.setIconImages( IconConstants.getImages( IconConstants.PAGEMAG_16,
-            IconConstants.PAGEMAG_32, IconConstants.PAGEMAG_64,
-            IconConstants.PAGEMAG_128 ) );
+        frame.setIconImages( IconConstants.loader.getImages(
+            IconConstants.PAGEMAG_16, IconConstants.PAGEMAG_32,
+            IconConstants.PAGEMAG_64, IconConstants.PAGEMAG_128 ) );
         frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 
         frame.setContentPane( contentPane );
@@ -67,19 +67,19 @@ public class FileSpyFrameView implements IView<JFrame>
     private JToolBar createToolBar()
     {
         JButton newButton = new JButton();
-        newButton.setIcon( IconConstants.getIcon( IconConstants.NEW_FILE_16 ) );
+        newButton.setIcon( IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
         newButton.setToolTipText( "Creates a new search tab." );
         newButton.addActionListener( new NewListener( spyPanel ) );
         newButton.setFocusable( false );
 
         JButton openButton = new JButton();
-        openButton.setIcon( IconConstants.getIcon( IconConstants.OPEN_FILE_16 ) );
+        openButton.setIcon( IconConstants.loader.getIcon( IconConstants.OPEN_FILE_16 ) );
         openButton.setToolTipText( "Opens a previously saved search tab." );
         openButton.addActionListener( new OpenListener() );
         openButton.setFocusable( false );
 
         JButton saveButton = new JButton();
-        saveButton.setIcon( IconConstants.getIcon( IconConstants.SAVE_16 ) );
+        saveButton.setIcon( IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
         saveButton.setToolTipText( "Saves search tab." );
         saveButton.addActionListener( new SaveListener() );
         saveButton.setFocusable( false );
@@ -116,23 +116,23 @@ public class FileSpyFrameView implements IView<JFrame>
         JMenuItem newMenuItem = new JMenuItem( "New" );
         newMenuItem.setToolTipText( "Creates a new search tab." );
         newMenuItem.addActionListener( new NewListener( spyPanel ) );
-        newMenuItem.setIcon( IconConstants.getIcon( IconConstants.NEW_FILE_16 ) );
+        newMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
 
         JMenuItem openMenuItem = new JMenuItem( "Open" );
         openMenuItem.setToolTipText( "Opens a previously saved search tab." );
         openMenuItem.addActionListener( new OpenListener() );
-        openMenuItem.setIcon( IconConstants.getIcon( IconConstants.OPEN_FILE_16 ) );
+        openMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.OPEN_FILE_16 ) );
 
         JMenuItem saveMenuItem = new JMenuItem( "Save" );
         saveMenuItem.setToolTipText( "Saves search tab." );
         saveMenuItem.addActionListener( new SaveListener() );
-        saveMenuItem.setIcon( IconConstants.getIcon( IconConstants.SAVE_16 ) );
+        saveMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
 
         JMenuItem exitMenuItem = new JMenuItem();
         exitMenuItem.setText( "Exit" );
         exitMenuItem.setToolTipText( "Exits the application." );
         exitMenuItem.addActionListener( new ExitListener( frame ) );
-        exitMenuItem.setIcon( IconConstants.getIcon( IconConstants.CLOSE_16 ) );
+        exitMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
 
         fileMenu.add( newMenuItem );
         fileMenu.add( openMenuItem );
@@ -186,7 +186,7 @@ public class FileSpyFrameView implements IView<JFrame>
         regexMenuItem.addActionListener( new RegexListener() );
 
         JMenuItem fileOptionsMenuItem = new JMenuItem( "File Options" );
-        fileOptionsMenuItem.setIcon( IconConstants.getIcon( IconConstants.EDIT_16 ) );
+        fileOptionsMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.EDIT_16 ) );
         fileOptionsMenuItem.addActionListener( new OptionsListener() );
 
         toolsMenu.add( regexMenuItem );

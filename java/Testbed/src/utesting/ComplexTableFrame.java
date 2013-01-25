@@ -335,7 +335,7 @@ class TableDataCellPanel extends JPanel
         super();
         stateLabel = new JLabel( "" );
         removeButton = new JButton(
-            IconConstants.getIcon( IconConstants.EDIT_DELETE_16 ) );
+            IconConstants.loader.getIcon( IconConstants.EDIT_DELETE_16 ) );
 
         setLayout( new GridBagLayout() );
 

@@ -117,7 +117,7 @@ public class ClearViewFrame extends JFrame
 
         JMenu fileMenu = new JMenu( "File" );
         JMenuItem exitMenuItem = new JMenuItem( "Exit",
-            IconConstants.getIcon( IconConstants.CLOSE_16 ) );
+            IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
 
         exitMenuItem.addActionListener( new ExitListener( this ) );
 

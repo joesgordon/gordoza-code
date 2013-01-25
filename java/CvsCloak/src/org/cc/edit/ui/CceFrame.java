@@ -74,11 +74,11 @@ public class CceFrame extends JFrame
         JMenuBar menuBar = new UMenuBar();
         JMenu fileMenu = new JMenu( "File" );
         JMenuItem openMenuItem = new JMenuItem( "Open",
-            IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
         JMenuItem saveMenuItem = new JMenuItem( "Save",
-            IconConstants.getIcon( IconConstants.SAVE_16 ) );
+            IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
         JMenuItem exitMenuItem = new JMenuItem( "Exit",
-            IconConstants.getIcon( IconConstants.CLOSE_16 ) );
+            IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
 
         openMenuItem.addActionListener( new OpenListener() );
         saveMenuItem.addActionListener( new SaveListener() );
@@ -127,30 +127,31 @@ public class CceFrame extends JFrame
         redoPopup.addItemSelectedListener( doList );
 
         newButton = new JButton(
-            IconConstants.getIcon( IconConstants.NEW_FILE_16 ) );
+            IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
         newButton.setToolTipText( "New" );
         newButton.addActionListener( new NewListener() );
         newButton.setFocusable( false );
 
-        saveButton = new JButton( IconConstants.getIcon( IconConstants.SAVE_16 ) );
+        saveButton = new JButton(
+            IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
         saveButton.setToolTipText( "Save" );
         saveButton.addActionListener( new SaveListener() );
         saveButton.setFocusable( false );
 
         openButton = new JButton(
-            IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
         openButton.setToolTipText( "Open" );
         openButton.addActionListener( new OpenListener() );
         openButton.setFocusable( false );
 
         undoButton = new ButtonLister<String>(
-            IconConstants.getIcon( IconConstants.UNDO_16 ), undoPopup );
+            IconConstants.loader.getIcon( IconConstants.UNDO_16 ), undoPopup );
         // undoButton.setToolTipText( "Undo" );
         undoButton.addActionListener( new DoListener() );
         undoButton.setFocusable( false );
 
         redoButton = new ButtonLister<String>(
-            IconConstants.getIcon( IconConstants.REDO_16 ), redoPopup );
+            IconConstants.loader.getIcon( IconConstants.REDO_16 ), redoPopup );
         // redoButton.setToolTipText( "Redo" );
         redoButton.addActionListener( new DoListener() );
         redoButton.setFocusable( false );

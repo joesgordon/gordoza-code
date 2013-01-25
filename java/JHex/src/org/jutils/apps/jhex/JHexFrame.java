@@ -63,7 +63,7 @@ public class JHexFrame extends JFrame
 
         try
         {
-            URL url = IconConstants.getIconUrl( IconConstants.BINARY_32 );
+            URL url = IconConstants.loader.getIconUrl( IconConstants.BINARY_32 );
             BufferedImage img16 = ImageIO.read( url );
             // setIconImage( img16 );
             setIconImages( Arrays.asList( new Image[] { img16 } ) );
@@ -100,13 +100,13 @@ public class JHexFrame extends JFrame
         // Setup menu bar
         // ---------------------------------------------------------------------
         openMenuItem.addActionListener( openListener );
-        openMenuItem.setIcon( IconConstants.getIcon( IconConstants.OPEN_FILE_16 ) );
+        openMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.OPEN_FILE_16 ) );
 
         saveMenuItem.addActionListener( saveListener );
-        saveMenuItem.setIcon( IconConstants.getIcon( IconConstants.SAVE_16 ) );
+        saveMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
 
         exitMenuItem.addActionListener( new ExitListener( this ) );
-        exitMenuItem.setIcon( IconConstants.getIcon( IconConstants.CLOSE_16 ) );
+        exitMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
 
         fileMenu.add( openMenuItem );
         fileMenu.add( saveMenuItem );
@@ -115,11 +115,11 @@ public class JHexFrame extends JFrame
         gotoMenuItem.addActionListener( gotoListener );
         searchMenu.add( gotoMenuItem );
 
-        findMenuItem.setIcon( IconConstants.getIcon( IconConstants.FIND_16 ) );
+        findMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.FIND_16 ) );
         findMenuItem.addActionListener( findListener );
         searchMenu.add( findMenuItem );
 
-        bufferSizeMenuItem.setIcon( IconConstants.getIcon( IconConstants.CONFIG_16 ) );
+        bufferSizeMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.CONFIG_16 ) );
         bufferSizeMenuItem.addActionListener( new BufferSizeListener() );
         toolsMenu.add( bufferSizeMenuItem );
 

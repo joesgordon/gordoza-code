@@ -37,8 +37,8 @@ public class ToDLsFrame extends JFrame
         setJMenuBar( createMenuBar() );
         setContentPane( contentPanel );
 
-        setIconImages( IconConstants.getImages( IconConstants.CALENDAR_16,
-            IconConstants.CALENDAR_32 ) );
+        setIconImages( IconConstants.loader.getImages(
+            IconConstants.CALENDAR_16, IconConstants.CALENDAR_32 ) );
     }
 
     /***************************************************************************
@@ -47,28 +47,28 @@ public class ToDLsFrame extends JFrame
     private JToolBar createToolBar()
     {
         JButton openButton = new JButton(
-            IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
 
         JButton upButton = new JButton(
-            IconConstants.getIcon( IconConstants.UP_16 ) );
+            IconConstants.loader.getIcon( IconConstants.UP_16 ) );
 
         JButton leftButton = new JButton(
-            IconConstants.getIcon( IconConstants.LEFT_16 ) );
+            IconConstants.loader.getIcon( IconConstants.LEFT_16 ) );
 
         JButton rightButton = new JButton(
-            IconConstants.getIcon( IconConstants.RIGHT_16 ) );
+            IconConstants.loader.getIcon( IconConstants.RIGHT_16 ) );
 
         JButton undoButton = new JButton(
-            IconConstants.getIcon( IconConstants.UNDO_16 ) );
+            IconConstants.loader.getIcon( IconConstants.UNDO_16 ) );
 
         JButton redoButton = new JButton(
-            IconConstants.getIcon( IconConstants.REDO_16 ) );
+            IconConstants.loader.getIcon( IconConstants.REDO_16 ) );
 
         JButton addButton = new JButton(
-            IconConstants.getIcon( IconConstants.EDIT_ADD_16 ) );
+            IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 ) );
 
         JButton removeButton = new JButton(
-            IconConstants.getIcon( IconConstants.EDIT_DELETE_16 ) );
+            IconConstants.loader.getIcon( IconConstants.EDIT_DELETE_16 ) );
 
         JToolBar mainToolBar = new UToolBar();
         mainToolBar.add( openButton );
@@ -109,19 +109,19 @@ public class ToDLsFrame extends JFrame
         JMenu fileMenu = new JMenu( "File" );
 
         JMenuItem newMenuItem = new JMenuItem( "New" );
-        newMenuItem.setIcon( IconConstants.getIcon( IconConstants.NEW_FILE_16 ) );
+        newMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
         newMenuItem.addActionListener( new NewListener() );
 
         JMenuItem openMenuItem = new JMenuItem( "Open" );
-        openMenuItem.setIcon( IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+        openMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
         openMenuItem.addActionListener( new OpenListener() );
 
         JMenuItem saveMenuItem = new JMenuItem( "Save" );
-        saveMenuItem.setIcon( IconConstants.getIcon( IconConstants.SAVE_16 ) );
+        saveMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
         saveMenuItem.addActionListener( new SaveListener() );
 
         JMenuItem exitMenuItem = new JMenuItem( "Exit" );
-        exitMenuItem.setIcon( IconConstants.getIcon( IconConstants.CLOSE_16 ) );
+        exitMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
         exitMenuItem.addActionListener( new ExitListener( this ) );
 
         fileMenu.add( newMenuItem );

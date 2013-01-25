@@ -194,7 +194,7 @@ public class ConversationPanel extends JPanel implements IConversationView
         BottomScroller bottomScroller = new BottomScroller( msgEditorPane );
         JButton fontButton = new JButton( "Font" );
 
-        fontButton.setIcon( IconConstants.getIcon( IconConstants.FONT_24 ) );
+        fontButton.setIcon( IconConstants.loader.getIcon( IconConstants.FONT_24 ) );
         fontButton.addActionListener( fontButtonListener );
 
         msgEditorPane.addComponentListener( bottomScroller );

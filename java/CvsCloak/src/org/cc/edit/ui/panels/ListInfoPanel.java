@@ -53,11 +53,13 @@ public class ListInfoPanel<T> extends InfoPanel<List<T>>
         dataList.addListSelectionListener( new ItemSelectionListener() );
 
         addButton = new JButton(
-            IconConstants.getIcon( IconConstants.EDIT_ADD_16 ) );
+            IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 ) );
         removeButton = new JButton(
-            IconConstants.getIcon( IconConstants.EDIT_DELETE_16 ) );
-        upButton = new JButton( IconConstants.getIcon( IconConstants.UP_16 ) );
-        downButton = new JButton( IconConstants.getIcon( IconConstants.DOWN_16 ) );
+            IconConstants.loader.getIcon( IconConstants.EDIT_DELETE_16 ) );
+        upButton = new JButton(
+            IconConstants.loader.getIcon( IconConstants.UP_16 ) );
+        downButton = new JButton(
+            IconConstants.loader.getIcon( IconConstants.DOWN_16 ) );
 
         removeButton.setEnabled( false );
         removeButton.addActionListener( new RemoveListener() );

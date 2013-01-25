@@ -113,7 +113,7 @@ public class CojoFrame extends JFrame
 
         JMenu fileMenu = new JMenu( "File" );
         JMenuItem exitMenuItem = new JMenuItem( "Exit",
-            IconConstants.getIcon( IconConstants.CLOSE_16 ) );
+            IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
 
         exitMenuItem.addActionListener( new ExitListener( this ) );
 
@@ -135,13 +135,13 @@ public class CojoFrame extends JFrame
         JButton openButton = new JButton();
         JButton saveButton = new JButton();
 
-        newButton.setIcon( IconConstants.getIcon( IconConstants.NEW_FILE_16 ) );
+        newButton.setIcon( IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
         newButton.setFocusable( false );
 
-        openButton.setIcon( IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+        openButton.setIcon( IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
         openButton.setFocusable( false );
 
-        saveButton.setIcon( IconConstants.getIcon( IconConstants.SAVE_16 ) );
+        saveButton.setIcon( IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
         saveButton.setFocusable( false );
 
         toolbar.add( newButton );

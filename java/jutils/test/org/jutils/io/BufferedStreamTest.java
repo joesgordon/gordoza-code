@@ -13,7 +13,8 @@ public class BufferedStreamTest
 
     private byte[] loadTestBytes() throws IOException
     {
-        InputStream stream = IconConstants.getIconUrl( IconConstants.ATOMIC_32 ).openStream();
+        InputStream stream = IconConstants.loader.getIconUrl(
+            IconConstants.ATOMIC_32 ).openStream();
         byte[] bytes = new byte[stream.available()];
 
         stream.read( bytes );

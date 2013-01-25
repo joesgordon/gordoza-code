@@ -92,16 +92,16 @@ public class RecordsPanel extends JPanel
         };
 
         // ---------------------------------------------------------------------
-        // 
+        //
         // ---------------------------------------------------------------------
         JToolBar toolbar = new JToolBar();
 
         findDuplicatesButton = new JButton(
-            IconConstants.getIcon( IconConstants.CHECK_16 ) );
+            IconConstants.loader.getIcon( IconConstants.CHECK_16 ) );
         assignDuplicateButton = new JButton(
-            IconConstants.getIcon( IconConstants.EDIT_ADD_16 ) );
+            IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 ) );
         removeDuplicateButton = new JButton(
-            IconConstants.getIcon( IconConstants.EDIT_DELETE_16 ) );
+            IconConstants.loader.getIcon( IconConstants.EDIT_DELETE_16 ) );
 
         findDuplicatesButton.setFocusable( false );
         findDuplicatesButton.setEnabled( false );
@@ -135,7 +135,7 @@ public class RecordsPanel extends JPanel
         recordsTable.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
 
         // ---------------------------------------------------------------------
-        // 
+        //
         // ---------------------------------------------------------------------
         setLayout( new BorderLayout() );
 

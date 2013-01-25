@@ -160,12 +160,12 @@ public class JExplorerFrame extends JFrame
 
         exitMenuItem.setText( "Exit" );
         exitMenuItem.addActionListener( new ExitListener( this ) );
-        exitMenuItem.setIcon( IconConstants.getIcon( IconConstants.CLOSE_16 ) );
+        exitMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
         fileMenu.add( exitMenuItem );
 
         toolsMenu.setText( "Tools" );
         optionsMenuItem.setText( "Options" );
-        optionsMenuItem.setIcon( IconConstants.getIcon( IconConstants.CONFIG_16 ) );
+        optionsMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.CONFIG_16 ) );
         // optionsMenuItem.setIcon( IconLoader.getIcon( IconLoader.EDIT_16 ) );
         optionsMenuItem.addActionListener( optionsMenuItemListener );
         toolsMenu.add( optionsMenuItem );
@@ -184,27 +184,27 @@ public class JExplorerFrame extends JFrame
 
         backButton.setText( "" );
         backButton.setToolTipText( BACKWARD_TIP );
-        backButton.setIcon( IconConstants.getIcon( IconConstants.BACK_24 ) );
+        backButton.setIcon( IconConstants.loader.getIcon( IconConstants.BACK_24 ) );
         backButton.setFocusable( false );
         backButton.setEnabled( false );
         backButton.addActionListener( backButtonListener );
 
         nextButton.setText( "" );
         nextButton.setToolTipText( FORWARD_TIP );
-        nextButton.setIcon( IconConstants.getIcon( IconConstants.FORWARD_24 ) );
+        nextButton.setIcon( IconConstants.loader.getIcon( IconConstants.FORWARD_24 ) );
         nextButton.setFocusable( false );
         nextButton.setEnabled( false );
         nextButton.addActionListener( nextButtonListener );
 
         upButton.setText( "" );
         upButton.setToolTipText( "Go to parent directory" );
-        upButton.setIcon( IconConstants.getIcon( IconConstants.UP_24 ) );
+        upButton.setIcon( IconConstants.loader.getIcon( IconConstants.UP_24 ) );
         upButton.setFocusable( false );
         upButton.addActionListener( upButtonListener );
 
         refreshButton.setText( "" );
         refreshButton.setToolTipText( "Refresh the current directory" );
-        refreshButton.setIcon( IconConstants.getIcon( IconConstants.REFRESH_24 ) );
+        refreshButton.setIcon( IconConstants.loader.getIcon( IconConstants.REFRESH_24 ) );
         refreshButton.setFocusable( false );
 
         toolbar.add( backButton );
@@ -268,8 +268,8 @@ public class JExplorerFrame extends JFrame
         this.getContentPane().add( mainPanel, BorderLayout.CENTER );
         this.getContentPane().add( statusPanel.getView(), BorderLayout.SOUTH );
 
-        setIconImages( IconConstants.getImages( IconConstants.OPEN_FOLDER_16,
-            IconConstants.OPEN_FOLDER_32 ) );
+        setIconImages( IconConstants.loader.getImages(
+            IconConstants.OPEN_FOLDER_16, IconConstants.OPEN_FOLDER_32 ) );
 
         setSize( new Dimension( 600, 450 ) );
         splitPane.setDividerLocation( 150 );

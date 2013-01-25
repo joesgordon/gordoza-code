@@ -3,27 +3,45 @@ package org.jutils;
 import java.util.Enumeration;
 import java.util.Iterator;
 
+/*******************************************************************************
+ * Class that provides a way to iterate through an Enumeration via an iterator
+ * (for each) block.
+ ******************************************************************************/
 public class EnumerationIteratorAdapter<T> implements Iterator<T>, Iterable<T>
 {
-    private Enumeration<T> it;
+    /** The enumeration to be iterated. */
+    private final Enumeration<T> it;
 
+    /***************************************************************************
+     * Creates the iterator with the given enumeration.
+     * @param it the enumeration to be iterated.
+     **************************************************************************/
     public EnumerationIteratorAdapter( Enumeration<T> it )
     {
         this.it = it;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public boolean hasNext()
     {
         return it.hasMoreElements();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public T next()
     {
         return it.nextElement();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void remove()
     {
@@ -31,6 +49,9 @@ public class EnumerationIteratorAdapter<T> implements Iterator<T>, Iterable<T>
             "Cannot remove from an Enumeration." );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public Iterator<T> iterator()
     {

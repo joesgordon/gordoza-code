@@ -52,9 +52,9 @@ public class ChatFrame extends JFrame implements IChatView
         JToolBar toolbar = new JToolBar();
 
         JButton historyButton = new JButton(
-            IconConstants.getIcon( IconConstants.CLOCK_24 ) );
+            IconConstants.loader.getIcon( IconConstants.CLOCK_24 ) );
         JButton configButton = new JButton(
-            IconConstants.getIcon( IconConstants.CONFIG_24 ) );
+            IconConstants.loader.getIcon( IconConstants.CONFIG_24 ) );
 
         historyButton.setToolTipText( "View Chat History" );
         historyButton.setFocusable( false );
@@ -115,7 +115,7 @@ public class ChatFrame extends JFrame implements IChatView
             }
         } );
 
-        setIconImages( IconConstants.getImages( IconConstants.CHAT_16,
+        setIconImages( IconConstants.loader.getImages( IconConstants.CHAT_16,
             IconConstants.CHAT_32, IconConstants.CHAT_48, IconConstants.CHAT_64 ) );
 
         setContentPane( contentPanel );

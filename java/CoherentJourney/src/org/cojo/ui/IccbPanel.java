@@ -33,8 +33,8 @@ public class IccbPanel extends JPanel
 
         JLabel dateApprovedLabel = new JLabel( "Date Approved :" );
         dateApprovedField = new JTextField( "Date", 25 );
-        dateApprovedButton = new JButton( IconConstants
-            .getIcon( IconConstants.CALENDAR_16 ) );
+        dateApprovedButton = new JButton(
+            IconConstants.loader.getIcon( IconConstants.CALENDAR_16 ) );
 
         JLabel releasedVersionLabel = new JLabel( "Released Version :" );
         releasedVersionField = new JComboBox();

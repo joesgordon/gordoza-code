@@ -124,7 +124,7 @@ public class StatusBarPanel
         JButton refreshButton = new JButton();
         refreshButton.setMargin( new Insets( 0, 0, 0, 0 ) );
         refreshButton.setText( "" );
-        refreshButton.setIcon( IconConstants.getIcon( IconConstants.REFRESH_16 ) );
+        refreshButton.setIcon( IconConstants.loader.getIcon( IconConstants.REFRESH_16 ) );
         refreshButton.setFocusable( false );
         refreshButton.addActionListener( new RefreshButtonListener() );
 
