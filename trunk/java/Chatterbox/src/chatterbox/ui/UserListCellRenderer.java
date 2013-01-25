@@ -16,8 +16,8 @@ public class UserListCellRenderer extends DefaultListCellRenderer
 
     public UserListCellRenderer()
     {
-        userAvailableIcon = IconConstants.getIcon( IconConstants.IM_USER_32 );
-        userUnavailableIcon = IconConstants.getIcon( IconConstants.IM_USER_OFFLINE_32 );
+        userAvailableIcon = IconConstants.loader.getIcon( IconConstants.IM_USER_32 );
+        userUnavailableIcon = IconConstants.loader.getIcon( IconConstants.IM_USER_OFFLINE_32 );
     }
 
     @Override

@@ -107,11 +107,11 @@ public class StfsPanel extends JPanel
         JButton addButton = new JButton();
         JButton deleteButton = new JButton();
 
-        addButton.setIcon( IconConstants.getIcon( IconConstants.EDIT_ADD_16 ) );
+        addButton.setIcon( IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 ) );
         addButton.setToolTipText( "Add an STF" );
         addButton.setFocusable( false );
 
-        deleteButton.setIcon( IconConstants.getIcon( IconConstants.EDIT_DELETE_16 ) );
+        deleteButton.setIcon( IconConstants.loader.getIcon( IconConstants.EDIT_DELETE_16 ) );
         deleteButton.setToolTipText( "Delete an STF" );
         deleteButton.setFocusable( false );
 

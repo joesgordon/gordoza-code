@@ -61,8 +61,9 @@ public class ColorGenFrame extends JFrame
         // ---------------------------------------------------------------------
         JToolBar toolbar = new JToolBar();
         JButton saveButton = new JButton(
-            IconConstants.getIcon( IconConstants.SAVE_16 ) );
-        goButton = new JButton( IconConstants.getIcon( IconConstants.CHECK_16 ) );
+            IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
+        goButton = new JButton(
+            IconConstants.loader.getIcon( IconConstants.CHECK_16 ) );
 
         saveButton.setFocusable( false );
         saveButton.addActionListener( new ActionListener()

@@ -40,7 +40,7 @@ public class TxDialog
         mainPanel.setLayout( new GridBagLayout() );
 
         progressBar.setMinimum( 0 );
-        cancelButton.setIcon( IconConstants.getIcon( IconConstants.CLOSE_16 ) );
+        cancelButton.setIcon( IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
         cancelButton.addActionListener( new ActionListener()
         {
             @Override

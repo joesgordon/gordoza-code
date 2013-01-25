@@ -168,7 +168,7 @@ public class DuakPanel extends JPanel
         {
             fsv = FileSystemView.getFileSystemView();
             iconMap = new HashMap<File, Icon>();
-            defaultIcon = IconConstants.getIcon( IconConstants.OPEN_FILE_16 );
+            defaultIcon = IconConstants.loader.getIcon( IconConstants.OPEN_FILE_16 );
         }
 
         public String getSystemName( File file )

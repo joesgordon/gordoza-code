@@ -42,8 +42,8 @@ public class McConfigurationPanel extends JPanel
      **************************************************************************/
     public McConfigurationPanel()
     {
-        checkIcon = IconConstants.getIcon( IconConstants.CHECK_16 );
-        deleteIcon = IconConstants.getIcon( IconConstants.STOP_16 );
+        checkIcon = IconConstants.loader.getIcon( IconConstants.CHECK_16 );
+        deleteIcon = IconConstants.loader.getIcon( IconConstants.STOP_16 );
 
         addressField = new JTextField( "224.69.69.69" );
         portField = new JTextField( "6969" );

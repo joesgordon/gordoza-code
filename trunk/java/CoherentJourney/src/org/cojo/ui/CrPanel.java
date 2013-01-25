@@ -67,7 +67,7 @@ public class CrPanel extends JPanel
         JButton stateButton = new JButton();
         JButton helpButton = new JButton();
 
-        saveButton.setIcon( IconConstants.getIcon( IconConstants.SAVE_16 ) );
+        saveButton.setIcon( IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
         saveButton.setToolTipText( "Save CR" );
         saveButton.setFocusable( false );
 

@@ -116,7 +116,7 @@ public class NmrConnectFrame extends JFrame
 
         JMenu fileMenu = new JMenu( "File" );
         JMenuItem exitMenuItem = new JMenuItem( "Exit",
-            IconConstants.getIcon( IconConstants.CLOSE_16 ) );
+            IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
 
         exitMenuItem.addActionListener( new ExitListener( this ) );
 
@@ -138,10 +138,11 @@ public class NmrConnectFrame extends JFrame
         JToolBar toolbar = new UToolBar();
 
         JButton newButton = new JButton(
-            IconConstants.getIcon( IconConstants.NEW_FILE_16 ) );
+            IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
         JButton openButton = new JButton(
-            IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
-        saveButton = new JButton( IconConstants.getIcon( IconConstants.SAVE_16 ) );
+            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+        saveButton = new JButton(
+            IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
 
         newButton.addActionListener( newListener );
         newButton.setFocusable( false );

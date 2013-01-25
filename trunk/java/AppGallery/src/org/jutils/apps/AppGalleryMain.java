@@ -40,7 +40,7 @@ public class AppGalleryMain extends FrameRunner
         JFrame frame = new JFrame();
         AppGalleryFrame appFrame = new AppGalleryFrame( apps );
 
-        Image img = IconConstants.getImage( IconConstants.LAUNCH_16 );
+        Image img = IconConstants.loader.getImage( IconConstants.LAUNCH_16 );
 
         frame.setContentPane( appFrame.getView() );
         frame.setTitle( "JUtils Application Gallery" );

@@ -247,20 +247,20 @@ class ExtPanel extends JPanel
                 4, 4 ), 0, 0 ) );
 
         // ---------------------------------------------------------------------
-        // 
+        //
         // ---------------------------------------------------------------------
         buttonPanel.setLayout( new GridBagLayout() );
 
-        addButton.setIcon( IconConstants.getIcon( IconConstants.EDIT_ADD_16 ) );
+        addButton.setIcon( IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 ) );
         addButton.setToolTipText( "Add a new program" );
 
-        removeButton.setIcon( IconConstants.getIcon( IconConstants.EDIT_DELETE_16 ) );
+        removeButton.setIcon( IconConstants.loader.getIcon( IconConstants.EDIT_DELETE_16 ) );
         removeButton.setToolTipText( "Remove an existing program" );
 
-        editButton.setIcon( IconConstants.getIcon( IconConstants.EDIT_16 ) );
+        editButton.setIcon( IconConstants.loader.getIcon( IconConstants.EDIT_16 ) );
         editButton.setToolTipText( "Edit an existing program" );
 
-        defaultButton.setIcon( IconConstants.getIcon( IconConstants.CHECK_16 ) );
+        defaultButton.setIcon( IconConstants.loader.getIcon( IconConstants.CHECK_16 ) );
         defaultButton.setToolTipText( "Make program extension default" );
 
         buttonPanel.add( addButton, new GridBagConstraints( 0, 0, 1, 1, 0.0,
@@ -277,7 +277,7 @@ class ExtPanel extends JPanel
             new Insets( 2, 8, 2, 2 ), 0, 0 ) );
 
         // ---------------------------------------------------------------------
-        // 
+        //
         // ---------------------------------------------------------------------
         this.setLayout( new GridBagLayout() );
         this.setBorder( new ShadowBorder() );
@@ -362,10 +362,10 @@ class ExtensionsPanel extends JPanel
         leftPanel.setLayout( new GridBagLayout() );
         leftPanel.setBorder( new ShadowBorder() );
 
-        addButton.setIcon( IconConstants.getIcon( IconConstants.EDIT_ADD_16 ) );
+        addButton.setIcon( IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 ) );
         addButton.setToolTipText( "Add a new extension" );
 
-        removeButton.setIcon( IconConstants.getIcon( IconConstants.EDIT_DELETE_16 ) );
+        removeButton.setIcon( IconConstants.loader.getIcon( IconConstants.EDIT_DELETE_16 ) );
         removeButton.setToolTipText( "Remove an existing extension" );
 
         extList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );

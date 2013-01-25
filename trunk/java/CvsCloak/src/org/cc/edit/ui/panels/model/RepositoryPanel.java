@@ -115,7 +115,7 @@ public class RepositoryPanel extends InfoPanel<Repository>
         JLabel locationLabel = new JLabel( "Location :" );
         locationField = new JTextField( 10 );
         JButton locationButton = new JButton(
-            IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
 
         locationButton.setToolTipText( "Browse" );
         locationButton.addActionListener( new LocationButtonActionListener() );

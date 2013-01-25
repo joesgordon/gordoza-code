@@ -73,8 +73,8 @@ public class CrDefinitionPanel extends JPanel
             @Override
             public void actionPerformed( ActionEvent e )
             {
-                thirdPartyListeners.fireListeners( this, thirdPartyField
-                    .isSelected() );
+                thirdPartyListeners.fireListeners( this,
+                    thirdPartyField.isSelected() );
             }
         };
 
@@ -257,8 +257,7 @@ public class CrDefinitionPanel extends JPanel
         list.setPreferredSize( new Dimension( 90, 90 ) );
         scrollPane.setPreferredSize( new Dimension( 150, 100 ) );
 
-        openButton.setIcon( IconConstants
-            .getIcon( IconConstants.OPEN_FOLDER_16 ) );
+        openButton.setIcon( IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
 
         panel.add( label, new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
             GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets( 0, 0,

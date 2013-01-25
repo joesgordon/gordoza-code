@@ -12,7 +12,7 @@ public class DuakApp implements ILibraryApp
     @Override
     public Icon getIcon()
     {
-        return IconConstants.getIcon( IconConstants.ATOMIC_32 );
+        return IconConstants.loader.getIcon( IconConstants.ATOMIC_32 );
     }
 
     @Override

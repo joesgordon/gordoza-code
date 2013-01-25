@@ -172,7 +172,7 @@ class FileIconLoader
     {
         fsv = FileSystemView.getFileSystemView();
         iconMap = new HashMap<File, Icon>();
-        defaultIcon = IconConstants.getIcon( IconConstants.OPEN_FILE_16 );
+        defaultIcon = IconConstants.loader.getIcon( IconConstants.OPEN_FILE_16 );
     }
 
     public Icon getSystemIcon( File file )

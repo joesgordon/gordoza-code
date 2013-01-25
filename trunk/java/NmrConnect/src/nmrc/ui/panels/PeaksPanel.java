@@ -69,7 +69,7 @@ public class PeaksPanel extends JPanel
             new TableSelectedListener() );
 
         // ---------------------------------------------------------------------
-        // 
+        //
         // ---------------------------------------------------------------------
         setLayout( new BorderLayout() );
 
@@ -85,17 +85,17 @@ public class PeaksPanel extends JPanel
         JToolBar toolbar = new JToolBar();
 
         sortButton = new JButton(
-            IconConstants.getIcon( IconConstants.SORT_DOWN_16 ) );
+            IconConstants.loader.getIcon( IconConstants.SORT_DOWN_16 ) );
         findButton = new JButton(
-            IconConstants.getIcon( IconConstants.PAGEMAG_16 ) );
+            IconConstants.loader.getIcon( IconConstants.PAGEMAG_16 ) );
         assignButton = new JButton(
-            IconConstants.getIcon( IconConstants.EDIT_ADD_16 ) );
+            IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 ) );
         unassignButton = new JButton(
-            IconConstants.getIcon( IconConstants.EDIT_DELETE_16 ) );
+            IconConstants.loader.getIcon( IconConstants.EDIT_DELETE_16 ) );
         previousButton = new JButton(
-            IconConstants.getIcon( IconConstants.BACK_16 ) );
+            IconConstants.loader.getIcon( IconConstants.BACK_16 ) );
         nextButton = new JButton(
-            IconConstants.getIcon( IconConstants.FORWARD_16 ) );
+            IconConstants.loader.getIcon( IconConstants.FORWARD_16 ) );
 
         sortButton.setFocusable( false );
         sortButton.setEnabled( false );

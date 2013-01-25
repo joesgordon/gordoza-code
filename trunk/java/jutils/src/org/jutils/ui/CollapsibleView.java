@@ -70,10 +70,10 @@ public class CollapsibleView
         GridBagConstraints constraints;
         GradientPanel titlePanel;
         JToggleButton collapseButton = new JToggleButton(
-            IconConstants.getIcon( "collapse.png" ) );
+            IconConstants.loader.getIcon( "collapse.png" ) );
 
         collapseButton.addActionListener( new CollapseButtonListener() );
-        collapseButton.setSelectedIcon( IconConstants.getIcon( "expand.png" ) );
+        collapseButton.setSelectedIcon( IconConstants.loader.getIcon( "expand.png" ) );
 
         collapseButton.setBorderPainted( false );
         collapseButton.setOpaque( false );

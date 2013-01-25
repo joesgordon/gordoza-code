@@ -70,11 +70,11 @@ public class HexEditorFilePanel extends JPanel
         progressBar.setValue( 0 );
 
         backButton.setEnabled( false );
-        backButton.setIcon( IconConstants.getIcon( IconConstants.BACK_24 ) );
+        backButton.setIcon( IconConstants.loader.getIcon( IconConstants.BACK_24 ) );
         backButton.addActionListener( backListener );
 
         nextButton.setEnabled( false );
-        nextButton.setIcon( IconConstants.getIcon( IconConstants.FORWARD_24 ) );
+        nextButton.setIcon( IconConstants.loader.getIcon( IconConstants.FORWARD_24 ) );
         nextButton.addActionListener( nextListener );
 
         buttonPanel.add( progressBar, new GridBagConstraints( 0, 0, 1, 1, 1.0,

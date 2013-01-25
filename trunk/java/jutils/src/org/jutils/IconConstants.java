@@ -1,14 +1,7 @@
 package org.jutils;
 
-import java.awt.Image;
-import java.io.IOException;
-import java.net.URL;
-import java.util.List;
-
-import javax.swing.ImageIcon;
-
 /*******************************************************************************
- *
+ * Defines the constants needed to access the icons in this library.
  ******************************************************************************/
 public final class IconConstants
 {
@@ -116,59 +109,14 @@ public final class IconConstants
 
     public final static String UP_24 = "up24.png";
 
-    private final static IconLoader loader = new IconLoader(
+    /** The icon loader to be used to access icons in this project. */
+    public final static IconLoader loader = new IconLoader(
         IconConstants.class, "icons" );
 
     /***************************************************************************
-     * 
+     * Private constructor to prevent instantiation.
      **************************************************************************/
     private IconConstants()
     {
-    }
-
-    /***************************************************************************
-     * @param str String
-     * @return ImageIcon
-     **************************************************************************/
-    public static ImageIcon getIcon( String str )
-    {
-        return loader.getIcon( str );
-    }
-
-    /***************************************************************************
-     * @param names
-     * @return
-     **************************************************************************/
-    public static List<ImageIcon> getIcons( String... names )
-    {
-        return loader.getIcons( names );
-    }
-
-    /***************************************************************************
-     * @param str String
-     * @return URL
-     **************************************************************************/
-    public static URL getIconUrl( String str )
-    {
-        return loader.getIconUrl( str );
-    }
-
-    /***************************************************************************
-     * @param str
-     * @return
-     * @throws IOException
-     **************************************************************************/
-    public static Image getImage( String str )
-    {
-        return loader.getImage( str );
-    }
-
-    /***************************************************************************
-     * @param names
-     * @return
-     **************************************************************************/
-    public static List<Image> getImages( String... names )
-    {
-        return loader.getImages( names );
     }
 }

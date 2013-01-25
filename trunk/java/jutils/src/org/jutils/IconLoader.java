@@ -10,14 +10,20 @@ import java.util.*;
 import javax.swing.ImageIcon;
 
 /*******************************************************************************
- * 
+ * Defines methods of loading icons that reside either in a directory or
+ * relative to a class file. Aids the developer in accessing icons in a manner
+ * independent of whether the class files are in a directory or a jar file. All
+ * icons must be copied to the directory or jar file by the build tool.
  ******************************************************************************/
 public class IconLoader
 {
-    /**  */
-    private URL baseUrl;
-    /**  */
-    private Map<String, ImageIcon> iconMap;
+    /** The URL at which all the icons reside. */
+    private final URL baseUrl;
+    /**
+     * The icon cache so that icons are not loaded more than once per instance
+     * of this class.
+     */
+    private final Map<String, ImageIcon> iconMap;
 
     /***************************************************************************
      * @param basePath

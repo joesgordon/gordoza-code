@@ -67,19 +67,21 @@ public class DuakFrame extends JFrame
         JButton button;
 
         button = new JButton(
-            IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
         button.setFocusable( false );
         button.addActionListener( new OpenListener() );
         toolbar.add( button );
 
-        button = new JButton( IconConstants.getIcon( IconConstants.BACK_16 ) );
+        button = new JButton(
+            IconConstants.loader.getIcon( IconConstants.BACK_16 ) );
         button.setFocusable( false );
         button.addActionListener( new BackListener() );
         button.setEnabled( false );
         toolbar.add( button );
         previousButton = button;
 
-        button = new JButton( IconConstants.getIcon( IconConstants.FORWARD_16 ) );
+        button = new JButton(
+            IconConstants.loader.getIcon( IconConstants.FORWARD_16 ) );
         button.setFocusable( false );
         button.addActionListener( new ForwardListener() );
         button.setEnabled( false );
