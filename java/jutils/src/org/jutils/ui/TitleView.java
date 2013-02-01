@@ -18,6 +18,9 @@ public class TitleView implements IDataView<String>
     /**  */
     private final JPanel componentPanel;
 
+    /**  */
+    private Component comp;
+
     /***************************************************************************
      * 
      **************************************************************************/
@@ -82,12 +85,24 @@ public class TitleView implements IDataView<String>
     }
 
     /***************************************************************************
+     * @return
+     **************************************************************************/
+    public Component getComponent()
+    {
+        return comp;
+    }
+
+    /***************************************************************************
      * @param comp
      **************************************************************************/
     public void setComponent( Component comp )
     {
+        this.comp = comp;
+
         componentPanel.removeAll();
         componentPanel.add( comp, BorderLayout.CENTER );
+        componentPanel.revalidate();
+        componentPanel.repaint();
     }
 
     /***************************************************************************
