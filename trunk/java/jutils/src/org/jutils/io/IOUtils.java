@@ -17,16 +17,7 @@ public final class IOUtils
 
     static
     {
-        URL url = IOUtils.class.getProtectionDomain().getCodeSource().getLocation();
-        try
-        {
-            INSTALL_DIR = new File( url.toURI() ).getParentFile();
-        }
-        catch( URISyntaxException ex )
-        {
-            throw new RuntimeException( "Unknown install location: " +
-                url.toString(), ex );
-        }
+        INSTALL_DIR = getInstallDir( IOUtils.class );
     }
 
     /***************************************************************************
@@ -78,6 +69,17 @@ public final class IOUtils
     }
 
     /***************************************************************************
+     * @param filename
+     * @return
+     **************************************************************************/
+    public static File getInstallFile( String filename, Class<?> installClass )
+    {
+        File dir = getInstallDir( installClass );
+
+        return new File( dir, filename );
+    }
+
+    /***************************************************************************
      * @param file
      * @return
      **************************************************************************/
@@ -96,4 +98,25 @@ public final class IOUtils
         return new File( parent, filename.substring( 0, extensionIndex ) );
     }
 
+    /***************************************************************************
+     * @param installClass
+     * @return
+     **************************************************************************/
+    public static File getInstallDir( Class<?> installClass )
+    {
+        File file = null;
+        URL url = installClass.getProtectionDomain().getCodeSource().getLocation();
+
+        try
+        {
+            file = new File( url.toURI() ).getParentFile();
+        }
+        catch( URISyntaxException ex )
+        {
+            throw new RuntimeException( "Unknown install location: " +
+                url.toString(), ex );
+        }
+
+        return file;
+    }
 }
