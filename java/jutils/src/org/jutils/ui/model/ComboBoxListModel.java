@@ -26,6 +26,7 @@ public class ComboBoxListModel<T> implements List<T>, MutableComboBoxModel
     public ComboBoxListModel( List<T> items )
     {
         this.items = new ArrayList<T>( items );
+
         this.ldListeners = new ArrayList<ListDataListener>();
         this.selectedIndex = -1;
     }
@@ -178,7 +179,7 @@ public class ComboBoxListModel<T> implements List<T>, MutableComboBoxModel
      * 
      **************************************************************************/
     @Override
-    public Object getElementAt( int index )
+    public T getElementAt( int index )
     {
         return items.get( index );
     }
@@ -498,5 +499,103 @@ public class ComboBoxListModel<T> implements List<T>, MutableComboBoxModel
     public void removeElementAt( int index )
     {
         remove( index );
+    }
+
+    /***************************************************************************
+     * @param item
+     * @param list
+     * @return
+     **************************************************************************/
+    public static <R> ItemWrapper<R> findItem( R item,
+        Iterable<ItemWrapper<R>> list )
+    {
+        for( ItemWrapper<R> wrapper : list )
+        {
+            if( wrapper.item == item )
+            {
+                return wrapper;
+            }
+        }
+
+        return null;
+    }
+
+    /***************************************************************************
+     * @param items
+     * @param serializer
+     * @return
+     **************************************************************************/
+    public static <R> List<ItemWrapper<R>> createListWithNull( List<R> items,
+        IStringSerializer<R> serializer )
+    {
+        List<ItemWrapper<R>> wrappedItems = new ArrayList<ItemWrapper<R>>();
+
+        ItemWrapper<R> wrapper = new ItemWrapper<R>( null, serializer );
+
+        wrappedItems.add( wrapper );
+
+        for( R item : items )
+        {
+            wrapper = new ItemWrapper<R>( item, serializer );
+            wrappedItems.add( wrapper );
+        }
+
+        return wrappedItems;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public static class ItemWrapper<R>
+    {
+        public final R item;
+        public final IStringSerializer<R> serializer;
+
+        public ItemWrapper( R item, IStringSerializer<R> serializer )
+        {
+            this.item = item;
+            this.serializer = serializer;
+        }
+
+        @Override
+        public String toString()
+        {
+            return item == null ? "" : serializer.toString( item );
+        }
+
+        public boolean equals( Object obj )
+        {
+            if( obj == null )
+            {
+                return false;
+            }
+            else if( obj instanceof ItemWrapper )
+            {
+                ItemWrapper<?> wrapper = ( ItemWrapper<?> )obj;
+                if( item == null )
+                {
+                    if( wrapper.item == null )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                return item.equals( wrapper.item );
+            }
+
+            return item.equals( obj );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public static interface IStringSerializer<R>
+    {
+        public String toString( R item );
     }
 }
