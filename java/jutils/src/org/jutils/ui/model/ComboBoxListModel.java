@@ -107,14 +107,6 @@ public class ComboBoxListModel<T> implements List<T>, MutableComboBoxModel
     @Override
     public T getSelectedItem()
     {
-        return getSelected();
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public T getSelected()
-    {
         return selectedIndex > -1 ? items.get( selectedIndex ) : null;
     }
 
