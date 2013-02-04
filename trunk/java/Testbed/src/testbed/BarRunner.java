@@ -68,7 +68,7 @@ public class BarRunner extends FrameRunner
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            BusyBar2.BarColor c = model.getSelected();
+            BusyBar2.BarColor c = model.getSelectedItem();
             bar.setColors( c );
         }
     }
