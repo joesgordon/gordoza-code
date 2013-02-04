@@ -105,7 +105,7 @@ public class ComboBoxListModel<T> implements List<T>, MutableComboBoxModel
      * 
      **************************************************************************/
     @Override
-    public Object getSelectedItem()
+    public T getSelectedItem()
     {
         return getSelected();
     }
