@@ -1,0 +1,15 @@
+#! /bin/ksh -p
+
+CopyLink=""
+if [[ "$1" == "-l" ]] ; then
+   CopyLink=h
+fi
+
+for Arg ; do
+   if [[ -L "$Arg" ]] ; then
+      LinkedArg=`ls -ld "$Arg" | cut -f2 -d'>' | cut -c2-`
+      rm -f "$Arg"
+      cp -r$CopyLink "$LinkedArg" "$Arg"
+   fi
+done
+
