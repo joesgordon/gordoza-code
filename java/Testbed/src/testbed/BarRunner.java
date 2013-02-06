@@ -8,12 +8,12 @@ import java.util.Arrays;
 import javax.swing.*;
 
 import org.jutils.ui.FrameRunner;
-import org.jutils.ui.model.ComboBoxListModel;
+import org.jutils.ui.model.ItemComboBoxModel;
 
 public class BarRunner extends FrameRunner
 {
     private BusyBar2 bar;
-    private ComboBoxListModel<BusyBar2.BarColor> model;
+    private ItemComboBoxModel<BusyBar2.BarColor> model;
 
     /***************************************************************************
      * @param args
@@ -28,7 +28,7 @@ public class BarRunner extends FrameRunner
     {
         JFrame frame = new JFrame();
         JPanel panel = new JPanel( new GridBagLayout() );
-        model = new ComboBoxListModel<BusyBar2.BarColor>();
+        model = new ItemComboBoxModel<BusyBar2.BarColor>();
         JComboBox combo = new JComboBox( model );
         model.addAll( Arrays.asList( BusyBar2.BarColor.values() ) );
 

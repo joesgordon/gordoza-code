@@ -63,7 +63,7 @@ public class JHexFrame extends JFrame
 
         try
         {
-            URL url = IconConstants.loader.getIconUrl( IconConstants.BINARY_32 );
+            URL url = IconConstants.loader.loader.getUrl( IconConstants.BINARY_32 );
             BufferedImage img16 = ImageIO.read( url );
             // setIconImage( img16 );
             setIconImages( Arrays.asList( new Image[] { img16 } ) );

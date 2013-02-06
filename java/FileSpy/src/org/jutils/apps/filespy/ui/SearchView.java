@@ -24,8 +24,8 @@ import org.jutils.ui.calendar.CalendarField;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.explorer.*;
-import org.jutils.ui.model.ComboBoxListModel;
 import org.jutils.ui.model.IDataView;
+import org.jutils.ui.model.ItemComboBoxModel;
 
 /*******************************************************************************
  *
@@ -91,11 +91,11 @@ public class SearchView implements IDataView<SearchParams>
     /**  */
     private final ActionListener startListener;
     /**  */
-    private final ComboBoxListModel<String> filenameModel;
+    private final ItemComboBoxModel<String> filenameModel;
     /**  */
-    private final ComboBoxListModel<String> contentsModel;
+    private final ItemComboBoxModel<String> contentsModel;
     /**  */
-    private final ComboBoxListModel<String> searchInModel;
+    private final ItemComboBoxModel<String> searchInModel;
     /**  */
     private final JPanel view;
     /**  */
@@ -148,9 +148,9 @@ public class SearchView implements IDataView<SearchParams>
         // ---------------------------------------------------------------------
         FileSpyData configData = FileSpyMain.getConfigData();
 
-        filenameModel = new ComboBoxListModel<String>( configData.filenames );
-        contentsModel = new ComboBoxListModel<String>( configData.contents );
-        searchInModel = new ComboBoxListModel<String>( configData.folders );
+        filenameModel = new ItemComboBoxModel<String>( configData.filenames );
+        contentsModel = new ItemComboBoxModel<String>( configData.contents );
+        searchInModel = new ItemComboBoxModel<String>( configData.folders );
 
         // ---------------------------------------------------------------------
         // Setup main panel.
