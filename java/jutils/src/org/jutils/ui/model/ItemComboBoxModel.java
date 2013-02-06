@@ -6,7 +6,7 @@ import javax.swing.MutableComboBoxModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
-public class ComboBoxListModel<T> implements List<T>, MutableComboBoxModel
+public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel
 {
     private final List<ListDataListener> ldListeners;
     private final List<T> items;
@@ -15,7 +15,7 @@ public class ComboBoxListModel<T> implements List<T>, MutableComboBoxModel
     /***************************************************************************
      * 
      **************************************************************************/
-    public ComboBoxListModel()
+    public ItemComboBoxModel()
     {
         this( new ArrayList<T>() );
     }
@@ -23,7 +23,7 @@ public class ComboBoxListModel<T> implements List<T>, MutableComboBoxModel
     /***************************************************************************
      * 
      **************************************************************************/
-    public ComboBoxListModel( List<T> items )
+    public ItemComboBoxModel( List<T> items )
     {
         this.items = new ArrayList<T>( items );
 
@@ -232,6 +232,26 @@ public class ComboBoxListModel<T> implements List<T>, MutableComboBoxModel
     }
 
     /***************************************************************************
+     * @param items
+     **************************************************************************/
+    public void setItems( List<T> items )
+    {
+        int prevSize = this.items.size();
+
+        clear();
+        if( prevSize > 0 )
+        {
+            fireIntervalRemoved( 0, prevSize );
+        }
+
+        this.items.addAll( items );
+        if( items.size() > 0 )
+        {
+            fireIntervalAdded( 0, this.items.size() );
+        }
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     @Override
@@ -386,6 +406,8 @@ public class ComboBoxListModel<T> implements List<T>, MutableComboBoxModel
     public boolean removeAll( Collection<?> c )
     {
         return items.removeAll( c );
+
+        // TODO finish writing class by firing listeners.
     }
 
     /***************************************************************************
