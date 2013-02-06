@@ -6,6 +6,8 @@ import javax.swing.MutableComboBoxModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
+import org.jutils.ListUtils;
+
 public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel
 {
     private final List<ListDataListener> ldListeners;
@@ -29,6 +31,14 @@ public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel
 
         this.ldListeners = new ArrayList<ListDataListener>();
         this.selectedIndex = -1;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public ItemComboBoxModel( Iterable<T> items )
+    {
+        this( ListUtils.asList( items ) );
     }
 
     /***************************************************************************
