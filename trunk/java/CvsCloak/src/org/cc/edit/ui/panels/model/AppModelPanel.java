@@ -18,7 +18,7 @@ import org.jutils.ui.DirectoryChooser;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.updater.ComboBoxUpdater;
 import org.jutils.ui.event.updater.IDataUpdater;
-import org.jutils.ui.model.ComboBoxListModel;
+import org.jutils.ui.model.ItemComboBoxModel;
 
 /*******************************************************************************
  * 
@@ -26,7 +26,7 @@ import org.jutils.ui.model.ComboBoxListModel;
 public class AppModelPanel extends InfoPanel<VersioningSystem>
 {
     /**  */
-    private final ComboBoxListModel<File> defaultRepoModel;
+    private final ItemComboBoxModel<File> defaultRepoModel;
     /**  */
     private final JComboBox defaultField;
     /**  */
@@ -48,7 +48,7 @@ public class AppModelPanel extends InfoPanel<VersioningSystem>
         repoAddedListeners = new ItemActionList<Repository>();
         repoRemovedListeners = new ItemActionList<Repository>();
 
-        defaultRepoModel = new ComboBoxListModel<File>();
+        defaultRepoModel = new ItemComboBoxModel<File>();
         defaultField = new JComboBox( defaultRepoModel );
         lockPanel = new NullableLockInfoPanel();
         reposPanel = new ListInfoPanel<Repository>();
