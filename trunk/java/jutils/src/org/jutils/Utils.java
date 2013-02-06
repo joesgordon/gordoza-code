@@ -17,19 +17,20 @@ import org.jutils.ui.hex.HexUtils;
 public final class Utils
 {
     /**  */
-    public static final char[] REGEX_METAC = { '\\', '^', '|', '[', ']', '(',
-        ')', '$', '.', '+', '*', '?', '{', '}' };
-
+    public static final char[] REGEX_METAC;
     /**  */
-    public static final String NEW_LINE = System.getProperty( PropConstants.SYS_LINE_SEP );
-
+    public static final String NEW_LINE;
     /**  */
-    public static final String USER_HOME = System.getProperty( PropConstants.SYS_USER_DIR );
-
+    public static final String USER_HOME;
+    /**  */
     private static final SimpleDateFormat debugDateFormatter;
 
     static
     {
+        REGEX_METAC = new char[] { '\\', '^', '|', '[', ']', '(', ')', '$',
+            '.', '+', '*', '?', '{', '}' };
+        NEW_LINE = System.getProperty( PropConstants.SYS_LINE_SEP );
+        USER_HOME = System.getProperty( PropConstants.SYS_USER_DIR );
         debugDateFormatter = new SimpleDateFormat( "HH:mm:ss:SSSS" );
     }
 

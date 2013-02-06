@@ -18,7 +18,7 @@ import javax.swing.ImageIcon;
 public class IconLoader
 {
     /** The URL at which all the icons reside. */
-    private final URL baseUrl;
+    public final ResourceLoader loader;
     /**
      * The icon cache so that icons are not loaded more than once per instance
      * of this class.
@@ -31,17 +31,16 @@ public class IconLoader
      **************************************************************************/
     public IconLoader( File basePath ) throws MalformedURLException
     {
-        this( basePath.toURI().toURL() );
+        this( new ResourceLoader( basePath ) );
     }
 
     /***************************************************************************
      * @param baseClass
      * @param relative
      **************************************************************************/
-    public IconLoader( Class<?> baseClass, String relative )
+    public IconLoader( Class<?> baseClass, String relativePath )
     {
-        this( Utils.loadResourceURL( baseClass,
-            relative.endsWith( "/" ) ? relative : relative + "/" ) );
+        this( new ResourceLoader( baseClass, relativePath ) );
     }
 
     /***************************************************************************
@@ -49,7 +48,15 @@ public class IconLoader
      **************************************************************************/
     public IconLoader( URL url )
     {
-        baseUrl = url;
+        this( new ResourceLoader( url ) );
+    }
+
+    /***************************************************************************
+     * @param resourceLoader
+     **************************************************************************/
+    public IconLoader( ResourceLoader resourceLoader )
+    {
+        this.loader = resourceLoader;
         iconMap = new HashMap<String, ImageIcon>();
     }
 
@@ -67,7 +74,7 @@ public class IconLoader
         }
         else
         {
-            icon = new ImageIcon( getIconUrl( str ) );
+            icon = new ImageIcon( loader.getUrl( str ) );
             iconMap.put( str, icon );
         }
 
@@ -88,28 +95,6 @@ public class IconLoader
         }
 
         return icons;
-    }
-
-    /***************************************************************************
-     * @param str String
-     * @return URL
-     **************************************************************************/
-    public URL getIconUrl( String str )
-    {
-        URL url;
-        try
-        {
-            url = new URL( baseUrl.toString() + str );
-        }
-        catch( MalformedURLException ex )
-        {
-            throw new RuntimeException( ex );
-        }
-
-        // System.out.println( "Base URL: " + baseUrl.getPath() );
-        // System.out.println( "URL is " + url.getPath() );
-
-        return url;
     }
 
     /***************************************************************************
