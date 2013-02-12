@@ -23,7 +23,7 @@ public class BusyFrameTest extends BusyFrame
     /**  */
     private JScrollPane treeScrollPane = new JScrollPane( tree );
     /**  */
-    private UTextArea textArea = new UTextArea();
+    private JTextArea textArea = new JTextArea();
     /**  */
     private JScrollPane textScrollPane = new JScrollPane( textArea );
     /**  */

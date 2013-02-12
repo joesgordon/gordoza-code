@@ -40,7 +40,7 @@ public class SliderTestFrame extends JFrame
 
     private JToolBar createToolBar()
     {
-        UToolBar toolbar = new UToolBar();
+        JGoodiesToolBar toolbar = new JGoodiesToolBar();
 
         lastButton = new JButton(
             IconConstants.loader.getIcon( IconConstants.BACK_24 ) );

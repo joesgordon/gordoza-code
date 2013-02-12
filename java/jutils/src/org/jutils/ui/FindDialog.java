@@ -188,7 +188,7 @@ public class FindDialog extends JDialog
         list.add( this.findButton );
         list.add( this.cancelButton );
 
-        this.setFocusTraversalPolicy( new UFocusPolicy( list ) );
+        this.setFocusTraversalPolicy( new FocusPolicyList( list ) );
     }
 
     /***************************************************************************

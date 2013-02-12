@@ -9,69 +9,86 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.text.*;
 
-import com.jgoodies.looks.Options;
+import org.jutils.Utils;
 
-public class UFontChooser extends JDialog
+/*******************************************************************************
+ * 
+ ******************************************************************************/
+public class FontChooserDialog extends JDialog
 {
+    /**  */
+    public final static String[] FONT_NAMES;
+    /**  */
+    public final static String[] FONT_SIZES;
+
+    /**  */
+    private final InputListPanel fontNameInputList;
+    /**  */
+    private final InputListPanel fontSizeInputList;
+    /**  */
+    private final JCheckBox boldCheckBox;
+    /**  */
+    private final JCheckBox italicCheckBox;
+    /**  */
+    private final JCheckBox underlineCheckBox;
+    /**  */
+    private final JCheckBox strikethroughCheckBox;
+    /**  */
+    private final JCheckBox subscriptCheckBox;
+    /**  */
+    private final JCheckBox superscriptCheckBox;
+    /**  */
+    private final ColorComboBox colorComboBox;
+    /**  */
+    private final FontLabel previewLabel;
+
+    /**  */
     private int closedOption = JOptionPane.CLOSED_OPTION;
-
-    private InputListPanel fontNameInputList;
-
-    private InputListPanel fontSizeInputList;
-
+    /**  */
     private MutableAttributeSet attributes;
-
-    private JCheckBox boldCheckBox = new JCheckBox( "Bold" );
-
-    private JCheckBox italicCheckBox = new JCheckBox( "Italic" );
-
-    private JCheckBox underlineCheckBox = new JCheckBox( "Underline" );
-
-    private JCheckBox strikethroughCheckBox = new JCheckBox( "Strikethrough" );
-
-    private JCheckBox subscriptCheckBox = new JCheckBox( "Subscript" );
-
-    private JCheckBox superscriptCheckBox = new JCheckBox( "Superscript" );
-
-    private ColorComboBox colorComboBox;
-
-    private FontLabel previewLabel;
-
-    public final static String[] fontNames;
-
-    public final static String[] fontSizes;
 
     static
     {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        fontNames = ge.getAvailableFontFamilyNames();
-        fontSizes = new String[] { "8", "9", "10", "11", "12", "14", "16",
+        FONT_NAMES = ge.getAvailableFontFamilyNames();
+        FONT_SIZES = new String[] { "8", "9", "10", "11", "12", "14", "16",
             "18", "20", "22", "24", "26", "28", "36", "48", "72" };
     }
 
     /***************************************************************************
      * @param owner
      **************************************************************************/
-    public UFontChooser( JFrame owner )
+    public FontChooserDialog( JFrame owner )
     {
         super( owner, "Font Chooser", true );
+
+        this.fontNameInputList = new InputListPanel( FONT_NAMES, "Name:" );
+        this.fontSizeInputList = new InputListPanel( FONT_SIZES, "Size:" );
+        this.boldCheckBox = new JCheckBox( "Bold" );
+        this.italicCheckBox = new JCheckBox( "Italic" );
+        this.underlineCheckBox = new JCheckBox( "Underline" );
+        this.strikethroughCheckBox = new JCheckBox( "Strikethrough" );
+        this.subscriptCheckBox = new JCheckBox( "Subscript" );
+        this.superscriptCheckBox = new JCheckBox( "Superscript" );
+        this.colorComboBox = new ColorComboBox();
+        this.previewLabel = new FontLabel( "Preview Font" );
+
+        this.setDefaultCloseOperation( JDialog.DISPOSE_ON_CLOSE );
 
         // ---------------------------------------------------------------------
         // Setup font panel.
         // ---------------------------------------------------------------------
         JPanel fontPanel = new JPanel( new GridBagLayout() );
+        Dimension dim = fontNameInputList.getPreferredSize();
         fontPanel.setBorder( BorderFactory.createTitledBorder( "Font" ) );
 
-        fontNameInputList = new InputListPanel( fontNames, "Name:" );
         fontNameInputList.setToolTipText( "Font name" );
 
-        fontSizeInputList = new InputListPanel( fontSizes, "Size:" );
         fontSizeInputList.setToolTipText( "Font size" );
+        fontSizeInputList.setPreferredSize( dim );
+        fontSizeInputList.setMinimumSize( dim );
 
-        fontSizeInputList.setPreferredSize( fontNameInputList.getPreferredSize() );
-        fontSizeInputList.setMinimumSize( fontNameInputList.getPreferredSize() );
-
-        fontNameInputList.setMinimumSize( fontNameInputList.getPreferredSize() );
+        fontNameInputList.setMinimumSize( dim );
 
         fontPanel.add( fontNameInputList, new GridBagConstraints( 0, 0, 1, 1,
             0.5, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -87,7 +104,6 @@ public class UFontChooser extends JDialog
         JPanel colorPanel = new JPanel( new GridBagLayout() );
         JLabel colorLabel = new JLabel( "Color:" );
 
-        colorComboBox = new ColorComboBox();
         colorComboBox.setToolTipText( "Font color" );
 
         colorPanel.add( colorLabel, new GridBagConstraints( 0, 0, 1, 1, 0.0,
@@ -146,10 +162,8 @@ public class UFontChooser extends JDialog
         JPanel previewPanel = new JPanel( new GridBagLayout() );
         previewPanel.setBorder( BorderFactory.createTitledBorder( "Preview" ) );
 
-        previewLabel = new FontLabel( "Preview Font" );
-
         previewPanel.add( previewLabel, new GridBagConstraints( 0, 0, 1, 1,
-            1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH,
+            1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
         // ---------------------------------------------------------------------
@@ -182,12 +196,14 @@ public class UFontChooser extends JDialog
         btCancel.setToolTipText( "Exit without save" );
         btCancel.addActionListener( cancelActionListener );
 
+        Utils.setMaxComponentSize( btOK, btCancel );
+
         buttonPanel.add( btOK, new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
             GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets( 4, 4,
-                4, 2 ), 18, 0 ) );
+                4, 2 ), 10, 10 ) );
         buttonPanel.add( btCancel, new GridBagConstraints( 1, 0, 1, 1, 0.0,
             0.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(
-                4, 2, 4, 4 ), 0, 0 ) );
+                4, 2, 4, 4 ), 10, 10 ) );
 
         // ---------------------------------------------------------------------
         // Setup content panel.
@@ -240,6 +256,9 @@ public class UFontChooser extends JDialog
         setAttributes( a );
     }
 
+    /***************************************************************************
+     * @param a
+     **************************************************************************/
     public void setAttributes( AttributeSet a )
     {
         attributes = new SimpleAttributeSet( a );
@@ -261,6 +280,9 @@ public class UFontChooser extends JDialog
         updatePreview();
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public AttributeSet getAttributes()
     {
         if( attributes == null )
@@ -291,11 +313,17 @@ public class UFontChooser extends JDialog
         return attributes;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public int getOption()
     {
         return closedOption;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public void setVisible( boolean b )
     {
         if( b )
@@ -305,28 +333,27 @@ public class UFontChooser extends JDialog
         super.setVisible( b );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     protected void updatePreview()
     {
         getAttributes();
         previewLabel.setAttributes( attributes );
     }
 
+    /***************************************************************************
+     * @param argv
+     **************************************************************************/
     public static void main( String argv[] )
     {
-        SwingUtilities.invokeLater( new Runnable()
+        SwingUtilities.invokeLater( new MainRunner()
         {
-            public void run()
+            @Override
+            protected void createAndShowGui()
             {
-                try
-                {
-                    UIManager.setLookAndFeel( Options.PLASTICXP_NAME );
-                }
-                catch( Exception exception )
-                {
-                    exception.printStackTrace();
-                }
 
-                UFontChooser dlg = new UFontChooser( new JFrame() );
+                FontChooserDialog dlg = new FontChooserDialog( new JFrame() );
                 dlg.addWindowListener( new WindowAdapter()
                 {
                     public void windowClosing( WindowEvent e )
@@ -340,105 +367,115 @@ public class UFontChooser extends JDialog
             }
         } );
     }
-}
 
-class FontLabel extends JPanel
-{
-    private JTextPane textPane;
-
-    public FontLabel( String text )
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class FontLabel extends JPanel
     {
-        super( new GridBagLayout() );
-        textPane = new JTextPane();
+        private JTextPane textPane;
 
-        textPane.setEditable( false );
-        textPane.setBorder( null );
-        textPane.setOpaque( false );
-        textPane.setText( text );
-        textPane.setFocusable( false );
-
-        setBackground( Color.white );
-        setForeground( Color.black );
-        setOpaque( true );
-        setBorder( new LineBorder( Color.black ) );
-        setMinimumSize( new Dimension( 120, 80 ) );
-        setPreferredSize( new Dimension( 120, 80 ) );
-        add( textPane, new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 ) );
-
-        centerText();
-    }
-
-    private void centerText()
-    {
-        MutableAttributeSet standard = new SimpleAttributeSet();
-        StyleConstants.setAlignment( standard, StyleConstants.ALIGN_CENTER );
-        textPane.getStyledDocument().setParagraphAttributes( 0,
-            textPane.getStyledDocument().getLength(), standard, true );
-    }
-
-    public void setAttributes( MutableAttributeSet s )
-    {
-        StyleConstants.setAlignment( s, StyleConstants.ALIGN_CENTER );
-        textPane.getStyledDocument().setParagraphAttributes( 0,
-            textPane.getStyledDocument().getLength(), s, true );
-    }
-}
-
-class ColorComboBox extends JComboBox
-{
-    public ColorComboBox()
-    {
-        int[] values = new int[] { 0, 128, 192, 255 };
-        for( int r = 0; r < values.length; r++ )
+        public FontLabel( String text )
         {
-            for( int g = 0; g < values.length; g++ )
+            super( new GridBagLayout() );
+            textPane = new JTextPane();
+
+            textPane.setEditable( false );
+            textPane.setBorder( null );
+            textPane.setOpaque( false );
+            textPane.setText( text );
+            textPane.setFocusable( false );
+
+            setBackground( Color.white );
+            setForeground( Color.black );
+            setOpaque( true );
+            setBorder( new LineBorder( Color.black ) );
+            setMinimumSize( new Dimension( 120, 80 ) );
+            setPreferredSize( new Dimension( 120, 80 ) );
+            add( textPane, new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
+                    0, 0, 0, 0 ), 0, 0 ) );
+
+            centerText();
+        }
+
+        private void centerText()
+        {
+            MutableAttributeSet standard = new SimpleAttributeSet();
+            StyleConstants.setAlignment( standard, StyleConstants.ALIGN_CENTER );
+            textPane.getStyledDocument().setParagraphAttributes( 0,
+                textPane.getStyledDocument().getLength(), standard, true );
+        }
+
+        public void setAttributes( MutableAttributeSet s )
+        {
+            StyleConstants.setAlignment( s, StyleConstants.ALIGN_CENTER );
+            textPane.getStyledDocument().setParagraphAttributes( 0,
+                textPane.getStyledDocument().getLength(), s, true );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class ColorComboBox extends JComboBox
+    {
+        public ColorComboBox()
+        {
+            int[] values = new int[] { 0, 128, 192, 255 };
+            for( int r = 0; r < values.length; r++ )
             {
-                for( int b = 0; b < values.length; b++ )
+                for( int g = 0; g < values.length; g++ )
                 {
-                    Color c = new Color( values[r], values[g], values[b] );
-                    addItem( c );
+                    for( int b = 0; b < values.length; b++ )
+                    {
+                        Color c = new Color( values[r], values[g], values[b] );
+                        addItem( c );
+                    }
                 }
             }
+            setRenderer( new ColorComboRenderer() );
         }
-        setRenderer( new ColorComboRenderer() );
+
+        public Color getSelectedColor()
+        {
+            Object obj = getSelectedItem();
+
+            return obj == null ? null : ( Color )obj;
+        }
     }
 
-    public Color getSelectedColor()
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class ColorComboRenderer extends JLabel implements
+        ListCellRenderer
     {
-        Object obj = getSelectedItem();
+        private ColorIcon icon;
 
-        return obj == null ? null : ( Color )obj;
-    }
-}
+        private static final int margin = 3;
 
-class ColorComboRenderer extends JLabel implements ListCellRenderer
-{
-    private ColorIcon icon;
+        public ColorComboRenderer()
+        {
+            super();
+            this.setBorder( BorderFactory.createEmptyBorder( margin, margin,
+                margin, margin ) );
+            icon = new ColorIcon( Color.black );
+            this.setIcon( icon );
+        }
 
-    private static final int margin = 3;
+        public Component getListCellRendererComponent( JList list, Object obj,
+            int row, boolean sel, boolean hasFocus )
+        {
+            icon.setColor( ( Color )obj );
+            return this;
+        }
 
-    public ColorComboRenderer()
-    {
-        super();
-        this.setBorder( BorderFactory.createEmptyBorder( margin, margin,
-            margin, margin ) );
-        icon = new ColorIcon( Color.black );
-        this.setIcon( icon );
-    }
-
-    public Component getListCellRendererComponent( JList list, Object obj,
-        int row, boolean sel, boolean hasFocus )
-    {
-        icon.setColor( ( Color )obj );
-        return this;
-    }
-
-    public void paint( Graphics g )
-    {
-        icon.setIconWidth( this.getWidth() - 2 * margin );
-        icon.setIconHeight( this.getHeight() - 2 * margin );
-        super.paint( g );
+        public void paint( Graphics g )
+        {
+            icon.setIconWidth( this.getWidth() - 2 * margin );
+            icon.setIconHeight( this.getHeight() - 2 * margin );
+            super.paint( g );
+        }
     }
 }

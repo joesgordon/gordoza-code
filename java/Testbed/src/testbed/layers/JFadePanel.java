@@ -11,7 +11,7 @@ import javax.swing.*;
 import javax.swing.Timer;
 
 import org.jutils.ui.FrameRunner;
-import org.jutils.ui.UToolBar;
+import org.jutils.ui.JGoodiesToolBar;
 
 /*******************************************************************************
  * This class manages a group of {@link JPanel}s. This class provides methods
@@ -230,7 +230,7 @@ public class JFadePanel extends JPanel
                     }
                 } );
 
-                JToolBar toolbar = new UToolBar();
+                JToolBar toolbar = new JGoodiesToolBar();
                 toolbar.setFloatable( false );
                 toolbar.setFocusable( false );
                 toolbar.add( first );

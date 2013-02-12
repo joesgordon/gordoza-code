@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.JFormattedTextField;
 import javax.swing.JFormattedTextField.AbstractFormatterFactory;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -15,11 +16,11 @@ import org.jutils.ui.model.IValidationView;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public final class UValidationTextField implements IValidationView
+public final class ValidationTextField implements IValidationView
 {
-    private final UFormattedTextField field;
+    private final JFormattedTextField field;
     /**  */
-    private final List<ValidityChangedListener> validityChangedListeners;
+    private final List<IValidityChangedListener> validityChangedListeners;
 
     /**  */
     private Color validBackground;
@@ -33,7 +34,7 @@ public final class UValidationTextField implements IValidationView
     /***************************************************************************
      * 
      **************************************************************************/
-    public UValidationTextField()
+    public ValidationTextField()
     {
         this( "" );
     }
@@ -41,7 +42,7 @@ public final class UValidationTextField implements IValidationView
     /***************************************************************************
      * 
      **************************************************************************/
-    public UValidationTextField( AbstractFormatterFactory factory )
+    public ValidationTextField( AbstractFormatterFactory factory )
     {
         this( factory, "" );
     }
@@ -49,7 +50,7 @@ public final class UValidationTextField implements IValidationView
     /***************************************************************************
      * @param str
      **************************************************************************/
-    public UValidationTextField( String str )
+    public ValidationTextField( String str )
     {
         this( null, str );
     }
@@ -57,9 +58,9 @@ public final class UValidationTextField implements IValidationView
     /***************************************************************************
      * @param str
      **************************************************************************/
-    public UValidationTextField( AbstractFormatterFactory factory, String str )
+    public ValidationTextField( AbstractFormatterFactory factory, String str )
     {
-        field = new UFormattedTextField( str );
+        field = new JFormattedTextField( str );
 
         field.setFormatterFactory( factory );
 
@@ -71,7 +72,7 @@ public final class UValidationTextField implements IValidationView
         invalidBackground = Color.red;
         validator = null;
         valid = true;
-        validityChangedListeners = new LinkedList<ValidityChangedListener>();
+        validityChangedListeners = new LinkedList<IValidityChangedListener>();
 
         field.getDocument().addDocumentListener(
             new ValidationDocumentListener( this ) );
@@ -83,7 +84,7 @@ public final class UValidationTextField implements IValidationView
      * 
      **************************************************************************/
     @Override
-    public UFormattedTextField getView()
+    public JFormattedTextField getView()
     {
         return field;
     }
@@ -146,7 +147,7 @@ public final class UValidationTextField implements IValidationView
      **************************************************************************/
     private void fireValidityChanged()
     {
-        for( ValidityChangedListener vcl : validityChangedListeners )
+        for( IValidityChangedListener vcl : validityChangedListeners )
         {
             vcl.validityChanged( valid );
         }
@@ -155,7 +156,8 @@ public final class UValidationTextField implements IValidationView
     /***************************************************************************
      * @param vcl
      **************************************************************************/
-    public void addValidityChanged( ValidityChangedListener vcl )
+    @Override
+    public void addValidityChanged( IValidityChangedListener vcl )
     {
         validityChangedListeners.add( 0, vcl );
     }
@@ -163,7 +165,8 @@ public final class UValidationTextField implements IValidationView
     /***************************************************************************
      * @param vcl
      **************************************************************************/
-    public void removeValidityChanged( ValidityChangedListener vcl )
+    @Override
+    public void removeValidityChanged( IValidityChangedListener vcl )
     {
         validityChangedListeners.remove( vcl );
     }
@@ -171,6 +174,7 @@ public final class UValidationTextField implements IValidationView
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public void setValidBackground( Color bg )
     {
         validBackground = bg;
@@ -180,6 +184,7 @@ public final class UValidationTextField implements IValidationView
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public void setInvalidBackground( Color bg )
     {
         invalidBackground = bg;
@@ -225,9 +230,9 @@ public final class UValidationTextField implements IValidationView
      **************************************************************************/
     private static class ValidationDocumentListener implements DocumentListener
     {
-        private UValidationTextField field;
+        private ValidationTextField field;
 
-        public ValidationDocumentListener( UValidationTextField field )
+        public ValidationDocumentListener( ValidationTextField field )
         {
             this.field = field;
         }
@@ -251,7 +256,7 @@ public final class UValidationTextField implements IValidationView
     /***************************************************************************
      * 
      **************************************************************************/
-    public static interface ValidityChangedListener
+    public static interface IValidityChangedListener
     {
         public void validityChanged( boolean newValidity );
     }

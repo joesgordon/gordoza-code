@@ -34,7 +34,7 @@ public class JExplorerFrame extends JFrame
     // Menu bar widgets
     // -------------------------------------------------------------------------
     /** The main menu bar for this frame. */
-    private JMenuBar menubar = new UMenuBar();
+    private JMenuBar menubar = new JGoodiesMenuBar();
 
     /** Menus containing items normally found under the name 'File'. */
     private JMenu fileMenu = new JMenu();
@@ -52,7 +52,7 @@ public class JExplorerFrame extends JFrame
     // Toolbar widgets
     // -------------------------------------------------------------------------
     /** The main toolbar for this frame. */
-    private JToolBar toolbar = new UToolBar();
+    private JToolBar toolbar = new JGoodiesToolBar();
 
     /** Allows the user to navigate to past shown directories. */
     private JButton backButton = new JButton();

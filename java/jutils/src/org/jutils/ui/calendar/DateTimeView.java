@@ -8,7 +8,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.jutils.ui.FrameRunner;
-import org.jutils.ui.USpinner;
+import org.jutils.ui.AutoSpinner;
 import org.jutils.ui.event.updater.DataUpdaterList;
 import org.jutils.ui.event.updater.IDataUpdater;
 import org.jutils.ui.model.IDataView;
@@ -37,7 +37,7 @@ public class DateTimeView implements IDataView<Calendar>
         updaterList = new DataUpdaterList<Calendar>();
         timeModel = new SpinnerDateModel( new Date(), null, null,
             Calendar.AM_PM );
-        JSpinner spinner = new USpinner( timeModel );
+        JSpinner spinner = new AutoSpinner( timeModel );
         JSpinner.DateEditor spinnerEditor = new JSpinner.DateEditor( spinner,
             "hh:mm:ss a" );
         spinner.setEditor( spinnerEditor );

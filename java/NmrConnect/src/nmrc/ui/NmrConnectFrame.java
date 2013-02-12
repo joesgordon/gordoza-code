@@ -112,7 +112,7 @@ public class NmrConnectFrame extends JFrame
      **************************************************************************/
     private JMenuBar createMenuBar()
     {
-        JMenuBar menubar = new UMenuBar();
+        JMenuBar menubar = new JGoodiesMenuBar();
 
         JMenu fileMenu = new JMenu( "File" );
         JMenuItem exitMenuItem = new JMenuItem( "Exit",
@@ -135,7 +135,7 @@ public class NmrConnectFrame extends JFrame
     private JToolBar createToolbar( ActionListener newListener,
         ActionListener openListener, ActionListener saveListener )
     {
-        JToolBar toolbar = new UToolBar();
+        JToolBar toolbar = new JGoodiesToolBar();
 
         JButton newButton = new JButton(
             IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );

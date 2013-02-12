@@ -6,15 +6,15 @@ import java.util.ArrayList;
 /*******************************************************************************
  *
  ******************************************************************************/
-public class UFocusPolicy extends FocusTraversalPolicy
+public class FocusPolicyList extends FocusTraversalPolicy
 {
     /**  */
-    private ArrayList<Component> order;
+    private final ArrayList<Component> order;
 
     /***************************************************************************
      * @param order
      **************************************************************************/
-    public UFocusPolicy( ArrayList<? extends Component> order )
+    public FocusPolicyList( ArrayList<? extends Component> order )
     {
         this.order = new ArrayList<Component>( order.size() );
         this.order.addAll( order );

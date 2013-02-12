@@ -84,7 +84,7 @@ public class FileSpyFrameView implements IView<JFrame>
         saveButton.addActionListener( new SaveListener() );
         saveButton.setFocusable( false );
 
-        JToolBar toolbar = new UToolBar();
+        JToolBar toolbar = new JGoodiesToolBar();
         toolbar.add( newButton );
         toolbar.add( openButton );
         toolbar.add( saveButton );
@@ -97,7 +97,7 @@ public class FileSpyFrameView implements IView<JFrame>
      **************************************************************************/
     private JMenuBar createMenuBar()
     {
-        JMenuBar menuBar = new UMenuBar();
+        JMenuBar menuBar = new JGoodiesMenuBar();
         menuBar.add( createFileMenu() );
         menuBar.add( createViewMenu() );
         menuBar.add( createToolsMenu() );

@@ -5,7 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import org.jutils.ui.USplitPane;
+import org.jutils.ui.AltSplitPane;
 
 /**
  * 
@@ -15,7 +15,7 @@ public class USnapPanel extends JPanel
     /**  */
     private JViewport viewport;
     /**  */
-    private USplitPane splitPane;
+    private AltSplitPane splitPane;
     /**  */
     private Container mainView;
     /**  */
@@ -34,7 +34,7 @@ public class USnapPanel extends JPanel
         super( new BorderLayout() );
 
         viewport = new JViewport();
-        splitPane = new USplitPane();
+        splitPane = new AltSplitPane();
         position = -1;
 
         // splitPane.setBorderless( true );

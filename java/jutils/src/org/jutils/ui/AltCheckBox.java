@@ -9,7 +9,7 @@ import com.jgoodies.looks.Options;
 /*******************************************************************************
  *
  ******************************************************************************/
-public class UCheckBox extends JCheckBox
+public class AltCheckBox extends JCheckBox
 {
     /** Used to be 0xD4D0C8 */
     private Color disabledBackground = null;
@@ -17,7 +17,7 @@ public class UCheckBox extends JCheckBox
     /***************************************************************************
      * 
      **************************************************************************/
-    public UCheckBox()
+    public AltCheckBox()
     {
         this( null );
     }
@@ -25,7 +25,7 @@ public class UCheckBox extends JCheckBox
     /***************************************************************************
      * @param text
      **************************************************************************/
-    public UCheckBox( String text )
+    public AltCheckBox( String text )
     {
         this( text, false );
     }
@@ -34,7 +34,7 @@ public class UCheckBox extends JCheckBox
      * @param text
      * @param selected
      **************************************************************************/
-    public UCheckBox( String text, boolean selected )
+    public AltCheckBox( String text, boolean selected )
     {
         super( text, null, selected );
     }
@@ -44,7 +44,7 @@ public class UCheckBox extends JCheckBox
      * @param icon
      * @param selected
      **************************************************************************/
-    public UCheckBox( String text, Icon icon, boolean selected )
+    public AltCheckBox( String text, Icon icon, boolean selected )
     {
         super( text, icon, selected );
     }
@@ -89,19 +89,19 @@ public class UCheckBox extends JCheckBox
                 }
                 JPanel panel = new JPanel();
                 JFrame frame = new JFrame();
-                UCheckBox plainCb = new UCheckBox( "Plain" );
-                UCheckBox disabledCb = new UCheckBox( "Disabled" );
+                AltCheckBox plainCb = new AltCheckBox( "Plain" );
+                AltCheckBox disabledCb = new AltCheckBox( "Disabled" );
 
-                UCheckBox customBgCb = new UCheckBox( "Custom BG" );
-                UCheckBox customDisabledBgCb = new UCheckBox(
+                AltCheckBox customBgCb = new AltCheckBox( "Custom BG" );
+                AltCheckBox customDisabledBgCb = new AltCheckBox(
                     "Custom BG Disabled" );
 
-                UCheckBox customDbgCb = new UCheckBox( "Custom DBG" );
-                UCheckBox customDisabledDbgCb = new UCheckBox(
+                AltCheckBox customDbgCb = new AltCheckBox( "Custom DBG" );
+                AltCheckBox customDisabledDbgCb = new AltCheckBox(
                     "Custom DBG Disabled" );
 
-                UCheckBox customBgDbgCb = new UCheckBox( "Custom BG/DBG" );
-                UCheckBox customDisabledBgDbgCb = new UCheckBox(
+                AltCheckBox customBgDbgCb = new AltCheckBox( "Custom BG/DBG" );
+                AltCheckBox customDisabledBgDbgCb = new AltCheckBox(
                     "Custom BG/DBG Disabled" );
 
                 disabledCb.setEnabled( false );

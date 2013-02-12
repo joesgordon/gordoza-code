@@ -8,8 +8,8 @@ import javax.swing.JPanel;
 
 import org.budgey.data.Account;
 import org.jutils.ui.*;
-import org.jutils.ui.UValidationTextField.ITextValidator;
-import org.jutils.ui.UValidationTextField.ValidityChangedListener;
+import org.jutils.ui.ValidationTextField.ITextValidator;
+import org.jutils.ui.ValidationTextField.IValidityChangedListener;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.model.FormatException;
@@ -20,7 +20,7 @@ import org.jutils.ui.model.FormatException;
 public class AccountConfigPanel
 {
     /**  */
-    private final UValidationTextField nameField;
+    private final ValidationTextField nameField;
     /**  */
     private final MoneyTextField startingBalanceField;
     /**  */
@@ -36,7 +36,7 @@ public class AccountConfigPanel
      **************************************************************************/
     public AccountConfigPanel()
     {
-        nameField = new UValidationTextField();
+        nameField = new ValidationTextField();
         startingBalanceField = new MoneyTextField();
         itemView = new ItemView( createFieldsPanel() );
         nameListeners = new ItemActionList<String>();
@@ -118,7 +118,7 @@ public class AccountConfigPanel
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class NameValidityChanged implements ValidityChangedListener
+    private static class NameValidityChanged implements IValidityChangedListener
     {
         private final AccountConfigPanel panel;
 

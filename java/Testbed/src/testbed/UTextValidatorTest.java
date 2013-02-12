@@ -8,8 +8,8 @@ import javax.swing.*;
 
 import org.jutils.Utils;
 import org.jutils.ui.*;
-import org.jutils.ui.UValidationTextField.ITextValidator;
-import org.jutils.ui.UValidationTextField.ValidityChangedListener;
+import org.jutils.ui.ValidationTextField.ITextValidator;
+import org.jutils.ui.ValidationTextField.IValidityChangedListener;
 import org.jutils.ui.model.FormatException;
 
 public class UTextValidatorTest extends FrameRunner
@@ -34,10 +34,10 @@ public class UTextValidatorTest extends FrameRunner
         JLabel jl3 = new JLabel( "Number, [0-25]:" );
         JLabel jl4 = new JLabel( "The phrase 'e pluribus unum':" );
 
-        final UValidationTextField uvtf1a = new UValidationTextField();
-        final UValidationTextField uvtf2a = new UValidationTextField();
-        final UValidationTextField uvtf3b = new UValidationTextField();
-        final UValidationTextField uvtf4c = new UValidationTextField();
+        final ValidationTextField uvtf1a = new ValidationTextField();
+        final ValidationTextField uvtf2a = new ValidationTextField();
+        final ValidationTextField uvtf3b = new ValidationTextField();
+        final ValidationTextField uvtf4c = new ValidationTextField();
 
         final JButton okButton = new JButton( "OK" );
         JButton cancelButton = new JButton( "Cancel" );
@@ -50,7 +50,7 @@ public class UTextValidatorTest extends FrameRunner
 
         ITextValidator tvC = new ExactTextValidator( "e pluribus unum" );
 
-        ValidityChangedListener vcl = new ValidityChangedListener()
+        IValidityChangedListener vcl = new IValidityChangedListener()
         {
             public void validityChanged( boolean newValidity )
             {

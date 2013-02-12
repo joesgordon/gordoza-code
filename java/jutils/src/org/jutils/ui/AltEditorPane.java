@@ -11,7 +11,7 @@ import javax.swing.text.*;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class UEditorPane extends JTextPane
+public class AltEditorPane extends JTextPane
 {
     /**  */
     protected StyledDocument doc = null;
@@ -19,7 +19,7 @@ public class UEditorPane extends JTextPane
     /***************************************************************************
      * 
      **************************************************************************/
-    public UEditorPane()
+    public AltEditorPane()
     {
         super();
         init();
@@ -29,7 +29,7 @@ public class UEditorPane extends JTextPane
      * @param doc
      * @throws IOException
      **************************************************************************/
-    public UEditorPane( StyledDocument doc ) throws IOException
+    public AltEditorPane( StyledDocument doc ) throws IOException
     {
         super( doc );
         init();
@@ -46,6 +46,7 @@ public class UEditorPane extends JTextPane
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public void setText( String text )
     {
         super.setText( text );
@@ -72,6 +73,7 @@ public class UEditorPane extends JTextPane
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public void setDocument( Document doc )
     {
         if( doc instanceof StyledDocument )
@@ -88,6 +90,7 @@ public class UEditorPane extends JTextPane
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public void setStyledDocument( StyledDocument doc )
     {
         super.setDocument( doc );
@@ -97,6 +100,7 @@ public class UEditorPane extends JTextPane
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public boolean getScrollableTracksViewportWidth()
     {
         Component parent = getParent();
@@ -109,6 +113,7 @@ public class UEditorPane extends JTextPane
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public void setBounds( int x, int y, int width, int height )
     {
         Dimension size = this.getPreferredSize();

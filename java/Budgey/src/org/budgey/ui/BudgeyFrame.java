@@ -15,7 +15,7 @@ import org.jutils.IconConstants;
 import org.jutils.io.FileOpener;
 import org.jutils.io.FileOpener.LastDirectorySaver;
 import org.jutils.ui.StatusBarPanel;
-import org.jutils.ui.UToolBar;
+import org.jutils.ui.JGoodiesToolBar;
 
 /*******************************************************************************
  * 
@@ -52,7 +52,7 @@ public class BudgeyFrame extends JFrame
 
     private Component createToolBar()
     {
-        UToolBar toolbar = new UToolBar();
+        JGoodiesToolBar toolbar = new JGoodiesToolBar();
 
         JButton newButton = new JButton(
             IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );

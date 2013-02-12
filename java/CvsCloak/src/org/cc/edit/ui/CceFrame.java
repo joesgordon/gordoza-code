@@ -71,7 +71,7 @@ public class CceFrame extends JFrame
      **************************************************************************/
     private JMenuBar createMenuBar()
     {
-        JMenuBar menuBar = new UMenuBar();
+        JMenuBar menuBar = new JGoodiesMenuBar();
         JMenu fileMenu = new JMenu( "File" );
         JMenuItem openMenuItem = new JMenuItem( "Open",
             IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
@@ -98,7 +98,7 @@ public class CceFrame extends JFrame
      **************************************************************************/
     private JToolBar createToolBar()
     {
-        JToolBar toolbar = new UToolBar();
+        JToolBar toolbar = new JGoodiesToolBar();
         JButton newButton;
         JButton saveButton;
         JButton openButton;

@@ -8,8 +8,7 @@ import java.net.URL;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 
-import org.jutils.ui.UEditorPane;
-import org.jutils.ui.UTabbedPane;
+import org.jutils.ui.AltEditorPane;
 
 import com.jgoodies.looks.Options;
 
@@ -43,7 +42,7 @@ public class LicenseDialog extends JDialog
     private static final String LICENSE_CRYSTALCLEAR = "crystalClearLicense.html";
 
     /**  */
-    private UTabbedPane tabbedPane = new UTabbedPane();
+    private JTabbedPane tabbedPane = new JTabbedPane();
 
     /***************************************************************************
      * @param owner
@@ -117,7 +116,7 @@ public class LicenseDialog extends JDialog
 
 class LicensePanel extends JPanel
 {
-    private UEditorPane editorPane = new UEditorPane();
+    private AltEditorPane editorPane = new AltEditorPane();
 
     private JScrollPane scrollPane = new JScrollPane( editorPane );
 

@@ -8,9 +8,9 @@ import javax.swing.JMenuBar;
 import com.jgoodies.looks.*;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 
-public class UMenuBar extends JMenuBar
+public class JGoodiesMenuBar extends JMenuBar
 {
-    public UMenuBar()
+    public JGoodiesMenuBar()
     {
         super();
 
