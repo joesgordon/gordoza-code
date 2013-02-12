@@ -84,7 +84,7 @@ public class JHexFrame extends JFrame
         ActionListener gotoListener = new GoToListener();
         ActionListener findListener = new FindListener();
 
-        JMenuBar menubar = new UMenuBar();
+        JMenuBar menubar = new JGoodiesMenuBar();
         JMenu fileMenu = new JMenu( "File" );
         JMenuItem openMenuItem = new JMenuItem( "Open" );
         JMenuItem saveMenuItem = new JMenuItem( "Save" );

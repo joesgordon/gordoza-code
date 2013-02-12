@@ -7,7 +7,7 @@ import javax.swing.*;
 /*******************************************************************************
  * Adds highlighting functionality to a standard JLabel.
  ******************************************************************************/
-public class UHighlightedLabel extends JLabel
+public class HighlightedLabel extends JLabel
 {
     private Color highlightColor = Color.cyan;
     private int highlightOffset;
@@ -17,7 +17,7 @@ public class UHighlightedLabel extends JLabel
     /***************************************************************************
      * Constructor
      **************************************************************************/
-    public UHighlightedLabel()
+    public HighlightedLabel()
     {
     }
 
@@ -25,7 +25,7 @@ public class UHighlightedLabel extends JLabel
      * Constructor
      * @param f
      **************************************************************************/
-    public UHighlightedLabel( Font font )
+    public HighlightedLabel( Font font )
     {
         this();
         setFont( font );
@@ -34,7 +34,7 @@ public class UHighlightedLabel extends JLabel
     /***************************************************************************
      * Constructor
      **************************************************************************/
-    public UHighlightedLabel( String text )
+    public HighlightedLabel( String text )
     {
         super( text );
         highlightOffset = 0;
@@ -151,22 +151,22 @@ public class UHighlightedLabel extends JLabel
                 JFrame frame = new JFrame();
                 JPanel panel = new JPanel();
 
-                UHighlightedLabel label1 = new UHighlightedLabel( new Font(
+                HighlightedLabel label1 = new HighlightedLabel( new Font(
                     "Monospaced", Font.PLAIN, 12 ) );
                 label1.setText( "Sample un-highlighted" );
 
-                UHighlightedLabel label2 = new UHighlightedLabel( new Font(
+                HighlightedLabel label2 = new HighlightedLabel( new Font(
                     "Sans Serif", Font.BOLD, 16 ) );
                 label2.setText( "Sample with highlight" );
                 label2.setHighlight( 12, 9 );
 
-                UHighlightedLabel label3 = new UHighlightedLabel( new Font(
+                HighlightedLabel label3 = new HighlightedLabel( new Font(
                     "Sans Serif", Font.BOLD, 16 ) );
                 label3.setText( "Sample with highlight" );
                 label3.setHighlight( 12, 9 );
                 label3.setHorizontalAlignment( SwingConstants.CENTER );
 
-                UHighlightedLabel label4 = new UHighlightedLabel(
+                HighlightedLabel label4 = new HighlightedLabel(
                     "Another sample" );
                 label4.setHighlightColor( Color.magenta );
                 label4.setHighlight( 8, 3 );

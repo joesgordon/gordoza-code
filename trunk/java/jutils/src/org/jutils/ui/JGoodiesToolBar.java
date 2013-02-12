@@ -5,30 +5,30 @@ import javax.swing.JToolBar;
 import com.jgoodies.looks.HeaderStyle;
 import com.jgoodies.looks.Options;
 
-public class UToolBar extends JToolBar
+public class JGoodiesToolBar extends JToolBar
 {
-    public UToolBar()
+    public JGoodiesToolBar()
     {
         super();
 
         init();
     }
 
-    public UToolBar( int orientation )
+    public JGoodiesToolBar( int orientation )
     {
         super( orientation );
 
         init();
     }
 
-    public UToolBar( String name )
+    public JGoodiesToolBar( String name )
     {
         super( name );
 
         init();
     }
 
-    public UToolBar( String name, int orientation )
+    public JGoodiesToolBar( String name, int orientation )
     {
         super( name, orientation );
 

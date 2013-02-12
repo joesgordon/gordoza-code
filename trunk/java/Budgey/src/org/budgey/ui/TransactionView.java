@@ -10,8 +10,8 @@ import javax.swing.*;
 
 import org.budgey.data.Money;
 import org.budgey.data.Transaction;
-import org.jutils.ui.UValidationTextField;
-import org.jutils.ui.UValidationTextField.ITextValidator;
+import org.jutils.ui.ValidationTextField;
+import org.jutils.ui.ValidationTextField.ITextValidator;
 import org.jutils.ui.calendar.CalendarField;
 import org.jutils.ui.model.FormatException;
 
@@ -21,7 +21,7 @@ import org.jutils.ui.model.FormatException;
 public class TransactionView
 {
     /**  */
-    private final UValidationTextField secondPartyField;
+    private final ValidationTextField secondPartyField;
     /**  */
     private final JTextField tagField;
     /**  */
@@ -38,7 +38,7 @@ public class TransactionView
      **************************************************************************/
     public TransactionView()
     {
-        secondPartyField = new UValidationTextField();
+        secondPartyField = new ValidationTextField();
         tagField = new JTextField();
         amountField = new MoneyTextField();
         dateField = new CalendarField();

@@ -6,21 +6,21 @@ import javax.swing.*;
 
 import org.jutils.NumberParsingUtils;
 import org.jutils.ui.*;
-import org.jutils.ui.UValidationTextField.ITextValidator;
+import org.jutils.ui.ValidationTextField.ITextValidator;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.model.FormatException;
 
 public class HexConvFrame extends FrameRunner
 {
-    private final UValidationTextField decField;
-    private final UValidationTextField hexField;
+    private final ValidationTextField decField;
+    private final ValidationTextField hexField;
     private final FieldValidator decListener;
     private final FieldValidator hexListener;
 
     public HexConvFrame()
     {
-        decField = new UValidationTextField();
-        hexField = new UValidationTextField();
+        decField = new ValidationTextField();
+        hexField = new ValidationTextField();
 
         decListener = new DecValidator();
         hexListener = new HexValidator();

@@ -10,13 +10,13 @@ import javax.swing.JFormattedTextField.AbstractFormatter;
 import javax.swing.text.DefaultFormatterFactory;
 
 import org.budgey.data.Money;
-import org.jutils.ui.UValidationTextField;
-import org.jutils.ui.UValidationTextField.ITextValidator;
+import org.jutils.ui.ValidationTextField;
+import org.jutils.ui.ValidationTextField.ITextValidator;
 import org.jutils.ui.model.IComponentView;
 
 public class MoneyTextField implements IComponentView
 {
-    private UValidationTextField field;
+    private ValidationTextField field;
     private MoneyFormatter formatter;
     private static final Pattern p;
 
@@ -29,7 +29,7 @@ public class MoneyTextField implements IComponentView
     {
         super();
         formatter = new MoneyFormatter();
-        field = new UValidationTextField( new DefaultFormatterFactory(
+        field = new ValidationTextField( new DefaultFormatterFactory(
             formatter ) );
     }
 

@@ -7,23 +7,23 @@ import javax.swing.*;
 
 import org.jutils.NumberParsingUtils;
 import org.jutils.ui.*;
-import org.jutils.ui.UValidationTextField.ITextValidator;
+import org.jutils.ui.ValidationTextField.ITextValidator;
 import org.jutils.ui.model.FormatException;
 
 public class OctetConvFrame extends FrameRunner
 {
-    private final UValidationTextField octField;
-    private final UValidationTextField decField;
-    private final UValidationTextField hexField;
+    private final ValidationTextField octField;
+    private final ValidationTextField decField;
+    private final ValidationTextField hexField;
     private final FieldValidator octListener;
     private final FieldValidator decListener;
     private final FieldValidator hexListener;
 
     public OctetConvFrame()
     {
-        octField = new UValidationTextField();
-        decField = new UValidationTextField();
-        hexField = new UValidationTextField();
+        octField = new ValidationTextField();
+        decField = new ValidationTextField();
+        hexField = new ValidationTextField();
 
         octListener = new OctValidator();
         decListener = new DecValidator();

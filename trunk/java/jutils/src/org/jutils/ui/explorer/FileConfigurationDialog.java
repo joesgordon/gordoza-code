@@ -6,12 +6,9 @@ import java.io.File;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.plaf.basic.BasicTabbedPaneUI;
 
 import org.jutils.IconConstants;
 import org.jutils.ui.*;
-
-import com.jgoodies.looks.Options;
 
 /*******************************************************************************
  * 
@@ -20,10 +17,9 @@ import com.jgoodies.looks.Options;
 public class FileConfigurationDialog extends JDialog
 {
     /**  */
-    private UCheckBox useCustomCheckBox = new UCheckBox();
-
+    private final JCheckBox useCustomCheckBox;
     /**  */
-    private ExtensionsPanel extPanel = new ExtensionsPanel();
+    private final ExtensionsPanel extPanel;
 
     /***************************************************************************
      * @param parent
@@ -32,14 +28,9 @@ public class FileConfigurationDialog extends JDialog
     {
         super( parent, "File Configuration", ModalityType.DOCUMENT_MODAL );
 
-        init();
-    }
+        this.useCustomCheckBox = new JCheckBox();
+        this.extPanel = new ExtensionsPanel();
 
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private void init()
-    {
         JPanel contentPanel = ( JPanel )this.getContentPane();
 
         contentPanel.setLayout( new GridBagLayout() );
@@ -70,31 +61,7 @@ public class FileConfigurationDialog extends JDialog
      **************************************************************************/
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new Runnable()
-        {
-            public void run()
-            {
-                try
-                {
-                    UIManager.setLookAndFeel( Options.PLASTICXP_NAME );
-                    UIManager.put( "TabbedPaneUI",
-                        BasicTabbedPaneUI.class.getCanonicalName() );
-                }
-                catch( Exception exception )
-                {
-                    exception.printStackTrace();
-                }
-
-                FileConfigurationDialog dialog = new FileConfigurationDialog(
-                    null );
-                dialog.setData( getUnitTestData() );
-                dialog.setTitle( "File Config Test" );
-                dialog.setSize( new Dimension( 600, 400 ) );
-                dialog.validate();
-                dialog.setLocationRelativeTo( null );
-                dialog.setVisible( true );
-            }
-        } );
+        SwingUtilities.invokeLater( new TestMainRunnable() );
     }
 
     public static FileConfigurationDialog showDialog( JFrame frame )
@@ -141,17 +108,32 @@ public class FileConfigurationDialog extends JDialog
 
         return configData;
     }
+
+    private static class TestMainRunnable extends MainRunner
+    {
+        @Override
+        protected void createAndShowGui()
+        {
+            FileConfigurationDialog dialog = new FileConfigurationDialog( null );
+            dialog.setData( getUnitTestData() );
+            dialog.setTitle( "File Config Test" );
+            dialog.setSize( new Dimension( 600, 400 ) );
+            dialog.validate();
+            dialog.setLocationRelativeTo( null );
+            dialog.setVisible( true );
+        }
+    }
 }
 
 class ProgramPanel extends JPanel
 {
     private JLabel nameLabel = new JLabel();
 
-    private UTextField pathField = new UTextField();
+    private JTextField pathField = new JTextField();
 
     private JButton browseButton = new JButton();
 
-    private UTextArea argArea = new UTextArea();
+    private JTextArea argArea = new JTextArea();
 
     private JScrollPane argScrollPane = new JScrollPane( argArea );
 
@@ -315,7 +297,7 @@ class ExtPanel extends JPanel
  ******************************************************************************/
 class ExtensionsPanel extends JPanel
 {
-    private USplitPane splitPane = new USplitPane();
+    private AltSplitPane splitPane = new AltSplitPane();
 
     private JPanel leftPanel = new JPanel();
 

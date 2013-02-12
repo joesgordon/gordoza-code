@@ -109,7 +109,7 @@ public class CojoFrame extends JFrame
      **************************************************************************/
     private JMenuBar createMenuBar()
     {
-        JMenuBar menubar = new UMenuBar();
+        JMenuBar menubar = new JGoodiesMenuBar();
 
         JMenu fileMenu = new JMenu( "File" );
         JMenuItem exitMenuItem = new JMenuItem( "Exit",
@@ -129,7 +129,7 @@ public class CojoFrame extends JFrame
      **************************************************************************/
     private JToolBar createToolBar()
     {
-        JToolBar toolbar = new UToolBar();
+        JToolBar toolbar = new JGoodiesToolBar();
 
         JButton newButton = new JButton();
         JButton openButton = new JButton();

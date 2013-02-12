@@ -13,7 +13,6 @@ import javax.swing.text.DefaultFormatterFactory;
 
 import org.jutils.IconConstants;
 import org.jutils.Utils;
-import org.jutils.ui.UFormattedTextField;
 import org.jutils.ui.event.updater.DataUpdaterList;
 import org.jutils.ui.event.updater.IDataUpdater;
 
@@ -23,7 +22,7 @@ import org.jutils.ui.event.updater.IDataUpdater;
 public class CalendarField extends JPanel
 {
     /**  */
-    private final UFormattedTextField dateTextField = new UFormattedTextField();
+    private final JFormattedTextField dateTextField = new JFormattedTextField();
     /**  */
     private final JButton calendarButton = new JButton();
     /**  */

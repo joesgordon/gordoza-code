@@ -70,7 +70,7 @@ public class ToDLsFrame extends JFrame
         JButton removeButton = new JButton(
             IconConstants.loader.getIcon( IconConstants.EDIT_DELETE_16 ) );
 
-        JToolBar mainToolBar = new UToolBar();
+        JToolBar mainToolBar = new JGoodiesToolBar();
         mainToolBar.add( openButton );
         mainToolBar.addSeparator();
         mainToolBar.add( upButton );
@@ -91,7 +91,7 @@ public class ToDLsFrame extends JFrame
      **************************************************************************/
     private JMenuBar createMenuBar()
     {
-        JMenuBar mainMenuBar = new UMenuBar();
+        JMenuBar mainMenuBar = new JGoodiesMenuBar();
 
         mainMenuBar.add( createFileMenu() );
         mainMenuBar.add( createViewMenu() );

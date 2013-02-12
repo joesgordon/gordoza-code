@@ -33,15 +33,15 @@ import org.jutils.ui.model.ItemComboBoxModel;
 public class SearchView implements IDataView<SearchParams>
 {
     /**  */
-    private final UComboBox filenameComboBox;
+    private final JComboBox filenameComboBox;
     /**  */
     private final JCheckBox contentsCheckBox;
     /**  */
-    private final UComboBox contentsComboBox;
+    private final JComboBox contentsComboBox;
     /**  */
     private final JButton startButton;
     /**  */
-    private final UComboBox searchInComboBox;
+    private final JComboBox searchInComboBox;
     /**  */
     private final JCheckBox subfoldersCheckBox;
     /**  */
@@ -49,11 +49,11 @@ public class SearchView implements IDataView<SearchParams>
     /**  */
     private final JCheckBox moreThanCheckBox;
     /**  */
-    private final UTextField moreThanTextField;
+    private final JTextField moreThanTextField;
     /**  */
     private final JCheckBox lessThanCheckBox;
     /**  */
-    private final UTextField lessThanTextField;
+    private final JTextField lessThanTextField;
     /**  */
     private final JCheckBox afterCheckBox;
     /**  */
@@ -81,7 +81,7 @@ public class SearchView implements IDataView<SearchParams>
     /**  */
     private final JScrollPane rightResultsScroll;
     /**  */
-    private final UEditorPane rightResultsPane;
+    private final AltEditorPane rightResultsPane;
     /**  */
     private final DefaultStyledDocument defStyledDocument;
     /**  */
@@ -112,17 +112,17 @@ public class SearchView implements IDataView<SearchParams>
         this.statusBar = statusBar;
 
         view = new JPanel( new GridBagLayout() );
-        filenameComboBox = new UComboBox();
+        filenameComboBox = new JComboBox();
         contentsCheckBox = new JCheckBox();
         startButton = new JButton();
-        contentsComboBox = new UComboBox();
-        searchInComboBox = new UComboBox();
+        contentsComboBox = new JComboBox();
+        searchInComboBox = new JComboBox();
         browseButton = new JButton();
         subfoldersCheckBox = new JCheckBox();
         moreThanCheckBox = new JCheckBox();
-        moreThanTextField = new UTextField();
+        moreThanTextField = new JTextField();
         lessThanCheckBox = new JCheckBox();
-        lessThanTextField = new UTextField();
+        lessThanTextField = new JTextField();
         afterCheckBox = new JCheckBox();
         afterTextField = new CalendarField();
         beforeCheckBox = new JCheckBox();
@@ -135,7 +135,7 @@ public class SearchView implements IDataView<SearchParams>
         leftResultsScroll = new JScrollPane();
         resultsTable = new ExplorerTable();
         rightResultsScroll = new JScrollPane();
-        rightResultsPane = new UEditorPane();
+        rightResultsPane = new AltEditorPane();
         defStyledDocument = new DefaultStyledDocument();
         startIcon = IconConstants.loader.getIcon( IconConstants.FIND_32 );
         browseListener = new BrowseButtonListener( this );

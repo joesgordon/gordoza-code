@@ -9,7 +9,7 @@ import javax.swing.table.*;
 import javax.swing.text.*;
 
 import org.jutils.PropConstants;
-import org.jutils.ui.UHighlightedLabel;
+import org.jutils.ui.HighlightedLabel;
 
 /*******************************************************************************
  * 
@@ -337,14 +337,14 @@ public class HexTable extends JTable
 
     private static class AsciiCellRenderer implements TableCellRenderer
     {
-        private UHighlightedLabel label;
+        private HighlightedLabel label;
 
         private HexTable ht;
 
         public AsciiCellRenderer( HexTable table )
         {
             ht = table;
-            label = new UHighlightedLabel();
+            label = new HighlightedLabel();
 
             label.setHorizontalAlignment( SwingConstants.CENTER );
             label.setHighlightColor( ByteCellRenderer.ALTERNATING_ROW_COLOR );

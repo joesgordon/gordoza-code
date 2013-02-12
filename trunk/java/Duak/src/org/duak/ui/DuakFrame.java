@@ -62,7 +62,7 @@ public class DuakFrame extends JFrame
      **************************************************************************/
     private JToolBar createToolbar()
     {
-        JToolBar toolbar = new UToolBar();
+        JToolBar toolbar = new JGoodiesToolBar();
 
         JButton button;
 

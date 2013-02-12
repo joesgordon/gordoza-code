@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.Icon;
+import javax.swing.JTabbedPane;
 
 import org.jutils.ui.event.TabRemovedListener;
 
@@ -12,12 +13,12 @@ import org.jutils.ui.event.TabRemovedListener;
  * method addTab(String, Component) To have an extra icon on each tab use the
  * method addTab(String, Component, Icon). Only clicking the 'X' closes the tab.
  ******************************************************************************/
-public class UClosableTabbedPane extends UTabbedPane
+public class ClosableTabbedPane extends JTabbedPane
 {
     /***************************************************************************
      *
      **************************************************************************/
-    public UClosableTabbedPane()
+    public ClosableTabbedPane()
     {
         super();
         addMouseListener( new TabClickedListener() );
@@ -106,7 +107,7 @@ public class UClosableTabbedPane extends UTabbedPane
     {
         public void mouseMoved( MouseEvent e )
         {
-            int tabNumber = getUI().tabForCoordinate( UClosableTabbedPane.this,
+            int tabNumber = getUI().tabForCoordinate( ClosableTabbedPane.this,
                 e.getX(), e.getY() );
             if( tabNumber < 0 )
             {
@@ -134,7 +135,7 @@ public class UClosableTabbedPane extends UTabbedPane
     {
         public void mouseClicked( MouseEvent e )
         {
-            int tabNumber = getUI().tabForCoordinate( UClosableTabbedPane.this,
+            int tabNumber = getUI().tabForCoordinate( ClosableTabbedPane.this,
                 e.getX(), e.getY() );
             if( tabNumber < 0 )
             {

@@ -113,7 +113,7 @@ public class ClearViewFrame extends JFrame
      **************************************************************************/
     private JMenuBar createMenuBar()
     {
-        JMenuBar menubar = new UMenuBar();
+        JMenuBar menubar = new JGoodiesMenuBar();
 
         JMenu fileMenu = new JMenu( "File" );
         JMenuItem exitMenuItem = new JMenuItem( "Exit",
@@ -152,7 +152,7 @@ public class ClearViewFrame extends JFrame
      **************************************************************************/
     private JToolBar createToolBar()
     {
-        JToolBar toolbar = new UToolBar();
+        JToolBar toolbar = new JGoodiesToolBar();
 
         JButton openButton = new JButton( CvIconLoader.getFileIcon() );
         openButton.addActionListener( new OpenListener() );

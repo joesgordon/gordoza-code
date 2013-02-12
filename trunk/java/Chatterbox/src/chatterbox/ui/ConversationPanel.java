@@ -11,7 +11,7 @@ import javax.swing.text.*;
 
 import org.jutils.IconConstants;
 import org.jutils.Utils;
-import org.jutils.ui.UFontChooser;
+import org.jutils.ui.FontChooserDialog;
 import org.jutils.ui.event.*;
 
 import chatterbox.data.UiChatMessage;
@@ -140,7 +140,7 @@ public class ConversationPanel extends JPanel implements IConversationView
             @Override
             public void actionPerformed( ActionEvent e )
             {
-                UFontChooser fontChooser = new UFontChooser(
+                FontChooserDialog fontChooser = new FontChooserDialog(
                     ( JFrame )SwingUtilities.getWindowAncestor( ConversationPanel.this ) );
 
                 fontChooser.setAttributes( msgEditorPane.getCharacterAttributes() );

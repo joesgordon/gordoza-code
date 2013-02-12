@@ -8,7 +8,7 @@ import javax.swing.border.Border;
 import javax.swing.plaf.SplitPaneUI;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 
-public class USplitPane extends JSplitPane
+public class AltSplitPane extends JSplitPane
 {
     /**  */
     public static final String PROPERTYNAME_DIVIDER_BORDER_VISIBLE = "dividerBorderVisible";
@@ -20,7 +20,7 @@ public class USplitPane extends JSplitPane
     /***************************************************************************
      * 
      **************************************************************************/
-    public USplitPane()
+    public AltSplitPane()
     {
         this( JSplitPane.HORIZONTAL_SPLIT, false, null, null );
     }
@@ -28,7 +28,7 @@ public class USplitPane extends JSplitPane
     /***************************************************************************
      * @param newOrientation
      **************************************************************************/
-    public USplitPane( int newOrientation )
+    public AltSplitPane( int newOrientation )
     {
         this( newOrientation, false );
     }
@@ -37,7 +37,7 @@ public class USplitPane extends JSplitPane
      * @param newOrientation
      * @param newContinuousLayout
      **************************************************************************/
-    public USplitPane( int newOrientation, boolean newContinuousLayout )
+    public AltSplitPane( int newOrientation, boolean newContinuousLayout )
     {
         this( newOrientation, newContinuousLayout, null, null );
     }
@@ -47,7 +47,7 @@ public class USplitPane extends JSplitPane
      * @param newLeftComponent
      * @param newRightComponent
      **************************************************************************/
-    public USplitPane( int newOrientation, Component newLeftComponent,
+    public AltSplitPane( int newOrientation, Component newLeftComponent,
         Component newRightComponent )
     {
         this( newOrientation, false, newLeftComponent, newRightComponent );
@@ -59,7 +59,7 @@ public class USplitPane extends JSplitPane
      * @param newLeftComponent
      * @param newRightComponent
      **************************************************************************/
-    public USplitPane( int newOrientation, boolean newContinuousLayout,
+    public AltSplitPane( int newOrientation, boolean newContinuousLayout,
         Component newLeftComponent, Component newRightComponent )
     {
         super( newOrientation, newContinuousLayout, newLeftComponent,

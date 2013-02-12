@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.regex.Pattern;
 
+import javax.swing.JTextArea;
 import javax.swing.text.*;
 
 import org.jutils.Utils;
@@ -11,7 +12,7 @@ import org.jutils.Utils;
 /*******************************************************************************
  *
  ******************************************************************************/
-public class SearchableTextArea extends UTextArea
+public class SearchableTextArea extends JTextArea
 {
     /**  */
     private GapContent content = new GapContent();

@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import org.jutils.ui.FrameRunner;
-import org.jutils.ui.UToolBar;
+import org.jutils.ui.JGoodiesToolBar;
 
 public class SnapTester extends FrameRunner
 {
@@ -76,7 +76,7 @@ public class SnapTester extends FrameRunner
 
     private JToolBar createToolBar()
     {
-        UToolBar toolbar = new UToolBar();
+        JGoodiesToolBar toolbar = new JGoodiesToolBar();
         // JToggleButton mainButton = new JToggleButton( "Add Main" );
         // JToggleButton snapButton = new JToggleButton( "Add Snap" );
         JToggleButton showButton = new JToggleButton( "Show Snap" );
