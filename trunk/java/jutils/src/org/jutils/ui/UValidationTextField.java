@@ -79,6 +79,10 @@ public final class UValidationTextField implements IValidationView
         field.setBackground( validBackground );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
     public UFormattedTextField getView()
     {
         return field;
@@ -87,6 +91,7 @@ public final class UValidationTextField implements IValidationView
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public boolean isValid()
     {
         return valid;

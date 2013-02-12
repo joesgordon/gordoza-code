@@ -11,6 +11,8 @@ public interface IValidationView extends IComponentView
 
     public void removeValidityChanged( ValidityChangedListener l );
 
+    public boolean isValid();
+
     public void setValidBackground( Color bg );
 
     public void setInvalidBackground( Color bg );
