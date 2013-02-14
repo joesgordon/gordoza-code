@@ -5,10 +5,9 @@ import java.awt.*;
 import javax.swing.*;
 
 import org.jutils.NumberParsingUtils;
-import org.jutils.ui.*;
-import org.jutils.ui.ValidationTextField.ITextValidator;
+import org.jutils.ui.FrameRunner;
 import org.jutils.ui.event.ItemActionListener;
-import org.jutils.ui.model.FormatException;
+import org.jutils.ui.validation.*;
 
 public class HexConvFrame extends FrameRunner
 {
@@ -91,7 +90,7 @@ public class HexConvFrame extends FrameRunner
     private class DecValidator extends FieldValidator
     {
         @Override
-        public void validate( String text ) throws FormatException
+        public void validate( String text ) throws ValidationException
         {
             hexListener.setEnabled( false );
             try
@@ -101,7 +100,7 @@ public class HexConvFrame extends FrameRunner
             }
             catch( NumberFormatException ex )
             {
-                throw new FormatException( ex.getMessage() );
+                throw new ValidationException( ex.getMessage() );
             }
             finally
             {
@@ -113,7 +112,7 @@ public class HexConvFrame extends FrameRunner
     private class HexValidator extends FieldValidator
     {
         @Override
-        public void validate( String text ) throws FormatException
+        public void validate( String text ) throws ValidationException
         {
             decListener.setEnabled( false );
             try
@@ -123,7 +122,7 @@ public class HexConvFrame extends FrameRunner
             }
             catch( NumberFormatException ex )
             {
-                throw new FormatException( ex.getMessage() );
+                throw new ValidationException( ex.getMessage() );
             }
             finally
             {
@@ -147,7 +146,8 @@ public class HexConvFrame extends FrameRunner
         }
 
         @Override
-        public final void validateText( String text ) throws FormatException
+        public final void validateText( String text )
+            throws ValidationException
         {
             if( enabled )
             {
@@ -155,7 +155,8 @@ public class HexConvFrame extends FrameRunner
             }
         }
 
-        protected abstract void validate( String text ) throws FormatException;
+        protected abstract void validate( String text )
+            throws ValidationException;
     }
 
     public interface IConverter<T, V>

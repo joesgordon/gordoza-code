@@ -7,10 +7,8 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import org.jutils.Utils;
-import org.jutils.ui.*;
-import org.jutils.ui.ValidationTextField.ITextValidator;
-import org.jutils.ui.ValidationTextField.IValidityChangedListener;
-import org.jutils.ui.model.FormatException;
+import org.jutils.ui.FrameRunner;
+import org.jutils.ui.validation.*;
 
 public class UTextValidatorTest extends FrameRunner
 {
@@ -52,9 +50,18 @@ public class UTextValidatorTest extends FrameRunner
 
         IValidityChangedListener vcl = new IValidityChangedListener()
         {
-            public void validityChanged( boolean newValidity )
+            @Override
+            public void signalValid()
             {
-                newValidity = uvtf1a.isValid() && uvtf2a.isValid() &&
+                boolean newValidity = uvtf1a.isValid() && uvtf2a.isValid() &&
+                    uvtf3b.isValid() && uvtf4c.isValid();
+                okButton.setEnabled( newValidity );
+            }
+
+            @Override
+            public void signalInvalid( String reason )
+            {
+                boolean newValidity = uvtf1a.isValid() && uvtf2a.isValid() &&
                     uvtf3b.isValid() && uvtf4c.isValid();
                 okButton.setEnabled( newValidity );
             }
@@ -147,11 +154,11 @@ public class UTextValidatorTest extends FrameRunner
         }
 
         @Override
-        public void validateText( String text ) throws FormatException
+        public void validateText( String text ) throws ValidationException
         {
             if( text.compareTo( this.text ) != 0 )
             {
-                throw new FormatException( text + " does not equal " +
+                throw new ValidationException( text + " does not equal " +
                     this.text );
             }
         }
@@ -173,7 +180,7 @@ public class UTextValidatorTest extends FrameRunner
             this.max = max;
         }
 
-        public void validateText( String text ) throws FormatException
+        public void validateText( String text ) throws ValidationException
         {
             int i = 0;
             try
@@ -182,18 +189,18 @@ public class UTextValidatorTest extends FrameRunner
 
                 if( min != null && i < min )
                 {
-                    throw new FormatException( "Value less than minimum: " + i +
-                        " < " + min );
+                    throw new ValidationException( "Value less than minimum: " +
+                        i + " < " + min );
                 }
                 if( max != null && i > max )
                 {
-                    throw new FormatException( "Value greater than maximum: " +
-                        i + max );
+                    throw new ValidationException(
+                        "Value greater than maximum: " + i + max );
                 }
             }
             catch( NumberFormatException ex )
             {
-                throw new FormatException( ex.getMessage() );
+                throw new ValidationException( ex.getMessage() );
             }
         }
     }
