@@ -7,12 +7,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.budgey.data.Account;
-import org.jutils.ui.*;
-import org.jutils.ui.ValidationTextField.ITextValidator;
-import org.jutils.ui.ValidationTextField.IValidityChangedListener;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
-import org.jutils.ui.model.FormatException;
+import org.jutils.ui.validation.*;
 
 /*******************************************************************************
  * 
@@ -118,7 +115,8 @@ public class AccountConfigPanel
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class NameValidityChanged implements IValidityChangedListener
+    private static class NameValidityChanged implements
+        IValidityChangedListener
     {
         private final AccountConfigPanel panel;
 
@@ -128,11 +126,20 @@ public class AccountConfigPanel
         }
 
         @Override
-        public void validityChanged( boolean newValidity )
+        public void signalValid()
         {
             if( panel.itemView != null )
             {
-                panel.itemView.setOkEnabled( newValidity );
+                panel.itemView.setOkEnabled( true );
+            }
+        }
+
+        @Override
+        public void signalInvalid( String reason )
+        {
+            if( panel.itemView != null )
+            {
+                panel.itemView.setOkEnabled( false );
             }
         }
     }
@@ -150,7 +157,7 @@ public class AccountConfigPanel
         }
 
         @Override
-        public void validateText( String text ) throws FormatException
+        public void validateText( String text ) throws ValidationException
         {
             boolean valid = text.length() > 0;
 
@@ -161,7 +168,7 @@ public class AccountConfigPanel
             }
             else
             {
-                throw new FormatException( "Field may not be empty" );
+                throw new ValidationException( "Field may not be empty" );
             }
         }
     }

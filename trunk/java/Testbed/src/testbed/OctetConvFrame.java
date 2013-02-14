@@ -6,9 +6,8 @@ import java.nio.ByteBuffer;
 import javax.swing.*;
 
 import org.jutils.NumberParsingUtils;
-import org.jutils.ui.*;
-import org.jutils.ui.ValidationTextField.ITextValidator;
-import org.jutils.ui.model.FormatException;
+import org.jutils.ui.FrameRunner;
+import org.jutils.ui.validation.*;
 
 public class OctetConvFrame extends FrameRunner
 {
@@ -262,7 +261,8 @@ public class OctetConvFrame extends FrameRunner
         }
 
         @Override
-        public final void validateText( String text ) throws FormatException
+        public final void validateText( String text )
+            throws ValidationException
         {
             if( enabled )
             {
@@ -271,6 +271,6 @@ public class OctetConvFrame extends FrameRunner
         }
 
         protected abstract boolean validate( String text )
-            throws FormatException;
+            throws ValidationException;
     }
 }

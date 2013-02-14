@@ -10,10 +10,8 @@ import javax.swing.*;
 
 import org.budgey.data.Money;
 import org.budgey.data.Transaction;
-import org.jutils.ui.ValidationTextField;
-import org.jutils.ui.ValidationTextField.ITextValidator;
 import org.jutils.ui.calendar.CalendarField;
-import org.jutils.ui.model.FormatException;
+import org.jutils.ui.validation.*;
 
 /*******************************************************************************
  * 
@@ -152,7 +150,7 @@ public class TransactionView
     private class SecondPartyValidtor implements ITextValidator
     {
         @Override
-        public void validateText( String text ) throws FormatException
+        public void validateText( String text ) throws ValidationException
         {
             boolean valid = text.length() > 0;
 
@@ -162,7 +160,7 @@ public class TransactionView
             }
             else
             {
-                throw new FormatException( "Field may not be empty" );
+                throw new ValidationException( "Field may not be empty" );
             }
         }
     }
@@ -173,7 +171,7 @@ public class TransactionView
     private class AmountValidtor implements ITextValidator
     {
         @Override
-        public void validateText( String text ) throws FormatException
+        public void validateText( String text ) throws ValidationException
         {
             boolean valid = false;
             Money m = null;
@@ -189,7 +187,7 @@ public class TransactionView
             }
             catch( ParseException ex )
             {
-                throw new FormatException( ex.getMessage() );
+                throw new ValidationException( ex.getMessage() );
             }
 
             if( valid )
