@@ -1,26 +1,22 @@
-package org.jutils.ui;
+package org.jutils.ui.validation;
 
 import java.awt.Color;
 import java.awt.event.ActionListener;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.JFormattedTextField;
 import javax.swing.JFormattedTextField.AbstractFormatterFactory;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.jutils.ui.model.FormatException;
-import org.jutils.ui.model.IValidationView;
-
 /*******************************************************************************
  * 
  ******************************************************************************/
 public final class ValidationTextField implements IValidationView
 {
+    /**  */
     private final JFormattedTextField field;
     /**  */
-    private final List<IValidityChangedListener> validityChangedListeners;
+    private final ValidityListenerList listenerList;
 
     /**  */
     private Color validBackground;
@@ -28,8 +24,6 @@ public final class ValidationTextField implements IValidationView
     private Color invalidBackground;
     /**  */
     private ITextValidator validator;
-    /**  */
-    private boolean valid;
 
     /***************************************************************************
      * 
@@ -60,23 +54,16 @@ public final class ValidationTextField implements IValidationView
      **************************************************************************/
     public ValidationTextField( AbstractFormatterFactory factory, String str )
     {
-        field = new JFormattedTextField( str );
+        this.field = new JFormattedTextField( factory, str );
+        this.listenerList = new ValidityListenerList();
 
-        field.setFormatterFactory( factory );
+        this.validBackground = field.getBackground();
+        this.invalidBackground = Color.red;
 
-        if( validBackground == null )
-        {
-            validBackground = field.getBackground();
-        }
-
-        invalidBackground = Color.red;
-        validator = null;
-        valid = true;
-        validityChangedListeners = new LinkedList<IValidityChangedListener>();
+        this.validator = null;
 
         field.getDocument().addDocumentListener(
             new ValidationDocumentListener( this ) );
-
         field.setBackground( validBackground );
     }
 
@@ -95,7 +82,16 @@ public final class ValidationTextField implements IValidationView
     @Override
     public boolean isValid()
     {
-        return valid;
+        return listenerList.isValid();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public String getInvalidationReason()
+    {
+        return listenerList.getInvalidationReason();
     }
 
     /***************************************************************************
@@ -105,24 +101,32 @@ public final class ValidationTextField implements IValidationView
     {
         if( validator != null )
         {
-            boolean oldValidity = valid;
+            boolean newValidity = true;
+            String reason = null;
 
             try
             {
                 validator.validateText( field.getText() );
-                field.setToolTipText( "" );
-                valid = true;
+                newValidity = true;
             }
-            catch( FormatException ex )
+            catch( ValidationException ex )
             {
-                field.setToolTipText( ex.getMessage() );
-                valid = false;
+                newValidity = false;
+                reason = ex.getMessage();
             }
 
-            if( oldValidity != valid )
+            if( listenerList.isValid() != newValidity )
             {
-                fireValidityChanged();
-                setComponentValid( valid );
+                setComponentValid( newValidity );
+            }
+
+            if( newValidity )
+            {
+                listenerList.signalValid();
+            }
+            else
+            {
+                listenerList.signalInvalid( reason );
             }
         }
     }
@@ -143,23 +147,12 @@ public final class ValidationTextField implements IValidationView
     }
 
     /***************************************************************************
-     * 
-     **************************************************************************/
-    private void fireValidityChanged()
-    {
-        for( IValidityChangedListener vcl : validityChangedListeners )
-        {
-            vcl.validityChanged( valid );
-        }
-    }
-
-    /***************************************************************************
      * @param vcl
      **************************************************************************/
     @Override
     public void addValidityChanged( IValidityChangedListener vcl )
     {
-        validityChangedListeners.add( 0, vcl );
+        listenerList.addListener( vcl );
     }
 
     /***************************************************************************
@@ -168,7 +161,7 @@ public final class ValidationTextField implements IValidationView
     @Override
     public void removeValidityChanged( IValidityChangedListener vcl )
     {
-        validityChangedListeners.remove( vcl );
+        listenerList.removeListener( vcl );
     }
 
     /***************************************************************************
@@ -178,7 +171,7 @@ public final class ValidationTextField implements IValidationView
     public void setValidBackground( Color bg )
     {
         validBackground = bg;
-        validateText();
+        setComponentValid( listenerList.isValid() );
     }
 
     /***************************************************************************
@@ -188,7 +181,7 @@ public final class ValidationTextField implements IValidationView
     public void setInvalidBackground( Color bg )
     {
         invalidBackground = bg;
-        validateText();
+        setComponentValid( listenerList.isValid() );
     }
 
     /***************************************************************************
@@ -251,21 +244,5 @@ public final class ValidationTextField implements IValidationView
         {
             field.validateText();
         }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public static interface IValidityChangedListener
-    {
-        public void validityChanged( boolean newValidity );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public static interface ITextValidator
-    {
-        public void validateText( String text ) throws FormatException;
     }
 }

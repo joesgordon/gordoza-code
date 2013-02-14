@@ -1,4 +1,4 @@
-package org.jutils.ui.model;
+package org.jutils.ui;
 
 public class FormatException extends Exception
 {
