@@ -7,7 +7,7 @@ import org.jutils.ui.model.IComponentView;
 /*******************************************************************************
  * Defines an {@link IComponentView} that supports validation.
  ******************************************************************************/
-public interface IValidationView extends IComponentView
+public interface IValidationField extends IComponentView
 {
     /***************************************************************************
      * Adds a listener that will be called when the user has entered data that

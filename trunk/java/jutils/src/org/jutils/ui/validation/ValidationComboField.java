@@ -1,20 +1,24 @@
 package org.jutils.ui.validation;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.List;
 
-import javax.swing.JFormattedTextField;
-import javax.swing.JFormattedTextField.AbstractFormatterFactory;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import javax.swing.JComboBox;
+
+import org.jutils.ui.model.ItemComboBoxModel;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public final class ValidationTextField implements IValidationField
+public final class ValidationComboField<T> implements IValidationField
 {
     /**  */
-    private final JFormattedTextField field;
+    private final ItemComboBoxModel<T> model;
+    /**  */
+    private final JComboBox field;
     /**  */
     private final ValidityListenerList listenerList;
 
@@ -22,58 +26,63 @@ public final class ValidationTextField implements IValidationField
     private Color validBackground;
     /**  */
     private Color invalidBackground;
-    /**  */
-    private ITextValidator validator;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public ValidationTextField()
+    // @SuppressWarnings( "unchecked")
+    // public ValidationComboField()
+    // {
+    // this( ( List<T> )Collections.emptyList() );
+    // }
+
+    /***************************************************************************
+     * @param items
+     **************************************************************************/
+    public ValidationComboField( T[] items )
     {
-        this( "" );
+        this( Arrays.asList( items ) );
     }
 
     /***************************************************************************
-     * 
+     * @param items
      **************************************************************************/
-    public ValidationTextField( AbstractFormatterFactory factory )
+    public ValidationComboField( List<T> items )
     {
-        this( factory, "" );
-    }
-
-    /***************************************************************************
-     * @param str
-     **************************************************************************/
-    public ValidationTextField( String str )
-    {
-        this( null, str );
-    }
-
-    /***************************************************************************
-     * @param str
-     **************************************************************************/
-    public ValidationTextField( AbstractFormatterFactory factory, String str )
-    {
-        this.field = new JFormattedTextField( factory, str );
+        this.model = new ItemComboBoxModel<T>( items );
+        this.field = new JComboBox( model );
         this.listenerList = new ValidityListenerList();
 
         this.validBackground = field.getBackground();
         this.invalidBackground = Color.red;
 
-        this.validator = null;
-
-        field.getDocument().addDocumentListener(
-            new ValidationDocumentListener( this ) );
         field.setBackground( validBackground );
+        field.addActionListener( new ValidationActionListener( this ) );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public JFormattedTextField getView()
+    public JComboBox getView()
     {
         return field;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public T getSelectedItem()
+    {
+        return model.getSelectedItem();
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public void setSelectedItem( T item )
+    {
+        model.setSelectedItem( item );
     }
 
     /***************************************************************************
@@ -92,43 +101,6 @@ public final class ValidationTextField implements IValidationField
     public String getInvalidationReason()
     {
         return listenerList.getInvalidationReason();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private void validateText()
-    {
-        if( validator != null )
-        {
-            boolean newValidity = true;
-            String reason = null;
-
-            try
-            {
-                validator.validateText( field.getText() );
-                newValidity = true;
-            }
-            catch( ValidationException ex )
-            {
-                newValidity = false;
-                reason = ex.getMessage();
-            }
-
-            if( listenerList.isValid() != newValidity )
-            {
-                setComponentValid( newValidity );
-            }
-
-            if( newValidity )
-            {
-                listenerList.signalValid();
-            }
-            else
-            {
-                listenerList.signalInvalid( reason );
-            }
-        }
     }
 
     /***************************************************************************
@@ -185,64 +157,32 @@ public final class ValidationTextField implements IValidationField
     }
 
     /***************************************************************************
-     * @param tv
-     **************************************************************************/
-    public final void setValidator( ITextValidator tv )
-    {
-        validator = tv;
-        validateText();
-    }
-
-    /***************************************************************************
-     * @param name
-     **************************************************************************/
-    public void setText( String text )
-    {
-        field.setText( text );
-        validateText();
-    }
-
-    /***************************************************************************
-     * @param l
-     **************************************************************************/
-    public void addActionListener( ActionListener l )
-    {
-        field.addActionListener( l );
-    }
-
-    /***************************************************************************
-     * @param columns
-     **************************************************************************/
-    public void setColumns( int columns )
-    {
-        field.setColumns( columns );
-    }
-
-    /***************************************************************************
      * 
      **************************************************************************/
-    private static class ValidationDocumentListener implements DocumentListener
+    private static class ValidationActionListener implements ActionListener
     {
-        private ValidationTextField field;
+        private ValidationComboField<?> field;
 
-        public ValidationDocumentListener( ValidationTextField field )
+        public ValidationActionListener( ValidationComboField<?> field )
         {
             this.field = field;
         }
 
-        public void removeUpdate( DocumentEvent e )
+        @Override
+        public void actionPerformed( ActionEvent e )
         {
-            field.validateText();
-        }
+            Object item = field.field.getSelectedItem();
 
-        public void insertUpdate( DocumentEvent e )
-        {
-            field.validateText();
-        }
-
-        public void changedUpdate( DocumentEvent e )
-        {
-            field.validateText();
+            if( item == null )
+            {
+                field.field.setBackground( field.invalidBackground );
+                field.listenerList.signalInvalid( "No item chosen" );
+            }
+            else
+            {
+                field.field.setBackground( field.validBackground );
+                field.listenerList.signalValid();
+            }
         }
     }
 }
