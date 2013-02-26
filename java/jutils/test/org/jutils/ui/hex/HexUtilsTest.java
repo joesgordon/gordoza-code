@@ -43,12 +43,12 @@ public class HexUtilsTest
 
             if( num != i )
             {
-                System.err.println( num + " != " + i );
+                Assert.assertEquals( i, num );
             }
         }
         long estTime = System.nanoTime() - start;
         double sec = estTime / 1000000000.0;
-        System.out.println( String.format( "Took: %3f", sec ) );
+        System.out.println( String.format( "Took: %3fs", sec ) );
     }
 
     @Test
