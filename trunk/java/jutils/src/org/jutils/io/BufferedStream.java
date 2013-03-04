@@ -85,8 +85,8 @@ public class BufferedStream implements IStream
         if( len <= 0 )
         {
             String msg = String.format(
-                "Attempted to set the position to 0x%016X which is past the length of the stream 0x%016X",
-                streamPosition, stream.getLength() );
+                "Attempted to set the position to 0x%016X which is past the end of the stream 0x%016X",
+                pos, streamLength - 1 );
             throw new EOFException( msg );
         }
 
@@ -317,6 +317,7 @@ public class BufferedStream implements IStream
         {
             streamLength = stream.getLength();
         }
+
         return Math.max( streamLength, streamPosition + bufferLength );
     }
 
