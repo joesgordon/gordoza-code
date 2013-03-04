@@ -85,17 +85,27 @@ public final class IOUtils
      **************************************************************************/
     public static File removeExtension( File file )
     {
-        String filename = file.getName();
         File parent = file.getAbsoluteFile().getParentFile();
+
+        return new File( parent, removeFilenameExtension( file ) );
+    }
+
+    /***************************************************************************
+     * @param file
+     * @return
+     **************************************************************************/
+    public static String removeFilenameExtension( File file )
+    {
+        String filename = file.getName();
 
         int extensionIndex = filename.lastIndexOf( "." );
 
         if( extensionIndex == -1 )
         {
-            return file;
+            return filename;
         }
 
-        return new File( parent, filename.substring( 0, extensionIndex ) );
+        return filename.substring( 0, extensionIndex );
     }
 
     /***************************************************************************
