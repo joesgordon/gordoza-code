@@ -65,6 +65,8 @@ public final class ValidationTextField implements IValidationField
         field.getDocument().addDocumentListener(
             new ValidationDocumentListener( this ) );
         field.setBackground( validBackground );
+
+        setComponentValid( listenerList.isValid() );
     }
 
     /***************************************************************************
@@ -94,10 +96,15 @@ public final class ValidationTextField implements IValidationField
         return listenerList.getInvalidationReason();
     }
 
+    private void validateText()
+    {
+        validateText( false );
+    }
+
     /***************************************************************************
      * 
      **************************************************************************/
-    private void validateText()
+    private void validateText( boolean ignorePreviousValidity )
     {
         if( validator != null )
         {
@@ -115,7 +122,8 @@ public final class ValidationTextField implements IValidationField
                 reason = ex.getMessage();
             }
 
-            if( listenerList.isValid() != newValidity )
+            if( !ignorePreviousValidity &&
+                listenerList.isValid() != newValidity )
             {
                 setComponentValid( newValidity );
             }
@@ -190,7 +198,8 @@ public final class ValidationTextField implements IValidationField
     public final void setValidator( ITextValidator tv )
     {
         validator = tv;
-        validateText();
+
+        validateText( true );
     }
 
     /***************************************************************************

@@ -23,8 +23,8 @@ public class ValidityListenerList
     {
         this.validityChangedListeners = new LinkedList<IValidityChangedListener>();
 
-        this.lastValidity = true;
-        this.lastReason = null;
+        this.lastValidity = false;
+        this.lastReason = "Uninitialized validity";
     }
 
     /***************************************************************************
@@ -51,14 +51,14 @@ public class ValidityListenerList
     {
         if( !lastValidity )
         {
+            lastValidity = true;
+            lastReason = null;
+
             for( IValidityChangedListener vcl : validityChangedListeners )
             {
                 vcl.signalValid();
             }
         }
-
-        lastValidity = true;
-        lastReason = null;
     }
 
     /***************************************************************************
@@ -66,13 +66,13 @@ public class ValidityListenerList
      **************************************************************************/
     public void signalInvalid( String reason )
     {
+        lastValidity = false;
+        lastReason = reason;
+
         for( IValidityChangedListener vcl : validityChangedListeners )
         {
             vcl.signalInvalid( reason );
         }
-
-        lastValidity = false;
-        lastReason = reason;
     }
 
     /***************************************************************************
