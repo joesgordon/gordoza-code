@@ -3,9 +3,15 @@ package org.jutils.concurrent;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.jutils.ui.event.EventListenerList;
-import org.jutils.ui.event.IEventListener;
+import org.jutils.ui.event.ItemActionList;
+import org.jutils.ui.event.ItemActionListener;
 
+// TODO rename to TaskStopManager.
+
+/*******************************************************************************
+ * This class is a sort of semaphore that represents the execution state
+ * (executing or stopped) and the methods to modify said state.
+ ******************************************************************************/
 public final class Stopper implements IStopper
 {
     /** Execution continues as long as {@code continueRunning} is {@code true}. */
@@ -13,33 +19,65 @@ public final class Stopper implements IStopper
     /** {@code true} after {@link #run()} returns {@code false} otherwise. */
     private volatile boolean isFinished;
     /** Lock used to protect the finished flag and the stop condition. */
-    private ReentrantLock stopLock;
+    private final ReentrantLock stopLock;
     /** Condition used to signal that {@link #run()} is complete. */
-    private Condition stopCondition;
-    /**  */
-    private EventListenerList stoppedListeners;
+    private final Condition stopCondition;
+    /** List of listeners to be called when {@link #signalFinished()} is called. */
+    private final ItemActionList<Boolean> finishedListeners;
 
+    /***************************************************************************
+     * Creates a new object.
+     **************************************************************************/
     public Stopper()
     {
-        continueRunning = true;
-        isFinished = false;
-        stopLock = new ReentrantLock();
-        stopCondition = stopLock.newCondition();
-        stoppedListeners = new EventListenerList();
+        this.continueRunning = true;
+        this.isFinished = false;
+        this.stopLock = new ReentrantLock();
+        this.stopCondition = stopLock.newCondition();
+        this.finishedListeners = new ItemActionList<Boolean>();
     }
 
+    /***************************************************************************
+     * Adds a listener to be called when {@link #signalFinished()} is called;
+     * reports {@code true} if the process was not stopped preemptively, {@link
+     * false} otherwise.
+     * @param l the listener to be added.
+     **************************************************************************/
+    public void addFinishedListener( ItemActionListener<Boolean> l )
+    {
+        finishedListeners.addListener( l );
+    }
+
+    /***************************************************************************
+     * Removes the supplied listener from the list of finished listeners.
+     * @param l the listener to be removed.
+     **************************************************************************/
+    public void removeFinishedListener( ItemActionListener<Boolean> l )
+    {
+        finishedListeners.removeListener( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void stop()
     {
         continueRunning = false;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public boolean isFinished()
     {
         return isFinished;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void waitFor() throws InterruptedException
     {
@@ -58,6 +96,9 @@ public final class Stopper implements IStopper
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void stopAndWaitFor() throws InterruptedException
     {
@@ -65,12 +106,18 @@ public final class Stopper implements IStopper
         waitFor();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public boolean continueProcessing()
     {
         return continueRunning;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void signalFinished()
     {
@@ -78,11 +125,7 @@ public final class Stopper implements IStopper
         isFinished = true;
         stopCondition.signalAll();
         stopLock.unlock();
-    }
 
-    @Override
-    public void addStoppedListener( IEventListener l )
-    {
-        stoppedListeners.addListener( l );
+        finishedListeners.fireListeners( this, continueRunning );
     }
 }
