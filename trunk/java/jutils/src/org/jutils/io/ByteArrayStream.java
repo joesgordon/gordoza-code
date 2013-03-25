@@ -45,12 +45,15 @@ public class ByteArrayStream implements IStream
 
     public ByteArrayStream( byte[] buf, int size, int increment )
     {
-        this.buffer = buf;
+        this.buffer = Arrays.copyOf( buf, size );
         this.position = 0;
         this.bufferSize = size;
         this.sizeIncrement = increment;
     }
 
+    /***************************************************************************
+     * @param length
+     **************************************************************************/
     private void ensureWrite( int length )
     {
         int nextPos = position + length;
@@ -96,6 +99,7 @@ public class ByteArrayStream implements IStream
         {
             throw new EOFException( "Tried to read past end of stream" );
         }
+
         return buffer[position++];
     }
 
@@ -114,6 +118,11 @@ public class ByteArrayStream implements IStream
     @Override
     public int read( byte[] buf, int off, int len ) throws IOException
     {
+        if( position > bufferSize )
+        {
+            throw new EOFException( "Tried to read past end of stream" );
+        }
+
         int bytesRead = ( int )getAvailableByteCount();
 
         if( len < bytesRead )
@@ -141,7 +150,7 @@ public class ByteArrayStream implements IStream
     @Override
     public void readFully( byte[] buf, int off, int len ) throws IOException
     {
-        if( len > getAvailableByteCount() )
+        if( len > getAvailable() )
         {
             throw new IOException( "Cannot fill with " + len +
                 " bytes as only " + getAvailableByteCount() +
@@ -162,15 +171,13 @@ public class ByteArrayStream implements IStream
             pos += position;
         }
 
-        if( pos < buffer.length )
+        if( pos > Integer.MAX_VALUE )
         {
-            this.position = ( int )pos;
+            throw new IOException( "Seek position to long for a byte buffer: " +
+                pos + " > " + Integer.MAX_VALUE );
         }
-        else
-        {
-            throw new IOException( "Cannot seek past the end of the buffer: " +
-                pos + " >= " + buffer.length );
-        }
+
+        this.position = ( int )pos;
     }
 
     /***************************************************************************
@@ -207,7 +214,7 @@ public class ByteArrayStream implements IStream
     @Override
     public long getLength() throws IOException
     {
-        return buffer.length;
+        return bufferSize;
     }
 
     /***************************************************************************
@@ -219,7 +226,6 @@ public class ByteArrayStream implements IStream
         ensureWrite( 1 );
 
         buffer[position++] = b;
-
     }
 
     /***************************************************************************

@@ -151,12 +151,13 @@ public class BufferedStreamTest
         try
         {
             stream.seek( off );
-            Assert.assertEquals( stream.getPosition(), off );
-            Assert.assertEquals( stream.read(), bytes[off] );
+            Assert.assertEquals( off, stream.getPosition() );
+            byte b = stream.read();
+            Assert.assertEquals( bytes[off], b );
 
             stream.seek( len );
-            Assert.assertEquals( stream.getPosition(), len );
-            Assert.assertEquals( stream.read(), bytes[len] );
+            Assert.assertEquals( len, stream.getPosition() );
+            Assert.assertEquals( bytes[len], stream.read() );
         }
         catch( IOException ex )
         {
@@ -188,7 +189,7 @@ public class BufferedStreamTest
 
         try
         {
-            Assert.assertEquals( stream.getPosition(), 0 );
+            Assert.assertEquals( 0, stream.getPosition() );
         }
         catch( IOException ex )
         {
@@ -204,7 +205,7 @@ public class BufferedStreamTest
 
         try
         {
-            Assert.assertEquals( stream.getLength(), bytes.length );
+            Assert.assertEquals( bytes.length, stream.getLength() );
         }
         catch( IOException ex )
         {
@@ -213,4 +214,49 @@ public class BufferedStreamTest
         }
     }
 
+    @Test
+    public void testWriteData()
+    {
+        ByteArrayStream byteStream = new ByteArrayStream( 0 );
+        BufferedStream stream = new BufferedStream( byteStream );
+
+        try
+        {
+            int len = 0;
+
+            try
+            {
+                int count = ( int )( ByteCache.DEFAULT_SIZE / bytes.length ) + 1;
+
+                count = 1;
+                Assert.assertEquals( 0, stream.getLength() );
+
+                stream.write( ( byte )55 );
+                stream.write( ( byte )55 );
+                stream.write( ( byte )55 );
+                stream.write( ( byte )55 );
+
+                len += 4;
+
+                Assert.assertEquals( 4, stream.getPosition() );
+
+                for( int i = 0; i < count; i++ )
+                {
+                    stream.write( bytes );
+                    len += bytes.length;
+                }
+            }
+            finally
+            {
+                stream.close();
+            }
+
+            Assert.assertEquals( len, stream.getLength() );
+        }
+        catch( IOException ex )
+        {
+            ex.printStackTrace();
+            Assert.fail( ex.getMessage() );
+        }
+    }
 }

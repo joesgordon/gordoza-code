@@ -7,7 +7,8 @@ import java.util.regex.Pattern;
 import org.jutils.apps.filespy.data.SearchParams;
 import org.jutils.apps.filespy.data.SearchRecord;
 import org.jutils.concurrent.*;
-import org.jutils.ui.event.IEventListener;
+import org.jutils.ui.event.ItemActionEvent;
+import org.jutils.ui.event.ItemActionListener;
 
 /*******************************************************************************
  *
@@ -49,7 +50,7 @@ public class SearchThread implements IStoppable
         Stoppable searcher = new Stoppable( contentsConsumer );
         Thread contentsSearcherThread = new Thread( searcher );
 
-        stopper.addStoppedListener( new StopListener( contentsConsumer,
+        stopper.addFinishedListener( new StopListener( contentsConsumer,
             searcher, contentsSearcherThread ) );
 
         contentsSearcherThread.start();
@@ -228,7 +229,7 @@ public class SearchThread implements IStoppable
     /***************************************************************************
      * 
      **************************************************************************/
-    private class StopListener implements IEventListener
+    private class StopListener implements ItemActionListener<Boolean>
     {
         private final Stoppable searcher;
         /**  */
@@ -245,7 +246,7 @@ public class SearchThread implements IStoppable
         }
 
         @Override
-        public void eventOccurred()
+        public void actionPerformed( ItemActionEvent<Boolean> event )
         {
             contentsConsumer.stopAcceptingInput();
             searcher.stop();

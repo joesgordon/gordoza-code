@@ -38,19 +38,16 @@ public final class Stopper implements IStopper
     }
 
     /***************************************************************************
-     * Adds a listener to be called when {@link #signalFinished()} is called;
-     * reports {@code true} if the process was not stopped preemptively, {@link
-     * false} otherwise.
-     * @param l the listener to be added.
+     * 
      **************************************************************************/
+    @Override
     public void addFinishedListener( ItemActionListener<Boolean> l )
     {
         finishedListeners.addListener( l );
     }
 
     /***************************************************************************
-     * Removes the supplied listener from the list of finished listeners.
-     * @param l the listener to be removed.
+     * 
      **************************************************************************/
     public void removeFinishedListener( ItemActionListener<Boolean> l )
     {
