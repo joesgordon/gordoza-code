@@ -1,5 +1,7 @@
 package org.jutils.concurrent;
 
+import org.jutils.ui.event.ItemActionListener;
+
 // TODO Rename to ITaskStopManager
 
 /*******************************************************************************
@@ -44,4 +46,18 @@ public interface IStopper
      * object may be released.
      **************************************************************************/
     public void signalFinished();
+
+    /***************************************************************************
+     * Adds a listener to be called when {@link #signalFinished()} is called;
+     * reports {@code true} if the process was not stopped preemptively, {@link
+     * false} otherwise.
+     * @param l the listener to be added.
+     **************************************************************************/
+    public void addFinishedListener( ItemActionListener<Boolean> l );
+
+    /***************************************************************************
+     * Removes the supplied listener from the list of finished listeners.
+     * @param l the listener to be removed.
+     **************************************************************************/
+    public void removeFinishedListener( ItemActionListener<Boolean> l );
 }
