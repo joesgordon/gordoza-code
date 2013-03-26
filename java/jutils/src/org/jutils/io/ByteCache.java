@@ -45,6 +45,8 @@ public class ByteCache
     {
         this.cache = bytes;
         this.position = -1;
+        this.cacheLen = 0;
+        this.index = 0;
     }
 
     /***************************************************************************
@@ -282,7 +284,7 @@ public class ByteCache
         {
             throw new IndexOutOfBoundsException( "Invalid position " + pos +
                 " for this cache of " + cache.length + " bytes at position " +
-                position + " results in a local invalic cache index of " + i );
+                position + " results in a local invalid cache index of " + i );
         }
 
         index = i;
