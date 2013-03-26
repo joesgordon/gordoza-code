@@ -72,7 +72,7 @@ public class BufferedStreamTest
     @Test
     public void testReadByteArray()
     {
-        BufferedStream stream = new BufferedStream( byteStream, 1087 );
+        BufferedStream stream = new BufferedStream( byteStream, 75 );
 
         try
         {

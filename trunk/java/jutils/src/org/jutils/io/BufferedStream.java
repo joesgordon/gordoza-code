@@ -51,7 +51,7 @@ public class BufferedStream implements IStream
     {
         this.position = 0;
         this.stream = stream;
-        this.buffer = new ByteCache();
+        this.buffer = new ByteCache( bufSize );
         this.streamLen = -1;
     }
 
@@ -168,6 +168,7 @@ public class BufferedStream implements IStream
 
             bytesRemaining -= bytesRead;
             off += bytesRead;
+            position += bytesRead;
 
             // printDebug( "read-post: " + bytesRemaining );
         }
@@ -189,6 +190,8 @@ public class BufferedStream implements IStream
         {
             bytesRead += read( buf, off + bytesRead, len - bytesRead );
         }
+
+        position += len;
     }
 
     /***************************************************************************
@@ -280,6 +283,7 @@ public class BufferedStream implements IStream
         {
             buffer.write( b );
             position++;
+            writeOnNextFlush = true;
         }
         else
         {

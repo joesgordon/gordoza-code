@@ -23,7 +23,7 @@ public interface IStream
     /***************************************************************************
      * Reads up to {@code buf.length} bytes from the stream.
      * @param buf the buffer into which the data is read.
-     * @return the total number of bytes read into the buffer, or -1 is there is
+     * @return the total number of bytes read into the buffer, or -1 if there is
      * no more data because the end of the stream has been reached.
      * @throws IOException If the first byte cannot be read for any reason other
      * than end of file, or if the stream has been closed, or if some other I/O
@@ -82,13 +82,13 @@ public interface IStream
     /***************************************************************************
      * Sets the file-pointer offset, measured from the beginning of this file,
      * at which the next read or write occurs. The offset may be set beyond the
-     * end of the stream. Setting the offset beyond the end of the file does not
-     * change the stream length. The file length will change only by writing
-     * after the offset has been set beyond the end of the file.
+     * end of the stream. Setting the offset beyond the end of the stream does
+     * not change the stream length. The stream length will change only by
+     * writing after the offset has been set beyond the end of the file.
      * @param pos the offset position, measured in bytes from the beginning of
      * the stream, at which to set the file pointer. If negative, {@code pos}
      * will be added to the current position before a seek occurs.
-     * @throws IOException If pos is less than 0 or if an I/O error occurs.
+     * @throws IOException If an I/O error occurs.
      **************************************************************************/
     public void seek( long pos ) throws IOException;
 
@@ -102,7 +102,7 @@ public interface IStream
 
     /***************************************************************************
      * Returns the number of bytes available in this stream. Returns<br><br>
-     * {@code getLength() + getPosition() )}
+     * {@code getLength() - getPosition() )}
      * @return the number of bytes available in this stream.
      * @throws IOException If an I/O error occurs.
      **************************************************************************/
