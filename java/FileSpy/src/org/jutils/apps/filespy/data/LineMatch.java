@@ -1,22 +1,26 @@
 package org.jutils.apps.filespy.data;
 
 /*******************************************************************************
- *
+ * Represents the information need to be related to the user about a search
+ * match within a text file.
  ******************************************************************************/
 public class LineMatch
 {
-    private int lineNumber = -1;
-
-    private String preMatch = null;
-
-    private String match = null;
-
-    private String postMatch = null;
+    /** The line number on which the match was found. */
+    public final int lineNumber;
+    /** The text prior to the match. */
+    public final String preMatch;
+    /** The text that matches the pattern. */
+    public final String match;
+    /** The text after the match. */
+    public final String postMatch;
 
     /***************************************************************************
-     * @param str String
-     * @param off int
-     * @param len int
+     * Creates a new set of match information with the provided values.
+     * @param lineNumber the line number on which the match was found.
+     * @param preMatch the text prior to the match.
+     * @param match the text that matches the pattern.
+     * @param postMatch the text after the match.
      **************************************************************************/
     public LineMatch( int lineNumber, String preMatch, String match,
         String postMatch )
@@ -28,50 +32,9 @@ public class LineMatch
     }
 
     /***************************************************************************
-     * @return int
+     * 
      **************************************************************************/
-    public int getLineNumber()
-    {
-        return lineNumber;
-    }
-
-    /***************************************************************************
-     * @return String
-     **************************************************************************/
-    public String getPreUnmatched()
-    {
-        return preMatch;
-    }
-
-    /***************************************************************************
-     * @return String
-     **************************************************************************/
-    public String getMatched()
-    {
-        return match;
-    }
-
-    /***************************************************************************
-     * @return String
-     **************************************************************************/
-    public String getPostUnmatched()
-    {
-        return postMatch;
-    }
-
-    /***************************************************************************
-     * @return String
-     **************************************************************************/
-    @SuppressWarnings( "unused")
-    private String toHtml()
-    {
-        // TODO Use it or lose it
-        return preMatch + "<b>" + match + "</b>" + postMatch;
-    }
-
-    /***************************************************************************
-     * @return String
-     **************************************************************************/
+    @Override
     public String toString()
     {
         return preMatch + match + postMatch;

@@ -238,20 +238,20 @@ public class BufferedStreamTest
 
                 len += 4;
 
-                Assert.assertEquals( 4, stream.getPosition() );
+                Assert.assertEquals( 4, stream.getLength() );
 
                 for( int i = 0; i < count; i++ )
                 {
                     stream.write( bytes );
                     len += bytes.length;
                 }
+
+                Assert.assertEquals( len, stream.getLength() );
             }
             finally
             {
                 stream.close();
             }
-
-            Assert.assertEquals( len, stream.getLength() );
         }
         catch( IOException ex )
         {

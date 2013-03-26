@@ -897,11 +897,10 @@ public class SearchView implements IDataView<SearchParams>
                     LineMatch line = ( LineMatch )lines.get( i );
                     // System.out.println( "\tWriting line:" + i );
 
-                    rightResultsPane.appendText( line.getLineNumber() + ": \t",
-                        null );
-                    rightResultsPane.appendText( line.getPreUnmatched(), null );
-                    rightResultsPane.appendText( line.getMatched(), matchStyle );
-                    rightResultsPane.appendText( line.getPostUnmatched(), null );
+                    rightResultsPane.appendText( line.lineNumber + ": \t", null );
+                    rightResultsPane.appendText( line.preMatch, null );
+                    rightResultsPane.appendText( line.match, matchStyle );
+                    rightResultsPane.appendText( line.postMatch, null );
                     rightResultsPane.appendText( Utils.NEW_LINE, null );
                 }
 

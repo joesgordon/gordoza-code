@@ -15,10 +15,10 @@ public class ByteCacheTest
         InputStream stream = null;
         byte[] bytes;
 
+        stream = url.openStream();
+
         try
         {
-            stream = url.openStream();
-
             bytes = new byte[stream.available()];
 
             stream.read( bytes );
