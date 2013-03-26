@@ -166,7 +166,7 @@ public class DataStream implements IDataStream
     @Override
     public boolean readBoolean() throws IOException
     {
-        return !( read() == 0 );
+        return read() != 0;
     }
 
     /***************************************************************************
