@@ -3,18 +3,25 @@ package org.jutils.io;
 import java.io.EOFException;
 import java.io.IOException;
 
-// TODO cache last stream length, update on write.
-
 /*******************************************************************************
  * {@code BufferedStream} is an {@link IStream} that buffers another
  * {@code IStream}.
  ******************************************************************************/
 public class BufferedStream implements IStream
 {
+    // -------------------------------------------------------------------------
+    // Immutable data members.
+    // -------------------------------------------------------------------------
+
     /** The stream to do all actual reads/writes */
     private final IStream stream;
     /** The buffer to be used */
     private final ByteCache buffer;
+
+    // -------------------------------------------------------------------------
+    // Mutable data members.
+    // -------------------------------------------------------------------------
+
     /**
      * Flag that specifies whether the buffer should be written ({@code true})
      * on next flush of the streams or not ({@code false}).
@@ -22,10 +29,12 @@ public class BufferedStream implements IStream
     private boolean writeOnNextFlush = false;
     /** The position in this stream of the next read/write. */
     private long position;
+    /**  */
+    private long streamLen;
 
     /***************************************************************************
-     * Buffers the provided stream with a buffer of {@link #DEFAULT_SIZE default
-     * size}.
+     * Buffers the provided stream with a buffer of
+     * {@link ByteCache#DEFAULT_SIZE default size}.
      * @param stream the underlying stream to be buffered.
      **************************************************************************/
     public BufferedStream( IStream stream )
@@ -43,6 +52,33 @@ public class BufferedStream implements IStream
         this.position = 0;
         this.stream = stream;
         this.buffer = new ByteCache();
+        this.streamLen = -1;
+    }
+
+    /***************************************************************************
+     * Flushes the buffer to the underlying stream if there is data to be
+     * written.
+     * @throws IOException If an I/O error occurs during write.
+     **************************************************************************/
+    public void flush() throws IOException
+    {
+        if( writeOnNextFlush )
+        {
+            boolean updateLength = false;
+
+            if( buffer.isReadCached( streamLen ) )
+            {
+                updateLength = true;
+            }
+
+            buffer.writeToStream( stream );
+            writeOnNextFlush = false;
+
+            if( updateLength )
+            {
+                streamLen = getLength();
+            }
+        }
     }
 
     /***************************************************************************
@@ -181,11 +217,7 @@ public class BufferedStream implements IStream
     @Override
     public void close() throws IOException
     {
-        if( writeOnNextFlush )
-        {
-            buffer.writeToStream( stream );
-        }
-
+        flush();
         stream.close();
     }
 
@@ -217,15 +249,22 @@ public class BufferedStream implements IStream
     }
 
     /***************************************************************************
-     * 
+     * Returns the virtual length of this stream (i.e. the returned value
+     * includes any bytes written past the end of the underlying stream which
+     * have not yet been written to disk).
+     * @return the virtual length of this stream.
      **************************************************************************/
     @Override
     public long getLength() throws IOException
     {
-        long len = buffer.getPosition() + buffer.remainingRead();
-        long streamLength = stream.getLength();
+        long len = buffer.getPosition() + buffer.getReadLength();
 
-        return Math.max( len, streamLength );
+        if( streamLen < 0 )
+        {
+            streamLen = stream.getLength();
+        }
+
+        return Math.max( len, streamLen );
     }
 
     /***************************************************************************
@@ -239,7 +278,6 @@ public class BufferedStream implements IStream
         // ---------------------------------------------------------------------
         if( buffer.isWriteCached( position ) )
         {
-            System.out.println( "Yep, it's write cached: " + position );
             buffer.write( b );
             position++;
         }
@@ -248,9 +286,6 @@ public class BufferedStream implements IStream
             // -----------------------------------------------------------------
             // Otherwise, write directly to the stream and cache afterwards.
             // -----------------------------------------------------------------
-
-            System.out.println( "Nawp, it ain't write cached: " + position );
-
             stream.seek( position );
             stream.write( b );
             position++;
@@ -281,8 +316,7 @@ public class BufferedStream implements IStream
             if( writeOnNextFlush )
             {
                 buffer.write( buf, off, buffer.remainingWrite() );
-                buffer.writeToStream( stream );
-                writeOnNextFlush = false;
+                flush();
             }
 
             if( toWrite > 0 )
@@ -317,18 +351,17 @@ public class BufferedStream implements IStream
     }
 
     /***************************************************************************
-     * Loads
-     * @param pos
-     * @throws IOException
+     * Flushes and then loads the buffer starting at the provided position into
+     * the stream.
+     * @param pos the position into the underlying stream at which the buffer
+     * will be loaded.
+     * @throws IOException If an I/O error occurs.
      **************************************************************************/
     private void loadBufferFromFile( long pos ) throws IOException
     {
         // printDebug( "pre-load" );
 
-        if( writeOnNextFlush )
-        {
-            buffer.writeToStream( stream );
-        }
+        flush();
 
         buffer.readFromStream( stream, pos );
 
@@ -336,7 +369,8 @@ public class BufferedStream implements IStream
     }
 
     /***************************************************************************
-     * @throws IOException
+     * Ensures that the current position is cached to be read.
+     * @throws IOException If an I/O error occurs.
      **************************************************************************/
     private void ensureReadCache() throws IOException
     {
