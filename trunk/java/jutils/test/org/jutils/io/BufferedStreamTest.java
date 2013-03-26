@@ -259,4 +259,34 @@ public class BufferedStreamTest
             Assert.fail( ex.getMessage() );
         }
     }
+
+    @Test
+    public void testWriteToDataStream()
+    {
+        byte[] buffer = new byte[100];
+        ByteArrayStream byteStream = new ByteArrayStream( buffer );
+        BufferedStream bufStream = new BufferedStream( byteStream );
+        DataStream stream = new DataStream( bufStream );
+
+        try
+        {
+            try
+            {
+                stream.writeInt( 0x12345 );
+                stream.seek( 0 );
+                int i = stream.readInt();
+
+                Assert.assertEquals( 0x12345, i );
+            }
+            finally
+            {
+                stream.close();
+            }
+        }
+        catch( IOException ex )
+        {
+            ex.printStackTrace();
+            Assert.fail( ex.getMessage() );
+        }
+    }
 }
