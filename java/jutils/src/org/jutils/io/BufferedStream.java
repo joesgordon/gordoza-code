@@ -308,32 +308,45 @@ public class BufferedStream implements IStream
     @Override
     public void write( byte[] buf, int off, int len ) throws IOException
     {
-        if( len > buffer.remainingWrite() )
+        if( buffer.isWriteCached( position ) )
         {
-            int toWrite = len - buffer.remainingWrite();
-            int nextOff = off + buffer.remainingWrite();
-
-            if( writeOnNextFlush )
+            if( len > buffer.remainingWrite() )
             {
-                buffer.write( buf, off, buffer.remainingWrite() );
-                flush();
-            }
+                int toWrite = len - buffer.remainingWrite();
+                int nextOff = off + buffer.remainingWrite();
 
-            if( toWrite > 0 )
+                if( writeOnNextFlush )
+                {
+                    buffer.write( buf, off, buffer.remainingWrite() );
+                    flush();
+                }
+
+                if( toWrite > 0 )
+                {
+                    stream.write( buf, off, nextOff );
+                }
+
+                position += len;
+
+                loadBufferFromFile( position );
+            }
+            else
             {
-                stream.write( buf, off, nextOff );
+                buffer.write( buf, off, len );
+                writeOnNextFlush = true;
+
+                position += len;
             }
-
-            position += len;
-
-            loadBufferFromFile( position );
         }
         else
         {
-            buffer.write( buf, off, len );
-            writeOnNextFlush = true;
-
+            // -----------------------------------------------------------------
+            // Otherwise, write directly to the stream and cache afterwards.
+            // -----------------------------------------------------------------
+            stream.seek( position );
+            stream.write( buf, off, len );
             position += len;
+            buffer.readFromStream( stream );
         }
     }
 
