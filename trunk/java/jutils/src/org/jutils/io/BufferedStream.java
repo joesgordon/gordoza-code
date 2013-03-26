@@ -173,8 +173,6 @@ public class BufferedStream implements IStream
             // printDebug( "read-post: " + bytesRemaining );
         }
 
-        position += len;
-
         return len;
     }
 
@@ -190,8 +188,6 @@ public class BufferedStream implements IStream
         {
             bytesRead += read( buf, off + bytesRead, len - bytesRead );
         }
-
-        position += len;
     }
 
     /***************************************************************************

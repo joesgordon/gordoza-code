@@ -261,6 +261,41 @@ public class BufferedStreamTest
     }
 
     @Test
+    public void testWriteToDataStream2()
+    {
+        byte[] expected = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        byte[] buffer = new byte[expected.length];
+        ByteArrayStream byteStream = new ByteArrayStream( buffer );
+        BufferedStream stream = new BufferedStream( byteStream );
+
+        try
+        {
+            try
+            {
+                stream.write( expected, 0, 4 );
+                stream.write( expected[4] );
+                stream.write( expected, 5, 6 );
+
+                byte[] actual = new byte[expected.length];
+
+                stream.seek( 0 );
+                stream.readFully( actual );
+
+                Assert.assertArrayEquals( expected, actual );
+            }
+            finally
+            {
+                stream.close();
+            }
+        }
+        catch( IOException ex )
+        {
+            ex.printStackTrace();
+            Assert.fail( ex.getMessage() );
+        }
+    }
+
+    @Test
     public void testWriteToDataStream()
     {
         byte[] buffer = new byte[100];
@@ -272,11 +307,25 @@ public class BufferedStreamTest
         {
             try
             {
-                stream.writeInt( 0x12345 );
-                stream.seek( 0 );
-                int i = stream.readInt();
+                stream.writeInt( 4 );
 
-                Assert.assertEquals( 0x12345, i );
+                stream.write( ( byte )42 );
+
+                Assert.assertEquals( 5, stream.getPosition() );
+
+                stream.seek( 0 );
+
+                Assert.assertEquals( 0, stream.getPosition() );
+
+                stream.readInt();
+
+                Assert.assertEquals( 4, stream.getPosition() );
+
+                byte b = stream.read();
+
+                Assert.assertEquals( 5, stream.getPosition() );
+
+                Assert.assertEquals( 42, b );
             }
             finally
             {
@@ -287,6 +336,104 @@ public class BufferedStreamTest
         {
             ex.printStackTrace();
             Assert.fail( ex.getMessage() );
+        }
+    }
+
+    private static class MockObject
+    {
+        public int i = 8;
+        public boolean b = true;
+        public double d = 9.0;
+        public float f = 4.5f;
+        public char c = 'y';
+        public long l = 42;
+
+        @Override
+        public boolean equals( Object obj )
+        {
+            if( obj != null )
+            {
+                if( obj == this )
+                {
+                    return true;
+                }
+                else
+                {
+                    if( obj instanceof MockObject )
+                    {
+                        MockObject that = ( MockObject )obj;
+                        return i == that.i && b == that.b &&
+                            Math.abs( d - that.d ) < 0.00001 &&
+                            Math.abs( f - that.f ) < 0.00001f && c == that.c &&
+                            l == that.l;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        @Override
+        public String toString()
+        {
+            StringBuilder str = new StringBuilder();
+
+            str.append( "i = " );
+            str.append( i );
+
+            str.append( ", b = " );
+            str.append( b );
+
+            str.append( ", d = " );
+            str.append( d );
+
+            str.append( ", f = " );
+            str.append( f );
+
+            str.append( ", c = " );
+            str.append( c );
+
+            str.append( ", l = " );
+            str.append( l );
+
+            return str.toString();
+        }
+    }
+
+    private static class MockObjectSerializer implements
+        IStdSerializer<MockObject, IDataStream>
+    {
+        @Override
+        public MockObject read( IDataStream stream ) throws IOException,
+            RuntimeFormatException
+        {
+            MockObject obj = new MockObject();
+
+            obj.i = stream.readInt();
+            obj.b = stream.readBoolean();
+            // obj.d = stream.readDouble();
+            // obj.f = stream.readFloat();
+            // obj.c = ( char )stream.read();
+            // obj.l = stream.readLong();
+
+            return obj;
+        }
+
+        @Override
+        public void write( MockObject item, IDataStream stream )
+            throws IOException
+        {
+            stream.writeInt( item.i );
+            // stream.writeBoolean( item.b );
+            stream.write( ( byte )1 );
+            // stream.writeDouble( item.d );
+            // stream.writeFloat( item.f );
+            // stream.write( ( byte )item.c );
+            // stream.writeLong( item.l );
         }
     }
 }
