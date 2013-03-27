@@ -339,6 +339,42 @@ public class BufferedStreamTest
         }
     }
 
+    @Test
+    public void testWriteMockDataToDataStream()
+    {
+        byte[] buffer = new byte[100];
+        ByteArrayStream byteStream = new ByteArrayStream( buffer );
+        BufferedStream bufStream = new BufferedStream( byteStream );
+        DataStream stream = new DataStream( bufStream );
+
+        MockObjectSerializer serializer = new MockObjectSerializer();
+        MockObject expected = new MockObject();
+        MockObject actual;
+
+        try
+        {
+            try
+            {
+                serializer.write( expected, stream );
+
+                stream.seek( 0 );
+
+                actual = serializer.read( stream );
+
+                Assert.assertEquals( expected, actual );
+            }
+            finally
+            {
+                stream.close();
+            }
+        }
+        catch( IOException ex )
+        {
+            ex.printStackTrace();
+            Assert.fail( ex.getMessage() );
+        }
+    }
+
     private static class MockObject
     {
         public int i = 8;
