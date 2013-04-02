@@ -1,8 +1,10 @@
 package org.jutils.io;
 
-import java.io.File;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /*******************************************************************************
  *
@@ -128,5 +130,39 @@ public final class IOUtils
         }
 
         return file;
+    }
+
+    /***************************************************************************
+     * @param file
+     * @return
+     * @throws FileNotFoundException
+     * @throws IOException
+     **************************************************************************/
+    public static List<String> readAllLines( File file )
+        throws FileNotFoundException, IOException
+    {
+        List<String> lines = new ArrayList<String>();
+        BufferedReader reader = null;
+
+        try
+        {
+            reader = new BufferedReader( new FileReader( file ) );
+
+            String line;
+
+            while( ( line = reader.readLine() ) != null )
+            {
+                lines.add( line );
+            }
+        }
+        finally
+        {
+            if( reader != null )
+            {
+                reader.close();
+            }
+        }
+
+        return lines;
     }
 }
