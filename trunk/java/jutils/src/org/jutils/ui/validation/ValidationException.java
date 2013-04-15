@@ -6,4 +6,9 @@ public class ValidationException extends Exception
     {
         super( string );
     }
+
+    public ValidationException( String string, Throwable cause )
+    {
+        super( string, cause );
+    }
 }

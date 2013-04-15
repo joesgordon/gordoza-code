@@ -115,20 +115,35 @@ public final class HexUtils
     public static List<Byte> fromHexString( String text )
         throws NumberFormatException
     {
+        if( text.length() == 0 )
+        {
+            throw new NumberFormatException( "The string is empty" );
+        }
+
+        List<Byte> bytes = new ArrayList<Byte>( text.length() / 2 );
+        int b = 0;
+        char c = '-';
+
+        for( int i = 0; i < text.length(); i++ )
+        {
+            c = text.charAt( i );
+
+            if( i % 2 == 0 )
+            {
+                b = NumberParsingUtils.digitFromHex( c );
+            }
+            else
+            {
+                b = b << 4;
+                b |= NumberParsingUtils.digitFromHex( c );
+                bytes.add( ( byte )b );
+            }
+        }
+
         if( text.length() % 2 != 0 )
         {
             throw new NumberFormatException(
-                "The string must be an even number of hexadecimal digits." );
-        }
-
-        int len = text.length() / 2;
-        List<Byte> bytes = new ArrayList<Byte>( len );
-        String byteStr;
-
-        for( int i = 0; i < len; i++ )
-        {
-            byteStr = text.substring( i * 2, i * 2 + 2 );
-            bytes.add( ( byte )NumberParsingUtils.parseHexByte( byteStr ) );
+                "The string must be an even number of hexadecimal digits" );
         }
 
         return bytes;
