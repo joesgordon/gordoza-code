@@ -95,7 +95,7 @@ public class ByteArrayStream implements IStream
     @Override
     public byte read() throws IOException
     {
-        if( position > bufferSize )
+        if( position >= bufferSize )
         {
             throw new EOFException( "Tried to read past end of stream" );
         }

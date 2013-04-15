@@ -96,6 +96,9 @@ public final class ValidationTextField implements IValidationField
         return listenerList.getInvalidationReason();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private void validateText()
     {
         validateText( false );
@@ -122,8 +125,7 @@ public final class ValidationTextField implements IValidationField
                 reason = ex.getMessage();
             }
 
-            if( !ignorePreviousValidity &&
-                listenerList.isValid() != newValidity )
+            if( ignorePreviousValidity || listenerList.isValid() != newValidity )
             {
                 setComponentValid( newValidity );
             }
