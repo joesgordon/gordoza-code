@@ -3,10 +3,9 @@ package org.jutils.ui.hex;
 import java.awt.*;
 
 import javax.swing.*;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
 
 import org.jutils.PropConstants;
+import org.jutils.ui.RowHeaderRenderer;
 
 /*******************************************************************************
  * 
@@ -172,35 +171,6 @@ public class HexPanel
         public Object getElementAt( int index )
         {
             return String.format( formatString, startingAddress + index * 16 );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class RowHeaderRenderer implements ListCellRenderer
-    {
-        private final JTable table;
-        private final TableCellRenderer tcr;
-        private final Font f;
-
-        public RowHeaderRenderer( JTable table )
-        {
-            this.table = table;
-            JTableHeader header = table.getTableHeader();
-            this.tcr = header.getDefaultRenderer();
-            this.f = new Font( "Monospaced", Font.PLAIN, 12 );
-        }
-
-        public Component getListCellRendererComponent( JList list,
-            Object value, int index, boolean isSelected, boolean cellHasFocus )
-        {
-            Component c = tcr.getTableCellRendererComponent( table, value,
-                isSelected, cellHasFocus, 0, 0 );
-
-            c.setFont( f );
-
-            return c;
         }
     }
 }
