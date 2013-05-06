@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+// TODO this is really broken. fix it.
+
 /*******************************************************************************
  * @param <T>
  ******************************************************************************/

@@ -21,13 +21,20 @@ public class SpinnerWheelListener implements MouseWheelListener
 
         if( e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL )
         {
+            Object value = null;
+
             if( e.getUnitsToScroll() > 0 )
             {
-                spinner.setValue( model.getPreviousValue() );
+                value = model.getPreviousValue();
             }
             else if( e.getUnitsToScroll() < 0 )
             {
-                spinner.setValue( model.getNextValue() );
+                value = model.getNextValue();
+            }
+
+            if( value != null )
+            {
+                spinner.setValue( value );
             }
         }
     }
