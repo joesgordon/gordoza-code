@@ -45,7 +45,19 @@ public class ByteArrayStream implements IStream
 
     public ByteArrayStream( byte[] buf, int size, int increment )
     {
-        this.buffer = Arrays.copyOf( buf, size );
+        this( buf, size, increment, true );
+    }
+
+    public ByteArrayStream( byte[] buf, int size, int increment, boolean copy )
+    {
+        if( copy )
+        {
+            this.buffer = Arrays.copyOf( buf, size );
+        }
+        else
+        {
+            this.buffer = buf;
+        }
         this.position = 0;
         this.bufferSize = size;
         this.sizeIncrement = increment;
