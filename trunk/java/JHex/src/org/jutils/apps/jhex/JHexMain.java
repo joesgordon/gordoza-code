@@ -49,16 +49,6 @@ public class JHexMain extends FrameRunner
         return frame;
     }
 
-    public void finalizeGui( JFrame frame )
-    {
-        JHexFrame hexFrame = ( JHexFrame )frame;
-
-        if( file == null )
-        {
-            hexFrame.showOpenDialog();
-        }
-    }
-
     /***************************************************************************
      * 
      **************************************************************************/

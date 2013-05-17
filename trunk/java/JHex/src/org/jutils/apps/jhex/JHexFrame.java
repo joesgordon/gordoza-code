@@ -1,19 +1,17 @@
 package org.jutils.apps.jhex;
 
 import java.awt.BorderLayout;
-import java.awt.Image;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.util.Arrays;
+import java.util.List;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import org.jutils.*;
 import org.jutils.ui.*;
+import org.jutils.ui.event.*;
+import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
 import org.jutils.ui.hex.HexEditorFilePanel;
 
 /*******************************************************************************
@@ -46,6 +44,9 @@ public class JHexFrame extends JFrame
         options = JHexOptions.lazyRead();
         bufferSizeIndex = choices.length - 1;
 
+        editor.setDropTarget( new FileDropTarget(
+            new FileDroppedListener( this ) ) );
+
         this.setJMenuBar( createMenuBar() );
 
         // ---------------------------------------------------------------------
@@ -61,17 +62,7 @@ public class JHexFrame extends JFrame
         this.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         this.setTitle( "JEditor" );
 
-        try
-        {
-            URL url = IconConstants.loader.loader.getUrl( IconConstants.BINARY_32 );
-            BufferedImage img16 = ImageIO.read( url );
-            // setIconImage( img16 );
-            setIconImages( Arrays.asList( new Image[] { img16 } ) );
-        }
-        catch( IOException ex )
-        {
-            ex.printStackTrace();
-        }
+        setIconImages( IconConstants.loader.getImages( IconConstants.BINARY_32 ) );
     }
 
     /***************************************************************************
@@ -153,9 +144,9 @@ public class JHexFrame extends JFrame
     }
 
     /***************************************************************************
-     * @param e
+     * 
      **************************************************************************/
-    public void showOpenDialog()
+    private void showOpenDialog()
     {
         JFileChooser chooser = new JFileChooser();
         int choice = JFileChooser.CANCEL_OPTION;
@@ -170,6 +161,9 @@ public class JHexFrame extends JFrame
         }
     }
 
+    /***************************************************************************
+     * @param f
+     **************************************************************************/
     public void openFile( File f )
     {
         if( !f.isFile() )
@@ -237,6 +231,7 @@ public class JHexFrame extends JFrame
         if( ans != null )
         {
             String strBytes = ans.toString();
+
             if( ( strBytes.length() & 0x01 ) != 0 )
             {
                 JOptionPane.showMessageDialog( this,
@@ -244,6 +239,7 @@ public class JHexFrame extends JFrame
                     JOptionPane.ERROR_MESSAGE );
                 return;
             }
+
             byte[] bytes = new byte[strBytes.length() / 2];
 
             try
@@ -323,6 +319,9 @@ public class JHexFrame extends JFrame
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private class OpenListener implements ActionListener
     {
         @Override
@@ -332,6 +331,9 @@ public class JHexFrame extends JFrame
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private class SaveListener implements ActionListener
     {
         @Override
@@ -341,6 +343,9 @@ public class JHexFrame extends JFrame
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private class GoToListener implements ActionListener
     {
         @Override
@@ -350,6 +355,9 @@ public class JHexFrame extends JFrame
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private class FindListener implements ActionListener
     {
         @Override
@@ -359,6 +367,9 @@ public class JHexFrame extends JFrame
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private class BufferSizeListener implements ActionListener
     {
         @Override
@@ -368,6 +379,9 @@ public class JHexFrame extends JFrame
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private class WindowCloseListener extends WindowAdapter
     {
         @Override
@@ -383,5 +397,29 @@ public class JHexFrame extends JFrame
             // System.out.println( "Window Closed" );
             closeFile();
         }
+    }
+
+    private class FileDroppedListener implements
+        ItemActionListener<IFileDropEvent>
+    {
+        private final JHexFrame view;
+
+        public FileDroppedListener( JHexFrame view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ItemActionEvent<IFileDropEvent> event )
+        {
+            IFileDropEvent dropEvent = event.getItem();
+            List<File> files = dropEvent.getFiles();
+
+            if( !files.isEmpty() )
+            {
+                view.openFile( files.get( 0 ) );
+            }
+        }
+
     }
 }
