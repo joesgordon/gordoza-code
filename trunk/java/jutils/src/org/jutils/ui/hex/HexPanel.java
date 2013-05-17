@@ -3,9 +3,11 @@ package org.jutils.ui.hex;
 import java.awt.*;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 import org.jutils.PropConstants;
 import org.jutils.ui.RowHeaderRenderer;
+import org.jutils.ui.ShadowBorder;
 
 /*******************************************************************************
  * 
@@ -54,11 +56,14 @@ public class HexPanel
         rowHeader.setCellRenderer( new RowHeaderRenderer( table ) );
         rowHeader.setMinimumSize( new Dimension( 50, 5 ) );
 
+        scrollPane.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
         scrollPane.setRowHeaderView( rowHeader );
 
+        panel.setBorder( new ShadowBorder() );
+
         panel.add( scrollPane, new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 5,
-                5, 5, 5 ), 0, 0 ) );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
+                0, 0, 0 ), 0, 0 ) );
 
         FontMetrics fm = rowHeader.getFontMetrics( rowHeader.getFont() );
         rowHeaderFontWidth = fm.charWidth( '0' );

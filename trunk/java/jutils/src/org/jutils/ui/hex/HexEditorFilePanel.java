@@ -102,7 +102,7 @@ public class HexEditorFilePanel extends JPanel
 
         this.add( editor.getView(), new GridBagConstraints( 0, 1, 1, 1, 1.0,
             1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+            new Insets( 4, 4, 4, 4 ), 0, 0 ) );
     }
 
     /***************************************************************************
@@ -123,7 +123,6 @@ public class HexEditorFilePanel extends JPanel
         raFile.read( buffer );
         editor.setStartingAddress( startOffset );
         editor.setBuffer( new ByteBuffer( buffer ) );
-        // editor.setStartOffset( startOffset );
 
         offsetLabel.setText( "Showing 0x" + Long.toHexString( startOffset ) +
             " - 0x" + Long.toHexString( nextOffset ) + " of 0x" +
