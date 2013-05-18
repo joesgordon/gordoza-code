@@ -1,6 +1,6 @@
 package org.jutils.apps.jhex;
 
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
@@ -9,25 +9,18 @@ import java.util.List;
 import javax.swing.*;
 
 import org.jutils.*;
+import org.jutils.io.UserOptionsSerializer;
 import org.jutils.ui.*;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
 import org.jutils.ui.hex.HexEditorFilePanel;
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class JHexFrame extends JFrame
+public class JHexFrame implements IView<JFrame>
 {
-    // ------------------------------------------------------------------------
-    // Main panel widgets
-    // ------------------------------------------------------------------------
-    /** The file tree displaying the directories in the given file system. */
-    private HexEditorFilePanel editor;
-    /**  */
-    private JHexOptions options;
-    /**  */
-    private int bufferSizeIndex;
     /**  */
     private static final String[] choices = new String[] { "Xtra-Small (1kb)",
         "Small (64kb)", "Medium (512 kb)", "Large (1 Mb)" };
@@ -35,34 +28,111 @@ public class JHexFrame extends JFrame
     private static final int[] sizes = new int[] { 0x400, 0x10000, 0x80000,
         0x100000 };
 
+    // -------------------------------------------------------------------------
+    // Main panel widgets
+    // -------------------------------------------------------------------------
+    /** The actual window. */
+    private final JFrame frame;
+    /** The file tree displaying the directories in the given file system. */
+    private final HexEditorFilePanel editor;
+    /**  */
+    private final UserOptionsSerializer<JHexOptions> userDataIO;
+
+    /**  */
+    private int bufferSizeIndex;
+
     /***************************************************************************
      * Creates a JHex frame.
+     * @param userDataIO
      **************************************************************************/
-    public JHexFrame()
+    public JHexFrame( UserOptionsSerializer<JHexOptions> userDataIO )
     {
-        editor = new HexEditorFilePanel();
-        options = JHexOptions.lazyRead();
-        bufferSizeIndex = choices.length - 1;
+        this.userDataIO = userDataIO;
+
+        this.frame = new JFrame();
+        this.editor = new HexEditorFilePanel();
+        this.bufferSizeIndex = choices.length - 1;
 
         editor.setDropTarget( new FileDropTarget(
             new FileDroppedListener( this ) ) );
 
-        this.setJMenuBar( createMenuBar() );
-
         // ---------------------------------------------------------------------
         // Setup frame
         // ---------------------------------------------------------------------
-        this.getContentPane().setLayout( new BorderLayout() );
+        frame.setJMenuBar( createMenuBar() );
 
-        this.getContentPane().add( editor, BorderLayout.CENTER );
-        this.getContentPane().add( new StatusBarPanel().getView(),
-            BorderLayout.SOUTH );
+        frame.setContentPane( createContentPane() );
 
-        this.addWindowListener( new WindowCloseListener() );
-        this.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-        this.setTitle( "JEditor" );
+        frame.addWindowListener( new WindowCloseListener() );
+        frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        frame.setTitle( "JHex" );
 
-        setIconImages( IconConstants.loader.getImages( IconConstants.BINARY_32 ) );
+        frame.setIconImages( IconConstants.loader.getImages( IconConstants.BINARY_32 ) );
+    }
+
+    private Container createContentPane()
+    {
+        JPanel panel = new JPanel( new BorderLayout() );
+        StatusBarPanel statusView = new StatusBarPanel();
+
+        panel.add( createToolbar(), BorderLayout.NORTH );
+        panel.add( editor, BorderLayout.CENTER );
+        panel.add( statusView.getView(), BorderLayout.SOUTH );
+
+        return panel;
+    }
+
+    private Component createToolbar()
+    {
+        JGoodiesToolBar toolbar = new JGoodiesToolBar();
+        JButton button = new JButton();
+
+        button = new JButton(
+            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+        button.setToolTipText( "Open File" );
+        button.setFocusable( false );
+        button.addActionListener( new OpenListener() );
+        toolbar.add( button );
+
+        button = new JButton(
+            IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
+        button.setToolTipText( "Save File (Not Yet Implemented)" );
+        button.setFocusable( false );
+        button.addActionListener( new SaveListener() );
+        button.setEnabled( false );
+        toolbar.add( button );
+
+        toolbar.addSeparator();
+
+        button = new JButton(
+            JHexIconConstants.loader.getIcon( JHexIconConstants.JUMP_LEFT ) );
+        button.setToolTipText( "Previous Data Block" );
+        button.setFocusable( false );
+        button.addActionListener( new BackListener() );
+        toolbar.add( button );
+
+        button = new JButton(
+            JHexIconConstants.loader.getIcon( JHexIconConstants.INCH_LEFT ) );
+        button.setToolTipText( "Previous Data" );
+        button.setFocusable( false );
+        button.addActionListener( new BackListener() );
+        toolbar.add( button );
+
+        button = new JButton(
+            JHexIconConstants.loader.getIcon( JHexIconConstants.INCH_RIGHT ) );
+        button.setToolTipText( "Next Data Block" );
+        button.setFocusable( false );
+        button.addActionListener( new NextListener() );
+        toolbar.add( button );
+
+        button = new JButton(
+            JHexIconConstants.loader.getIcon( JHexIconConstants.JUMP_RIGHT ) );
+        button.setToolTipText( "Next Data" );
+        button.setFocusable( false );
+        button.addActionListener( new NextListener() );
+        toolbar.add( button );
+
+        return toolbar;
     }
 
     /***************************************************************************
@@ -96,7 +166,7 @@ public class JHexFrame extends JFrame
         saveMenuItem.addActionListener( saveListener );
         saveMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
 
-        exitMenuItem.addActionListener( new ExitListener( this ) );
+        exitMenuItem.addActionListener( new ExitListener( frame ) );
         exitMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
 
         fileMenu.add( openMenuItem );
@@ -121,12 +191,17 @@ public class JHexFrame extends JFrame
         return menubar;
     }
 
+    public JFrame getView()
+    {
+        return frame;
+    }
+
     /***************************************************************************
      * 
      **************************************************************************/
     private void showBufferSizeDialog()
     {
-        Object ans = JOptionPane.showInputDialog( this, "Choose buffer size:",
+        Object ans = JOptionPane.showInputDialog( frame, "Choose buffer size:",
             "Buffer Size", JOptionPane.QUESTION_MESSAGE, null, choices,
             choices[bufferSizeIndex] );
 
@@ -150,9 +225,10 @@ public class JHexFrame extends JFrame
     {
         JFileChooser chooser = new JFileChooser();
         int choice = JFileChooser.CANCEL_OPTION;
+        JHexOptions options = userDataIO.getOptions();
 
-        chooser.setCurrentDirectory( options.getLastSavedLocation() );
-        choice = chooser.showOpenDialog( this );
+        chooser.setCurrentDirectory( options.lastSavedLocation );
+        choice = chooser.showOpenDialog( frame );
 
         if( choice == JFileChooser.APPROVE_OPTION )
         {
@@ -172,9 +248,10 @@ public class JHexFrame extends JFrame
         }
 
         File dir = f.getAbsoluteFile().getParentFile();
+        JHexOptions options = userDataIO.getOptions();
 
-        options.setLastSavedLocation( dir );
-        options.lazySave();
+        options.lastSavedLocation = dir;
+        userDataIO.write();
 
         try
         {
@@ -191,7 +268,7 @@ public class JHexFrame extends JFrame
      **************************************************************************/
     private void saveFile()
     {
-        JOptionPane.showMessageDialog( this,
+        JOptionPane.showMessageDialog( frame,
             "This functionality is not yet implemented.",
             "Not Yet Implemented", JOptionPane.INFORMATION_MESSAGE );
 
@@ -200,16 +277,17 @@ public class JHexFrame extends JFrame
 
         JFileChooser chooser = new JFileChooser();
         int choice = JFileChooser.CANCEL_OPTION;
+        JHexOptions options = userDataIO.getOptions();
 
-        chooser.setCurrentDirectory( options.getLastSavedLocation() );
-        choice = chooser.showSaveDialog( this );
+        chooser.setCurrentDirectory( options.lastSavedLocation );
+        choice = chooser.showSaveDialog( frame );
 
         if( choice == JFileChooser.APPROVE_OPTION )
         {
             File f = chooser.getSelectedFile();
             File dir = f.getParentFile();
-            options.setLastSavedLocation( dir );
-            options.lazySave();
+            options.lastSavedLocation = dir;
+            userDataIO.write();
             try
             {
                 editor.saveFile( f );
@@ -226,7 +304,7 @@ public class JHexFrame extends JFrame
      **************************************************************************/
     private void showFindDialog()
     {
-        Object ans = JOptionPane.showInputDialog( this, "Enter hex string:",
+        Object ans = JOptionPane.showInputDialog( frame, "Enter hex string:",
             new Integer( 0 ) );
         if( ans != null )
         {
@@ -234,7 +312,7 @@ public class JHexFrame extends JFrame
 
             if( ( strBytes.length() & 0x01 ) != 0 )
             {
-                JOptionPane.showMessageDialog( this,
+                JOptionPane.showMessageDialog( frame,
                     "Cannot search for nibbles.", "ERROR",
                     JOptionPane.ERROR_MESSAGE );
                 return;
@@ -260,7 +338,7 @@ public class JHexFrame extends JFrame
             }
             catch( NumberFormatException ex )
             {
-                JOptionPane.showMessageDialog( this, "'" + ans.toString() +
+                JOptionPane.showMessageDialog( frame, "'" + ans.toString() +
                     "' is not a hexadecimal string.", "ERROR",
                     JOptionPane.ERROR_MESSAGE );
                 return;
@@ -273,7 +351,7 @@ public class JHexFrame extends JFrame
      **************************************************************************/
     private void showGotoDialog()
     {
-        Object ans = JOptionPane.showInputDialog( this,
+        Object ans = JOptionPane.showInputDialog( frame,
             "Enter Offset in hexadecimal:", new Integer( 0 ) );
         if( ans != null )
         {
@@ -285,7 +363,7 @@ public class JHexFrame extends JFrame
             }
             catch( NumberFormatException ex )
             {
-                JOptionPane.showMessageDialog( this, "'" + ans.toString() +
+                JOptionPane.showMessageDialog( frame, "'" + ans.toString() +
                     "' is not a hexadecimal string.", "ERROR",
                     JOptionPane.ERROR_MESSAGE );
                 return;
@@ -297,7 +375,7 @@ public class JHexFrame extends JFrame
             }
             catch( IOException ex )
             {
-                JOptionPane.showMessageDialog( this, ex.getMessage(), "ERROR",
+                JOptionPane.showMessageDialog( frame, ex.getMessage(), "ERROR",
                     JOptionPane.ERROR_MESSAGE );
             }
         }
@@ -314,7 +392,7 @@ public class JHexFrame extends JFrame
         }
         catch( IOException ex )
         {
-            JOptionPane.showMessageDialog( this, ex.getMessage(), "ERROR",
+            JOptionPane.showMessageDialog( frame, ex.getMessage(), "ERROR",
                 JOptionPane.ERROR_MESSAGE );
         }
     }
@@ -420,6 +498,27 @@ public class JHexFrame extends JFrame
                 view.openFile( files.get( 0 ) );
             }
         }
+    }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private class BackListener implements ActionListener
+    {
+        public void actionPerformed( ActionEvent e )
+        {
+            editor.jumpPrevious();
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private class NextListener implements ActionListener
+    {
+        public void actionPerformed( ActionEvent e )
+        {
+            editor.jumpForward();
+        }
     }
 }

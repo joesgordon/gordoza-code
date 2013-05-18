@@ -1,13 +1,11 @@
 package org.jutils.ui.hex;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.*;
 
 import javax.swing.*;
 
-import org.jutils.IconConstants;
+import org.jutils.ui.TitleView;
 
 /*******************************************************************************
  *
@@ -17,13 +15,9 @@ public class HexEditorFilePanel extends JPanel
     /**  */
     private JProgressBar progressBar = new JProgressBar();
     /**  */
-    private JLabel descLabel = new JLabel( "File not loaded" );
-    /**  */
     private JLabel offsetLabel = new JLabel( "" );
     /**  */
-    private JButton backButton = new JButton();
-    /**  */
-    private JButton nextButton = new JButton();
+    private TitleView titlePanel = new TitleView();
     /**  */
     private HexPanel editor = new HexPanel();
     /**  */
@@ -46,21 +40,9 @@ public class HexEditorFilePanel extends JPanel
         // Setup progress bar.
         // ---------------------------------------------------------------------
         progressBar.setLayout( new GridBagLayout() );
-        progressBar.add( descLabel, new GridBagConstraints( 0, 0, 1, 1, 1.0,
+        progressBar.add( offsetLabel, new GridBagConstraints( 0, 0, 1, 1, 1.0,
             1.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(
-                2, 10, 0, 10 ), 0, 0 ) );
-        progressBar.add( offsetLabel, new GridBagConstraints( 0, 1, 1, 1, 1.0,
-            1.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(
-                0, 10, 2, 10 ), 0, 0 ) );
-
-        // ---------------------------------------------------------------------
-        // Setup button panel.
-        // ---------------------------------------------------------------------
-        JPanel buttonPanel = new JPanel();
-        ActionListener nextListener = new NextListener();
-        ActionListener backListener = new BackListener();
-
-        buttonPanel.setLayout( new GridBagLayout() );
+                2, 10, 2, 10 ), 0, 0 ) );
 
         progressBar.setStringPainted( true );
         progressBar.setString( "" );
@@ -68,24 +50,7 @@ public class HexEditorFilePanel extends JPanel
         progressBar.setMaximum( 100 );
         progressBar.setMinimum( 0 );
         progressBar.setValue( 0 );
-
-        backButton.setEnabled( false );
-        backButton.setIcon( IconConstants.loader.getIcon( IconConstants.BACK_24 ) );
-        backButton.addActionListener( backListener );
-
-        nextButton.setEnabled( false );
-        nextButton.setIcon( IconConstants.loader.getIcon( IconConstants.FORWARD_24 ) );
-        nextButton.addActionListener( nextListener );
-
-        buttonPanel.add( progressBar, new GridBagConstraints( 0, 0, 1, 1, 1.0,
-            1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(
-                0, 0, 0, 10 ), 0, 4 ) );
-        buttonPanel.add( backButton, new GridBagConstraints( 1, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-            new Insets( 0, 0, 0, 10 ), 0, 0 ) );
-        buttonPanel.add( nextButton, new GridBagConstraints( 2, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-            new Insets( 0, 10, 0, 0 ), 0, 0 ) );
+        // progressBar.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
 
         // ---------------------------------------------------------------------
         // Setup main panel.
@@ -94,15 +59,17 @@ public class HexEditorFilePanel extends JPanel
 
         // editor.setAlternateRowBG( true );
         // editor.setShowGrid( true );
-        // editor.setBorder( BorderFactory.createLoweredBevelBorder() );
 
-        this.add( buttonPanel, new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+        titlePanel.setTitle( "No File Loaded" );
+        titlePanel.setComponent( editor.getView() );
+
+        this.add( titlePanel.getView(), new GridBagConstraints( 0, 0, 1, 1,
+            1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+
+        this.add( progressBar, new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 4,
                 4, 4, 4 ), 0, 0 ) );
-
-        this.add( editor.getView(), new GridBagConstraints( 0, 1, 1, 1, 1.0,
-            1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 4, 4, 4, 4 ), 0, 0 ) );
     }
 
     /***************************************************************************
@@ -124,12 +91,14 @@ public class HexEditorFilePanel extends JPanel
         editor.setStartingAddress( startOffset );
         editor.setBuffer( new ByteBuffer( buffer ) );
 
-        offsetLabel.setText( "Showing 0x" + Long.toHexString( startOffset ) +
-            " - 0x" + Long.toHexString( nextOffset ) + " of 0x" +
-            Long.toHexString( fileLength ) );
+        offsetLabel.setText( String.format(
+            "Showing 0x%016X - 0x%016X of 0x%016X", startOffset, nextOffset,
+            fileLength ) );
 
-        nextButton.setEnabled( nextOffset < fileLength );
-        backButton.setEnabled( startOffset > 0 );
+        // TODO create listener list to notify when buttons should be
+        // dis/en-abled
+        // nextButton.setEnabled( nextOffset < fileLength );
+        // backButton.setEnabled( startOffset > 0 );
         progressBar.setValue( ( int )percent );
     }
 
@@ -143,9 +112,41 @@ public class HexEditorFilePanel extends JPanel
             raFile.close();
             editor.setBuffer( null );
             raFile = null;
-            descLabel.setText( "File not loaded" );
             startOffset = 0;
             fileLength = 0;
+        }
+    }
+
+    public void jumpPrevious()
+    {
+        long lastOffset = startOffset - ( startOffset % maxBufferSize ) -
+            maxBufferSize;
+        lastOffset = Math.max( lastOffset, 0 );
+
+        try
+        {
+            setStartOffset( lastOffset );
+        }
+        catch( IOException ex )
+        {
+            JOptionPane.showMessageDialog( HexEditorFilePanel.this,
+                ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE );
+        }
+    }
+
+    public void jumpForward()
+    {
+        long nextOffset = startOffset - ( startOffset % maxBufferSize ) +
+            maxBufferSize;
+
+        try
+        {
+            setStartOffset( nextOffset );
+        }
+        catch( IOException ex )
+        {
+            JOptionPane.showMessageDialog( HexEditorFilePanel.this,
+                ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE );
         }
     }
 
@@ -193,8 +194,7 @@ public class HexEditorFilePanel extends JPanel
         {
             closeFile();
         }
-        descLabel.setText( file.getName() );
-        descLabel.setToolTipText( file.getAbsolutePath() );
+        titlePanel.setTitle( file.getName() );
         raFile = new RandomAccessFile( file, "r" );
         fileLength = raFile.length();
         setStartOffset( 0 );
@@ -216,51 +216,6 @@ public class HexEditorFilePanel extends JPanel
         if( file.compareTo( currentFile ) == 0 )
         {
             setFile( file );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private class BackListener implements ActionListener
-    {
-        public void actionPerformed( ActionEvent e )
-        {
-            long lastOffset = startOffset - ( startOffset % maxBufferSize ) -
-                maxBufferSize;
-            lastOffset = Math.max( lastOffset, 0 );
-
-            try
-            {
-                setStartOffset( lastOffset );
-            }
-            catch( IOException ex )
-            {
-                JOptionPane.showMessageDialog( HexEditorFilePanel.this,
-                    ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE );
-            }
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private class NextListener implements ActionListener
-    {
-        public void actionPerformed( ActionEvent e )
-        {
-            long nextOffset = startOffset - ( startOffset % maxBufferSize ) +
-                maxBufferSize;
-
-            try
-            {
-                setStartOffset( nextOffset );
-            }
-            catch( IOException ex )
-            {
-                JOptionPane.showMessageDialog( HexEditorFilePanel.this,
-                    ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE );
-            }
         }
     }
 }
