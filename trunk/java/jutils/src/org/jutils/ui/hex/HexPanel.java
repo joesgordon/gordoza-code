@@ -7,12 +7,12 @@ import javax.swing.border.EmptyBorder;
 
 import org.jutils.PropConstants;
 import org.jutils.ui.RowHeaderRenderer;
-import org.jutils.ui.ShadowBorder;
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class HexPanel
+public class HexPanel implements IView<JComponent>
 {
     /**  */
     private final HexTable table;
@@ -58,8 +58,6 @@ public class HexPanel
 
         scrollPane.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
         scrollPane.setRowHeaderView( rowHeader );
-
-        panel.setBorder( new ShadowBorder() );
 
         panel.add( scrollPane, new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
