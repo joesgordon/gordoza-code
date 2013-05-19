@@ -12,6 +12,7 @@ import org.budgey.data.Money;
 import org.budgey.data.Transaction;
 import org.jutils.ui.calendar.CalendarField;
 import org.jutils.ui.validation.*;
+import org.jutils.ui.validators.ITextValidator;
 
 /*******************************************************************************
  * 

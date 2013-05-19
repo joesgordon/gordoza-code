@@ -8,6 +8,7 @@ import org.jutils.NumberParsingUtils;
 import org.jutils.ui.FrameRunner;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.validation.*;
+import org.jutils.ui.validators.ITextValidator;
 
 public class HexConvFrame extends FrameRunner
 {

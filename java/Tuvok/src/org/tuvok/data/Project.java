@@ -29,17 +29,18 @@ public class Project
     }
 
     /***************************************************************************
-     * @return String
+     * 
      **************************************************************************/
+    @Override
     public String toString()
     {
         return title;
     }
 
     /***************************************************************************
-     * @param obj Object
-     * @return boolean
+     * 
      **************************************************************************/
+    @Override
     public boolean equals( Object obj )
     {
         boolean equal = false;
@@ -60,5 +61,14 @@ public class Project
             equal = false;
         }
         return equal;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public int hashCode()
+    {
+        return file.hashCode();
     }
 }

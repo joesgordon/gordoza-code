@@ -4,7 +4,9 @@ import java.awt.*;
 import java.io.*;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
+import org.jutils.ui.ShadowBorder;
 import org.jutils.ui.TitleView;
 
 /*******************************************************************************
@@ -13,13 +15,14 @@ import org.jutils.ui.TitleView;
 public class HexEditorFilePanel extends JPanel
 {
     /**  */
-    private JProgressBar progressBar = new JProgressBar();
+    private final JProgressBar progressBar;
     /**  */
-    private JLabel offsetLabel = new JLabel( "" );
+    private final JLabel offsetLabel;
     /**  */
-    private TitleView titlePanel = new TitleView();
+    private final TitleView titlePanel;
     /**  */
-    private HexPanel editor = new HexPanel();
+    private final HexPanel editor;
+
     /**  */
     private long startOffset = 0;
     /**  */
@@ -36,6 +39,37 @@ public class HexEditorFilePanel extends JPanel
      **************************************************************************/
     public HexEditorFilePanel()
     {
+        this.progressBar = new JProgressBar();
+        this.offsetLabel = new JLabel( "" );
+        this.titlePanel = new TitleView();
+        this.editor = new HexPanel();
+        // ---------------------------------------------------------------------
+        // Setup main panel.
+        // ---------------------------------------------------------------------
+        this.setLayout( new GridBagLayout() );
+
+        titlePanel.setTitle( "No File Loaded" );
+        titlePanel.setComponent( createTitleContent() );
+
+        this.add( createContentPanel(), new GridBagConstraints( 0, 0, 1, 1,
+            1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+    }
+
+    private Component createContentPanel()
+    {
+        titlePanel.setTitle( "No File Loaded" );
+        titlePanel.setComponent( createTitleContent() );
+        titlePanel.getView().setBorder( new ShadowBorder() );
+
+        return titlePanel.getView();
+    }
+
+    private Component createTitleContent()
+    {
+        JPanel panel = new JPanel( new GridBagLayout() );
+        GridBagConstraints constraints;
+
         // ---------------------------------------------------------------------
         // Setup progress bar.
         // ---------------------------------------------------------------------
@@ -50,26 +84,28 @@ public class HexEditorFilePanel extends JPanel
         progressBar.setMaximum( 100 );
         progressBar.setMinimum( 0 );
         progressBar.setValue( 0 );
-        // progressBar.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
-
-        // ---------------------------------------------------------------------
-        // Setup main panel.
-        // ---------------------------------------------------------------------
-        this.setLayout( new GridBagLayout() );
+        progressBar.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
+        progressBar.setBorderPainted( false );
 
         // editor.setAlternateRowBG( true );
         // editor.setShowGrid( true );
 
-        titlePanel.setTitle( "No File Loaded" );
-        titlePanel.setComponent( editor.getView() );
+        constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
+                0, 0, 0 ), 0, 0 );
+        panel.add( editor.getView(), constraints );
 
-        this.add( titlePanel.getView(), new GridBagConstraints( 0, 0, 1, 1,
-            1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+        constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
+        panel.add( new JSeparator(), constraints );
 
-        this.add( progressBar, new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 4,
-                4, 4, 4 ), 0, 0 ) );
+        constraints = new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
+        panel.add( progressBar, constraints );
+
+        return panel;
     }
 
     /***************************************************************************
@@ -100,6 +136,14 @@ public class HexEditorFilePanel extends JPanel
         // nextButton.setEnabled( nextOffset < fileLength );
         // backButton.setEnabled( startOffset > 0 );
         progressBar.setValue( ( int )percent );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public IByteBuffer getBuffer()
+    {
+        return editor.getBuffer();
     }
 
     /***************************************************************************
@@ -217,5 +261,10 @@ public class HexEditorFilePanel extends JPanel
         {
             setFile( file );
         }
+    }
+
+    public void addRangeSelectedListener()
+    {
+        editor.addRangeSelectedListener();
     }
 }

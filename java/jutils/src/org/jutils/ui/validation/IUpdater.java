@@ -1,14 +1,15 @@
 package org.jutils.ui.validation;
 
-
 /*******************************************************************************
- * 
+ * Defines a method of updating an object with new data. Basically a fancy-named
+ * setter.
+ * @param <T> the type of data to be updated.
  ******************************************************************************/
-public interface ITextValidator
+public interface IUpdater<T>
 {
     /***************************************************************************
-     * @param text
-     * @throws ValidationException
+     * Updates the object with the provided data.
+     * @param data the latest data.
      **************************************************************************/
-    public void validateText( String text ) throws ValidationException;
+    public void update( T data );
 }

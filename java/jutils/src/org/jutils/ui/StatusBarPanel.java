@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 import org.jutils.*;
 
@@ -82,8 +83,7 @@ public class StatusBarPanel
         view = new JPanel( new GridBagLayout() );
 
         // statusProgress.setForeground( new Color( 50, 130, 180 ) );
-        statusProgressBar.setBorder( BorderFactory.createEmptyBorder( 4, 4, 4,
-            4 ) );
+        statusProgressBar.setBorder( new EmptyBorder( 4, 4, 4, 4 ) );
         statusProgressBar.setString( "" );
         statusProgressBar.setStringPainted( true );
         statusProgressBar.setBorderPainted( false );

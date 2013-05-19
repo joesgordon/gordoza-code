@@ -28,15 +28,6 @@ public final class ValidationComboField<T> implements IValidationField
     private Color invalidBackground;
 
     /***************************************************************************
-     * 
-     **************************************************************************/
-    // @SuppressWarnings( "unchecked")
-    // public ValidationComboField()
-    // {
-    // this( ( List<T> )Collections.emptyList() );
-    // }
-
-    /***************************************************************************
      * @param items
      **************************************************************************/
     public ValidationComboField( T[] items )
