@@ -12,4 +12,8 @@ public class JHexIconConstants
 
     public static final String INCH_RIGHT = "arrow-right.png";
     public static final String JUMP_RIGHT = "arrow-right-double.png";
+
+    public static final String SHOW_DATA = "flashlight.png";
+
+    public static final String GOTO = "goto.png";
 }

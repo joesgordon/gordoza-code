@@ -107,22 +107,6 @@ public class HexTable extends JTable
     }
 
     /***************************************************************************
-     * @return
-     **************************************************************************/
-    public int getSelectStart()
-    {
-        return selectStart;
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public int getSelectEnd()
-    {
-        return selectEnd;
-    }
-
-    /***************************************************************************
      * 
      **************************************************************************/
     @Override
@@ -301,6 +285,9 @@ public class HexTable extends JTable
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class ByteCellEditor extends DefaultCellEditor
     {
         private JTextField field;
@@ -335,6 +322,9 @@ public class HexTable extends JTable
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class AsciiCellRenderer implements TableCellRenderer
     {
         private HighlightedLabel label;
@@ -364,8 +354,8 @@ public class HexTable extends JTable
         public Component getTableCellRendererComponent( JTable table,
             Object value, boolean isSelected, boolean hasFocus, int row, int col )
         {
-            int selectStart = ht.getSelectStart();
-            int selectEnd = ht.getSelectEnd();
+            int selectStart = ht.selectStart;
+            int selectEnd = ht.selectEnd;
 
             label.setText( ( String )value );
             // label.setHorizontalAlignment( SwingConstants.LEFT );
@@ -374,6 +364,7 @@ public class HexTable extends JTable
             {
                 int min = Math.min( selectStart, selectEnd );
                 int max = Math.max( selectStart, selectEnd );
+
                 if( min / 16 < row && max / 16 > row )
                 {
                     label.setHighlight( 0, 16 );
@@ -401,6 +392,9 @@ public class HexTable extends JTable
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class ByteCellRenderer extends DefaultTableCellRenderer
     {
         /**  */
@@ -446,6 +440,9 @@ public class HexTable extends JTable
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class ColHeaderRenderer implements TableCellRenderer
     {
         private TableCellRenderer renderer;
@@ -469,5 +466,10 @@ public class HexTable extends JTable
 
             return c;
         }
+    }
+
+    public static interface IRangeSelectedListener
+    {
+        public void rangeSelected( int start, int end );
     }
 }

@@ -1,6 +1,7 @@
 package org.jutils.apps.jhex;
 
 import java.awt.*;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import org.jutils.ui.*;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
 import org.jutils.ui.hex.HexEditorFilePanel;
+import org.jutils.ui.hex.ValueView;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
@@ -37,6 +39,10 @@ public class JHexFrame implements IView<JFrame>
     private final HexEditorFilePanel editor;
     /**  */
     private final UserOptionsSerializer<JHexOptions> userDataIO;
+    /**  */
+    private final JDialog dataDialog;
+    /**  */
+    private final JToggleButton dataViewButton;
 
     /**  */
     private int bufferSizeIndex;
@@ -51,10 +57,14 @@ public class JHexFrame implements IView<JFrame>
 
         this.frame = new JFrame();
         this.editor = new HexEditorFilePanel();
+        this.dataViewButton = new JToggleButton();
+        this.dataDialog = createDataDialog();
+
         this.bufferSizeIndex = choices.length - 1;
 
         editor.setDropTarget( new FileDropTarget(
             new FileDroppedListener( this ) ) );
+        editor.addRangeSelectedListener();
 
         // ---------------------------------------------------------------------
         // Setup frame
@@ -68,6 +78,42 @@ public class JHexFrame implements IView<JFrame>
         frame.setTitle( "JHex" );
 
         frame.setIconImages( IconConstants.loader.getImages( IconConstants.BINARY_32 ) );
+    }
+
+    private JDialog createDataDialog()
+    {
+        JDialog dialog = new JDialog( frame, ModalityType.MODELESS );
+        JPanel panel = new JPanel( new GridBagLayout() );
+        ValueView view = new ValueView();
+        JButton okButton = new JButton( "OK" );
+        GridBagConstraints constraints;
+
+        constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 4,
+                4, 4, 4 ), 0, 0 );
+        panel.add( view.getView(), constraints );
+
+        constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
+                0, 0, 0 ), 0, 0 );
+        panel.add( new JSeparator(), constraints );
+
+        okButton.addActionListener( new HideDialogListener() );
+
+        constraints = new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets( 10,
+                10, 10, 10 ), 30, 10 );
+        panel.add( okButton, constraints );
+
+        dialog.setTitle( "Data View" );
+        dialog.setContentPane( panel );
+        dialog.setAlwaysOnTop( false );
+        dialog.setIconImages( IconConstants.loader.getImages( IconConstants.BINARY_32 ) );
+
+        dialog.pack();
+        dialog.setLocationRelativeTo( frame );
+
+        return dialog;
     }
 
     private Container createContentPane()
@@ -132,6 +178,36 @@ public class JHexFrame implements IView<JFrame>
         button.addActionListener( new NextListener() );
         toolbar.add( button );
 
+        toolbar.addSeparator();
+
+        button = new JButton(
+            IconConstants.loader.getIcon( IconConstants.FIND_16 ) );
+        button.setToolTipText( "Find Bytes" );
+        button.setFocusable( false );
+        button.addActionListener( new FindListener() );
+        toolbar.add( button );
+
+        button = new JButton(
+            JHexIconConstants.loader.getIcon( JHexIconConstants.GOTO ) );
+        button.setToolTipText( "Go To Byte" );
+        button.setFocusable( false );
+        button.addActionListener( new GoToListener() );
+        toolbar.add( button );
+
+        button = new JButton(
+            IconConstants.loader.getIcon( IconConstants.CONFIG_16 ) );
+        button.setToolTipText( "Configure Options" );
+        button.setFocusable( false );
+        button.addActionListener( new BufferSizeListener() );
+        toolbar.add( button );
+
+        JToggleButton jtb = dataViewButton;
+        jtb.setIcon( JHexIconConstants.loader.getIcon( JHexIconConstants.SHOW_DATA ) );
+        jtb.setToolTipText( "Show Data" );
+        jtb.setFocusable( false );
+        jtb.addActionListener( new ShowDataListener( this, jtb ) );
+        toolbar.add( jtb );
+
         return toolbar;
     }
 
@@ -161,7 +237,7 @@ public class JHexFrame implements IView<JFrame>
         // Setup menu bar
         // ---------------------------------------------------------------------
         openMenuItem.addActionListener( openListener );
-        openMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.OPEN_FILE_16 ) );
+        openMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
 
         saveMenuItem.addActionListener( saveListener );
         saveMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
@@ -173,6 +249,7 @@ public class JHexFrame implements IView<JFrame>
         fileMenu.add( saveMenuItem );
         fileMenu.add( exitMenuItem );
 
+        gotoMenuItem.setIcon( JHexIconConstants.loader.getIcon( JHexIconConstants.GOTO ) );
         gotoMenuItem.addActionListener( gotoListener );
         searchMenu.add( gotoMenuItem );
 
@@ -519,6 +596,38 @@ public class JHexFrame implements IView<JFrame>
         public void actionPerformed( ActionEvent e )
         {
             editor.jumpForward();
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class ShowDataListener implements ActionListener
+    {
+        private final JHexFrame view;
+        private final JToggleButton button;
+
+        public ShowDataListener( JHexFrame view, JToggleButton jtb )
+        {
+            this.view = view;
+            this.button = jtb;
+        }
+
+        public void actionPerformed( ActionEvent e )
+        {
+            view.dataDialog.setVisible( button.isSelected() );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private class HideDialogListener implements ActionListener
+    {
+        public void actionPerformed( ActionEvent e )
+        {
+            dataDialog.setVisible( false );
+            dataViewButton.setSelected( false );
         }
     }
 }

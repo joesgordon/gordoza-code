@@ -4,6 +4,7 @@ import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.*;
 
 import org.jutils.PropConstants;
 import org.jutils.ui.RowHeaderRenderer;
@@ -15,11 +16,11 @@ import org.jutils.ui.model.IView;
 public class HexPanel implements IView<JComponent>
 {
     /**  */
+    private final JPanel panel;
+    /**  */
     private final HexTable table;
     /**  */
     private final HexRowListModel rowListModel;
-    /**  */
-    private final JPanel panel;
     /**  */
     private final JList rowHeader;
     /**  */
@@ -34,6 +35,9 @@ public class HexPanel implements IView<JComponent>
         this.rowListModel = new HexRowListModel();
         this.table = new HexTable();
         this.rowHeader = new JList( rowListModel );
+
+        table.getColumnModel().addColumnModelListener(
+            new SelectionListener( this ) );
 
         JScrollPane scrollPane = new JScrollPane( table );
 
@@ -62,6 +66,10 @@ public class HexPanel implements IView<JComponent>
         panel.add( scrollPane, new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
                 0, 0, 0 ), 0, 0 ) );
+
+        Dimension dim = panel.getMinimumSize();
+        dim.width = 600;
+        panel.setMinimumSize( dim );
 
         FontMetrics fm = rowHeader.getFontMetrics( rowHeader.getFont() );
         rowHeaderFontWidth = fm.charWidth( '0' );
@@ -174,6 +182,57 @@ public class HexPanel implements IView<JComponent>
         public Object getElementAt( int index )
         {
             return String.format( formatString, startingAddress + index * 16 );
+        }
+    }
+
+    public void addRangeSelectedListener()
+    { // TODO fjdlfjld
+    }
+
+    private class SelectionListener implements TableColumnModelListener
+    {
+        private final HexPanel panel;
+
+        public SelectionListener( HexPanel panel )
+        {
+            this.panel = panel;
+        }
+
+        @Override
+        public void columnAdded( TableColumnModelEvent e )
+        {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void columnRemoved( TableColumnModelEvent e )
+        {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void columnMoved( TableColumnModelEvent e )
+        {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void columnMarginChanged( ChangeEvent e )
+        {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void columnSelectionChanged( ListSelectionEvent e )
+        {
+            int col = table.getSelectedColumn();
+            int row = table.getSelectedRow();
+
+            System.out.println( "col: " + col + ", row " + row );
         }
     }
 }

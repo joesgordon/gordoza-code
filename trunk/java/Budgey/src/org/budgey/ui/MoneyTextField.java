@@ -11,8 +11,8 @@ import javax.swing.text.DefaultFormatterFactory;
 
 import org.budgey.data.Money;
 import org.jutils.ui.model.IComponentView;
-import org.jutils.ui.validation.ITextValidator;
 import org.jutils.ui.validation.ValidationTextField;
+import org.jutils.ui.validators.ITextValidator;
 
 public class MoneyTextField implements IComponentView
 {

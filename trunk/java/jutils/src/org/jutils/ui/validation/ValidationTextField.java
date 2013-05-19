@@ -3,18 +3,21 @@ package org.jutils.ui.validation;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 
-import javax.swing.JFormattedTextField;
+import javax.swing.*;
 import javax.swing.JFormattedTextField.AbstractFormatterFactory;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.jutils.ui.validators.ITextValidator;
+
 /*******************************************************************************
- * 
+ * A validation field that validates user input according to an
+ * {@link ITextValidator}.
  ******************************************************************************/
 public final class ValidationTextField implements IValidationField
 {
     /**  */
-    private final JFormattedTextField field;
+    private final JTextField field;
     /**  */
     private final ValidityListenerList listenerList;
 
@@ -73,7 +76,7 @@ public final class ValidationTextField implements IValidationField
      * 
      **************************************************************************/
     @Override
-    public JFormattedTextField getView()
+    public JTextField getView()
     {
         return field;
     }

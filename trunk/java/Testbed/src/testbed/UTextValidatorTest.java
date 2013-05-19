@@ -9,6 +9,7 @@ import javax.swing.*;
 import org.jutils.Utils;
 import org.jutils.ui.FrameRunner;
 import org.jutils.ui.validation.*;
+import org.jutils.ui.validators.ITextValidator;
 
 public class UTextValidatorTest extends FrameRunner
 {
