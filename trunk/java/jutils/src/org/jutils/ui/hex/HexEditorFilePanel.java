@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 
 import org.jutils.ui.ShadowBorder;
 import org.jutils.ui.TitleView;
+import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
 
 /*******************************************************************************
  *
@@ -138,6 +139,24 @@ public class HexEditorFilePanel extends JPanel
         progressBar.setValue( ( int )percent );
     }
 
+    public int getSelectedColumn()
+    {
+        return editor.getSelectedColumn();
+    }
+
+    public int getSelectedRow()
+    {
+        return editor.getSelectedRow();
+    }
+
+    /***************************************************************************
+     * @param l
+     **************************************************************************/
+    public void addRangeSelectedListener( IRangeSelectedListener l )
+    {
+        editor.addRangeSelectedListener( l );
+    }
+
     /***************************************************************************
      * @return
      **************************************************************************/
@@ -192,6 +211,16 @@ public class HexEditorFilePanel extends JPanel
             JOptionPane.showMessageDialog( HexEditorFilePanel.this,
                 ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE );
         }
+    }
+
+    public void setHightlightColor( Color c )
+    {
+        editor.setHightlightColor( c );
+    }
+
+    public void setHighlightLength( int length )
+    {
+        editor.setHighlightLength( length );
     }
 
     /***************************************************************************
@@ -261,10 +290,5 @@ public class HexEditorFilePanel extends JPanel
         {
             setFile( file );
         }
-    }
-
-    public void addRangeSelectedListener()
-    {
-        editor.addRangeSelectedListener();
     }
 }

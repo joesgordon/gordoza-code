@@ -3,6 +3,8 @@ package org.jutils.ui.hex;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -17,11 +19,14 @@ import org.jutils.ui.HighlightedLabel;
 public class HexTable extends JTable
 {
     /**  */
-    private HexTableModel model;
+    private final HexTableModel model;
     /**  */
-    private ByteCellRenderer renderer;
+    private final ByteCellRenderer renderer;
     /**  */
-    private ByteCellEditor editor;
+    private final ByteCellEditor editor;
+    /**  */
+    private final List<IRangeSelectedListener> rangeListeners;
+
     /**  */
     private int selectEnd;
     /**  */
@@ -35,6 +40,7 @@ public class HexTable extends JTable
         editor = new ByteCellEditor();
         renderer = new ByteCellRenderer();
         model = new HexTableModel();
+        this.rangeListeners = new ArrayList<IRangeSelectedListener>();
 
         setFont( new Font( "Monospaced", Font.PLAIN, 12 ) );
         setCellSelectionEnabled( true );
@@ -81,6 +87,14 @@ public class HexTable extends JTable
     }
 
     /***************************************************************************
+     * @param l
+     **************************************************************************/
+    public void addRangeSelectedListener( IRangeSelectedListener l )
+    {
+        rangeListeners.add( l );
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     @Override
@@ -113,6 +127,8 @@ public class HexTable extends JTable
     public void changeSelection( int row, int col, boolean toggle,
         boolean extend )
     {
+        super.changeSelection( row, col, toggle, extend );
+
         if( isFocusable() )
         {
             col = calculateClosestValidColumn( row, col );
@@ -124,7 +140,40 @@ public class HexTable extends JTable
             }
 
             repaint();
+
+            renderer.setHighlightOffset( selectEnd );
+            // renderer.setHighlightOffset( Math.min( selectStart, selectEnd )
+            // );
+
+            fireSelectionChanged( selectStart, selectEnd );
         }
+    }
+
+    /***************************************************************************
+     * @param start
+     * @param end
+     **************************************************************************/
+    private void fireSelectionChanged( int start, int end )
+    {
+        for( IRangeSelectedListener l : rangeListeners )
+        {
+            l.rangeSelected( start, end );
+        }
+    }
+
+    public void setHightlightColor( Color c )
+    {
+        renderer.setHightlightColor( c );
+    }
+
+    public void setHighlightLength( int length )
+    {
+        renderer.setHighlightLength( length );
+
+        int row1 = selectEnd / 16;
+        int row2 = ( selectEnd + length ) / 16;
+
+        model.fireTableRowsUpdated( row1, row2 );
     }
 
     /***************************************************************************
@@ -290,7 +339,7 @@ public class HexTable extends JTable
      **************************************************************************/
     private static class ByteCellEditor extends DefaultCellEditor
     {
-        private JTextField field;
+        private final JTextField field;
 
         public ByteCellEditor()
         {
@@ -395,48 +444,90 @@ public class HexTable extends JTable
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class ByteCellRenderer extends DefaultTableCellRenderer
+    private static class ByteCellRenderer implements TableCellRenderer
     {
         /**  */
         public static final Color ALTERNATING_ROW_COLOR = new Color( 210, 225,
             240 );
 
         /**  */
-        private Color nullColor;
+        private final DefaultTableCellRenderer renderer;
+        /**  */
+        private final Color nullColor;
+
+        /**  */
+        private Color highlightColor;
+        /**  */
+        private int offset;
+        /**  */
+        private int len;
 
         public ByteCellRenderer()
         {
             super();
 
-            nullColor = ( Color )UIManager.get( PropConstants.UI_PANEL_COLOR );
+            this.renderer = new DefaultTableCellRenderer();
+            this.nullColor = ( Color )UIManager.get( PropConstants.UI_PANEL_COLOR );
 
-            setHorizontalAlignment( SwingConstants.CENTER );
+            this.highlightColor = Color.yellow;
+            this.offset = -1;
+            this.len = -1;
+
+            renderer.setHorizontalAlignment( SwingConstants.CENTER );
         }
 
         public Component getTableCellRendererComponent( JTable table,
             Object value, boolean isSelected, boolean hasFocus, int row, int col )
         {
-            super.getTableCellRendererComponent( table, value, isSelected,
+            renderer.getTableCellRendererComponent( table, value, isSelected,
                 hasFocus, row, col );
+
+            int off = row * 16 + col;
+            boolean isHighlighted = len > -1 && off >= offset &&
+                off < offset + len;
+            boolean isAltRow = row % 2 == 1;
 
             if( value == null )
             {
-                setBackground( nullColor );
-                setBorder( null );
+                renderer.setBackground( nullColor );
+                renderer.setBorder( null );
             }
-            else if( !isSelected )
+            else
             {
-                if( row % 2 == 1 )
+                if( isHighlighted )
                 {
-                    setBackground( ALTERNATING_ROW_COLOR );
+                    renderer.setBackground( highlightColor );
+                    renderer.setForeground( Color.black );
                 }
-                else
+                else if( !isSelected )
                 {
-                    setBackground( null );
+                    if( isAltRow )
+                    {
+                        renderer.setBackground( ALTERNATING_ROW_COLOR );
+                    }
+                    else
+                    {
+                        renderer.setBackground( null );
+                    }
                 }
             }
 
-            return this;
+            return renderer;
+        }
+
+        public void setHightlightColor( Color c )
+        {
+            this.highlightColor = c;
+        }
+
+        public void setHighlightLength( int length )
+        {
+            this.len = length;
+        }
+
+        public void setHighlightOffset( int offset )
+        {
+            this.offset = offset;
         }
     }
 
@@ -468,6 +559,9 @@ public class HexTable extends JTable
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public static interface IRangeSelectedListener
     {
         public void rangeSelected( int start, int end );
