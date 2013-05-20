@@ -14,8 +14,8 @@ import org.jutils.io.UserOptionsSerializer;
 import org.jutils.ui.*;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
-import org.jutils.ui.hex.HexEditorFilePanel;
-import org.jutils.ui.hex.ValueView;
+import org.jutils.ui.hex.*;
+import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
@@ -42,6 +42,8 @@ public class JHexFrame implements IView<JFrame>
     /**  */
     private final JDialog dataDialog;
     /**  */
+    private final ValueView valuePanel;
+    /**  */
     private final JToggleButton dataViewButton;
 
     /**  */
@@ -58,13 +60,14 @@ public class JHexFrame implements IView<JFrame>
         this.frame = new JFrame();
         this.editor = new HexEditorFilePanel();
         this.dataViewButton = new JToggleButton();
+        this.valuePanel = new ValueView();
         this.dataDialog = createDataDialog();
 
         this.bufferSizeIndex = choices.length - 1;
 
         editor.setDropTarget( new FileDropTarget(
             new FileDroppedListener( this ) ) );
-        editor.addRangeSelectedListener();
+        editor.addRangeSelectedListener( new SelectionListener( this ) );
 
         // ---------------------------------------------------------------------
         // Setup frame
@@ -84,14 +87,15 @@ public class JHexFrame implements IView<JFrame>
     {
         JDialog dialog = new JDialog( frame, ModalityType.MODELESS );
         JPanel panel = new JPanel( new GridBagLayout() );
-        ValueView view = new ValueView();
         JButton okButton = new JButton( "OK" );
         GridBagConstraints constraints;
+
+        valuePanel.addSizeSelectedListener( new SizeSelectedListener( this ) );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 4,
                 4, 4, 4 ), 0, 0 );
-        panel.add( view.getView(), constraints );
+        panel.add( valuePanel.getView(), constraints );
 
         constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
@@ -145,8 +149,7 @@ public class JHexFrame implements IView<JFrame>
         button.setToolTipText( "Save File (Not Yet Implemented)" );
         button.setFocusable( false );
         button.addActionListener( new SaveListener() );
-        button.setEnabled( false );
-        toolbar.add( button );
+        // toolbar.add( button );
 
         toolbar.addSeparator();
 
@@ -162,18 +165,18 @@ public class JHexFrame implements IView<JFrame>
         button.setToolTipText( "Previous Data" );
         button.setFocusable( false );
         button.addActionListener( new BackListener() );
-        toolbar.add( button );
-
+        // toolbar.add( button );
+        //
         button = new JButton(
             JHexIconConstants.loader.getIcon( JHexIconConstants.INCH_RIGHT ) );
-        button.setToolTipText( "Next Data Block" );
+        button.setToolTipText( "Next Data" );
         button.setFocusable( false );
         button.addActionListener( new NextListener() );
-        toolbar.add( button );
+        // toolbar.add( button );
 
         button = new JButton(
             JHexIconConstants.loader.getIcon( JHexIconConstants.JUMP_RIGHT ) );
-        button.setToolTipText( "Next Data" );
+        button.setToolTipText( "Next Data Block" );
         button.setFocusable( false );
         button.addActionListener( new NextListener() );
         toolbar.add( button );
@@ -246,7 +249,7 @@ public class JHexFrame implements IView<JFrame>
         exitMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
 
         fileMenu.add( openMenuItem );
-        fileMenu.add( saveMenuItem );
+        // fileMenu.add( saveMenuItem );
         fileMenu.add( exitMenuItem );
 
         gotoMenuItem.setIcon( JHexIconConstants.loader.getIcon( JHexIconConstants.GOTO ) );
@@ -616,6 +619,15 @@ public class JHexFrame implements IView<JFrame>
         public void actionPerformed( ActionEvent e )
         {
             view.dataDialog.setVisible( button.isSelected() );
+
+            if( button.isSelected() )
+            {
+                view.editor.setHighlightLength( view.valuePanel.getSelectedSize() );
+            }
+            else
+            {
+                view.editor.setHighlightLength( -1 );
+            }
         }
     }
 
@@ -628,6 +640,51 @@ public class JHexFrame implements IView<JFrame>
         {
             dataDialog.setVisible( false );
             dataViewButton.setSelected( false );
+            editor.setHighlightLength( -1 );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private class SelectionListener implements IRangeSelectedListener
+    {
+        private final JHexFrame frame;
+
+        public SelectionListener( JHexFrame frame )
+        {
+            this.frame = frame;
+        }
+
+        @Override
+        public void rangeSelected( int start, int end )
+        {
+            frame.valuePanel.setBytes( frame.editor.getBuffer().getBytes(), end );
+
+            // System.out.println( "col: " + col + ", row: " + row + ", start: "
+            // +
+            // start + ", end: " + end );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private class SizeSelectedListener implements ItemActionListener<Integer>
+    {
+        private final JHexFrame frame;
+
+        public SizeSelectedListener( JHexFrame frame )
+        {
+            this.frame = frame;
+        }
+
+        @Override
+        public void actionPerformed( ItemActionEvent<Integer> event )
+        {
+            int len = event.getItem() == null ? -1 : event.getItem();
+
+            frame.editor.setHighlightLength( len );
         }
     }
 }
