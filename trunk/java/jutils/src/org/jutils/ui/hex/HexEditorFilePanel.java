@@ -6,8 +6,7 @@ import java.io.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import org.jutils.ui.ShadowBorder;
-import org.jutils.ui.TitleView;
+import org.jutils.ui.*;
 import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
 
 /*******************************************************************************
@@ -16,7 +15,7 @@ import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
 public class HexEditorFilePanel extends JPanel
 {
     /**  */
-    private final JProgressBar progressBar;
+    private final PositionIndicator progressBar;
     /**  */
     private final JLabel offsetLabel;
     /**  */
@@ -40,7 +39,7 @@ public class HexEditorFilePanel extends JPanel
      **************************************************************************/
     public HexEditorFilePanel()
     {
-        this.progressBar = new JProgressBar();
+        this.progressBar = new PositionIndicator();
         this.offsetLabel = new JLabel( "" );
         this.titlePanel = new TitleView();
         this.editor = new HexPanel();
@@ -79,14 +78,9 @@ public class HexEditorFilePanel extends JPanel
             1.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(
                 2, 10, 2, 10 ), 0, 0 ) );
 
-        progressBar.setStringPainted( true );
-        progressBar.setString( "" );
-        progressBar.setIndeterminate( false );
-        progressBar.setMaximum( 100 );
-        progressBar.setMinimum( 0 );
-        progressBar.setValue( 0 );
+        progressBar.setLength( 100 );
+        progressBar.setOffset( 0 );
         progressBar.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
-        progressBar.setBorderPainted( false );
 
         // editor.setAlternateRowBG( true );
         // editor.setShowGrid( true );
@@ -117,7 +111,6 @@ public class HexEditorFilePanel extends JPanel
         int bufLen = ( int )Math.min( maxBufferSize, fileLength - startOffset );
         byte[] buffer = new byte[bufLen];
         long nextOffset = startOffset + bufLen;
-        double percent = ( double )nextOffset / ( double )fileLength * 100.0;
 
         // System.out.println( "Loading buffer @ " + startOffset + " , " +
         // percent + "%" );
@@ -136,7 +129,8 @@ public class HexEditorFilePanel extends JPanel
         // dis/en-abled
         // nextButton.setEnabled( nextOffset < fileLength );
         // backButton.setEnabled( startOffset > 0 );
-        progressBar.setValue( ( int )percent );
+        progressBar.setOffset( startOffset );
+        progressBar.setUnitLength( bufLen );
     }
 
     public int getSelectedColumn()
@@ -229,6 +223,8 @@ public class HexEditorFilePanel extends JPanel
     public void setBufferSize( int size )
     {
         this.maxBufferSize = size;
+        progressBar.setUnitLength( maxBufferSize );
+
         if( currentFile != null )
         {
             try
@@ -271,6 +267,8 @@ public class HexEditorFilePanel extends JPanel
         raFile = new RandomAccessFile( file, "r" );
         fileLength = raFile.length();
         setStartOffset( 0 );
+        progressBar.setLength( fileLength );
+        progressBar.setUnitLength( maxBufferSize );
     }
 
     public void saveFile( File file ) throws IOException

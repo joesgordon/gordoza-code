@@ -124,8 +124,26 @@ public class EagleSheetFrameView implements IView<JFrame>
         StatusBarPanel statusBar = new StatusBarPanel();
 
         panel.add( createToolbar(), BorderLayout.NORTH );
-        panel.add( sheetView.getView(), BorderLayout.CENTER );
+        panel.add( createMainPanel(), BorderLayout.CENTER );
         panel.add( statusBar.getView(), BorderLayout.SOUTH );
+
+        return panel;
+    }
+
+    private Component createMainPanel()
+    {
+        JPanel panel = new JPanel( new GridBagLayout() );
+        TitleView titlePanel = new TitleView();
+        GridBagConstraints constraints;
+
+        titlePanel.setTitle( "New Sheet" );
+        titlePanel.setComponent( sheetView.getView() );
+        titlePanel.getView().setBorder( new ShadowBorder() );
+
+        constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 5,
+                5, 5, 5 ), 0, 0 );
+        panel.add( titlePanel.getView(), constraints );
 
         return panel;
     }
