@@ -45,6 +45,8 @@ public class JHexFrame implements IView<JFrame>
     private final ValueView valuePanel;
     /**  */
     private final JToggleButton dataViewButton;
+    /**  */
+    private final JMenu fileMenu;
 
     /**  */
     private int bufferSizeIndex;
@@ -62,6 +64,7 @@ public class JHexFrame implements IView<JFrame>
         this.dataViewButton = new JToggleButton();
         this.valuePanel = new ValueView();
         this.dataDialog = createDataDialog();
+        this.fileMenu = new JMenu( "File" );
 
         this.bufferSizeIndex = choices.length - 1;
 
@@ -76,7 +79,7 @@ public class JHexFrame implements IView<JFrame>
 
         frame.setContentPane( createContentPane() );
 
-        frame.addWindowListener( new WindowCloseListener() );
+        frame.addWindowListener( new WindowCloseListener( this ) );
         frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         frame.setTitle( "JHex" );
 
@@ -102,7 +105,7 @@ public class JHexFrame implements IView<JFrame>
                 0, 0, 0 ), 0, 0 );
         panel.add( new JSeparator(), constraints );
 
-        okButton.addActionListener( new HideDialogListener() );
+        okButton.addActionListener( new HideDialogListener( this ) );
 
         constraints = new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets( 10,
@@ -141,14 +144,14 @@ public class JHexFrame implements IView<JFrame>
             IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
         button.setToolTipText( "Open File" );
         button.setFocusable( false );
-        button.addActionListener( new OpenListener() );
+        button.addActionListener( new OpenListener( this ) );
         toolbar.add( button );
 
         button = new JButton(
             IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
         button.setToolTipText( "Save File (Not Yet Implemented)" );
         button.setFocusable( false );
-        button.addActionListener( new SaveListener() );
+        button.addActionListener( new SaveListener( this ) );
         // toolbar.add( button );
 
         toolbar.addSeparator();
@@ -157,28 +160,28 @@ public class JHexFrame implements IView<JFrame>
             JHexIconConstants.loader.getIcon( JHexIconConstants.JUMP_LEFT ) );
         button.setToolTipText( "Previous Data Block" );
         button.setFocusable( false );
-        button.addActionListener( new BackListener() );
+        button.addActionListener( new BackListener( this ) );
         toolbar.add( button );
 
         button = new JButton(
             JHexIconConstants.loader.getIcon( JHexIconConstants.INCH_LEFT ) );
         button.setToolTipText( "Previous Data" );
         button.setFocusable( false );
-        button.addActionListener( new BackListener() );
+        button.addActionListener( new BackListener( this ) );
         // toolbar.add( button );
         //
         button = new JButton(
             JHexIconConstants.loader.getIcon( JHexIconConstants.INCH_RIGHT ) );
         button.setToolTipText( "Next Data" );
         button.setFocusable( false );
-        button.addActionListener( new NextListener() );
+        button.addActionListener( new NextListener( this ) );
         // toolbar.add( button );
 
         button = new JButton(
             JHexIconConstants.loader.getIcon( JHexIconConstants.JUMP_RIGHT ) );
         button.setToolTipText( "Next Data Block" );
         button.setFocusable( false );
-        button.addActionListener( new NextListener() );
+        button.addActionListener( new NextListener( this ) );
         toolbar.add( button );
 
         toolbar.addSeparator();
@@ -187,21 +190,21 @@ public class JHexFrame implements IView<JFrame>
             IconConstants.loader.getIcon( IconConstants.FIND_16 ) );
         button.setToolTipText( "Find Bytes" );
         button.setFocusable( false );
-        button.addActionListener( new FindListener() );
+        button.addActionListener( new FindListener( this ) );
         toolbar.add( button );
 
         button = new JButton(
             JHexIconConstants.loader.getIcon( JHexIconConstants.GOTO ) );
         button.setToolTipText( "Go To Byte" );
         button.setFocusable( false );
-        button.addActionListener( new GoToListener() );
+        button.addActionListener( new GoToListener( this ) );
         toolbar.add( button );
 
         button = new JButton(
             IconConstants.loader.getIcon( IconConstants.CONFIG_16 ) );
         button.setToolTipText( "Configure Options" );
         button.setFocusable( false );
-        button.addActionListener( new BufferSizeListener() );
+        button.addActionListener( new BufferSizeListener( this ) );
         toolbar.add( button );
 
         JToggleButton jtb = dataViewButton;
@@ -219,58 +222,86 @@ public class JHexFrame implements IView<JFrame>
      **************************************************************************/
     private JMenuBar createMenuBar()
     {
-        ActionListener openListener = new OpenListener();
-        ActionListener saveListener = new SaveListener();
-        ActionListener gotoListener = new GoToListener();
-        ActionListener findListener = new FindListener();
-
         JMenuBar menubar = new JGoodiesMenuBar();
-        JMenu fileMenu = new JMenu( "File" );
-        JMenuItem openMenuItem = new JMenuItem( "Open" );
-        JMenuItem saveMenuItem = new JMenuItem( "Save" );
-        JMenuItem exitMenuItem = new JMenuItem( "Exit" );
 
-        JMenu searchMenu = new JMenu( "Search" );
-        JMenuItem gotoMenuItem = new JMenuItem( "Go To Offset" );
-        JMenuItem findMenuItem = new JMenuItem( "Find" );
-        JMenu toolsMenu = new JMenu( "Tools" );
-        JMenuItem bufferSizeMenuItem = new JMenuItem( "Set Buffer Size" );
-
-        // ---------------------------------------------------------------------
-        // Setup menu bar
-        // ---------------------------------------------------------------------
-        openMenuItem.addActionListener( openListener );
-        openMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
-
-        saveMenuItem.addActionListener( saveListener );
-        saveMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
-
-        exitMenuItem.addActionListener( new ExitListener( frame ) );
-        exitMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
-
-        fileMenu.add( openMenuItem );
-        // fileMenu.add( saveMenuItem );
-        fileMenu.add( exitMenuItem );
-
-        gotoMenuItem.setIcon( JHexIconConstants.loader.getIcon( JHexIconConstants.GOTO ) );
-        gotoMenuItem.addActionListener( gotoListener );
-        searchMenu.add( gotoMenuItem );
-
-        findMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.FIND_16 ) );
-        findMenuItem.addActionListener( findListener );
-        searchMenu.add( findMenuItem );
-
-        bufferSizeMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.CONFIG_16 ) );
-        bufferSizeMenuItem.addActionListener( new BufferSizeListener() );
-        toolsMenu.add( bufferSizeMenuItem );
-
-        menubar.add( fileMenu );
-        menubar.add( searchMenu );
-        menubar.add( toolsMenu );
+        menubar.add( updateFileMenu( fileMenu ) );
+        menubar.add( createSearchMenu() );
+        menubar.add( createToolsMenu() );
 
         return menubar;
     }
 
+    private JMenu updateFileMenu( JMenu menu )
+    {
+        JMenuItem item;
+        JHexOptions options = userDataIO.getOptions();
+
+        menu.removeAll();
+
+        item = new JMenuItem( "Open" );
+        item.addActionListener( new OpenListener( this ) );
+        item.setIcon( IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+        menu.add( item );
+
+        item = new JMenuItem( "Save" );
+        item.addActionListener( new SaveListener( this ) );
+        item.setIcon( IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
+        // fileMenu.add( item );
+
+        if( !options.lastAccessedFiles.isEmpty() )
+        {
+            menu.addSeparator();
+
+            for( File f : options.lastAccessedFiles )
+            {
+                item = new JMenuItem( f.getName() );
+                item.addActionListener( new OpenFileListener( this, f ) );
+                menu.add( item );
+            }
+        }
+
+        menu.addSeparator();
+
+        item = new JMenuItem( "Exit" );
+        item.addActionListener( new ExitListener( frame ) );
+        item.setIcon( IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
+        menu.add( item );
+
+        return menu;
+    }
+
+    private JMenu createSearchMenu()
+    {
+        JMenu menu = new JMenu( "Search" );
+        JMenuItem item;
+
+        item = new JMenuItem( "Go To Offset" );
+        item.setIcon( JHexIconConstants.loader.getIcon( JHexIconConstants.GOTO ) );
+        item.addActionListener( new GoToListener( this ) );
+        menu.add( item );
+
+        item = new JMenuItem( "Find" );
+        item.setIcon( IconConstants.loader.getIcon( IconConstants.FIND_16 ) );
+        item.addActionListener( new FindListener( this ) );
+        menu.add( item );
+
+        return menu;
+    }
+
+    private JMenu createToolsMenu()
+    {
+        JMenu menu = new JMenu( "Tools" );
+        JMenuItem item;
+
+        item = new JMenuItem( "Set Buffer Size" );
+        item.setIcon( IconConstants.loader.getIcon( IconConstants.CONFIG_16 ) );
+        item.addActionListener( new BufferSizeListener( this ) );
+        menu.add( item );
+
+        return menu;
+    }
+
+    @Override
     public JFrame getView()
     {
         return frame;
@@ -307,7 +338,7 @@ public class JHexFrame implements IView<JFrame>
         int choice = JFileChooser.CANCEL_OPTION;
         JHexOptions options = userDataIO.getOptions();
 
-        chooser.setCurrentDirectory( options.lastSavedLocation );
+        chooser.setSelectedFile( options.getLastFile() );
         choice = chooser.showOpenDialog( frame );
 
         if( choice == JFileChooser.APPROVE_OPTION )
@@ -327,10 +358,9 @@ public class JHexFrame implements IView<JFrame>
             return;
         }
 
-        File dir = f.getAbsoluteFile().getParentFile();
         JHexOptions options = userDataIO.getOptions();
 
-        options.lastSavedLocation = dir;
+        options.lastAccessedFiles.push( f );
         userDataIO.write();
 
         try
@@ -341,6 +371,8 @@ public class JHexFrame implements IView<JFrame>
         {
             ex.printStackTrace();
         }
+
+        updateFileMenu( fileMenu );
     }
 
     /***************************************************************************
@@ -359,14 +391,14 @@ public class JHexFrame implements IView<JFrame>
         int choice = JFileChooser.CANCEL_OPTION;
         JHexOptions options = userDataIO.getOptions();
 
-        chooser.setCurrentDirectory( options.lastSavedLocation );
+        chooser.setSelectedFile( options.getLastFile() );
         choice = chooser.showSaveDialog( frame );
 
         if( choice == JFileChooser.APPROVE_OPTION )
         {
             File f = chooser.getSelectedFile();
-            File dir = f.getParentFile();
-            options.lastSavedLocation = dir;
+
+            options.lastAccessedFiles.push( f );
             userDataIO.write();
             try
             {
@@ -427,7 +459,7 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * @param e
+     * 
      **************************************************************************/
     private void showGotoDialog()
     {
@@ -482,89 +514,152 @@ public class JHexFrame implements IView<JFrame>
      **************************************************************************/
     private class OpenListener implements ActionListener
     {
+        private final JHexFrame frame;
+
+        public OpenListener( JHexFrame frame )
+        {
+            this.frame = frame;
+        }
+
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            showOpenDialog();
+            frame.showOpenDialog();
         }
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private class SaveListener implements ActionListener
+    private class OpenFileListener implements ActionListener
     {
+        private final JHexFrame frame;
+        private final File file;
+
+        public OpenFileListener( JHexFrame frame, File f )
+        {
+            this.frame = frame;
+            this.file = f;
+        }
+
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            saveFile();
+            frame.openFile( file );
         }
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private class GoToListener implements ActionListener
+    private static class SaveListener implements ActionListener
     {
+        private final JHexFrame frame;
+
+        public SaveListener( JHexFrame frame )
+        {
+            this.frame = frame;
+        }
+
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            showGotoDialog();
+            frame.saveFile();
         }
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private class FindListener implements ActionListener
+    private static class GoToListener implements ActionListener
     {
+        private final JHexFrame frame;
+
+        public GoToListener( JHexFrame frame )
+        {
+            this.frame = frame;
+        }
+
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            showFindDialog();
+            frame.showGotoDialog();
         }
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private class BufferSizeListener implements ActionListener
+    private static class FindListener implements ActionListener
     {
+        private final JHexFrame frame;
+
+        public FindListener( JHexFrame frame )
+        {
+            this.frame = frame;
+        }
+
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            showBufferSizeDialog();
+            frame.showFindDialog();
         }
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private class WindowCloseListener extends WindowAdapter
+    private static class BufferSizeListener implements ActionListener
     {
+        private final JHexFrame frame;
+
+        public BufferSizeListener( JHexFrame frame )
+        {
+            this.frame = frame;
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            frame.showBufferSizeDialog();
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class WindowCloseListener extends WindowAdapter
+    {
+        private final JHexFrame frame;
+
+        public WindowCloseListener( JHexFrame frame )
+        {
+            this.frame = frame;
+        }
+
         @Override
         public void windowClosing( WindowEvent e )
         {
             // System.out.println( "Window Closing" );
-            closeFile();
+            frame.closeFile();
         }
 
         @Override
         public void windowClosed( WindowEvent e )
         {
             // System.out.println( "Window Closed" );
-            closeFile();
+            frame.closeFile();
         }
     }
 
-    private class FileDroppedListener implements
+    private static class FileDroppedListener implements
         ItemActionListener<IFileDropEvent>
     {
-        private final JHexFrame view;
+        private final JHexFrame frame;
 
         public FileDroppedListener( JHexFrame view )
         {
-            this.view = view;
+            this.frame = view;
         }
 
         @Override
@@ -575,7 +670,7 @@ public class JHexFrame implements IView<JFrame>
 
             if( !files.isEmpty() )
             {
-                view.openFile( files.get( 0 ) );
+                frame.openFile( files.get( 0 ) );
             }
         }
     }
@@ -583,22 +678,36 @@ public class JHexFrame implements IView<JFrame>
     /***************************************************************************
      * 
      **************************************************************************/
-    private class BackListener implements ActionListener
+    private static class BackListener implements ActionListener
     {
+        private final JHexFrame frame;
+
+        public BackListener( JHexFrame view )
+        {
+            this.frame = view;
+        }
+
         public void actionPerformed( ActionEvent e )
         {
-            editor.jumpPrevious();
+            frame.editor.jumpPrevious();
         }
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private class NextListener implements ActionListener
+    private static class NextListener implements ActionListener
     {
+        private final JHexFrame frame;
+
+        public NextListener( JHexFrame view )
+        {
+            this.frame = view;
+        }
+
         public void actionPerformed( ActionEvent e )
         {
-            editor.jumpForward();
+            frame.editor.jumpForward();
         }
     }
 
@@ -634,26 +743,33 @@ public class JHexFrame implements IView<JFrame>
     /***************************************************************************
      * 
      **************************************************************************/
-    private class HideDialogListener implements ActionListener
+    private static class HideDialogListener implements ActionListener
     {
+        private final JHexFrame frame;
+
+        public HideDialogListener( JHexFrame view )
+        {
+            this.frame = view;
+        }
+
         public void actionPerformed( ActionEvent e )
         {
-            dataDialog.setVisible( false );
-            dataViewButton.setSelected( false );
-            editor.setHighlightLength( -1 );
+            frame.dataDialog.setVisible( false );
+            frame.dataViewButton.setSelected( false );
+            frame.editor.setHighlightLength( -1 );
         }
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private class SelectionListener implements IRangeSelectedListener
+    private static class SelectionListener implements IRangeSelectedListener
     {
         private final JHexFrame frame;
 
-        public SelectionListener( JHexFrame frame )
+        public SelectionListener( JHexFrame view )
         {
-            this.frame = frame;
+            this.frame = view;
         }
 
         @Override
@@ -670,7 +786,8 @@ public class JHexFrame implements IView<JFrame>
     /***************************************************************************
      * 
      **************************************************************************/
-    private class SizeSelectedListener implements ItemActionListener<Integer>
+    private static class SizeSelectedListener implements
+        ItemActionListener<Integer>
     {
         private final JHexFrame frame;
 

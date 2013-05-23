@@ -6,17 +6,18 @@ import java.util.List;
 
 import org.cc.data.VersioningSystem;
 import org.cc.model.*;
-import org.jutils.utils.UniqueMaxQueue;
+import org.jutils.ListUtils;
+import org.jutils.utils.UniqueMaxStack;
 
 public class CvsCloak implements ICloak
 {
     private VersioningSystem vs;
-    private UniqueMaxQueue<File> recentSandboxes;
+    private UniqueMaxStack<File> recentSandboxes;
 
     public CvsCloak()
     {
         vs = new VersioningSystem();
-        recentSandboxes = new UniqueMaxQueue<File>();
+        recentSandboxes = new UniqueMaxStack<File>();
     }
 
     @Override
@@ -149,6 +150,6 @@ public class CvsCloak implements ICloak
     @Override
     public List<File> getRecentSandboxes()
     {
-        return recentSandboxes;
+        return ListUtils.asList( recentSandboxes );
     }
 }
