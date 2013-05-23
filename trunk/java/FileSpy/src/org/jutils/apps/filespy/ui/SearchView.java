@@ -828,15 +828,15 @@ public class SearchView implements IDataView<SearchParams>
 
         if( filename != null && filename.toString().length() > 0 )
         {
-            configData.filenames.add( filename.toString() );
+            configData.filenames.push( filename.toString() );
         }
 
         if( contents != null )
         {
-            configData.contents.add( contents.toString() );
+            configData.contents.push( contents.toString() );
         }
 
-        configData.folders.add( folder.toString() );
+        configData.folders.push( folder.toString() );
 
         try
         {

@@ -1,8 +1,9 @@
 package org.jutils.utils;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Iterator;
 
-public class MaxQueue<T> implements Queue<T>
+public class MaxQueue<T> implements Iterable<T>
 {
     /**  */
     private final ArrayDeque<T> elements;
@@ -19,130 +20,45 @@ public class MaxQueue<T> implements Queue<T>
     }
 
     @Override
-    public int size()
-    {
-        return elements.size();
-    }
-
-    @Override
-    public boolean isEmpty()
-    {
-        return elements.isEmpty();
-    }
-
-    @Override
-    public boolean contains( Object o )
-    {
-        return elements.contains( o );
-    }
-
-    @Override
     public Iterator<T> iterator()
     {
         return elements.iterator();
     }
 
-    @Override
-    public Object[] toArray()
+    public int size()
     {
-        return elements.toArray();
+        return elements.size();
     }
 
-    @Override
-    public <G> G[] toArray( G[] a )
+    public boolean isEmpty()
     {
-        return elements.toArray( a );
+        return elements.isEmpty();
     }
 
-    @Override
     public boolean remove( Object o )
     {
         return elements.remove( o );
     }
 
-    @Override
-    public boolean containsAll( Collection<?> c )
-    {
-        return elements.containsAll( c );
-    }
-
-    @Override
-    public boolean addAll( Collection<? extends T> c )
-    {
-        boolean changed = false;
-
-        for( T t : c )
-        {
-            changed = changed || add( t );
-        }
-
-        return changed;
-    }
-
-    @Override
-    public boolean removeAll( Collection<?> c )
-    {
-        return elements.removeAll( c );
-    }
-
-    @Override
-    public boolean retainAll( Collection<?> c )
-    {
-        return elements.retainAll( c );
-    }
-
-    @Override
     public void clear()
     {
         elements.clear();
     }
 
-    @Override
-    public boolean add( T e )
+    public boolean push( T e )
     {
         boolean changed = elements.add( e );
 
         if( size() > maxCount )
         {
-            remove();
+            elements.remove();
         }
 
         return changed;
     }
 
-    @Override
-    public boolean offer( T e )
+    public T first()
     {
-        // TODO Auto-generated method stub
-        return false;
+        return elements.getFirst();
     }
-
-    @Override
-    public T remove()
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public T poll()
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public T element()
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public T peek()
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }

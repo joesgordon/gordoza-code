@@ -3,7 +3,7 @@ package org.jutils.apps.filespy.data;
 import java.io.File;
 
 import org.jutils.io.XObject;
-import org.jutils.utils.UniqueMaxQueue;
+import org.jutils.utils.UniqueMaxStack;
 
 /*******************************************************************************
  *
@@ -14,13 +14,13 @@ public class FileSpyData extends XObject
     private String lastSavedLocation = null;
 
     /**  */
-    public UniqueMaxQueue<String> filenames = null;
+    public UniqueMaxStack<String> filenames = null;
 
     /**  */
-    public UniqueMaxQueue<String> contents = null;
+    public UniqueMaxStack<String> contents = null;
 
     /**  */
-    public UniqueMaxQueue<String> folders = null;
+    public UniqueMaxStack<String> folders = null;
 
     /***************************************************************************
      * 
@@ -58,17 +58,17 @@ public class FileSpyData extends XObject
     {
         if( filenames == null )
         {
-            filenames = new UniqueMaxQueue<String>();
+            filenames = new UniqueMaxStack<String>();
         }
 
         if( contents == null )
         {
-            contents = new UniqueMaxQueue<String>();
+            contents = new UniqueMaxStack<String>();
         }
 
         if( folders == null )
         {
-            folders = new UniqueMaxQueue<String>();
+            folders = new UniqueMaxStack<String>();
         }
     }
 }
