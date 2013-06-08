@@ -253,11 +253,6 @@ public class StandardFormView implements IView<JPanel>
         public String name;
         public Component comp;
 
-        public DefaultFormField()
-        {
-            this( null, null );
-        }
-
         public DefaultFormField( String name, Component comp )
         {
             this.name = name;

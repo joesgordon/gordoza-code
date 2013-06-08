@@ -1,6 +1,6 @@
-package org.jutils.ui.validation;
+package org.jutils.ui.validators;
 
-import org.jutils.ui.validators.IDataValidator;
+import org.jutils.ui.validation.ValidationException;
 
 /*******************************************************************************
  * A validator that ensures that integers fall within a specified range.

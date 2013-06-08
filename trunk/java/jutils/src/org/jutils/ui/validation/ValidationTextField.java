@@ -39,6 +39,16 @@ public final class ValidationTextField implements IValidationField
     /***************************************************************************
      * 
      **************************************************************************/
+    public ValidationTextField( int columns )
+    {
+        this();
+
+        setColumns( columns );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public ValidationTextField( AbstractFormatterFactory factory )
     {
         this( factory, "" );

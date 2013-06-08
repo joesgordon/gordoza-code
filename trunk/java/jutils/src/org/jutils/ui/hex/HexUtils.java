@@ -65,32 +65,44 @@ public final class HexUtils
         return s;
     }
 
-    /***************************************************************************
-     * @param sync
-     * @return
-     **************************************************************************/
-    public static String toHexString( List<Byte> sync )
+    public static String toHexString( byte[] bytes )
     {
-        return toHexString( sync, "" );
+        List<Byte> byteList = new ArrayList<Byte>( bytes.length );
+
+        for( int i = 0; i < bytes.length; i++ )
+        {
+            byteList.add( bytes[i] );
+        }
+
+        return toHexString( byteList );
     }
 
     /***************************************************************************
      * @param sync
+     * @return
+     **************************************************************************/
+    public static String toHexString( List<Byte> bytes )
+    {
+        return toHexString( bytes, "" );
+    }
+
+    /***************************************************************************
+     * @param bytes
      * @param delim
      * @return
      **************************************************************************/
-    public static String toHexString( List<Byte> sync, String delim )
+    public static String toHexString( List<Byte> bytes, String delim )
     {
         StringBuilder str = new StringBuilder();
 
-        for( int i = 0; i < sync.size(); i++ )
+        for( int i = 0; i < bytes.size(); i++ )
         {
             if( i > 0 )
             {
                 str.append( delim );
             }
 
-            str.append( toHexString( sync.get( i ) & 0xFF ) );
+            str.append( toHexString( bytes.get( i ) & 0xFF ) );
         }
 
         return str.toString();
