@@ -1,5 +1,8 @@
 package org.jutils.apps.jhex;
 
+import java.awt.Image;
+import java.util.List;
+
 import org.jutils.IconLoader;
 
 public class JHexIconConstants
@@ -16,4 +19,12 @@ public class JHexIconConstants
     public static final String SHOW_DATA = "flashlight.png";
 
     public static final String GOTO = "goto.png";
+
+    public static final String APP_024 = "app_024.png";
+
+    public static List<Image> getAppImages()
+    {
+        return loader.getImages( "app_128.png", "app_064.png", "app_048.png",
+            "app_032.png", "app_024.png", "app_016.png" );
+    }
 }
