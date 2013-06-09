@@ -400,6 +400,7 @@ public class JHexFrame implements IView<JFrame>
 
             options.lastAccessedFiles.push( f );
             userDataIO.write();
+
             try
             {
                 editor.saveFile( f );
@@ -408,6 +409,8 @@ public class JHexFrame implements IView<JFrame>
             {
                 ex.printStackTrace();
             }
+
+            updateFileMenu( fileMenu );
         }
     }
 
