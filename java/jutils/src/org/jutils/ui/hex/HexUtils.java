@@ -173,4 +173,28 @@ public final class HexUtils
 
         return bytes;
     }
+
+    public static List<Byte> asList( byte[] array )
+    {
+        List<Byte> bytes = new ArrayList<Byte>( array.length );
+
+        for( int i = 0; i < array.length; i++ )
+        {
+            bytes.add( array[i] );
+        }
+
+        return bytes;
+    }
+
+    public static byte[] asArray( List<Byte> bytes )
+    {
+        byte[] array = new byte[bytes.size()];
+
+        for( int i = 0; i < bytes.size(); i++ )
+        {
+            array[i] = bytes.get( i );
+        }
+
+        return array;
+    }
 }
