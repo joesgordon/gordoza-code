@@ -83,7 +83,7 @@ public class JHexFrame implements IView<JFrame>
         frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         frame.setTitle( "JHex" );
 
-        frame.setIconImages( IconConstants.loader.getImages( IconConstants.BINARY_32 ) );
+        frame.setIconImages( JHexIconConstants.getAppImages() );
     }
 
     private JDialog createDataDialog()
