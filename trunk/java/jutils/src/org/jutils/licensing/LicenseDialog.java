@@ -8,6 +8,7 @@ import java.net.URL;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 
+import org.jutils.ResourceLoader;
 import org.jutils.ui.AltEditorPane;
 
 import com.jgoodies.looks.Options;
@@ -17,9 +18,6 @@ import com.jgoodies.looks.Options;
  **************************************************************************/
 public class LicenseDialog extends JDialog
 {
-    /**  */
-    private static final String LICENSE_HEX_EDITOR = "hexEditorLicense.html";
-
     /**  */
     private static final String LICENSE_FORMS = "jgoodiesFormsLicense.html";
 
@@ -50,29 +48,26 @@ public class LicenseDialog extends JDialog
     public LicenseDialog( Frame owner )
     {
         super( owner, true );
-        Class<? extends LicenseDialog> ldClass = this.getClass();
-        LicensePanel hePanel = new LicensePanel(
-            ldClass.getResource( LICENSE_HEX_EDITOR ) );
+        ResourceLoader loader = new ResourceLoader( getClass(), "./" );
+
         LicensePanel jgFormsPanel = new LicensePanel(
-            ldClass.getResource( LICENSE_FORMS ) );
+            loader.getUrl( LICENSE_FORMS ) );
         LicensePanel jgLooksPanel = new LicensePanel(
-            ldClass.getResource( LICENSE_LOOKS ) );
-        LicensePanel xpp3Panel = new LicensePanel(
-            ldClass.getResource( LICENSE_XPP3 ) );
+            loader.getUrl( LICENSE_LOOKS ) );
+        LicensePanel xpp3Panel = new LicensePanel( loader.getUrl( LICENSE_XPP3 ) );
         LicensePanel xstreamPanel = new LicensePanel(
-            ldClass.getResource( LICENSE_XSTREAM ) );
+            loader.getUrl( LICENSE_XSTREAM ) );
         LicensePanel crystalClearPanel = new LicensePanel(
-            ldClass.getResource( LICENSE_CRYSTALCLEAR ) );
+            loader.getUrl( LICENSE_CRYSTALCLEAR ) );
         LicensePanel farmFreshPanel = new LicensePanel(
-            ldClass.getResource( LICENSE_FARMFRESH ) );
+            loader.getUrl( LICENSE_FARMFRESH ) );
         LicensePanel openIconPanel = new LicensePanel(
-            ldClass.getResource( LICENSE_OPENICON ) );
+            loader.getUrl( LICENSE_OPENICON ) );
 
         this.setLayout( new BorderLayout() );
 
         this.add( tabbedPane, BorderLayout.CENTER );
 
-        tabbedPane.addTab( "HexEditor", hePanel );
         tabbedPane.addTab( "JGoodies Forms", jgFormsPanel );
         tabbedPane.addTab( "JGoodies Looks", jgLooksPanel );
         tabbedPane.addTab( "XPP3", xpp3Panel );
@@ -106,6 +101,9 @@ public class LicenseDialog extends JDialog
                 }
 
                 LicenseDialog d = new LicenseDialog( null );
+
+                d.setDefaultCloseOperation( JDialog.EXIT_ON_CLOSE );
+
                 d.validate();
                 d.setLocationRelativeTo( null );
                 d.setVisible( true );
