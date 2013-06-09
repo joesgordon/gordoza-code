@@ -119,6 +119,19 @@ public final class HexUtils
         return messyString.replaceAll( "[^0-9a-fA-F]", "" );
     }
 
+    public static byte[] fromHexStringToArray( String text )
+    {
+        List<Byte> byteList = fromHexString( text );
+        byte[] bytes = new byte[byteList.size()];
+
+        for( int i = 0; i < byteList.size(); i++ )
+        {
+            bytes[i] = byteList.get( i );
+        }
+
+        return bytes;
+    }
+
     /***************************************************************************
      * @param text
      * @return
