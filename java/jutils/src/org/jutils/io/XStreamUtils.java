@@ -53,13 +53,16 @@ public class XStreamUtils
      * @return Object
      * @throws IOException
      **************************************************************************/
-    @SuppressWarnings( "unchecked")
     public static <T> T readObjectXStream( InputStream inputStream )
         throws IOException, XStreamException
     {
         XStream xstream = new XStream();
 
-        return ( T )xstream.fromXML( inputStream );
+        Object obj = xstream.fromXML( inputStream );
+        @SuppressWarnings( "unchecked")
+        T t = ( T )obj;
+
+        return t;
     }
 
     /***************************************************************************
