@@ -79,11 +79,25 @@ public class UserOptionsSerializer<T>
 
             try
             {
+                options = creator.createDefaultOptions();
                 stream = new FileInputStream( file );
 
-                @SuppressWarnings( "unchecked")
-                T t = ( T )XStreamUtils.readObjectXStream( stream );
-                options = t;
+                Object obj = XStreamUtils.readObjectXStream( stream );
+
+                if( obj.getClass().equals( options.getClass() ) )
+                {
+                    @SuppressWarnings( "unchecked")
+                    T t = ( T )obj;
+                    options = t;
+                }
+                else
+                {
+                    throw new XStreamException(
+                        "Existing user options are of type " +
+                            obj.getClass().getName() +
+                            " and are not assignable to the type " +
+                            options.getClass() );
+                }
             }
             finally
             {
@@ -96,22 +110,25 @@ public class UserOptionsSerializer<T>
         catch( FileNotFoundException ex )
         {
             options = creator.createDefaultOptions();
+            write();
             System.out.println( "WARNING: User options file does not exist: " +
                 file.getAbsolutePath() );
         }
         catch( IOException ex )
         {
             options = creator.createDefaultOptions();
+            write();
             ex.printStackTrace();
         }
         catch( XStreamException ex )
         {
-
             file.renameTo( new File( file.getAbsoluteFile().getParentFile(),
                 file.getName() + ".broken" ) );
             options = creator.createDefaultOptions();
+            write();
             System.out.println( "WARNING: User options file is out of date: " +
                 file.getAbsolutePath() );
+            System.out.println( "WARNING: because: " + ex.getMessage() );
         }
 
         return options;
