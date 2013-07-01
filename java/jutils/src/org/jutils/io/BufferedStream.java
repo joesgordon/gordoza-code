@@ -148,7 +148,10 @@ public class BufferedStream implements IStream
 
             if( getPosition() >= getLength() )
             {
-                throw new EOFException( "Tried to read past end of stream" );
+                String msg = String.format(
+                    "Tried to read past end of stream: Position: %016X, Length: %016X",
+                    getPosition(), getLength() );
+                throw new EOFException( msg );
             }
 
             // -----------------------------------------------------------------
