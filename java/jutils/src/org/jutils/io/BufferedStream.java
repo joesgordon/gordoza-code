@@ -127,8 +127,6 @@ public class BufferedStream implements IStream
     public void readFully( byte[] buf ) throws IOException
     {
         readFully( buf, 0, buf.length );
-
-        position += buf.length;
     }
 
     /***************************************************************************
