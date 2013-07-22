@@ -165,4 +165,20 @@ public final class IOUtils
 
         return lines;
     }
+
+    /***************************************************************************
+     * @param prefix
+     * @param suffix
+     * @return
+     * @throws IOException
+     **************************************************************************/
+    public static File createSelfDemisingTempFile( String prefix, String suffix )
+        throws IOException
+    {
+        File f = File.createTempFile( prefix, suffix );
+
+        f.deleteOnExit();
+
+        return f;
+    }
 }
