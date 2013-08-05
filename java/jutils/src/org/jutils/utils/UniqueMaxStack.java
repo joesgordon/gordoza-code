@@ -3,21 +3,22 @@ package org.jutils.utils;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-// TODO Rename to UniqueMaxStack
-
 /*******************************************************************************
- *
+ * Stack containing no more than a user-specified number of unique items.
+ * Iterates from the latest to earliest entries.
  ******************************************************************************/
 public class UniqueMaxStack<T> implements Iterable<T>
 {
+    /** The default maximum number of unique items. */
     public static final int DEFAULT_MAX_SIZE = 20;
 
+    /**  */
     private final LinkedList<T> stack;
-
+    /**  */
     private final int maxSize;
 
     /***************************************************************************
-     *
+     * Creates the stack with the default maximum number of unique items.
      **************************************************************************/
     public UniqueMaxStack()
     {
@@ -25,7 +26,8 @@ public class UniqueMaxStack<T> implements Iterable<T>
     }
 
     /***************************************************************************
-     * @param maxSize int
+     * Creates the stack with the specified maximum number of unique items.
+     * @param maxSize The maximum number of unique items.
      **************************************************************************/
     public UniqueMaxStack( int maxSize )
     {
@@ -33,21 +35,33 @@ public class UniqueMaxStack<T> implements Iterable<T>
         this.maxSize = maxSize;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public void clear()
     {
         stack.clear();
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public T first()
     {
         return stack.getFirst();
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public boolean isEmpty()
     {
         return stack.isEmpty();
     }
 
+    /***************************************************************************
+     * @param element
+     **************************************************************************/
     public void push( T element )
     {
         int index = stack.indexOf( element );
@@ -65,11 +79,18 @@ public class UniqueMaxStack<T> implements Iterable<T>
         stack.addFirst( element );
     }
 
+    /***************************************************************************
+     * @param o
+     * @return
+     **************************************************************************/
     public boolean remove( Object o )
     {
         return stack.remove( o );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public int size()
     {
         return stack.size();

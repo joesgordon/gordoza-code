@@ -33,17 +33,33 @@ public class FileDropTarget extends DropTarget
     {
         try
         {
+            DropActionType action = getAction( evt.getDropAction() );
             evt.acceptDrop( DnDConstants.ACTION_COPY );
             @SuppressWarnings( "unchecked")
             List<File> droppedFiles = ( List<File> )evt.getTransferable().getTransferData(
                 DataFlavor.javaFileListFlavor );
 
             droppedListener.actionPerformed( new ItemActionEvent<IFileDropEvent>(
-                this, new DefaultFileDropEvent( evt, droppedFiles ) ) );
+                this, new DefaultFileDropEvent( evt, droppedFiles, action ) ) );
         }
         catch( Exception ex )
         {
             ex.printStackTrace();
+        }
+    }
+
+    private static DropActionType getAction( int action )
+    {
+        switch( action )
+        {
+            case DnDConstants.ACTION_LINK:
+                return DropActionType.LINK;
+            case DnDConstants.ACTION_COPY:
+                return DropActionType.COPY;
+            case DnDConstants.ACTION_MOVE:
+                return DropActionType.MOVE;
+            default:
+                return DropActionType.MOVE;
         }
     }
 
@@ -52,17 +68,27 @@ public class FileDropTarget extends DropTarget
         public DropTargetDropEvent getEvent();
 
         public List<File> getFiles();
+
+        public DropActionType getActionType();
+    }
+
+    public static enum DropActionType
+    {
+        LINK, COPY, MOVE;
     }
 
     private static class DefaultFileDropEvent implements IFileDropEvent
     {
         private final DropTargetDropEvent event;
         private final List<File> files;
+        private final DropActionType action;
 
-        public DefaultFileDropEvent( DropTargetDropEvent event, List<File> files )
+        public DefaultFileDropEvent( DropTargetDropEvent event,
+            List<File> files, DropActionType action )
         {
             this.event = event;
             this.files = files;
+            this.action = action;
         }
 
         @Override
@@ -75,6 +101,12 @@ public class FileDropTarget extends DropTarget
         public List<File> getFiles()
         {
             return files;
+        }
+
+        @Override
+        public DropActionType getActionType()
+        {
+            return action;
         }
     }
 
