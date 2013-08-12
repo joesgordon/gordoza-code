@@ -1,9 +1,24 @@
 package org.jutils.ui;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class FormatException extends Exception
 {
-    public FormatException( String string )
+    /***************************************************************************
+     * @param message
+     **************************************************************************/
+    public FormatException( String message )
     {
-        super( string );
+        super( message );
+    }
+
+    /***************************************************************************
+     * @param message
+     * @param cause
+     **************************************************************************/
+    public FormatException( String message, Throwable cause )
+    {
+        super( message, cause );
     }
 }

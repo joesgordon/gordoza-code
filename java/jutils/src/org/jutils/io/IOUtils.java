@@ -181,4 +181,46 @@ public final class IOUtils
 
         return f;
     }
+
+    /***************************************************************************
+     * @param directory
+     * @return
+     **************************************************************************/
+    public static List<File> getAllFiles( File dir )
+    {
+        List<File> files = new ArrayList<File>();
+
+        getAllFiles( dir, files );
+
+        return files;
+    }
+
+    /***************************************************************************
+     * @param file
+     * @param files
+     **************************************************************************/
+    private static void getAllFiles( File file, List<File> files )
+    {
+        if( file.isDirectory() )
+        {
+            File[] fs = file.listFiles();
+
+            if( fs == null )
+            {
+                return;
+            }
+
+            for( File f : fs )
+            {
+                if( f.isDirectory() )
+                {
+                    getAllFiles( f, files );
+                }
+                else
+                {
+                    files.add( f );
+                }
+            }
+        }
+    }
 }

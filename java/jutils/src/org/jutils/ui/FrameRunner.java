@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
 /*******************************************************************************
  * Helper class to provide a standard way of displaying a frame that optionally
@@ -16,10 +15,19 @@ public abstract class FrameRunner extends MainRunner
     private JFrame frame;
 
     /***************************************************************************
-     * @return
+     * Creates and displays a tray icon with the provided image, tool tip, and
+     * popup menu which displays/hides the provided frame when double-clicked.
+     * @param img The image (icon) to be displayed.
+     * @param tooltip The tool tip to be displayed.
+     * @param frame The frame to be displayed/hidden.
+     * @param popup The popup menu to be displayed on right-click.
+     * @return The tray icon created or {@code null} if the system tray is not
+     * supported.
+     * @throws RuntimeException if {@link SystemTray#add(TrayIcon)} throws an
+     * {@link AWTException}.
      **************************************************************************/
     protected final TrayIcon createTrayIcon( Image img, String tooltip,
-        JFrame frame, PopupMenu popup )
+        JFrame frame, PopupMenu popup ) throws RuntimeException
     {
         TrayIcon icon = null;
 
@@ -39,14 +47,7 @@ public abstract class FrameRunner extends MainRunner
             }
             catch( AWTException ex )
             {
-                // Cannot add Icon. Warn user if they want to continue.
-                int ans = JOptionPane.showConfirmDialog( frame,
-                    "Cannot load icon in tray! Continue?", "WARNING",
-                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE );
-                if( ans == JOptionPane.NO_OPTION )
-                {
-                    System.exit( 0 );
-                }
+                throw new RuntimeException( "Cannot load icon in tray", ex );
             }
 
             icon.setPopupMenu( popup );
@@ -82,6 +83,9 @@ public abstract class FrameRunner extends MainRunner
         finalizeGui( frame );
     }
 
+    /***************************************************************************
+     * @param frame
+     **************************************************************************/
     protected void finalizeGui( JFrame frame )
     {
         ;
