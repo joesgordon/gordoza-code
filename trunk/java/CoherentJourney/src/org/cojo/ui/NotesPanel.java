@@ -38,7 +38,7 @@ public class NotesPanel extends JPanel
         JButton addButton = new JButton();
         JButton editButton = new JButton();
         JButton deleteButton = new JButton();
-        JList notesList = new JList();
+        JList<String> notesList = new JList<String>();
         JScrollPane notesScrollPane = new JScrollPane( notesList );
 
         addButton.setIcon( IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 ) );
@@ -69,7 +69,7 @@ public class NotesPanel extends JPanel
         JPanel panel = new JPanel( new GridBagLayout() );
         JButton addButton = new JButton();
         JButton deleteButton = new JButton();
-        JList notesList = new JList();
+        JList<String> notesList = new JList<String>();
         JScrollPane notesScrollPane = new JScrollPane( notesList );
 
         addButton.setIcon( IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );

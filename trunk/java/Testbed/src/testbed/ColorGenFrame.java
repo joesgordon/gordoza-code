@@ -26,11 +26,11 @@ public class ColorGenFrame extends JFrame
     /**  */
     private JProgressBar progressBar;
     /**  */
-    private DefaultListModel colorModel;
+    private DefaultListModel<GenericColor> colorModel;
     /**  */
     private List<GenericColor> colors;
     /**  */
-    private JComboBox comparatorComboBox;
+    private JComboBox<Comparator<GenericColor>> comparatorComboBox;
 
     /***************************************************************************
      * 
@@ -96,8 +96,8 @@ public class ColorGenFrame extends JFrame
         // ---------------------------------------------------------------------
         // Setup color scroll pane.
         // ---------------------------------------------------------------------
-        colorModel = new DefaultListModel();
-        JList colorList = new JList( colorModel );
+        colorModel = new DefaultListModel<GenericColor>();
+        JList<GenericColor> colorList = new JList<GenericColor>( colorModel );
         JScrollPane colorScrollPane = new JScrollPane( colorList );
 
         colorList.setFixedCellHeight( 30 );
@@ -108,7 +108,7 @@ public class ColorGenFrame extends JFrame
         // ---------------------------------------------------------------------
         JPanel mainPanel = new JPanel( new GridBagLayout() );
         JLabel compLabel = new JLabel( "Sort by:" );
-        comparatorComboBox = new JComboBox();
+        comparatorComboBox = new JComboBox<Comparator<GenericColor>>();
         progressBar = new JProgressBar();
 
         comparatorComboBox.setEnabled( false );
@@ -432,7 +432,7 @@ class ColorListCellRenderer extends DefaultListCellRenderer
      * 
      **************************************************************************/
     @Override
-    public Component getListCellRendererComponent( JList list, Object value,
+    public Component getListCellRendererComponent( JList<?> list, Object value,
         int index, boolean isSelected, boolean cellHasFocus )
     {
         Component comp = super.getListCellRendererComponent( list, value,

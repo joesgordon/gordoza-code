@@ -13,8 +13,7 @@ import org.cc.edit.ui.InfoPanel;
 import org.jutils.IconConstants;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
-
-import com.jgoodies.common.collect.ArrayListModel;
+import org.jutils.ui.model.CollectionListModel;
 
 /*******************************************************************************
  * 
@@ -22,9 +21,9 @@ import com.jgoodies.common.collect.ArrayListModel;
 public class ListInfoPanel<T> extends InfoPanel<List<T>>
 {
     /**  */
-    private ArrayListModel<T> dataModel;
+    private CollectionListModel<T> dataModel;
     /**  */
-    private JList dataList;
+    private JList<T> dataList;
     /**  */
     private JButton addButton;
     /**  */
@@ -44,9 +43,9 @@ public class ListInfoPanel<T> extends InfoPanel<List<T>>
         super( new BorderLayout() );
 
         removeListeners = new ItemActionList<T>();
-        dataModel = new ArrayListModel<T>();
+        dataModel = new CollectionListModel<T>();
 
-        dataList = new JList( dataModel );
+        dataList = new JList<T>( dataModel );
         JScrollPane listScrollPane = new JScrollPane( dataList );
         JToolBar toolbar = new JToolBar();
 
@@ -200,7 +199,7 @@ public class ListInfoPanel<T> extends InfoPanel<List<T>>
             if( index > -1 && newIndex > -1 && newIndex < dataModel.getSize() )
             {
                 T obj = dataModel.remove( index );
-                dataModel.add( newIndex, obj );
+                dataModel.add( obj, newIndex );
                 dataList.setSelectedIndex( newIndex );
             }
         }

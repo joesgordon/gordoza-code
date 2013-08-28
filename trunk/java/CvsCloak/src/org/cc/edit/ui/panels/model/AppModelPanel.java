@@ -28,7 +28,7 @@ public class AppModelPanel extends InfoPanel<VersioningSystem>
     /**  */
     private final ItemComboBoxModel<File> defaultRepoModel;
     /**  */
-    private final JComboBox defaultField;
+    private final JComboBox<File> defaultField;
     /**  */
     private final NullableLockInfoPanel lockPanel;
     /**  */
@@ -49,7 +49,7 @@ public class AppModelPanel extends InfoPanel<VersioningSystem>
         repoRemovedListeners = new ItemActionList<Repository>();
 
         defaultRepoModel = new ItemComboBoxModel<File>();
-        defaultField = new JComboBox( defaultRepoModel );
+        defaultField = new JComboBox<File>( defaultRepoModel );
         lockPanel = new NullableLockInfoPanel();
         reposPanel = new ListInfoPanel<Repository>();
 

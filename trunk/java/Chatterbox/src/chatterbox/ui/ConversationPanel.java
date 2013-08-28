@@ -28,9 +28,9 @@ public class ConversationPanel extends JPanel implements IConversationView
 
     private JTextPane msgEditorPane;
 
-    private JList userList;
+    private JList<IUser> userList;
 
-    private DefaultListModel userModel;
+    private DefaultListModel<IUser> userModel;
 
     // -------------------------------------------------------------------------
     // Helper members
@@ -223,8 +223,8 @@ public class ConversationPanel extends JPanel implements IConversationView
         // ---------------------------------------------------------------------
         setLayout( new GridBagLayout() );
 
-        userModel = new DefaultListModel();
-        userList = new JList( userModel );
+        userModel = new DefaultListModel<IUser>();
+        userList = new JList<IUser>( userModel );
         JScrollPane userScrollPane = new JScrollPane( userList );
 
         chatEditorPane = new AppendableTextPane();
@@ -248,7 +248,7 @@ public class ConversationPanel extends JPanel implements IConversationView
                     if( index > -1 )
                     {
                         ArrayList<IUser> users = new ArrayList<IUser>();
-                        ListModel dlm = userList.getModel();
+                        ListModel<IUser> dlm = userList.getModel();
                         Object item = dlm.getElementAt( index );
 
                         users.add( ( IUser )item );

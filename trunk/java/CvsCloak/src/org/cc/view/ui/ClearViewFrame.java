@@ -22,7 +22,7 @@ import org.jutils.ui.*;
 public class ClearViewFrame extends JFrame
 {
     /**  */
-    private JComboBox pathField;
+    private JComboBox<String> pathField;
     /**  */
     private ClearViewPanel cvPanel;
     /**  */
@@ -93,7 +93,7 @@ public class ClearViewFrame extends JFrame
     {
         JPanel centerPanel = new JPanel( new GridBagLayout() );
 
-        pathField = new JComboBox();
+        pathField = new JComboBox<String>();
         pathField.setEditable( false );
         cvPanel = new ClearViewPanel( cloak );
 

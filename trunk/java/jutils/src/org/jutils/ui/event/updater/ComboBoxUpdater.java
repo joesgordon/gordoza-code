@@ -8,9 +8,9 @@ import javax.swing.JComboBox;
 public class ComboBoxUpdater<T> implements ActionListener
 {
     private final IDataUpdater<T> updater;
-    private final JComboBox comboBox;
+    private final JComboBox<T> comboBox;
 
-    public ComboBoxUpdater( JComboBox comboBox, IDataUpdater<T> dataUpdater )
+    public ComboBoxUpdater( JComboBox<T> comboBox, IDataUpdater<T> dataUpdater )
     {
         this.comboBox = comboBox;
         this.updater = dataUpdater;

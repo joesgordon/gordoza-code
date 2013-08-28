@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 import org.cojo.model.ISoftwareTask;
+import org.cojo.model.IUser;
 
 /*******************************************************************************
  * 
@@ -16,7 +17,7 @@ public class StfPanel extends JPanel
 
     private JTextField numberField;
     private JTextField titleField;
-    private JComboBox leadField;
+    private JComboBox<IUser> leadField;
     private JCheckBox codeReviewField;
     private JTextField estimatedHoursField;
     private JTextField actualHoursField;
@@ -74,7 +75,7 @@ public class StfPanel extends JPanel
 
         numberField = new JTextField( 25 );
         titleField = new JTextField();
-        leadField = new JComboBox();
+        leadField = new JComboBox<IUser>();
         codeReviewField = new JCheckBox();
         estimatedHoursField = new JTextField();
         actualHoursField = new JTextField();

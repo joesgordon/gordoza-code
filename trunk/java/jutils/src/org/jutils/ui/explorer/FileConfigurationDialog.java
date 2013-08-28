@@ -175,10 +175,10 @@ class ExtPanel extends JPanel
     // Main panel components.
     // -------------------------------------------------------------------------
     /**  */
-    private DefaultListModel pgmListModel = new DefaultListModel();
+    private DefaultListModel<ProgramData> pgmListModel = new DefaultListModel<ProgramData>();
 
     /**  */
-    private JList pgmList = new JList( pgmListModel );
+    private JList<ProgramData> pgmList = new JList<ProgramData>( pgmListModel );
 
     /**  */
     private JScrollPane pgmScrollPane = new JScrollPane( pgmList );
@@ -313,9 +313,10 @@ class ExtensionsPanel extends JPanel
 
     private JButton removeButton = new JButton();
 
-    private DefaultListModel extListModel = new DefaultListModel();
+    private DefaultListModel<ExtensionData> extListModel = new DefaultListModel<ExtensionData>();
 
-    private JList extList = new JList( extListModel );
+    private JList<ExtensionData> extList = new JList<ExtensionData>(
+        extListModel );
 
     private JScrollPane extScrollPane = new JScrollPane( extList );
 

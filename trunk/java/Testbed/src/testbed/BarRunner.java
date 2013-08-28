@@ -29,7 +29,8 @@ public class BarRunner extends FrameRunner
         JFrame frame = new JFrame();
         JPanel panel = new JPanel( new GridBagLayout() );
         model = new ItemComboBoxModel<BusyBar2.BarColor>();
-        JComboBox combo = new JComboBox( model );
+        JComboBox<BusyBar2.BarColor> combo = new JComboBox<BusyBar2.BarColor>(
+            model );
         model.addAll( Arrays.asList( BusyBar2.BarColor.values() ) );
 
         combo.setSelectedItem( BusyBar2.BarColor.GREEN );

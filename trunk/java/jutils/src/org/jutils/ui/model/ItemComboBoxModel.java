@@ -8,7 +8,7 @@ import javax.swing.event.ListDataListener;
 
 import org.jutils.ListUtils;
 
-public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel
+public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel<T>
 {
     private final List<ListDataListener> ldListeners;
     private final List<T> items;

@@ -7,7 +7,7 @@ import java.util.Locale;
 import javax.swing.*;
 import javax.swing.text.*;
 
-public class AutoComplete extends JComboBox implements
+public class AutoComplete<T> extends JComboBox<T> implements
     JComboBox.KeySelectionManager
 {
     private String searchFor;
@@ -27,7 +27,7 @@ public class AutoComplete extends JComboBox implements
         }
     }
 
-    public AutoComplete( Object[] items )
+    public AutoComplete( T[] items )
     {
         super( items );
         lap = new java.util.Date().getTime();
@@ -41,11 +41,12 @@ public class AutoComplete extends JComboBox implements
                 tf.setDocument( new CBDocument() );
                 addActionListener( new ActionListener()
                 {
+                    @Override
                     public void actionPerformed( ActionEvent evt )
                     {
                         JTextField tf = ( JTextField )getEditor().getEditorComponent();
                         String text = tf.getText();
-                        ComboBoxModel aModel = getModel();
+                        ComboBoxModel<T> aModel = getModel();
                         String current;
                         for( int i = 0; i < aModel.getSize(); i++ )
                         {
@@ -65,7 +66,9 @@ public class AutoComplete extends JComboBox implements
         }
     }
 
-    public int selectionForKey( char aKey, ComboBoxModel aModel )
+    @Override
+    public int selectionForKey( char aKey,
+        @SuppressWarnings( "rawtypes") ComboBoxModel aModel )
     {
         long now = new java.util.Date().getTime();
         if( searchFor != null && aKey == KeyEvent.VK_BACK_SPACE &&
@@ -93,6 +96,7 @@ public class AutoComplete extends JComboBox implements
         return -1;
     }
 
+    @Override
     public void fireActionEvent()
     {
         super.fireActionEvent();
@@ -109,7 +113,7 @@ public class AutoComplete extends JComboBox implements
         // "Fritz", "Frodo", "Hermann", "Willi"};
         // JComboBox cBox= new AutoComplete(names);
         Locale[] locales = Locale.getAvailableLocales();//
-        JComboBox cBox = new AutoComplete( locales );
+        JComboBox<Locale> cBox = new AutoComplete<Locale>( locales );
         cBox.setBounds( 50, 50, 100, 21 );
         cBox.setEditable( true );
         cp.add( cBox );

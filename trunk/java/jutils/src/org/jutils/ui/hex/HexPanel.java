@@ -22,7 +22,7 @@ public class HexPanel implements IView<JComponent>
     /**  */
     private final HexRowListModel rowListModel;
     /**  */
-    private final JList rowHeader;
+    private final JList<String> rowHeader;
     /**  */
     private final int rowHeaderFontWidth;
 
@@ -34,7 +34,7 @@ public class HexPanel implements IView<JComponent>
         this.panel = new JPanel( new GridBagLayout() );
         this.rowListModel = new HexRowListModel();
         this.table = new HexTable();
-        this.rowHeader = new JList( rowListModel );
+        this.rowHeader = new JList<String>( rowListModel );
 
         JScrollPane scrollPane = new JScrollPane( table );
 
@@ -153,7 +153,7 @@ public class HexPanel implements IView<JComponent>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class HexRowListModel extends AbstractListModel
+    private static class HexRowListModel extends AbstractListModel<String>
     {
         /**  */
         private long startingAddress;
@@ -205,7 +205,8 @@ public class HexPanel implements IView<JComponent>
             startingAddress = address;
         }
 
-        public Object getElementAt( int index )
+        @Override
+        public String getElementAt( int index )
         {
             return String.format( formatString, startingAddress + index * 16 );
         }
