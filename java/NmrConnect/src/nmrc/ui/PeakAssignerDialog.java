@@ -141,7 +141,7 @@ public class PeakAssignerDialog extends JDialog
 class PeakAssignerPanel extends JPanel
 {
     /**  */
-    private JComboBox optionComboBox;
+    private JComboBox<ChoiceStringAdapter> optionComboBox;
     /**  */
     private AminoAcidTableModel aaModel;
 
@@ -165,7 +165,7 @@ class PeakAssignerPanel extends JPanel
         JScrollPane tableScrollPane;
 
         aaModel = new AminoAcidTableModel();
-        optionComboBox = new JComboBox();
+        optionComboBox = new JComboBox<ChoiceStringAdapter>();
         aaTable = new ObjectTable<IAminoAcid, AminoAcidTableModel>( aaModel );
         tableScrollPane = new JScrollPane( aaTable );
         optionsLabel = new JLabel( "Select Option :" );

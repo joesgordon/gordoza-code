@@ -9,7 +9,8 @@ import org.mc.McMessage;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class McMessagePanel extends JPanel implements ListCellRenderer
+public class McMessagePanel extends JPanel implements
+    ListCellRenderer<McMessage>
 {
     /**  */
     private JLabel addressLabel;
@@ -85,8 +86,9 @@ public class McMessagePanel extends JPanel implements ListCellRenderer
      * 
      **************************************************************************/
     @Override
-    public Component getListCellRendererComponent( JList list, Object value,
-        int index, boolean isSelected, boolean cellHasFocus )
+    public Component getListCellRendererComponent(
+        JList<? extends McMessage> list, McMessage value, int index,
+        boolean isSelected, boolean cellHasFocus )
     {
         setMessage( ( McMessage )value );
 

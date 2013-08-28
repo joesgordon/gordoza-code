@@ -9,27 +9,27 @@ import org.jutils.IconConstants;
 
 public class IccbPanel extends JPanel
 {
-    private JComboBox leadField;
-    private JComboBox seField;
-    private JComboBox proposedVersionField;
+    private JComboBox<String> leadField;
+    private JComboBox<String> seField;
+    private JComboBox<String> proposedVersionField;
     private JTextField dateApprovedField;
     private JButton dateApprovedButton;
     private JTextArea commentField;
-    private JComboBox releasedVersionField;
-    private JComboBox eventField;
+    private JComboBox<String> releasedVersionField;
+    private JComboBox<String> eventField;
 
     public IccbPanel()
     {
         super( new GridBagLayout() );
 
         JLabel leadLabel = new JLabel( "CR Lead :" );
-        leadField = new JComboBox();
+        leadField = new JComboBox<String>();
 
         JLabel seLabel = new JLabel( "Systems Engineer :" );
-        seField = new JComboBox();
+        seField = new JComboBox<String>();
 
         JLabel proposedVersionLabel = new JLabel( "Proposed Version :" );
-        proposedVersionField = new JComboBox();
+        proposedVersionField = new JComboBox<String>();
 
         JLabel dateApprovedLabel = new JLabel( "Date Approved :" );
         dateApprovedField = new JTextField( "Date", 25 );
@@ -37,10 +37,10 @@ public class IccbPanel extends JPanel
             IconConstants.loader.getIcon( IconConstants.CALENDAR_16 ) );
 
         JLabel releasedVersionLabel = new JLabel( "Released Version :" );
-        releasedVersionField = new JComboBox();
+        releasedVersionField = new JComboBox<String>();
 
         JLabel eventLabel = new JLabel( "Event Supported :" );
-        eventField = new JComboBox();
+        eventField = new JComboBox<String>();
 
         JLabel commentLabel = new JLabel( "Comments :" );
         commentField = new JTextArea();

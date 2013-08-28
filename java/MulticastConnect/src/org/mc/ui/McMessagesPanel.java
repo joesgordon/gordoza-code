@@ -20,9 +20,9 @@ public class McMessagesPanel extends JPanel
     /**  */
     private JCheckBox filterCheckBox;
     /**  */
-    private JList displayList;
+    private JList<McMessage> displayList;
     /**  */
-    private DefaultListModel msgModel;
+    private DefaultListModel<McMessage> msgModel;
     /**  */
     private List<McMessage> allMessages;
 
@@ -36,10 +36,10 @@ public class McMessagesPanel extends JPanel
         JButton clearButton = new JButton( "Clear" );
         GridBagConstraints constraints;
 
-        msgModel = new DefaultListModel();
+        msgModel = new DefaultListModel<McMessage>();
         allMessages = new ArrayList<McMessage>( 100 );
 
-        displayList = new JList( msgModel );
+        displayList = new JList<McMessage>( msgModel );
         JScrollPane displayScrollPane = new JScrollPane( displayList );
         JScrollBar vScrollBar = displayScrollPane.getVerticalScrollBar();
         filterCheckBox = new JCheckBox( "Do not display sent messages" );
@@ -173,15 +173,15 @@ public class McMessagesPanel extends JPanel
             {
                 Frame f = Utils.getComponentsFrame( displayList );
                 int index = displayList.locationToIndex( e.getPoint() );
-                ListModel dlm = displayList.getModel();
-                Object item = dlm.getElementAt( index );
+                ListModel<McMessage> dlm = displayList.getModel();
+                McMessage item = dlm.getElementAt( index );
 
                 displayList.ensureIndexIsVisible( index );
 
                 JDialog d = new JDialog( f, "Message Contents", true );
                 HexPanel p = new HexPanel();
 
-                p.setBuffer( new ByteBuffer( ( ( McMessage )item ).contents ) );
+                p.setBuffer( new ByteBuffer( item.contents ) );
                 d.setContentPane( p.getView() );
                 d.setSize( 640, 300 );
                 d.setLocationRelativeTo( f );

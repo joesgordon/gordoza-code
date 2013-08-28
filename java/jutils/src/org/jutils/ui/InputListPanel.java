@@ -16,7 +16,7 @@ public class InputListPanel extends JPanel implements ListSelectionListener,
 {
     private JTextField textfield;
 
-    private JList list;
+    private JList<String> list;
 
     private JScrollPane scroll;
 
@@ -27,7 +27,7 @@ public class InputListPanel extends JPanel implements ListSelectionListener,
     public InputListPanel( String[] data, String title )
     {
         textfield = new JTextField( 5 );
-        list = new JList( data );
+        list = new JList<String>( data );
         scroll = new JScrollPane( list );
 
         setLayout( new GridBagLayout() );
@@ -94,7 +94,7 @@ public class InputListPanel extends JPanel implements ListSelectionListener,
 
     public void actionPerformed( ActionEvent e )
     {
-        ListModel model = list.getModel();
+        ListModel<String> model = list.getModel();
         String key = textfield.getText().toLowerCase();
         for( int k = 0; k < model.getSize(); k++ )
         {

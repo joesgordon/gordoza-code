@@ -346,9 +346,9 @@ public final class Utils
 
     }
 
-    public static <T> ComboBoxModel createModel( T[] options )
+    public static <T> ComboBoxModel<T> createModel( T[] options )
     {
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        DefaultComboBoxModel<T> model = new DefaultComboBoxModel<T>();
 
         for( T option : options )
         {

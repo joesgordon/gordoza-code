@@ -8,7 +8,7 @@ import javax.swing.AbstractListModel;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class CollectionListModel<T> extends AbstractListModel
+public class CollectionListModel<T> extends AbstractListModel<T>
 {
     /**  */
     private List<T> items;
@@ -42,6 +42,18 @@ public class CollectionListModel<T> extends AbstractListModel
     /***************************************************************************
      * @param items
      **************************************************************************/
+    public void addAll( List<T> items )
+    {
+        int from = this.items.size();
+
+        this.items.addAll( items );
+
+        fireContentsChanged( this, from, this.items.size() - 1 );
+    }
+
+    /***************************************************************************
+     * @param items
+     **************************************************************************/
     public void setData( List<T> items )
     {
         int maxIndex = Math.max( this.items.size(), items.size() ) - 1;
@@ -53,6 +65,15 @@ public class CollectionListModel<T> extends AbstractListModel
         // fireIntervalAdded( this, 0, getSize() );
 
         fireContentsChanged( this, 0, maxIndex );
+    }
+
+    /***************************************************************************
+     * @param index
+     * @return
+     **************************************************************************/
+    public T get( int index )
+    {
+        return items.get( index );
     }
 
     /***************************************************************************

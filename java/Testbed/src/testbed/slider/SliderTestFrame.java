@@ -14,7 +14,7 @@ import org.jutils.ui.*;
 public class SliderTestFrame extends JFrame
 {
     private SliderPanel sliderPanel;
-    private JComboBox comboBox;
+    private JComboBox<Integer> comboBox;
     private JButton lastButton;
     private JButton nextButton;
 
@@ -55,7 +55,7 @@ public class SliderTestFrame extends JFrame
         toolbar.add( nextButton );
 
         JComponent comboPanel = new JPanel( new GridBagLayout() );
-        comboBox = new JComboBox();
+        comboBox = new JComboBox<Integer>();
         comboBox.addItem( new Integer( 0 ) );
         comboBox.addItem( new Integer( 1 ) );
         comboBox.addItem( new Integer( 2 ) );

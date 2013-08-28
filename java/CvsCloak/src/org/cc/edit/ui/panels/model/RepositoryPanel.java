@@ -30,7 +30,7 @@ public class RepositoryPanel extends InfoPanel<Repository>
     /**  */
     private NullableLockInfoPanel lockPanel;
     /**  */
-    private JComboBox trunkNameField;
+    private JComboBox<String> trunkNameField;
     /**  */
     private StringListInfoPanel<Baseline> baselinesPanel;
     /**  */
@@ -48,7 +48,7 @@ public class RepositoryPanel extends InfoPanel<Repository>
         locationChangedListeners = new ItemActionList<File>();
 
         lockPanel = new NullableLockInfoPanel();
-        trunkNameField = new JComboBox();
+        trunkNameField = new JComboBox<String>();
         baselinesPanel = new StringListInfoPanel<Baseline>( "Baseline name?" );
         productsPanel = new NamedItemsListPanel<Product>( manager,
             new ProductCreator(), "Product name?" );

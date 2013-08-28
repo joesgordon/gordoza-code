@@ -418,7 +418,7 @@ public class FontChooserDialog extends JDialog
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class ColorComboBox extends JComboBox
+    private static class ColorComboBox extends JComboBox<Color>
     {
         public ColorComboBox()
         {
@@ -449,7 +449,7 @@ public class FontChooserDialog extends JDialog
      * 
      **************************************************************************/
     private static class ColorComboRenderer extends JLabel implements
-        ListCellRenderer
+        ListCellRenderer<Color>
     {
         private ColorIcon icon;
 
@@ -464,10 +464,12 @@ public class FontChooserDialog extends JDialog
             this.setIcon( icon );
         }
 
-        public Component getListCellRendererComponent( JList list, Object obj,
-            int row, boolean sel, boolean hasFocus )
+        @Override
+        public Component getListCellRendererComponent(
+            JList<? extends Color> list, Color value, int index,
+            boolean isSelected, boolean cellHasFocus )
         {
-            icon.setColor( ( Color )obj );
+            icon.setColor( value );
             return this;
         }
 

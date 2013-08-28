@@ -251,7 +251,7 @@ public class CrDefinitionPanel extends JPanel
         JPanel panel = new JPanel( new GridBagLayout() );
         JLabel label = new JLabel( title );
         JButton openButton = new JButton();
-        JList list = new JList();
+        JList<String> list = new JList<String>();
         JScrollPane scrollPane = new JScrollPane( list );
 
         list.setPreferredSize( new Dimension( 90, 90 ) );

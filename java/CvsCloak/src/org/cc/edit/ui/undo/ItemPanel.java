@@ -10,8 +10,7 @@ import javax.swing.event.ListSelectionListener;
 
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
-
-import com.jgoodies.common.collect.ArrayListModel;
+import org.jutils.ui.model.CollectionListModel;
 
 /*******************************************************************************
  * @param <T>
@@ -21,9 +20,9 @@ public class ItemPanel<T> extends JPanel
     /**  */
     private ItemActionList<T> itemSelectedListeners;
     /**  */
-    private ArrayListModel<T> model;
+    private CollectionListModel<T> model;
     /**  */
-    private JList itemList;
+    private JList<T> itemList;
 
     /***************************************************************************
      * 
@@ -41,8 +40,8 @@ public class ItemPanel<T> extends JPanel
         super( new BorderLayout() );
 
         itemSelectedListeners = new ItemActionList<T>();
-        model = new ArrayListModel<T>();
-        itemList = new JList( model );
+        model = new CollectionListModel<T>();
+        itemList = new JList<T>( model );
         itemList.setVisibleRowCount( 10 );
 
         JScrollPane pane = new JScrollPane( itemList );

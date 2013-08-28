@@ -10,7 +10,7 @@ import javax.swing.table.TableCellRenderer;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class RowHeaderRenderer implements ListCellRenderer
+public class RowHeaderRenderer implements ListCellRenderer<Object>
 {
     private final JTable table;
     private final TableCellRenderer tcr;
@@ -24,8 +24,9 @@ public class RowHeaderRenderer implements ListCellRenderer
         this.f = new Font( "Monospaced", Font.PLAIN, 12 );
     }
 
-    public Component getListCellRendererComponent( JList list, Object value,
-        int index, boolean isSelected, boolean cellHasFocus )
+    public Component getListCellRendererComponent(
+        JList<? extends Object> list, Object value, int index,
+        boolean isSelected, boolean cellHasFocus )
     {
         Component c = tcr.getTableCellRendererComponent( table, value,
             isSelected, cellHasFocus, 0, 0 );

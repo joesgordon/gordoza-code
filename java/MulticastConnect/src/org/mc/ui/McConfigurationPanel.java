@@ -35,7 +35,7 @@ public class McConfigurationPanel extends JPanel
     /**  */
     private final JTextField msgSizeField;
     /**  */
-    private final JComboBox nicComboBox;
+    private final JComboBox<NicComboItem> nicComboBox;
 
     /***************************************************************************
      * 
@@ -66,7 +66,7 @@ public class McConfigurationPanel extends JPanel
 
         bindButton.setIcon( checkIcon );
         bindButton.setText( bindText );
-        nicComboBox = new JComboBox();
+        nicComboBox = new JComboBox<NicComboItem>();
 
         try
         {

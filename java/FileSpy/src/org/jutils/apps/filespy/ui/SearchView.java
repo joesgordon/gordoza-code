@@ -33,15 +33,15 @@ import org.jutils.ui.model.ItemComboBoxModel;
 public class SearchView implements IDataView<SearchParams>
 {
     /**  */
-    private final JComboBox filenameComboBox;
+    private final JComboBox<String> filenameComboBox;
     /**  */
     private final JCheckBox contentsCheckBox;
     /**  */
-    private final JComboBox contentsComboBox;
+    private final JComboBox<String> contentsComboBox;
     /**  */
     private final JButton startButton;
     /**  */
-    private final JComboBox searchInComboBox;
+    private final JComboBox<String> searchInComboBox;
     /**  */
     private final JCheckBox subfoldersCheckBox;
     /**  */
@@ -112,11 +112,11 @@ public class SearchView implements IDataView<SearchParams>
         this.statusBar = statusBar;
 
         view = new JPanel( new GridBagLayout() );
-        filenameComboBox = new JComboBox();
+        filenameComboBox = new JComboBox<String>();
         contentsCheckBox = new JCheckBox();
         startButton = new JButton();
-        contentsComboBox = new JComboBox();
-        searchInComboBox = new JComboBox();
+        contentsComboBox = new JComboBox<String>();
+        searchInComboBox = new JComboBox<String>();
         browseButton = new JButton();
         subfoldersCheckBox = new JCheckBox();
         moreThanCheckBox = new JCheckBox();

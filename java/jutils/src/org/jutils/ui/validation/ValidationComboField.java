@@ -18,7 +18,7 @@ public final class ValidationComboField<T> implements IValidationField
     /**  */
     private final ItemComboBoxModel<T> model;
     /**  */
-    private final JComboBox field;
+    private final JComboBox<T> field;
     /**  */
     private final ValidityListenerList listenerList;
 
@@ -41,7 +41,7 @@ public final class ValidationComboField<T> implements IValidationField
     public ValidationComboField( List<T> items )
     {
         this.model = new ItemComboBoxModel<T>( items );
-        this.field = new JComboBox( model );
+        this.field = new JComboBox<T>( model );
         this.listenerList = new ValidityListenerList();
 
         this.validBackground = field.getBackground();
@@ -55,7 +55,7 @@ public final class ValidationComboField<T> implements IValidationField
      * 
      **************************************************************************/
     @Override
-    public JComboBox getView()
+    public JComboBox<T> getView()
     {
         return field;
     }

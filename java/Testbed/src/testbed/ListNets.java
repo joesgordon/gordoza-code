@@ -47,6 +47,7 @@ public class ListNets
         socket.setNetworkInterface( nic );
         // socket.setInterface( nic.getInterfaceAddresses().get( 0
         // ).getAddress() );
+        socket.close();
     }
 
     @SuppressWarnings( "unused")
