@@ -15,7 +15,7 @@ public class JChartAppRunner extends FrameRunner
     @Override
     protected JFrame createFrame()
     {
-        JChartFrameView view = new JChartFrameView();
+        JChartFrameView view = new JChartFrameView( JChartAppConstants.APP_NAME );
         JFrame frame = view.getView();
 
         frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );

@@ -1,5 +1,6 @@
 package org.jutils.chart.ui.objects;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +11,9 @@ import org.jutils.chart.ui.Layer2d;
 
 public class Chart implements IJava2dObject
 {
-    private Layer2d axesLayer;
-    private Layer2d seriesLayer;
+    public final Layer2d axesLayer;
+    public final Layer2d seriesLayer;
+    public final Layer2d highlightLayer;
 
     public final List<Series> serieses;
 
@@ -23,6 +25,8 @@ public class Chart implements IJava2dObject
 
         this.axesLayer = new Layer2d();
         this.seriesLayer = new Layer2d();
+        this.highlightLayer = new Layer2d();
+        this.highlightLayer.repaint = false;
 
         this.context = new ChartContext();
     }
@@ -32,17 +36,55 @@ public class Chart implements IJava2dObject
     {
         Graphics2D g2d;
 
+        graphics.setColor( Color.white );
+
+        graphics.fillRect( 0, 0, width, height );
+
+        // ---------------------------------------------------------------------
+        // Draw axes layer.
+        // ---------------------------------------------------------------------
         g2d = axesLayer.setSize( width, height );
-        graphics.drawImage( axesLayer.getImage(), 0, 0, null );
-
-        g2d = seriesLayer.setSize( width, height );
-
-        for( Series s : serieses )
+        if( axesLayer.repaint )
         {
-            s.context = context;
-            s.paint( g2d, width, height );
-        }
+            axesLayer.clear();
 
-        graphics.drawImage( seriesLayer.getImage(), 0, 0, null );
+            axesLayer.repaint = false;
+        }
+        axesLayer.paint( graphics );
+
+        // ---------------------------------------------------------------------
+        // Draw series layer.
+        // ---------------------------------------------------------------------
+        g2d = seriesLayer.setSize( width, height );
+        if( seriesLayer.repaint )
+        {
+            seriesLayer.clear();
+
+            for( Series s : serieses )
+            {
+                s.context = context;
+                s.paint( g2d, width, height );
+            }
+
+            seriesLayer.repaint = false;
+        }
+        seriesLayer.paint( graphics );
+
+        // ---------------------------------------------------------------------
+        // Draw highlight layer.
+        // ---------------------------------------------------------------------
+        g2d = highlightLayer.setSize( width, height );
+        if( highlightLayer.repaint )
+        {
+            highlightLayer.clear();
+
+            for( Series s : serieses )
+            {
+                s.highlightMarker.paint( g2d, width, height );
+            }
+
+            highlightLayer.repaint = false;
+        }
+        highlightLayer.paint( graphics );
     }
 }
