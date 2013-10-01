@@ -24,7 +24,7 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
     /**  */
     private final RowListModel rowHeaderModel;
     /**  */
-    private final JList rowHeader;
+    private final JList<String> rowHeader;
     /**  */
     private final int rowHeaderFontWidth;
     /**  */
@@ -36,7 +36,7 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
     public SpreadSheetView()
     {
         this.rowHeaderModel = new RowListModel();
-        this.rowHeader = new JList( rowHeaderModel );
+        this.rowHeader = new JList<String>( rowHeaderModel );
         this.model = new SheetModel();
         this.table = new JTable( model );
         this.scrollpane = new JScrollPane( table );
@@ -174,7 +174,7 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class RowListModel extends AbstractListModel
+    private static class RowListModel extends AbstractListModel<String>
     {
         /**  */
         private int rowCount;
@@ -208,7 +208,7 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
             super.fireContentsChanged( this, 0, count );
         }
 
-        public Object getElementAt( int index )
+        public String getElementAt( int index )
         {
             return Integer.toString( index + 1 );
         }
