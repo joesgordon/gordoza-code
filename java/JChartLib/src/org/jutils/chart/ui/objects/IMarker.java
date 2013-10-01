@@ -12,4 +12,6 @@ public interface IMarker extends IJava2dObject
     public void setLocation( Point p );
 
     public void setColor( Color color );
+
+    public void setBorderColor( Color color );
 }

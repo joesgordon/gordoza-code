@@ -8,7 +8,7 @@ import javax.swing.JComponent;
 public class Java2dPanel extends JComponent
 {
     private IJava2dObject object;
-    private Object lock;
+    private final Object lock;
 
     public Java2dPanel()
     {

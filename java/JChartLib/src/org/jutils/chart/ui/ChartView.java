@@ -8,8 +8,6 @@ import javax.swing.JComponent;
 
 import org.jutils.chart.ChartUtils;
 import org.jutils.chart.ISeries;
-import org.jutils.chart.series.LineSeries;
-import org.jutils.chart.series.SinSeries;
 import org.jutils.chart.ui.objects.Chart;
 import org.jutils.chart.ui.objects.Series;
 import org.jutils.ui.model.IView;
@@ -26,17 +24,22 @@ public class ChartView implements IView<JComponent>
 
         Series s;
 
-        s = new Series( new LineSeries( 1000000, 1.0, 0.0, -5.0, 5.0 ) );
+        s = new Series( ChartUtils.createLineSeries( 1000000, 1.0, 0.0, -5.0,
+            5.0 ) );
         chart.serieses.add( s );
 
-        s = new Series( new SinSeries( 100000, 1.0, 0.0, -5.0, 5.0 ) );
+        s = new Series(
+            ChartUtils.createSinSeries( 100000, 1.0, 0.0, -5.0, 5.0 ) );
         s.marker.setColor( new Color( 0x339933 ) );
         s.highlightMarker.setColor( new Color( 0x339933 ) );
+        s.highlightMarker.setBorderColor( new Color( 0x339933 ^ -1 ) );
         chart.serieses.add( s );
 
-        s = new Series( new LineSeries( 100000, -0.750, 0.0, -5.0, 5.0 ) );
+        s = new Series( ChartUtils.createLineSeries( 100000, -0.750, 0.0, -5.0,
+            5.0 ) );
         s.marker.setColor( new Color( 0xFF9933 ) );
         s.highlightMarker.setColor( new Color( 0xFF9933 ) );
+        s.highlightMarker.setBorderColor( new Color( 0xFF9933 ^ -1 ) );
         chart.serieses.add( s );
 
         chart.context.xMin = -5.0;
@@ -60,34 +63,47 @@ public class ChartView implements IView<JComponent>
     {
         int lo = 0;
         int hi = series.getCount() - 1;
+        int value = -1;
 
         if( series.getX( hi ) < x )
         {
-            return hi + 1;
+            value = hi;
         }
-
-        while( lo <= hi )
+        else if( x < series.getX( 0 ) )
         {
-            // Key is in a[lo..hi] or not present.
-            int mid = lo + ( hi - lo ) / 2;
-            double x1 = series.getX( mid );
-            double x2 = series.getX( mid + 1 );
+            value = 0;
+        }
+        else
+        {
+            while( value < 0 && lo <= hi )
+            {
+                // Key is in a[lo..hi] or not present.
+                int mid = lo + ( hi - lo ) / 2;
+                double x1 = series.getX( mid );
+                double x2 = series.getX( mid + 1 );
 
-            if( x < x1 )
-            {
-                hi = mid - 1;
-            }
-            else if( x2 < x )
-            {
-                lo = mid + 1;
-            }
-            else
-            {
-                return mid;
+                if( x < x1 )
+                {
+                    hi = mid - 1;
+                }
+                else if( x2 < x )
+                {
+                    lo = mid + 1;
+                }
+                else
+                {
+                    value = mid;
+                }
             }
         }
 
-        return 0;
+        if( value < ( series.getCount() - 1 ) &&
+            ( x - series.getX( value ) ) > ( series.getX( value + 1 ) - x ) )
+        {
+            value++;
+        }
+
+        return value;
     }
 
     private static class ChartMouseListenter extends MouseMotionAdapter
@@ -115,10 +131,10 @@ public class ChartView implements IView<JComponent>
             {
                 x = ChartUtils.coordsToValueX( mx, w, view.chart.context );
                 idx = ChartView.findX( s.data, x );
-                p = ChartUtils.valueToChartCoords( x, s.data.getY( idx ), w, h,
-                    view.chart.context );
+                p = ChartUtils.valueToChartCoords( s.data.getX( idx ),
+                    s.data.getY( idx ), w, h, view.chart.context );
 
-                p.x = mx;
+                // p.x = mx;
 
                 s.highlightMarker.setLocation( p );
             }

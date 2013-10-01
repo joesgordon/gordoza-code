@@ -32,7 +32,6 @@ public class Layer2d
 
     public void clear()
     {
-        graphics.clearRect( 0, 0, img.getWidth(), img.getHeight() );
         graphics.setComposite( AlphaComposite.Clear );
         graphics.fillRect( 0, 0, img.getWidth(), img.getHeight() );
         graphics.setComposite( AlphaComposite.SrcOver );
@@ -50,6 +49,11 @@ public class Layer2d
 
     public void paint( Graphics2D graphics )
     {
-        graphics.drawImage( img, 0, 0, null );
+        paint( graphics, 0, 0 );
+    }
+
+    public void paint( Graphics2D graphics, int x, int y )
+    {
+        graphics.drawImage( img, x, y, null );
     }
 }
