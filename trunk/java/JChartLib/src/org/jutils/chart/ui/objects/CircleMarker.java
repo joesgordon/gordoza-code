@@ -33,7 +33,11 @@ public class CircleMarker implements IMarker
         {
             g.setColor( borderColor );
 
-            g.fillOval( x - 3, y - 3, radius + 6, radius + 6 );
+            g.fillOval( x - 6, y - 6, radius + 12, radius + 12 );
+
+            g.setColor( color );
+
+            g.fillOval( x - 4, y - 4, radius + 8, radius + 8 );
         }
 
         g.setColor( color );
@@ -58,5 +62,11 @@ public class CircleMarker implements IMarker
     public void setColor( Color color )
     {
         this.color = color;
+    }
+
+    @Override
+    public void setBorderColor( Color color )
+    {
+        this.borderColor = color;
     }
 }

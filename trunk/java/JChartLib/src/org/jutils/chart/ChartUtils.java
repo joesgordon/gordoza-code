@@ -2,6 +2,9 @@ package org.jutils.chart;
 
 import java.awt.Point;
 
+import org.jutils.chart.series.DefaultSeries;
+import org.jutils.chart.series.XYPoint;
+
 public final class ChartUtils
 {
     private ChartUtils()
@@ -30,5 +33,41 @@ public final class ChartUtils
         ChartContext context )
     {
         return x * context.xRange / chartWidth + context.xMin;
+    }
+
+    public static ISeries createLineSeries( int count, double slope,
+        double offset, double min, double max )
+    {
+        DefaultSeries series = new DefaultSeries();
+
+        for( int i = 0; i < count; i++ )
+        {
+            XYPoint pt = new XYPoint();
+
+            pt.x = ( max - min ) * i / count + min;
+            pt.y = slope * pt.x + offset;
+
+            series.points.add( pt );
+        }
+
+        return series;
+    }
+
+    public static ISeries createSinSeries( int count, double scale,
+        double phase, double min, double max )
+    {
+        DefaultSeries series = new DefaultSeries();
+
+        for( int i = 0; i < count; i++ )
+        {
+            XYPoint pt = new XYPoint();
+
+            pt.x = ( max - min ) * i / count + min;
+            pt.y = scale * Math.sin( pt.x + phase );
+
+            series.points.add( pt );
+        }
+
+        return series;
     }
 }

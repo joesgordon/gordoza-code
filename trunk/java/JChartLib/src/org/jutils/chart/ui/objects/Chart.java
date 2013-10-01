@@ -55,7 +55,7 @@ public class Chart implements IJava2dObject
         // ---------------------------------------------------------------------
         // Draw series layer.
         // ---------------------------------------------------------------------
-        g2d = seriesLayer.setSize( width, height );
+        g2d = seriesLayer.setSize( width - 0, height - 0 );
         if( seriesLayer.repaint )
         {
             seriesLayer.clear();
@@ -63,12 +63,12 @@ public class Chart implements IJava2dObject
             for( Series s : serieses )
             {
                 s.context = context;
-                s.paint( g2d, width, height );
+                s.paint( g2d, width - 0, height - 0 );
             }
 
             seriesLayer.repaint = false;
         }
-        seriesLayer.paint( graphics );
+        seriesLayer.paint( graphics, 0, 0 );
 
         // ---------------------------------------------------------------------
         // Draw highlight layer.
