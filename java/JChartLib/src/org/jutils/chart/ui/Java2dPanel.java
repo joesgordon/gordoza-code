@@ -3,9 +3,9 @@ package org.jutils.chart.ui;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-import javax.swing.JPanel;
+import javax.swing.JComponent;
 
-public class Java2dPanel extends JPanel
+public class Java2dPanel extends JComponent
 {
     private IJava2dObject object;
     private Object lock;

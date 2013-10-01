@@ -1,79 +1,77 @@
 package org.jutils.chart.ui;
 
-import java.awt.Point;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.*;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
-import org.jutils.chart.series.LineSeries;
-import org.jutils.chart.ui.objects.*;
+import org.jutils.ui.*;
 import org.jutils.ui.model.IView;
 
 public class JChartFrameView implements IView<JFrame>
 {
     private final JFrame frame;
+    private final ChartView chartView;
 
-    public JChartFrameView()
+    public JChartFrameView( String title )
     {
         this.frame = new JFrame();
+        this.chartView = new ChartView();
 
-        Java2dPanel mainPanel = new Java2dPanel();
+        frame.setTitle( title );
 
-        Chart chart = new Chart();
+        frame.setJMenuBar( createMenubar( frame ) );
+        frame.setContentPane( createContentPane() );
+    }
 
-        chart.serieses.add( new Series( new LineSeries( 3000000, 1.0, 0.0,
-            -5.0, 5.0 ) ) );
+    private JMenuBar createMenubar( JFrame frame )
+    {
+        JMenuBar menubar = new JGoodiesMenuBar();
 
-        chart.context.xMin = -5.0;
-        chart.context.xRange = 10.0;
-        chart.context.yMin = -5.0;
-        chart.context.yRange = 10.0;
+        menubar.add( createFileMenu() );
 
-        mainPanel.setObject( chart );
+        return menubar;
+    }
 
-        // mainPanel.addMouseMotionListener( new ChartMouseListenter( obj,
-        // mainPanel ) );
+    private JMenu createFileMenu()
+    {
+        JMenu menu = new JMenu( "File" );
+        JMenuItem item;
 
-        frame.setContentPane( mainPanel );
+        item = new JMenuItem( "Exit" );
+        item.addActionListener( new ExitListener( frame ) );
+        menu.add( item );
+
+        return menu;
+    }
+
+    private Container createContentPane()
+    {
+        JPanel panel = new JPanel( new GridBagLayout() );
+        StatusBarPanel statusView = new StatusBarPanel();
+
+        GridBagConstraints constraints;
+
+        constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
+                0, 0, 0 ), 0, 0 );
+        panel.add( chartView.getView(), constraints );
+
+        constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
+                0, 0, 0 ), 0, 0 );
+        panel.add( new JSeparator(), constraints );
+
+        constraints = new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
+                0, 0, 0 ), 0, 0 );
+        panel.add( statusView.getView(), constraints );
+
+        return panel;
     }
 
     @Override
     public JFrame getView()
     {
         return frame;
-    }
-
-    private class ChartMouseListenter extends MouseMotionAdapter
-    {
-        private CircleMarker marker;
-        private Java2dPanel panel;
-
-        public ChartMouseListenter( CircleMarker obj, Java2dPanel panel )
-        {
-            this.marker = obj;
-            this.panel = panel;
-        }
-
-        @Override
-        public void mouseMoved( MouseEvent e )
-        {
-            Point p = e.getPoint();
-
-            marker.x = p.x;
-            marker.y = ( int )( panel.getHeight() - p.x * panel.getHeight() *
-                1.0 / panel.getWidth() );
-
-            if( p.x > ( panel.getWidth() / 2 ) )
-            {
-                marker.hasBorder = false;
-            }
-            else
-            {
-                marker.hasBorder = true;
-            }
-
-            panel.repaint();
-        }
     }
 }

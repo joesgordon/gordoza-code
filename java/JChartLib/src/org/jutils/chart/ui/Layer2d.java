@@ -8,8 +8,12 @@ public class Layer2d
     private BufferedImage img;
     private Graphics2D graphics;
 
+    public boolean repaint;
+
     public Layer2d()
     {
+        repaint = true;
+
         createImage( 100, 100 );
     }
 
@@ -26,13 +30,9 @@ public class Layer2d
         return graphics;
     }
 
-    public Image getImage()
-    {
-        return img;
-    }
-
     public void clear()
     {
+        graphics.clearRect( 0, 0, img.getWidth(), img.getHeight() );
         graphics.setComposite( AlphaComposite.Clear );
         graphics.fillRect( 0, 0, img.getWidth(), img.getHeight() );
         graphics.setComposite( AlphaComposite.SrcOver );
@@ -40,11 +40,16 @@ public class Layer2d
 
     public Graphics2D setSize( int width, int height )
     {
-        if( width != img.getWidth() && height != img.getHeight() )
+        if( width != img.getWidth() || height != img.getHeight() )
         {
             createImage( width, height );
         }
 
         return getGraphics();
+    }
+
+    public void paint( Graphics2D graphics )
+    {
+        graphics.drawImage( img, 0, 0, null );
     }
 }

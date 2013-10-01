@@ -4,6 +4,8 @@ import java.awt.*;
 
 public class CircleMarker implements IMarker
 {
+    public Color color;
+    public Color borderColor;
     public int radius;
     public int x;
     public int y;
@@ -11,6 +13,9 @@ public class CircleMarker implements IMarker
 
     public CircleMarker()
     {
+        color = new Color( 0x0066CC );
+        borderColor = new Color( 0xCC0000 );
+
         radius = 6;
         x = 5;
         y = 5;
@@ -26,31 +31,32 @@ public class CircleMarker implements IMarker
 
         if( hasBorder )
         {
-            g.setColor( new Color( 0xcc0000 ) );
+            g.setColor( borderColor );
 
-            g.fillOval( x - 2, y - 2, radius + 4, radius + 4 );
+            g.fillOval( x - 3, y - 3, radius + 6, radius + 6 );
         }
 
-        g.setColor( new Color( 0x0066cc ) );
+        g.setColor( color );
 
         g.fillOval( x, y, radius, radius );
-    }
-
-    @Override
-    public void setX( int x )
-    {
-        this.x = x;
-    }
-
-    @Override
-    public void setY( int y )
-    {
-        this.y = y;
     }
 
     @Override
     public void setBorderVisible( boolean visible )
     {
         hasBorder = visible;
+    }
+
+    @Override
+    public void setLocation( Point p )
+    {
+        this.x = p.x;
+        this.y = p.y;
+    }
+
+    @Override
+    public void setColor( Color color )
+    {
+        this.color = color;
     }
 }

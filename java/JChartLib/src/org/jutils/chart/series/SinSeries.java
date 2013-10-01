@@ -2,21 +2,20 @@ package org.jutils.chart.series;
 
 import org.jutils.chart.ISeries;
 
-public class LineSeries implements ISeries
+public class SinSeries implements ISeries
 {
-
     private final int count;
-    private final double slope;
-    private final double offset;
+    private final double scale;
+    private final double phase;
     private final double min;
     private final double max;
 
-    public LineSeries( int count, double slope, double offset, double min,
+    public SinSeries( int count, double scale, double phase, double min,
         double max )
     {
         this.count = count;
-        this.slope = slope;
-        this.offset = offset;
+        this.scale = scale;
+        this.phase = phase;
         this.min = min;
         this.max = max;
     }
@@ -36,6 +35,7 @@ public class LineSeries implements ISeries
     @Override
     public double getY( int index )
     {
-        return slope * getX( index ) + offset;
+        return scale * Math.sin( getX( index ) + phase );
     }
+
 }
