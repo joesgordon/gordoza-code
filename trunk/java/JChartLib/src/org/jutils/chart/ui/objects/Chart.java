@@ -9,6 +9,9 @@ import org.jutils.chart.ChartContext;
 import org.jutils.chart.ui.IJava2dObject;
 import org.jutils.chart.ui.Layer2d;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class Chart implements IJava2dObject
 {
     public final Layer2d axesLayer;

@@ -1,17 +1,19 @@
 package org.jutils.chart.ui;
 
-import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.*;
 
 import javax.swing.JComponent;
 
 import org.jutils.chart.ChartUtils;
-import org.jutils.chart.ISeries;
+import org.jutils.chart.data.ISeries;
 import org.jutils.chart.ui.objects.Chart;
 import org.jutils.chart.ui.objects.Series;
 import org.jutils.ui.model.IView;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class ChartView implements IView<JComponent>
 {
     private final Java2dPanel mainPanel;
@@ -22,35 +24,15 @@ public class ChartView implements IView<JComponent>
         this.mainPanel = new Java2dPanel();
         this.chart = new Chart();
 
-        Series s;
-
-        s = new Series( ChartUtils.createLineSeries( 1000000, 1.0, 0.0, -5.0,
-            5.0 ) );
-        chart.serieses.add( s );
-
-        s = new Series(
-            ChartUtils.createSinSeries( 100000, 1.0, 0.0, -5.0, 5.0 ) );
-        s.marker.setColor( new Color( 0x339933 ) );
-        s.highlightMarker.setColor( new Color( 0x339933 ) );
-        s.highlightMarker.setBorderColor( new Color( 0x339933 ^ -1 ) );
-        chart.serieses.add( s );
-
-        s = new Series( ChartUtils.createLineSeries( 100000, -0.750, 0.0, -5.0,
-            5.0 ) );
-        s.marker.setColor( new Color( 0xFF9933 ) );
-        s.highlightMarker.setColor( new Color( 0xFF9933 ) );
-        s.highlightMarker.setBorderColor( new Color( 0xFF9933 ^ -1 ) );
-        chart.serieses.add( s );
-
-        chart.context.xMin = -5.0;
-        chart.context.xRange = 10.0;
-        chart.context.yMin = -5.0;
-        chart.context.yRange = 10.0;
-
         mainPanel.setObject( chart );
 
         mainPanel.addComponentListener( new ChartComponentListener( this ) );
         mainPanel.addMouseMotionListener( new ChartMouseListenter( this ) );
+    }
+
+    public void addSeries( Series s )
+    {
+        chart.serieses.add( s );
     }
 
     @Override
