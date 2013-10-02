@@ -2,21 +2,25 @@ package org.jutils.chart.ui.objects;
 
 import java.awt.*;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class CircleMarker implements IMarker
 {
-    public Color color;
-    public Color borderColor;
-    public int radius;
-    public int x;
-    public int y;
-    public boolean hasBorder;
+    private Color color;
+    private Color borderColor;
+    private int radius;
+    private int radiusHalf;
+    private int x;
+    private int y;
+    private boolean hasBorder;
 
     public CircleMarker()
     {
         color = new Color( 0x0066CC );
         borderColor = new Color( 0xCC0000 );
 
-        radius = 6;
+        setRadius( 6 );
         x = 5;
         y = 5;
 
@@ -33,16 +37,17 @@ public class CircleMarker implements IMarker
         {
             g.setColor( borderColor );
 
-            g.fillOval( x - 6, y - 6, radius + 12, radius + 12 );
+            g.fillOval( x - radiusHalf - 2, y - radiusHalf - 2, radius + 4,
+                radius + 4 );
 
-            g.setColor( color );
-
-            g.fillOval( x - 4, y - 4, radius + 8, radius + 8 );
+            // g.setColor( color );
+            //
+            // g.fillOval( x - 4, y - 4, radius + 8, radius + 8 );
         }
 
         g.setColor( color );
 
-        g.fillOval( x, y, radius, radius );
+        g.fillOval( x - radiusHalf, y - radiusHalf, radius, radius );
     }
 
     @Override
@@ -68,5 +73,12 @@ public class CircleMarker implements IMarker
     public void setBorderColor( Color color )
     {
         this.borderColor = color;
+    }
+
+    @Override
+    public void setRadius( int r )
+    {
+        this.radius = r;
+        this.radiusHalf = r / 2;
     }
 }

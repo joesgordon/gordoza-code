@@ -3,6 +3,9 @@ package org.jutils.chart.ui;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class Layer2d
 {
     private BufferedImage img;

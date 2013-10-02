@@ -1,4 +1,4 @@
-package org.jutils.chart.series;
+package org.jutils.chart.data;
 
 public class XYPoint
 {

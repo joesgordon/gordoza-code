@@ -5,6 +5,9 @@ import java.awt.Graphics2D;
 
 import javax.swing.JComponent;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class Java2dPanel extends JComponent
 {
     private IJava2dObject object;
