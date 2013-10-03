@@ -8,23 +8,23 @@ import javax.swing.JComponent;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class Java2dPanel extends JComponent
+public class ChadgetPanel extends JComponent
 {
-    private IJava2dObject object;
+    private IChadget object;
     private final Object lock;
 
-    public Java2dPanel()
+    public ChadgetPanel()
     {
         this( null );
     }
 
-    public Java2dPanel( IJava2dObject object )
+    public ChadgetPanel( IChadget object )
     {
         this.lock = new Object();
         this.object = object;
     }
 
-    public void setObject( IJava2dObject obj )
+    public void setObject( IChadget obj )
     {
         this.object = obj;
     }
@@ -37,7 +37,7 @@ public class Java2dPanel extends JComponent
     {
         super.paintComponent( g );
 
-        IJava2dObject obj = null;
+        IChadget obj = null;
 
         synchronized( lock )
         {

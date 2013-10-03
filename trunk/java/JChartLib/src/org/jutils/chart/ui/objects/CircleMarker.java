@@ -30,9 +30,6 @@ public class CircleMarker implements IMarker
     @Override
     public void paint( Graphics2D g, int width, int height )
     {
-        g.setRenderingHint( RenderingHints.KEY_ANTIALIASING,
-            RenderingHints.VALUE_ANTIALIAS_ON );
-
         if( hasBorder )
         {
             g.setColor( borderColor );

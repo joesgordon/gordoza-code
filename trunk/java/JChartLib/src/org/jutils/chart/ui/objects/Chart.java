@@ -1,35 +1,24 @@
 package org.jutils.chart.ui.objects;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.*;
 
-import org.jutils.chart.ChartContext;
-import org.jutils.chart.ui.IJava2dObject;
-import org.jutils.chart.ui.Layer2d;
+import org.jutils.chart.data.ChartContext;
+import org.jutils.chart.ui.IChadget;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class Chart implements IJava2dObject
+public class Chart implements IChadget
 {
-    public final Layer2d axesLayer;
-    public final Layer2d seriesLayer;
-    public final Layer2d highlightLayer;
-
-    public final List<Series> serieses;
+    public final Plot plot;
+    public final ChartElements elements;
 
     public final ChartContext context;
 
     public Chart()
     {
-        this.serieses = new ArrayList<Series>();
-
-        this.axesLayer = new Layer2d();
-        this.seriesLayer = new Layer2d();
-        this.highlightLayer = new Layer2d();
-        this.highlightLayer.repaint = false;
+        this.plot = new Plot();
+        this.elements = new ChartElements();
 
         this.context = new ChartContext();
     }
@@ -37,57 +26,27 @@ public class Chart implements IJava2dObject
     @Override
     public void paint( Graphics2D graphics, int width, int height )
     {
-        Graphics2D g2d;
+        graphics.setRenderingHint( RenderingHints.KEY_ANTIALIASING,
+            RenderingHints.VALUE_ANTIALIAS_ON );
 
         graphics.setColor( Color.white );
 
         graphics.fillRect( 0, 0, width, height );
 
-        // ---------------------------------------------------------------------
-        // Draw axes layer.
-        // ---------------------------------------------------------------------
-        g2d = axesLayer.setSize( width, height );
-        if( axesLayer.repaint )
-        {
-            axesLayer.clear();
-
-            axesLayer.repaint = false;
-        }
-        axesLayer.paint( graphics );
+        context.width = width - 40;
+        context.height = height - 40;
 
         // ---------------------------------------------------------------------
-        // Draw series layer.
+        // Draw plot.
         // ---------------------------------------------------------------------
-        g2d = seriesLayer.setSize( width - 0, height - 0 );
-        if( seriesLayer.repaint )
-        {
-            seriesLayer.clear();
-
-            for( Series s : serieses )
-            {
-                s.context = context;
-                s.paint( g2d, width - 0, height - 0 );
-            }
-
-            seriesLayer.repaint = false;
-        }
-        seriesLayer.paint( graphics, 0, 0 );
+        plot.x = 20;
+        plot.y = 20;
+        plot.context = context;
+        plot.paint( graphics, context.width, context.height );
 
         // ---------------------------------------------------------------------
-        // Draw highlight layer.
+        // Draw chart elements.
         // ---------------------------------------------------------------------
-        g2d = highlightLayer.setSize( width, height );
-        if( highlightLayer.repaint )
-        {
-            highlightLayer.clear();
-
-            for( Series s : serieses )
-            {
-                s.highlightMarker.paint( g2d, width, height );
-            }
-
-            highlightLayer.repaint = false;
-        }
-        highlightLayer.paint( graphics );
+        elements.paint( graphics, width, height );
     }
 }

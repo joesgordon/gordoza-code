@@ -3,9 +3,9 @@ package org.jutils.chart.ui.objects;
 import java.awt.Color;
 import java.awt.Point;
 
-import org.jutils.chart.ui.IJava2dObject;
+import org.jutils.chart.ui.IChadget;
 
-public interface ILine extends IJava2dObject
+public interface ILine extends IChadget
 {
     public void setPoints( Point p1, Point p2 );
 

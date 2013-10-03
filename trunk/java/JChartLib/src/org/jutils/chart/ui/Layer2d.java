@@ -26,6 +26,9 @@ public class Layer2d
             width, height, Transparency.TRANSLUCENT );
 
         graphics = img.createGraphics();
+
+        graphics.setRenderingHint( RenderingHints.KEY_ANTIALIASING,
+            RenderingHints.VALUE_ANTIALIAS_ON );
     }
 
     public Graphics2D getGraphics()
