@@ -3,12 +3,11 @@ package org.jutils.chart.ui.objects;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
-import org.jutils.chart.ChartContext;
 import org.jutils.chart.ChartUtils;
 import org.jutils.chart.data.*;
-import org.jutils.chart.ui.IJava2dObject;
+import org.jutils.chart.ui.IChadget;
 
-public class Series implements IJava2dObject
+public class Series implements IChadget
 {
     public final ISeries data;
     public IMarker marker;
@@ -38,8 +37,7 @@ public class Series implements IJava2dObject
         Point lastlp = new Point();
         XYPoint xy;
 
-        ScreenPlotTransformer trans = new ScreenPlotTransformer( context,
-            width, height );
+        ScreenPlotTransformer trans = new ScreenPlotTransformer( context );
 
         // System.out.println( "w: " + width + ", h: " + height );
 

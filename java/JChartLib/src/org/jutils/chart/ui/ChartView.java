@@ -16,12 +16,12 @@ import org.jutils.ui.model.IView;
  ******************************************************************************/
 public class ChartView implements IView<JComponent>
 {
-    private final Java2dPanel mainPanel;
+    private final ChadgetPanel mainPanel;
     private final Chart chart;
 
     public ChartView()
     {
-        this.mainPanel = new Java2dPanel();
+        this.mainPanel = new ChadgetPanel();
         this.chart = new Chart();
 
         mainPanel.setObject( chart );
@@ -32,7 +32,7 @@ public class ChartView implements IView<JComponent>
 
     public void addSeries( Series s )
     {
-        chart.serieses.add( s );
+        chart.plot.serieses.add( s );
     }
 
     @Override
@@ -104,12 +104,12 @@ public class ChartView implements IView<JComponent>
             int mx = e.getPoint().x;
             double x;
             int idx;
-            int w = view.mainPanel.getWidth();
-            int h = view.mainPanel.getHeight();
+            int w = view.chart.context.width;
+            int h = view.chart.context.height;
 
             // System.out.println( "here: " + mx );
 
-            for( Series s : view.chart.serieses )
+            for( Series s : view.chart.plot.serieses )
             {
                 x = ChartUtils.coordsToValueX( mx, w, view.chart.context );
                 idx = ChartView.findX( s.data, x );
@@ -121,13 +121,13 @@ public class ChartView implements IView<JComponent>
                 s.highlightMarker.setLocation( p );
             }
 
-            view.chart.highlightLayer.repaint = true;
+            view.chart.plot.highlightLayer.repaint = true;
 
             view.mainPanel.repaint();
         }
     }
 
-    private static class ChartComponentListener implements ComponentListener
+    private static class ChartComponentListener extends ComponentAdapter
     {
         private final ChartView view;
 
@@ -139,31 +139,10 @@ public class ChartView implements IView<JComponent>
         @Override
         public void componentResized( ComponentEvent e )
         {
-            view.chart.axesLayer.repaint = true;
-            view.chart.seriesLayer.repaint = true;
-            view.chart.highlightLayer.clear();
-            view.chart.highlightLayer.repaint = false;
-        }
-
-        @Override
-        public void componentMoved( ComponentEvent e )
-        {
-            // TODO Auto-generated method stub
-
-        }
-
-        @Override
-        public void componentShown( ComponentEvent e )
-        {
-            // TODO Auto-generated method stub
-
-        }
-
-        @Override
-        public void componentHidden( ComponentEvent e )
-        {
-            // TODO Auto-generated method stub
-
+            view.chart.elements.axesLayer.repaint = true;
+            view.chart.plot.seriesLayer.repaint = true;
+            view.chart.plot.highlightLayer.clear();
+            view.chart.plot.highlightLayer.repaint = false;
         }
     }
 }

@@ -2,8 +2,6 @@ package org.jutils.chart.data;
 
 import java.awt.Point;
 
-import org.jutils.chart.ChartContext;
-
 public class ScreenPlotTransformer
 {
     private final ChartContext context;
@@ -12,14 +10,13 @@ public class ScreenPlotTransformer
     private final double xScale;
     private final double yScale;
 
-    public ScreenPlotTransformer( ChartContext context, int chartWidth,
-        int chartHeight )
+    public ScreenPlotTransformer( ChartContext context )
     {
         this.context = context;
-        this.chartHeight = chartHeight;
+        this.chartHeight = context.height;
 
-        this.xScale = chartWidth / context.getXRange();
-        this.yScale = chartHeight / context.getYRange();
+        this.xScale = context.width / context.getXRange();
+        this.yScale = context.height / context.getYRange();
     }
 
     public void fromChart( XYPoint xy, Point p )
