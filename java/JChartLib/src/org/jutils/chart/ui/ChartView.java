@@ -5,8 +5,7 @@ import java.awt.event.*;
 
 import javax.swing.JComponent;
 
-import org.jutils.chart.ChartUtils;
-import org.jutils.chart.data.ISeries;
+import org.jutils.chart.data.*;
 import org.jutils.chart.ui.objects.Chart;
 import org.jutils.chart.ui.objects.Series;
 import org.jutils.ui.model.IView;
@@ -100,25 +99,24 @@ public class ChartView implements IView<JComponent>
         @Override
         public void mouseMoved( MouseEvent e )
         {
-            Point p;
-            int mx = e.getPoint().x;
-            double x;
+            Point p = new Point( e.getX() - 20, e.getY() - 20 );
+            XYPoint xy = new XYPoint();
             int idx;
-            int w = view.chart.context.width;
-            int h = view.chart.context.height;
+
+            ScreenPlotTransformer trans = new ScreenPlotTransformer(
+                view.chart.context );
 
             // System.out.println( "here: " + mx );
 
             for( Series s : view.chart.plot.serieses )
             {
-                x = ChartUtils.coordsToValueX( mx, w, view.chart.context );
-                idx = ChartView.findX( s.data, x );
-                p = ChartUtils.valueToChartCoords( s.data.getX( idx ),
-                    s.data.getY( idx ), w, h, view.chart.context );
+                trans.fromScreen( p, xy );
+                idx = ChartView.findX( s.data, xy.x );
 
-                // p.x = mx;
+                xy = new XYPoint( s.data.get( idx ) );
+                trans.fromChart( xy, p );
 
-                s.highlightMarker.setLocation( p );
+                s.highlightMarker.setLocation( new Point( p ) );
             }
 
             view.chart.plot.highlightLayer.repaint = true;
