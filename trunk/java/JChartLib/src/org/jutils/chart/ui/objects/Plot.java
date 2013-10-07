@@ -15,12 +15,13 @@ public class Plot implements IChadget
 
     public final List<Series> serieses;
 
-    public ChartContext context;
+    public final ChartContext context;
     public int x;
     public int y;
 
     public Plot()
     {
+        this.context = new ChartContext();
         this.serieses = new ArrayList<>();
         this.seriesLayer = new Layer2d();
         this.highlightLayer = new Layer2d();
@@ -32,10 +33,13 @@ public class Plot implements IChadget
     {
         Graphics2D g2d;
 
+        context.width = width;
+        context.height = height;
+
         // ---------------------------------------------------------------------
         // Draw series layer.
         // ---------------------------------------------------------------------
-        g2d = seriesLayer.setSize( width - 0, height - 0 );
+        g2d = seriesLayer.setSize( width, height );
         if( seriesLayer.repaint )
         {
             seriesLayer.clear();
@@ -43,7 +47,7 @@ public class Plot implements IChadget
             for( Series s : serieses )
             {
                 s.context = context;
-                s.paint( g2d, width - 0, height - 0 );
+                s.paint( g2d, width, height );
             }
 
             seriesLayer.repaint = false;

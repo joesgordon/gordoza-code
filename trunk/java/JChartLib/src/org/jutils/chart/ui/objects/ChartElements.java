@@ -35,7 +35,7 @@ public class ChartElements implements IChadget
 
             g2d.setStroke( solidStroke );
 
-            // g2d.drawRect( 16, 16, width - 32, height - 32 );
+            g2d.drawRect( 16, 16, width - 32, height - 32 );
 
             axesLayer.repaint = false;
         }
