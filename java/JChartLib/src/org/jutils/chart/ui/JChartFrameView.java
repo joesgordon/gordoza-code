@@ -1,6 +1,8 @@
 package org.jutils.chart.ui;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
@@ -36,7 +38,6 @@ public class JChartFrameView implements IView<JFrame>
 
         s = new Series( ChartUtils.createLineSeries( 1000000, 1.0, 0.0, -5.0,
             5.0 ) );
-        // s.marker = null;
         s.line.setSize( 4 );
         s.line = null;
         chartView.addSeries( s );
@@ -69,6 +70,8 @@ public class JChartFrameView implements IView<JFrame>
 
         menubar.add( createFileMenu() );
 
+        menubar.add( createViewMenu() );
+
         return menubar;
     }
 
@@ -82,6 +85,21 @@ public class JChartFrameView implements IView<JFrame>
 
         item = new JMenuItem( "Exit" );
         item.addActionListener( new ExitListener( frame ) );
+        menu.add( item );
+
+        return menu;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private JMenu createViewMenu()
+    {
+        JMenu menu = new JMenu( "View" );
+        JMenuItem item;
+
+        item = new JMenuItem( "Data" );
+        item.addActionListener( new DataDialogListener( this ) );
         menu.add( item );
 
         return menu;
@@ -122,5 +140,37 @@ public class JChartFrameView implements IView<JFrame>
     public JFrame getView()
     {
         return frame;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class DataDialogListener implements ActionListener
+    {
+        private final OkDialog dialog;
+        private final DataView dataView;
+
+        public DataDialogListener( JChartFrameView view )
+        {
+            this.dataView = new DataView();
+            this.dialog = new OkDialog( dataView, view.frame );
+
+            JDialog d = dialog.getView();
+
+            d.setSize( 300, 300 );
+            d.validate();
+            d.setLocationRelativeTo( view.frame );
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            JDialog d = dialog.getView();
+
+            if( !d.isVisible() )
+            {
+                d.setVisible( true );
+            }
+        }
     }
 }

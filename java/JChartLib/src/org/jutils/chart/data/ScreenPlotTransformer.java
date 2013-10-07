@@ -28,6 +28,6 @@ public class ScreenPlotTransformer
     public void fromScreen( Point p, XYPoint xy )
     {
         xy.x = p.x / xScale + context.xMin;
-        xy.y = ( p.y - chartHeight ) / yScale + context.yMin;
+        xy.y = -1 * p.y / yScale + context.yMin;
     }
 }

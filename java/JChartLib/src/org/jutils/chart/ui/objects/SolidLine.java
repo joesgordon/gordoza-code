@@ -13,7 +13,7 @@ public class SolidLine implements ILine
 
     public SolidLine()
     {
-        this.color = new Color( 0x0099CC );
+        this.color = new Color( 0x0066CC );
         this.setSize( 4 );
     }
 

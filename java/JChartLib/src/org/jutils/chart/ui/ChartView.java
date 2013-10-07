@@ -2,12 +2,20 @@ package org.jutils.chart.ui;
 
 import java.awt.Point;
 import java.awt.event.*;
+import java.io.*;
+import java.util.List;
 
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 
+import org.jutils.chart.ChartUtils;
 import org.jutils.chart.data.*;
+import org.jutils.chart.io.DataFileReader;
 import org.jutils.chart.ui.objects.Chart;
 import org.jutils.chart.ui.objects.Series;
+import org.jutils.ui.event.*;
+import org.jutils.ui.event.FileDropTarget.DropActionType;
+import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
@@ -15,9 +23,14 @@ import org.jutils.ui.model.IView;
  ******************************************************************************/
 public class ChartView implements IView<JComponent>
 {
+    /**  */
     private final ChadgetPanel mainPanel;
+    /**  */
     private final Chart chart;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public ChartView()
     {
         this.mainPanel = new ChadgetPanel();
@@ -27,6 +40,7 @@ public class ChartView implements IView<JComponent>
 
         mainPanel.addComponentListener( new ChartComponentListener( this ) );
         mainPanel.addMouseMotionListener( new ChartMouseListenter( this ) );
+        mainPanel.setDropTarget( new FileDropTarget( new ChartDropTarget( this ) ) );
     }
 
     public void addSeries( Series s )
@@ -34,59 +48,83 @@ public class ChartView implements IView<JComponent>
         chart.plot.serieses.add( s );
     }
 
+    public void importData( File file, boolean addData )
+    {
+        if( !addData )
+        {
+            chart.plot.serieses.clear();
+        }
+
+        try
+        {
+            DataFileReader reader = new DataFileReader();
+            ISeries data = reader.read( file );
+
+            Series s = new Series( data );
+
+            s.name = file.getName();
+
+            chart.plot.serieses.add( s );
+
+            chart.plot.seriesLayer.repaint = true;
+            mainPanel.repaint();
+        }
+        catch( FileNotFoundException ex )
+        {
+            JOptionPane.showMessageDialog( mainPanel,
+                "The file was not found: " + file.getAbsolutePath(),
+                "File Not Found", JOptionPane.ERROR_MESSAGE );
+        }
+        catch( IOException ex )
+        {
+            JOptionPane.showMessageDialog( mainPanel,
+                "I/O Exception: " + ex.getMessage(), "I/O Exception",
+                JOptionPane.ERROR_MESSAGE );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public JComponent getView()
     {
         return mainPanel;
     }
 
-    private static int findX( ISeries series, double x )
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class ChartDropTarget implements
+        ItemActionListener<IFileDropEvent>
     {
-        int lo = 0;
-        int hi = series.getCount() - 1;
-        int value = -1;
+        private final ChartView view;
 
-        if( series.getX( hi ) < x )
+        public ChartDropTarget( ChartView view )
         {
-            value = hi;
+            this.view = view;
         }
-        else if( x < series.getX( 0 ) )
+
+        @Override
+        public void actionPerformed( ItemActionEvent<IFileDropEvent> event )
         {
-            value = 0;
-        }
-        else
-        {
-            while( value < 0 && lo <= hi )
+            IFileDropEvent fde = event.getItem();
+            List<File> files = fde.getFiles();
+
+            boolean addData = files.size() == 1 &&
+                fde.getActionType() == DropActionType.COPY;
+
+            for( int i = 0; i < files.size(); i++ )
             {
-                // Key is in a[lo..hi] or not present.
-                int mid = lo + ( hi - lo ) / 2;
-                double x1 = series.getX( mid );
-                double x2 = series.getX( mid + 1 );
-
-                if( x < x1 )
-                {
-                    hi = mid - 1;
-                }
-                else if( x2 < x )
-                {
-                    lo = mid + 1;
-                }
-                else
-                {
-                    value = mid;
-                }
+                view.importData( files.get( i ), addData );
+                addData = files.size() > 1;
             }
         }
-
-        if( value < ( series.getCount() - 1 ) &&
-            ( x - series.getX( value ) ) > ( series.getX( value + 1 ) - x ) )
-        {
-            value++;
-        }
-
-        return value;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class ChartMouseListenter extends MouseMotionAdapter
     {
         private final ChartView view;
@@ -104,17 +142,19 @@ public class ChartView implements IView<JComponent>
             int idx;
 
             ScreenPlotTransformer trans = new ScreenPlotTransformer(
-                view.chart.context );
+                view.chart.plot.context );
 
             // System.out.println( "here: " + mx );
 
             for( Series s : view.chart.plot.serieses )
             {
                 trans.fromScreen( p, xy );
-                idx = ChartView.findX( s.data, xy.x );
+                idx = ChartUtils.findNearest( s.data, xy.x );
 
                 xy = new XYPoint( s.data.get( idx ) );
                 trans.fromChart( xy, p );
+
+                // System.out.println( "here: " + xy.x );
 
                 s.highlightMarker.setLocation( new Point( p ) );
             }
@@ -125,6 +165,9 @@ public class ChartView implements IView<JComponent>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class ChartComponentListener extends ComponentAdapter
     {
         private final ChartView view;

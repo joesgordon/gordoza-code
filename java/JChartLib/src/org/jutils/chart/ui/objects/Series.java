@@ -15,6 +15,7 @@ public class Series implements IChadget
     public ILine line;
 
     public ChartContext context;
+    public String name;
 
     public Series( ISeries data )
     {
@@ -46,13 +47,6 @@ public class Series implements IChadget
             xy = data.get( i );
 
             trans.fromChart( xy, p );
-
-            // p.x = ( int )( vx * 1.0 / width );
-            // p.y = ( int )( vy * 1.0 / width );
-
-            // System.out.println( "value[" + i + "] = " + vx + ", " + vy );
-            // System.out.println( "location[" + i + "] = " + p.x + ", " + p.y
-            // );
 
             if( line != null && i > 0 )
             {

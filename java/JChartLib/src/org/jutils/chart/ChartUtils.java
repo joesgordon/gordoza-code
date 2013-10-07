@@ -47,11 +47,13 @@ public final class ChartUtils
     {
         List<XYPoint> points = new ArrayList<>();
 
+        double m = ( max - min ) / count;
+
         for( int i = 0; i < count; i++ )
         {
             XYPoint pt = new XYPoint();
 
-            pt.x = ( max - min + 1 ) * i / count + min;
+            pt.x = m * i + min;
             pt.y = slope * pt.x + offset;
 
             points.add( pt );
@@ -65,11 +67,13 @@ public final class ChartUtils
     {
         List<XYPoint> points = new ArrayList<>();
 
+        double m = ( max - min ) / count;
+
         for( int i = 0; i < count; i++ )
         {
             XYPoint pt = new XYPoint();
 
-            pt.x = ( max - min + 1 ) * i / count + min;
+            pt.x = m * i + min;
             pt.y = amplitude * Math.sin( frequency * ( pt.x + phase ) );
 
             points.add( pt );
@@ -82,5 +86,52 @@ public final class ChartUtils
     {
         return Math.sqrt( Math.pow( lastlp.x - p.x, 2 ) +
             Math.pow( lastlp.y - p.y, 2 ) );
+    }
+
+    public static int findNearest( ISeries series, double x )
+    {
+        int lo = 0;
+        int hi = series.getCount() - 1;
+        int value = -1;
+
+        if( series.getX( hi ) < x )
+        {
+            value = hi;
+        }
+        else if( x < series.getX( 0 ) )
+        {
+            value = 0;
+        }
+        else
+        {
+            while( value < 0 && lo <= hi )
+            {
+                // Key is in a[lo..hi] or not present.
+                int mid = lo + ( hi - lo ) / 2;
+                double x1 = series.getX( mid );
+                double x2 = series.getX( mid + 1 );
+
+                if( x < x1 )
+                {
+                    hi = mid - 1;
+                }
+                else if( x2 < x )
+                {
+                    lo = mid + 1;
+                }
+                else
+                {
+                    value = mid;
+                }
+            }
+        }
+
+        if( value < ( series.getCount() - 1 ) &&
+            ( x - series.getX( value ) ) > ( series.getX( value + 1 ) - x ) )
+        {
+            value++;
+        }
+
+        return value;
     }
 }
