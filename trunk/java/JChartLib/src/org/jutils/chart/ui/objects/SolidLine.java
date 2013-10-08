@@ -22,7 +22,7 @@ public class SolidLine implements ILine
     {
         graphics.setColor( color );
 
-        graphics.setStroke( solidStroke );
+        // graphics.setStroke( solidStroke );
 
         graphics.drawLine( p1.x, p1.y, p2.x, p2.y );
     }

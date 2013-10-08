@@ -53,7 +53,8 @@ public class ChartView implements IView<JComponent>
         chart.plot.serieses.add( s );
         s.marker.setColor( c );
         s.highlightMarker.setColor( c );
-        s.line = null;
+        s.line.setColor( c );
+        // s.line = null;
     }
 
     public void importData( File file, boolean addData )

@@ -3,7 +3,6 @@ package org.jutils.chart.ui.objects;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
-import org.jutils.chart.ChartUtils;
 import org.jutils.chart.data.*;
 import org.jutils.chart.ui.IChadget;
 
@@ -50,7 +49,7 @@ public class Series implements IChadget
 
             if( line != null && i > 0 )
             {
-                if( ChartUtils.distance( lastlp, p ) > 10 )
+                if( !p.equals( lastlp ) )
                 {
                     line.setPoints( lastlp, p );
 
@@ -61,9 +60,9 @@ public class Series implements IChadget
                 }
             }
 
-            if( marker != null && i > 0 && !p.equals( lastmp ) )
+            if( marker != null && ( i == 0 || ( i > 0 && !p.equals( lastmp ) ) ) )
             {
-                marker.setLocation( lastmp );
+                marker.setLocation( p );
 
                 marker.paint( graphics, width, height );
 
