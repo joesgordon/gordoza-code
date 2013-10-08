@@ -9,6 +9,9 @@ import org.jutils.chart.data.XYPoint;
 import org.jutils.chart.ui.IChadget;
 import org.jutils.chart.ui.Layer2d;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class Plot implements IChadget
 {
     public final Layer2d seriesLayer;
@@ -20,6 +23,9 @@ public class Plot implements IChadget
     public int x;
     public int y;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public Plot()
     {
         this.context = new ChartContext();
@@ -29,6 +35,9 @@ public class Plot implements IChadget
         this.highlightLayer.repaint = false;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void paint( Graphics2D graphics, int width, int height )
     {
@@ -73,6 +82,9 @@ public class Plot implements IChadget
         highlightLayer.paint( graphics, x, y );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public void calculateRanges()
     {
         XYPoint min = new XYPoint( -5, 5 );
@@ -95,5 +107,8 @@ public class Plot implements IChadget
 
         context.xMax = max.x;
         context.yMax = max.y;
+
+        context.yMin -= ( context.yMax - context.yMin ) * .03;
+        context.yMax += ( context.yMax - context.yMin ) * .03;
     }
 }

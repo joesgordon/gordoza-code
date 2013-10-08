@@ -5,6 +5,9 @@ import java.awt.*;
 import org.jutils.chart.ui.IChadget;
 import org.jutils.chart.ui.Layer2d;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class ChartElements implements IChadget
 {
     public final Layer2d axesLayer;
@@ -22,6 +25,9 @@ public class ChartElements implements IChadget
             BasicStroke.JOIN_ROUND );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void paint( Graphics2D graphics, int width, int height )
     {

@@ -1,5 +1,6 @@
 package org.jutils.chart.ui;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.*;
 import java.io.*;
@@ -8,7 +9,7 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
-import org.jutils.chart.ChartUtils;
+import org.jutils.chart.*;
 import org.jutils.chart.data.*;
 import org.jutils.chart.io.DataFileReader;
 import org.jutils.chart.ui.objects.Chart;
@@ -27,6 +28,8 @@ public class ChartView implements IView<JComponent>
     private final ChadgetPanel mainPanel;
     /**  */
     private final Chart chart;
+    /**  */
+    private final IPalette palette;
 
     /***************************************************************************
      * 
@@ -35,6 +38,7 @@ public class ChartView implements IView<JComponent>
     {
         this.mainPanel = new ChadgetPanel();
         this.chart = new Chart();
+        this.palette = new PresetPalette();
 
         mainPanel.setObject( chart );
 
@@ -45,7 +49,11 @@ public class ChartView implements IView<JComponent>
 
     public void addSeries( Series s )
     {
+        Color c = palette.next();
         chart.plot.serieses.add( s );
+        s.marker.setColor( c );
+        s.highlightMarker.setColor( c );
+        s.line = null;
     }
 
     public void importData( File file, boolean addData )
@@ -63,13 +71,13 @@ public class ChartView implements IView<JComponent>
 
             s.name = file.getName();
 
-            chart.plot.serieses.add( s );
+            addSeries( s );
 
             chart.plot.calculateRanges();
 
-            System.out.format( "x => (%f,%f)", chart.plot.context.xMin,
-                chart.plot.context.xMax );
-            System.out.println();
+            // System.out.format( "x => (%f,%f)", chart.plot.context.xMin,
+            // chart.plot.context.xMax );
+            // System.out.println();
 
             chart.plot.seriesLayer.repaint = true;
             mainPanel.repaint();
@@ -189,6 +197,7 @@ public class ChartView implements IView<JComponent>
             view.chart.plot.seriesLayer.repaint = true;
             view.chart.plot.highlightLayer.clear();
             view.chart.plot.highlightLayer.repaint = false;
+            view.mainPanel.repaint();
         }
     }
 }
