@@ -12,12 +12,18 @@ public class Chart implements IChadget
     public final Plot plot;
     public final ChartElements elements;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public Chart()
     {
         this.plot = new Plot();
         this.elements = new ChartElements();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void paint( Graphics2D graphics, int width, int height )
     {
