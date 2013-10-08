@@ -2,16 +2,13 @@ package org.jutils.chart.ui.objects;
 
 import java.awt.*;
 
-public class SolidLine implements ILine
+public class SimpleLine implements ILine
 {
     public Color color;
-    public int size;
     public Point p1;
     public Point p2;
 
-    private BasicStroke solidStroke;
-
-    public SolidLine()
+    public SimpleLine()
     {
         this.color = new Color( 0x0066CC );
         this.setSize( 4 );
@@ -21,8 +18,6 @@ public class SolidLine implements ILine
     public void paint( Graphics2D graphics, int width, int height )
     {
         graphics.setColor( color );
-
-        graphics.setStroke( solidStroke );
 
         graphics.drawLine( p1.x, p1.y, p2.x, p2.y );
     }
@@ -43,14 +38,11 @@ public class SolidLine implements ILine
     @Override
     public void setSize( int size )
     {
-        this.size = size;
-        this.solidStroke = new BasicStroke( size, BasicStroke.CAP_ROUND,
-            BasicStroke.JOIN_ROUND );
     }
 
     @Override
     public double getSize()
     {
-        return size;
+        return 1;
     }
 }

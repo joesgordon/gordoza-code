@@ -22,7 +22,7 @@ public class Series implements IChadget
 
         this.marker = new CircleMarker();
         this.highlightMarker = new CircleMarker();
-        this.line = new SolidLine();
+        this.line = new SimpleLine();
 
         highlightMarker.setRadius( 10 );
 
