@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jutils.chart.data.ChartContext;
+import org.jutils.chart.data.XYPoint;
 import org.jutils.chart.ui.IChadget;
 import org.jutils.chart.ui.Layer2d;
 
@@ -70,5 +71,29 @@ public class Plot implements IChadget
             highlightLayer.repaint = false;
         }
         highlightLayer.paint( graphics, x, y );
+    }
+
+    public void calculateRanges()
+    {
+        XYPoint min = new XYPoint( -5, 5 );
+        XYPoint max = new XYPoint( -5, 5 );
+
+        if( !serieses.isEmpty() )
+        {
+            min = new XYPoint( serieses.get( 0 ).data.getMin() );
+            max = new XYPoint( serieses.get( 0 ).data.getMax() );
+        }
+
+        for( Series s : serieses )
+        {
+            XYPoint.min( min, s.data.getMin(), min );
+            XYPoint.max( max, s.data.getMax(), max );
+        }
+
+        context.xMin = min.x;
+        context.yMin = min.y;
+
+        context.xMax = max.x;
+        context.yMax = max.y;
     }
 }
