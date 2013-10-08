@@ -42,8 +42,8 @@ public class JChartFrameView implements IView<JFrame>
         s.line = null;
         chartView.addSeries( s );
 
-        s = new Series( ChartUtils.createLineSeries( 1000000, -0.750, 0.0,
-            -5.0, 5.0 ) );
+        s = new Series( ChartUtils.createLineSeries( 1000000, -1.0, 0.0, -5.0,
+            5.0 ) );
         s.marker.setColor( new Color( 0xFF9933 ) );
         s.highlightMarker.setColor( new Color( 0xFF9933 ) );
         s.line.setColor( new Color( 0xCC6622 ) );

@@ -10,11 +10,15 @@ public class ChartElements implements IChadget
     public final Layer2d axesLayer;
 
     private BasicStroke solidStroke;
+    private int width;
+    private int inset;
 
     public ChartElements()
     {
+        this.width = 4;
+        this.inset = 20;
         this.axesLayer = new Layer2d();
-        this.solidStroke = new BasicStroke( 4, BasicStroke.CAP_ROUND,
+        this.solidStroke = new BasicStroke( width, BasicStroke.CAP_ROUND,
             BasicStroke.JOIN_ROUND );
     }
 
@@ -29,13 +33,17 @@ public class ChartElements implements IChadget
         g2d = axesLayer.setSize( width, height );
         if( axesLayer.repaint )
         {
+            int x = inset - this.width / 2;
+            int w = width - 2 * inset + this.width;
+            int h = height - 2 * inset + this.width;
+
             axesLayer.clear();
 
             g2d.setColor( Color.black );
 
             g2d.setStroke( solidStroke );
 
-            g2d.drawRect( 16, 16, width - 32, height - 32 );
+            g2d.drawRect( x, x, w, h );
 
             axesLayer.repaint = false;
         }
