@@ -59,12 +59,17 @@ public class ChartView implements IView<JComponent>
         {
             DataFileReader reader = new DataFileReader();
             ISeries data = reader.read( file );
-
             Series s = new Series( data );
 
             s.name = file.getName();
 
             chart.plot.serieses.add( s );
+
+            chart.plot.calculateRanges();
+
+            System.out.format( "x => (%f,%f)", chart.plot.context.xMin,
+                chart.plot.context.xMax );
+            System.out.println();
 
             chart.plot.seriesLayer.repaint = true;
             mainPanel.repaint();

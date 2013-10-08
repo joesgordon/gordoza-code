@@ -6,6 +6,10 @@ public interface ISeries extends Iterable<XYPoint>
 
     public double getX( int index );
 
+    public XYPoint getMin();
+
+    public XYPoint getMax();
+
     public double getY( int index );
 
     public XYPoint get( int index );
