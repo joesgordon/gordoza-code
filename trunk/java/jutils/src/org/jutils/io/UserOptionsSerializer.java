@@ -84,19 +84,27 @@ public class UserOptionsSerializer<T>
 
                 Object obj = XStreamUtils.readObjectXStream( stream );
 
-                if( obj.getClass().equals( options.getClass() ) )
+                if( obj != null )
                 {
-                    @SuppressWarnings( "unchecked")
-                    T t = ( T )obj;
-                    options = t;
+                    if( obj.getClass().equals( options.getClass() ) )
+                    {
+                        @SuppressWarnings( "unchecked")
+                        T t = ( T )obj;
+                        options = t;
+                    }
+                    else
+                    {
+                        throw new XStreamException(
+                            "Existing user options are of type " +
+                                obj.getClass().getName() +
+                                " and are not assignable to the type " +
+                                options.getClass() );
+                    }
                 }
                 else
                 {
-                    throw new XStreamException(
-                        "Existing user options are of type " +
-                            obj.getClass().getName() +
-                            " and are not assignable to the type " +
-                            options.getClass() );
+                    options = creator.createDefaultOptions();
+                    write();
                 }
             }
             finally

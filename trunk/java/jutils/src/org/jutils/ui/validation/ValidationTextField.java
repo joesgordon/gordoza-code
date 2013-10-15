@@ -17,7 +17,7 @@ import org.jutils.ui.validators.ITextValidator;
 public final class ValidationTextField implements IValidationField
 {
     /**  */
-    private final JTextField field;
+    private final JTextField textfield;
     /**  */
     private final ValidityListenerList listenerList;
 
@@ -67,17 +67,17 @@ public final class ValidationTextField implements IValidationField
      **************************************************************************/
     public ValidationTextField( AbstractFormatterFactory factory, String str )
     {
-        this.field = new JFormattedTextField( factory, str );
+        this.textfield = new JFormattedTextField( factory, str );
         this.listenerList = new ValidityListenerList();
 
-        this.validBackground = field.getBackground();
+        this.validBackground = textfield.getBackground();
         this.invalidBackground = Color.red;
 
         this.validator = null;
 
-        field.getDocument().addDocumentListener(
+        textfield.getDocument().addDocumentListener(
             new ValidationDocumentListener( this ) );
-        field.setBackground( validBackground );
+        textfield.setBackground( validBackground );
 
         setComponentValid( listenerList.isValid() );
     }
@@ -88,7 +88,7 @@ public final class ValidationTextField implements IValidationField
     @Override
     public JTextField getView()
     {
-        return field;
+        return textfield;
     }
 
     /***************************************************************************
@@ -124,26 +124,32 @@ public final class ValidationTextField implements IValidationField
     {
         if( validator != null )
         {
-            boolean newValidity = true;
+            boolean validity = true;
             String reason = null;
 
             try
             {
-                validator.validateText( field.getText() );
-                newValidity = true;
+                validator.validateText( textfield.getText() );
+                validity = true;
             }
             catch( ValidationException ex )
             {
-                newValidity = false;
+                validity = false;
                 reason = ex.getMessage();
             }
 
-            if( ignorePreviousValidity || listenerList.isValid() != newValidity )
+            if( ignorePreviousValidity || listenerList.isValid() != validity )
             {
-                setComponentValid( newValidity );
+                setComponentValid( validity );
             }
 
-            if( newValidity )
+            // System.out.println( ">>>Validating text \"" + textfield.getText()
+            // +
+            // "\", old validity: " + listenerList.isValid() +
+            // ", new validity: " + validity );
+            // Utils.printStackTrace();
+
+            if( validity )
             {
                 listenerList.signalValid();
             }
@@ -161,11 +167,11 @@ public final class ValidationTextField implements IValidationField
     {
         if( valid )
         {
-            field.setBackground( validBackground );
+            textfield.setBackground( validBackground );
         }
         else
         {
-            field.setBackground( invalidBackground );
+            textfield.setBackground( invalidBackground );
         }
     }
 
@@ -222,8 +228,8 @@ public final class ValidationTextField implements IValidationField
      **************************************************************************/
     public void setText( String text )
     {
-        field.setText( text );
-        validateText();
+        textfield.setText( text );
+        // validateText();
     }
 
     /***************************************************************************
@@ -231,7 +237,7 @@ public final class ValidationTextField implements IValidationField
      **************************************************************************/
     public void addActionListener( ActionListener l )
     {
-        field.addActionListener( l );
+        textfield.addActionListener( l );
     }
 
     /***************************************************************************
@@ -239,7 +245,7 @@ public final class ValidationTextField implements IValidationField
      **************************************************************************/
     public void setColumns( int columns )
     {
-        field.setColumns( columns );
+        textfield.setColumns( columns );
     }
 
     /***************************************************************************
@@ -254,18 +260,24 @@ public final class ValidationTextField implements IValidationField
             this.field = field;
         }
 
+        @Override
         public void removeUpdate( DocumentEvent e )
         {
+            // System.out.println( "Updating text" );
             field.validateText();
         }
 
+        @Override
         public void insertUpdate( DocumentEvent e )
         {
+            // System.out.println( "Inserting text" );
             field.validateText();
         }
 
+        @Override
         public void changedUpdate( DocumentEvent e )
         {
+            // System.out.println( "Changing text" );
             field.validateText();
         }
     }

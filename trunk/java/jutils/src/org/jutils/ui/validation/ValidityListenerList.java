@@ -49,11 +49,11 @@ public class ValidityListenerList
      **************************************************************************/
     public void signalValid()
     {
-        lastValidity = true;
-        lastReason = null;
-
         if( !lastValidity )
         {
+            lastValidity = true;
+            lastReason = "VALID";
+
             for( IValidityChangedListener vcl : validityChangedListeners )
             {
                 vcl.signalValid();
