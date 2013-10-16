@@ -67,6 +67,14 @@ public class UserOptionsSerializer<T>
     }
 
     /***************************************************************************
+     * @return
+     **************************************************************************/
+    public T getDefault()
+    {
+        return creator.createDefaultOptions();
+    }
+
+    /***************************************************************************
      * Reads the options from file, caching the options before returns them.
      **************************************************************************/
     public T read()
@@ -79,7 +87,7 @@ public class UserOptionsSerializer<T>
 
             try
             {
-                options = creator.createDefaultOptions();
+                options = getDefault();
                 stream = new FileInputStream( file );
 
                 Object obj = XStreamUtils.readObjectXStream( stream );
@@ -103,7 +111,7 @@ public class UserOptionsSerializer<T>
                 }
                 else
                 {
-                    options = creator.createDefaultOptions();
+                    options = getDefault();
                     write();
                 }
             }
@@ -117,14 +125,14 @@ public class UserOptionsSerializer<T>
         }
         catch( FileNotFoundException ex )
         {
-            options = creator.createDefaultOptions();
+            options = getDefault();
             write();
             System.out.println( "WARNING: User options file does not exist: " +
                 file.getAbsolutePath() );
         }
         catch( IOException ex )
         {
-            options = creator.createDefaultOptions();
+            options = getDefault();
             write();
             ex.printStackTrace();
         }
@@ -132,7 +140,7 @@ public class UserOptionsSerializer<T>
         {
             file.renameTo( new File( file.getAbsoluteFile().getParentFile(),
                 file.getName() + ".broken" ) );
-            options = creator.createDefaultOptions();
+            options = getDefault();
             write();
             System.out.println( "WARNING: User options file is out of date: " +
                 file.getAbsolutePath() );
