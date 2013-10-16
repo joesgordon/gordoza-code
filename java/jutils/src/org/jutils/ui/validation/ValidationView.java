@@ -44,7 +44,7 @@ public class ValidationView implements IView<JPanel>
 
         this.errorField = new JTextField();
         this.unitsField = units == null ? null : new JLabel( units );
-        this.errorConstraints = new GridBagConstraints( 0, 1, 2, 1, 1.0, 0.0,
+        this.errorConstraints = new GridBagConstraints( 0, 1, 2, 1, 1.0, 1.0,
             GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
                 4, 0, 0, 0 ), 0, 0 );
 
@@ -67,9 +67,9 @@ public class ValidationView implements IView<JPanel>
         JPanel panel = new JPanel( new GridBagLayout() );
         GridBagConstraints constraints;
 
-        constraints = new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 0, 0,
-                0, 0 ), 0, 0 );
+        constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
+                0, 0, 0, 0 ), 0, 0 );
         panel.add( field.getView(), constraints );
 
         if( unitsField != null )
