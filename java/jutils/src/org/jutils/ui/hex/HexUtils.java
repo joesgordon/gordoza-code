@@ -243,4 +243,9 @@ public final class HexUtils
 
         return array;
     }
+
+    public static byte fromBcd( byte b )
+    {
+        return ( byte )( ( ( ( b >>> 4 ) & 0x0F ) * 10 ) + ( b & 0x0F ) );
+    }
 }
