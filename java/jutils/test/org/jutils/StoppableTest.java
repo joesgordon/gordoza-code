@@ -3,7 +3,7 @@ package org.jutils;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.jutils.concurrent.Stopper;
+import org.jutils.concurrent.TaskStopManager;
 
 /*******************************************************************************
  * 
@@ -16,7 +16,7 @@ public final class StoppableTest
     @Test
     public final void testCanContinue()
     {
-        Stopper stopper = new Stopper();
+        TaskStopManager stopper = new TaskStopManager();
         boolean canContinuePrior = stopper.continueProcessing();
         stopper.stop();
         boolean canContinuePost = stopper.continueProcessing();
@@ -29,7 +29,7 @@ public final class StoppableTest
     @Test
     public final void testIsFinished()
     {
-        Stopper stopper = new Stopper();
+        TaskStopManager stopper = new TaskStopManager();
 
         boolean isFinishedPrior = stopper.isFinished();
         stopper.signalFinished();
@@ -43,7 +43,7 @@ public final class StoppableTest
     @Test
     public final void testStop()
     {
-        Stopper stopper = new Stopper();
+        TaskStopManager stopper = new TaskStopManager();
 
         stopper.stop();
         stopper.signalFinished();

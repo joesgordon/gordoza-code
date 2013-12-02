@@ -8,16 +8,16 @@ import org.jutils.ui.event.ItemActionListener;
 public class Stoppable implements Runnable
 {
     /** Object used to hold the continue/stop state. */
-    private final Stopper stopper;
+    private final TaskStopManager stopper;
     /** The task to run */
-    private final IStoppable task;
+    private final IStoppableTask task;
 
     /***************************************************************************
      * Creates the {@link Runnable}
      **************************************************************************/
-    public Stoppable( IStoppable task )
+    public Stoppable( IStoppableTask task )
     {
-        this( task, new Stopper() );
+        this( task, new TaskStopManager() );
     }
 
     /***************************************************************************
@@ -43,7 +43,7 @@ public class Stoppable implements Runnable
     /***************************************************************************
      * Creates the {@link Runnable}
      **************************************************************************/
-    public Stoppable( IStoppable task, Stopper stopper )
+    public Stoppable( IStoppableTask task, TaskStopManager stopper )
     {
         this.stopper = stopper;
         this.task = task;
@@ -60,7 +60,7 @@ public class Stoppable implements Runnable
     }
 
     /***************************************************************************
-     * @see Stopper#stop()
+     * @see TaskStopManager#stop()
      **************************************************************************/
     public void stop()
     {
@@ -68,7 +68,7 @@ public class Stoppable implements Runnable
     }
 
     /***************************************************************************
-     * @see Stopper#isFinished()
+     * @see TaskStopManager#isFinished()
      **************************************************************************/
     public boolean isFinished()
     {
@@ -76,7 +76,7 @@ public class Stoppable implements Runnable
     }
 
     /***************************************************************************
-     * @see Stopper#waitFor()
+     * @see TaskStopManager#waitFor()
      **************************************************************************/
     public void waitFor() throws InterruptedException
     {
@@ -84,7 +84,7 @@ public class Stoppable implements Runnable
     }
 
     /***************************************************************************
-     * @see Stopper#stopAndWaitFor()
+     * @see TaskStopManager#stopAndWaitFor()
      **************************************************************************/
     public void stopAndWaitFor() throws InterruptedException
     {

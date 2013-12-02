@@ -7,7 +7,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * has data AND has a chance to process said data, it will call the sub-class's
  * {@link #processData(Object)} function.
  ******************************************************************************/
-public class Consumer<T> implements IStoppable
+public class Consumer<T> implements IStoppableTask
 {
     /** {@code true} if input should be accepted, {@code false} otherwise. */
     private volatile boolean acceptInput;
@@ -40,7 +40,7 @@ public class Consumer<T> implements IStoppable
      * be called by {@link Thread#start()}.
      **************************************************************************/
     @Override
-    public final void run( IStopper stopper )
+    public final void run( ITaskStopManager stopper )
     {
         T obj = null;
 
