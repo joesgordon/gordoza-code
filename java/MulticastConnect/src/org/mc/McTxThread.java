@@ -4,14 +4,14 @@ import java.io.IOException;
 
 import javax.swing.*;
 
-import org.jutils.concurrent.IStoppable;
-import org.jutils.concurrent.IStopper;
+import org.jutils.concurrent.IStoppableTask;
+import org.jutils.concurrent.ITaskStopManager;
 import org.mc.ui.TxDialog;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class McTxThread implements IStoppable
+public class McTxThread implements IStoppableTask
 {
     /**  */
     private int sendCount;
@@ -50,7 +50,7 @@ public class McTxThread implements IStoppable
      * 
      **************************************************************************/
     @Override
-    public void run( final IStopper stopper )
+    public void run( final ITaskStopManager stopper )
     {
         SwingUtilities.invokeLater( new Runnable()
         {

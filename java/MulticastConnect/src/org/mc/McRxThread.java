@@ -6,11 +6,11 @@ import java.net.SocketTimeoutException;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import org.jutils.concurrent.IStoppable;
-import org.jutils.concurrent.IStopper;
+import org.jutils.concurrent.IStoppableTask;
+import org.jutils.concurrent.ITaskStopManager;
 import org.mc.ui.McFrame;
 
-public class McRxThread implements IStoppable
+public class McRxThread implements IStoppableTask
 {
     private McFrame frame;
 
@@ -23,7 +23,7 @@ public class McRxThread implements IStoppable
     }
 
     @Override
-    public void run( IStopper stopper )
+    public void run( ITaskStopManager stopper )
     {
         while( stopper.continueProcessing() )
         {

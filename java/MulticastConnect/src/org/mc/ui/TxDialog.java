@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import org.jutils.IconConstants;
-import org.jutils.concurrent.IStopper;
+import org.jutils.concurrent.ITaskStopManager;
 
 public class TxDialog
 {
@@ -21,12 +21,12 @@ public class TxDialog
 
     private String maxText;
 
-    private final IStopper stopper;
+    private final ITaskStopManager stopper;
 
     /**  */
     private final JDialog dialog;
 
-    public TxDialog( JFrame parent, IStopper stopper )
+    public TxDialog( JFrame parent, ITaskStopManager stopper )
     {
         dialog = new JDialog( parent, "Sending Messages...", true );
 

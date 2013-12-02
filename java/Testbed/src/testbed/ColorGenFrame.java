@@ -248,7 +248,7 @@ public class ColorGenFrame extends JFrame
 /*******************************************************************************
  * 
  ******************************************************************************/
-class ColorGenerator implements IStoppable
+class ColorGenerator implements IStoppableTask
 {
     /**  */
     private List<GenericColor> colors;
@@ -267,7 +267,7 @@ class ColorGenerator implements IStoppable
      * 
      **************************************************************************/
     @Override
-    public void run( IStopper stopper )
+    public void run( ITaskStopManager stopper )
     {
         colors = getColors();
 
