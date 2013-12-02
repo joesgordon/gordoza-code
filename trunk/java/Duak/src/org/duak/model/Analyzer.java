@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import org.duak.data.FileInfo;
-import org.jutils.concurrent.IStopper;
+import org.jutils.concurrent.ITaskStopManager;
 
 /*******************************************************************************
  * 
@@ -16,7 +16,7 @@ public class Analyzer
      * @return
      **************************************************************************/
     public FileInfo analyze( File dir, IProgressReporter reporter,
-        IStopper stopper )
+        ITaskStopManager stopper )
     {
         FileInfo results = new FileInfo( dir );
 
@@ -37,7 +37,7 @@ public class Analyzer
      * @param len
      **************************************************************************/
     private int getSize( FileInfo fileInfo, IProgressReporter reporter,
-        IStopper stopper, int i, int len )
+        ITaskStopManager stopper, int i, int len )
     {
         if( !stopper.continueProcessing() )
         {

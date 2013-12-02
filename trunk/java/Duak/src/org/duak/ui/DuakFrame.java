@@ -211,7 +211,7 @@ public class DuakFrame extends JFrame
     /***************************************************************************
      * 
      **************************************************************************/
-    private class AnalysisThread implements IStoppable
+    private class AnalysisThread implements IStoppableTask
     {
         private final File dir;
         private final ProgressDialog dialog;
@@ -223,7 +223,7 @@ public class DuakFrame extends JFrame
         }
 
         @Override
-        public void run( IStopper stopper )
+        public void run( ITaskStopManager stopper )
         {
             Analyzer analyzer = new Analyzer();
             FileInfo results = analyzer.analyze( dir,

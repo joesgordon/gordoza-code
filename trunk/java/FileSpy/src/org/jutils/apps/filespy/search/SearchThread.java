@@ -13,7 +13,7 @@ import org.jutils.ui.event.ItemActionListener;
 /*******************************************************************************
  *
  ******************************************************************************/
-public class SearchThread implements IStoppable
+public class SearchThread implements IStoppableTask
 {
     /**  */
     private final SearchResultsHandler searchHandler;
@@ -41,7 +41,7 @@ public class SearchThread implements IStoppable
      *
      **************************************************************************/
     @Override
-    public void run( IStopper stopper )
+    public void run( ITaskStopManager stopper )
     {
         FileContentsSearcher contentsSearcher = new FileContentsSearcher(
             params.getContentsPattern(), searchHandler );
@@ -170,7 +170,7 @@ public class SearchThread implements IStoppable
      * @param file
      **********************************************************************/
     private void findFiles( File file, Consumer<SearchRecord> contentsConsumer,
-        IStopper stopper )
+        ITaskStopManager stopper )
     {
         boolean isDir = file.isDirectory();
 

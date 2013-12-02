@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.net.*;
 import java.util.Arrays;
 
-import org.jutils.concurrent.IStoppable;
-import org.jutils.concurrent.IStopper;
+import org.jutils.concurrent.IStoppableTask;
+import org.jutils.concurrent.ITaskStopManager;
 import org.jutils.io.*;
 
 import chatterbox.data.ChatHeader;
@@ -17,7 +17,7 @@ import chatterbox.model.IChatMessage;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ChatReceiveRunner implements IStoppable
+public class ChatReceiveRunner implements IStoppableTask
 {
     /**  */
     private Chat chat;
@@ -55,7 +55,7 @@ public class ChatReceiveRunner implements IStoppable
      * 
      **************************************************************************/
     @Override
-    public void run( IStopper stopper )
+    public void run( ITaskStopManager stopper )
     {
         byte[] messageBytes;
         ByteArrayStream byteStream;

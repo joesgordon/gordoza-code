@@ -8,7 +8,7 @@ import org.jutils.apps.filespy.ByteCharSequence;
 import org.jutils.apps.filespy.data.LineMatch;
 import org.jutils.apps.filespy.data.SearchRecord;
 import org.jutils.concurrent.IConsumer;
-import org.jutils.concurrent.IStopper;
+import org.jutils.concurrent.ITaskStopManager;
 
 public class FileContentsSearcher implements IConsumer<SearchRecord>
 {
@@ -82,7 +82,7 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
      * @param file
      * @throws IOException
      **********************************************************************/
-    private void searchFile( SearchRecord record, IStopper stopper )
+    private void searchFile( SearchRecord record, ITaskStopManager stopper )
         throws IOException
     {
         File file = record.getFile();
@@ -122,7 +122,7 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
      * 
      **********************************************************************/
     @Override
-    public void consume( SearchRecord data, IStopper stopper )
+    public void consume( SearchRecord data, ITaskStopManager stopper )
     {
         try
         {
