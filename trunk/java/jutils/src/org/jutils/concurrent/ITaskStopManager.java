@@ -2,13 +2,11 @@ package org.jutils.concurrent;
 
 import org.jutils.ui.event.ItemActionListener;
 
-// TODO Rename to ITaskStopManager
-
 /*******************************************************************************
  * Represents the execution state (executing or stopped) and the methods to
  * modify said state.
  ******************************************************************************/
-public interface IStopper
+public interface ITaskStopManager
 {
     /***************************************************************************
      * Asynchronously requests that the task stop. Returns immediately.

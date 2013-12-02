@@ -9,12 +9,12 @@ import java.awt.event.ActionListener;
 public class DefaultCancelListener implements ActionListener
 {
     /**  */
-    private final IStopper stopper;
+    private final ITaskStopManager stopper;
 
     /***************************************************************************
      * @param stopper
      **************************************************************************/
-    public DefaultCancelListener( IStopper stopper )
+    public DefaultCancelListener( ITaskStopManager stopper )
     {
         this.stopper = stopper;
     }

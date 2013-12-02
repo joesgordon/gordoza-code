@@ -17,7 +17,7 @@ public class Timeable extends Stoppable
     /***************************************************************************
      * @param stoppable
      **************************************************************************/
-    public Timeable( IStoppable timeable,
+    public Timeable( IStoppableTask timeable,
         ItemActionListener<Long> finishedListener )
     {
         super( timeable );

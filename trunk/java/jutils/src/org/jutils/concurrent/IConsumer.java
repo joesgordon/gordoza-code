@@ -11,5 +11,5 @@ public interface IConsumer<T>
      * normally go here. . . . } </pre> </blockquote>
      * @param obj The data to be processed.
      **************************************************************************/
-    public void consume( T data, IStopper stopper );
+    public void consume( T data, ITaskStopManager stopper );
 }
