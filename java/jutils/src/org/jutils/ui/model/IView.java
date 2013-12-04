@@ -3,12 +3,12 @@ package org.jutils.ui.model;
 import java.awt.Component;
 
 /*******************************************************************************
- * 
+ * Represents a generic method of storing a view.
  ******************************************************************************/
 public interface IView<T extends Component>
 {
     /***************************************************************************
-     * @return
+     * Returns the pre-built view.
      **************************************************************************/
-    T getView();
+    public T getView();
 }

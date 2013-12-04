@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import org.jutils.io.*;
-import org.jutils.io.UserOptionsSerializer.UserOptionsCreator;
+import org.jutils.io.UserOptionsSerializer.IUserOptionsCreator;
 import org.jutils.ui.FrameRunner;
 
 /*******************************************************************************
@@ -105,7 +105,7 @@ public class JHexMain extends FrameRunner
      * 
      **************************************************************************/
     private static class JHexOptionsDataCreator implements
-        UserOptionsCreator<JHexOptions>
+        IUserOptionsCreator<JHexOptions>
     {
         @Override
         public JHexOptions createDefaultOptions()
