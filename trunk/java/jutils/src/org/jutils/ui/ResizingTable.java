@@ -58,13 +58,19 @@ public class ResizingTable<T extends TableModel> extends JTable
             colName = model.getColumnName( col );
             defaultWidth = col < colCount - 1 ? 65 : getWidth() - totalWidth;
 
-            tableCellRenderer = getCellRenderer( -1, col );
+            tableCellRenderer = getColumnModel().getColumn( col ).getHeaderRenderer();
+            if( tableCellRenderer == null )
+            {
+                tableCellRenderer = getTableHeader().getDefaultRenderer();
+            }
             cellRenderer = tableCellRenderer.getTableCellRendererComponent(
                 this, colName, false, false, -1, col );
 
             widths[col] = ( int )cellRenderer.getPreferredSize().getWidth() +
                 horzSpace;
             widths[col] = Math.max( widths[col], defaultWidth );
+
+            tableCellRenderer = getCellRenderer( -1, col );
 
             // -----------------------------------------------------------------
             // check if cell values fit in their cells

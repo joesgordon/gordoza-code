@@ -1,13 +1,13 @@
 package org.jutils;
 
 import java.awt.*;
+import java.awt.event.WindowEvent;
 import java.io.*;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
+import javax.swing.*;
 
 import org.jutils.ui.hex.HexUtils;
 
@@ -356,5 +356,22 @@ public final class Utils
         }
 
         return model;
+    }
+
+    /***************************************************************************
+     * Programmatically closes the provided window. See the StackOverflow
+     * question <a href="http://stackoverflow.com/questions/1234912">How to
+     * programmatically close a JFrame</a> for more information.
+     * @param win the window to be closed.
+     **************************************************************************/
+    public static void closeWindow( Window win )
+    {
+        win.dispatchEvent( new WindowEvent( win, WindowEvent.WINDOW_CLOSING ) );
+    }
+
+    public static void scrollToVisible( JTable table, int row, int col )
+    {
+        table.scrollRectToVisible( new Rectangle( table.getCellRect( row, col,
+            true ) ) );
     }
 }

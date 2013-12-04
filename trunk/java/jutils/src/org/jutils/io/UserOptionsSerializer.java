@@ -4,7 +4,7 @@ import java.io.*;
 
 import com.thoughtworks.xstream.XStreamException;
 
-// TODO add a way for the errors to become warnings.
+// TODO Add a way for the errors to become warnings via callback or logging.
 
 /*******************************************************************************
  * Default serializer for user options.
@@ -16,7 +16,7 @@ public class UserOptionsSerializer<T>
      * The class to use to create default options when the options cannot be
      * read from file.
      */
-    private final UserOptionsCreator<T> creator;
+    private final IUserOptionsCreator<T> creator;
     /** The file from which the options will be read and written. */
     private final File file;
 
@@ -31,7 +31,7 @@ public class UserOptionsSerializer<T>
      * options cannot be read from file.
      * @param file The file from which the options will be read and written.
      **************************************************************************/
-    public UserOptionsSerializer( UserOptionsCreator<T> creator, File file )
+    public UserOptionsSerializer( IUserOptionsCreator<T> creator, File file )
     {
         this.creator = creator;
         this.file = file;
@@ -163,7 +163,7 @@ public class UserOptionsSerializer<T>
 
     /***************************************************************************
      * Caches the given options and writes to file.
-     * @param data
+     * @param data the data to be cached and written.
      **************************************************************************/
     public void write( T data )
     {
@@ -188,16 +188,24 @@ public class UserOptionsSerializer<T>
      * during a read from file.
      * @param <T> The type of options to be created.
      **************************************************************************/
-    public static interface UserOptionsCreator<T>
+    public static interface IUserOptionsCreator<T>
     {
         /** Creates a default set of options. */
         public T createDefaultOptions();
     }
 
+    /***************************************************************************
+     * Creates an options serializer with the specified file and options creator
+     * by ensuring the directory structure exists for the file before creation.
+     * @param creator the default creator to be used.
+     * @param file the file to be used for serialization.
+     * @return the new options serializer.
+     **************************************************************************/
     public static <T> UserOptionsSerializer<T> getUserIO(
-        UserOptionsCreator<T> creator, File file )
+        IUserOptionsCreator<T> creator, File file )
     {
-        File dir = file.getParentFile();
+        File dir = file.getAbsoluteFile().getParentFile();
+
         if( !dir.isDirectory() )
         {
             if( !dir.mkdirs() )
