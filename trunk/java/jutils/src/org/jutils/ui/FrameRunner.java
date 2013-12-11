@@ -23,11 +23,11 @@ public abstract class FrameRunner extends MainRunner
      * @param popup The popup menu to be displayed on right-click.
      * @return The tray icon created or {@code null} if the system tray is not
      * supported.
-     * @throws RuntimeException if {@link SystemTray#add(TrayIcon)} throws an
-     * {@link AWTException}.
+     * @throws UnsupportedOperationException if {@link SystemTray#add(TrayIcon)}
+     * throws an {@link AWTException}.
      **************************************************************************/
-    protected final TrayIcon createTrayIcon( Image img, String tooltip,
-        JFrame frame, PopupMenu popup ) throws RuntimeException
+    protected static final TrayIcon createTrayIcon( Image img, String tooltip,
+        JFrame frame, PopupMenu popup ) throws UnsupportedOperationException
     {
         TrayIcon icon = null;
 
@@ -47,7 +47,8 @@ public abstract class FrameRunner extends MainRunner
             }
             catch( AWTException ex )
             {
-                throw new RuntimeException( "Cannot load icon in tray", ex );
+                throw new UnsupportedOperationException(
+                    "Cannot load icon in tray", ex );
             }
 
             icon.setPopupMenu( popup );
