@@ -2,38 +2,34 @@ package org.jutils.ui.hex;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.PatternSyntaxException;
 
 import org.jutils.NumberParsingUtils;
 
+// TODO move to org.jutils.utils
+
 /*******************************************************************************
- * 
+ * Utility class to contain static methods for parsing strings as hex and
+ * converting bytes to strings.
  ******************************************************************************/
 public final class HexUtils
 {
-    /**  */
-    public static final String[] BYTE_STRINGS;
-
-    static
-    {
-        BYTE_STRINGS = new String[256];
-
-        for( int i = 0; i < BYTE_STRINGS.length; i++ )
-        {
-            BYTE_STRINGS[i] = toHexString( i );
-        }
-    }
+    /**
+     * Lookup table to contain the string representations of every possible
+     * byte.
+     */
+    private static final HexStringConverter HEX_STRINGS = new HexStringConverter();
 
     /***************************************************************************
-     * 
+     * Declare the default and only constructor private to prevent instances.
      **************************************************************************/
     private HexUtils()
     {
     }
 
     /***************************************************************************
-     * @param b
-     * @return
+     * Converts a byte to an integer sans sign extension.
+     * @param b the byte to be converted.
+     * @return the integer representation of the byte.
      **************************************************************************/
     public static int toUnsigned( byte b )
     {
@@ -41,30 +37,10 @@ public final class HexUtils
     }
 
     /***************************************************************************
-     * @param i
-     * @return
+     * Converts a nibble (integer values 0 - 15) to a hexadecimal character.
+     * @param nibble the nibble to be converted.
+     * @return the hexadecimal character representation of the nibble.
      **************************************************************************/
-    public static byte toSigned( int i )
-    {
-        return ( byte )i;
-    }
-
-    /***************************************************************************
-     * @param i
-     * @return
-     **************************************************************************/
-    public static String toHexString( int i )
-    {
-        String s = Integer.toHexString( i ).toUpperCase();
-
-        if( i < 0x10 )
-        {
-            s = "0" + s;
-        }
-
-        return s;
-    }
-
     public static char toHex( int nibble )
     {
         switch( nibble )
@@ -108,8 +84,34 @@ public final class HexUtils
     }
 
     /***************************************************************************
-     * @param bytes
-     * @return
+     * Converts a byte to a two digit hexadecimal string.
+     * @param b the byte to be converted.
+     * @return the hexadecimal string representation of the byte.
+     **************************************************************************/
+    public static String toHexString( byte b )
+    {
+        return toHexString( toUnsigned( b ) );
+    }
+
+    /***************************************************************************
+     * Converts the provided integer representation of an unsigned byte (integer
+     * values 0 - 255) to a hexadecimal string.
+     * @param b the byte to be converted.
+     * @return the hexadecimal string representation of the byte.
+     * @throws ArrayIndexOutOfBoundsException if the input value is outside the
+     * range 0 - 255 inclusive.
+     **************************************************************************/
+    public static String toHexString( int b )
+        throws ArrayIndexOutOfBoundsException
+    {
+        return HEX_STRINGS.get( b );
+    }
+
+    /***************************************************************************
+     * Converts the byte array to a single string. The resultant string is not
+     * prefaced with a <i>0x</i>.
+     * @param bytes the bytes to be converted.
+     * @return the hexadecimal string representation of the bytes.
      **************************************************************************/
     public static String toHexString( byte[] bytes )
     {
@@ -124,8 +126,10 @@ public final class HexUtils
     }
 
     /***************************************************************************
-     * @param sync
-     * @return
+     * Converts the list of bytes to a single string. The resultant string is
+     * not prefaced with a <i>0x</i>.
+     * @param bytes the bytes to be converted.
+     * @return the hexadecimal string representation of the bytes.
      **************************************************************************/
     public static String toHexString( List<Byte> bytes )
     {
@@ -133,9 +137,12 @@ public final class HexUtils
     }
 
     /***************************************************************************
-     * @param bytes
-     * @param delim
-     * @return
+     * Converts the byte array to a single string inserting the specified
+     * delimiter between each byte. The resultant string is not prefaced with a
+     * <i>0x</i>.
+     * @param bytes the bytes to be converted.
+     * @param delim the delimiter to be used.
+     * @return the hexadecimal string representation of the bytes.
      **************************************************************************/
     public static String toHexString( List<Byte> bytes, String delim )
     {
@@ -148,40 +155,42 @@ public final class HexUtils
                 str.append( delim );
             }
 
-            str.append( toHexString( bytes.get( i ) & 0xFF ) );
+            str.append( HEX_STRINGS.get( toUnsigned( bytes.get( i ) ) ) );
         }
 
         return str.toString();
     }
 
     /***************************************************************************
-     * @param messyString
-     * @return
-     * @throws PatternSyntaxException
+     * Removed all non-hexadecimal digits from the provided string.
+     * @param messyString the string to be cleansed.
+     * @return a sting containing only hexadecimal digits.
      **************************************************************************/
     public static String trimHexString( String messyString )
-        throws PatternSyntaxException
     {
         return messyString.replaceAll( "[^0-9a-fA-F]", "" );
     }
 
+    /***************************************************************************
+     * Converts a string of hexadecimal digits to a byte array.
+     * @param text the string to be converted.
+     * @return the byte array.
+     * @throws NumberFormatException see {@link #fromHexString(String)}.
+     **************************************************************************/
     public static byte[] fromHexStringToArray( String text )
+        throws NumberFormatException
     {
         List<Byte> byteList = fromHexString( text );
-        byte[] bytes = new byte[byteList.size()];
 
-        for( int i = 0; i < byteList.size(); i++ )
-        {
-            bytes[i] = byteList.get( i );
-        }
-
-        return bytes;
+        return asArray( byteList );
     }
 
     /***************************************************************************
-     * @param text
-     * @return
-     * @throws NumberFormatException
+     * Converts a string of hexadecimal digits to a list of bytes.
+     * @param text the string to be converted.
+     * @return the list of bytes.
+     * @throws NumberFormatException if any non-hexadecimal digit is found, if
+     * the string is empty, or see {@link NumberParsingUtils#digitFromHex}.
      **************************************************************************/
     public static List<Byte> fromHexString( String text )
         throws NumberFormatException
@@ -211,6 +220,11 @@ public final class HexUtils
             }
         }
 
+        // ---------------------------------------------------------------------
+        // Check the text length only after checking each character because the
+        // user should be notified of an incorrect character as they are typing
+        // if the first hex digit of a byte is incorrect.
+        // ---------------------------------------------------------------------
         if( text.length() % 2 != 0 )
         {
             throw new NumberFormatException(
@@ -220,6 +234,9 @@ public final class HexUtils
         return bytes;
     }
 
+    /***************************************************************************
+     * Converts an array of bytes to a list of bytes.
+     **************************************************************************/
     public static List<Byte> asList( byte[] array )
     {
         List<Byte> bytes = new ArrayList<Byte>( array.length );
@@ -232,6 +249,9 @@ public final class HexUtils
         return bytes;
     }
 
+    /***************************************************************************
+     * Converts a list of bytes to an array of bytes.
+     **************************************************************************/
     public static byte[] asArray( List<Byte> bytes )
     {
         byte[] array = new byte[bytes.size()];
@@ -244,8 +264,51 @@ public final class HexUtils
         return array;
     }
 
+    /***************************************************************************
+     * Converts the byte from binary coded decimal (BCD) to its two's complement
+     * form. E.g. the byte 0x10 will be returned as 0x0A. This function performs
+     * no error checking on the BCD byte.
+     * @param b
+     * @return
+     **************************************************************************/
     public static byte fromBcd( byte b )
     {
         return ( byte )( ( ( ( b >>> 4 ) & 0x0F ) * 10 ) + ( b & 0x0F ) );
+    }
+
+    /***************************************************************************
+     * Helper class for creating and accessing a lookup table for hexadecimal
+     * string representations of bytes.
+     **************************************************************************/
+    private static class HexStringConverter
+    {
+        private final String[] BYTE_STRINGS;
+
+        public HexStringConverter()
+        {
+            this.BYTE_STRINGS = new String[256];
+
+            for( int i = 0; i < BYTE_STRINGS.length; i++ )
+            {
+                BYTE_STRINGS[i] = buildHexString( i );
+            }
+        }
+
+        public String get( int i )
+        {
+            return BYTE_STRINGS[i];
+        }
+
+        private static String buildHexString( int b )
+        {
+            String s = Integer.toHexString( b ).toUpperCase();
+
+            if( b < 0x10 )
+            {
+                s = "0" + s;
+            }
+
+            return s;
+        }
     }
 }
