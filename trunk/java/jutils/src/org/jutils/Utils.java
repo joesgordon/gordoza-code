@@ -9,20 +9,19 @@ import java.util.*;
 
 import javax.swing.*;
 
-import org.jutils.ui.hex.HexUtils;
-
 /*******************************************************************************
- *
+ * Utility class for general static functions.
  ******************************************************************************/
 public final class Utils
 {
-    /**  */
+    /** A list of all regular expression meta characters. */
     public static final char[] REGEX_METAC;
-    /**  */
+    /** The new line string for the current system. */
     public static final String NEW_LINE;
-    /**  */
+    /** The user's home directory. */
     public static final String USER_HOME;
-    /**  */
+
+    /** A date formatter for displaying debug statements. */
     private static final SimpleDateFormat debugDateFormatter;
 
     static
@@ -35,7 +34,7 @@ public final class Utils
     }
 
     /***************************************************************************
-     *
+     * Declare the default and only constructor private to prevent instances.
      **************************************************************************/
     private Utils()
     {
@@ -52,11 +51,11 @@ public final class Utils
         return DATE_FORMAT.format( d );
     }
 
-    /**
+    /***************************************************************************
      * From SO http://stackoverflow.com/questions/1410168
      * @param s
      * @return
-     */
+     **************************************************************************/
     public static long parseHexLong2( String s )
     {
         int len = s.length();
@@ -89,7 +88,8 @@ public final class Utils
     }
 
     /***************************************************************************
-     * @param message
+     * Prints the provided debug message with a time/date stamp.
+     * @param message the message to be printed.
      **************************************************************************/
     public static void printDebug( String message )
     {
@@ -100,7 +100,7 @@ public final class Utils
     }
 
     /***************************************************************************
-     * 
+     * Prints the stack trace from the caller.
      **************************************************************************/
     public static void printStackTrace()
     {
@@ -113,8 +113,9 @@ public final class Utils
     }
 
     /***************************************************************************
-     * @param tr Throwable
-     * @return String
+     * Prints the stack trace of the provided throwable to a string.
+     * @param tr the throwable containing the stack trace to be printed.
+     * @return String the string representation of the stack trace.
      **************************************************************************/
     public static String printStackTrace( Throwable tr )
     {
@@ -125,9 +126,11 @@ public final class Utils
     }
 
     /***************************************************************************
-     * @param comp Component
-     * @param type Class
-     * @return Component
+     * Search the component's parent tree looking for an object of the provided
+     * type.
+     * @param comp the child component.
+     * @param type the type of parent to be found.
+     * @return the component of the type provided or {@code null} if not found.
      **************************************************************************/
     public static Component getParentOfType( Component comp, Class<?> type )
     {
@@ -148,8 +151,10 @@ public final class Utils
     }
 
     /***************************************************************************
-     * @param comp Component
-     * @return Window
+     * Returns the {@link Window} containing the provided component.
+     * @param comp the child component.
+     * @return the window owning the provided component or {@code null} if the
+     * component is orphaned.
      **************************************************************************/
     public static Window getComponentsWindow( Component comp )
     {
@@ -158,8 +163,10 @@ public final class Utils
     }
 
     /***************************************************************************
-     * @param comp Component
-     * @return Frame
+     * Returns the {@link Frame} containing the provided component.
+     * @param comp the child component.
+     * @return the frame owning the provided component or {@code null} if the
+     * component is orphaned or the owning window is not a frame.
      **************************************************************************/
     public static Frame getComponentsFrame( Component comp )
     {
@@ -168,8 +175,10 @@ public final class Utils
     }
 
     /***************************************************************************
-     * @param comps
-     * @return
+     * Finds the maximum width and length of the provided components and sets
+     * the preferred size of each to the maximum.
+     * @param comps the components to be evaluated.
+     * @return the maximum size.
      **************************************************************************/
     public static Dimension setMaxComponentSize( Component... comps )
     {
@@ -184,8 +193,9 @@ public final class Utils
     }
 
     /***************************************************************************
-     * @param comps
-     * @return
+     * Finds the maximum width and length of the provided components.
+     * @param comps the components to be evaluated.
+     * @return the maximum size.
      **************************************************************************/
     public static Dimension getMaxComponentSize( Component... comps )
     {
@@ -203,18 +213,11 @@ public final class Utils
     }
 
     /***************************************************************************
-     * @param resource String
-     * @return URL
-     **************************************************************************/
-    public static URL loadResourceURL( String resource )
-    {
-        return loadResourceURL( Utils.class, resource );
-    }
-
-    /***************************************************************************
-     * @param c Class
-     * @param resource String
-     * @return URL
+     * Builds a URL for a resource relative to the provided class by the
+     * provided string.
+     * @param c the class from which the relative path of the resource is known.
+     * @param resource the path to the resource relative to the class.
+     * @return the URL path of the resource.
      **************************************************************************/
     public static URL loadResourceURL( Class<?> c, String resource )
     {
@@ -223,73 +226,63 @@ public final class Utils
     }
 
     /***************************************************************************
-     * @param array Object[]
-     * @return String
+     * Calls {@link Object#toString()} for each object in the array and places a
+     * comma and a space between each.
+     * @param items Object[] the array to convert to a string.
+     * @return the comma separated list of items.
      **************************************************************************/
-    public static String arrayToString( Object[] array )
+    public static String arrayToString( Object[] items )
     {
         StringBuffer buf = new StringBuffer();
-        for( int i = 0; i < array.length; i++ )
+        for( int i = 0; i < items.length; i++ )
         {
             if( i > 0 )
             {
                 buf.append( ", " );
             }
-            buf.append( array[i].toString() );
+            buf.append( items[i].toString() );
         }
 
         return buf.toString();
     }
 
     /***************************************************************************
-     * @param array Object[]
-     * @return String
+     * Performs the same operations as {@link #arrayToString(Object[])} but with
+     * variable argument syntax.
+     * @param items the objects to convert to a string.
+     * @return the comma separated string of items.
      **************************************************************************/
-    public static String arrayToString( byte[] array )
+    public static String argsToString( Object... items )
     {
-        StringBuffer buf = new StringBuffer();
-        for( int i = 0; i < array.length; i++ )
-        {
-            if( i > 0 )
-            {
-                buf.append( ", " );
-            }
-            buf.append( HexUtils.BYTE_STRINGS[array[i] & 0x0FF] );
-        }
-
-        return buf.toString();
+        return arrayToString( items );
     }
 
     /***************************************************************************
-     * @param args
-     * @return
+     * Performs the same operations as {@link #arrayToString(Object[])} but with
+     * a list rather than an array.
+     * @param items the list to convert to a string.
+     * @return the comma separated list of items.
      **************************************************************************/
-    public static String argsToString( Object... args )
+    public static String listToString( java.util.List<? extends Object> items )
     {
-        return arrayToString( args );
+        return arrayToString( items.toArray() );
     }
 
     /***************************************************************************
-     * @param vec Vector
-     * @return String
+     * Performs the same operations as {@link #arrayToString(Object[])} but with
+     * a list rather than an array.
+     * @param items the collection to convert to a string.
+     * @return the comma separated list of items.
      **************************************************************************/
-    public static String listToString( java.util.List<?> vec )
+    public static String collectionToString( Collection<?> items )
     {
-        return arrayToString( vec.toArray() );
+        return arrayToString( items.toArray() );
     }
 
     /***************************************************************************
-     * @param c Collection
-     * @return String
-     **************************************************************************/
-    public static String collectionToString( Collection<?> c )
-    {
-        return arrayToString( c.toArray() );
-    }
-
-    /***************************************************************************
-     * @param str String
-     * @return String
+     * Escapes all meta-characters in the regular expression string provided.
+     * @param str the regular expression to be cleansed.
+     * @return the cleansed string.
      **************************************************************************/
     public static String escapeRegexMetaChar( String str )
     {
@@ -297,9 +290,11 @@ public final class Utils
     }
 
     /***************************************************************************
-     * @param str String
-     * @param chars char[]
-     * @return String
+     * Escapes each character in the provided array found in the provided string
+     * with a backslash '\'.
+     * @param str the string to be cleansed.
+     * @param chars char[] the characters to be escaped.
+     * @return the cleansed string.
      **************************************************************************/
     public static String escapeAllChars( String str, char[] chars )
     {
@@ -346,11 +341,16 @@ public final class Utils
 
     }
 
-    public static <T> ComboBoxModel<T> createModel( T[] options )
+    /***************************************************************************
+     * Creates a {@link ComboBoxModel} with the provided array of items.
+     * @param items the items to be contained within the model.
+     * @return the model containing the items.
+     **************************************************************************/
+    public static <T> ComboBoxModel<T> createModel( T[] items )
     {
         DefaultComboBoxModel<T> model = new DefaultComboBoxModel<T>();
 
-        for( T option : options )
+        for( T option : items )
         {
             model.addElement( option );
         }
@@ -369,6 +369,12 @@ public final class Utils
         win.dispatchEvent( new WindowEvent( win, WindowEvent.WINDOW_CLOSING ) );
     }
 
+    /***************************************************************************
+     * Scrolls to the row and column provided.
+     * @param table the table to be scrolled.
+     * @param row the row to be scrolled to.
+     * @param col the column to be scrolled to.
+     **************************************************************************/
     public static void scrollToVisible( JTable table, int row, int col )
     {
         table.scrollRectToVisible( new Rectangle( table.getCellRect( row, col,

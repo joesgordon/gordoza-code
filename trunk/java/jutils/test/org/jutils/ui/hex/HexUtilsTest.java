@@ -50,23 +50,4 @@ public class HexUtilsTest
         double sec = estTime / 1000000000.0;
         System.out.println( String.format( "Took: %3fs", sec ) );
     }
-
-    @Test
-    public void testToSigned()
-    {
-        for( int i = 0; i <= 256; i++ )
-        {
-            byte b = HexUtils.toSigned( i );
-
-            if( i > Byte.MAX_VALUE )
-            {
-                Assert.assertEquals( i, b + 256 );
-            }
-            else
-            {
-                Assert.assertEquals( i, b );
-            }
-        }
-    }
-
 }

@@ -9,7 +9,8 @@ import java.util.List;
 
 import javax.swing.*;
 
-import org.jutils.*;
+import org.jutils.IconConstants;
+import org.jutils.NumberParsingUtils;
 import org.jutils.io.UserOptionsSerializer;
 import org.jutils.ui.*;
 import org.jutils.ui.event.*;
@@ -19,15 +20,17 @@ import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
- * 
+ * Represents the view that builds and contains the main frame for the
+ * application.
  ******************************************************************************/
 public class JHexFrame implements IView<JFrame>
 {
-    /**  */
-    private static final String[] choices = new String[] { "Xtra-Small (1kb)",
+    // TODO create enum of sizes.
+    /** The text description of the sizes. */
+    private static final String [] choices = new String[] { "Xtra-Small (1kb)",
         "Small (64kb)", "Medium (512 kb)", "Large (1 Mb)" };
-    /**  */
-    private static final int[] sizes = new int[] { 0x400, 0x10000, 0x80000,
+    /** The size of the buffer in bytes. */
+    private static final int [] sizes = new int[] { 0x400, 0x10000, 0x80000,
         0x100000 };
 
     // -------------------------------------------------------------------------
@@ -37,27 +40,33 @@ public class JHexFrame implements IView<JFrame>
     private final JFrame frame;
     /** The file tree displaying the directories in the given file system. */
     private final HexEditorFilePanel editor;
-    /**  */
-    private final UserOptionsSerializer<JHexOptions> userDataIO;
-    /**  */
+    /** The serializer to access user options. */
+    private final UserOptionsSerializer<JHexOptions> userio;
+    /**
+     * The dialog to show the data in different formats starting at the
+     * currently selected byte.
+     */
     private final JDialog dataDialog;
-    /**  */
+    /**
+     * The view to show the data in different formats starting at the currently
+     * selected byte.
+     */
     private final ValueView valuePanel;
-    /**  */
+    /** The button to toggle the data view between visible and invisible. */
     private final JToggleButton dataViewButton;
-    /**  */
+    /** The file menu. */
     private final JMenu fileMenu;
 
-    /**  */
+    /** Index of the currently selected buffer size. */
     private int bufferSizeIndex;
 
     /***************************************************************************
      * Creates a JHex frame.
-     * @param userDataIO
+     * @param userio the serializer used to access user data.
      **************************************************************************/
-    public JHexFrame( UserOptionsSerializer<JHexOptions> userDataIO )
+    public JHexFrame( UserOptionsSerializer<JHexOptions> userio )
     {
-        this.userDataIO = userDataIO;
+        this.userio = userio;
 
         this.frame = new JFrame();
         this.editor = new HexEditorFilePanel();
@@ -86,6 +95,9 @@ public class JHexFrame implements IView<JFrame>
         frame.setIconImages( JHexIconConstants.getAppImages() );
     }
 
+    /***************************************************************************
+     * Creates the data dialog.
+     **************************************************************************/
     private JDialog createDataDialog()
     {
         JDialog dialog = new JDialog( frame, ModalityType.MODELESS );
@@ -123,6 +135,10 @@ public class JHexFrame implements IView<JFrame>
         return dialog;
     }
 
+    /***************************************************************************
+     * Creates the content pane for the frame. This frame contains the toolbar,
+     * main panel, and status bar.
+     **************************************************************************/
     private Container createContentPane()
     {
         JPanel panel = new JPanel( new BorderLayout() );
@@ -135,6 +151,9 @@ public class JHexFrame implements IView<JFrame>
         return panel;
     }
 
+    /***************************************************************************
+     * Creates the toolbar.
+     **************************************************************************/
     private Component createToolbar()
     {
         JGoodiesToolBar toolbar = new JGoodiesToolBar();
@@ -218,30 +237,38 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * @return
+     * Creates the menu bar.
      **************************************************************************/
     private JMenuBar createMenuBar()
     {
         JMenuBar menubar = new JGoodiesMenuBar();
 
-        menubar.add( updateFileMenu( fileMenu ) );
+        updateFileMenu();
+
+        menubar.add( fileMenu );
         menubar.add( createSearchMenu() );
         menubar.add( createToolsMenu() );
 
         return menubar;
     }
 
-    private JMenu updateFileMenu( JMenu menu )
+    /***************************************************************************
+     * Replaces the recently opened files in the file menu with those in the
+     * user data.
+     * @param menu the file menu
+     * @return
+     **************************************************************************/
+    private void updateFileMenu()
     {
         JMenuItem item;
-        JHexOptions options = userDataIO.getOptions();
+        JHexOptions options = userio.getOptions();
 
-        menu.removeAll();
+        fileMenu.removeAll();
 
         item = new JMenuItem( "Open" );
         item.addActionListener( new OpenListener( this ) );
         item.setIcon( IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
-        menu.add( item );
+        fileMenu.add( item );
 
         item = new JMenuItem( "Save" );
         item.addActionListener( new SaveListener( this ) );
@@ -250,26 +277,27 @@ public class JHexFrame implements IView<JFrame>
 
         if( !options.lastAccessedFiles.isEmpty() )
         {
-            menu.addSeparator();
+            fileMenu.addSeparator();
 
             for( File f : options.lastAccessedFiles )
             {
                 item = new JMenuItem( f.getName() );
                 item.addActionListener( new OpenFileListener( this, f ) );
-                menu.add( item );
+                fileMenu.add( item );
             }
         }
 
-        menu.addSeparator();
+        fileMenu.addSeparator();
 
         item = new JMenuItem( "Exit" );
         item.addActionListener( new ExitListener( frame ) );
         item.setIcon( IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
-        menu.add( item );
-
-        return menu;
+        fileMenu.add( item );
     }
 
+    /***************************************************************************
+     * Creates the search menu.
+     **************************************************************************/
     private JMenu createSearchMenu()
     {
         JMenu menu = new JMenu( "Search" );
@@ -288,6 +316,9 @@ public class JHexFrame implements IView<JFrame>
         return menu;
     }
 
+    /***************************************************************************
+     * Creates the tools menu.
+     **************************************************************************/
     private JMenu createToolsMenu()
     {
         JMenu menu = new JMenu( "Tools" );
@@ -301,6 +332,9 @@ public class JHexFrame implements IView<JFrame>
         return menu;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public JFrame getView()
     {
@@ -308,7 +342,8 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * 
+     * Displays the dialog that allows the user to change the size of the
+     * buffer.
      **************************************************************************/
     private void showBufferSizeDialog()
     {
@@ -330,13 +365,13 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * 
+     * Displays the dialog that allows the user to open a file.
      **************************************************************************/
     private void showOpenDialog()
     {
         JFileChooser chooser = new JFileChooser();
         int choice = JFileChooser.CANCEL_OPTION;
-        JHexOptions options = userDataIO.getOptions();
+        JHexOptions options = userio.getOptions();
 
         chooser.setSelectedFile( options.getLastFile() );
         choice = chooser.showOpenDialog( frame );
@@ -349,7 +384,8 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * @param f
+     * Opens the provided file and displays its content.
+     * @param f the file to be opened.
      **************************************************************************/
     public void openFile( File f )
     {
@@ -358,10 +394,10 @@ public class JHexFrame implements IView<JFrame>
             return;
         }
 
-        JHexOptions options = userDataIO.getOptions();
+        JHexOptions options = userio.getOptions();
 
         options.lastAccessedFiles.push( f );
-        userDataIO.write();
+        userio.write();
 
         try
         {
@@ -372,11 +408,11 @@ public class JHexFrame implements IView<JFrame>
             ex.printStackTrace();
         }
 
-        updateFileMenu( fileMenu );
+        updateFileMenu();
     }
 
     /***************************************************************************
-     * @param e
+     * Saves the file.
      **************************************************************************/
     private void saveFile()
     {
@@ -385,11 +421,13 @@ public class JHexFrame implements IView<JFrame>
             "Not Yet Implemented", JOptionPane.INFORMATION_MESSAGE );
 
         if( "".length() < 1 )
+        {
             return;
+        }
 
         JFileChooser chooser = new JFileChooser();
         int choice = JFileChooser.CANCEL_OPTION;
-        JHexOptions options = userDataIO.getOptions();
+        JHexOptions options = userio.getOptions();
 
         chooser.setSelectedFile( options.getLastFile() );
         choice = chooser.showSaveDialog( frame );
@@ -399,7 +437,7 @@ public class JHexFrame implements IView<JFrame>
             File f = chooser.getSelectedFile();
 
             options.lastAccessedFiles.push( f );
-            userDataIO.write();
+            userio.write();
 
             try
             {
@@ -410,12 +448,12 @@ public class JHexFrame implements IView<JFrame>
                 ex.printStackTrace();
             }
 
-            updateFileMenu( fileMenu );
+            updateFileMenu();
         }
     }
 
     /***************************************************************************
-     * @param e
+     * Displays the dialog that allows the user to enter bytes to be found.
      **************************************************************************/
     private void showFindDialog()
     {
@@ -433,7 +471,7 @@ public class JHexFrame implements IView<JFrame>
                 return;
             }
 
-            byte[] bytes = new byte[strBytes.length() / 2];
+            byte [] bytes = new byte[strBytes.length() / 2];
 
             try
             {
@@ -447,7 +485,7 @@ public class JHexFrame implements IView<JFrame>
                     b = NumberParsingUtils.digitFromHex( strBytes.charAt( i * 2 + 1 ) ) & 0x0F;
                     bytes[i] |= ( byte )b;
                 }
-                System.out.println( Utils.arrayToString( bytes ) );
+                System.out.println( HexUtils.toHexString( bytes ) );
 
                 // TODO actually find the bytes.
             }
@@ -462,7 +500,8 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * 
+     * Displays the dialog that allows the user to go to a particular offset
+     * into the file.
      **************************************************************************/
     private void showGotoDialog()
     {
@@ -497,7 +536,7 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * Closed the currently opened file.
+     * Closes the currently opened file.
      **************************************************************************/
     private void closeFile()
     {
@@ -513,7 +552,7 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * 
+     * Action listener for displaying the file open dialog.
      **************************************************************************/
     private class OpenListener implements ActionListener
     {
@@ -532,7 +571,7 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * 
+     * Action listener for opening a particular file.
      **************************************************************************/
     private class OpenFileListener implements ActionListener
     {
@@ -553,7 +592,7 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * 
+     * Action listener for saving the file.
      **************************************************************************/
     private static class SaveListener implements ActionListener
     {
@@ -572,7 +611,7 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * 
+     * Action listener for displaying the go to dialog.
      **************************************************************************/
     private static class GoToListener implements ActionListener
     {
@@ -591,7 +630,7 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * 
+     * Action listener for displaying the find dialog.
      **************************************************************************/
     private static class FindListener implements ActionListener
     {
@@ -610,7 +649,7 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * 
+     * Action listener for displaying the buffer size dialog.
      **************************************************************************/
     private static class BufferSizeListener implements ActionListener
     {
@@ -629,7 +668,7 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * 
+     * Window listener to close the file.
      **************************************************************************/
     private static class WindowCloseListener extends WindowAdapter
     {
@@ -655,6 +694,9 @@ public class JHexFrame implements IView<JFrame>
         }
     }
 
+    /***************************************************************************
+     * Listener to open a file that is drag and dropped onto the table.
+     **************************************************************************/
     private static class FileDroppedListener implements
         ItemActionListener<IFileDropEvent>
     {
@@ -679,7 +721,7 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * 
+     * Action listener for navigating to the previous buffer.
      **************************************************************************/
     private static class BackListener implements ActionListener
     {
@@ -697,7 +739,7 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * 
+     * Action listener for navigating to the next buffer.
      **************************************************************************/
     private static class NextListener implements ActionListener
     {
@@ -715,7 +757,7 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * 
+     * Action listener for displaying the data dialog.
      **************************************************************************/
     private static class ShowDataListener implements ActionListener
     {
@@ -744,7 +786,7 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * 
+     * Action listener for hiding the dialog.
      **************************************************************************/
     private static class HideDialogListener implements ActionListener
     {
@@ -764,7 +806,7 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * 
+     * Listener to update the data dialog as bytes are selected.
      **************************************************************************/
     private static class SelectionListener implements IRangeSelectedListener
     {
@@ -787,7 +829,7 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * 
+     * Listener to update the buffer size.
      **************************************************************************/
     private static class SizeSelectedListener implements
         ItemActionListener<Integer>

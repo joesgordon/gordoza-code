@@ -1,65 +1,62 @@
 package org.jutils.ui.hex;
 
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 
+/*******************************************************************************
+ * Implements a {@link TableModel} to display the hexadecimal values and their
+ * corresponding ASCII representations.
+ ******************************************************************************/
 public class HexTableModel extends AbstractTableModel
 {
+    /** The buffer to be displayed */
     private IByteBuffer buffer;
-    private char[] asciiBuffer;
+    /**  */
+    private final char[] asciiBuffer;
 
+    /***************************************************************************
+     * Creates the table model.
+     **************************************************************************/
     public HexTableModel()
     {
         asciiBuffer = new char[16];
     }
 
-    public int getBufferSize()
-    {
-        return buffer != null ? buffer.size() : 0;
-    }
-
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
     public Class<?> getColumnClass( int col )
     {
         return String.class;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public boolean isCellEditable( int row, int col )
     {
         return true;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public String getColumnName( int col )
     {
         if( col < 16 )
         {
-            return HexUtils.BYTE_STRINGS[col];
+            return HexUtils.toHexString( col );
         }
 
         return "Ascii";
     }
 
-    public void setBuffer( IByteBuffer buf )
-    {
-        buffer = buf;
-
-        int lastRow = getRowCount();
-        if( lastRow > -1 )
-        {
-            super.fireTableRowsInserted( 0, lastRow );
-        }
-    }
-
-    private int getOffset( int row, int col )
-    {
-        if( col != 16 )
-        {
-            return row * 16 + col;
-        }
-
-        return row * 16;
-    }
-
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void setValueAt( Object val, int row, int col )
     {
@@ -74,6 +71,9 @@ public class HexTableModel extends AbstractTableModel
         buffer.set( getOffset( row, col ), ( byte )i );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public Object getValueAt( int row, int col )
     {
@@ -90,7 +90,7 @@ public class HexTableModel extends AbstractTableModel
         {
             if( index < buffer.size() )
             {
-                str = HexUtils.BYTE_STRINGS[HexUtils.toUnsigned( buffer.get( index ) )];
+                str = HexUtils.toHexString( buffer.get( index ) );
             }
         }
         else
@@ -118,12 +118,18 @@ public class HexTableModel extends AbstractTableModel
         return str;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public int getColumnCount()
     {
         return 17;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public int getRowCount()
     {
@@ -137,8 +143,49 @@ public class HexTableModel extends AbstractTableModel
         return len > 0 ? len / 16 + extra : 0;
     }
 
+    /***************************************************************************
+     * Returns the size of the current buffer.
+     **************************************************************************/
+    public int getBufferSize()
+    {
+        return buffer != null ? buffer.size() : 0;
+    }
+
+    /***************************************************************************
+     * Sets the buffer to be displayed.
+     **************************************************************************/
+    public void setBuffer( IByteBuffer buf )
+    {
+        buffer = buf;
+
+        int lastRow = getRowCount();
+        if( lastRow > -1 )
+        {
+            super.fireTableRowsInserted( 0, lastRow );
+        }
+    }
+
+    /***************************************************************************
+     * Returns the current buffer.
+     **************************************************************************/
     public IByteBuffer getBuffer()
     {
         return buffer;
+    }
+
+    /***************************************************************************
+     * Returns the 0-relative byte offset for the given row and column.
+     * @param row the row of the byte.
+     * @param col the column of the byte.
+     * @return the byte offset.
+     **************************************************************************/
+    private static int getOffset( int row, int col )
+    {
+        if( col != 16 )
+        {
+            return row * 16 + col;
+        }
+
+        return row * 16;
     }
 }
