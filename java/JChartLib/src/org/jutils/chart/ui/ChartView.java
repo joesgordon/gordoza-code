@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import org.jutils.chart.*;
 import org.jutils.chart.data.*;
 import org.jutils.chart.io.DataFileReader;
+import org.jutils.chart.model.ISeriesData;
 import org.jutils.chart.ui.objects.Chart;
 import org.jutils.chart.ui.objects.Series;
 import org.jutils.ui.event.*;
@@ -47,34 +48,50 @@ public class ChartView implements IView<JComponent>
         mainPanel.setDropTarget( new FileDropTarget( new ChartDropTarget( this ) ) );
     }
 
+    /***************************************************************************
+     * @param s
+     **************************************************************************/
     public void addSeries( Series s )
     {
-        Color c = palette.next();
-        chart.plot.serieses.add( s );
-        s.marker.setColor( c );
-        s.highlightMarker.setColor( c );
-        s.line.setColor( c );
-        // s.line = null;
+        addSeries( s, false );
     }
 
-    public void importData( File file, boolean addData )
+    /***************************************************************************
+     * @param s
+     * @param addData
+     **************************************************************************/
+    public void addSeries( Series s, boolean addData )
     {
         if( !addData )
         {
             chart.plot.serieses.clear();
         }
 
+        Color c = palette.next();
+        chart.plot.serieses.add( s );
+        s.marker.setColor( c );
+        s.highlightMarker.setColor( c );
+        s.line.setColor( c );
+        // s.line = null;
+
+        chart.plot.calculateRanges();
+    }
+
+    /***************************************************************************
+     * @param file
+     * @param addData
+     **************************************************************************/
+    public void importData( File file, boolean addData )
+    {
         try
         {
             DataFileReader reader = new DataFileReader();
-            ISeries data = reader.read( file );
+            ISeriesData data = reader.read( file );
             Series s = new Series( data );
 
             s.name = file.getName();
 
             addSeries( s );
-
-            chart.plot.calculateRanges();
 
             // System.out.format( "x => (%f,%f)", chart.plot.context.xMin,
             // chart.plot.context.xMax );

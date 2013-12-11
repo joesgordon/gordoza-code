@@ -1,74 +1,42 @@
-package org.jutils.chart.ui.objects;
+package org.jutils.chart.model;
 
-import java.awt.*;
-
-import org.jutils.chart.model.ILine;
+import org.jutils.chart.data.XYPoint;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class SimpleLine implements ILine
+public interface ISeriesData extends Iterable<XYPoint>
 {
-    /**  */
-    public Color color;
-    /**  */
-    public Point p1;
-    /**  */
-    public Point p2;
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public int getCount();
 
     /***************************************************************************
-     * 
+     * @param index
+     * @return
      **************************************************************************/
-    public SimpleLine()
-    {
-        this.color = new Color( 0x0066CC );
-        this.setSize( 4 );
-    }
+    public double getX( int index );
 
     /***************************************************************************
-     * 
+     * @return
      **************************************************************************/
-    @Override
-    public void paint( Graphics2D graphics, int width, int height )
-    {
-        graphics.setColor( color );
-
-        graphics.drawLine( p1.x, p1.y, p2.x, p2.y );
-    }
+    public XYPoint getMin();
 
     /***************************************************************************
-     * 
+     * @return
      **************************************************************************/
-    @Override
-    public void setPoints( Point p1, Point p2 )
-    {
-        this.p1 = p1;
-        this.p2 = p2;
-    }
+    public XYPoint getMax();
 
     /***************************************************************************
-     * 
+     * @param index
+     * @return
      **************************************************************************/
-    @Override
-    public void setColor( Color color )
-    {
-        this.color = color;
-    }
+    public double getY( int index );
 
     /***************************************************************************
-     * 
+     * @param index
+     * @return
      **************************************************************************/
-    @Override
-    public void setSize( int size )
-    {
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public double getSize()
-    {
-        return 1;
-    }
+    public XYPoint get( int index );
 }

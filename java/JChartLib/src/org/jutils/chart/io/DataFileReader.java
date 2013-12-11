@@ -5,17 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jutils.chart.data.*;
+import org.jutils.chart.model.ISeriesData;
 import org.jutils.io.IReader;
 import org.jutils.io.RuntimeFormatException;
 
-public class DataFileReader implements IReader<ISeries, File>
+public class DataFileReader implements IReader<ISeriesData, File>
 {
     public DataFileReader()
     {
     }
 
     @Override
-    public ISeries read( File f ) throws IOException, RuntimeFormatException
+    public ISeriesData read( File f ) throws IOException, RuntimeFormatException
     {
         List<XYPoint> points = new ArrayList<>();
         BufferedReader reader = new BufferedReader( new FileReader( f ) );

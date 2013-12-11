@@ -1,4 +1,4 @@
-package org.jutils.chart.ui.objects;
+package org.jutils.chart.model;
 
 import java.awt.Color;
 import java.awt.Point;

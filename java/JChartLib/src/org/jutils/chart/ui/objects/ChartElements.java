@@ -10,12 +10,19 @@ import org.jutils.chart.ui.Layer2d;
  ******************************************************************************/
 public class ChartElements implements IChadget
 {
+    /**  */
     public final Layer2d axesLayer;
 
+    /**  */
     private BasicStroke solidStroke;
+    /**  */
     private int width;
+    /**  */
     private int inset;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public ChartElements()
     {
         this.width = 4;

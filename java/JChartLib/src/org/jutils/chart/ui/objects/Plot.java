@@ -14,13 +14,20 @@ import org.jutils.chart.ui.Layer2d;
  ******************************************************************************/
 public class Plot implements IChadget
 {
+    /**  */
     public final Layer2d seriesLayer;
+    /**  */
     public final Layer2d highlightLayer;
 
+    /**  */
     public final List<Series> serieses;
 
+    /**  */
     public final ChartContext context;
+
+    /**  */
     public int x;
+    /**  */
     public int y;
 
     /***************************************************************************
