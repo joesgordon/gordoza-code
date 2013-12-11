@@ -4,19 +4,33 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 
 import org.jutils.chart.data.*;
+import org.jutils.chart.model.*;
 import org.jutils.chart.ui.IChadget;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class Series implements IChadget
 {
-    public final ISeries data;
+    /**  */
+    public final ISeriesData data;
+
+    /**  */
     public IMarker marker;
+    /**  */
     public IMarker highlightMarker;
+    /**  */
     public ILine line;
 
+    /**  */
     public ChartContext context;
+    /**  */
     public String name;
 
-    public Series( ISeries data )
+    /***************************************************************************
+     * @param data
+     **************************************************************************/
+    public Series( ISeriesData data )
     {
         this.data = data;
 
@@ -29,6 +43,9 @@ public class Series implements IChadget
         marker.setBorderVisible( false );
     }
 
+    /***************************************************************************
+     *
+     **************************************************************************/
     @Override
     public void paint( Graphics2D graphics, int width, int height )
     {

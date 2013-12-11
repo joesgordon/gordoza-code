@@ -2,10 +2,12 @@ package org.jutils.chart.data;
 
 import java.util.*;
 
+import org.jutils.chart.model.ISeriesData;
+
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class DefaultSeries implements ISeries
+public class DefaultSeries implements ISeriesData
 {
     private final List<XYPoint> points;
     private final XYPoint min;

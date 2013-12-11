@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jutils.chart.data.*;
+import org.jutils.chart.model.ISeriesData;
 
 /*******************************************************************************
  * 
@@ -42,7 +43,7 @@ public final class ChartUtils
         return x * context.getXRange() / chartWidth + context.xMin;
     }
 
-    public static ISeries createLineSeries( int count, double slope,
+    public static ISeriesData createLineSeries( int count, double slope,
         double offset, double min, double max )
     {
         List<XYPoint> points = new ArrayList<>();
@@ -62,7 +63,7 @@ public final class ChartUtils
         return new DefaultSeries( points );
     }
 
-    public static ISeries createSinSeries( int count, double amplitude,
+    public static ISeriesData createSinSeries( int count, double amplitude,
         double frequency, double phase, double min, double max )
     {
         List<XYPoint> points = new ArrayList<>();
@@ -88,7 +89,7 @@ public final class ChartUtils
             Math.pow( lastlp.y - p.y, 2 ) );
     }
 
-    public static int findNearest( ISeries series, double x )
+    public static int findNearest( ISeriesData series, double x )
     {
         int lo = 0;
         int hi = series.getCount() - 1;
