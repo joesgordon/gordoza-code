@@ -5,7 +5,7 @@ import java.net.*;
 import java.util.Collections;
 import java.util.Enumeration;
 
-import org.jutils.Utils;
+import org.jutils.ui.hex.HexUtils;
 
 public class ListNets
 {
@@ -36,7 +36,7 @@ public class ListNets
             System.out.printf( "InetAddress: %s\n", inetAddress );
         }
         System.out.printf( "Hardware Address: %s\n",
-            Utils.arrayToString( nic.getHardwareAddress() ) );
+            HexUtils.toHexString( nic.getHardwareAddress() ) );
         System.out.printf( "\n" );
     }
 
