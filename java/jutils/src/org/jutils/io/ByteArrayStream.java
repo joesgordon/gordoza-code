@@ -4,11 +4,12 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.util.Arrays;
 
-/**
- * 
- */
+/*******************************************************************************
+ * Implements an {@link IStream} in memory backed by a {@code byte []}.
+ ******************************************************************************/
 public class ByteArrayStream implements IStream
 {
+    /** The default size of the buffer. */
     public static int DEFAULT_SIZE = 1024;
 
     /** Current position in the buffer where data will be read or written. */
@@ -21,50 +22,85 @@ public class ByteArrayStream implements IStream
     private int sizeIncrement;
 
     /***************************************************************************
-     * 
+     * Creates a new stream backed by {@link #DEFAULT_SIZE} bytes. The stream
+     * will start with a length of 0.
      **************************************************************************/
     public ByteArrayStream()
     {
-        this( new byte[DEFAULT_SIZE], 0 );
+        this( DEFAULT_SIZE );
     }
 
-    public ByteArrayStream( byte[] buf )
-    {
-        this( buf, buf.length );
-    }
-
+    /***************************************************************************
+     * Creates a new stream backed by the specified number of bytes. The stream
+     * will start with a length of 0.
+     * @param size the initial size of the buffer to back this buffer.
+     **************************************************************************/
     public ByteArrayStream( int size )
     {
         this( new byte[size], size );
     }
 
-    public ByteArrayStream( byte[] buf, int size )
+    /***************************************************************************
+     * Creates a new stream backed by a copy of the provided buffer with a
+     * length of the size of the provided buffer.
+     * @param buf the initial buffer for the stream.
+     **************************************************************************/
+    public ByteArrayStream( byte[] buf )
     {
-        this( buf, size, DEFAULT_SIZE );
+        this( buf, buf.length );
     }
 
-    public ByteArrayStream( byte[] buf, int size, int increment )
+    /***************************************************************************
+     * Creates a new stream backed by a copy of the provided buffer with a
+     * length as specified.
+     * @param buf the initial buffer for the stream.
+     * @param length the initial length of the stream.
+     **************************************************************************/
+    public ByteArrayStream( byte[] buf, int length )
     {
-        this( buf, size, increment, true );
+        this( buf, length, DEFAULT_SIZE );
     }
 
-    public ByteArrayStream( byte[] buf, int size, int increment, boolean copy )
+    /***************************************************************************
+     * Creates a new stream backed by a copy of the provided buffer with a
+     * length as specified that will grow with the provided increment.
+     * @param buf the initial buffer for the stream.
+     * @param length the initial length of the stream.
+     * @param increment the growth increment for writes that occur past the end
+     * of the buffer.
+     **************************************************************************/
+    public ByteArrayStream( byte[] buf, int length, int increment )
+    {
+        this( buf, length, increment, true );
+    }
+
+    /***************************************************************************
+     * Creates a new stream backed by the provided buffer (optionally a copy)
+     * with a length as specified that will grow with the provided increment.
+     * @param buf the initial buffer for the stream.
+     * @param length the initial length of the stream.
+     * @param increment the growth increment for writes that occur past the end
+     * of the buffer.
+     * @param copy copies the provided buffer if {@code true}, simply uses the
+     * buffer until it grows otherwise.
+     **************************************************************************/
+    public ByteArrayStream( byte[] buf, int length, int increment, boolean copy )
     {
         if( copy )
         {
-            this.buffer = Arrays.copyOf( buf, size );
+            buf = Arrays.copyOf( buf, length );
         }
-        else
-        {
-            this.buffer = buf;
-        }
+
+        this.buffer = buf;
         this.position = 0;
-        this.bufferSize = size;
+        this.bufferSize = length;
         this.sizeIncrement = increment;
     }
 
     /***************************************************************************
-     * @param length
+     * Ensures a write of the provided number of bytes at the current position
+     * will succeed by growing the {@link #buffer} if needed.
+     * @param length the number of bytes to be written at the current position.
      **************************************************************************/
     private void ensureWrite( int length )
     {
@@ -81,6 +117,15 @@ public class ByteArrayStream implements IStream
         {
             bufferSize = nextPos;
         }
+    }
+
+    /***************************************************************************
+     * Returns the number of bytes available for reading/writing in the current
+     * buffer.
+     **************************************************************************/
+    private long getAvailableByteCount()
+    {
+        return buffer.length - position;
     }
 
     /***************************************************************************
@@ -193,16 +238,6 @@ public class ByteArrayStream implements IStream
     }
 
     /***************************************************************************
-     * Returns the number of bytes available for reading/writing in the current
-     * buffer.
-     * @return
-     **************************************************************************/
-    private long getAvailableByteCount()
-    {
-        return buffer.length - position;
-    }
-
-    /***************************************************************************
      * 
      **************************************************************************/
     @Override
@@ -263,7 +298,8 @@ public class ByteArrayStream implements IStream
     }
 
     /***************************************************************************
-     * @return
+     * Returns a copy of the current buffer trimmed to the length of this
+     * stream.
      **************************************************************************/
     public byte[] toByteArray()
     {
