@@ -1,20 +1,21 @@
 package org.jutils.ui.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import javax.swing.AbstractListModel;
+import javax.swing.ListModel;
 
 /*******************************************************************************
- * 
+ * Provides a {@link ListModel} with Generics.
  ******************************************************************************/
-public class CollectionListModel<T> extends AbstractListModel<T>
+public class CollectionListModel<T> extends AbstractListModel<T> implements
+    Iterable<T>
 {
-    /**  */
+    /** The items contained within the list. */
     private List<T> items;
 
     /***************************************************************************
-     * 
+     * Creates a new empty model.
      **************************************************************************/
     public CollectionListModel()
     {
@@ -40,7 +41,17 @@ public class CollectionListModel<T> extends AbstractListModel<T>
     }
 
     /***************************************************************************
-     * @param items
+     * 
+     **************************************************************************/
+    @Override
+    public Iterator<T> iterator()
+    {
+        return items.iterator();
+    }
+
+    /***************************************************************************
+     * Adds all the provided items to the list.
+     * @param items the items to be added.
      **************************************************************************/
     public void addAll( List<T> items )
     {
@@ -52,7 +63,8 @@ public class CollectionListModel<T> extends AbstractListModel<T>
     }
 
     /***************************************************************************
-     * @param items
+     * Sets the list items to those provided.
+     * @param items the items to compose the list.
      **************************************************************************/
     public void setData( List<T> items )
     {
@@ -68,8 +80,9 @@ public class CollectionListModel<T> extends AbstractListModel<T>
     }
 
     /***************************************************************************
-     * @param index
-     * @return
+     * Retrieves the item at the provided index.
+     * @param index the index of the element to return.
+     * @return the item at the provided index.
      **************************************************************************/
     public T get( int index )
     {
@@ -77,7 +90,8 @@ public class CollectionListModel<T> extends AbstractListModel<T>
     }
 
     /***************************************************************************
-     * @return
+     * Returns a copy of the data in this list.
+     * @return a copy of the data in this list.
      **************************************************************************/
     public List<T> getData()
     {
@@ -85,7 +99,8 @@ public class CollectionListModel<T> extends AbstractListModel<T>
     }
 
     /***************************************************************************
-     * @param item
+     * Adds an item to this list.
+     * @param item the item to be added.
      **************************************************************************/
     public void add( T item )
     {
@@ -97,8 +112,9 @@ public class CollectionListModel<T> extends AbstractListModel<T>
     }
 
     /***************************************************************************
-     * @param item
-     * @param index
+     * Adds an item to this list at the provided index.
+     * @param item the item to be added.
+     * @param index the index at which the item will be insterted.
      **************************************************************************/
     public void add( T item, int index )
     {
@@ -108,17 +124,24 @@ public class CollectionListModel<T> extends AbstractListModel<T>
     }
 
     /***************************************************************************
-     * @param item
+     * Removed the provided item from the list or does nothing if not found.
+     * @param item the item to be removed.
      **************************************************************************/
     public void remove( T item )
     {
         int index = items.indexOf( item );
 
-        remove( index );
+        if( index > -1 )
+        {
+            remove( index );
+        }
     }
 
     /***************************************************************************
-     * @param index
+     * Removes the item at the specified index.
+     * @param index the index of the element to be removed
+     * @throws IndexOutOfBoundsException if the index is out of range (index < 0
+     * || index >= getSize())
      **************************************************************************/
     public T remove( int index )
     {
@@ -130,7 +153,7 @@ public class CollectionListModel<T> extends AbstractListModel<T>
     }
 
     /***************************************************************************
-     * 
+     * Removes all items from the list.
      **************************************************************************/
     public void clear()
     {
