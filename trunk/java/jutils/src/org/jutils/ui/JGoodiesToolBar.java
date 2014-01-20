@@ -5,6 +5,8 @@ import javax.swing.JToolBar;
 import com.jgoodies.looks.HeaderStyle;
 import com.jgoodies.looks.Options;
 
+//TODO comments
+
 public class JGoodiesToolBar extends JToolBar
 {
     public JGoodiesToolBar()
