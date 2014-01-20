@@ -1,5 +1,7 @@
 package org.jutils.ui.hex;
 
+//TODO comments
+
 public class ByteBuffer implements IByteBuffer
 {
     private final byte[] buf;

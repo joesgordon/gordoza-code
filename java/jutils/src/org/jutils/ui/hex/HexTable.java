@@ -13,6 +13,8 @@ import javax.swing.text.*;
 import org.jutils.PropConstants;
 import org.jutils.ui.HighlightedLabel;
 
+//TODO comments
+
 /*******************************************************************************
  * 
  ******************************************************************************/

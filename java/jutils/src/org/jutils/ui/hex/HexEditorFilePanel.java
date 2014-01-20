@@ -9,6 +9,8 @@ import javax.swing.border.EmptyBorder;
 import org.jutils.ui.*;
 import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
 
+//TODO comments
+
 /*******************************************************************************
  *
  ******************************************************************************/
