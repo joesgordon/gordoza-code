@@ -49,11 +49,10 @@ public class BitPosition
      **************************************************************************/
     public void increment( int bitCount )
     {
-        bitIndex += bitCount;
+        long bits = byteIndex * 8 + bitIndex + bitCount;
 
-        byteIndex += ( bitCount / 8 );
-
-        bitIndex = bitIndex % 8;
+        byteIndex = ( int )( bits / 8 );
+        bitIndex = ( int )( bits % 8 );
     }
 
     /***************************************************************************

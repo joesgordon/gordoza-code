@@ -4,12 +4,14 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
+import java.util.*;
 
 import javax.swing.*;
 
 import org.jutils.IconConstants;
+import org.jutils.Utils;
 import org.jutils.io.BitBuffer;
+import org.jutils.io.BitPosition;
 import org.jutils.ui.model.IView;
 
 //TODO comments
@@ -38,7 +40,7 @@ public class ShiftHexView implements IView<JComponent>
 
         this.bitOffset = 0;
 
-        resetToolbar();
+        setData( new byte[] { 0 } );
     }
 
     private JPanel createView()
@@ -67,6 +69,11 @@ public class ShiftHexView implements IView<JComponent>
         rightButton.addActionListener( new ShiftListener( this, 1 ) );
         toolbar.add( rightButton );
 
+        JButton button = new JButton();
+        button.setIcon( IconConstants.loader.getIcon( IconConstants.FIND_16 ) );
+        button.addActionListener( new FindListener( this ) );
+        toolbar.add( button );
+
         toolbar.addSeparator();
 
         toolbar.add( offLabel );
@@ -80,22 +87,37 @@ public class ShiftHexView implements IView<JComponent>
         this.buffer = new BitBuffer( Arrays.copyOf( bytes, bytes.length + 1 ) );
         this.bitOffset = 0;
 
-        hexPanel.setBuffer( new ByteBuffer( buffer.buffer ) );
-
-        resetToolbar();
+        resetData();
     }
 
-    private void resetToolbar()
+    private void resetData()
     {
         leftButton.setEnabled( bitOffset > 0 );
         rightButton.setEnabled( bitOffset < 7 );
         offLabel.setText( "bit: " + bitOffset );
+
+        hexPanel.setBuffer( new ByteBuffer( buffer.buffer ) );
     }
 
     @Override
     public JComponent getView()
     {
         return view;
+    }
+
+    private void shitTo()
+    {
+        int bit = bitOffset % 8;
+        int b = bitOffset / 8;
+
+        buffer.buffer[0] = 0;
+        buffer.buffer[buffer.buffer.length - 1] = 0;
+
+        orig.setPosition( 0, 0 );
+        buffer.setPosition( b, bit );
+        orig.writeTo( buffer, orig.bitCount() );
+
+        resetData();
     }
 
     private static class ShiftListener implements ActionListener
@@ -114,19 +136,101 @@ public class ShiftHexView implements IView<JComponent>
         {
             view.bitOffset += dir;
 
-            int bit = view.bitOffset % 8;
-            int b = view.bitOffset / 8;
+            view.shitTo();
+        }
+    }
 
-            view.buffer.buffer[0] = 0;
-            view.buffer.buffer[view.buffer.buffer.length - 1] = 0;
+    private static class FindListener implements ActionListener
+    {
+        private final ShiftHexView view;
 
-            view.orig.setPosition( 0, 0 );
-            view.buffer.setPosition( b, bit );
-            view.orig.writeTo( view.buffer, view.orig.bitCount() );
+        public FindListener( ShiftHexView view )
+        {
+            this.view = view;
+        }
 
-            view.resetToolbar();
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            String binaryString = JOptionPane.showInputDialog( view.view,
+                "Enter binary string to be found:", "Enter Search String",
+                JOptionPane.QUESTION_MESSAGE );
 
-            view.hexPanel.setBuffer( new ByteBuffer( view.buffer.buffer ) );
+            if( binaryString != null )
+            {
+                List<Boolean> bits;
+
+                try
+                {
+                    binaryString = binaryString.replace( " ", "" );
+
+                    bits = fromBinaryString( binaryString );
+
+                    int start = view.hexPanel.getSelectedByte();
+
+                    start = start > -1 ? start : 0;
+
+                    System.out.println( "Starting from " + start );
+
+                    BitPosition pos = view.orig.find( bits, start );
+
+                    if( pos != null )
+                    {
+                        view.bitOffset = ( 8 - pos.getBit() ) % 8;
+
+                        view.shitTo();
+
+                        view.resetData();
+
+                        int off = pos.getBit() == 0 ? 0 : 1;
+                        off += pos.getByte();
+
+                        System.out.println( "Found @" + off );
+
+                        view.hexPanel.setSelected( off, off );
+                    }
+                    else
+                    {
+                        JOptionPane.showMessageDialog( view.view,
+                            "Pattern not found: " + binaryString,
+                            "Pattern Not Found", JOptionPane.ERROR_MESSAGE );
+                    }
+                }
+                catch( NumberFormatException ex )
+                {
+                    JOptionPane.showMessageDialog( view.view, "Cannot parse " +
+                        binaryString + " as a binary string:" + Utils.NEW_LINE +
+                        ex.getMessage(), "Parse Error",
+                        JOptionPane.ERROR_MESSAGE );
+                }
+            }
+        }
+
+        private static List<Boolean> fromBinaryString( String str )
+        {
+            List<Boolean> bits = new ArrayList<>( str.length() );
+
+            for( int i = 0; i < str.length(); i++ )
+            {
+                switch( str.charAt( i ) )
+                {
+                    case '0':
+                        bits.add( false );
+                        break;
+
+                    case '1':
+                        bits.add( true );
+                        break;
+
+                    default:
+                        throw new NumberFormatException(
+                            "Non-binary character '" + str.charAt( i ) +
+                                "' found at index " + i + " in string " + str );
+                }
+                ;
+            }
+
+            return bits;
         }
     }
 }
