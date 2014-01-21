@@ -1,7 +1,6 @@
 package org.jutils.utils;
 
-import java.util.ArrayDeque;
-import java.util.Iterator;
+import java.util.*;
 
 /*******************************************************************************
  * Defines a queue that contain zero to the provided maximum number of unique
@@ -99,5 +98,28 @@ public class MaxQueue<T> implements Iterable<T>
         }
 
         return changed;
+    }
+
+    /***************************************************************************
+     * Adds the provided items to this queue. If the size of the provided list
+     * is larger than the maximum size of this queue, only the last items up to
+     * max size will be added.
+     * @param items the items to be added to this queue.
+     **************************************************************************/
+    public void addAll( List<T> items )
+    {
+        for( T t : items )
+        {
+            push( t );
+        }
+    }
+
+    /***************************************************************************
+     * Returns the last item in the queue, or {@code null} if empty.
+     * @return the last item in the queue, or {@code null} if empty.
+     **************************************************************************/
+    public T last()
+    {
+        return elements.isEmpty() ? null : elements.getLast();
     }
 }
