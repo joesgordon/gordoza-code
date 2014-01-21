@@ -1,100 +1,105 @@
 package org.jutils.utils;
 
-import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.zip.CRC32;
+import java.io.File;
 
-import org.jutils.io.*;
-import org.jutils.io.UserOptionsSerializer.IUserOptionsCreator;
+// TODO comments
 
-//TODO comments
+// TODO fix me
 
+/*******************************************************************************
+ * @param <T>
+ ******************************************************************************/
 public class FileDataCache<T>
 {
-    private final IUserOptionsCreator<T> dataCreator;
-    private final Map<Long, CacheItem<T>> cache;
+    /**  */
+    private final IDataUtils<T> dataUtils;
+    /**  */
+    private final MaxQueue<CacheItem<T>> cache;
 
-    public FileDataCache( IUserOptionsCreator<T> dataCreator )
+    public FileDataCache( IDataUtils<T> dataUtils, int maxCount )
     {
-        this.dataCreator = dataCreator;
-        this.cache = new HashMap<>();
+        this.dataUtils = dataUtils;
+        this.cache = new MaxQueue<>( maxCount );
     }
 
-    public T getData( File f ) throws FileNotFoundException, IOException
+    /***************************************************************************
+     * Finds the user data indexed by the provided file.
+     * @param f
+     * @return
+     **************************************************************************/
+    public T getData( File f )
     {
         CacheItem<T> ci = null;
-        long cksum;
 
-        ci = cache.get( f.length() );
+        ci = find( f.length() );
 
-        cksum = determineFileHash( f );
-
-        if( ci != null )
+        if( ci == null )
         {
-            if( ci.fileHash != cksum )
-            {
-                ci = null;
-            }
+            ci = find( f.getAbsoluteFile() );
         }
 
         if( ci == null )
         {
+            T t = null;
+
+            ci = cache.last();
+
+            if( ci == null )
+            {
+                t = dataUtils.createDefault();
+            }
+            else
+            {
+                t = dataUtils.copy( ci.item );
+            }
+
             ci = new CacheItem<>();
-            ci.item = dataCreator.createDefaultOptions();
-            ci.fileHash = cksum;
+            ci.item = t;
+            ci.path = f.getAbsoluteFile();
             ci.fileLength = f.length();
-            cache.put( ci.fileHash, ci );
+            cache.push( ci );
         }
 
         return ci.item;
     }
 
-    private long determineFileHash( File file ) throws FileNotFoundException,
-        IOException
+    private CacheItem<T> find( File f )
     {
-        byte[] data = new byte[1024];
-        CRC32 crc32 = new CRC32();
-        IStream stream = new FileStream( file, true );
+        for( CacheItem<T> ci : cache )
+        {
+            if( f.equals( ci.path ) )
+            {
+                return ci;
+            }
+        }
 
-        int read = stream.read( data );
+        return null;
+    }
 
-        crc32.update( data, 0, read );
+    private CacheItem<T> find( long length )
+    {
+        for( CacheItem<T> ci : cache )
+        {
+            if( length == ci.fileLength )
+            {
+                return ci;
+            }
+        }
 
-        return crc32.getValue();
+        return null;
     }
 
     private static class CacheItem<T>
     {
         public long fileLength;
-        public long fileHash;
+        public File path;
         public T item;
+    }
 
-        @Override
-        public int hashCode()
-        {
-            return ( int )( fileHash + fileLength );
-        }
+    public static interface IDataUtils<T>
+    {
+        T copy( T item );
 
-        @Override
-        public boolean equals( Object obj )
-        {
-            if( obj == null )
-            {
-                return false;
-            }
-            else if( obj == this )
-            {
-                return true;
-            }
-            else if( !( obj instanceof CacheItem ) )
-            {
-                return false;
-            }
-
-            CacheItem<?> c = ( CacheItem<?> )obj;
-
-            return fileLength == c.fileLength && fileHash == c.fileHash;
-        }
+        T createDefault();
     }
 }

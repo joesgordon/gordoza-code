@@ -59,7 +59,7 @@ public class BitBuffer
     {
         for( int i = 0; i < bitCount; i++ )
         {
-            buf.writeBit( readBit() );
+            buf.writeBit( this.readBit() );
         }
     }
 

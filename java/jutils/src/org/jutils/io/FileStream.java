@@ -2,6 +2,8 @@ package org.jutils.io;
 
 import java.io.*;
 
+//TODO comments
+
 /*******************************************************************************
  * 
  ******************************************************************************/
@@ -30,6 +32,15 @@ public class FileStream implements IStream
     {
         this.file = file;
         this.raf = new RandomAccessFile( file, readOnly ? "r" : "rw" );
+    }
+
+    /***************************************************************************
+     * @param length
+     * @throws IOException
+     **************************************************************************/
+    public void setLength( long length ) throws IOException
+    {
+        raf.setLength( length );
     }
 
     /***************************************************************************
