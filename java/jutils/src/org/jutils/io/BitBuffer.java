@@ -1,5 +1,9 @@
 package org.jutils.io;
 
+import java.util.List;
+
+//TODO comments
+
 /*******************************************************************************
  * Wraps a byte array and provides bit by bit access to the data.
  ******************************************************************************/
@@ -145,5 +149,39 @@ public class BitBuffer
     public int remainingBytes()
     {
         return buffer.length - position.getByte();
+    }
+
+    public BitPosition find( List<Boolean> bits, int start )
+    {
+        BitPosition curPos = new BitPosition( position );
+        int b = 0;
+        boolean bit;
+        BitPosition pos = null;
+
+        position.set( start, 0 );
+
+        while( remainingBits() > 0 )
+        {
+            bit = readBit();
+
+            if( bit == bits.get( b ) )
+            {
+                b++;
+                if( b >= bits.size() )
+                {
+                    pos = new BitPosition( position );
+                    pos.increment( -bits.size() );
+                    break;
+                }
+            }
+            else
+            {
+                b = 0;
+            }
+        }
+
+        position.set( curPos.getByte(), curPos.getBit() );
+
+        return pos;
     }
 }

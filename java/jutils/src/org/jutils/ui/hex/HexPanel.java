@@ -6,11 +6,12 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import org.jutils.PropConstants;
+import org.jutils.Utils;
 import org.jutils.ui.RowHeaderRenderer;
 import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
 import org.jutils.ui.model.IView;
 
-//TODO comments
+// TODO comments
 
 /*******************************************************************************
  * 
@@ -132,6 +133,23 @@ public class HexPanel implements IView<JComponent>
     }
 
     /***************************************************************************
+     * @param start
+     * @param end
+     **************************************************************************/
+    public void setSelected( int start, int end )
+    {
+        int row0 = start / 16;
+        int col0 = start % 16;
+        int row1 = end / 16;
+        int col1 = end % 16;
+
+        table.changeSelection( row0, col0, false, false );
+        table.changeSelection( row1, col1, false, true );
+
+        Utils.scrollToVisible( table, row1, col1 );
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     private void refreshRowHeader()
@@ -212,5 +230,17 @@ public class HexPanel implements IView<JComponent>
         {
             return String.format( formatString, startingAddress + index * 16 );
         }
+    }
+
+    public int getSelectedByte()
+    {
+        int selected = getSelectedRow();
+
+        if( selected > -1 )
+        {
+            selected = 16 * selected + getSelectedColumn();
+        }
+
+        return selected;
     }
 }
