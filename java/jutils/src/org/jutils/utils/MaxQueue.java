@@ -78,8 +78,8 @@ public class MaxQueue<T> implements Iterable<T>
     }
 
     /***************************************************************************
-     * Adds the provided element to the beginning of the queue only if it is not
-     * already added.
+     * Adds the provided element to the beginning of the queue if it is not
+     * already added, otherwise it is moved to the beginning.
      * @param e the element to be added.
      * @return {@code true}, if the queue was modified, {@code false} otherwise.
      **************************************************************************/
@@ -87,7 +87,12 @@ public class MaxQueue<T> implements Iterable<T>
     {
         boolean changed = false;
 
-        if( !elements.contains( e ) )
+        if( elements.contains( e ) )
+        {
+            elements.remove( e );
+            elements.add( e );
+        }
+        else
         {
             changed = elements.add( e );
 
