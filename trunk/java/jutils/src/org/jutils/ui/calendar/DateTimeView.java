@@ -7,11 +7,13 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jutils.ui.FrameRunner;
 import org.jutils.ui.AutoSpinner;
+import org.jutils.ui.FrameRunner;
 import org.jutils.ui.event.updater.DataUpdaterList;
 import org.jutils.ui.event.updater.IDataUpdater;
 import org.jutils.ui.model.IDataView;
+
+//TODO comments
 
 /*******************************************************************************
  * 

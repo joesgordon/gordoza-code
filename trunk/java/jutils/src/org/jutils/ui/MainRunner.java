@@ -11,7 +11,7 @@ import com.jgoodies.looks.plastic.theme.DesertBluer;
  * Helper class that sets up the UI in a standard way. When a class,
  * <code>SomeMain</code>, extends this that classes main is normally very small:
  * <code> public static void main( String [] args ) {
- * SwingUtilities.invokeLater( new SomeMain() ); }
+ * SwingUtilities.invokeLater( new SomeMain() ); }</code>
  ******************************************************************************/
 public abstract class MainRunner implements Runnable
 {

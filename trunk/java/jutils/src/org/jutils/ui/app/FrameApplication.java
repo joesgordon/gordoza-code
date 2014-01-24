@@ -1,18 +1,81 @@
-package org.jutils.ui;
+package org.jutils.ui.app;
 
 import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
+//TODO comments
 
 /*******************************************************************************
- * Helper class to provide a standard way of displaying a frame that optionally
- * has a tray icon.
+ * 
  ******************************************************************************/
-public abstract class FrameRunner extends MainRunner
+public class FrameApplication implements IApplication
 {
-    /** The frame displayed. */
+    /**  */
+    private final IFrameApp frameApp;
+    /**  */
+    private final boolean validate;
+    /**  */
+    private final String lookAndFeel;
+
+    /**  */
     private JFrame frame;
+
+    public FrameApplication( IFrameApp frameApp )
+    {
+        this( frameApp, true );
+    }
+
+    public FrameApplication( IFrameApp frameApp, boolean validate )
+    {
+        this( frameApp, validate, null );
+    }
+
+    public FrameApplication( IFrameApp frameApp, boolean validate,
+        String lookAndFeel )
+    {
+        this.frameApp = frameApp;
+        this.validate = validate;
+        this.lookAndFeel = lookAndFeel;
+    }
+
+    @Override
+    public String getLookAndFeelName()
+    {
+        return lookAndFeel;
+    }
+
+    @Override
+    public void createAndShowUi()
+    {
+        frame = frameApp.createFrame();
+
+        // ---------------------------------------------------------------------
+        // Validate frames that have preset sizes. Pack frames that have
+        // useful preferred size info, e.g. from their layout.
+        // ---------------------------------------------------------------------
+        if( validate )
+        {
+            frame.validate();
+        }
+        else
+        {
+            frame.pack();
+        }
+
+        frame.setLocationRelativeTo( null );
+        frame.setVisible( true );
+
+        frameApp.finalizeGui();
+    }
+
+    // TODO use it or lose it.
+    // public JFrame getFrame()
+    // {
+    // return frame;
+    // }
 
     /***************************************************************************
      * Creates and displays a tray icon with the provided image, tool tip, and
@@ -26,7 +89,7 @@ public abstract class FrameRunner extends MainRunner
      * @throws UnsupportedOperationException if {@link SystemTray#add(TrayIcon)}
      * throws an {@link AWTException}.
      **************************************************************************/
-    protected static final TrayIcon createTrayIcon( Image img, String tooltip,
+    public static final TrayIcon createTrayIcon( Image img, String tooltip,
         JFrame frame, PopupMenu popup ) throws UnsupportedOperationException
     {
         TrayIcon icon = null;
@@ -57,62 +120,25 @@ public abstract class FrameRunner extends MainRunner
         return icon;
     }
 
-    /***************************************************************************
-     * Calls {@link #createFrame()}, validates if {@link #validate()} returns
-     * {@code true} or packs otherwise, centers the frame, set the frame
-     * visible, and calls {@link #finalizeGui(JFrame)}.
-     **************************************************************************/
-    @Override
-    protected void createAndShowGui()
+    public static void invokeLater( IFrameApp app )
     {
-        frame = createFrame();
-
-        // ---------------------------------------------------------------------
-        // Validate frames that have preset sizes. Pack frames that have
-        // useful preferred size info, e.g. from their layout.
-        // ---------------------------------------------------------------------
-        if( validate() )
-        {
-            frame.validate();
-        }
-        else
-        {
-            frame.pack();
-        }
-
-        frame.setLocationRelativeTo( null );
-        frame.setVisible( true );
-
-        finalizeGui();
+        invokeLater( app, true, null );
     }
 
-    /***************************************************************************
-     * Exists for the final touches to be placed on the frame (i.e. files
-     * loaded, open dialogs displayed by default, etc.). This is rarely done and
-     * does nothing by default.
-     **************************************************************************/
-    protected void finalizeGui()
+    public static void invokeLater( IFrameApp app, boolean validate )
     {
-        ;
+        invokeLater( app, validate, null );
     }
 
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public JFrame getFrame()
+    public static void invokeLater( IFrameApp app, boolean validate,
+        String lookAndFeel )
     {
-        return frame;
+        FrameApplication fApp = new FrameApplication( app, validate,
+            lookAndFeel );
+        AppRunner runner = new AppRunner( fApp );
+
+        SwingUtilities.invokeLater( runner );
     }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    protected abstract JFrame createFrame();
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    protected abstract boolean validate();
 
     /***************************************************************************
      * 

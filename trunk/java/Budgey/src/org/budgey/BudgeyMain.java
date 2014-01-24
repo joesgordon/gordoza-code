@@ -3,18 +3,20 @@ package org.budgey;
 import java.io.File;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 import org.budgey.data.Budget;
 import org.budgey.data.BudgeyOptions;
 import org.budgey.ui.BudgeyFrame;
 import org.jutils.io.IOUtils;
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
+
+//TODO comments
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class BudgeyMain extends FrameRunner
+public class BudgeyMain implements IFrameApp
 {
     /**  */
     public static final String OPTIONS_FILENAME = ".BudgeyOptions.cfg";
@@ -37,7 +39,7 @@ public class BudgeyMain extends FrameRunner
      * 
      **************************************************************************/
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         BudgeyFrame frame = new BudgeyFrame( options );
 
@@ -50,20 +52,17 @@ public class BudgeyMain extends FrameRunner
     }
 
     /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    protected boolean validate()
-    {
-        return true;
-    }
-
-    /***************************************************************************
      * @param args
      **************************************************************************/
     public static void main( String[] args )
     {
         BudgeyOptions options = BudgeyOptions.read( OPTIONS_FILE );
-        SwingUtilities.invokeLater( new BudgeyMain( options ) );
+
+        FrameApplication.invokeLater( new BudgeyMain( options ) );
+    }
+
+    @Override
+    public void finalizeGui()
+    {
     }
 }

@@ -7,7 +7,7 @@ package org.jutils;
 public class GcThread extends Thread
 {
     /***************************************************************************
-     * Creates a new GcThread.
+     * Creates a new garbage collection thread.
      **************************************************************************/
     public GcThread()
     {
@@ -15,8 +15,9 @@ public class GcThread extends Thread
     }
 
     /***************************************************************************
-     * Main run routine of the GcThread that starts the garbage collector.
+     * 
      **************************************************************************/
+    @Override
     public void run()
     {
         Runtime.getRuntime().gc();

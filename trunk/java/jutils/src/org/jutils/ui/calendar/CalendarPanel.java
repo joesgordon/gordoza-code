@@ -17,6 +17,8 @@ import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.model.CyclingSpinnerListModel;
 import org.jutils.ui.model.IDataView;
 
+//TODO comments
+
 /*******************************************************************************
  *
  ******************************************************************************/
@@ -90,7 +92,8 @@ public class CalendarPanel implements IDataView<Long>
         this.showTime = showTime;
 
         this.timeSpinner = new AutoSpinner( new SpinnerDateModel() );
-        this.monthSpinner = new AutoSpinner( new CyclingSpinnerListModel( MONTHS ) );
+        this.monthSpinner = new AutoSpinner( new CyclingSpinnerListModel(
+            MONTHS ) );
         this.yearSpinner = new AutoSpinner( new SpinnerNumberModel() );
         this.weekdayLabels = new JLabel[WEEK_DAYS.length];
         this.dayLabels = new DayLabel[42];
@@ -118,7 +121,7 @@ public class CalendarPanel implements IDataView<Long>
      * 
      **************************************************************************/
     @Override
-    public Component getView()
+    public Container getView()
     {
         return view;
     }
