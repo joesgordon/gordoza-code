@@ -16,7 +16,16 @@ public class XStreamUtils
         throws IOException, XStreamException
     {
         FileOutputStream stream = new FileOutputStream( file );
-        writeObjectXStream( obj, stream );
+
+        try
+        {
+            writeObjectXStream( obj, stream );
+        }
+        finally
+        {
+            stream.close();
+        }
+
         stream.close();
     }
 
@@ -43,8 +52,17 @@ public class XStreamUtils
         throws FileNotFoundException, IOException, XStreamException
     {
         FileInputStream fis = new FileInputStream( file );
-        Object obj = readObjectXStream( fis );
-        fis.close();
+        Object obj;
+
+        try
+        {
+            obj = readObjectXStream( fis );
+        }
+        finally
+        {
+            fis.close();
+        }
+
         return ( T )obj;
     }
 
