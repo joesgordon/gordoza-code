@@ -96,7 +96,7 @@ public class BitBuffer
      * by 1 bit.
      * @return the bit read.
      **************************************************************************/
-    private boolean readBit()
+    public boolean readBit()
     {
         byte mask = SET_MASKS[7 - position.getBit()];
         boolean bit = ( buffer[position.getByte()] & mask ) == mask;
@@ -111,7 +111,7 @@ public class BitBuffer
      * position by 1 bit.
      * @param bit the bit to be written.
      **************************************************************************/
-    private void writeBit( boolean bit )
+    public void writeBit( boolean bit )
     {
         byte mask;
 
