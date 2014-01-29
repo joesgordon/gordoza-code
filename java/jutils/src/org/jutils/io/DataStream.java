@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+//TODO comments
+
 /*******************************************************************************
  * 
  ******************************************************************************/
@@ -17,6 +19,8 @@ public class DataStream implements IDataStream
     private final ByteBuffer buffer;
     /**  */
     private final byte[] bytes;
+    /**  */
+    private final ByteOrder order;
 
     /***************************************************************************
      * @param stream
@@ -34,6 +38,8 @@ public class DataStream implements IDataStream
         this.stream = stream;
 
         this.bytes = new byte[8];
+
+        this.order = order;
 
         this.buffer = ByteBuffer.wrap( bytes );
         this.buffer.order( order );
@@ -314,5 +320,14 @@ public class DataStream implements IDataStream
     public long getAvailable() throws IOException
     {
         return stream.getAvailable();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public ByteOrder getOrder()
+    {
+        return order;
     }
 }
