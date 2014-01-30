@@ -3,7 +3,6 @@ package org.jutils.ui.validators;
 import org.jutils.ui.validation.IUpdater;
 import org.jutils.ui.validation.ValidationException;
 
-
 /*******************************************************************************
  * Validator that updates an object with the latest data when the data is valid.
  * @param <T> the type of data to be validated/updated.

@@ -5,12 +5,11 @@ import java.util.Random;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.jutils.io.BitBuffer;
 
 public class BitBufferTest
 {
-    private static final byte [] fromArray;
-    private static final byte [] toArray;
+    private static final byte[] fromArray;
+    private static final byte[] toArray;
 
     static
     {
