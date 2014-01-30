@@ -91,6 +91,16 @@ public class BitBuffer
         return new BitPosition( position );
     }
 
+    public int getByte()
+    {
+        return position.getByte();
+    }
+
+    public int getBit()
+    {
+        return position.getBit();
+    }
+
     /***************************************************************************
      * Reads a single bit from the current position and increments the position
      * by 1 bit.

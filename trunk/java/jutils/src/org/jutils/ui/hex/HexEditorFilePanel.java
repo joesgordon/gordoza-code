@@ -8,14 +8,18 @@ import javax.swing.border.EmptyBorder;
 
 import org.jutils.ui.*;
 import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
+import org.jutils.ui.model.IView;
 
 //TODO comments
 
 /*******************************************************************************
  *
  ******************************************************************************/
-public class HexEditorFilePanel extends JPanel
+public class HexEditorFilePanel implements IView<JPanel>
 {
+    /**  */
+    private final JPanel view;
+
     /**  */
     private final PositionIndicator progressBar;
     /**  */
@@ -45,15 +49,15 @@ public class HexEditorFilePanel extends JPanel
         this.offsetLabel = new JLabel( "" );
         this.titlePanel = new TitleView();
         this.editor = new HexPanel();
+        this.view = new JPanel( new GridBagLayout() );
+
         // ---------------------------------------------------------------------
         // Setup main panel.
         // ---------------------------------------------------------------------
-        this.setLayout( new GridBagLayout() );
-
         titlePanel.setTitle( "No File Loaded" );
         titlePanel.setComponent( createTitleContent() );
 
-        this.add( createContentPanel(), new GridBagConstraints( 0, 0, 1, 1,
+        view.add( createContentPanel(), new GridBagConstraints( 0, 0, 1, 1,
             1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets( 4, 4, 4, 4 ), 0, 0 ) );
     }
@@ -188,8 +192,8 @@ public class HexEditorFilePanel extends JPanel
         }
         catch( IOException ex )
         {
-            JOptionPane.showMessageDialog( HexEditorFilePanel.this,
-                ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog( view, ex.getMessage(), "ERROR",
+                JOptionPane.ERROR_MESSAGE );
         }
     }
 
@@ -204,8 +208,8 @@ public class HexEditorFilePanel extends JPanel
         }
         catch( IOException ex )
         {
-            JOptionPane.showMessageDialog( HexEditorFilePanel.this,
-                ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog( view, ex.getMessage(), "ERROR",
+                JOptionPane.ERROR_MESSAGE );
         }
     }
 
@@ -235,7 +239,7 @@ public class HexEditorFilePanel extends JPanel
             }
             catch( IOException ex )
             {
-                JOptionPane.showMessageDialog( this, ex.getMessage(), "ERROR",
+                JOptionPane.showMessageDialog( view, ex.getMessage(), "ERROR",
                     JOptionPane.ERROR_MESSAGE );
             }
         }
@@ -290,5 +294,12 @@ public class HexEditorFilePanel extends JPanel
         {
             setFile( file );
         }
+    }
+
+    @Override
+    public JPanel getView()
+    {
+        // TODO Auto-generated method stub
+        return view;
     }
 }
