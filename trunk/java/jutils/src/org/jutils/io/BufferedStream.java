@@ -313,7 +313,7 @@ public class BufferedStream implements IStream
         {
             if( len > buffer.remainingWrite() )
             {
-                int toWrite = len - buffer.remainingWrite();
+                int nextWrite = len - buffer.remainingWrite();
                 int nextOff = off + buffer.remainingWrite();
 
                 if( writeOnNextFlush )
@@ -322,9 +322,9 @@ public class BufferedStream implements IStream
                     flush();
                 }
 
-                if( toWrite > 0 )
+                if( nextWrite > 0 )
                 {
-                    stream.write( buf, off, nextOff );
+                    stream.write( buf, nextOff, nextWrite );
                 }
 
                 position += len;
