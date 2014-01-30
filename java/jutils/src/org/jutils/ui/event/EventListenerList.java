@@ -2,7 +2,6 @@ package org.jutils.ui.event;
 
 import java.util.LinkedList;
 
-
 public class EventListenerList
 {
     private LinkedList<IEventListener> listeners;

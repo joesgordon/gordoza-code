@@ -27,10 +27,10 @@ public class JHexFrame implements IView<JFrame>
 {
     // TODO create enum of sizes.
     /** The text description of the sizes. */
-    private static final String[] choices = new String[] { "Xtra-Small (1kb)",
+    private static final String [] choices = new String[] { "Xtra-Small (1kb)",
         "Small (64kb)", "Medium (512 kb)", "Large (1 Mb)" };
     /** The size of the buffer in bytes. */
-    private static final int[] sizes = new int[] { 0x400, 0x10000, 0x80000,
+    private static final int [] sizes = new int[] { 0x400, 0x10000, 0x80000,
         0x100000 };
 
     // -------------------------------------------------------------------------
@@ -481,7 +481,7 @@ public class JHexFrame implements IView<JFrame>
                 return;
             }
 
-            byte[] bytes = new byte[strBytes.length() / 2];
+            byte [] bytes = new byte[strBytes.length() / 2];
 
             try
             {
