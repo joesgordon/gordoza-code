@@ -6,6 +6,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO comments
+
 /*******************************************************************************
  *
  ******************************************************************************/
@@ -27,6 +29,25 @@ public final class IOUtils
      **************************************************************************/
     private IOUtils()
     {
+    }
+
+    /***************************************************************************
+     * Returns a human readable representation of bytes where a KB = 1024 bytes.
+     * Hat tip SO question <a
+     * href="http://stackoverflow.com/questions/3758606">3758606</a>
+     * @param count the number of bytes.
+     * @return the human readable string.
+     **************************************************************************/
+    public static String byteCount( long count )
+    {
+        int unit = 1024;
+        if( count < unit )
+        {
+            return count + " B";
+        }
+        int exp = ( int )( Math.log( count ) / Math.log( unit ) );
+        char pre = "KMGTPE".charAt( exp - 1 );
+        return String.format( "%.1f %ciB", count / Math.pow( unit, exp ), pre );
     }
 
     /***************************************************************************
