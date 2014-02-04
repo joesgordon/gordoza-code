@@ -146,16 +146,13 @@ public class BufferedStream implements IStream
 
             if( getPosition() >= getLength() )
             {
-                String msg = String.format(
-                    "Tried to read past end of stream: Position: %016X, Length: %016X",
-                    getPosition(), getLength() );
-                throw new EOFException( msg );
+                break;
             }
 
             // -----------------------------------------------------------------
             // Determine how many bytes can be read out of this cache.
             // -----------------------------------------------------------------
-            bytesRead = buffer.remainingWrite();
+            bytesRead = buffer.remainingRead();
 
             if( bytesRemaining < bytesRead )
             {
@@ -174,20 +171,28 @@ public class BufferedStream implements IStream
             // printDebug( "read-post: " + bytesRemaining );
         }
 
-        return len;
+        return len - bytesRemaining;
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void readFully( byte[] buf, int off, int len ) throws IOException
+    public void readFully( byte[] buf, int off, int len ) throws EOFException,
+        IOException
     {
-        int bytesRead = 0;
+        int totalRead = 0;
 
-        while( bytesRead < len )
+        if( getAvailable() < len )
         {
-            bytesRead += read( buf, off + bytesRead, len - bytesRead );
+            throw new EOFException( "Cannot read " + len +
+                " bytes from the stream; only " + getAvailable() +
+                " bytes available." );
+        }
+
+        while( totalRead < len )
+        {
+            totalRead += read( buf, off + totalRead, len - totalRead );
         }
     }
 

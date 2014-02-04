@@ -34,7 +34,7 @@ public class LeOutputStream extends FilterOutputStream implements DataOutput
     {
         buffer.clear();
         buffer.putShort( ( short )v );
-        buffer.position( 0 );
+        buffer.rewind();
         buffer.get( bytes );
         super.write( bytes, 0, 2 );
     }
@@ -50,7 +50,7 @@ public class LeOutputStream extends FilterOutputStream implements DataOutput
     {
         buffer.clear();
         buffer.putInt( v );
-        buffer.position( 0 );
+        buffer.rewind();
         buffer.get( bytes );
         Byte[] array = new Byte[4];
 
@@ -67,7 +67,7 @@ public class LeOutputStream extends FilterOutputStream implements DataOutput
     {
         buffer.clear();
         buffer.putLong( v );
-        buffer.position( 0 );
+        buffer.rewind();
         buffer.get( bytes );
         super.write( bytes, 0, 8 );
     }
@@ -77,7 +77,7 @@ public class LeOutputStream extends FilterOutputStream implements DataOutput
     {
         buffer.clear();
         buffer.putFloat( v );
-        buffer.position( 0 );
+        buffer.rewind();
         buffer.get( bytes );
         super.write( bytes, 0, 4 );
     }
@@ -87,7 +87,7 @@ public class LeOutputStream extends FilterOutputStream implements DataOutput
     {
         buffer.clear();
         buffer.putDouble( v );
-        buffer.position( 0 );
+        buffer.rewind();
         buffer.get( bytes );
         super.write( bytes, 0, 8 );
     }

@@ -1,16 +1,26 @@
 package org.jutils.io;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 import org.junit.*;
 import org.jutils.IconConstants;
 
+//TODO comments
+
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class BufferedStreamTest
 {
+    /**  */
     private ByteArrayStream byteStream;
+    /**  */
     private byte[] bytes;
 
+    /***************************************************************************
+     * @return
+     * @throws IOException
+     **************************************************************************/
     private byte[] loadTestBytes() throws IOException
     {
         InputStream stream = IconConstants.loader.loader.getUrl(
@@ -23,6 +33,9 @@ public class BufferedStreamTest
         return bytes;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Before
     public void setUp()
     {
@@ -38,6 +51,9 @@ public class BufferedStreamTest
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @After
     public void tearDown()
     {
@@ -52,6 +68,9 @@ public class BufferedStreamTest
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testRead()
     {
@@ -69,6 +88,9 @@ public class BufferedStreamTest
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testReadByteArray()
     {
@@ -87,6 +109,9 @@ public class BufferedStreamTest
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testReadFullyByteArray()
     {
@@ -105,6 +130,34 @@ public class BufferedStreamTest
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Test
+    public void testReadFullyGreaterThanAvailable()
+    {
+        BufferedStream stream = new BufferedStream( byteStream );
+
+        try
+        {
+            byte[] buf = new byte[bytes.length + 10];
+            stream.readFully( buf );
+            Assert.fail( "An EOF Exception should have been thrown." );
+        }
+        catch( EOFException ex )
+        {
+            Assert.assertTrue( true );
+            return;
+        }
+        catch( IOException ex )
+        {
+            Assert.fail( "An EOF Exception should have been thrown instead of an I/O Exception." );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testReadByteArrayIntInt()
     {
@@ -123,6 +176,9 @@ public class BufferedStreamTest
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testReadFullyByteArrayIntInt()
     {
@@ -141,6 +197,9 @@ public class BufferedStreamTest
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testSeek()
     {
@@ -166,6 +225,9 @@ public class BufferedStreamTest
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testClose()
     {
@@ -182,6 +244,9 @@ public class BufferedStreamTest
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testGetPosition()
     {
@@ -198,6 +263,9 @@ public class BufferedStreamTest
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testGetLength()
     {
@@ -214,6 +282,9 @@ public class BufferedStreamTest
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testWriteData()
     {
@@ -260,6 +331,9 @@ public class BufferedStreamTest
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testWriteToDataStream2()
     {
@@ -295,6 +369,9 @@ public class BufferedStreamTest
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testWriteToDataStream()
     {
@@ -339,6 +416,9 @@ public class BufferedStreamTest
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testWriteMockDataToDataStream()
     {
@@ -375,6 +455,9 @@ public class BufferedStreamTest
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class MockObject
     {
         public int i = 8;
@@ -440,6 +523,9 @@ public class BufferedStreamTest
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class MockObjectSerializer implements
         IStdSerializer<MockObject, IDataStream>
     {
