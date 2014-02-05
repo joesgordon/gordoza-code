@@ -180,16 +180,26 @@ public class ByteArrayStream implements IStream
             throw new EOFException( "Tried to read past end of stream" );
         }
 
-        int bytesRead = ( int )getAvailableByteCount();
+        int bytesToRead = ( int )getAvailableByteCount();
 
-        if( len < bytesRead )
+        if( len < bytesToRead )
         {
-            bytesRead = len;
+            bytesToRead = len;
         }
 
-        System.arraycopy( buffer, position, buf, off, len );
+        try
+        {
+            System.arraycopy( buffer, position, buf, off, bytesToRead );
+        }
+        catch( ArrayIndexOutOfBoundsException ex )
+        {
+            throw new RuntimeException( "Cannot copy " + len +
+                " items into an array of " + buffer.length +
+                " items starting at index " + position + " from an array of " +
+                buf.length + " items starting at index " + off, ex );
+        }
 
-        return bytesRead;
+        return bytesToRead;
     }
 
     /***************************************************************************

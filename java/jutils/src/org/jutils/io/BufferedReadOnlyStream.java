@@ -66,49 +66,32 @@ public class BufferedReadOnlyStream implements IStream
     @Override
     public int read( byte[] buf, int off, int len ) throws IOException
     {
-        int bufAvailable;
+        int bufAvailable = fillCount - index;
         int totalRead = 0;
         int toCopy;
 
-        while( totalRead < len && getAvailable() > 0 )
+        // ---------------------------------------------------------------------
+        // Read from the available buffer if possible.
+        // ---------------------------------------------------------------------
+        if( bufAvailable > 0 )
         {
-            bufAvailable = fillCount - index;
-
-            if( bufAvailable < 1 )
-            {
-                long pos = position + index;
-
-                if( pos < getLength() )
-                {
-                    fillBuffer( pos );
-
-                    bufAvailable = fillCount;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
             toCopy = Math.min( len - totalRead, bufAvailable );
-
-            // try
-            // {
             System.arraycopy( buffer, index, buf, off, toCopy );
-            // }
-            // catch( ArrayIndexOutOfBoundsException ex )
-            // {
-            // throw new RuntimeException( "Src len: " + buffer.length +
-            // ", src pos: " + index + ", dest len: " + buf.length +
-            // ", dest pos: " + off + ", count: " + toCopy, ex );
-            // }
 
             totalRead += toCopy;
-            off += toCopy;
             this.index += toCopy;
         }
 
-        return len;
+        // ---------------------------------------------------------------------
+        // Read directly from the base stream if needed. Cache next afterwards.
+        // ---------------------------------------------------------------------
+        if( totalRead < len )
+        {
+            totalRead += stream.read( buffer, off + totalRead, len - totalRead );
+            fillBuffer( stream.getPosition() );
+        }
+
+        return totalRead;
     }
 
     @Override
