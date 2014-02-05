@@ -1,6 +1,6 @@
 package org.jutils;
 
-import java.awt.Window;
+import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
@@ -49,5 +49,49 @@ public final class SwingUtils
         {
             win.dispatchEvent( new WindowEvent( win, WindowEvent.WINDOW_CLOSING ) );
         }
+    }
+
+    public static <T> String showEditableMessage( Component parent,
+        String message, String title, T[] list, T defaultChoice )
+    {
+        JPanel panel = new JPanel( new GridBagLayout() );
+        JLabel msgLabel = new JLabel( message );
+        JComboBox<T> nameField = new JComboBox<>( list );
+        GridBagConstraints constraints;
+
+        int ans;
+        String name;
+
+        // ---------------------------------------------------------------------
+        // Build message UI.
+        // ---------------------------------------------------------------------
+        constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 8, 8,
+                0, 8 ), 0, 0 );
+        panel.add( msgLabel, constraints );
+
+        nameField.setEditable( true );
+        nameField.setSelectedItem( defaultChoice );
+
+        constraints = new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets( 8, 8, 8, 8 ), 0, 0 );
+        panel.add( nameField, constraints );
+
+        // ---------------------------------------------------------------------
+        // Prompt user.
+        // ---------------------------------------------------------------------
+        ans = JOptionPane.showOptionDialog( parent, panel, title,
+            JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+            null, null );
+
+        name = nameField.getSelectedItem().toString();
+
+        if( ans != JOptionPane.OK_OPTION )
+        {
+            name = null;
+        }
+
+        return name;
     }
 }
