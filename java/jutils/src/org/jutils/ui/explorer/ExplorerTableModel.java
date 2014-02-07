@@ -12,7 +12,7 @@ import javax.swing.table.AbstractTableModel;
 public class ExplorerTableModel extends AbstractTableModel
 {
     /**  */
-    public static final String[] HEADERS = new String[] { "Name", "Location",
+    public static final String [] HEADERS = new String[] { "Name", "Location",
         "Size (kB)", "Type", "Modified" };
 
     /**  */

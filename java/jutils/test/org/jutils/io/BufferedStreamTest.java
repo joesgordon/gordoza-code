@@ -15,17 +15,17 @@ public class BufferedStreamTest
     /**  */
     private ByteArrayStream byteStream;
     /**  */
-    private byte[] bytes;
+    private byte [] bytes;
 
     /***************************************************************************
      * @return
      * @throws IOException
      **************************************************************************/
-    private byte[] loadTestBytes() throws IOException
+    private byte [] loadTestBytes() throws IOException
     {
         InputStream stream = IconConstants.loader.loader.getUrl(
             IconConstants.ATOMIC_32 ).openStream();
-        byte[] bytes = new byte[stream.available()];
+        byte [] bytes = new byte[stream.available()];
 
         stream.read( bytes );
         stream.close();
@@ -98,7 +98,7 @@ public class BufferedStreamTest
 
         try
         {
-            byte[] buf = new byte[bytes.length];
+            byte [] buf = new byte[bytes.length];
             stream.read( buf );
             Assert.assertArrayEquals( bytes, buf );
         }
@@ -119,7 +119,7 @@ public class BufferedStreamTest
 
         try
         {
-            byte[] buf = new byte[bytes.length];
+            byte [] buf = new byte[bytes.length];
             stream.readFully( buf );
             Assert.assertArrayEquals( bytes, buf );
         }
@@ -140,7 +140,7 @@ public class BufferedStreamTest
 
         try
         {
-            byte[] buf = new byte[bytes.length + 10];
+            byte [] buf = new byte[bytes.length + 10];
             stream.readFully( buf );
             Assert.fail( "An EOF Exception should have been thrown." );
         }
@@ -165,7 +165,7 @@ public class BufferedStreamTest
 
         try
         {
-            byte[] buf = new byte[bytes.length];
+            byte [] buf = new byte[bytes.length];
             stream.read( buf, 0, buf.length );
             Assert.assertArrayEquals( bytes, buf );
         }
@@ -186,7 +186,7 @@ public class BufferedStreamTest
 
         try
         {
-            byte[] buf = new byte[bytes.length];
+            byte [] buf = new byte[bytes.length];
             stream.readFully( buf, 0, buf.length );
             Assert.assertArrayEquals( bytes, buf );
         }
@@ -337,8 +337,8 @@ public class BufferedStreamTest
     @Test
     public void testWriteToDataStream2()
     {
-        byte[] expected = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-        byte[] buffer = new byte[expected.length];
+        byte [] expected = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        byte [] buffer = new byte[expected.length];
         ByteArrayStream byteStream = new ByteArrayStream( buffer );
         BufferedStream stream = new BufferedStream( byteStream );
 
@@ -350,7 +350,7 @@ public class BufferedStreamTest
                 stream.write( expected[4] );
                 stream.write( expected, 5, 6 );
 
-                byte[] actual = new byte[expected.length];
+                byte [] actual = new byte[expected.length];
 
                 stream.seek( 0 );
                 stream.readFully( actual );
@@ -375,7 +375,7 @@ public class BufferedStreamTest
     @Test
     public void testWriteToDataStream()
     {
-        byte[] buffer = new byte[100];
+        byte [] buffer = new byte[100];
         ByteArrayStream byteStream = new ByteArrayStream( buffer );
         BufferedStream bufStream = new BufferedStream( byteStream );
         DataStream stream = new DataStream( bufStream );
@@ -422,7 +422,7 @@ public class BufferedStreamTest
     @Test
     public void testWriteMockDataToDataStream()
     {
-        byte[] buffer = new byte[100];
+        byte [] buffer = new byte[100];
         ByteArrayStream byteStream = new ByteArrayStream( buffer );
         BufferedStream bufStream = new BufferedStream( byteStream );
         DataStream stream = new DataStream( bufStream );

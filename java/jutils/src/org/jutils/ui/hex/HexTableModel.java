@@ -12,7 +12,7 @@ public class HexTableModel extends AbstractTableModel
     /** The buffer to be displayed */
     private IByteBuffer buffer;
     /**  */
-    private final char[] asciiBuffer;
+    private final char [] asciiBuffer;
 
     /***************************************************************************
      * Creates the table model.

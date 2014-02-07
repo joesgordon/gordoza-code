@@ -10,23 +10,23 @@ public class ExtensionData implements Comparable<Object>
 
     private String description;
 
-    private byte[] iconData;
+    private byte [] iconData;
 
     private ArrayList<ProgramData> programs = new ArrayList<ProgramData>();
 
-    public ExtensionData( String ext, String desc, byte[] iconData )
+    public ExtensionData( String ext, String desc, byte [] iconData )
     {
         setExtension( ext );
         setDescription( desc );
         setIconData( iconData );
     }
 
-    public byte[] getIconData()
+    public byte [] getIconData()
     {
         return iconData;
     }
 
-    public void setIconData( byte[] iconData )
+    public void setIconData( byte [] iconData )
     {
         this.iconData = iconData;
     }

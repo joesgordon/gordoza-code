@@ -4,9 +4,9 @@ package org.jutils.ui.hex;
 
 public class ByteBuffer implements IByteBuffer
 {
-    private final byte[] buf;
+    private final byte [] buf;
 
-    public ByteBuffer( byte[] buffer )
+    public ByteBuffer( byte [] buffer )
     {
         buf = buffer;
     }
@@ -36,7 +36,7 @@ public class ByteBuffer implements IByteBuffer
     }
 
     @Override
-    public byte[] getBytes()
+    public byte [] getBytes()
     {
         return buf;
     }

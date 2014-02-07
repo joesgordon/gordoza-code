@@ -17,9 +17,9 @@ import org.jutils.Utils;
 public class FontChooserDialog extends JDialog
 {
     /**  */
-    public final static String[] FONT_NAMES;
+    public final static String [] FONT_NAMES;
     /**  */
-    public final static String[] FONT_SIZES;
+    public final static String [] FONT_SIZES;
 
     /**  */
     private final InputListPanel fontNameInputList;
@@ -422,7 +422,7 @@ public class FontChooserDialog extends JDialog
     {
         public ColorComboBox()
         {
-            int[] values = new int[] { 0, 128, 192, 255 };
+            int [] values = new int[] { 0, 128, 192, 255 };
             for( int r = 0; r < values.length; r++ )
             {
                 for( int g = 0; g < values.length; g++ )

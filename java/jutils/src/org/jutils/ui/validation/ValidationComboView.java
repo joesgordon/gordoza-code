@@ -30,7 +30,7 @@ public class ValidationComboView<T> implements IView<JPanel>
     /***************************************************************************
      * @param units
      **************************************************************************/
-    public ValidationComboView( T[] items )
+    public ValidationComboView( T [] items )
     {
         this( Arrays.asList( items ) );
     }

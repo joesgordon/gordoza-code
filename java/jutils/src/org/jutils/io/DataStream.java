@@ -18,7 +18,7 @@ public class DataStream implements IDataStream
     /**  */
     private final ByteBuffer buffer;
     /**  */
-    private final byte[] bytes;
+    private final byte [] bytes;
     /**  */
     private final ByteOrder order;
 
@@ -64,7 +64,7 @@ public class DataStream implements IDataStream
      * 
      **************************************************************************/
     @Override
-    public int read( byte[] buf ) throws IOException
+    public int read( byte [] buf ) throws IOException
     {
         return stream.read( buf );
     }
@@ -73,7 +73,7 @@ public class DataStream implements IDataStream
      * 
      **************************************************************************/
     @Override
-    public void readFully( byte[] buf ) throws EOFException, IOException
+    public void readFully( byte [] buf ) throws EOFException, IOException
     {
         stream.readFully( buf );
     }
@@ -82,7 +82,7 @@ public class DataStream implements IDataStream
      * 
      **************************************************************************/
     @Override
-    public int read( byte[] buf, int off, int len ) throws IOException
+    public int read( byte [] buf, int off, int len ) throws IOException
     {
         return stream.read( buf, off, len );
     }
@@ -91,7 +91,7 @@ public class DataStream implements IDataStream
      * 
      **************************************************************************/
     @Override
-    public void readFully( byte[] buf, int off, int len ) throws EOFException,
+    public void readFully( byte [] buf, int off, int len ) throws EOFException,
         IOException
     {
         stream.readFully( buf, off, len );
@@ -146,7 +146,7 @@ public class DataStream implements IDataStream
      * 
      **************************************************************************/
     @Override
-    public void write( byte[] buf ) throws IOException
+    public void write( byte [] buf ) throws IOException
     {
         stream.write( buf );
     }
@@ -155,7 +155,7 @@ public class DataStream implements IDataStream
      * 
      **************************************************************************/
     @Override
-    public void write( byte[] buf, int off, int len ) throws IOException
+    public void write( byte [] buf, int off, int len ) throws IOException
     {
         stream.write( buf, off, len );
     }

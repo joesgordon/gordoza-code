@@ -48,7 +48,7 @@ public class ValueView implements IView<JPanel>
     private final ItemActionList<Integer> selectionListeners;
 
     private ByteOrder dataOrder;
-    private byte[] bytes;
+    private byte [] bytes;
     private int offset;
 
     /***************************************************************************
@@ -243,7 +243,7 @@ public class ValueView implements IView<JPanel>
         return -1;
     }
 
-    public void setBytes( byte[] bytes, int offset )
+    public void setBytes( byte [] bytes, int offset )
     {
         this.bytes = bytes;
         this.offset = offset;

@@ -115,7 +115,7 @@ public class HexEditorFilePanel implements IView<JPanel>
     private void loadBuffer() throws IOException
     {
         int bufLen = ( int )Math.min( maxBufferSize, fileLength - startOffset );
-        byte[] buffer = new byte[bufLen];
+        byte [] buffer = new byte[bufLen];
         long nextOffset = startOffset + bufLen;
 
         // System.out.println( "Loading buffer @ " + startOffset + " , " +
@@ -286,7 +286,7 @@ public class HexEditorFilePanel implements IView<JPanel>
 
         FileOutputStream fileStream = new FileOutputStream( file );
 
-        byte[] buffer = editor.getBuffer().getBytes();
+        byte [] buffer = editor.getBuffer().getBytes();
         fileStream.write( buffer );
         fileStream.close();
 

@@ -15,7 +15,7 @@ public class ByteArrayStream implements IStream
     /** Current position in the buffer where data will be read or written. */
     private int position;
     /** The buffer to be used for reading/writing. */
-    private byte[] buffer;
+    private byte [] buffer;
     /** The used size of the current buffer. */
     private int bufferSize;
     /** The number of bytes by which the buffer size will increase as needed. */
@@ -45,7 +45,7 @@ public class ByteArrayStream implements IStream
      * length of the size of the provided buffer.
      * @param buf the initial buffer for the stream.
      **************************************************************************/
-    public ByteArrayStream( byte[] buf )
+    public ByteArrayStream( byte [] buf )
     {
         this( buf, buf.length );
     }
@@ -56,7 +56,7 @@ public class ByteArrayStream implements IStream
      * @param buf the initial buffer for the stream.
      * @param length the initial length of the stream.
      **************************************************************************/
-    public ByteArrayStream( byte[] buf, int length )
+    public ByteArrayStream( byte [] buf, int length )
     {
         this( buf, length, DEFAULT_SIZE );
     }
@@ -69,7 +69,7 @@ public class ByteArrayStream implements IStream
      * @param increment the growth increment for writes that occur past the end
      * of the buffer.
      **************************************************************************/
-    public ByteArrayStream( byte[] buf, int length, int increment )
+    public ByteArrayStream( byte [] buf, int length, int increment )
     {
         this( buf, length, increment, true );
     }
@@ -84,7 +84,7 @@ public class ByteArrayStream implements IStream
      * @param copy copies the provided buffer if {@code true}, simply uses the
      * buffer until it grows otherwise.
      **************************************************************************/
-    public ByteArrayStream( byte[] buf, int length, int increment, boolean copy )
+    public ByteArrayStream( byte [] buf, int length, int increment, boolean copy )
     {
         if( copy )
         {
@@ -164,7 +164,7 @@ public class ByteArrayStream implements IStream
      * 
      **************************************************************************/
     @Override
-    public int read( byte[] buf ) throws IOException
+    public int read( byte [] buf ) throws IOException
     {
         return read( buf, 0, buf.length );
     }
@@ -173,7 +173,7 @@ public class ByteArrayStream implements IStream
      * 
      **************************************************************************/
     @Override
-    public int read( byte[] buf, int off, int len ) throws IOException
+    public int read( byte [] buf, int off, int len ) throws IOException
     {
         if( position > bufferSize )
         {
@@ -206,7 +206,7 @@ public class ByteArrayStream implements IStream
      * 
      **************************************************************************/
     @Override
-    public void readFully( byte[] buf ) throws IOException
+    public void readFully( byte [] buf ) throws IOException
     {
         readFully( buf, 0, buf.length );
     }
@@ -215,7 +215,7 @@ public class ByteArrayStream implements IStream
      * 
      **************************************************************************/
     @Override
-    public void readFully( byte[] buf, int off, int len ) throws IOException
+    public void readFully( byte [] buf, int off, int len ) throws IOException
     {
         if( len > getAvailable() )
         {
@@ -289,7 +289,7 @@ public class ByteArrayStream implements IStream
      * 
      **************************************************************************/
     @Override
-    public void write( byte[] buf ) throws IOException
+    public void write( byte [] buf ) throws IOException
     {
         write( buf, 0, buf.length );
     }
@@ -298,7 +298,7 @@ public class ByteArrayStream implements IStream
      * 
      **************************************************************************/
     @Override
-    public void write( byte[] buf, int off, int len ) throws IOException
+    public void write( byte [] buf, int off, int len ) throws IOException
     {
         ensureWrite( len );
 
@@ -311,9 +311,9 @@ public class ByteArrayStream implements IStream
      * Returns a copy of the current buffer trimmed to the length of this
      * stream.
      **************************************************************************/
-    public byte[] toByteArray()
+    public byte [] toByteArray()
     {
-        byte[] bytes = new byte[bufferSize];
+        byte [] bytes = new byte[bufferSize];
 
         System.arraycopy( buffer, 0, bytes, 0, bufferSize );
 

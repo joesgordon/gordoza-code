@@ -192,7 +192,7 @@ public class CalendarField extends JPanel
     protected void fireActionPerformed( ActionEvent event )
     {
         // Guaranteed to return a non-null array
-        Object[] listeners = listenerList.getListenerList();
+        Object [] listeners = listenerList.getListenerList();
         ActionEvent e = null;
         // Process the listeners last to first, notifying
         // those that are interested in this event

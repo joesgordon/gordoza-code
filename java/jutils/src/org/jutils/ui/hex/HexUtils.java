@@ -113,7 +113,7 @@ public final class HexUtils
      * @param bytes the bytes to be converted.
      * @return the hexadecimal string representation of the bytes.
      **************************************************************************/
-    public static String toHexString( byte[] bytes )
+    public static String toHexString( byte [] bytes )
     {
         List<Byte> byteList = new ArrayList<Byte>( bytes.length );
 
@@ -177,7 +177,7 @@ public final class HexUtils
      * @return the byte array.
      * @throws NumberFormatException see {@link #fromHexString(String)}.
      **************************************************************************/
-    public static byte[] fromHexStringToArray( String text )
+    public static byte [] fromHexStringToArray( String text )
         throws NumberFormatException
     {
         List<Byte> byteList = fromHexString( text );
@@ -237,7 +237,7 @@ public final class HexUtils
     /***************************************************************************
      * Converts an array of bytes to a list of bytes.
      **************************************************************************/
-    public static List<Byte> asList( byte[] array )
+    public static List<Byte> asList( byte [] array )
     {
         List<Byte> bytes = new ArrayList<Byte>( array.length );
 
@@ -252,9 +252,9 @@ public final class HexUtils
     /***************************************************************************
      * Converts a list of bytes to an array of bytes.
      **************************************************************************/
-    public static byte[] asArray( List<Byte> bytes )
+    public static byte [] asArray( List<Byte> bytes )
     {
-        byte[] array = new byte[bytes.size()];
+        byte [] array = new byte[bytes.size()];
 
         for( int i = 0; i < bytes.size(); i++ )
         {
@@ -282,7 +282,7 @@ public final class HexUtils
      **************************************************************************/
     private static class HexStringConverter
     {
-        private final String[] BYTE_STRINGS;
+        private final String [] BYTE_STRINGS;
 
         public HexStringConverter()
         {

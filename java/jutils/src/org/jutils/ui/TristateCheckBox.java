@@ -561,7 +561,7 @@ class TristateDecorator implements ButtonModel
     /***********************************************************************
      * @return Object[]
      **********************************************************************/
-    public Object[] getSelectedObjects()
+    public Object [] getSelectedObjects()
     {
         return other.getSelectedObjects();
     }

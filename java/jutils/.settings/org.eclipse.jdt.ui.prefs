@@ -1,8 +1,6 @@
-#Tue May 19 23:07:12 CDT 2009
 eclipse.preferences.version=1
 editor_save_participant_org.eclipse.jdt.ui.postsavelistener.cleanup=true
-formatter_profile=_Gordoza
-formatter_settings_version=11
+formatter_settings_version=12
 internal.default.compliance=default
 org.eclipse.jdt.ui.ignorelowercasenames=false
 org.eclipse.jdt.ui.importorder=java;javax;org;com;

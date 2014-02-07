@@ -8,16 +8,16 @@ import org.jutils.ui.validation.ValidationException;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class HexBytesValidator implements IDataValidator<byte[]>
+public class HexBytesValidator implements IDataValidator<byte []>
 {
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public byte[] validate( String text ) throws ValidationException
+    public byte [] validate( String text ) throws ValidationException
     {
         List<Byte> bytes;
-        byte[] bytearray = null;
+        byte [] bytearray = null;
 
         text.replaceAll( "\\s", "" );
 

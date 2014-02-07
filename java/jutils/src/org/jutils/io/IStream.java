@@ -30,7 +30,7 @@ public interface IStream
      * error occurs.
      * @see java.io.InputStream#read(byte[])
      **************************************************************************/
-    public int read( byte[] buf ) throws IOException;
+    public int read( byte [] buf ) throws IOException;
 
     /***************************************************************************
      * Fills the entire buffer with the next consecutive bytes from this stream
@@ -40,7 +40,7 @@ public interface IStream
      * than end of file, or if the stream has been closed, or if some other I/O
      * error occurs.
      **************************************************************************/
-    public void readFully( byte[] buf ) throws EOFException, IOException;
+    public void readFully( byte [] buf ) throws EOFException, IOException;
 
     /***************************************************************************
      * @param buf the buffer into which the data is read.
@@ -54,7 +54,7 @@ public interface IStream
      * error occurs.
      * @see java.io.InputStream#read(byte[], int, int)
      **************************************************************************/
-    public int read( byte[] buf, int off, int len ) throws IOException;
+    public int read( byte [] buf, int off, int len ) throws IOException;
 
     /***************************************************************************
      * Fills the buffer with the next consecutive bytes from this stream at the
@@ -68,7 +68,7 @@ public interface IStream
      * than end of file, or if the stream has been closed, or if some other I/O
      * error occurs.
      **************************************************************************/
-    public void readFully( byte[] buf, int off, int len ) throws EOFException,
+    public void readFully( byte [] buf, int off, int len ) throws EOFException,
         IOException;
 
     /***************************************************************************
@@ -137,7 +137,7 @@ public interface IStream
      * @param buf the bytes to be written.
      * @throws IOException If an I/O error occurs.
      **************************************************************************/
-    public void write( byte[] buf ) throws IOException;
+    public void write( byte [] buf ) throws IOException;
 
     /***************************************************************************
      * Writes the given byte to this stream at the current offset, increasing
@@ -147,5 +147,5 @@ public interface IStream
      * @param len the number of bytes to write.
      * @throws IOException If an I/O error occurs.
      **************************************************************************/
-    public void write( byte[] buf, int off, int len ) throws IOException;
+    public void write( byte [] buf, int off, int len ) throws IOException;
 }

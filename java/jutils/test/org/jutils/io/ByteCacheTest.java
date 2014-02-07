@@ -10,10 +10,10 @@ import org.jutils.IconConstants;
 
 public class ByteCacheTest
 {
-    private static byte[] loadBytes( URL url ) throws IOException
+    private static byte [] loadBytes( URL url ) throws IOException
     {
         InputStream stream = null;
-        byte[] bytes;
+        byte [] bytes;
 
         stream = url.openStream();
 
@@ -34,7 +34,7 @@ public class ByteCacheTest
         return bytes;
     }
 
-    private static byte[] loadTestBytes() throws IOException
+    private static byte [] loadTestBytes() throws IOException
     {
         URL url;
 
@@ -43,7 +43,7 @@ public class ByteCacheTest
         return loadBytes( url );
     }
 
-    private byte[] getTestBytes()
+    private byte [] getTestBytes()
     {
         try
         {
@@ -75,7 +75,7 @@ public class ByteCacheTest
     @Test
     public void testCreateByteArray()
     {
-        byte[] bytes = getTestBytes();
+        byte [] bytes = getTestBytes();
         ByteCache cache = new ByteCache( bytes );
 
         Assert.assertEquals( bytes.length, cache.getSize() );
@@ -86,8 +86,8 @@ public class ByteCacheTest
     {
         ByteCache cache = new ByteCache();
         ByteArrayStream stream = null;
-        byte[] bytes = getTestBytes();
-        byte[] buf = new byte[10];
+        byte [] bytes = getTestBytes();
+        byte [] buf = new byte[10];
 
         try
         {
