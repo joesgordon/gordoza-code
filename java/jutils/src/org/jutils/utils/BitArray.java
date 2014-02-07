@@ -75,6 +75,11 @@ public class BitArray implements Iterable<Boolean>
         return bytes;
     }
 
+    public int size()
+    {
+        return bits.size();
+    }
+
     @Override
     public Iterator<Boolean> iterator()
     {
