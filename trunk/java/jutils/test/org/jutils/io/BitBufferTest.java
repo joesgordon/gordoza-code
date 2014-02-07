@@ -8,8 +8,8 @@ import org.junit.Test;
 
 public class BitBufferTest
 {
-    private static final byte[] fromArray;
-    private static final byte[] toArray;
+    private static final byte [] fromArray;
+    private static final byte [] toArray;
 
     static
     {

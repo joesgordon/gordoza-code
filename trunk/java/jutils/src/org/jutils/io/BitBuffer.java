@@ -10,9 +10,9 @@ import java.util.List;
 public class BitBuffer
 {
     /** Masks needed to set a particular bit. */
-    public static final byte[] SET_MASKS;
+    public static final byte [] SET_MASKS;
     /** Masks needed to clear a particular bit. */
-    public static final byte[] CLEAR_MASKS;
+    public static final byte [] CLEAR_MASKS;
 
     static
     {
@@ -27,7 +27,7 @@ public class BitBuffer
     }
 
     /** The byte array to be used. */
-    public final byte[] buffer;
+    public final byte [] buffer;
     /** The current position into the byte array. */
     private final BitPosition position;
     /**  */
@@ -47,7 +47,7 @@ public class BitBuffer
      * buffer.
      * @param buffer the byte array to read to/write from.
      **************************************************************************/
-    public BitBuffer( byte[] buffer )
+    public BitBuffer( byte [] buffer )
     {
         this.buffer = buffer;
         this.position = new BitPosition();
@@ -77,7 +77,7 @@ public class BitBuffer
         if( byteIndex >= buffer.length )
         {
             throw new IllegalArgumentException( "The byte index (" + byteIndex +
-                ")must be < the buffer length (" + buffer.length + ")" );
+                ") must be < the buffer length (" + buffer.length + ")" );
         }
 
         position.set( byteIndex, bitIndex );

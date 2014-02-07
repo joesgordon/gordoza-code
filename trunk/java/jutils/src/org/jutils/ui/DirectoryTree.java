@@ -47,7 +47,7 @@ public class DirectoryTree extends JTree
     /***************************************************************************
      * @param rootFiles File[]
      **************************************************************************/
-    public DirectoryTree( File[] rootFiles )
+    public DirectoryTree( File [] rootFiles )
     {
         super( new DefaultTreeModel( new DefaultMutableTreeNode() ) );
         treeModel = ( DefaultTreeModel )super.getModel();
@@ -74,14 +74,14 @@ public class DirectoryTree extends JTree
     /***************************************************************************
      * @return File[]
      **************************************************************************/
-    public File[] getSelected()
+    public File [] getSelected()
     {
-        TreePath[] paths = this.getSelectionPaths();
+        TreePath [] paths = this.getSelectionPaths();
         if( paths == null )
         {
             return null;
         }
-        File[] files = new File[paths.length];
+        File [] files = new File[paths.length];
 
         for( int i = 0; i < paths.length; i++ )
         {
@@ -95,9 +95,9 @@ public class DirectoryTree extends JTree
     /***************************************************************************
      * @param dirs File[]
      **************************************************************************/
-    public void setSelected( File[] dirs )
+    public void setSelected( File [] dirs )
     {
-        TreePath[] treePaths = getTreePaths( dirs );
+        TreePath [] treePaths = getTreePaths( dirs );
 
         // LogUtils.printDebug( "DEBUG: Selecting " + dirs.length + " folders"
         // );
@@ -112,10 +112,10 @@ public class DirectoryTree extends JTree
      * @param dirs
      * @return
      **************************************************************************/
-    private TreePath[] getTreePaths( File[] dirs )
+    private TreePath [] getTreePaths( File [] dirs )
     {
         ArrayList<TreePath> paths = new ArrayList<TreePath>();
-        TreePath[] treePaths = null;
+        TreePath [] treePaths = null;
 
         // For each directory to be selected
         for( int i = 0; i < dirs.length; i++ )
@@ -147,7 +147,7 @@ public class DirectoryTree extends JTree
     private TreePath getTreePath( File dir )
     {
         TreePath path = null;
-        File[] filesPath = getParentage( dir );
+        File [] filesPath = getParentage( dir );
         DefaultMutableTreeNode dmtr = root;
 
         // LogUtils.printDebug( "Dir: " + dir.getAbsolutePath() );
@@ -185,10 +185,10 @@ public class DirectoryTree extends JTree
      * @param dir
      * @return
      **************************************************************************/
-    private static File[] getParentage( File dir )
+    private static File [] getParentage( File dir )
     {
         ArrayList<File> files = new ArrayList<File>( 10 );
-        File[] array;
+        File [] array;
 
         // LogUtils.printDebug( "Dir: " + dir.getAbsolutePath() );
 
@@ -269,7 +269,7 @@ public class DirectoryTree extends JTree
      **************************************************************************/
     public String getSelectedPaths()
     {
-        File[] selected = getSelected();
+        File [] selected = getSelected();
 
         return UFile.getStringFromFiles( selected );
     }
@@ -293,7 +293,7 @@ public class DirectoryTree extends JTree
     private void addChildren( FolderNode node )
     {
         File f = node.getFolder();
-        File[] chillen = f.listFiles();
+        File [] chillen = f.listFiles();
 
         java.util.Arrays.sort( chillen );
 
@@ -312,7 +312,7 @@ public class DirectoryTree extends JTree
      **************************************************************************/
     public void refreshSelected()
     {
-        TreePath[] paths = super.getSelectionPaths();
+        TreePath [] paths = super.getSelectionPaths();
 
         if( paths != null )
         {

@@ -81,7 +81,7 @@ public class ShiftHexView implements IView<JComponent>
         return toolbar;
     }
 
-    public void setData( byte[] bytes )
+    public void setData( byte [] bytes )
     {
         this.orig = new BitBuffer( bytes );
         this.buffer = new BitBuffer( Arrays.copyOf( bytes, bytes.length + 1 ) );

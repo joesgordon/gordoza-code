@@ -42,7 +42,7 @@ public final class TextAreaUtils
         throws IOException
     {
         BufferedInputStream buffer = new BufferedInputStream( stream );
-        byte[] byteBuffer = new byte[1024 * 16];
+        byte [] byteBuffer = new byte[1024 * 16];
         int bytesRead = 0;
 
         while( ( bytesRead = buffer.read( byteBuffer ) ) > 0 )

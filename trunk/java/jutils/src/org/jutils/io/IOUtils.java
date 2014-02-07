@@ -224,7 +224,7 @@ public final class IOUtils
     {
         if( file.isDirectory() )
         {
-            File[] fs = file.listFiles();
+            File [] fs = file.listFiles();
 
             if( fs == null )
             {

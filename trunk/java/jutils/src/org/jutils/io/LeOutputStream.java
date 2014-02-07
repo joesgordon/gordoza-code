@@ -7,7 +7,7 @@ import java.nio.ByteOrder;
 public class LeOutputStream extends FilterOutputStream implements DataOutput
 {
     private ByteBuffer buffer;
-    private byte[] bytes;
+    private byte [] bytes;
 
     public LeOutputStream( OutputStream out )
     {
@@ -52,7 +52,7 @@ public class LeOutputStream extends FilterOutputStream implements DataOutput
         buffer.putInt( v );
         buffer.rewind();
         buffer.get( bytes );
-        Byte[] array = new Byte[4];
+        Byte [] array = new Byte[4];
 
         for( int i = 0; i < array.length; i++ )
         {

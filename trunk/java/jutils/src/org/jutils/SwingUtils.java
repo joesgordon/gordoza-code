@@ -52,7 +52,7 @@ public final class SwingUtils
     }
 
     public static <T> String showEditableMessage( Component parent,
-        String message, String title, T[] list, T defaultChoice )
+        String message, String title, T [] list, T defaultChoice )
     {
         JPanel panel = new JPanel( new GridBagLayout() );
         JLabel msgLabel = new JLabel( message );

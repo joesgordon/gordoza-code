@@ -15,7 +15,7 @@ import javax.swing.*;
 public final class Utils
 {
     /** A list of all regular expression meta characters. */
-    public static final char[] REGEX_METAC;
+    public static final char [] REGEX_METAC;
     /** The new line string for the current system. */
     public static final String NEW_LINE;
     /** The user's home directory. */
@@ -105,8 +105,8 @@ public final class Utils
     public static void printStackTrace()
     {
         Throwable tr = new Throwable();
-        StackTraceElement[] trace = tr.getStackTrace();
-        StackTraceElement[] newTrace = Arrays.copyOfRange( trace, 1,
+        StackTraceElement [] trace = tr.getStackTrace();
+        StackTraceElement [] newTrace = Arrays.copyOfRange( trace, 1,
             trace.length );
         tr.setStackTrace( newTrace );
         System.out.println( printStackTrace( tr ) );
@@ -231,7 +231,7 @@ public final class Utils
      * @param items Object[] the array to convert to a string.
      * @return the comma separated list of items.
      **************************************************************************/
-    public static String arrayToString( Object[] items )
+    public static String arrayToString( Object [] items )
     {
         StringBuffer buf = new StringBuffer();
         for( int i = 0; i < items.length; i++ )
@@ -296,7 +296,7 @@ public final class Utils
      * @param chars char[] the characters to be escaped.
      * @return the cleansed string.
      **************************************************************************/
-    public static String escapeAllChars( String str, char[] chars )
+    public static String escapeAllChars( String str, char [] chars )
     {
         StringBuffer buffer = new StringBuffer();
         int offset = str.length();
@@ -346,7 +346,7 @@ public final class Utils
      * @param items the items to be contained within the model.
      * @return the model containing the items.
      **************************************************************************/
-    public static <T> ComboBoxModel<T> createModel( T[] items )
+    public static <T> ComboBoxModel<T> createModel( T [] items )
     {
         DefaultComboBoxModel<T> model = new DefaultComboBoxModel<T>();
 

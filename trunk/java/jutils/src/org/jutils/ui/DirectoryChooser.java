@@ -160,7 +160,7 @@ public class DirectoryChooser
     /***************************************************************************
      * @param args
      **************************************************************************/
-    public static void main( String[] args )
+    public static void main( String [] args )
     {
         SwingUtilities.invokeLater( new Runnable()
         {
@@ -193,7 +193,7 @@ public class DirectoryChooser
     /***************************************************************************
      * @return File[]
      **************************************************************************/
-    public File[] getSelected()
+    public File [] getSelected()
     {
         return tree.getSelected();
     }
@@ -201,7 +201,7 @@ public class DirectoryChooser
     /***************************************************************************
      * @param files File[]
      **************************************************************************/
-    public void setSelected( File[] files )
+    public void setSelected( File [] files )
     {
         tree.setSelected( files );
     }
@@ -289,7 +289,7 @@ public class DirectoryChooser
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            File[] selectedFiles = chooser.tree.getSelected();
+            File [] selectedFiles = chooser.tree.getSelected();
 
             if( selectedFiles != null && selectedFiles.length == 1 )
             {

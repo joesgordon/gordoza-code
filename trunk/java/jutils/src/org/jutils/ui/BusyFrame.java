@@ -352,7 +352,7 @@ class SeeThroughPane extends JComponent implements ActionListener
 
     public void paint( Graphics g )
     {
-        float[] my_kernel = { 0.10f, 0.10f, 0.10f, 0.10f, 0.20f, 0.10f, 0.10f,
+        float [] my_kernel = { 0.10f, 0.10f, 0.10f, 0.10f, 0.20f, 0.10f, 0.10f,
             0.10f, 0.10f };
         ConvolveOp op = new ConvolveOp( new Kernel( 3, 3, my_kernel ) );
         BufferedImage buf = new BufferedImage( getWidth(), getHeight(),

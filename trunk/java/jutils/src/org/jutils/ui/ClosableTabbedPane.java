@@ -87,7 +87,7 @@ public class ClosableTabbedPane extends JTabbedPane
     protected void fireTabRemoved( Component comp, int index )
     {
         // Guaranteed to return a non-null array
-        Object[] listeners = listenerList.getListenerList();
+        Object [] listeners = listenerList.getListenerList();
         // Process the listeners last to first, notifying
         // those that are interested in this event
         for( int i = listeners.length - 2; i >= 0; i -= 2 )

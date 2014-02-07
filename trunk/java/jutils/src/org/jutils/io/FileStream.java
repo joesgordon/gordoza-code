@@ -65,7 +65,7 @@ public class FileStream implements IStream
      * 
      **************************************************************************/
     @Override
-    public int read( byte[] buf ) throws IOException
+    public int read( byte [] buf ) throws IOException
     {
         return raf.read( buf );
     }
@@ -74,7 +74,7 @@ public class FileStream implements IStream
      * 
      **************************************************************************/
     @Override
-    public void readFully( byte[] buf ) throws IOException
+    public void readFully( byte [] buf ) throws IOException
     {
         readFully( buf, 0, buf.length );
     }
@@ -83,13 +83,13 @@ public class FileStream implements IStream
      * 
      **************************************************************************/
     @Override
-    public int read( byte[] buf, int off, int len ) throws IOException
+    public int read( byte [] buf, int off, int len ) throws IOException
     {
         return raf.read( buf, off, len );
     }
 
     @Override
-    public void readFully( byte[] buf, int off, int len ) throws IOException
+    public void readFully( byte [] buf, int off, int len ) throws IOException
     {
         int bytesRead = 0;
 
@@ -166,7 +166,7 @@ public class FileStream implements IStream
      * 
      **************************************************************************/
     @Override
-    public void write( byte[] buf ) throws IOException
+    public void write( byte [] buf ) throws IOException
     {
         raf.write( buf );
     }
@@ -175,7 +175,7 @@ public class FileStream implements IStream
      * 
      **************************************************************************/
     @Override
-    public void write( byte[] buf, int off, int len ) throws IOException
+    public void write( byte [] buf, int off, int len ) throws IOException
     {
         raf.write( buf, off, len );
     }

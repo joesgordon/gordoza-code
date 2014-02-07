@@ -139,19 +139,19 @@ public class MappedStream implements IDataStream
     }
 
     @Override
-    public int read( byte[] buf ) throws IOException
+    public int read( byte [] buf ) throws IOException
     {
         return read( buf, 0, buf.length );
     }
 
     @Override
-    public void readFully( byte[] buf ) throws EOFException, IOException
+    public void readFully( byte [] buf ) throws EOFException, IOException
     {
         readFully( buf, 0, buf.length );
     }
 
     @Override
-    public int read( byte[] buf, int off, int len ) throws IOException
+    public int read( byte [] buf, int off, int len ) throws IOException
     {
         int totalRead = 0;
         int toCopy;
@@ -179,7 +179,7 @@ public class MappedStream implements IDataStream
     }
 
     @Override
-    public void readFully( byte[] buf, int off, int len ) throws EOFException,
+    public void readFully( byte [] buf, int off, int len ) throws EOFException,
         IOException
     {
         int bytesRead = 0;
@@ -251,13 +251,13 @@ public class MappedStream implements IDataStream
     }
 
     @Override
-    public void write( byte[] buf ) throws IOException
+    public void write( byte [] buf ) throws IOException
     {
         throw new IOException( "Cannot write to a read only stream." );
     }
 
     @Override
-    public void write( byte[] buf, int off, int len ) throws IOException
+    public void write( byte [] buf, int off, int len ) throws IOException
     {
         throw new IOException( "Cannot write to a read only stream." );
     }

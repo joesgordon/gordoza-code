@@ -190,7 +190,7 @@ public class CollectionTogglePanel<T> extends JPanel
      * debugging purposes only.
      * @param args Ignored arguments to this application.
      **************************************************************************/
-    public static void main( String[] args )
+    public static void main( String [] args )
     {
         SwingUtilities.invokeLater( new Runnable()
         {
@@ -261,7 +261,11 @@ public class CollectionTogglePanel<T> extends JPanel
      **************************************************************************/
     private enum TestEnum
     {
-        FIRST, SECOND, THIRD, FORTH, FIFTH_SIXTH_SEVENTH;
+        FIRST,
+        SECOND,
+        THIRD,
+        FORTH,
+        FIFTH_SIXTH_SEVENTH;
 
         public String toString()
         {

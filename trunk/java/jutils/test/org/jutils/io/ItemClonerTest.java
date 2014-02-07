@@ -12,10 +12,10 @@ public class ItemClonerTest
     @Test
     public void testSingleUse()
     {
-        ItemCloner<Object[]> cloner = new ItemCloner<>();
+        ItemCloner<Object []> cloner = new ItemCloner<>();
 
-        Object[] item;
-        Object[] clone;
+        Object [] item;
+        Object [] clone;
 
         item = buildArray( 32 );
         clone = cloner.cloneItem( item );
@@ -27,10 +27,10 @@ public class ItemClonerTest
     @Test
     public void testMultipleUse()
     {
-        ItemCloner<Object[]> cloner = new ItemCloner<>();
+        ItemCloner<Object []> cloner = new ItemCloner<>();
 
-        Object[] item;
-        Object[] clone;
+        Object [] item;
+        Object [] clone;
 
         item = buildArray( 32 );
         clone = cloner.cloneItem( item );
@@ -51,9 +51,9 @@ public class ItemClonerTest
         Assert.assertNotSame( item, clone );
     }
 
-    private static Object[] buildArray( int count )
+    private static Object [] buildArray( int count )
     {
-        Object[] values = new Object[count];
+        Object [] values = new Object[count];
 
         Random rand = new Random();
         for( int i = 0; i < count; i++ )

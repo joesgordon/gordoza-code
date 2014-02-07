@@ -7,7 +7,7 @@ import org.jutils.ui.validation.ValidationException;
  * Validator that updates an object with the latest data when the data is valid.
  * @param <T> the type of data to be validated/updated.
  ******************************************************************************/
-public class DataTextValidtor<T> implements ITextValidator
+public class DataTextValidator<T> implements ITextValidator
 {
     /** The validator to be used. */
     private final IDataValidator<T> validator;
@@ -20,7 +20,7 @@ public class DataTextValidtor<T> implements ITextValidator
      * data.
      * @param updater the updater to be called when the data is valid.
      **************************************************************************/
-    public DataTextValidtor( IDataValidator<T> validator, IUpdater<T> updater )
+    public DataTextValidator( IDataValidator<T> validator, IUpdater<T> updater )
     {
         this.validator = validator;
         this.updater = updater;

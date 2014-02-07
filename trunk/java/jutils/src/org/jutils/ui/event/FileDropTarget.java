@@ -74,7 +74,9 @@ public class FileDropTarget extends DropTarget
 
     public static enum DropActionType
     {
-        LINK, COPY, MOVE;
+        LINK,
+        COPY,
+        MOVE;
     }
 
     private static class DefaultFileDropEvent implements IFileDropEvent

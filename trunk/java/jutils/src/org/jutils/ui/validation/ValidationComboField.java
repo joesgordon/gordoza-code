@@ -30,7 +30,7 @@ public final class ValidationComboField<T> implements IValidationField
     /***************************************************************************
      * @param items
      **************************************************************************/
-    public ValidationComboField( T[] items )
+    public ValidationComboField( T [] items )
     {
         this( Arrays.asList( items ) );
     }

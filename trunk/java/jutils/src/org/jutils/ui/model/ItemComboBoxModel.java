@@ -460,7 +460,7 @@ public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel<T>
      * 
      **************************************************************************/
     @Override
-    public Object[] toArray()
+    public Object [] toArray()
     {
         return items.toArray();
     }
@@ -469,7 +469,7 @@ public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel<T>
      * 
      **************************************************************************/
     @Override
-    public <I> I[] toArray( I[] a )
+    public <I> I [] toArray( I [] a )
     {
         return items.toArray( a );
     }

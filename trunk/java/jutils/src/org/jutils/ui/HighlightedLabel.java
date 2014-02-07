@@ -141,7 +141,7 @@ public class HighlightedLabel extends JLabel
      * UHighlightedLabel demo
      * @param args
      **************************************************************************/
-    public static void main( String[] args )
+    public static void main( String [] args )
     {
         class DemoRunner extends FrameRunner
         {

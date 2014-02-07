@@ -10,7 +10,7 @@ import javax.swing.ImageIcon;
  *****************************************************************************/
 public class ProgramData implements Comparable<Object>
 {
-    private byte[] iconData;
+    private byte [] iconData;
 
     private String name;
 
@@ -121,7 +121,7 @@ public class ProgramData implements Comparable<Object>
     /***************************************************************************
      * @param data
      **************************************************************************/
-    public void setIconData( byte[] data )
+    public void setIconData( byte [] data )
     {
         iconData = Arrays.copyOf( data, data.length );
     }

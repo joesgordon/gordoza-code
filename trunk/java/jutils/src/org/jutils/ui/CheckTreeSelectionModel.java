@@ -33,7 +33,7 @@ public class CheckTreeSelectionModel extends DefaultTreeSelectionModel
         {
             return false;
         }
-        TreePath[] selectionPaths = getSelectionPaths();
+        TreePath [] selectionPaths = getSelectionPaths();
         if( selectionPaths == null )
         {
             return false;
@@ -91,7 +91,7 @@ public class CheckTreeSelectionModel extends DefaultTreeSelectionModel
     /***************************************************************************
      * @param pPaths TreePath[]
      **************************************************************************/
-    public void setSelectionPaths( TreePath[] paths )
+    public void setSelectionPaths( TreePath [] paths )
     {
         this.clearSelection();
         this.addSelectionPaths( paths );
@@ -100,13 +100,13 @@ public class CheckTreeSelectionModel extends DefaultTreeSelectionModel
     /***************************************************************************
      * @param paths TreePath[]
      **************************************************************************/
-    public void addSelectionPaths( TreePath[] paths )
+    public void addSelectionPaths( TreePath [] paths )
     {
         // unselect all descendants of paths[]
         for( int i = 0; i < paths.length; i++ )
         {
             TreePath path = paths[i];
-            TreePath[] selectionPaths = getSelectionPaths();
+            TreePath [] selectionPaths = getSelectionPaths();
             if( selectionPaths == null )
             {
                 break;
@@ -119,7 +119,7 @@ public class CheckTreeSelectionModel extends DefaultTreeSelectionModel
                     toBeRemoved.add( selectionPaths[j] );
                 }
             }
-            super.removeSelectionPaths( ( TreePath[] )toBeRemoved.toArray( new TreePath[0] ) );
+            super.removeSelectionPaths( ( TreePath [] )toBeRemoved.toArray( new TreePath[0] ) );
         }
 
         // if all siblings are selected then unselect them and select parent
@@ -193,7 +193,7 @@ public class CheckTreeSelectionModel extends DefaultTreeSelectionModel
     /***************************************************************************
      * @param paths TreePath[]
      **************************************************************************/
-    public void removeSelectionPaths( TreePath[] paths )
+    public void removeSelectionPaths( TreePath [] paths )
     {
         for( int i = 0; i < paths.length; i++ )
         {

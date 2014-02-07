@@ -16,7 +16,7 @@ public class CyclingSpinnerListModel extends SpinnerListModel
     /***************************************************************************
      * @param values
      **************************************************************************/
-    public CyclingSpinnerListModel( Object[] values )
+    public CyclingSpinnerListModel( Object [] values )
     {
         super( values );
         firstValue = values[0];

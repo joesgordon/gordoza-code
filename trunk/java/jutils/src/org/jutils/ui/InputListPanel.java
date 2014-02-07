@@ -24,7 +24,7 @@ public class InputListPanel extends JPanel implements ListSelectionListener,
      * @param data
      * @param title
      **************************************************************************/
-    public InputListPanel( String[] data, String title )
+    public InputListPanel( String [] data, String title )
     {
         textfield = new JTextField( 5 );
         list = new JList<String>( data );
