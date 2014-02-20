@@ -75,6 +75,8 @@ public final class IconConstants
 
     public final static String PAGEMAG_16 = "document-preview16.png";
 
+    public final static String PAGEMAG_24 = "document-preview24.png";
+
     public final static String PAGEMAG_32 = "document-preview32.png";
 
     public final static String PAGEMAG_64 = "document-preview64.png";

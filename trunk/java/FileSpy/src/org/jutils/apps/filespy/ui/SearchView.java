@@ -17,7 +17,6 @@ import org.jutils.*;
 import org.jutils.apps.filespy.FileSpyMain;
 import org.jutils.apps.filespy.data.*;
 import org.jutils.apps.filespy.search.Searcher;
-import org.jutils.apps.jexplorer.JExplorerFrame;
 import org.jutils.io.UFile;
 import org.jutils.ui.*;
 import org.jutils.ui.calendar.CalendarField;
@@ -1033,14 +1032,14 @@ public class SearchView implements IDataView<SearchParams>
     private static class CheckBoxEnabler_actionAdapter implements
         ActionListener
     {
-        private JComponent[] components;
+        private JComponent [] components;
 
         public CheckBoxEnabler_actionAdapter( JComponent component )
         {
             this( new JComponent[] { component } );
         }
 
-        public CheckBoxEnabler_actionAdapter( JComponent[] components )
+        public CheckBoxEnabler_actionAdapter( JComponent [] components )
         {
             this.components = components;
         }
@@ -1061,12 +1060,13 @@ public class SearchView implements IDataView<SearchParams>
     private static class OpenResultsListener extends MouseAdapter
     {
         private final SearchView panel;
-        private final JExplorerFrame explorer;
+
+        // private final JExplorerFrame explorer;
 
         public OpenResultsListener( SearchView adaptee )
         {
             this.panel = adaptee;
-            this.explorer = new JExplorerFrame();
+            // this.explorer = new JExplorerFrame();
         }
 
         public void mouseClicked( MouseEvent e )
@@ -1074,33 +1074,35 @@ public class SearchView implements IDataView<SearchParams>
             if( e.getClickCount() == 2 && !e.isPopupTrigger() )
             {
                 File file = panel.resultsTable.getSelectedFile();
+
                 if( file != null )
                 {
-                    if( file.isDirectory() )
+                    // if( file.isDirectory() )
+                    // {
+                    // Desktop.getDesktop().open( file );
+                    // // showFile( file );
+                    // if( explorer == null )
+                    // {
+                    // explorer.setDefaultCloseOperation( JFrame.HIDE_ON_CLOSE
+                    // );
+                    // }
+                    // else
+                    // {
+                    // explorer.setVisible( true );
+                    // }
+                    // }
+                    // else
+                    // {
+                    try
                     {
-                        // showFile( file );
-                        if( explorer == null )
-                        {
-                            explorer.setDefaultCloseOperation( JFrame.HIDE_ON_CLOSE );
-                        }
-                        else
-                        {
-                            explorer.setVisible( true );
-                        }
+                        Desktop.getDesktop().open( file );
                     }
-                    else
+                    catch( Exception ex )
                     {
-                        try
-                        {
-                            Desktop.getDesktop().open( file );
-                        }
-                        catch( Exception ex )
-                        {
-                            JOptionPane.showMessageDialog( panel.view,
-                                ex.getMessage(), "ERROR",
-                                JOptionPane.ERROR_MESSAGE );
-                        }
+                        JOptionPane.showMessageDialog( panel.view,
+                            ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE );
                     }
+                    // }
                 }
 
             }
