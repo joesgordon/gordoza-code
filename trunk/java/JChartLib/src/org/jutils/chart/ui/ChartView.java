@@ -10,7 +10,8 @@ import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
 import org.jutils.chart.*;
-import org.jutils.chart.data.*;
+import org.jutils.chart.data.ScreenPlotTransformer;
+import org.jutils.chart.data.XYPoint;
 import org.jutils.chart.io.DataFileReader;
 import org.jutils.chart.model.ISeriesData;
 import org.jutils.chart.ui.objects.Chart;
@@ -91,7 +92,7 @@ public class ChartView implements IView<JComponent>
 
             s.name = file.getName();
 
-            addSeries( s );
+            addSeries( s, addData );
 
             // System.out.format( "x => (%f,%f)", chart.plot.context.xMin,
             // chart.plot.context.xMax );
@@ -142,13 +143,12 @@ public class ChartView implements IView<JComponent>
             IFileDropEvent fde = event.getItem();
             List<File> files = fde.getFiles();
 
-            boolean addData = files.size() == 1 &&
-                fde.getActionType() == DropActionType.COPY;
+            boolean addData = fde.getActionType() == DropActionType.COPY;
 
             for( int i = 0; i < files.size(); i++ )
             {
                 view.importData( files.get( i ), addData );
-                addData = files.size() > 1;
+                addData = true;
             }
         }
     }
