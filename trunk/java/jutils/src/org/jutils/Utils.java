@@ -40,6 +40,11 @@ public final class Utils
     {
     }
 
+    public static boolean doubleEquals( double a, double b, double epsilon )
+    {
+        return a == b ? true : Math.abs( a - b ) < epsilon;
+    }
+
     /***************************************************************************
      * Returns the elapsed time in the default formatted string.
      * @return the elapsed time in the default formatted string.
