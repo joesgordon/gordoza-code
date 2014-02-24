@@ -94,11 +94,14 @@ public class StandardFormView implements IView<JPanel>
     public void addField( IFormField field, int index )
     {
         GridBagConstraints constraints;
-        JLabel label = new JLabel( field.getFieldName() + ":" );
         int top = formMargin;
+
+        JLabel label = null;
 
         if( field.getFieldName() != null )
         {
+            label = new JLabel( field.getFieldName() + ":" );
+
             constraints = new GridBagConstraints( 0, index * 2, 1, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(
                     formMargin, formMargin, 0, formMargin ), 0, 0 );
@@ -136,7 +139,10 @@ public class StandardFormView implements IView<JPanel>
     {
         FieldInfo info = fields.remove( index );
 
-        view.remove( info.label );
+        if( info.label != null )
+        {
+            view.remove( info.label );
+        }
         view.remove( info.field.getField() );
 
         refreshForm( index );
@@ -160,7 +166,10 @@ public class StandardFormView implements IView<JPanel>
         FieldInfo info = fields.get( index );
 
         info.field.getField().setVisible( visible );
-        info.label.setVisible( visible );
+        if( info.label != null )
+        {
+            info.label.setVisible( visible );
+        }
     }
 
     /***************************************************************************
