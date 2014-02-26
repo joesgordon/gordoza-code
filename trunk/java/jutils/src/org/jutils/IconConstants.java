@@ -1,5 +1,8 @@
 package org.jutils;
 
+import java.awt.Image;
+import java.util.List;
+
 /*******************************************************************************
  * Defines the constants needed to access the icons in this library.
  ******************************************************************************/
@@ -120,5 +123,11 @@ public final class IconConstants
      **************************************************************************/
     private IconConstants()
     {
+    }
+
+    public static List<Image> getPageMagImages()
+    {
+        return loader.getImages( PAGEMAG_16, PAGEMAG_24, PAGEMAG_32,
+            PAGEMAG_64, PAGEMAG_128 );
     }
 }
