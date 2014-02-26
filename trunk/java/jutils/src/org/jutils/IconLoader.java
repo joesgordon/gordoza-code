@@ -74,7 +74,6 @@ public class IconLoader
         }
         else
         {
-            System.out.println( "Getting icon: " + str );
             icon = new ImageIcon( loader.getUrl( str ) );
             iconMap.put( str, icon );
         }
