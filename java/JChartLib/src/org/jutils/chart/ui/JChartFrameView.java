@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import org.jutils.chart.ChartIconConstants;
 import org.jutils.chart.ChartUtils;
 import org.jutils.chart.ui.objects.Series;
 import org.jutils.ui.*;
@@ -33,6 +34,7 @@ public class JChartFrameView implements IView<JFrame>
 
         frame.setJMenuBar( createMenubar( frame ) );
         frame.setContentPane( createContentPane() );
+        frame.setIconImages( ChartIconConstants.getChartImages() );
 
         Series s;
 

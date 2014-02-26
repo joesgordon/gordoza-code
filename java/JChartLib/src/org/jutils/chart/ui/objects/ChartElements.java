@@ -25,7 +25,7 @@ public class ChartElements implements IChadget
      **************************************************************************/
     public ChartElements()
     {
-        this.width = 4;
+        this.width = 2;
         this.inset = 20;
         this.axesLayer = new Layer2d();
         this.solidStroke = new BasicStroke( width, BasicStroke.CAP_ROUND,
