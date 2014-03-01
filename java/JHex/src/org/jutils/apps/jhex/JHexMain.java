@@ -2,8 +2,8 @@ package org.jutils.apps.jhex;
 
 import java.io.File;
 
-import org.jutils.io.*;
-import org.jutils.io.UserOptionsSerializer.IUserOptionsCreator;
+import org.jutils.io.IOUtils;
+import org.jutils.io.UserOptionsSerializer;
 import org.jutils.ui.app.FrameApplication;
 
 //TODO comments
@@ -14,11 +14,8 @@ import org.jutils.ui.app.FrameApplication;
 public class JHexMain
 {
     /**  */
-    private static final File USER_OPTIONS_DIR = new File( IOUtils.USERS_DIR,
-        ".jhex" );
-    /**  */
-    private static final File USER_OPTIONS_FILE = new File( USER_OPTIONS_DIR,
-        "options.txt" );
+    public static final File USER_OPTIONS_FILE = IOUtils.getUsersFile(
+        ".jutils", "jhex", "options.xml" );
 
     /***************************************************************************
      * @param args Program arguments.
@@ -38,8 +35,8 @@ public class JHexMain
             }
         }
 
-        JHexApp app = new JHexApp( getUserIO(), file );
-        FrameApplication.invokeLater( app );
+        JHexApp hexApp = new JHexApp( getUserIO(), file );
+        FrameApplication.invokeLater( hexApp );
     }
 
     /***************************************************************************
@@ -47,21 +44,7 @@ public class JHexMain
      **************************************************************************/
     public static UserOptionsSerializer<JHexOptions> getUserIO()
     {
-        return UserOptionsSerializer.getUserIO( new JHexOptionsDataCreator(),
+        return UserOptionsSerializer.getUserIO( JHexOptions.class,
             USER_OPTIONS_FILE );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class JHexOptionsDataCreator implements
-        IUserOptionsCreator<JHexOptions>
-    {
-        @Override
-        public JHexOptions createDefaultOptions()
-        {
-            JHexOptions options = new JHexOptions();
-            return options;
-        }
     }
 }

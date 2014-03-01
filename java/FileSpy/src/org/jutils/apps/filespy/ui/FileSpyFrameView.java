@@ -10,9 +10,9 @@ import java.io.IOException;
 import javax.swing.*;
 
 import org.jutils.IconConstants;
-import org.jutils.apps.filespy.FileSpyMain;
 import org.jutils.apps.filespy.data.FileSpyData;
 import org.jutils.apps.filespy.data.SearchParams;
+import org.jutils.io.UserOptionsSerializer;
 import org.jutils.licensing.LicenseDialog;
 import org.jutils.ui.*;
 import org.jutils.ui.explorer.FileConfigurationDialog;
@@ -29,16 +29,19 @@ public class FileSpyFrameView implements IView<JFrame>
     private final SearchView spyPanel;
     /**  */
     private final JFrame frame;
+    /**  */
+    private final UserOptionsSerializer<FileSpyData> userio;
 
     /***************************************************************************
      *
      **************************************************************************/
-    public FileSpyFrameView()
+    public FileSpyFrameView( UserOptionsSerializer<FileSpyData> userio )
     {
         StatusBarPanel statusBar = new StatusBarPanel();
 
+        this.userio = userio;
         this.frame = new JFrame();
-        this.spyPanel = new SearchView( statusBar );
+        this.spyPanel = new SearchView( statusBar, userio );
 
         JPanel contentPane = new JPanel( new BorderLayout() );
 
@@ -240,9 +243,9 @@ public class FileSpyFrameView implements IView<JFrame>
         JFileChooser chooser = new JFileChooser();
         int result = JFileChooser.ERROR_OPTION;
         File fileChosen = null;
-        FileSpyData configData = FileSpyMain.getConfigData();
+        FileSpyData configData = userio.getOptions();
 
-        chooser.setCurrentDirectory( configData.getLastSavedLocation() );
+        chooser.setCurrentDirectory( configData.lastSavedLocation );
         chooser.setAcceptAllFileFilterUsed( false );
         chooser.setFileFilter( new FileSpySearchFilter() );
         chooser.setDialogTitle( "Open Search File" );
@@ -250,14 +253,7 @@ public class FileSpyFrameView implements IView<JFrame>
         result = chooser.showOpenDialog( frame );
         if( result == JFileChooser.APPROVE_OPTION )
         {
-            try
-            {
-                configData.write();
-            }
-            catch( IOException ex )
-            {
-                ex.printStackTrace();
-            }
+            userio.write();
 
             fileChosen = chooser.getSelectedFile();
             if( fileChosen != null && fileChosen.isFile() )
@@ -289,9 +285,9 @@ public class FileSpyFrameView implements IView<JFrame>
         JFileChooser chooser = new JFileChooser();
         int result = JFileChooser.ERROR_OPTION;
         File fileChosen = null;
-        FileSpyData configData = FileSpyMain.getConfigData();
+        FileSpyData configData = userio.getOptions();
 
-        chooser.setCurrentDirectory( configData.getLastSavedLocation() );
+        chooser.setCurrentDirectory( configData.lastSavedLocation );
         chooser.setAcceptAllFileFilterUsed( false );
         chooser.setFileFilter( new FileSpySearchFilter() );
         chooser.setDialogTitle( "Save As" );
@@ -299,14 +295,7 @@ public class FileSpyFrameView implements IView<JFrame>
         result = chooser.showSaveDialog( frame );
         if( result == JFileChooser.APPROVE_OPTION )
         {
-            try
-            {
-                configData.write();
-            }
-            catch( IOException ex )
-            {
-                ex.printStackTrace();
-            }
+            userio.write();
 
             fileChosen = chooser.getSelectedFile();
             if( !fileChosen.getName().endsWith(

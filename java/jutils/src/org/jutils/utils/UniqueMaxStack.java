@@ -79,6 +79,14 @@ public class UniqueMaxStack<T> implements Iterable<T>
         stack.addFirst( element );
     }
 
+    public void pushAll( UniqueMaxStack<T> stack )
+    {
+        for( T item : stack )
+        {
+            push( item );
+        }
+    }
+
     /***************************************************************************
      * @param o
      * @return

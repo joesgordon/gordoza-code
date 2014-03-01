@@ -1,79 +1,57 @@
 package org.jutils.apps.filespy;
 
 import java.io.File;
-import java.io.IOException;
-
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 import org.jutils.apps.filespy.data.FileSpyData;
-import org.jutils.apps.filespy.ui.FileSpyFrameView;
-import org.jutils.io.IOUtils;
-import org.jutils.ui.FrameRunner;
-import org.jutils.ui.StandardUncaughtExceptionHandler;
+import org.jutils.io.*;
+import org.jutils.io.UserOptionsSerializer.IUserOptionsCreator;
+import org.jutils.ui.app.FrameApplication;
 
 /*******************************************************************************
  *
  ******************************************************************************/
-public class FileSpyMain extends FrameRunner
+public class FileSpyMain
 {
     /**  */
-    public static final String CONFIG_FILENAME = ".fileSpy.conf";
-    /**  */
-    private static FileSpyData configData = null;
-
-    /***************************************************************************
-     * @return FileSpyData
-     **************************************************************************/
-    public static FileSpyData getConfigData()
-    {
-        if( configData == null )
-        {
-            File file = new File( IOUtils.USERS_DIR, CONFIG_FILENAME );
-            try
-            {
-                configData = ( FileSpyData )FileSpyData.read( file );
-            }
-            catch( IOException ex )
-            {
-                configData = new FileSpyData();
-                configData.setFile( file );
-            }
-        }
-
-        return configData;
-    }
-
-    /***************************************************************************
-     * Construct and show the application.
-     **************************************************************************/
-    @Override
-    protected JFrame createFrame()
-    {
-        FileSpyFrameView frameView = new FileSpyFrameView();
-        JFrame frame = frameView.getView();
-        StandardUncaughtExceptionHandler fsue = new StandardUncaughtExceptionHandler(
-            frame );
-        Thread.setDefaultUncaughtExceptionHandler( fsue );
-
-        return frame;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    protected boolean validate()
-    {
-        return true;
-    }
+    public static final File USER_OPTIONS_FILE = IOUtils.getUsersFile(
+        ".jutils", "filespy", "options.xml" );
 
     /***************************************************************************
      * Application entry point.
      * @param args String[]
      **************************************************************************/
-    public static void main( String[] args )
+    public static void main( String [] args )
     {
-        SwingUtilities.invokeLater( new FileSpyMain() );
+        FrameApplication.invokeLater( new FileSpyApp( createUserIO() ) );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class OptionsCreator implements
+        IUserOptionsCreator<FileSpyData>
+    {
+        @Override
+        public FileSpyData createDefaultOptions()
+        {
+            FileSpyData data = new FileSpyData();
+
+            return data;
+        }
+
+        @Override
+        public FileSpyData initialize( FileSpyData item_read )
+        {
+            return new FileSpyData( item_read );
+        }
+    }
+
+    public static UserOptionsSerializer<FileSpyData> createUserIO()
+    {
+        UserOptionsSerializer<FileSpyData> userio;
+        userio = UserOptionsSerializer.getUserIO( new OptionsCreator(),
+            USER_OPTIONS_FILE );
+
+        return userio;
     }
 }

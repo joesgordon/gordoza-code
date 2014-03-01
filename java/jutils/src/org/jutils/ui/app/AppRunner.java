@@ -1,8 +1,11 @@
 package org.jutils.ui.app;
 
 import javax.swing.UIManager;
+import javax.swing.plaf.basic.BasicTabbedPaneUI;
 
 import com.jgoodies.looks.Options;
+import com.jgoodies.looks.plastic.PlasticLookAndFeel;
+import com.jgoodies.looks.plastic.theme.DesertBluer;
 
 //TODO comments
 
@@ -34,6 +37,11 @@ public class AppRunner implements Runnable
 
             if( lafName == null )
             {
+                UIManager.put( "TabbedPaneUI",
+                    BasicTabbedPaneUI.class.getCanonicalName() );
+                PlasticLookAndFeel.setPlasticTheme( new DesertBluer() );
+                Options.setSelectOnFocusGainEnabled( true );
+
                 lafName = Options.PLASTICXP_NAME;
             }
 

@@ -2,73 +2,57 @@ package org.jutils.apps.filespy.data;
 
 import java.io.File;
 
-import org.jutils.io.XObject;
 import org.jutils.utils.UniqueMaxStack;
 
 /*******************************************************************************
  *
  ******************************************************************************/
-public class FileSpyData extends XObject
+public class FileSpyData
 {
     /**  */
-    private String lastSavedLocation = null;
+    public File lastSavedLocation = null;
 
     /**  */
-    public UniqueMaxStack<String> filenames = null;
+    public final UniqueMaxStack<String> filenames;
 
     /**  */
-    public UniqueMaxStack<String> contents = null;
+    public final UniqueMaxStack<String> contents;
 
     /**  */
-    public UniqueMaxStack<String> folders = null;
+    public final UniqueMaxStack<String> folders;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public FileSpyData()
     {
-        super();
-        init();
+        this.filenames = new UniqueMaxStack<String>();
+        this.contents = new UniqueMaxStack<String>();
+        this.folders = new UniqueMaxStack<String>();
     }
 
     /***************************************************************************
-     * @return
+     * @param data
      **************************************************************************/
-    public File getLastSavedLocation()
+    public FileSpyData( FileSpyData data )
     {
-        if( lastSavedLocation == null )
-        {
-            return null;
-        }
-        return new File( lastSavedLocation );
-    }
+        this();
 
-    /***************************************************************************
-     * @param file
-     **************************************************************************/
-    public void setLastSavedLocation( File file )
-    {
-        lastSavedLocation = file.getAbsolutePath();
-    }
+        this.lastSavedLocation = data.lastSavedLocation;
 
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public void init()
-    {
-        if( filenames == null )
+        if( data.filenames != null )
         {
-            filenames = new UniqueMaxStack<String>();
+            this.filenames.pushAll( data.filenames );
         }
 
-        if( contents == null )
+        if( data.contents != null )
         {
-            contents = new UniqueMaxStack<String>();
+            this.contents.pushAll( data.contents );
         }
 
-        if( folders == null )
+        if( data.folders != null )
         {
-            folders = new UniqueMaxStack<String>();
+            this.folders.pushAll( data.folders );
         }
     }
 }
