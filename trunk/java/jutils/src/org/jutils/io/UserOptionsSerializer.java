@@ -1,6 +1,8 @@
 package org.jutils.io;
 
 import java.io.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 import com.thoughtworks.xstream.XStreamException;
 
@@ -98,6 +100,7 @@ public class UserOptionsSerializer<T>
                     {
                         @SuppressWarnings( "unchecked")
                         T t = ( T )obj;
+                        // options = creator.initialize( t );
                         options = t;
                     }
                     else
@@ -192,6 +195,64 @@ public class UserOptionsSerializer<T>
     {
         /** Creates a default set of options. */
         public T createDefaultOptions();
+
+        /** Called to initialize fields that may have been read as null. */
+        public T initialize( T item_read );
+    }
+
+    public static class DefaultOptionsCreator<T> implements
+        IUserOptionsCreator<T>
+    {
+        private final Constructor<T> dataConstructor;
+
+        public DefaultOptionsCreator( Class<T> cls )
+        {
+            try
+            {
+                this.dataConstructor = cls.getConstructor();
+            }
+            catch( NoSuchMethodException ex )
+            {
+                throw new IllegalArgumentException( cls.getName() +
+                    " has no default constructor", ex );
+            }
+            catch( SecurityException ex )
+            {
+                throw new IllegalArgumentException( cls.getName() +
+                    " has no accesible constructor", ex );
+            }
+        }
+
+        @Override
+        public T createDefaultOptions()
+        {
+            try
+            {
+                return dataConstructor.newInstance();
+            }
+            catch( InstantiationException ex )
+            {
+                throw new IllegalStateException( ex );
+            }
+            catch( IllegalAccessException ex )
+            {
+                throw new IllegalStateException( ex );
+            }
+            catch( IllegalArgumentException ex )
+            {
+                throw new IllegalStateException( ex );
+            }
+            catch( InvocationTargetException ex )
+            {
+                throw new IllegalStateException( ex );
+            }
+        }
+
+        @Override
+        public T initialize( T item_read )
+        {
+            return item_read;
+        }
     }
 
     /***************************************************************************
@@ -216,5 +277,11 @@ public class UserOptionsSerializer<T>
         }
 
         return new UserOptionsSerializer<T>( creator, file );
+    }
+
+    public static <T> UserOptionsSerializer<T> getUserIO( Class<T> cls,
+        File file )
+    {
+        return getUserIO( new DefaultOptionsCreator<T>( cls ), file );
     }
 }

@@ -3,7 +3,6 @@ package org.jutils.apps.filespy.ui;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
@@ -14,10 +13,10 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.text.*;
 
 import org.jutils.*;
-import org.jutils.apps.filespy.FileSpyMain;
 import org.jutils.apps.filespy.data.*;
 import org.jutils.apps.filespy.search.Searcher;
 import org.jutils.io.UFile;
+import org.jutils.io.UserOptionsSerializer;
 import org.jutils.ui.*;
 import org.jutils.ui.calendar.CalendarField;
 import org.jutils.ui.event.ItemActionEvent;
@@ -101,14 +100,19 @@ public class SearchView implements IDataView<SearchParams>
     private final StatusBarPanel statusBar;
 
     /**  */
+    private final UserOptionsSerializer<FileSpyData> userio;
+
+    /**  */
     private Searcher searcher;
 
     /***************************************************************************
      *
      **************************************************************************/
-    public SearchView( StatusBarPanel statusBar )
+    public SearchView( StatusBarPanel statusBar,
+        UserOptionsSerializer<FileSpyData> userio )
     {
         this.statusBar = statusBar;
+        this.userio = userio;
 
         view = new JPanel( new GridBagLayout() );
         filenameComboBox = new JComboBox<String>();
@@ -145,7 +149,7 @@ public class SearchView implements IDataView<SearchParams>
         // ---------------------------------------------------------------------
         // Setup search panel
         // ---------------------------------------------------------------------
-        FileSpyData configData = FileSpyMain.getConfigData();
+        FileSpyData configData = userio.getOptions();
 
         filenameModel = new ItemComboBoxModel<String>( configData.filenames );
         contentsModel = new ItemComboBoxModel<String>( configData.contents );
@@ -820,7 +824,7 @@ public class SearchView implements IDataView<SearchParams>
 
         setSearchStarted();
 
-        FileSpyData configData = FileSpyMain.getConfigData();
+        FileSpyData configData = userio.getOptions();
         Object contents = contentsComboBox.getSelectedItem();
         Object filename = filenameComboBox.getSelectedItem();
         Object folder = searchInComboBox.getSelectedItem();
@@ -837,14 +841,7 @@ public class SearchView implements IDataView<SearchParams>
 
         configData.folders.push( folder.toString() );
 
-        try
-        {
-            configData.write();
-        }
-        catch( IOException ex )
-        {
-            ex.printStackTrace();
-        }
+        userio.write();
     }
 
     /***************************************************************************

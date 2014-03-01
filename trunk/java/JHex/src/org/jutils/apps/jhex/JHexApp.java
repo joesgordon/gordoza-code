@@ -6,6 +6,7 @@ import java.io.File;
 import javax.swing.JFrame;
 
 import org.jutils.io.UserOptionsSerializer;
+import org.jutils.ui.StandardUncaughtExceptionHandler;
 import org.jutils.ui.app.IFrameApp;
 
 //TODO comments
@@ -42,6 +43,11 @@ public class JHexApp implements IFrameApp
         this( userio, file, true );
     }
 
+    /***************************************************************************
+     * @param userio
+     * @param file
+     * @param closeFileWithFrame
+     **************************************************************************/
     public JHexApp( UserOptionsSerializer<JHexOptions> userio, File file,
         boolean closeFileWithFrame )
     {
@@ -69,6 +75,10 @@ public class JHexApp implements IFrameApp
 
         frame.setSize( new Dimension( 800, 600 ) );
         frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+
+        StandardUncaughtExceptionHandler h;
+        h = new StandardUncaughtExceptionHandler( frame );
+        Thread.setDefaultUncaughtExceptionHandler( h );
 
         return frame;
     }

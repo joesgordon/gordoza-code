@@ -83,6 +83,28 @@ public final class IOUtils
     }
 
     /***************************************************************************
+     * @param names
+     * @return
+     **************************************************************************/
+    public static File getUsersFile( String... names )
+    {
+        if( names.length < 1 )
+        {
+            throw new IllegalArgumentException(
+                "Must specify at least one name." );
+        }
+
+        File file = getUsersFile( names[0] );
+
+        for( int i = 1; i < names.length; i++ )
+        {
+            file = new File( file, names[i] );
+        }
+
+        return file;
+    }
+
+    /***************************************************************************
      * @param filename
      * @return
      **************************************************************************/

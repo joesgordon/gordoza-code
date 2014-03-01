@@ -20,9 +20,6 @@ public class FrameApplication implements IApplication
     /**  */
     private final String lookAndFeel;
 
-    /**  */
-    private JFrame frame;
-
     public FrameApplication( IFrameApp frameApp )
     {
         this( frameApp, true );
@@ -50,7 +47,7 @@ public class FrameApplication implements IApplication
     @Override
     public void createAndShowUi()
     {
-        frame = frameApp.createFrame();
+        JFrame frame = frameApp.createFrame();
 
         // ---------------------------------------------------------------------
         // Validate frames that have preset sizes. Pack frames that have
@@ -70,12 +67,6 @@ public class FrameApplication implements IApplication
 
         frameApp.finalizeGui();
     }
-
-    // TODO use it or lose it.
-    // public JFrame getFrame()
-    // {
-    // return frame;
-    // }
 
     /***************************************************************************
      * Creates and displays a tray icon with the provided image, tool tip, and
