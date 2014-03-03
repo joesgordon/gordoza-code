@@ -5,6 +5,8 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
+import org.jutils.ui.StatusBarPanel;
+
 //TODO comments
 
 public final class SwingUtils
@@ -93,5 +95,46 @@ public final class SwingUtils
         }
 
         return name;
+    }
+
+    public static JPanel createStandardConentPane( JToolBar toolbar,
+        Container container )
+    {
+        StatusBarPanel statusbar = new StatusBarPanel();
+
+        return createStandardConentPane( toolbar, container, statusbar );
+    }
+
+    private static JPanel createStandardConentPane( JToolBar toolbar,
+        Container container, StatusBarPanel statusbar )
+    {
+        JPanel panel = new JPanel( new GridBagLayout() );
+        GridBagConstraints constraints;
+        int row = 0;
+
+        if( toolbar != null )
+        {
+            constraints = new GridBagConstraints( 0, row++, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 0, 0, 0, 0 ), 0, 0 );
+            panel.add( toolbar, constraints );
+        }
+
+        constraints = new GridBagConstraints( 0, row++, 1, 1, 1.0, 1.0,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
+                0, 0, 0 ), 0, 0 );
+        panel.add( container, constraints );
+
+        constraints = new GridBagConstraints( 0, row++, 1, 1, 1.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
+        panel.add( new JSeparator(), constraints );
+
+        constraints = new GridBagConstraints( 0, row++, 1, 1, 1.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
+        panel.add( statusbar.getView(), constraints );
+
+        return panel;
     }
 }
