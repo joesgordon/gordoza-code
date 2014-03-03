@@ -1,4 +1,4 @@
-package org.jutils.apps;
+package org.jutils.appgallery;
 
 import javax.swing.Icon;
 import javax.swing.JFrame;
