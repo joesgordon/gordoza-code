@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import org.budgey.BudgeyIconConstants;
 import org.budgey.BudgeyMain;
 import org.budgey.data.BudgeyOptions;
+import org.jutils.ui.app.FrameApplication;
 import org.jutils.ui.app.IFrameApp;
 
 //TODO comments
@@ -31,7 +32,9 @@ public class BudgeyApp implements ILibraryApp
     public JFrame runApp()
     {
         BudgeyOptions options = BudgeyOptions.read( BudgeyMain.OPTIONS_FILE );
-        IFrameApp r = new BudgeyMain( options );
-        return r.createFrame();
+        IFrameApp frameApp = new BudgeyMain( options );
+        FrameApplication app = new FrameApplication( frameApp, true );
+
+        return app.createAndShowFrame();
     }
 }
