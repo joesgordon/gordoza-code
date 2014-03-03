@@ -1,4 +1,4 @@
-package org.jutils.apps;
+package org.jutils.appgallery;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
