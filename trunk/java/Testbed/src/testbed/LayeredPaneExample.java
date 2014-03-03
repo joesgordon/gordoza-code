@@ -5,6 +5,7 @@ import java.awt.Container;
 
 import javax.swing.*;
 
+import org.jutils.apps.filespy.FileSpyMain;
 import org.jutils.apps.filespy.ui.SearchView;
 import org.jutils.ui.FrameRunner;
 import org.jutils.ui.StatusBarPanel;
@@ -40,7 +41,7 @@ public class LayeredPaneExample extends FrameRunner
     private JLayeredPane createLayers( StatusBarPanel statusBar )
     {
         JLayeredPane layeredPane = new JLayeredPane();
-        JPanel pane = new SearchView( statusBar ).getView();
+        JPanel pane = new SearchView( statusBar, FileSpyMain.createUserIO() ).getView();
 
         pane.setBounds( 0, 0, 500, 500 );
 

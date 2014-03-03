@@ -5,7 +5,8 @@ import javax.swing.JFrame;
 
 import org.jutils.IconConstants;
 import org.jutils.apps.filespy.FileSpyMain;
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 
 public class FileSpyApp implements ILibraryApp
 {
@@ -24,8 +25,10 @@ public class FileSpyApp implements ILibraryApp
     @Override
     public JFrame runApp()
     {
-        FrameRunner r = new FileSpyMain();
-        r.run();
-        return r.getFrame();
+        IFrameApp frameApp = new org.jutils.apps.filespy.FileSpyApp(
+            FileSpyMain.createUserIO() );
+        FrameApplication app = new FrameApplication( frameApp, true );
+
+        return app.createAndShowFrame();
     }
 }

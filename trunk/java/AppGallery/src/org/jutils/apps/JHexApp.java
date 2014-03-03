@@ -5,7 +5,8 @@ import javax.swing.JFrame;
 
 import org.jutils.IconConstants;
 import org.jutils.apps.jhex.JHexMain;
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 
 public class JHexApp implements ILibraryApp
 {
@@ -24,8 +25,10 @@ public class JHexApp implements ILibraryApp
     @Override
     public JFrame runApp()
     {
-        FrameRunner r = new JHexMain();
-        r.run();
-        return r.getFrame();
+        IFrameApp frameApp = new org.jutils.apps.jhex.JHexApp(
+            JHexMain.getUserIO() );
+        FrameApplication app = new FrameApplication( frameApp, true );
+
+        return app.createAndShowFrame();
     }
 }

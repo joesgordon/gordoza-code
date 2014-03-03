@@ -47,6 +47,11 @@ public class FrameApplication implements IApplication
     @Override
     public void createAndShowUi()
     {
+        createAndShowFrame();
+    }
+
+    public JFrame createAndShowFrame()
+    {
         JFrame frame = frameApp.createFrame();
 
         // ---------------------------------------------------------------------
@@ -66,6 +71,8 @@ public class FrameApplication implements IApplication
         frame.setVisible( true );
 
         frameApp.finalizeGui();
+
+        return frame;
     }
 
     /***************************************************************************
