@@ -127,4 +127,21 @@ public class IconLoader
 
         return images;
     }
+
+    /***************************************************************************
+     * @param prefix
+     * @return
+     **************************************************************************/
+    public static String [] buildImageList( String prefix )
+    {
+        final int [] sizes = new int[] { 16, 24, 32, 48, 64, 128, 256 };
+        String [] list = new String[sizes.length];
+
+        for( int i = 0; i < sizes.length; i++ )
+        {
+            list[i] = String.format( "%s%03d.png", prefix, sizes[i] );
+        }
+
+        return list;
+    }
 }
