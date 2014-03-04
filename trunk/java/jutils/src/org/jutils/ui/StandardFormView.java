@@ -88,6 +88,15 @@ public class StandardFormView implements IView<JPanel>
     }
 
     /***************************************************************************
+     * @param name
+     * @param comp
+     **************************************************************************/
+    public void addField( String name, Component comp )
+    {
+        addField( new DefaultFormField( name, comp ) );
+    }
+
+    /***************************************************************************
      * @param field
      * @param index
      **************************************************************************/
