@@ -81,50 +81,15 @@ public class UserOptionsSerializer<T>
      **************************************************************************/
     public T read()
     {
+        Object obj = null;
+
         options = null;
 
         try
         {
-            InputStream stream = null;
+            options = getDefault();
 
-            try
-            {
-                options = getDefault();
-                stream = new FileInputStream( file );
-
-                Object obj = XStreamUtils.readObjectXStream( stream );
-
-                if( obj != null )
-                {
-                    if( obj.getClass().equals( options.getClass() ) )
-                    {
-                        @SuppressWarnings( "unchecked")
-                        T t = ( T )obj;
-                        // options = creator.initialize( t );
-                        options = t;
-                    }
-                    else
-                    {
-                        throw new XStreamException(
-                            "Existing user options are of type " +
-                                obj.getClass().getName() +
-                                " and are not assignable to the type " +
-                                options.getClass() );
-                    }
-                }
-                else
-                {
-                    options = getDefault();
-                    write();
-                }
-            }
-            finally
-            {
-                if( stream != null )
-                {
-                    stream.close();
-                }
-            }
+            obj = XStreamUtils.readObjectXStream( file );
         }
         catch( FileNotFoundException ex )
         {
@@ -148,6 +113,30 @@ public class UserOptionsSerializer<T>
             System.out.println( "WARNING: User options file is out of date: " +
                 file.getAbsolutePath() );
             System.out.println( "WARNING: because: " + ex.getMessage() );
+        }
+
+        if( obj != null )
+        {
+            if( obj.getClass().equals( options.getClass() ) )
+            {
+                @SuppressWarnings( "unchecked")
+                T t = ( T )obj;
+                options = creator.initialize( t );
+                // options = t;
+            }
+            else
+            {
+                throw new XStreamException(
+                    "Existing user options are of type " +
+                        obj.getClass().getName() +
+                        " and are not assignable to the type " +
+                        options.getClass() );
+            }
+        }
+        else
+        {
+            options = getDefault();
+            write();
         }
 
         return options;
@@ -200,6 +189,9 @@ public class UserOptionsSerializer<T>
         public T initialize( T item_read );
     }
 
+    /***************************************************************************
+     * @param <T>
+     **************************************************************************/
     public static class DefaultOptionsCreator<T> implements
         IUserOptionsCreator<T>
     {
@@ -279,6 +271,9 @@ public class UserOptionsSerializer<T>
         return new UserOptionsSerializer<T>( creator, file );
     }
 
+    /***************************************************************************
+     * @param <T>
+     **************************************************************************/
     public static <T> UserOptionsSerializer<T> getUserIO( Class<T> cls,
         File file )
     {
