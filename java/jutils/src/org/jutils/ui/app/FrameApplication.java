@@ -2,9 +2,12 @@ package org.jutils.ui.app;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.lang.Thread.UncaughtExceptionHandler;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+
+import org.jutils.ui.StandardUncaughtExceptionHandler;
 
 //TODO comments
 
@@ -53,6 +56,10 @@ public class FrameApplication implements IApplication
     public JFrame createAndShowFrame()
     {
         JFrame frame = frameApp.createFrame();
+
+        UncaughtExceptionHandler h;
+        h = new StandardUncaughtExceptionHandler( frame );
+        Thread.setDefaultUncaughtExceptionHandler( h );
 
         // ---------------------------------------------------------------------
         // Validate frames that have preset sizes. Pack frames that have

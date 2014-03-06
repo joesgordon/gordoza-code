@@ -1,13 +1,13 @@
 package org.jutils.chart.app;
 
-import javax.swing.SwingUtilities;
+import org.jutils.ui.app.FrameApplication;
 
 public class JChartAppMain
 {
-    public static void main( String[] args )
+    public static void main( String [] args )
     {
         JChartAppRunner runnable = new JChartAppRunner();
 
-        SwingUtilities.invokeLater( runnable );
+        FrameApplication.invokeLater( runnable );
     }
 }

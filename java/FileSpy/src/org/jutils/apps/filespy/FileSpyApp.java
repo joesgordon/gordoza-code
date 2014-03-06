@@ -5,7 +5,6 @@ import javax.swing.JFrame;
 import org.jutils.apps.filespy.data.FileSpyData;
 import org.jutils.apps.filespy.ui.FileSpyFrameView;
 import org.jutils.io.UserOptionsSerializer;
-import org.jutils.ui.StandardUncaughtExceptionHandler;
 import org.jutils.ui.app.IFrameApp;
 
 public class FileSpyApp implements IFrameApp
@@ -22,9 +21,6 @@ public class FileSpyApp implements IFrameApp
     {
         FileSpyFrameView frameView = new FileSpyFrameView( userio );
         JFrame frame = frameView.getView();
-        StandardUncaughtExceptionHandler fsue = new StandardUncaughtExceptionHandler(
-            frame );
-        Thread.setDefaultUncaughtExceptionHandler( fsue );
 
         return frame;
     }
@@ -33,5 +29,4 @@ public class FileSpyApp implements IFrameApp
     public void finalizeGui()
     {
     }
-
 }
