@@ -6,11 +6,13 @@ import java.nio.ByteBuffer;
 import javax.swing.*;
 
 import org.jutils.NumberParsingUtils;
-import org.jutils.ui.FrameRunner;
-import org.jutils.ui.validation.*;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
+import org.jutils.ui.validation.ValidationException;
+import org.jutils.ui.validation.ValidationTextField;
 import org.jutils.ui.validators.ITextValidator;
 
-public class OctetConvFrame extends FrameRunner
+public class OctetConvFrame implements IFrameApp
 {
     private final ValidationTextField octField;
     private final ValidationTextField decField;
@@ -31,7 +33,7 @@ public class OctetConvFrame extends FrameRunner
     }
 
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         JFrame frame = new JFrame();
 
@@ -89,9 +91,8 @@ public class OctetConvFrame extends FrameRunner
     }
 
     @Override
-    protected boolean validate()
+    public void finalizeGui()
     {
-        return true;
     }
 
     private void setOctetField( long num )
@@ -129,7 +130,7 @@ public class OctetConvFrame extends FrameRunner
 
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new OctetConvFrame() );
+        FrameApplication.invokeLater( new OctetConvFrame() );
     }
 
     private class DecValidator extends FieldValidator

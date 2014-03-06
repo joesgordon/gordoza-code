@@ -10,8 +10,9 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.Timer;
 
-import org.jutils.ui.FrameRunner;
 import org.jutils.ui.JGoodiesToolBar;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 
 /*******************************************************************************
  * This class manages a group of {@link JPanel}s. This class provides methods
@@ -162,10 +163,10 @@ public class JFadePanel extends JPanel
      **************************************************************************/
     public static void main( String[] args )
     {
-        class DemoRunner extends FrameRunner
+        class DemoRunner implements IFrameApp
         {
             @Override
-            protected JFrame createFrame()
+            public JFrame createFrame()
             {
                 JFrame frame = new JFrame();
 
@@ -248,12 +249,11 @@ public class JFadePanel extends JPanel
             }
 
             @Override
-            protected boolean validate()
+            public void finalizeGui()
             {
-                return false;
             }
         }
 
-        SwingUtilities.invokeLater( new DemoRunner() );
+        FrameApplication.invokeLater( new DemoRunner() );
     }
 }

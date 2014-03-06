@@ -5,13 +5,13 @@ import java.awt.*;
 import javax.swing.*;
 
 import org.jutils.ui.CollapsibleView;
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 
-public class CollapsibleViewMain extends FrameRunner
+public class CollapsibleViewMain implements IFrameApp
 {
-
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         JFrame frame = new JFrame( "Collapsible View Tester" );
         JPanel panel = new JPanel( new GridBagLayout() );
@@ -76,13 +76,12 @@ public class CollapsibleViewMain extends FrameRunner
     }
 
     @Override
-    protected boolean validate()
+    public void finalizeGui()
     {
-        return true;
     }
 
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new CollapsibleViewMain() );
+        FrameApplication.invokeLater( new CollapsibleViewMain() );
     }
 }

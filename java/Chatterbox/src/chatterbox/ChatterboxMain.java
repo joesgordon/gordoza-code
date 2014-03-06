@@ -3,9 +3,9 @@ package chatterbox;
 import java.io.IOException;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 
 import chatterbox.controller.ChatController;
 import chatterbox.messager.Chat;
@@ -14,7 +14,7 @@ import chatterbox.ui.ChatFrame;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ChatterboxMain extends FrameRunner
+public class ChatterboxMain implements IFrameApp
 {
     private Chat messager;
     private String address;
@@ -32,11 +32,11 @@ public class ChatterboxMain extends FrameRunner
      **************************************************************************/
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new ChatterboxMain() );
+        FrameApplication.invokeLater( new ChatterboxMain() );
     }
 
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         ChatFrame frame = new ChatFrame( messager );
         new ChatController( messager, frame );
@@ -63,8 +63,7 @@ public class ChatterboxMain extends FrameRunner
     }
 
     @Override
-    protected boolean validate()
+    public void finalizeGui()
     {
-        return true;
     }
 }

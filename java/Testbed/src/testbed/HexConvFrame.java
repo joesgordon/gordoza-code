@@ -5,12 +5,14 @@ import java.awt.*;
 import javax.swing.*;
 
 import org.jutils.NumberParsingUtils;
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.event.ItemActionListener;
-import org.jutils.ui.validation.*;
+import org.jutils.ui.validation.ValidationException;
+import org.jutils.ui.validation.ValidationTextField;
 import org.jutils.ui.validators.ITextValidator;
 
-public class HexConvFrame extends FrameRunner
+public class HexConvFrame implements IFrameApp
 {
     private final ValidationTextField decField;
     private final ValidationTextField hexField;
@@ -27,7 +29,7 @@ public class HexConvFrame extends FrameRunner
     }
 
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         JFrame frame = new JFrame();
 
@@ -73,9 +75,8 @@ public class HexConvFrame extends FrameRunner
     }
 
     @Override
-    protected boolean validate()
+    public void finalizeGui()
     {
-        return true;
     }
 
     private void setHexField( long num )
@@ -85,7 +86,7 @@ public class HexConvFrame extends FrameRunner
 
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new HexConvFrame() );
+        FrameApplication.invokeLater( new HexConvFrame() );
     }
 
     private class DecValidator extends FieldValidator

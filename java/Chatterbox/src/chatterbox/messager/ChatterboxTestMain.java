@@ -1,9 +1,9 @@
 package chatterbox.messager;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 
 import chatterbox.controller.ChatController;
 import chatterbox.ui.ChatFrame;
@@ -11,7 +11,7 @@ import chatterbox.ui.ChatFrame;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ChatterboxTestMain extends FrameRunner
+public class ChatterboxTestMain implements IFrameApp
 {
     private TestChat messager;
 
@@ -25,11 +25,11 @@ public class ChatterboxTestMain extends FrameRunner
      **************************************************************************/
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new ChatterboxTestMain() );
+        FrameApplication.invokeLater( new ChatterboxTestMain() );
     }
 
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         ChatFrame frame = new ChatFrame( messager );
         new ChatController( messager, frame );
@@ -47,8 +47,7 @@ public class ChatterboxTestMain extends FrameRunner
     }
 
     @Override
-    protected boolean validate()
+    public void finalizeGui()
     {
-        return true;
     }
 }

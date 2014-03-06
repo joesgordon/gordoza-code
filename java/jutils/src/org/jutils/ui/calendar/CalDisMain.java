@@ -1,9 +1,11 @@
 package org.jutils.ui.calendar;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import org.junit.runner.Runner;
 import org.jutils.IconConstants;
+import org.jutils.SwingUtils;
 import org.jutils.ui.app.FrameApplication;
 import org.jutils.ui.app.IFrameApp;
 
@@ -16,7 +18,7 @@ public class CalDisMain
      * Defines the main entry point for this application. Arguments are ignored.
      * @param args ignored.
      **************************************************************************/
-    public static void main( String [] args )
+    public static void main( String[] args )
     {
         FrameApplication.invokeLater( new CalDisApp() );
     }
@@ -44,7 +46,7 @@ public class CalDisMain
 
             // frame.setSize( 500, 500 );
 
-            FrameApplication.createTrayIcon(
+            SwingUtils.createTrayIcon(
                 IconConstants.loader.getImage( IconConstants.CALENDAR_16 ),
                 "CalDis", frame, null );
 

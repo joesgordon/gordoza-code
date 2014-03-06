@@ -1,11 +1,11 @@
 package org.eglsht;
 
-import javax.swing.SwingUtilities;
+import org.jutils.ui.app.FrameApplication;
 
 public class EagleSheetMain
 {
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new EagleSheetRunner() );
+        FrameApplication.invokeLater( new EagleSheetRunner() );
     }
 }

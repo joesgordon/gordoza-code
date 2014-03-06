@@ -1,14 +1,14 @@
 package testbed.layers;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 
-public class LayeredTestMain extends FrameRunner
+public class LayeredTestMain implements IFrameApp
 {
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         JFrame frame = new LayeredTestFrame();
 
@@ -20,13 +20,12 @@ public class LayeredTestMain extends FrameRunner
     }
 
     @Override
-    protected boolean validate()
+    public void finalizeGui()
     {
-        return true;
     }
 
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new LayeredTestMain() );
+        FrameApplication.invokeLater( new LayeredTestMain() );
     }
 }

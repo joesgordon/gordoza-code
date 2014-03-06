@@ -7,13 +7,14 @@ import javax.swing.*;
 
 import org.jutils.apps.filespy.FileSpyMain;
 import org.jutils.apps.filespy.ui.SearchView;
-import org.jutils.ui.FrameRunner;
 import org.jutils.ui.StatusBarPanel;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 
-public class LayeredPaneExample extends FrameRunner
+public class LayeredPaneExample implements IFrameApp
 {
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         JFrame frame = new JFrame();
 
@@ -51,13 +52,12 @@ public class LayeredPaneExample extends FrameRunner
     }
 
     @Override
-    protected boolean validate()
+    public void finalizeGui()
     {
-        return true;
     }
 
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new LayeredPaneExample() );
+        FrameApplication.invokeLater( new LayeredPaneExample() );
     }
 }

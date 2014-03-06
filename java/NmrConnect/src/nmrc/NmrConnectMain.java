@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.io.File;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 import nmrc.controller.NmrConnectController;
 import nmrc.data.NmrcUserPrefs;
@@ -12,12 +11,13 @@ import nmrc.ui.NmrConnectFrame;
 
 import org.jutils.Utils;
 import org.jutils.io.ConfigFile;
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 
 /*******************************************************************************
  *
  ******************************************************************************/
-public class NmrConnectMain extends FrameRunner
+public class NmrConnectMain implements IFrameApp
 {
     /**  */
     public static final String OPTIONS_FILE_NAME = "ctdOptions.cfg";
@@ -53,9 +53,8 @@ public class NmrConnectMain extends FrameRunner
      * 
      **************************************************************************/
     @Override
-    protected boolean validate()
+    public void finalizeGui()
     {
-        return true;
     }
 
     /***************************************************************************
@@ -64,6 +63,6 @@ public class NmrConnectMain extends FrameRunner
      **************************************************************************/
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new NmrConnectMain() );
+        FrameApplication.invokeLater( new NmrConnectMain() );
     }
 }
