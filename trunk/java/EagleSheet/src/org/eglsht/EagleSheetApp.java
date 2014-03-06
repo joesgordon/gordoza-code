@@ -1,21 +1,25 @@
-package org.jutils.chart.app;
+package org.eglsht;
 
 import javax.swing.JFrame;
 
-import org.jutils.chart.ui.JChartFrameView;
+import org.eglsht.ui.EagleSheetFrameView;
 import org.jutils.ui.app.IFrameApp;
 
-public class JChartAppRunner implements IFrameApp
+public class EagleSheetApp implements IFrameApp
 {
+    public EagleSheetApp()
+    {
+        ;
+    }
+
     @Override
     public JFrame createFrame()
     {
-        JChartFrameView view = new JChartFrameView( JChartAppConstants.APP_NAME );
+        EagleSheetFrameView view = new EagleSheetFrameView();
         JFrame frame = view.getView();
 
+        frame.setSize( 500, 500 );
         frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-
-        frame.setSize( 700, 700 );
 
         return frame;
     }

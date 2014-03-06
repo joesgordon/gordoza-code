@@ -6,6 +6,6 @@ public class EagleSheetMain
 {
     public static void main( String[] args )
     {
-        FrameApplication.invokeLater( new EagleSheetRunner() );
+        FrameApplication.invokeLater( new EagleSheetApp() );
     }
 }

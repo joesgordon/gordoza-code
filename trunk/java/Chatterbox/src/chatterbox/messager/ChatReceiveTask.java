@@ -17,7 +17,7 @@ import chatterbox.model.IChatMessage;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ChatReceiveRunner implements IStoppableTask
+public class ChatReceiveTask implements IStoppableTask
 {
     /**  */
     private Chat chat;
@@ -39,7 +39,7 @@ public class ChatReceiveRunner implements IStoppableTask
      * @param socket
      * @param rxPacket
      **************************************************************************/
-    public ChatReceiveRunner( Chat chat, MulticastSocket socket,
+    public ChatReceiveTask( Chat chat, MulticastSocket socket,
         DatagramPacket rxPacket )
     {
         this.chat = chat;

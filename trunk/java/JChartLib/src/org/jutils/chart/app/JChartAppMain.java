@@ -6,7 +6,7 @@ public class JChartAppMain
 {
     public static void main( String [] args )
     {
-        JChartAppRunner runnable = new JChartAppRunner();
+        JChartApp runnable = new JChartApp();
 
         FrameApplication.invokeLater( runnable );
     }

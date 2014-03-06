@@ -10,7 +10,7 @@ import org.jutils.ui.hex.HexPanel;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class HexPanelRunner implements IFrameApp
+public class HexPanelApp implements IFrameApp
 {
     /***************************************************************************
      * 
@@ -53,6 +53,6 @@ public class HexPanelRunner implements IFrameApp
      **************************************************************************/
     public static void main( String[] args )
     {
-        FrameApplication.invokeLater( new HexPanelRunner() );
+        FrameApplication.invokeLater( new HexPanelApp() );
     }
 }
