@@ -4,6 +4,9 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
+
 /*******************************************************************************
  * Adds highlighting functionality to a standard JLabel.
  ******************************************************************************/
@@ -143,10 +146,10 @@ public class HighlightedLabel extends JLabel
      **************************************************************************/
     public static void main( String [] args )
     {
-        class DemoRunner extends FrameRunner
+        class DemoRunner implements IFrameApp
         {
             @Override
-            protected JFrame createFrame()
+            public JFrame createFrame()
             {
                 JFrame frame = new JFrame();
                 JPanel panel = new JPanel();
@@ -200,12 +203,11 @@ public class HighlightedLabel extends JLabel
             }
 
             @Override
-            protected boolean validate()
+            public void finalizeGui()
             {
-                return false;
             }
         }
 
-        SwingUtilities.invokeLater( new DemoRunner() );
+        FrameApplication.invokeLater( new DemoRunner() );
     }
 }

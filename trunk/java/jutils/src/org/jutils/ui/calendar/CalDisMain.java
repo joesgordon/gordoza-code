@@ -4,7 +4,8 @@ import javax.swing.*;
 
 import org.junit.runner.Runner;
 import org.jutils.IconConstants;
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 
 /*******************************************************************************
  * Defines an application that simply displays a calendar.
@@ -17,22 +18,17 @@ public class CalDisMain
      **************************************************************************/
     public static void main( String [] args )
     {
-        SwingUtilities.invokeLater( new CalDisRunner() );
+        FrameApplication.invokeLater( new CalDisApp() );
     }
 
     /***************************************************************************
      * Defines the {@link Runner} used to create and display this applications
      * UI.
      **************************************************************************/
-    public static class CalDisRunner extends FrameRunner
+    public static class CalDisApp implements IFrameApp
     {
-        public CalDisRunner()
-        {
-            ;
-        }
-
         @Override
-        protected JFrame createFrame()
+        public JFrame createFrame()
         {
             JFrame frame = new JFrame();
             CalendarPanel calView = new CalendarPanel();
@@ -48,7 +44,7 @@ public class CalDisMain
 
             // frame.setSize( 500, 500 );
 
-            createTrayIcon(
+            FrameApplication.createTrayIcon(
                 IconConstants.loader.getImage( IconConstants.CALENDAR_16 ),
                 "CalDis", frame, null );
 
@@ -56,9 +52,8 @@ public class CalDisMain
         }
 
         @Override
-        protected boolean validate()
+        public void finalizeGui()
         {
-            return false;
-        };
+        }
     }
 }
