@@ -27,8 +27,6 @@ public class XStreamUtils
         {
             stream.close();
         }
-
-        stream.close();
     }
 
     /***************************************************************************
