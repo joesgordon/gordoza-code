@@ -3,15 +3,15 @@ package org.jutils.apps.jexplorer;
 import java.io.File;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 
 /*******************************************************************************
  * This class defines the application that will display the main applications
  * contained in JUtils.
  ******************************************************************************/
-public class JExplorerMain extends FrameRunner
+public class JExplorerMain implements IFrameApp
 {
     /***************************************************************************
      * Create the AppGalley frame.
@@ -30,9 +30,8 @@ public class JExplorerMain extends FrameRunner
      * 
      **************************************************************************/
     @Override
-    protected boolean validate()
+    public void finalizeGui()
     {
-        return false;
     }
 
     /***************************************************************************
@@ -41,7 +40,6 @@ public class JExplorerMain extends FrameRunner
      **************************************************************************/
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new JExplorerMain() );
+        FrameApplication.invokeLater( new JExplorerMain() );
     }
-
 }

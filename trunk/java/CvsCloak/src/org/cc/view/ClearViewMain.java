@@ -1,29 +1,29 @@
 package org.cc.view;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 import org.cc.view.ui.ClearViewFrame;
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ClearViewMain extends FrameRunner
+public class ClearViewMain implements IFrameApp
 {
     /***************************************************************************
      * @param args
      **************************************************************************/
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new ClearViewMain() );
+        FrameApplication.invokeLater( new ClearViewMain() );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         ClearViewFrame frame = new ClearViewFrame();
 
@@ -37,8 +37,7 @@ public class ClearViewMain extends FrameRunner
      * 
      **************************************************************************/
     @Override
-    protected boolean validate()
+    public void finalizeGui()
     {
-        return true;
     }
 }

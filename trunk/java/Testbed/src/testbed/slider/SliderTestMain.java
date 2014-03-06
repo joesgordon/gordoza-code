@@ -1,14 +1,14 @@
 package testbed.slider;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 
-public class SliderTestMain extends FrameRunner
+public class SliderTestMain implements IFrameApp
 {
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         SliderTestFrame frame = new SliderTestFrame();
 
@@ -20,13 +20,12 @@ public class SliderTestMain extends FrameRunner
     }
 
     @Override
-    protected boolean validate()
+    public void finalizeGui()
     {
-        return true;
     }
 
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new SliderTestMain() );
+        FrameApplication.invokeLater( new SliderTestMain() );
     }
 }

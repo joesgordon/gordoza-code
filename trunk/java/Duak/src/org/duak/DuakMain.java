@@ -1,15 +1,15 @@
 package org.duak;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 import org.duak.ui.DuakFrame;
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 
-public class DuakMain extends FrameRunner
+public class DuakMain implements IFrameApp
 {
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         JFrame frame = new DuakFrame();
 
@@ -20,13 +20,12 @@ public class DuakMain extends FrameRunner
     }
 
     @Override
-    protected boolean validate()
+    public void finalizeGui()
     {
-        return true;
     }
 
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new DuakMain() );
+        FrameApplication.invokeLater( new DuakMain() );
     }
 }

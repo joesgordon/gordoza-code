@@ -4,15 +4,16 @@ import java.awt.Dimension;
 import java.awt.Image;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 import org.jutils.IconConstants;
-import org.jutils.ui.FrameRunner;
+import org.jutils.SwingUtils;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 
 /*******************************************************************************
  *
  ******************************************************************************/
-public class ToDLsMain extends FrameRunner
+public class ToDLsMain implements IFrameApp
 {
     /***************************************************************************
      *
@@ -26,20 +27,20 @@ public class ToDLsMain extends FrameRunner
      **************************************************************************/
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new ToDLsMain() );
+        FrameApplication.invokeLater( new ToDLsMain() );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         ToDLsFrame frame = new ToDLsFrame();
         ToDLsMenu popup = new ToDLsMenu( frame );
         Image img = IconConstants.loader.getImage( IconConstants.CALENDAR_16 );
 
-        createTrayIcon( img, "Tuvok", frame, popup );
+        SwingUtils.createTrayIcon( img, "Tuvok", frame, popup );
 
         frame.setSize( new Dimension( 640, 480 ) );
         frame.setMinimumSize( new Dimension( 300, 300 ) );
@@ -49,8 +50,7 @@ public class ToDLsMain extends FrameRunner
     }
 
     @Override
-    protected boolean validate()
+    public void finalizeGui()
     {
-        return true;
     }
 }

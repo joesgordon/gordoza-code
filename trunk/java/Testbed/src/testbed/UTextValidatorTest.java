@@ -7,23 +7,23 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import org.jutils.Utils;
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.validation.*;
 import org.jutils.ui.validators.ITextValidator;
 
-public class UTextValidatorTest extends FrameRunner
+public class UTextValidatorTest implements IFrameApp
 {
-
     /***************************************************************************
      * @param args
      **************************************************************************/
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new UTextValidatorTest() );
+        FrameApplication.invokeLater( new UTextValidatorTest() );
     }
 
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         JFrame frame = new JFrame();
         JPanel panel = new JPanel();
@@ -140,9 +140,8 @@ public class UTextValidatorTest extends FrameRunner
     }
 
     @Override
-    protected boolean validate()
+    public void finalizeGui()
     {
-        return true;
     }
 
     public static class ExactTextValidator implements ITextValidator

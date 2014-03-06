@@ -43,9 +43,11 @@ package testbed.treetable;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 
 /**
  * A TreeTable example, showing a JTreeTable, operating on the local file
@@ -54,15 +56,15 @@ import org.jutils.ui.FrameRunner;
  * @author Philip Milne
  */
 
-public class TreeTableMain extends FrameRunner
+public class TreeTableMain implements IFrameApp
 {
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new TreeTableMain() );
+        FrameApplication.invokeLater( new TreeTableMain() );
     }
 
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         JFrame frame = new JFrame( "TreeTable" );
         JTreeTable treeTable = new JTreeTable( new FileSystemModel() );
@@ -82,8 +84,7 @@ public class TreeTableMain extends FrameRunner
     }
 
     @Override
-    protected boolean validate()
+    public void finalizeGui()
     {
-        return false;
     }
 }

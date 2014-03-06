@@ -6,13 +6,14 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import org.jutils.ui.FrameRunner;
 import org.jutils.ui.PropEditPanel;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 
-public class PropEditMain extends FrameRunner
+public class PropEditMain implements IFrameApp
 {
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         JFrame frame = new JFrame();
         PropEditPanel panel = new PropEditPanel();
@@ -58,15 +59,8 @@ public class PropEditMain extends FrameRunner
     }
 
     @Override
-    protected String getLookAndFeelName()
+    public void finalizeGui()
     {
-        return UIManager.getCrossPlatformLookAndFeelClassName();
-    }
-
-    @Override
-    protected boolean validate()
-    {
-        return true;
     }
 
     public static void main( String[] args )
@@ -85,7 +79,8 @@ public class PropEditMain extends FrameRunner
         UIManager.put( "ToolBar.background", stadBg );
         UIManager.put( "OptionPane.background", stadBg );
 
-        SwingUtilities.invokeLater( new PropEditMain() );
+        FrameApplication.invokeLater( new PropEditMain(), true,
+            UIManager.getCrossPlatformLookAndFeelClassName() );
     }
 
     private static class ShowMsgListener implements ActionListener

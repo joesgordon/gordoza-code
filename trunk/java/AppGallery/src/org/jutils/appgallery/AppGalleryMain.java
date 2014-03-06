@@ -5,17 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 import org.jutils.IconConstants;
+import org.jutils.SwingUtils;
 import org.jutils.ui.ExitListener;
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 
 /*******************************************************************************
  * This class defines the application that will display the main applications
  * contained in JUtils.
  ******************************************************************************/
-public class AppGalleryMain extends FrameRunner
+public class AppGalleryMain implements IFrameApp
 {
     private final List<ILibraryApp> apps;
 
@@ -35,7 +36,7 @@ public class AppGalleryMain extends FrameRunner
      * @return
      **************************************************************************/
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         JFrame frame = new JFrame();
         AppGalleryFrame appFrame = new AppGalleryFrame( apps );
@@ -46,7 +47,8 @@ public class AppGalleryMain extends FrameRunner
         frame.setTitle( "JUtils Application Gallery" );
         frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 
-        createTrayIcon( img, "App Gallery", frame, createPopupMenu( frame ) );
+        SwingUtils.createTrayIcon( img, "App Gallery", frame,
+            createPopupMenu( frame ) );
 
         return frame;
     }
@@ -79,9 +81,8 @@ public class AppGalleryMain extends FrameRunner
      * 
      **************************************************************************/
     @Override
-    protected boolean validate()
+    public void finalizeGui()
     {
-        return false;
     }
 
     /***************************************************************************
@@ -90,7 +91,6 @@ public class AppGalleryMain extends FrameRunner
      **************************************************************************/
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new AppGalleryMain() );
+        FrameApplication.invokeLater( new AppGalleryMain() );
     }
-
 }

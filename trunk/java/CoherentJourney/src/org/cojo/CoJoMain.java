@@ -1,20 +1,20 @@
 package org.cojo;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 import org.cojo.ui.CojoFrame;
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 
-public class CoJoMain extends FrameRunner
+public class CoJoMain implements IFrameApp
 {
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new CoJoMain() );
+        FrameApplication.invokeLater( new CoJoMain() );
     }
 
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         CojoFrame frame = new CojoFrame();
 
@@ -24,8 +24,7 @@ public class CoJoMain extends FrameRunner
     }
 
     @Override
-    protected boolean validate()
+    public void finalizeGui()
     {
-        return true;
     }
 }

@@ -5,7 +5,8 @@ import java.util.Arrays;
 
 import javax.swing.*;
 
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.hex.ByteBuffer;
 import org.jutils.ui.hex.HexTable;
 import org.mc.McMessage;
@@ -112,14 +113,14 @@ public class HexMessagePanel extends JPanel implements
 
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new Runner() );
+        FrameApplication.invokeLater( new HexMessageApp() );
     }
 }
 
-class Runner extends FrameRunner
+class HexMessageApp implements IFrameApp
 {
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         JFrame frame = new JFrame();
 
@@ -140,8 +141,7 @@ class Runner extends FrameRunner
     }
 
     @Override
-    protected boolean validate()
+    public void finalizeGui()
     {
-        return true;
     }
 }

@@ -1,22 +1,22 @@
 package utesting;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.hex.ByteBuffer;
 import org.jutils.ui.hex.HexPanel;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class HexPanelRunner extends FrameRunner
+public class HexPanelRunner implements IFrameApp
 {
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         JFrame frame = new JFrame( "HexRunner" );
         HexPanel p = new HexPanel();
@@ -44,19 +44,8 @@ public class HexPanelRunner extends FrameRunner
      * 
      **************************************************************************/
     @Override
-    protected String getLookAndFeelName()
+    public void finalizeGui()
     {
-        // return "com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel";
-        return null;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    protected boolean validate()
-    {
-        return true;
     }
 
     /***************************************************************************
@@ -64,6 +53,6 @@ public class HexPanelRunner extends FrameRunner
      **************************************************************************/
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new HexPanelRunner() );
+        FrameApplication.invokeLater( new HexPanelRunner() );
     }
 }

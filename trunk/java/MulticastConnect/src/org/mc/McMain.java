@@ -1,29 +1,29 @@
 package org.mc;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 import org.mc.ui.McFrame;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class McMain extends FrameRunner
+public class McMain implements IFrameApp
 {
     /***************************************************************************
      * @param args
      **************************************************************************/
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new McMain() );
+        FrameApplication.invokeLater( new McMain() );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         McFrame frame = new McFrame();
 
@@ -37,8 +37,7 @@ public class McMain extends FrameRunner
      * 
      **************************************************************************/
     @Override
-    protected boolean validate()
+    public void finalizeGui()
     {
-        return true;
     }
 }

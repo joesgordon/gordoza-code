@@ -6,10 +6,11 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import org.jutils.ui.FrameRunner;
 import org.jutils.ui.JGoodiesToolBar;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 
-public class SnapTester extends FrameRunner
+public class SnapTester implements IFrameApp
 {
     private USnapPanel snapPanel;
 
@@ -52,7 +53,7 @@ public class SnapTester extends FrameRunner
     }
 
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         JFrame frame = new JFrame( "SnapTest" );
 
@@ -102,14 +103,13 @@ public class SnapTester extends FrameRunner
     }
 
     @Override
-    protected boolean validate()
+    public void finalizeGui()
     {
-        return true;
     }
 
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new SnapTester() );
+        FrameApplication.invokeLater( new SnapTester() );
     }
 
     private abstract class ToggleAction implements ActionListener

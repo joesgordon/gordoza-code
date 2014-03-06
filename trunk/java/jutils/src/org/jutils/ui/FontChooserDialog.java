@@ -10,6 +10,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.text.*;
 
 import org.jutils.Utils;
+import org.jutils.ui.app.AppRunner;
+import org.jutils.ui.app.IApplication;
 
 /*******************************************************************************
  * 
@@ -17,9 +19,9 @@ import org.jutils.Utils;
 public class FontChooserDialog extends JDialog
 {
     /**  */
-    public final static String [] FONT_NAMES;
+    public final static String[] FONT_NAMES;
     /**  */
-    public final static String [] FONT_SIZES;
+    public final static String[] FONT_SIZES;
 
     /**  */
     private final InputListPanel fontNameInputList;
@@ -347,10 +349,10 @@ public class FontChooserDialog extends JDialog
      **************************************************************************/
     public static void main( String argv[] )
     {
-        SwingUtilities.invokeLater( new MainRunner()
+        IApplication app = new IApplication()
         {
             @Override
-            protected void createAndShowGui()
+            public void createAndShowUi()
             {
 
                 FontChooserDialog dlg = new FontChooserDialog( new JFrame() );
@@ -365,7 +367,14 @@ public class FontChooserDialog extends JDialog
                 dlg.setLocationByPlatform( true );
                 dlg.setVisible( true );
             }
-        } );
+
+            @Override
+            public String getLookAndFeelName()
+            {
+                return null;
+            }
+        };
+        SwingUtilities.invokeLater( new AppRunner( app ) );
     }
 
     /***************************************************************************
@@ -422,7 +431,7 @@ public class FontChooserDialog extends JDialog
     {
         public ColorComboBox()
         {
-            int [] values = new int[] { 0, 128, 192, 255 };
+            int[] values = new int[] { 0, 128, 192, 255 };
             for( int r = 0; r < values.length; r++ )
             {
                 for( int g = 0; g < values.length; g++ )

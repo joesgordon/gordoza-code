@@ -6,13 +6,14 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import org.jutils.ui.FrameRunner;
 import org.jutils.ui.GradientButtonUI;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 
-public class ButtonTestFrame extends FrameRunner
+public class ButtonTestFrame implements IFrameApp
 {
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         JFrame frame = new JFrame();
 
@@ -53,15 +54,8 @@ public class ButtonTestFrame extends FrameRunner
     }
 
     @Override
-    protected String getLookAndFeelName()
+    public void finalizeGui()
     {
-        return UIManager.getCrossPlatformLookAndFeelClassName();
-    }
-
-    @Override
-    protected boolean validate()
-    {
-        return true;
     }
 
     /**
@@ -84,7 +78,8 @@ public class ButtonTestFrame extends FrameRunner
         System.out.println( "ButtonUI = " +
             UIManager.getDefaults().getString( "ButtonUI" ) );
 
-        SwingUtilities.invokeLater( new ButtonTestFrame() );
+        FrameApplication.invokeLater( new ButtonTestFrame(), true,
+            UIManager.getCrossPlatformLookAndFeelClassName() );
     }
 
     private static class ShowMsgListener implements ActionListener

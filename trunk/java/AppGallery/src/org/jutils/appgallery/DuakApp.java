@@ -5,7 +5,7 @@ import javax.swing.JFrame;
 
 import org.duak.DuakMain;
 import org.jutils.IconConstants;
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.IFrameApp;
 
 public class DuakApp implements ILibraryApp
 {
@@ -24,8 +24,8 @@ public class DuakApp implements ILibraryApp
     @Override
     public JFrame runApp()
     {
-        FrameRunner r = new DuakMain();
-        r.run();
-        return r.getFrame();
+        IFrameApp r = new DuakMain();
+
+        return r.createFrame();
     }
 }

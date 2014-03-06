@@ -9,6 +9,8 @@ import javax.swing.event.ListSelectionListener;
 
 import org.jutils.IconConstants;
 import org.jutils.ui.*;
+import org.jutils.ui.app.AppRunner;
+import org.jutils.ui.app.IApplication;
 
 /*******************************************************************************
  * 
@@ -59,9 +61,9 @@ public class FileConfigurationDialog extends JDialog
     /***************************************************************************
      * @param args
      **************************************************************************/
-    public static void main( String [] args )
+    public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new TestMainRunnable() );
+        SwingUtilities.invokeLater( new AppRunner( new TestMainApp() ) );
     }
 
     public static FileConfigurationDialog showDialog( JFrame frame )
@@ -109,10 +111,10 @@ public class FileConfigurationDialog extends JDialog
         return configData;
     }
 
-    private static class TestMainRunnable extends MainRunner
+    private static class TestMainApp implements IApplication
     {
         @Override
-        protected void createAndShowGui()
+        public void createAndShowUi()
         {
             FileConfigurationDialog dialog = new FileConfigurationDialog( null );
             dialog.setData( getUnitTestData() );
@@ -121,6 +123,12 @@ public class FileConfigurationDialog extends JDialog
             dialog.validate();
             dialog.setLocationRelativeTo( null );
             dialog.setVisible( true );
+        }
+
+        @Override
+        public String getLookAndFeelName()
+        {
+            return null;
         }
     }
 }

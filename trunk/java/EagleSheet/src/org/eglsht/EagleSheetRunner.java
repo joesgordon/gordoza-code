@@ -3,9 +3,9 @@ package org.eglsht;
 import javax.swing.JFrame;
 
 import org.eglsht.ui.EagleSheetFrameView;
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.IFrameApp;
 
-public class EagleSheetRunner extends FrameRunner
+public class EagleSheetRunner implements IFrameApp
 {
     public EagleSheetRunner()
     {
@@ -13,7 +13,7 @@ public class EagleSheetRunner extends FrameRunner
     }
 
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         EagleSheetFrameView view = new EagleSheetFrameView();
         JFrame frame = view.getView();
@@ -25,8 +25,7 @@ public class EagleSheetRunner extends FrameRunner
     }
 
     @Override
-    protected boolean validate()
+    public void finalizeGui()
     {
-        return true;
     }
 }

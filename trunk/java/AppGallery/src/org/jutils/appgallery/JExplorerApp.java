@@ -5,7 +5,7 @@ import javax.swing.JFrame;
 
 import org.jutils.IconConstants;
 import org.jutils.apps.jexplorer.JExplorerMain;
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.IFrameApp;
 
 public class JExplorerApp implements ILibraryApp
 {
@@ -24,8 +24,8 @@ public class JExplorerApp implements ILibraryApp
     @Override
     public JFrame runApp()
     {
-        FrameRunner r = new JExplorerMain();
-        r.run();
-        return r.getFrame();
+        IFrameApp r = new JExplorerMain();
+
+        return r.createFrame();
     }
 }

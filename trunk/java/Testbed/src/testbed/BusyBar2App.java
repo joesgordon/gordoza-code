@@ -7,10 +7,11 @@ import java.util.Arrays;
 
 import javax.swing.*;
 
-import org.jutils.ui.FrameRunner;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.model.ItemComboBoxModel;
 
-public class BarRunner extends FrameRunner
+public class BusyBar2App implements IFrameApp
 {
     private BusyBar2 bar;
     private ItemComboBoxModel<BusyBar2.BarColor> model;
@@ -20,11 +21,11 @@ public class BarRunner extends FrameRunner
      **************************************************************************/
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new BarRunner() );
+        FrameApplication.invokeLater( new BusyBar2App() );
     }
 
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         JFrame frame = new JFrame();
         JPanel panel = new JPanel( new GridBagLayout() );
@@ -59,9 +60,8 @@ public class BarRunner extends FrameRunner
     }
 
     @Override
-    protected boolean validate()
+    public void finalizeGui()
     {
-        return true;
     }
 
     private class ColorSelectedListener implements ActionListener
