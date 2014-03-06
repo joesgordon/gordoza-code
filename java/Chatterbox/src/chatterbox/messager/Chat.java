@@ -43,7 +43,7 @@ public class Chat extends AbstractChat
     /**  */
     private Stoppable receiveThread;
     /**  */
-    private ChatReceiveRunner receiver;
+    private ChatReceiveTask receiver;
     /**  */
     private Map<String, UserCheckTask> userTasks;
     /**  */
@@ -81,7 +81,7 @@ public class Chat extends AbstractChat
         socket.joinGroup( address );
         socket.setSoTimeout( 1000 );
 
-        receiver = new ChatReceiveRunner( this, socket, rxPacket );
+        receiver = new ChatReceiveTask( this, socket, rxPacket );
         receiveThread = new Stoppable( receiver );
         Thread thread = new Thread( receiveThread );
         thread.setName( "Message Receive Thread" );
