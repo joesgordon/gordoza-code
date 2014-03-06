@@ -3,18 +3,12 @@ package org.jutils.chart.app;
 import javax.swing.JFrame;
 
 import org.jutils.chart.ui.JChartFrameView;
-import org.jutils.ui.FrameRunner;
-import org.jutils.ui.StandardUncaughtExceptionHandler;
+import org.jutils.ui.app.IFrameApp;
 
-public class JChartAppRunner extends FrameRunner
+public class JChartAppRunner implements IFrameApp
 {
-    public JChartAppRunner()
-    {
-        ;
-    }
-
     @Override
-    protected JFrame createFrame()
+    public JFrame createFrame()
     {
         JChartFrameView view = new JChartFrameView( JChartAppConstants.APP_NAME );
         JFrame frame = view.getView();
@@ -23,17 +17,11 @@ public class JChartAppRunner extends FrameRunner
 
         frame.setSize( 700, 700 );
 
-        StandardUncaughtExceptionHandler sueh = new StandardUncaughtExceptionHandler(
-            frame );
-
-        Thread.setDefaultUncaughtExceptionHandler( sueh );
-
         return frame;
     }
 
     @Override
-    protected boolean validate()
+    public void finalizeGui()
     {
-        return true;
     }
 }
