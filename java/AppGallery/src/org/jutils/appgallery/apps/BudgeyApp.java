@@ -1,4 +1,4 @@
-package org.jutils.appgallery;
+package org.jutils.appgallery.apps;
 
 import javax.swing.Icon;
 import javax.swing.JFrame;
@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 import org.budgey.BudgeyIconConstants;
 import org.budgey.BudgeyMain;
 import org.budgey.data.BudgeyOptions;
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.appgallery.ILibraryApp;
 import org.jutils.ui.app.IFrameApp;
 
 //TODO comments
@@ -29,12 +29,11 @@ public class BudgeyApp implements ILibraryApp
     }
 
     @Override
-    public JFrame runApp()
+    public JFrame createApp()
     {
         BudgeyOptions options = BudgeyOptions.read( BudgeyMain.OPTIONS_FILE );
         IFrameApp frameApp = new BudgeyMain( options );
-        FrameApplication app = new FrameApplication( frameApp, true );
 
-        return app.createAndShowFrame();
+        return frameApp.createFrame();
     }
 }
