@@ -1,30 +1,31 @@
-package org.jutils.appgallery;
+package org.jutils.appgallery.apps;
 
 import javax.swing.Icon;
 import javax.swing.JFrame;
 
+import org.duak.DuakMain;
 import org.jutils.IconConstants;
-import org.jutils.apps.jexplorer.JExplorerMain;
+import org.jutils.appgallery.ILibraryApp;
 import org.jutils.ui.app.IFrameApp;
 
-public class JExplorerApp implements ILibraryApp
+public class DuakApp implements ILibraryApp
 {
     @Override
     public Icon getIcon()
     {
-        return IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_32 );
+        return IconConstants.loader.getIcon( IconConstants.ATOMIC_32 );
     }
 
     @Override
     public String getName()
     {
-        return "JExplorer";
+        return "Duak";
     }
 
     @Override
-    public JFrame runApp()
+    public JFrame createApp()
     {
-        IFrameApp r = new JExplorerMain();
+        IFrameApp r = new DuakMain();
 
         return r.createFrame();
     }

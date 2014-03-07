@@ -3,7 +3,7 @@ package org.jutils.appgallery;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JFrame;
+import org.jutils.appgallery.ui.AppGalleryView;
 
 /*******************************************************************************
  * ActionListener that runs the provided application upon invocation.
@@ -26,11 +26,6 @@ public class AppButtonListener implements ActionListener
     @Override
     public void actionPerformed( ActionEvent e )
     {
-        JFrame frame = app.runApp();
-
-        if( frame != null )
-        {
-            frame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
-        }
+        AppGalleryView.displayApp( app );
     }
 }

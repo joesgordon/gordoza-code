@@ -1,11 +1,11 @@
-package org.jutils.appgallery;
+package org.jutils.appgallery.apps;
 
 import javax.swing.Icon;
 import javax.swing.JFrame;
 
 import org.jutils.IconConstants;
+import org.jutils.appgallery.ILibraryApp;
 import org.jutils.apps.filespy.FileSpyMain;
-import org.jutils.ui.app.FrameApplication;
 import org.jutils.ui.app.IFrameApp;
 
 public class FileSpyApp implements ILibraryApp
@@ -23,12 +23,11 @@ public class FileSpyApp implements ILibraryApp
     }
 
     @Override
-    public JFrame runApp()
+    public JFrame createApp()
     {
         IFrameApp frameApp = new org.jutils.apps.filespy.FileSpyApp(
             FileSpyMain.createUserIO() );
-        FrameApplication app = new FrameApplication( frameApp, true );
 
-        return app.createAndShowFrame();
+        return frameApp.createFrame();
     }
 }

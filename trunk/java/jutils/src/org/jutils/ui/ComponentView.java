@@ -1,26 +1,49 @@
-package org.jutils.appgallery;
+package org.jutils.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 
-import javax.swing.Icon;
+import javax.swing.JPanel;
+
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public interface ILibraryApp
+public class ComponentView implements IView<JPanel>
 {
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public Icon getIcon();
+    /**  */
+    private final JPanel view;
 
     /***************************************************************************
-     * @return
+     * 
      **************************************************************************/
-    public String getName();
+    public ComponentView()
+    {
+        this.view = new JPanel( new BorderLayout() );
+    }
 
     /***************************************************************************
-     * @return
+     * 
      **************************************************************************/
-    public Component createApp();
+    @Override
+    public JPanel getView()
+    {
+        return view;
+    }
+
+    /***************************************************************************
+     * @param comp
+     **************************************************************************/
+    public void setComponent( Component comp )
+    {
+        view.removeAll();
+        if( comp != null )
+        {
+            view.add( comp, BorderLayout.CENTER );
+        }
+        view.invalidate();
+        view.validate();
+        view.repaint();
+    }
 }

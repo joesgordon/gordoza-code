@@ -4,10 +4,24 @@ import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.*;
 
+import javax.swing.Action;
+
+import org.jutils.IconConstants;
+import org.jutils.ui.event.ActionAdapter;
+
+// TODO comments
+
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class ExitListener implements ActionListener
 {
+    /**  */
     private final Window win;
 
+    /***************************************************************************
+     * @param win
+     **************************************************************************/
     public ExitListener( Window win )
     {
         this.win = win;
@@ -22,6 +36,19 @@ public class ExitListener implements ActionListener
         doDefaultCloseOperation( win );
     }
 
+    /***************************************************************************
+     * @param win
+     * @return
+     **************************************************************************/
+    public static Action createStandardExitAction( Window win )
+    {
+        return new ActionAdapter( new ExitListener( win ), "Exit",
+            IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
+    }
+
+    /***************************************************************************
+     * @param win
+     **************************************************************************/
     public static void doDefaultCloseOperation( Window win )
     {
         WindowEvent wev = new WindowEvent( win, WindowEvent.WINDOW_CLOSING );
