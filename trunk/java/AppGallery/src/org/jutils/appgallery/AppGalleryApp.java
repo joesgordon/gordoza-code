@@ -10,8 +10,8 @@ import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
 import org.jutils.appgallery.apps.*;
 import org.jutils.appgallery.ui.AppGalleryView;
-import org.jutils.appgallery.ui.StandardFrameView;
 import org.jutils.ui.ExitListener;
+import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.app.IFrameApp;
 
 /*******************************************************************************

@@ -1,10 +1,9 @@
-package org.jutils.appgallery.ui;
+package org.jutils.ui;
 
 import java.awt.*;
 
 import javax.swing.*;
 
-import org.jutils.ui.*;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
