@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import org.jutils.appgallery.ILibraryApp;
+import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.model.IComponentView;
 
 /*******************************************************************************
