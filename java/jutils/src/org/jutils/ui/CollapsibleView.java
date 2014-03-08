@@ -113,6 +113,24 @@ public class CollapsibleView
         return panel;
     }
 
+    private void setCollapsed( boolean collapsed )
+    {
+        if( collapsed )
+        {
+            componentPanel.setVisible( false );
+            separator.setVisible( false );
+            // componentPanel.removeAll();
+            componentPanel.revalidate();
+        }
+        else
+        {
+            componentPanel.setVisible( true );
+            // setComponent( comp );
+            separator.setVisible( true );
+            componentPanel.revalidate();
+        }
+    }
+
     private class CollapseButtonListener implements ActionListener
     {
         @Override
@@ -120,20 +138,7 @@ public class CollapsibleView
         {
             JToggleButton toggleButton = ( JToggleButton )e.getSource();
 
-            if( toggleButton.isSelected() )
-            {
-                componentPanel.setVisible( false );
-                separator.setVisible( false );
-                // componentPanel.removeAll();
-                componentPanel.revalidate();
-            }
-            else
-            {
-                componentPanel.setVisible( true );
-                // setComponent( comp );
-                separator.setVisible( true );
-                componentPanel.revalidate();
-            }
+            setCollapsed( toggleButton.isSelected() );
         }
     }
 }
