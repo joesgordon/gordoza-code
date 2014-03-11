@@ -4,28 +4,28 @@ import java.util.LinkedList;
 
 public class DataUpdaterList<T>
 {
-    private LinkedList<IDataUpdater<T>> listeners;
+    private LinkedList<IUpdater<T>> listeners;
 
     public DataUpdaterList()
     {
-        listeners = new LinkedList<IDataUpdater<T>>();
+        listeners = new LinkedList<IUpdater<T>>();
     }
 
-    public void addListener( IDataUpdater<T> l )
+    public void addListener( IUpdater<T> l )
     {
         listeners.addFirst( l );
     }
 
-    public void removeListener( IDataUpdater<T> l )
+    public void removeListener( IUpdater<T> l )
     {
         listeners.remove( l );
     }
 
     public void fireListeners( T data )
     {
-        for( IDataUpdater<T> l : listeners )
+        for( IUpdater<T> l : listeners )
         {
-            l.updateData( data );
+            l.update( data );
         }
     }
 
