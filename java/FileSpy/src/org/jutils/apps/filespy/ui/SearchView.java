@@ -316,7 +316,7 @@ public class SearchView implements IDataView<SearchParams>
         afterCheckBox.setToolTipText( "Specifies that files should be "
             + "modified after the date given." );
         afterCheckBox.addActionListener( new CheckBoxEnabler_actionAdapter(
-            afterTextField ) );
+            afterTextField.getView() ) );
         afterTextField.setToolTipText( "The date the file should be "
             + "modified after." );
 
@@ -324,7 +324,7 @@ public class SearchView implements IDataView<SearchParams>
         beforeCheckBox.setToolTipText( "Specifies that files should be "
             + "modified before the date given." );
         beforeCheckBox.addActionListener( new CheckBoxEnabler_actionAdapter(
-            beforeTextField ) );
+            beforeTextField.getView() ) );
         beforeTextField.setToolTipText( "The date the file should be "
             + "modified before." );
 
@@ -332,13 +332,14 @@ public class SearchView implements IDataView<SearchParams>
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 0, 0, 0 ), 0, 0 );
         advancedPanel.add(
-            createRightSidedPanel( afterCheckBox, afterTextField ), constraints );
+            createRightSidedPanel( afterCheckBox, afterTextField.getView() ),
+            constraints );
 
         constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 0, 0, 0 ), 0, 0 );
         advancedPanel.add(
-            createRightSidedPanel( beforeCheckBox, beforeTextField ),
+            createRightSidedPanel( beforeCheckBox, beforeTextField.getView() ),
             constraints );
 
         constraints = new GridBagConstraints( 0, 2, 3, 1, 1.0, 1.0,
