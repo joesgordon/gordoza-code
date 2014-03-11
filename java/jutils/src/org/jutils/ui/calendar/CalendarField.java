@@ -7,7 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.DateFormatter;
 import javax.swing.text.DefaultFormatterFactory;
 
@@ -15,14 +16,17 @@ import org.jutils.IconConstants;
 import org.jutils.Utils;
 import org.jutils.ui.event.updater.DataUpdaterList;
 import org.jutils.ui.event.updater.IDataUpdater;
+import org.jutils.ui.model.IView;
 
 //TODO comments
 
 /*******************************************************************************
  *
  ******************************************************************************/
-public class CalendarField extends JPanel
+public class CalendarField implements IView<JPanel>
 {
+    /**  */
+    private final JPanel view;
     /**  */
     private final JFormattedTextField dateTextField = new JFormattedTextField();
     /**  */
@@ -32,15 +36,13 @@ public class CalendarField extends JPanel
 
     /**  */
     private Calendar curDate = null;
-    /**  */
-    private String actionCommand = null;
 
     /***************************************************************************
      *
      **************************************************************************/
     public CalendarField()
     {
-        this.setLayout( new GridBagLayout() );
+        this.view = new JPanel( new GridBagLayout() );
 
         updaterList = new DataUpdaterList<Calendar>();
 
@@ -61,12 +63,21 @@ public class CalendarField extends JPanel
         calendarButton.setIcon( IconConstants.loader.getIcon( IconConstants.CALENDAR_16 ) );
         calendarButton.setMargin( new Insets( 0, 0, 0, 0 ) );
 
-        add( dateTextField, new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+        view.add( dateTextField, new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 0, 0, 0 ), 0, 0 ) );
-        add( calendarButton, new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
+        view.add( calendarButton, new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.VERTICAL, new Insets(
                 0, 2, 0, 0 ), 0, 0 ) );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public JPanel getView()
+    {
+        return view;
     }
 
     /***************************************************************************
@@ -75,6 +86,18 @@ public class CalendarField extends JPanel
     public void addDataUpdater( IDataUpdater<Calendar> updater )
     {
         updaterList.addListener( updater );
+    }
+
+    /***************************************************************************
+     * @param millis
+     **************************************************************************/
+    public void setMillis( long millis )
+    {
+        GregorianCalendar cal = new GregorianCalendar();
+
+        cal.setTimeInMillis( millis );
+
+        setDate( cal );
     }
 
     /***************************************************************************
@@ -140,80 +163,9 @@ public class CalendarField extends JPanel
      **************************************************************************/
     public void setEnabled( boolean enabled )
     {
-        super.setEnabled( enabled );
+        view.setEnabled( enabled );
         calendarButton.setEnabled( enabled );
         dateTextField.setEnabled( enabled );
-    }
-
-    /***************************************************************************
-     * @param listener ActionListener
-     **************************************************************************/
-    public void addActionListener( ActionListener listener )
-    {
-        listenerList.add( ActionListener.class, listener );
-    }
-
-    /***************************************************************************
-     * @param listener ActionListener
-     **************************************************************************/
-    public void removeActionListener( ActionListener listener )
-    {
-        if( listener != null )
-        {
-            listenerList.remove( ActionListener.class, listener );
-        }
-    }
-
-    /***************************************************************************
-     * Sets the action command for this calendar field.
-     * @param actionCommand The action command for this calendar field.
-     **************************************************************************/
-    public void setActionCommand( String actionCommand )
-    {
-        this.actionCommand = actionCommand;
-    }
-
-    /***************************************************************************
-     * Returns the action command for this calendar field.
-     * @return the action command for this calendar field
-     **************************************************************************/
-    public String getActionCommand()
-    {
-        return actionCommand;
-    }
-
-    /***************************************************************************
-     * Notifies all listeners that have registered interest for notification on
-     * this event type. The event instance is lazily created using the
-     * <code>event</code> parameter.
-     * @param event the <code>ActionEvent</code> object
-     * @see EventListenerList
-     **************************************************************************/
-    protected void fireActionPerformed( ActionEvent event )
-    {
-        // Guaranteed to return a non-null array
-        Object [] listeners = listenerList.getListenerList();
-        ActionEvent e = null;
-        // Process the listeners last to first, notifying
-        // those that are interested in this event
-        for( int i = listeners.length - 2; i >= 0; i -= 2 )
-        {
-            if( listeners[i] == ActionListener.class )
-            {
-                // Lazily create the event:
-                if( e == null )
-                {
-                    String actionCommand = event.getActionCommand();
-                    if( actionCommand == null )
-                    {
-                        actionCommand = getActionCommand();
-                    }
-                    e = new ActionEvent( this, ActionEvent.ACTION_PERFORMED,
-                        actionCommand, event.getWhen(), event.getModifiers() );
-                }
-                ( ( ActionListener )listeners[i + 1] ).actionPerformed( e );
-            }
-        }
     }
 
     /***************************************************************************
@@ -222,7 +174,7 @@ public class CalendarField extends JPanel
     public void displayDialog()
     {
         CalendarDialog dialog = new CalendarDialog(
-            Utils.getComponentsFrame( this ), "Select Date", true );
+            Utils.getComponentsFrame( view ), "Select Date", true );
 
         try
         {
@@ -249,8 +201,6 @@ public class CalendarField extends JPanel
         if( cal != null )
         {
             setDate( cal );
-            this.fireActionPerformed( new ActionEvent( this,
-                ActionEvent.ACTION_PERFORMED, actionCommand ) );
         }
     }
 

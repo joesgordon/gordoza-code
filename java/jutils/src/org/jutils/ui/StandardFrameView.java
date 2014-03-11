@@ -17,6 +17,8 @@ public class StandardFrameView implements IView<JFrame>
     private final ComponentView toolbarView;
     /**  */
     private final ComponentView contentView;
+    /**  */
+    private final JMenu fileMenu;
 
     /***************************************************************************
      * 
@@ -26,6 +28,7 @@ public class StandardFrameView implements IView<JFrame>
         this.frame = new JFrame();
         this.toolbarView = new ComponentView();
         this.contentView = new ComponentView();
+        this.fileMenu = new JMenu( "File" );
 
         frame.setJMenuBar( createMenuBar() );
         frame.setContentPane( createContentPane() );
@@ -69,12 +72,10 @@ public class StandardFrameView implements IView<JFrame>
     private JMenuBar createMenuBar()
     {
         JMenuBar menubar = new JGoodiesMenuBar();
-        JMenu menu;
 
-        menu = new JMenu( "File" );
-        menubar.add( menu );
+        menubar.add( fileMenu );
 
-        menu.add( ExitListener.createStandardExitAction( frame ) );
+        fileMenu.add( ExitListener.createStandardExitAction( frame ) );
 
         return menubar;
     }
@@ -102,5 +103,13 @@ public class StandardFrameView implements IView<JFrame>
     public JFrame getView()
     {
         return frame;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public JMenu getFileMenu()
+    {
+        return fileMenu;
     }
 }

@@ -52,8 +52,8 @@ public class DateTimeView implements IDataView<Calendar>
         view.add( spinner, new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 0, 0, 2 ), 0, 0 ) );
-        view.add( dateField, new GridBagConstraints( 1, 0, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+        view.add( dateField.getView(), new GridBagConstraints( 1, 0, 1, 1, 1.0,
+            1.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 2, 0, 0 ), 0, 0 ) );
     }
 
