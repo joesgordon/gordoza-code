@@ -3,18 +3,19 @@ package org.jutils.ui.validators;
 import org.jutils.ui.validation.ValidationException;
 
 /*******************************************************************************
- * A validator that ensures that integers fall within a specified range.
+ * A validator that ensures that a monetary value falls within a specified
+ * range.
  ******************************************************************************/
 public class MoneyValidator implements IDataValidator<Integer>
 {
-    /** The minimum bound, inclusive; not checked if {@code null}. */
+    /** The minimum bound in cents, inclusive; not checked if {@code null}. */
     private final Integer min;
-    /** The maximum bound, inclusive; not checked if {@code null}. */
+    /** The maximum bound in cents, inclusive; not checked if {@code null}. */
     private final Integer max;
 
     /***************************************************************************
-     * Creates a validator that ensures the text is an integer and performs no
-     * bounds checking.
+     * Creates a validator that ensures the text is a monetary value and
+     * performs no bounds checking.
      **************************************************************************/
     public MoneyValidator()
     {
@@ -22,10 +23,12 @@ public class MoneyValidator implements IDataValidator<Integer>
     }
 
     /***************************************************************************
-     * Creates a validator that ensures the text is an integer and performs the
-     * specified bounds checking.
-     * @param min The minimum bound, inclusive; not checked if {@code null}.
-     * @param max The maximum bound, inclusive; not checked if {@code null}.
+     * Creates a validator that ensures the text is a monetary value and
+     * performs the specified bounds checking.
+     * @param min The minimum bound in cents, inclusive; not checked if
+     * {@code null}.
+     * @param max The maximum bound in cents, inclusive; not checked if
+     * {@code null}.
      **************************************************************************/
     public MoneyValidator( Integer min, Integer max )
     {
@@ -54,7 +57,7 @@ public class MoneyValidator implements IDataValidator<Integer>
             int idx = text.indexOf( '.' );
 
             String dStr = text.substring( 0, idx );
-            String pStr = text.substring( idx, text.length() );
+            String pStr = text.substring( idx + 1, text.length() );
 
             int dollars = Integer.parseInt( dStr );
             int pennies = Integer.parseInt( pStr );
