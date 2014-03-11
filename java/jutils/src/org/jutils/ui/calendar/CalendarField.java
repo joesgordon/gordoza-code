@@ -15,7 +15,7 @@ import javax.swing.text.DefaultFormatterFactory;
 import org.jutils.IconConstants;
 import org.jutils.Utils;
 import org.jutils.ui.event.updater.DataUpdaterList;
-import org.jutils.ui.event.updater.IDataUpdater;
+import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.model.IView;
 
 //TODO comments
@@ -83,7 +83,7 @@ public class CalendarField implements IView<JPanel>
     /***************************************************************************
      * @param updater
      **************************************************************************/
-    public void addDataUpdater( IDataUpdater<Calendar> updater )
+    public void addDataUpdater( IUpdater<Calendar> updater )
     {
         updaterList.addListener( updater );
     }

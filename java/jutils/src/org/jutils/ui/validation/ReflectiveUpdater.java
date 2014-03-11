@@ -2,6 +2,8 @@ package org.jutils.ui.validation;
 
 import java.lang.reflect.Field;
 
+import org.jutils.ui.event.updater.IUpdater;
+
 /*******************************************************************************
  * @param <T>
  ******************************************************************************/

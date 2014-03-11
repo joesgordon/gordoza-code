@@ -11,7 +11,7 @@ import org.jutils.ui.AutoSpinner;
 import org.jutils.ui.app.FrameApplication;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.event.updater.DataUpdaterList;
-import org.jutils.ui.event.updater.IDataUpdater;
+import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.model.IDataView;
 
 //TODO comments
@@ -60,7 +60,7 @@ public class DateTimeView implements IDataView<Calendar>
     /***************************************************************************
      * @param updater
      **************************************************************************/
-    public void addDataUpdater( IDataUpdater<Calendar> updater )
+    public void addDataUpdater( IUpdater<Calendar> updater )
     {
         updaterList.addListener( updater );
         dateField.addDataUpdater( updater );

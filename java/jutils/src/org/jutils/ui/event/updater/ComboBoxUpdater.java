@@ -7,10 +7,10 @@ import javax.swing.JComboBox;
 
 public class ComboBoxUpdater<T> implements ActionListener
 {
-    private final IDataUpdater<T> updater;
+    private final IUpdater<T> updater;
     private final JComboBox<T> comboBox;
 
-    public ComboBoxUpdater( JComboBox<T> comboBox, IDataUpdater<T> dataUpdater )
+    public ComboBoxUpdater( JComboBox<T> comboBox, IUpdater<T> dataUpdater )
     {
         this.comboBox = comboBox;
         this.updater = dataUpdater;
@@ -21,6 +21,6 @@ public class ComboBoxUpdater<T> implements ActionListener
     {
         @SuppressWarnings( "unchecked")
         T selectedObject = ( T )comboBox.getSelectedItem();
-        updater.updateData( selectedObject );
+        updater.update( selectedObject );
     }
 }

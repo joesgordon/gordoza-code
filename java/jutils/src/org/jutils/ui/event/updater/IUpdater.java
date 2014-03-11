@@ -1,4 +1,4 @@
-package org.jutils.ui.validation;
+package org.jutils.ui.event.updater;
 
 /*******************************************************************************
  * Defines a method of updating an object with new data. Basically a fancy-named
