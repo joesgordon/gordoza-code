@@ -37,6 +37,12 @@ public class ResourceLoader
     public ResourceLoader( URL url )
     {
         baseUrl = url;
+
+        if( url == null )
+        {
+            throw new IllegalArgumentException(
+                "Does not support null initialization" );
+        }
     }
 
     /***************************************************************************

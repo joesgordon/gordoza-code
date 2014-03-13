@@ -62,7 +62,18 @@ public class MoneyValidator implements IDataValidator<Integer>
             if( idx > -1 )
             {
                 dStr = text.substring( 0, idx );
-                pStr = text.substring( idx + 1, idx + 3 );
+                int start = idx + 1;
+                int end = text.length();
+                int cnt = end - start;
+
+                if( cnt > 2 )
+                {
+                    throw new ValidationException( "Too many decimal places." );
+                }
+                else if( cnt > 0 )
+                {
+                    pStr = text.substring( start, end );
+                }
             }
             else
             {
