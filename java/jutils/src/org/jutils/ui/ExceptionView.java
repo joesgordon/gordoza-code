@@ -90,25 +90,44 @@ public class ExceptionView implements IView<JComponent>
             JOptionPane.ERROR_MESSAGE );
     }
 
-    public static void main( String [] args )
+    public static void invokeLater( Throwable ex, String title, String message )
     {
-        IApplication app = new IApplication()
-        {
-            @Override
-            public String getLookAndFeelName()
-            {
-                return null;
-            }
-
-            @Override
-            public void createAndShowUi()
-            {
-                RuntimeFormatException ex = new RuntimeFormatException(
-                    "Wrong, three tries for a quarter." );
-                showExceptionDialog( null, "It didn't work", "WRONG!", ex );
-            }
-        };
+        IApplication app = new DefaultApp( ex, title, message );
 
         SwingUtilities.invokeLater( new AppRunner( app ) );
+    }
+
+    public static void main( String [] args )
+    {
+        RuntimeFormatException ex = new RuntimeFormatException(
+            "Wrong, three tries for a quarter." );
+
+        invokeLater( ex, "WRONG!", "It didn't work" );
+    }
+
+    private static class DefaultApp implements IApplication
+    {
+        private final Throwable ex;
+        private final String title;
+        private final String message;
+
+        public DefaultApp( Throwable ex, String title, String message )
+        {
+            this.ex = ex;
+            this.title = title;
+            this.message = message;
+        }
+
+        @Override
+        public String getLookAndFeelName()
+        {
+            return null;
+        }
+
+        @Override
+        public void createAndShowUi()
+        {
+            showExceptionDialog( null, title, message, ex );
+        }
     }
 }
