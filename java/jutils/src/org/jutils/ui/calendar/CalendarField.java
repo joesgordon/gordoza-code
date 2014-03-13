@@ -147,7 +147,7 @@ public class CalendarField implements IView<JPanel>
      **************************************************************************/
     public Calendar getDate()
     {
-        Calendar cal = new GregorianCalendar();
+        Calendar cal = new GregorianCalendar( this.curDate.getTimeZone() );
         Date date = ( Date )dateTextField.getValue();
 
         if( date != null )

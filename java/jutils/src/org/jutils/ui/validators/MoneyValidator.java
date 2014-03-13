@@ -56,8 +56,18 @@ public class MoneyValidator implements IDataValidator<Integer>
 
             int idx = text.indexOf( '.' );
 
-            String dStr = text.substring( 0, idx );
-            String pStr = text.substring( idx + 1, text.length() );
+            String dStr = "0";
+            String pStr = "0";
+
+            if( idx > -1 )
+            {
+                dStr = text.substring( 0, idx );
+                pStr = text.substring( idx + 1, idx + 3 );
+            }
+            else
+            {
+                dStr = text;
+            }
 
             int dollars = Integer.parseInt( dStr );
             int pennies = Integer.parseInt( pStr );
