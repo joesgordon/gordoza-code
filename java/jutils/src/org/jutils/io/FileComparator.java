@@ -38,6 +38,6 @@ public class FileComparator implements Comparator<File>
         String name1 = DefaultExplorerItem.FILE_SYSTEM_VIEW.getSystemDisplayName( file1 );
         String name2 = DefaultExplorerItem.FILE_SYSTEM_VIEW.getSystemDisplayName( file2 );
 
-        return name1.compareTo( name2 );
+        return name1.compareToIgnoreCase( name2 );
     }
 }
