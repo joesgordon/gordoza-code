@@ -88,7 +88,15 @@ public class BufferedReadOnlyStream implements IStream
         if( totalRead < len )
         {
             totalRead += stream.read( buf, off + totalRead, len - totalRead );
-            fillBuffer( stream.getPosition() );
+
+            try
+            {
+                fillBuffer( stream.getPosition() );
+            }
+            catch( EOFException ex )
+            {
+                ;
+            }
         }
 
         return totalRead;
