@@ -21,16 +21,12 @@ public final class Utils
     /** The user's home directory. */
     public static final String USER_HOME;
 
-    /** A date formatter for displaying debug statements. */
-    private static final SimpleDateFormat debugDateFormatter;
-
     static
     {
         REGEX_METAC = new char[] { '\\', '^', '|', '[', ']', '(', ')', '$',
             '.', '+', '*', '?', '{', '}' };
         NEW_LINE = System.getProperty( PropConstants.SYS_LINE_SEP );
         USER_HOME = System.getProperty( PropConstants.SYS_USER_DIR );
-        debugDateFormatter = new SimpleDateFormat( "HH:mm:ss:SSSS" );
     }
 
     /***************************************************************************
@@ -90,18 +86,6 @@ public final class Utils
         }
 
         return msb << 32 | lsb;
-    }
-
-    /***************************************************************************
-     * Prints the provided debug message with a time/date stamp.
-     * @param message the message to be printed.
-     **************************************************************************/
-    public static void printDebug( String message )
-    {
-        System.out.print( "DEBUG[" );
-        System.out.print( debugDateFormatter.format( new Date() ) );
-        System.out.print( "]: " );
-        System.out.println( message );
     }
 
     /***************************************************************************

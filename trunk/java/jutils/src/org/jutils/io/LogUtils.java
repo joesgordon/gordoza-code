@@ -5,22 +5,26 @@ import java.util.Date;
 
 public class LogUtils
 {
-    private static SimpleDateFormat dateFormatter;
+
+    /** A date formatter for displaying debug statements. */
+    private static final SimpleDateFormat dateFormatter;
 
     static
     {
-        dateFormatter = new SimpleDateFormat( "HH:mm:ss:SS" );
+        dateFormatter = new SimpleDateFormat( "HH:mm:ss:SSSS" );
     }
 
-    public static void printDebug( String str )
+    public static void printDebug( String message )
     {
-        printDate();
-        System.out.print( ' ' );
-        System.out.println( str );
+        printMessage( "DEBUG", message );
     }
 
-    private static void printDate()
+    private static void printMessage( String msgClass, String message )
     {
+        System.out.print( msgClass );
+        System.out.print( "[" );
         System.out.print( dateFormatter.format( new Date() ) );
+        System.out.print( "]: " );
+        System.out.println( message );
     }
 }
