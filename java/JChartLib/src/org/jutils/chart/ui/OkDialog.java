@@ -11,9 +11,9 @@ import org.jutils.ui.model.IView;
 public class OkDialog implements IView<JDialog>
 {
     private final JDialog dialog;
-    private final IView<? extends JComponent> view;
+    private final IView<? extends Component> view;
 
-    public OkDialog( IView<? extends JComponent> view, JFrame frame )
+    public OkDialog( IView<? extends Component> view, JFrame frame )
     {
         this.dialog = new JDialog( frame );
         this.view = view;
