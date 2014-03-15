@@ -54,7 +54,7 @@ public final class SwingUtils
     }
 
     public static <T> String showEditableMessage( Component parent,
-        String message, String title, T[] list, T defaultChoice )
+        String message, String title, T [] list, T defaultChoice )
     {
         JPanel panel = new JPanel( new GridBagLayout() );
         JLabel msgLabel = new JLabel( message );
@@ -136,6 +136,18 @@ public final class SwingUtils
         panel.add( statusbar.getView(), constraints );
 
         return panel;
+    }
+
+    public static JButton addActionToToolbar( JToolBar toolbar, Action action )
+    {
+        JButton button = new JButton( action );
+
+        button.setFocusable( false );
+        button.setText( null );
+        button.setToolTipText( action.getValue( Action.NAME ).toString() );
+        toolbar.add( button );
+
+        return button;
     }
 
     /***************************************************************************
