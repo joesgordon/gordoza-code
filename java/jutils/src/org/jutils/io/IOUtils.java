@@ -41,13 +41,79 @@ public final class IOUtils
     public static String byteCount( long count )
     {
         int unit = 1024;
+        int exp;
+        char pre;
+
         if( count < unit )
         {
             return count + " B";
         }
-        int exp = ( int )( Math.log( count ) / Math.log( unit ) );
-        char pre = "KMGTPE".charAt( exp - 1 );
+
+        exp = ( int )( Math.log( count ) / Math.log( unit ) );
+        pre = "KMGTPE".charAt( exp - 1 );
         return String.format( "%.1f %ciB", count / Math.pow( unit, exp ), pre );
+    }
+
+    /***************************************************************************
+     * @param files
+     * @return
+     **************************************************************************/
+    public static File findClosestCommonAncestor( File... files )
+    {
+        File ans = null;
+        String ansPath = null;
+        String [] paths = new String[files.length];
+
+        for( int i = 0; i < files.length; i++ )
+        {
+            paths[i] = files[i].getAbsolutePath();
+
+            paths[i] = paths[i].replace( '\\', '/' );
+
+            if( files[i].isDirectory() )
+            {
+                paths[i] += '/';
+            }
+        }
+
+        for( String path : paths )
+        {
+            if( ansPath == null )
+            {
+                ansPath = new File( path ).getParent();
+                ansPath += '/';
+                ansPath = ansPath.replace( '\\', '/' );
+            }
+            else
+            {
+                int i = 0;
+                for( ; i < ansPath.length() && i < path.length(); i++ )
+                {
+                    if( ansPath.charAt( i ) != path.charAt( i ) )
+                    {
+                        break;
+                    }
+                }
+
+                i = ansPath.lastIndexOf( '/', i );
+                if( i > -1 )
+                {
+                    ansPath = ansPath.substring( 0, i ) + '/';
+                }
+                else
+                {
+                    ansPath = null;
+                    break;
+                }
+            }
+        }
+
+        if( ansPath != null )
+        {
+            ans = new File( ansPath );
+        }
+
+        return ans;
     }
 
     /***************************************************************************
