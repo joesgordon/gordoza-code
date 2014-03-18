@@ -2,6 +2,8 @@ package org.jutils.ui;
 
 import javax.swing.JToolBar;
 
+import org.jutils.SwingUtils;
+
 import com.jgoodies.looks.HeaderStyle;
 import com.jgoodies.looks.Options;
 
@@ -39,9 +41,7 @@ public class JGoodiesToolBar extends JToolBar
 
     private void init()
     {
-        setFloatable( false );
-        setRollover( true );
-        setBorderPainted( false );
+        SwingUtils.setToolbarDefaults( this );
 
         putClientProperty( Options.HEADER_STYLE_KEY, HeaderStyle.BOTH );
     }

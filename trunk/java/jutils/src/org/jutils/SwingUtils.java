@@ -9,22 +9,38 @@ import org.jutils.ui.StatusBarPanel;
 
 //TODO comments
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public final class SwingUtils
 {
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private SwingUtils()
     {
     }
 
+    /***************************************************************************
+     * @param frame
+     **************************************************************************/
     public static void installEscapeCloseOperation( JFrame frame )
     {
         installEscapeCloseOperation( frame, frame.getRootPane() );
     }
 
+    /***************************************************************************
+     * @param dialog
+     **************************************************************************/
     public static void installEscapeCloseOperation( JDialog dialog )
     {
         installEscapeCloseOperation( dialog, dialog.getRootPane() );
     }
 
+    /***************************************************************************
+     * @param win
+     * @param rootPane
+     **************************************************************************/
     private static void installEscapeCloseOperation( Window win,
         JRootPane rootPane )
     {
@@ -37,22 +53,14 @@ public final class SwingUtils
         rootPane.getActionMap().put( mapKey, dispatchClosing );
     }
 
-    private static class CloseAction extends AbstractAction
-    {
-        private final Window win;
-
-        public CloseAction( Window win )
-        {
-            this.win = win;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent event )
-        {
-            win.dispatchEvent( new WindowEvent( win, WindowEvent.WINDOW_CLOSING ) );
-        }
-    }
-
+    /***************************************************************************
+     * @param parent
+     * @param message
+     * @param title
+     * @param list
+     * @param defaultChoice
+     * @return
+     **************************************************************************/
     public static <T> String showEditableMessage( Component parent,
         String message, String title, T [] list, T defaultChoice )
     {
@@ -97,6 +105,11 @@ public final class SwingUtils
         return name;
     }
 
+    /***************************************************************************
+     * @param toolbar
+     * @param container
+     * @return
+     **************************************************************************/
     public static JPanel createStandardConentPane( JToolBar toolbar,
         Container container )
     {
@@ -105,6 +118,12 @@ public final class SwingUtils
         return createStandardConentPane( toolbar, container, statusbar );
     }
 
+    /***************************************************************************
+     * @param toolbar
+     * @param container
+     * @param statusbar
+     * @return
+     **************************************************************************/
     private static JPanel createStandardConentPane( JToolBar toolbar,
         Container container, StatusBarPanel statusbar )
     {
@@ -138,6 +157,11 @@ public final class SwingUtils
         return panel;
     }
 
+    /***************************************************************************
+     * @param toolbar
+     * @param action
+     * @return
+     **************************************************************************/
     public static JButton addActionToToolbar( JToolBar toolbar, Action action )
     {
         JButton button = new JButton( action );
@@ -239,6 +263,35 @@ public final class SwingUtils
         public void windowIconified( WindowEvent e )
         {
             frame.setVisible( false );
+        }
+    }
+
+    /***************************************************************************
+     * @param toolbar
+     **************************************************************************/
+    public static void setToolbarDefaults( JToolBar toolbar )
+    {
+        toolbar.setFloatable( false );
+        toolbar.setRollover( true );
+        toolbar.setBorderPainted( false );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class CloseAction extends AbstractAction
+    {
+        private final Window win;
+
+        public CloseAction( Window win )
+        {
+            this.win = win;
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent event )
+        {
+            win.dispatchEvent( new WindowEvent( win, WindowEvent.WINDOW_CLOSING ) );
         }
     }
 }
