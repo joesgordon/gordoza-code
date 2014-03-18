@@ -163,6 +163,12 @@ public final class Utils
         return win != null ? ( Frame )win : null;
     }
 
+    public static JFrame getComponentsJFrame( Component comp )
+    {
+        Object win = getParentOfType( comp, JFrame.class );
+        return win != null ? ( JFrame )win : null;
+    }
+
     /***************************************************************************
      * Finds the maximum width and length of the provided components and sets
      * the preferred size of each to the maximum.

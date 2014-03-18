@@ -2,8 +2,7 @@ package org.jutils.ui;
 
 import java.awt.Component;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 
 import javax.swing.Icon;
 import javax.swing.JTree;
@@ -14,19 +13,25 @@ import javax.swing.tree.*;
 
 import org.jutils.io.LogUtils;
 import org.jutils.io.UFile;
+import org.jutils.ui.event.*;
+import org.jutils.ui.event.FileDropTarget.DropActionType;
+import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class DirectoryTree extends JTree
+public class DirectoryTree implements IView<JTree>
 {
     /**  */
     public static final FileSystemView FILE_SYSTEM = FileSystemView.getFileSystemView();
 
     /**  */
-    private DefaultMutableTreeNode root = null;
+    private final JTree tree;
     /**  */
-    private DefaultTreeModel treeModel;
+    private final DefaultMutableTreeNode root;
+    /**  */
+    private final DefaultTreeModel treeModel;
 
     /***************************************************************************
      * 
@@ -49,9 +54,9 @@ public class DirectoryTree extends JTree
      **************************************************************************/
     public DirectoryTree( File [] rootFiles )
     {
-        super( new DefaultTreeModel( new DefaultMutableTreeNode() ) );
-        treeModel = ( DefaultTreeModel )super.getModel();
-        root = ( DefaultMutableTreeNode )treeModel.getRoot();
+        this.root = new DefaultMutableTreeNode();
+        this.treeModel = new DefaultTreeModel( root );
+        this.tree = new JTree( treeModel );
 
         if( rootFiles != null )
         {
@@ -63,12 +68,31 @@ public class DirectoryTree extends JTree
 
         // super.putClientProperty( "JTree.lineStyle", "None" );
 
-        super.setShowsRootHandles( true );
-        super.setRootVisible( false );
-        super.setEditable( false );
-        super.expandPath( new TreePath( root ) );
-        super.setCellRenderer( new Renderer() );
-        super.addTreeWillExpandListener( new ExpansionListener() );
+        tree.setShowsRootHandles( true );
+        tree.setRootVisible( false );
+        tree.setEditable( false );
+        tree.expandPath( new TreePath( root ) );
+        tree.setCellRenderer( new Renderer() );
+        tree.addTreeWillExpandListener( new ExpansionListener() );
+
+        tree.setDropTarget( new FileDropTarget( new FileDroppedListener( this ) ) );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public JTree getView()
+    {
+        return tree;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public void clearSelection()
+    {
+        tree.clearSelection();
     }
 
     /***************************************************************************
@@ -76,7 +100,7 @@ public class DirectoryTree extends JTree
      **************************************************************************/
     public File [] getSelected()
     {
-        TreePath [] paths = this.getSelectionPaths();
+        TreePath [] paths = tree.getSelectionPaths();
         if( paths == null )
         {
             return null;
@@ -103,8 +127,8 @@ public class DirectoryTree extends JTree
         // );
         if( treePaths.length > 0 )
         {
-            scrollPathToVisible( treePaths[0] );
-            setSelectionPaths( treePaths );
+            tree.scrollPathToVisible( treePaths[0] );
+            tree.setSelectionPaths( treePaths );
         }
     }
 
@@ -158,7 +182,7 @@ public class DirectoryTree extends JTree
 
         for( int i = 0; i < filesPath.length; i++ )
         {
-            expandPath( new TreePath( dmtr.getPath() ) );
+            tree.expandPath( new TreePath( dmtr.getPath() ) );
 
             FolderNode node = getNodeWithFile( dmtr, filesPath[i] );
 
@@ -312,7 +336,7 @@ public class DirectoryTree extends JTree
      **************************************************************************/
     public void refreshSelected()
     {
-        TreePath [] paths = super.getSelectionPaths();
+        TreePath [] paths = tree.getSelectionPaths();
 
         if( paths != null )
         {
@@ -360,73 +384,99 @@ public class DirectoryTree extends JTree
             // Intentionally not used.
         }
     }
-}
 
-class FolderNode extends DefaultMutableTreeNode
-{
-    private String desc = null;
-
-    private Icon icon = null;
-
-    public FolderNode( File dir )
+    private static class FolderNode extends DefaultMutableTreeNode
     {
-        super( dir );
-    }
+        private String desc = null;
 
-    public String toString()
-    {
-        if( desc == null )
+        private Icon icon = null;
+
+        public FolderNode( File dir )
         {
-            desc = DirectoryTree.FILE_SYSTEM.getSystemDisplayName( getFolder() );
+            super( dir );
         }
 
-        return desc;
-    }
-
-    public boolean isLeaf()
-    {
-        return !getFolder().isDirectory();
-    }
-
-    public File getFolder()
-    {
-        return ( File )super.getUserObject();
-    }
-
-    public Icon getIcon()
-    {
-        if( icon == null )
+        public String toString()
         {
-            icon = DirectoryTree.FILE_SYSTEM.getSystemIcon( getFolder() );
-        }
-        return icon;
-    }
+            if( desc == null )
+            {
+                desc = DirectoryTree.FILE_SYSTEM.getSystemDisplayName( getFolder() );
+            }
 
-    public void setIcon( Icon icon )
-    {
-        this.icon = icon;
-    }
-}
-
-class Renderer extends DefaultTreeCellRenderer
-{
-    public Renderer()
-    {
-    }
-
-    public Component getTreeCellRendererComponent( JTree tree, Object value,
-        boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus )
-    {
-        super.getTreeCellRendererComponent( tree, value, sel, expanded, leaf,
-            row, hasFocus );
-
-        if( value instanceof FolderNode )
-        {
-            FolderNode node = ( FolderNode )value;
-
-            setIcon( node.getIcon() );
+            return desc;
         }
 
-        return this;
+        public boolean isLeaf()
+        {
+            return !getFolder().isDirectory();
+        }
+
+        public File getFolder()
+        {
+            return ( File )super.getUserObject();
+        }
+
+        public Icon getIcon()
+        {
+            if( icon == null )
+            {
+                icon = DirectoryTree.FILE_SYSTEM.getSystemIcon( getFolder() );
+            }
+            return icon;
+        }
+    }
+
+    private static class Renderer extends DefaultTreeCellRenderer
+    {
+        public Renderer()
+        {
+        }
+
+        public Component getTreeCellRendererComponent( JTree tree,
+            Object value, boolean sel, boolean expanded, boolean leaf, int row,
+            boolean hasFocus )
+        {
+            super.getTreeCellRendererComponent( tree, value, sel, expanded,
+                leaf, row, hasFocus );
+
+            if( value instanceof FolderNode )
+            {
+                FolderNode node = ( FolderNode )value;
+
+                setIcon( node.getIcon() );
+            }
+
+            return this;
+        }
+    }
+
+    private static class FileDroppedListener implements
+        ItemActionListener<IFileDropEvent>
+    {
+        private final DirectoryTree tree;
+
+        public FileDroppedListener( DirectoryTree tree )
+        {
+            this.tree = tree;
+        }
+
+        @Override
+        public void actionPerformed( ItemActionEvent<IFileDropEvent> event )
+        {
+            IFileDropEvent drop = event.getItem();
+            List<File> files = drop.getFiles();
+
+            if( drop.getActionType() == DropActionType.COPY )
+            {
+                List<File> selected = new ArrayList<>();
+                selected.addAll( Arrays.asList( tree.getSelected() ) );
+                selected.addAll( files );
+                tree.setSelected( selected.toArray( new File[0] ) );
+            }
+            else
+            {
+                tree.setSelected( files.toArray( new File[0] ) );
+            }
+        }
     }
 }

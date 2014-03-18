@@ -120,9 +120,16 @@ public class FileDropTarget extends DropTarget
         ItemActionListener<IFileDropEvent>
     {
         private final JTextField field;
+        private final boolean directoryOnly;
 
         public JTextFieldFilesListener( JTextField field )
         {
+            this( field, false );
+        }
+
+        public JTextFieldFilesListener( JTextField field, boolean directoryOnly )
+        {
+            this.directoryOnly = directoryOnly;
             this.field = field;
         }
 
@@ -134,7 +141,14 @@ public class FileDropTarget extends DropTarget
 
             for( int i = 0; i < files.size(); i++ )
             {
-                if( i > 0 )
+                File file = files.get( i );
+
+                if( directoryOnly && !file.isDirectory() )
+                {
+                    continue;
+                }
+
+                if( paths.length() > 0 )
                 {
                     paths.append( File.pathSeparator );
                 }
