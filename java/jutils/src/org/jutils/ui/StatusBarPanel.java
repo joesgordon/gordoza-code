@@ -129,9 +129,8 @@ public class StatusBarPanel
         refreshButton.addActionListener( new RefreshButtonListener() );
 
         toolbar.add( refreshButton );
-        toolbar.setBorderPainted( false );
-        toolbar.setFloatable( false );
-        toolbar.setRollover( true );
+
+        SwingUtils.setToolbarDefaults( toolbar );
 
         return toolbar;
     }

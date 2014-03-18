@@ -8,8 +8,7 @@ import java.util.*;
 
 import javax.swing.*;
 
-import org.jutils.IconConstants;
-import org.jutils.Utils;
+import org.jutils.*;
 import org.jutils.io.BitBuffer;
 import org.jutils.io.BitPosition;
 import org.jutils.ui.model.IView;
@@ -57,9 +56,7 @@ public class ShiftHexView implements IView<JComponent>
     {
         JToolBar toolbar = new JToolBar();
 
-        toolbar.setFloatable( false );
-        toolbar.setRollover( true );
-        toolbar.setBorderPainted( false );
+        SwingUtils.setToolbarDefaults( toolbar );
 
         leftButton.setIcon( IconConstants.loader.getIcon( IconConstants.BACK_16 ) );
         leftButton.addActionListener( new ShiftListener( this, -1 ) );
