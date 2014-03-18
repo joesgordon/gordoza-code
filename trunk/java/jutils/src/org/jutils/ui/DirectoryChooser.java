@@ -1,18 +1,18 @@
 package org.jutils.ui;
 
+import java.awt.Dialog.ModalityType;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicTabbedPaneUI;
 
 import org.jutils.Utils;
 import org.jutils.io.IOUtils;
 import org.jutils.io.LogUtils;
-
-import com.jgoodies.looks.Options;
+import org.jutils.ui.app.AppRunner;
+import org.jutils.ui.app.IApplication;
 
 /*******************************************************************************
  *
@@ -29,7 +29,7 @@ public class DirectoryChooser
     /***************************************************************************
      * @param owner
      **************************************************************************/
-    public DirectoryChooser( Frame owner )
+    public DirectoryChooser( Window owner )
     {
         this( owner, "Choose Directory" );
     }
@@ -38,7 +38,7 @@ public class DirectoryChooser
      * @param owner Frame
      * @param title String
      **************************************************************************/
-    public DirectoryChooser( Frame owner, String title )
+    public DirectoryChooser( Window owner, String title )
     {
         this( owner, title, "Please choose a folder or folders:" );
     }
@@ -48,9 +48,9 @@ public class DirectoryChooser
      * @param title String
      * @param message String
      **************************************************************************/
-    public DirectoryChooser( Frame owner, String title, String message )
+    public DirectoryChooser( Window owner, String title, String message )
     {
-        this.dialog = new JDialog( owner, title, true );
+        this.dialog = new JDialog( owner, title, ModalityType.APPLICATION_MODAL );
         this.tree = new DirectoryTree();
         this.messageLabel = new JLabel();
 
@@ -58,7 +58,7 @@ public class DirectoryChooser
 
         dialog.setContentPane( createContentPanel( message ) );
 
-        dialog.setSize( 300, 300 );
+        dialog.setSize( 350, 550 );
         dialog.validate();
         dialog.setLocationRelativeTo( owner );
     }
@@ -70,7 +70,8 @@ public class DirectoryChooser
     private JPanel createContentPanel( String message )
     {
         JPanel mainPanel = new JPanel( new GridBagLayout() );
-        JScrollPane scrollPane = new JScrollPane( tree );
+        JScrollPane scrollPane = new JScrollPane( tree.getView() );
+        GridBagConstraints constraints;
 
         messageLabel.setText( message );
 
@@ -79,15 +80,20 @@ public class DirectoryChooser
             messageLabel.getPreferredSize().width ) );
         scrollPane.setPreferredSize( scrollPane.getMinimumSize() );
 
-        mainPanel.add( messageLabel, new GridBagConstraints( 0, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(
-                8, 8, 8, 8 ), 0, 0 ) );
-        mainPanel.add( scrollPane, new GridBagConstraints( 0, 1, 1, 1, 1.0,
-            1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 8, 8, 8, 8 ), 0, 0 ) );
-        mainPanel.add( createButtonPanel(), new GridBagConstraints( 0, 2, 1, 1,
-            0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
-            new Insets( 8, 8, 8, 8 ), 0, 0 ) );
+        constraints = new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 8, 8,
+                0, 8 ), 0, 0 );
+        mainPanel.add( messageLabel, constraints );
+
+        constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 8,
+                8, 8, 8 ), 0, 0 );
+        mainPanel.add( scrollPane, constraints );
+
+        constraints = new GridBagConstraints( 0, 2, 1, 1, 0.0, 0.0,
+            GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL, new Insets(
+                8, 4, 8, 4 ), 0, 0 );
+        mainPanel.add( createButtonPanel(), constraints );
 
         return mainPanel;
     }
@@ -139,7 +145,15 @@ public class DirectoryChooser
                 2, 4 ), 4, 0 );
         panel.add( cancelButton, constraints );
 
-        Utils.setMaxComponentSize( newButton, okButton, cancelButton );
+        Dimension dim = Utils.getMaxComponentSize( newButton, okButton,
+            cancelButton );
+
+        newButton.setMinimumSize( dim );
+        newButton.setPreferredSize( dim );
+        okButton.setMinimumSize( dim );
+        okButton.setPreferredSize( dim );
+        cancelButton.setMinimumSize( dim );
+        cancelButton.setPreferredSize( dim );
 
         return panel;
     }
@@ -162,21 +176,17 @@ public class DirectoryChooser
      **************************************************************************/
     public static void main( String [] args )
     {
-        SwingUtilities.invokeLater( new Runnable()
+        IApplication app = new IApplication()
         {
-            public void run()
+            @Override
+            public String getLookAndFeelName()
             {
-                try
-                {
-                    UIManager.setLookAndFeel( Options.PLASTICXP_NAME );
-                    UIManager.put( "TabbedPaneUI",
-                        BasicTabbedPaneUI.class.getCanonicalName() );
-                }
-                catch( Exception exception )
-                {
-                    exception.printStackTrace();
-                }
+                return null;
+            }
 
+            @Override
+            public void createAndShowUi()
+            {
                 DirectoryChooser dialog = new DirectoryChooser( null );
 
                 dialog.setSelectedPaths( new File( IOUtils.USERS_DIR,
@@ -185,9 +195,11 @@ public class DirectoryChooser
                 dialog.setVisible( true );
 
                 String paths = dialog.getSelectedPaths();
-                LogUtils.printDebug( "DEBUG: Paths: " + paths );
+                LogUtils.printDebug( paths );
             }
-        } );
+        };
+
+        SwingUtilities.invokeLater( new AppRunner( app ) );
     }
 
     /***************************************************************************
