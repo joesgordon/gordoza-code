@@ -332,4 +332,19 @@ public final class IOUtils
             }
         }
     }
+
+    public static String getFileExtension( File file )
+    {
+        String fileName = file.getName();
+        String extension = "";
+
+        int i = fileName.lastIndexOf( '.' );
+
+        if( i > -1 )
+        {
+            extension = fileName.substring( i + 1 );
+        }
+
+        return extension;
+    }
 }
