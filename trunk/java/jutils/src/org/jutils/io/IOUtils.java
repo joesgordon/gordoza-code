@@ -3,8 +3,7 @@ package org.jutils.io;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 //TODO comments
 
@@ -60,17 +59,27 @@ public final class IOUtils
      **************************************************************************/
     public static File findClosestCommonAncestor( File... files )
     {
+        return findClosestCommonAncestor( Arrays.asList( files ) );
+    }
+
+    /***************************************************************************
+     * @param files
+     * @return
+     **************************************************************************/
+    public static File findClosestCommonAncestor( List<File> files )
+    {
         File ans = null;
         String ansPath = null;
-        String [] paths = new String[files.length];
+        String [] paths = new String[files.size()];
 
-        for( int i = 0; i < files.length; i++ )
+        for( int i = 0; i < files.size(); i++ )
         {
-            paths[i] = files[i].getAbsolutePath();
+            File file = files.get( i );
+            paths[i] = file.getAbsolutePath();
 
             paths[i] = paths[i].replace( '\\', '/' );
 
-            if( files[i].isDirectory() )
+            if( file.isDirectory() )
             {
                 paths[i] += '/';
             }
@@ -86,19 +95,12 @@ public final class IOUtils
             }
             else
             {
-                int i = 0;
-                for( ; i < ansPath.length() && i < path.length(); i++ )
-                {
-                    if( ansPath.charAt( i ) != path.charAt( i ) )
-                    {
-                        break;
-                    }
-                }
+                int idx = findFirstDiff( ansPath, path );
 
-                i = ansPath.lastIndexOf( '/', i );
-                if( i > -1 )
+                if( idx > 0 )
                 {
-                    ansPath = ansPath.substring( 0, i ) + '/';
+                    idx = ansPath.lastIndexOf( '/', idx );
+                    ansPath = ansPath.substring( 0, idx ) + '/';
                 }
                 else
                 {
@@ -114,6 +116,21 @@ public final class IOUtils
         }
 
         return ans;
+    }
+
+    private static int findFirstDiff( String str1, String str2 )
+    {
+        int idx = 0;
+
+        for( ; idx < str1.length() && idx < str2.length(); idx++ )
+        {
+            if( str1.charAt( idx ) != str2.charAt( idx ) )
+            {
+                break;
+            }
+        }
+
+        return idx;
     }
 
     /***************************************************************************
@@ -292,8 +309,10 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param directory
-     * @return
+     * Returns a list of all files (in which {@code isDirectory() == false})
+     * found in the provided directory.
+     * @param directory the directory to be searched.
+     * @return the list of all files found in the provided directory.
      **************************************************************************/
     public static List<File> getAllFiles( File dir )
     {
@@ -346,5 +365,20 @@ public final class IOUtils
         }
 
         return extension;
+    }
+
+    public static List<File> getAncestors( File file )
+    {
+        List<File> files = new ArrayList<>();
+
+        file = file.getAbsoluteFile();
+
+        while( file != null )
+        {
+            files.add( 0, file );
+            file = file.getParentFile();
+        }
+
+        return files;
     }
 }
