@@ -100,7 +100,7 @@ public class SliderTestFrame extends JFrame
     {
         JPanel panel = new JPanel( new BorderLayout() );
         DirectoryTree dirTree = new DirectoryTree();
-        JScrollPane jsp = new JScrollPane( dirTree );
+        JScrollPane jsp = new JScrollPane( dirTree.getView() );
         panel.setBorder( BorderFactory.createRaisedBevelBorder() );
 
         panel.add( jsp, BorderLayout.CENTER );

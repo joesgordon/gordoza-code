@@ -94,7 +94,7 @@ public class JExplorerFrame extends JFrame
     private DirectoryTree dirTree = new DirectoryTree();
 
     /** The scroll pane for the file tree. */
-    private JScrollPane treeScrollPane = new JScrollPane( dirTree );
+    private JScrollPane treeScrollPane = new JScrollPane( dirTree.getView() );
 
     /**
      * The file table displaying all the files and folder for the current
@@ -238,10 +238,10 @@ public class JExplorerFrame extends JFrame
         this.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         this.setTitle( "JExplorer" );
 
-        dirTree.getSelectionModel().setSelectionMode(
+        dirTree.getView().getSelectionModel().setSelectionMode(
             TreeSelectionModel.SINGLE_TREE_SELECTION );
-        dirTree.addTreeSelectionListener( dirTreeSelListener );
-        dirTree.addMouseListener( dirTreeMouseListener );
+        dirTree.getView().addTreeSelectionListener( dirTreeSelListener );
+        dirTree.getView().addMouseListener( dirTreeMouseListener );
 
         fileTable.setAutoCreateRowSorter( true );
         fileTable.setBackground( Color.white );

@@ -54,6 +54,7 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
         table.setColumnSelectionAllowed( true );
         table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
 
+//        scrollpane.getViewport().setBackground(table.getBackground());
         scrollpane.setHorizontalScrollBarPolicy( ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS );
         scrollpane.setVerticalScrollBarPolicy( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
         scrollpane.setRowHeaderView( rowHeader );
