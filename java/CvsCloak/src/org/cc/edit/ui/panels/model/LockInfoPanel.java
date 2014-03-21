@@ -10,7 +10,7 @@ import org.cc.data.LockInfo;
 import org.cc.edit.ui.InfoPanel;
 import org.jutils.ui.calendar.DateTimeView;
 import org.jutils.ui.event.updater.DocumentUpdater;
-import org.jutils.ui.event.updater.IDataUpdater;
+import org.jutils.ui.event.updater.IUpdater;
 
 /*******************************************************************************
  * 
@@ -82,10 +82,10 @@ public class LockInfoPanel extends InfoPanel<LockInfo>
     /***************************************************************************
      * 
      **************************************************************************/
-    private class DateUpdater implements IDataUpdater<Calendar>
+    private class DateUpdater implements IUpdater<Calendar>
     {
         @Override
-        public void updateData( Calendar cal )
+        public void update( Calendar cal )
         {
             getData().setTime( ( long )( cal.getTimeInMillis() / 1000.0 ) );
         }
@@ -94,10 +94,10 @@ public class LockInfoPanel extends InfoPanel<LockInfo>
     /***************************************************************************
      * 
      **************************************************************************/
-    private class UserUpdater implements IDataUpdater<String>
+    private class UserUpdater implements IUpdater<String>
     {
         @Override
-        public void updateData( String data )
+        public void update( String data )
         {
             getData().setUser( data );
         }
@@ -106,10 +106,10 @@ public class LockInfoPanel extends InfoPanel<LockInfo>
     /***************************************************************************
      * 
      **************************************************************************/
-    private class ReasonUpdater implements IDataUpdater<String>
+    private class ReasonUpdater implements IUpdater<String>
     {
         @Override
-        public void updateData( String data )
+        public void update( String data )
         {
             getData().setReason( data );
         }

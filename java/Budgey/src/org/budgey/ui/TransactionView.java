@@ -86,7 +86,7 @@ public class TransactionView
         panel.add( new JLabel( "Date:" ), new GridBagConstraints( 0, 6, 1, 1,
             0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
             new Insets( 4, 4, 2, 2 ), 0, 0 ) );
-        panel.add( dateField, new GridBagConstraints( 0, 7, 1, 1, 0.0, 0.0,
+        panel.add( dateField.getView(), new GridBagConstraints( 0, 7, 1, 1, 0.0, 0.0,
             GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
                 2, 4, 4, 4 ), 0, 0 ) );
 

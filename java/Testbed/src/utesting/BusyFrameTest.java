@@ -21,7 +21,7 @@ public class BusyFrameTest extends BusyFrame
     /**  */
     private DirectoryTree tree = new DirectoryTree();
     /**  */
-    private JScrollPane treeScrollPane = new JScrollPane( tree );
+    private JScrollPane treeScrollPane = new JScrollPane( tree.getView() );
     /**  */
     private JTextArea textArea = new JTextArea();
     /**  */
@@ -39,10 +39,10 @@ public class BusyFrameTest extends BusyFrame
         this.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         this.setTitle( "Checked Tree Tester" );
 
-        tree.getSelectionModel().setSelectionMode(
+        tree.getView().getSelectionModel().setSelectionMode(
             TreeSelectionModel.SINGLE_TREE_SELECTION );
-        tree.addTreeSelectionListener( new CheckTreeTest_tree_treeSelectionAdapter(
-            this ) );
+        tree.getView().addTreeSelectionListener(
+            new CheckTreeTest_tree_treeSelectionAdapter( this ) );
 
         textArea.setText( "" );
         textScrollPane.getViewport().setBackground( Color.white );

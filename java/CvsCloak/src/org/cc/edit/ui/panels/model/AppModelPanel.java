@@ -17,7 +17,7 @@ import org.jutils.Utils;
 import org.jutils.ui.DirectoryChooser;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.updater.ComboBoxUpdater;
-import org.jutils.ui.event.updater.IDataUpdater;
+import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.model.ItemComboBoxModel;
 
 /*******************************************************************************
@@ -188,7 +188,7 @@ public class AppModelPanel extends InfoPanel<VersioningSystem>
         }
     }
 
-    private static class DefaultRepoUpdater implements IDataUpdater<File>
+    private static class DefaultRepoUpdater implements IUpdater<File>
     {
         private final AppModelPanel panel;
 
@@ -198,7 +198,7 @@ public class AppModelPanel extends InfoPanel<VersioningSystem>
         }
 
         @Override
-        public void updateData( File selected )
+        public void update( File selected )
         {
             VersioningSystem vs = panel.getData();
             String path = selected.getAbsolutePath();

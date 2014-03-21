@@ -1,6 +1,7 @@
 package utesting;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -65,22 +66,21 @@ public class PropEditMain implements IFrameApp
 
     public static void main( String[] args )
     {
-        Color stadBg = new Color( 0x808080 );
+        // Color stadBg = new Color( 0x808080 );
+        //
+        // UIManager.put( "Panel.background", stadBg );
+        // UIManager.put( "RadioButton.background", stadBg );
+        // UIManager.put( "ColorChooser.background", stadBg );
+        // UIManager.put( "TabbedPane.background", stadBg );
+        // UIManager.put( "Slider.background", stadBg );
+        // UIManager.put( "CheckBox.background", stadBg );
+        // UIManager.put( "Button.background", Color.black );
+        // UIManager.put( "Button.foreground", Color.white );
+        // UIManager.put( "RadioButtonMenuItem.background", stadBg );
+        // UIManager.put( "ToolBar.background", stadBg );
+        // UIManager.put( "OptionPane.background", stadBg );
 
-        UIManager.put( "Panel.background", stadBg );
-        UIManager.put( "RadioButton.background", stadBg );
-        UIManager.put( "ColorChooser.background", stadBg );
-        UIManager.put( "TabbedPane.background", stadBg );
-        UIManager.put( "Slider.background", stadBg );
-        UIManager.put( "CheckBox.background", stadBg );
-        UIManager.put( "Button.background", Color.black );
-        UIManager.put( "Button.foreground", Color.white );
-        UIManager.put( "RadioButtonMenuItem.background", stadBg );
-        UIManager.put( "ToolBar.background", stadBg );
-        UIManager.put( "OptionPane.background", stadBg );
-
-        FrameApplication.invokeLater( new PropEditMain(), true,
-            UIManager.getCrossPlatformLookAndFeelClassName() );
+        FrameApplication.invokeLater( new PropEditMain(), true );
     }
 
     private static class ShowMsgListener implements ActionListener
@@ -114,7 +114,9 @@ public class PropEditMain implements IFrameApp
 
             SwingUtilities.updateComponentTreeUI( frame );
 
+            frame.invalidate();
             frame.validate();
+            frame.repaint();
         }
     }
 }
