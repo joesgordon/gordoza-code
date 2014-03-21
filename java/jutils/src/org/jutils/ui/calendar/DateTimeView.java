@@ -30,24 +30,28 @@ public class DateTimeView implements IDataView<Calendar>
     /**  */
     private final JPanel view;
 
+    /**  */
+    private final TimeListener timeChanged;
+
     /***************************************************************************
      * 
      **************************************************************************/
     public DateTimeView()
     {
-        view = new JPanel( new GridBagLayout() );
+        this.view = new JPanel( new GridBagLayout() );
 
-        updaterList = new DataUpdaterList<Calendar>();
-        timeModel = new SpinnerDateModel( new Date(), null, null,
+        this.updaterList = new DataUpdaterList<Calendar>();
+        this.timeModel = new SpinnerDateModel( new Date(), null, null,
             Calendar.AM_PM );
         JSpinner spinner = new AutoSpinner( timeModel );
         JSpinner.DateEditor spinnerEditor = new JSpinner.DateEditor( spinner,
             "hh:mm:ss a" );
         spinner.setEditor( spinnerEditor );
 
-        dateField = new CalendarField();
+        this.dateField = new CalendarField();
+        this.timeChanged = new TimeListener( this, updaterList );
 
-        spinner.addChangeListener( new TimeListener( this, updaterList ) );
+        spinner.addChangeListener( timeChanged );
 
         view.add( spinner, new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
@@ -87,8 +91,10 @@ public class DateTimeView implements IDataView<Calendar>
      **************************************************************************/
     public void setDate( Calendar cal )
     {
+        timeChanged.setEnabled( false );
         timeModel.setValue( cal.getTime() );
         dateField.setDate( cal );
+        timeChanged.setEnabled( true );
     }
 
     /***************************************************************************
@@ -126,17 +132,29 @@ public class DateTimeView implements IDataView<Calendar>
         private final DateTimeView field;
         private final DataUpdaterList<Calendar> updaterList;
 
+        private boolean enabled;
+
         public TimeListener( DateTimeView field,
             DataUpdaterList<Calendar> updaterList )
         {
             this.field = field;
             this.updaterList = updaterList;
+
+            this.enabled = true;
         }
 
         @Override
         public void stateChanged( ChangeEvent e )
         {
-            updaterList.fireListeners( field.getDate() );
+            if( enabled )
+            {
+                updaterList.fireListeners( field.getDate() );
+            }
+        }
+
+        public void setEnabled( boolean enabled )
+        {
+            this.enabled = enabled;
         }
     }
 
