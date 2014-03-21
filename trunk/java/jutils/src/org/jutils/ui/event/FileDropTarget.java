@@ -33,14 +33,23 @@ public class FileDropTarget extends DropTarget
     {
         try
         {
-            DropActionType action = getAction( evt.getDropAction() );
-            evt.acceptDrop( DnDConstants.ACTION_COPY );
-            @SuppressWarnings( "unchecked")
-            List<File> droppedFiles = ( List<File> )evt.getTransferable().getTransferData(
-                DataFlavor.javaFileListFlavor );
+            int dropAction = evt.getDropAction();
+            DropActionType action = getAction( dropAction );
+            Object xferData;
+            DefaultFileDropEvent dfde;
+            ItemActionEvent<IFileDropEvent> iae;
 
-            droppedListener.actionPerformed( new ItemActionEvent<IFileDropEvent>(
-                this, new DefaultFileDropEvent( evt, droppedFiles, action ) ) );
+            evt.acceptDrop( dropAction );
+
+            xferData = evt.getTransferable().getTransferData(
+                DataFlavor.javaFileListFlavor );
+            @SuppressWarnings( "unchecked")
+            List<File> droppedFiles = ( List<File> )xferData;
+
+            dfde = new DefaultFileDropEvent( evt, droppedFiles, action );
+            iae = new ItemActionEvent<IFileDropEvent>( this, dfde );
+
+            droppedListener.actionPerformed( iae );
         }
         catch( Exception ex )
         {
