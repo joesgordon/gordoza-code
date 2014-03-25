@@ -10,6 +10,9 @@ import org.jutils.PropConstants;
 import org.jutils.ui.RowHeaderRenderer;
 import org.jutils.ui.model.IDataView;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class SpreadSheetView implements IDataView<ISpreadSheet>
 {
     /**  */
@@ -29,9 +32,9 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
     /**  */
     private final JLabel cornerLabel;
 
-    /**
+    /***************************************************************************
      * 
-     */
+     **************************************************************************/
     public SpreadSheetView()
     {
         this.rowHeaderModel = new RowListModel();
@@ -150,8 +153,6 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
             this.sheet = file;
 
             super.fireTableStructureChanged();
-
-            System.out.println( "Size set to " + file.getRowCount() );
         }
 
         public ISpreadSheet getData()
