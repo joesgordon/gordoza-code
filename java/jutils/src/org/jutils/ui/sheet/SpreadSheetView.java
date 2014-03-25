@@ -1,4 +1,4 @@
-package org.eglsht.ui;
+package org.jutils.ui.sheet;
 
 import java.awt.*;
 
@@ -6,7 +6,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 
-import org.eglsht.model.ISpreadSheet;
 import org.jutils.PropConstants;
 import org.jutils.ui.RowHeaderRenderer;
 import org.jutils.ui.model.IDataView;
@@ -54,7 +53,7 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
         table.setColumnSelectionAllowed( true );
         table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
 
-//        scrollpane.getViewport().setBackground(table.getBackground());
+        // scrollpane.getViewport().setBackground(table.getBackground());
         scrollpane.setHorizontalScrollBarPolicy( ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS );
         scrollpane.setVerticalScrollBarPolicy( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
         scrollpane.setRowHeaderView( rowHeader );
@@ -68,18 +67,27 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
         this.rowHeaderFontWidth = fm.charWidth( 'W' );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public Component getView()
     {
         return view;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public ISpreadSheet getData()
     {
         return model.getData();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void setData( ISpreadSheet data )
     {
@@ -87,6 +95,29 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
         rowHeaderModel.setSize( data.getRowCount() );
         refreshRowHeader();
         cornerLabel.setText( data.getCornerName() );
+    }
+
+    /***************************************************************************
+     * @param col
+     * @return
+     **************************************************************************/
+    private static String generateDefautColumnName( int col )
+    {
+        String name = "";
+        int val;
+        char c;
+
+        do
+        {
+            val = col % 26;
+            c = ( char )( ( int )'A' + val );
+            name = c + name;
+
+            col /= 26;
+            col--;
+        } while( col > -1 );
+
+        return name;
     }
 
     /***************************************************************************
@@ -215,6 +246,9 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class NullSheet implements ISpreadSheet
     {
         @Override
@@ -230,7 +264,7 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
         }
 
         @Override
-        public String getValueAt( int row, int col )
+        public Object getValueAt( int row, int col )
         {
             return null;
         }
@@ -248,7 +282,7 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
         }
 
         @Override
-        public void setValueAt( String string, int row, int col )
+        public void setValueAt( Object string, int row, int col )
         {
             ;
         }
@@ -258,24 +292,5 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
         {
             return null;
         }
-    }
-
-    private static String generateDefautColumnName( int col )
-    {
-        String name = "";
-        int val;
-        char c;
-
-        do
-        {
-            val = col % 26;
-            c = ( char )( ( int )'A' + val );
-            name = c + name;
-
-            col /= 26;
-            col--;
-        } while( col > -1 );
-
-        return name;
     }
 }
