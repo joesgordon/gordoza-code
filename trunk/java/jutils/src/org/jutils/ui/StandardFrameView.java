@@ -112,4 +112,12 @@ public class StandardFrameView implements IView<JFrame>
     {
         return fileMenu;
     }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public JMenuBar getMenuBar()
+    {
+        return frame.getJMenuBar();
+    }
 }

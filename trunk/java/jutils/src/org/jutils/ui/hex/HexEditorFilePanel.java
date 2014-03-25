@@ -25,9 +25,11 @@ public class HexEditorFilePanel implements IView<JPanel>
     /**  */
     private final JLabel offsetLabel;
     /**  */
+    private final JPanel titleContent;
+    /**  */
     private final TitleView titlePanel;
     /**  */
-    private final HexPanel editor;
+    private final HexPanel hexView;
 
     /**  */
     private long startOffset = 0;
@@ -47,31 +49,38 @@ public class HexEditorFilePanel implements IView<JPanel>
     {
         this.progressBar = new PositionIndicator();
         this.offsetLabel = new JLabel( "" );
+        this.hexView = new HexPanel();
+        this.titleContent = createTitleContent();
         this.titlePanel = new TitleView();
-        this.editor = new HexPanel();
         this.view = new JPanel( new GridBagLayout() );
 
         // ---------------------------------------------------------------------
         // Setup main panel.
         // ---------------------------------------------------------------------
         titlePanel.setTitle( "No File Loaded" );
-        titlePanel.setComponent( createTitleContent() );
+        titlePanel.setComponent( titleContent );
 
         view.add( createContentPanel(), new GridBagConstraints( 0, 0, 1, 1,
             1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets( 4, 4, 4, 4 ), 0, 0 ) );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private Component createContentPanel()
     {
         titlePanel.setTitle( "No File Loaded" );
-        titlePanel.setComponent( createTitleContent() );
+        titlePanel.setComponent( titleContent );
         titlePanel.getView().setBorder( new ShadowBorder() );
 
         return titlePanel.getView();
     }
 
-    private Component createTitleContent()
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private JPanel createTitleContent()
     {
         JPanel panel = new JPanel( new GridBagLayout() );
         GridBagConstraints constraints;
@@ -94,7 +103,7 @@ public class HexEditorFilePanel implements IView<JPanel>
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
                 0, 0, 0 ), 0, 0 );
-        panel.add( editor.getView(), constraints );
+        panel.add( hexView.getView(), constraints );
 
         constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
@@ -124,8 +133,8 @@ public class HexEditorFilePanel implements IView<JPanel>
         raFile.seek( startOffset );
         // TODO Check the results of read or use a different class to paginate.
         raFile.read( buffer );
-        editor.setStartingAddress( startOffset );
-        editor.setBuffer( new ByteBuffer( buffer ) );
+        hexView.setStartingAddress( startOffset );
+        hexView.setBuffer( new ByteBuffer( buffer ) );
 
         offsetLabel.setText( String.format(
             "Showing 0x%016X - 0x%016X of 0x%016X", startOffset, nextOffset,
@@ -141,12 +150,12 @@ public class HexEditorFilePanel implements IView<JPanel>
 
     public int getSelectedColumn()
     {
-        return editor.getSelectedColumn();
+        return hexView.getSelectedColumn();
     }
 
     public int getSelectedRow()
     {
-        return editor.getSelectedRow();
+        return hexView.getSelectedRow();
     }
 
     /***************************************************************************
@@ -154,7 +163,7 @@ public class HexEditorFilePanel implements IView<JPanel>
      **************************************************************************/
     public void addRangeSelectedListener( IRangeSelectedListener l )
     {
-        editor.addRangeSelectedListener( l );
+        hexView.addRangeSelectedListener( l );
     }
 
     /***************************************************************************
@@ -162,7 +171,7 @@ public class HexEditorFilePanel implements IView<JPanel>
      **************************************************************************/
     public IByteBuffer getBuffer()
     {
-        return editor.getBuffer();
+        return hexView.getBuffer();
     }
 
     /***************************************************************************
@@ -173,7 +182,7 @@ public class HexEditorFilePanel implements IView<JPanel>
         if( raFile != null )
         {
             raFile.close();
-            editor.setBuffer( null );
+            hexView.setBuffer( null );
             raFile = null;
             startOffset = 0;
             fileLength = 0;
@@ -215,12 +224,12 @@ public class HexEditorFilePanel implements IView<JPanel>
 
     public void setHightlightColor( Color c )
     {
-        editor.setHightlightColor( c );
+        hexView.setHightlightColor( c );
     }
 
     public void setHighlightLength( int length )
     {
-        editor.setHighlightLength( length );
+        hexView.setHighlightLength( length );
     }
 
     /***************************************************************************
@@ -286,7 +295,7 @@ public class HexEditorFilePanel implements IView<JPanel>
 
         FileOutputStream fileStream = new FileOutputStream( file );
 
-        byte [] buffer = editor.getBuffer().getBytes();
+        byte [] buffer = hexView.getBuffer().getBytes();
         fileStream.write( buffer );
         fileStream.close();
 
@@ -299,7 +308,11 @@ public class HexEditorFilePanel implements IView<JPanel>
     @Override
     public JPanel getView()
     {
-        // TODO Auto-generated method stub
         return view;
+    }
+
+    public JPanel getNonTitleView()
+    {
+        return titleContent;
     }
 }
