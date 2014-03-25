@@ -41,6 +41,8 @@ public class HexPanel implements IView<JComponent>
 
         JScrollPane scrollPane = new JScrollPane( table );
 
+        table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
+
         rowHeader.setBackground( ( Color )UIManager.get( PropConstants.UI_PANEL_COLOR ) );
         rowHeader.setFixedCellWidth( 50 );
 

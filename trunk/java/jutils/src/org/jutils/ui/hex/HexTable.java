@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.text.*;
 
-import org.jutils.PropConstants;
 import org.jutils.ui.HighlightedLabel;
 
 //TODO comments
@@ -440,124 +440,6 @@ public class HexTable extends JTable
             }
 
             return label;
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class ByteCellRenderer implements TableCellRenderer
-    {
-        /**  */
-        public static final Color ALTERNATING_ROW_COLOR = new Color( 210, 225,
-            240 );
-
-        /**  */
-        private final DefaultTableCellRenderer renderer;
-        /**  */
-        private final Color nullColor;
-
-        /**  */
-        private Color highlightColor;
-        /**  */
-        private int offset;
-        /**  */
-        private int len;
-
-        public ByteCellRenderer()
-        {
-            super();
-
-            this.renderer = new DefaultTableCellRenderer();
-            this.nullColor = ( Color )UIManager.get( PropConstants.UI_PANEL_COLOR );
-
-            this.highlightColor = Color.yellow;
-            this.offset = -1;
-            this.len = -1;
-
-            renderer.setHorizontalAlignment( SwingConstants.CENTER );
-        }
-
-        public Component getTableCellRendererComponent( JTable table,
-            Object value, boolean isSelected, boolean hasFocus, int row, int col )
-        {
-            renderer.getTableCellRendererComponent( table, value, isSelected,
-                hasFocus, row, col );
-
-            int off = row * 16 + col;
-            boolean isHighlighted = len > -1 && off >= offset &&
-                off < offset + len;
-            boolean isAltRow = row % 2 == 1;
-
-            if( value == null )
-            {
-                renderer.setBackground( nullColor );
-                renderer.setBorder( null );
-            }
-            else
-            {
-                if( isHighlighted )
-                {
-                    renderer.setBackground( highlightColor );
-                    renderer.setForeground( Color.black );
-                }
-                else if( !isSelected )
-                {
-                    if( isAltRow )
-                    {
-                        renderer.setBackground( ALTERNATING_ROW_COLOR );
-                    }
-                    else
-                    {
-                        renderer.setBackground( null );
-                    }
-                }
-            }
-
-            return renderer;
-        }
-
-        public void setHightlightColor( Color c )
-        {
-            this.highlightColor = c;
-        }
-
-        public void setHighlightLength( int length )
-        {
-            this.len = length;
-        }
-
-        public void setHighlightOffset( int offset )
-        {
-            this.offset = offset;
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class ColHeaderRenderer implements TableCellRenderer
-    {
-        private TableCellRenderer renderer;
-
-        public ColHeaderRenderer( TableCellRenderer defaultRenderer )
-        {
-            renderer = defaultRenderer;
-            Font f = new Font( "Monospaced", Font.PLAIN, 12 );
-
-            DefaultTableCellRenderer r = ( DefaultTableCellRenderer )renderer;
-            r.setHorizontalAlignment( SwingConstants.CENTER );
-            r.setFont( f );
-        }
-
-        @Override
-        public Component getTableCellRendererComponent( JTable table,
-            Object value, boolean isSelected, boolean hasFocus, int row, int col )
-        {
-            Component c = renderer.getTableCellRendererComponent( table, value,
-                isSelected, hasFocus, row, col );
-
-            return c;
         }
     }
 
