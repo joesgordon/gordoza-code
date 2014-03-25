@@ -13,6 +13,7 @@ import org.eglsht.data.SheetSize;
 import org.jutils.IconConstants;
 import org.jutils.ui.*;
 import org.jutils.ui.model.IView;
+import org.jutils.ui.sheet.SpreadSheetView;
 
 public class EagleSheetFrameView implements IView<JFrame>
 {
