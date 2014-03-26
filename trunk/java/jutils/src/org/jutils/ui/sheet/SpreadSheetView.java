@@ -71,10 +71,19 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
     }
 
     /***************************************************************************
+     * @param col
+     * @param width
+     **************************************************************************/
+    public void setColWidth( int col, int width )
+    {
+        table.getColumnModel().getColumn( col ).setPreferredWidth( width );
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public Component getView()
+    public JComponent getView()
     {
         return view;
     }
