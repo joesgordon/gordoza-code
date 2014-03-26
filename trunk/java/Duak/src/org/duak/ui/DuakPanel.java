@@ -1,9 +1,9 @@
 package org.duak.ui;
 
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 import javax.swing.*;
@@ -14,9 +14,10 @@ import javax.swing.table.TableRowSorter;
 import org.duak.data.FileInfo;
 import org.duak.utils.FileSize;
 import org.jutils.IconConstants;
+import org.jutils.io.LogUtils;
+import org.jutils.ui.ExceptionView;
 import org.jutils.ui.ResizingTable;
-import org.jutils.ui.event.ItemActionList;
-import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.event.*;
 
 /*******************************************************************************
  * 
@@ -84,6 +85,26 @@ public class DuakPanel extends JPanel
     }
 
     /***************************************************************************
+     * @return
+     **************************************************************************/
+    private JPopupMenu createPopup()
+    {
+        JPopupMenu menu = new JPopupMenu();
+        Action action;
+
+        action = new ActionAdapter( new OpenFileListener( this ), "Open File",
+            IconConstants.loader.getIcon( IconConstants.OPEN_FILE_16 ) );
+        menu.add( action );
+
+        action = new ActionAdapter( new OpenLocationListener( this ),
+            "Open Location",
+            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+        menu.add( action );
+
+        return menu;
+    }
+
+    /***************************************************************************
      * @param results
      **************************************************************************/
     public void setResults( FileInfo results )
@@ -108,12 +129,67 @@ public class DuakPanel extends JPanel
      **************************************************************************/
     private class FolderOpenedListener extends MouseAdapter
     {
+        private final JPopupMenu menu;
+
+        public FolderOpenedListener()
+        {
+            JPopupMenu popup = null;
+            if( Desktop.isDesktopSupported() )
+            {
+                popup = createPopup();
+            }
+            this.menu = popup;
+        }
+
+        @Override
+        public void mousePressed( MouseEvent e )
+        {
+            int row = table.rowAtPoint( e.getPoint() );
+
+            LogUtils.printDebug( "mouse pressed" );
+
+            if( e.isPopupTrigger() && menu != null )
+            {
+                if( row > -1 )
+                {
+                    table.setRowSelectionInterval( row, row );
+                    menu.show( table, e.getX(), e.getY() );
+                }
+                else
+                {
+                    table.clearSelection();
+                }
+            }
+        }
+
+        @Override
+        public void mouseReleased( MouseEvent e )
+        {
+            int row = table.rowAtPoint( e.getPoint() );
+
+            LogUtils.printDebug( "mouse released" );
+
+            if( e.isPopupTrigger() )
+            {
+                if( row > -1 )
+                {
+                    table.setRowSelectionInterval( row, row );
+                    menu.show( table, e.getX(), e.getY() );
+                }
+                else
+                {
+                    table.clearSelection();
+                }
+            }
+        }
+
         @Override
         public void mouseClicked( MouseEvent e )
         {
+            int row = table.rowAtPoint( e.getPoint() );
+
             if( e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2 )
             {
-                int row = table.getSelectedRow();
                 if( row > -1 )
                 {
                     row = table.convertRowIndexToModel( row );
@@ -124,6 +200,83 @@ public class DuakPanel extends JPanel
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class OpenFileListener implements ActionListener
+    {
+        private final DuakPanel panel;
+        private final Desktop desktop;
+
+        public OpenFileListener( DuakPanel panel )
+        {
+            this.panel = panel;
+            this.desktop = Desktop.getDesktop();
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent event )
+        {
+            int row = panel.table.getSelectedRow();
+
+            if( row > -1 )
+            {
+                FileInfo fi = panel.tableModel.getRow( row );
+
+                try
+                {
+                    desktop.open( fi.getFile() );
+                }
+                catch( IOException ex )
+                {
+                    ExceptionView.showExceptionDialog( panel,
+                        "Cannot open file " + fi.getFile().getName(),
+                        "I/O Error", ex );
+                }
+            }
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class OpenLocationListener implements ActionListener
+    {
+        private final DuakPanel panel;
+        private final Desktop desktop;
+
+        public OpenLocationListener( DuakPanel panel )
+        {
+            this.panel = panel;
+            this.desktop = Desktop.getDesktop();
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent event )
+        {
+            int row = panel.table.getSelectedRow();
+
+            if( row > -1 )
+            {
+                FileInfo fi = panel.tableModel.getRow( row );
+
+                try
+                {
+                    desktop.open( fi.getFile().getAbsoluteFile().getParentFile() );
+                }
+                catch( IOException ex )
+                {
+                    ExceptionView.showExceptionDialog( panel,
+                        "Cannot open file " + fi.getFile().getName(),
+                        "I/O Error", ex );
+                }
+            }
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class FileResultTableCellRenderer extends
         DefaultTableCellRenderer
     {
@@ -158,6 +311,9 @@ public class DuakPanel extends JPanel
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class FileIconLoader
     {
         private FileSystemView fsv;
