@@ -14,7 +14,6 @@ import javax.swing.table.TableRowSorter;
 import org.duak.data.FileInfo;
 import org.duak.utils.FileSize;
 import org.jutils.IconConstants;
-import org.jutils.io.LogUtils;
 import org.jutils.ui.ExceptionView;
 import org.jutils.ui.ResizingTable;
 import org.jutils.ui.event.*;
@@ -144,42 +143,33 @@ public class DuakPanel extends JPanel
         @Override
         public void mousePressed( MouseEvent e )
         {
-            int row = table.rowAtPoint( e.getPoint() );
-
-            LogUtils.printDebug( "mouse pressed" );
-
-            if( e.isPopupTrigger() && menu != null )
+            if( e.isPopupTrigger() )
             {
-                if( row > -1 )
-                {
-                    table.setRowSelectionInterval( row, row );
-                    menu.show( table, e.getX(), e.getY() );
-                }
-                else
-                {
-                    table.clearSelection();
-                }
+                selectRowAt( e.getPoint() );
             }
         }
 
         @Override
         public void mouseReleased( MouseEvent e )
         {
-            int row = table.rowAtPoint( e.getPoint() );
-
-            LogUtils.printDebug( "mouse released" );
-
             if( e.isPopupTrigger() )
             {
-                if( row > -1 )
-                {
-                    table.setRowSelectionInterval( row, row );
-                    menu.show( table, e.getX(), e.getY() );
-                }
-                else
-                {
-                    table.clearSelection();
-                }
+                selectRowAt( e.getPoint() );
+            }
+        }
+
+        private void selectRowAt( Point p )
+        {
+            int row = table.rowAtPoint( p );
+
+            if( row > -1 )
+            {
+                table.setRowSelectionInterval( row, row );
+                menu.show( table, ( int )p.getX(), ( int )p.getY() );
+            }
+            else
+            {
+                table.clearSelection();
             }
         }
 
