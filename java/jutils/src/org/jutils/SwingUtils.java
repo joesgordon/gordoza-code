@@ -159,19 +159,41 @@ public final class SwingUtils
 
     /***************************************************************************
      * @param toolbar
+     **************************************************************************/
+    public static void setToolbarDefaults( JToolBar toolbar )
+    {
+        toolbar.setFloatable( false );
+        toolbar.setRollover( true );
+        toolbar.setBorderPainted( false );
+    }
+
+    /***************************************************************************
+     * @param toolbar
      * @param action
      * @return
      **************************************************************************/
     public static JButton addActionToToolbar( JToolBar toolbar, Action action )
     {
-        JButton button = new JButton( action );
+        JButton button = new JButton();
 
+        addActionToToolbar( toolbar, action, button );
+
+        return button;
+    }
+
+    /***************************************************************************
+     * @param toolbar
+     * @param action
+     * @param button
+     **************************************************************************/
+    public static void addActionToToolbar( JToolBar toolbar, Action action,
+        JButton button )
+    {
+        button.setAction( action );
         button.setFocusable( false );
         button.setText( null );
         button.setToolTipText( action.getValue( Action.NAME ).toString() );
         toolbar.add( button );
-
-        return button;
     }
 
     /***************************************************************************
@@ -264,16 +286,6 @@ public final class SwingUtils
         {
             frame.setVisible( false );
         }
-    }
-
-    /***************************************************************************
-     * @param toolbar
-     **************************************************************************/
-    public static void setToolbarDefaults( JToolBar toolbar )
-    {
-        toolbar.setFloatable( false );
-        toolbar.setRollover( true );
-        toolbar.setBorderPainted( false );
     }
 
     /***************************************************************************
