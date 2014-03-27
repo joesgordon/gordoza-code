@@ -38,10 +38,11 @@ public class ResizingTable<T extends TableModel> extends JTable
     /***************************************************************************
      *
      **************************************************************************/
-    private void resizeTable()
+    public static void resizeTable( JTable table )
     {
         int horzSpace = 6;
         String colName;
+        TableModel model = table.getModel();
         int colCount = model.getColumnCount();
         int rowCount = model.getRowCount();
         int widths[] = new int[model.getColumnCount()];
@@ -51,26 +52,35 @@ public class ResizingTable<T extends TableModel> extends JTable
         int defaultWidth;
 
         // ---------------------------------------------------------------------
-        // computes headers' widths
+        // Compute all widths.
         // ---------------------------------------------------------------------
         for( int col = 0; col < colCount; col++ )
         {
             colName = model.getColumnName( col );
-            defaultWidth = col < colCount - 1 ? 65 : getWidth() - totalWidth;
+            defaultWidth = 65;
 
-            tableCellRenderer = getColumnModel().getColumn( col ).getHeaderRenderer();
+            if( table.getAutoResizeMode() != JTable.AUTO_RESIZE_OFF &&
+                col < colCount - 1 )
+            {
+                defaultWidth = table.getWidth() - totalWidth;
+            }
+
+            // -----------------------------------------------------------------
+            // Compute header width.
+            // -----------------------------------------------------------------
+            tableCellRenderer = table.getColumnModel().getColumn( col ).getHeaderRenderer();
             if( tableCellRenderer == null )
             {
-                tableCellRenderer = getTableHeader().getDefaultRenderer();
+                tableCellRenderer = table.getTableHeader().getDefaultRenderer();
             }
             cellRenderer = tableCellRenderer.getTableCellRendererComponent(
-                this, colName, false, false, -1, col );
+                table, colName, false, false, -1, col );
 
             widths[col] = ( int )cellRenderer.getPreferredSize().getWidth() +
                 horzSpace;
             widths[col] = Math.max( widths[col], defaultWidth );
 
-            tableCellRenderer = getCellRenderer( -1, col );
+            tableCellRenderer = table.getCellRenderer( -1, col );
 
             // -----------------------------------------------------------------
             // check if cell values fit in their cells
@@ -81,9 +91,9 @@ public class ResizingTable<T extends TableModel> extends JTable
                 int width = 0;
                 if( obj != null )
                 {
-                    tableCellRenderer = getCellRenderer( row, col );
+                    tableCellRenderer = table.getCellRenderer( row, col );
                     cellRenderer = tableCellRenderer.getTableCellRendererComponent(
-                        this, obj, false, false, row, col );
+                        table, obj, false, false, row, col );
                     width = ( int )cellRenderer.getPreferredSize().getWidth() +
                         horzSpace;
                 }
@@ -93,10 +103,10 @@ public class ResizingTable<T extends TableModel> extends JTable
             totalWidth += widths[col];
         }
 
-        TableColumnModel colModel = getColumnModel();
+        TableColumnModel colModel = table.getColumnModel();
 
         // ---------------------------------------------------------------------
-        // set the column widths
+        // Set the column widths.
         // ---------------------------------------------------------------------
         for( int i = 0; i < colCount; i++ )
         {
@@ -122,7 +132,7 @@ public class ResizingTable<T extends TableModel> extends JTable
                 @Override
                 public void run()
                 {
-                    resizingTable.resizeTable();
+                    ResizingTable.resizeTable( resizingTable );
                 }
             } );
         }

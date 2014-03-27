@@ -7,6 +7,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 
 import org.jutils.PropConstants;
+import org.jutils.ui.ResizingTable;
 import org.jutils.ui.RowHeaderRenderer;
 import org.jutils.ui.model.IDataView;
 
@@ -77,6 +78,11 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
     public void setColWidth( int col, int width )
     {
         table.getColumnModel().getColumn( col ).setPreferredWidth( width );
+    }
+
+    public void autoLayout()
+    {
+        ResizingTable.resizeTable( table );
     }
 
     /***************************************************************************
