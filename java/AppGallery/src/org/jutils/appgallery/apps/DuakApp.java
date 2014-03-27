@@ -3,7 +3,6 @@ package org.jutils.appgallery.apps;
 import javax.swing.Icon;
 import javax.swing.JFrame;
 
-import org.duak.DuakMain;
 import org.jutils.IconConstants;
 import org.jutils.appgallery.ILibraryApp;
 import org.jutils.ui.app.IFrameApp;
@@ -25,7 +24,7 @@ public class DuakApp implements ILibraryApp
     @Override
     public JFrame createApp()
     {
-        IFrameApp r = new DuakMain();
+        IFrameApp r = new org.duak.DuakApp();
 
         return r.createFrame();
     }
