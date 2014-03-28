@@ -5,6 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
 
 import org.jutils.PropConstants;
 import org.jutils.ui.ResizingTable;
@@ -83,6 +84,11 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
     public void autoLayout()
     {
         ResizingTable.resizeTable( table );
+    }
+
+    public void setRenderer( TableCellRenderer renderer )
+    {
+        table.setDefaultRenderer( Object.class, renderer );
     }
 
     /***************************************************************************
@@ -178,7 +184,7 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
         @Override
         public boolean isCellEditable( int row, int col )
         {
-            return true;
+            return sheet.isEditable( row, col );
         }
 
         @Override
@@ -307,6 +313,12 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
         public String getCornerName()
         {
             return null;
+        }
+
+        @Override
+        public boolean isEditable( int row, int col )
+        {
+            return false;
         }
     }
 }

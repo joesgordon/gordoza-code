@@ -45,4 +45,11 @@ public interface ISpreadSheet
      * @param col
      **************************************************************************/
     public void setValueAt( Object string, int row, int col );
+
+    /***************************************************************************
+     * @param row
+     * @param col
+     * @return
+     **************************************************************************/
+    public boolean isEditable( int row, int col );
 }
