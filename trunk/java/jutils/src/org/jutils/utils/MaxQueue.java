@@ -90,7 +90,7 @@ public class MaxQueue<T> implements Iterable<T>
         if( elements.contains( e ) )
         {
             elements.remove( e );
-            elements.add( e );
+            elements.addFirst( e );
         }
         else
         {
