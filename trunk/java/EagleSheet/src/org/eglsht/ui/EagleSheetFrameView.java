@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import org.eglsht.AppConstants;
-import org.eglsht.EagleSheetIconConstants;
+import org.eglsht.EagleSheetIcons;
 import org.eglsht.data.EagleSheet;
 import org.eglsht.data.SheetSize;
 import org.jutils.IconConstants;
@@ -27,7 +27,7 @@ public class EagleSheetFrameView implements IView<JFrame>
         this.sheetView = new SpreadSheetView();
 
         frame.setTitle( AppConstants.APP_NAME );
-        frame.setIconImages( EagleSheetIconConstants.getApplicationImages() );
+        frame.setIconImages( EagleSheetIcons.getApplicationImages() );
 
         frame.setJMenuBar( createMenuBar() );
         frame.setContentPane( createContentPane() );
@@ -154,19 +154,19 @@ public class EagleSheetFrameView implements IView<JFrame>
         JToolBar toolbar = new JGoodiesToolBar();
         JButton button;
 
-        button = new JButton( EagleSheetIconConstants.getInsertRowBeforeIcon() );
+        button = new JButton( EagleSheetIcons.getInsertRowBeforeIcon() );
         button.setToolTipText( "Insert Row Before" );
         button.setFocusable( false );
         button.addActionListener( new InsertRowListener( this ) );
         toolbar.add( button );
 
-        button = new JButton( EagleSheetIconConstants.getInsertRowAfterIcon() );
+        button = new JButton( EagleSheetIcons.getInsertRowAfterIcon() );
         button.setToolTipText( "Insert Row After" );
         button.setFocusable( false );
         button.addActionListener( new InsertRowListener( this, 1 ) );
         toolbar.add( button );
 
-        button = new JButton( EagleSheetIconConstants.getDeleteRowIcon() );
+        button = new JButton( EagleSheetIcons.getDeleteRowIcon() );
         button.setToolTipText( "Delete Row" );
         button.setFocusable( false );
         button.addActionListener( new DeleteRowListener( this ) );
@@ -175,20 +175,20 @@ public class EagleSheetFrameView implements IView<JFrame>
         toolbar.addSeparator();
 
         button = new JButton(
-            EagleSheetIconConstants.getInsertColumnBeforeIcon() );
+            EagleSheetIcons.getInsertColumnBeforeIcon() );
         button.setToolTipText( "Insert Column Before" );
         button.setFocusable( false );
         button.addActionListener( new InsertColumnListener( this ) );
         toolbar.add( button );
 
         button = new JButton(
-            EagleSheetIconConstants.getInsertColumnAfterIcon() );
+            EagleSheetIcons.getInsertColumnAfterIcon() );
         button.setToolTipText( "Insert Column After" );
         button.setFocusable( false );
         button.addActionListener( new InsertColumnListener( this, 1 ) );
         toolbar.add( button );
 
-        button = new JButton( EagleSheetIconConstants.getDeleteColumnIcon() );
+        button = new JButton( EagleSheetIcons.getDeleteColumnIcon() );
         button.setToolTipText( "Delete Column" );
         button.setFocusable( false );
         button.addActionListener( new DeleteColumnListener( this ) );
@@ -196,7 +196,7 @@ public class EagleSheetFrameView implements IView<JFrame>
 
         toolbar.addSeparator();
 
-        button = new JButton( EagleSheetIconConstants.getEditTableIcon() );
+        button = new JButton( EagleSheetIcons.getEditTableIcon() );
         button.setToolTipText( "Change Size" );
         button.setFocusable( false );
         button.addActionListener( new EditTableListener( this ) );

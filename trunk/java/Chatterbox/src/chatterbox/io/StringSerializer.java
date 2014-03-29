@@ -18,6 +18,7 @@ public class StringSerializer implements IDataSerializer<String>
     {
         int length = stream.readInt();
         byte[] bytes = new byte[length];
+
         stream.readFully( bytes );
 
         return new String( bytes );
@@ -29,5 +30,4 @@ public class StringSerializer implements IDataSerializer<String>
         stream.writeInt( string.length() );
         stream.write( string.getBytes( Charset.forName( "US-ASCII" ) ) );
     }
-
 }

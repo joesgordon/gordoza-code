@@ -7,12 +7,12 @@ import javax.swing.Icon;
 
 import org.jutils.IconLoader;
 
-public final class EagleSheetIconConstants
+public final class EagleSheetIcons
 {
     public static final IconLoader loader = new IconLoader(
-        EagleSheetIconConstants.class, "icons" );
+        EagleSheetIcons.class, "icons" );
 
-    private EagleSheetIconConstants()
+    private EagleSheetIcons()
     {
     }
 
@@ -56,5 +56,10 @@ public final class EagleSheetIconConstants
         return loader.getImages( "spreadsheet128.png", "spreadsheet64.png",
             "spreadsheet48.png", "spreadsheet32.png", "spreadsheet24.png",
             "spreadsheet16.png" );
+    }
+
+    public static Icon getApp32()
+    {
+        return loader.getIcon( "spreadsheet32.png" );
     }
 }

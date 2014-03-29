@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.jutils.IconLoader;
 
-public class ChartIconConstants
+public class ChartIcons
 {
     public static final String CHART_016 = "chart016.png";
     public static final String CHART_024 = "chart024.png";
@@ -19,9 +19,9 @@ public class ChartIconConstants
         CHART_024, CHART_032, CHART_064, CHART_128, CHART_256 };
 
     public static final IconLoader loader = new IconLoader(
-        ChartIconConstants.class, "icons" );
+        ChartIcons.class, "icons" );
 
-    private ChartIconConstants()
+    private ChartIcons()
     {
     }
 
