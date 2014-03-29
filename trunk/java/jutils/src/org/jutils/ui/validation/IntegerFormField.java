@@ -2,6 +2,8 @@ package org.jutils.ui.validation;
 
 import java.awt.Component;
 
+import javax.swing.JTextField;
+
 import org.jutils.ui.StandardFormView.IFormField;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.validators.*;
@@ -95,6 +97,11 @@ public class IntegerFormField implements IFormField
     public Component getField()
     {
         return textField.getView();
+    }
+
+    public JTextField getTextField()
+    {
+        return textField.getField().getView();
     }
 
     /***************************************************************************
