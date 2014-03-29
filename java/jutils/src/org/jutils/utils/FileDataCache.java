@@ -3,14 +3,15 @@ package org.jutils.utils;
 import java.io.File;
 import java.util.*;
 
+import org.jutils.utils.FileDataCache.CacheItem;
+
 // TODO comments
 
-// TODO fix me
-
 /*******************************************************************************
- * @param <T>
+ * Defines a class that stores objects in association with a file.
+ * @param <T> the type of objects to be stored.
  ******************************************************************************/
-public class FileDataCache<T> implements Iterable<T>
+public class FileDataCache<T> implements Iterable<CacheItem<T>>
 {
     /**  */
     private final IDataUtils<T> dataUtils;
@@ -80,11 +81,11 @@ public class FileDataCache<T> implements Iterable<T>
     /***************************************************************************
      * @return
      **************************************************************************/
-    public List<T> getData()
+    public List<CacheItem<T>> getData()
     {
-        List<T> items = new ArrayList<>( cache.size() );
+        List<CacheItem<T>> items = new ArrayList<>( cache.size() );
 
-        for( T item : this )
+        for( CacheItem<T> item : cache )
         {
             items.add( item );
         }
@@ -93,12 +94,22 @@ public class FileDataCache<T> implements Iterable<T>
     }
 
     /***************************************************************************
+     * @param optionsData
+     **************************************************************************/
+    public void setData( List<CacheItem<T>> data )
+    {
+        cache.clear();
+
+        cache.addAll( data );
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public Iterator<T> iterator()
+    public Iterator<CacheItem<T>> iterator()
     {
-        return new CacheItemIterator<>( cache.iterator() );
+        return cache.iterator();
     }
 
     /***************************************************************************
@@ -154,43 +165,44 @@ public class FileDataCache<T> implements Iterable<T>
     /***************************************************************************
      * @param <T>
      **************************************************************************/
-    private static class CacheItem<T>
+    public static class CacheItem<T>
     {
         public long fileLength;
         public File path;
         public T item;
-    }
 
-    /***************************************************************************
-     * @param <T>
-     **************************************************************************/
-    private static class CacheItemIterator<T> implements Iterator<T>
-    {
-        private final Iterator<CacheItem<T>> cii;
-
-        public CacheItemIterator( Iterator<CacheItem<T>> cii )
-        {
-            this.cii = cii;
-        }
-
+        /***************************************************************************
+         * 
+         **************************************************************************/
         @Override
-        public boolean hasNext()
+        public boolean equals( Object obj )
         {
-            return cii.hasNext();
+            if( obj == null )
+            {
+                return false;
+            }
+            else if( this == obj )
+            {
+                return true;
+            }
+            else if( obj instanceof CacheItem )
+            {
+                CacheItem<?> hit = ( CacheItem<?> )obj;
+
+                return equals( hit );
+            }
+
+            return false;
         }
 
-        @Override
-        public T next()
+        /***************************************************************************
+         * @param hit
+         * @return
+         **************************************************************************/
+        public boolean equals( CacheItem<?> item )
         {
-            return cii.next().item;
+            return fileLength == item.fileLength && path.equals( item.path );
         }
-
-        @Override
-        public void remove()
-        {
-            cii.remove();
-        }
-
     }
 
     /***************************************************************************

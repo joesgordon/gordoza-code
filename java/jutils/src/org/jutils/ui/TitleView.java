@@ -138,4 +138,9 @@ public class TitleView implements IDataView<String>
     {
         setData( title );
     }
+
+    public String getTitle()
+    {
+        return titleField.getText();
+    }
 }
