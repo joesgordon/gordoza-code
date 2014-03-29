@@ -11,7 +11,8 @@ import javax.swing.*;
 import org.budgey.data.Money;
 import org.budgey.data.Transaction;
 import org.jutils.ui.calendar.CalendarField;
-import org.jutils.ui.validation.*;
+import org.jutils.ui.validation.ValidationException;
+import org.jutils.ui.validation.ValidationTextField;
 import org.jutils.ui.validators.ITextValidator;
 
 /*******************************************************************************
@@ -86,9 +87,9 @@ public class TransactionView
         panel.add( new JLabel( "Date:" ), new GridBagConstraints( 0, 6, 1, 1,
             0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
             new Insets( 4, 4, 2, 2 ), 0, 0 ) );
-        panel.add( dateField.getView(), new GridBagConstraints( 0, 7, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
-                2, 4, 4, 4 ), 0, 0 ) );
+        panel.add( dateField.getView(), new GridBagConstraints( 0, 7, 1, 1,
+            0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+            new Insets( 2, 4, 4, 4 ), 0, 0 ) );
 
         return panel;
     }
@@ -100,9 +101,7 @@ public class TransactionView
     {
         itemView.addOkListener( l );
 
-        secondPartyField.addActionListener( l );
         tagField.addActionListener( l );
-        amountField.addActionListener( l );
     }
 
     /***************************************************************************
