@@ -1,13 +1,11 @@
 package org.budgey.ui;
 
-import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField.AbstractFormatter;
-import javax.swing.text.DefaultFormatterFactory;
 
 import org.budgey.data.Money;
 import org.jutils.ui.model.IComponentView;
@@ -29,8 +27,7 @@ public class MoneyTextField implements IComponentView
     {
         super();
         formatter = new MoneyFormatter();
-        field = new ValidationTextField(
-            new DefaultFormatterFactory( formatter ) );
+        field = new ValidationTextField();
     }
 
     public MoneyFormatter getFormatter()
@@ -100,10 +97,5 @@ public class MoneyTextField implements IComponentView
     public void setValidator( ITextValidator tv )
     {
         field.setValidator( tv );
-    }
-
-    public void addActionListener( ActionListener l )
-    {
-        field.addActionListener( l );
     }
 }

@@ -93,8 +93,6 @@ public class AccountConfigPanel
     public void addOkListener( ActionListener l )
     {
         itemView.addOkListener( l );
-
-        nameField.addActionListener( l );
     }
 
     /***************************************************************************

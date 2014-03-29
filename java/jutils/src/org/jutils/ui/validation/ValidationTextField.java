@@ -1,10 +1,8 @@
 package org.jutils.ui.validation;
 
 import java.awt.Color;
-import java.awt.event.ActionListener;
 
-import javax.swing.*;
-import javax.swing.JFormattedTextField.AbstractFormatterFactory;
+import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -47,27 +45,11 @@ public final class ValidationTextField implements IValidationField
     }
 
     /***************************************************************************
-     * 
-     **************************************************************************/
-    public ValidationTextField( AbstractFormatterFactory factory )
-    {
-        this( factory, "" );
-    }
-
-    /***************************************************************************
      * @param str
      **************************************************************************/
     public ValidationTextField( String str )
     {
-        this( null, str );
-    }
-
-    /***************************************************************************
-     * @param str
-     **************************************************************************/
-    public ValidationTextField( AbstractFormatterFactory factory, String str )
-    {
-        this.textfield = new JFormattedTextField( factory, str );
+        this.textfield = new JTextField( str );
         this.listenerList = new ValidityListenerList();
 
         this.validBackground = textfield.getBackground();
@@ -230,14 +212,6 @@ public final class ValidationTextField implements IValidationField
     {
         textfield.setText( text );
         // validateText();
-    }
-
-    /***************************************************************************
-     * @param l
-     **************************************************************************/
-    public void addActionListener( ActionListener l )
-    {
-        textfield.addActionListener( l );
     }
 
     /***************************************************************************
