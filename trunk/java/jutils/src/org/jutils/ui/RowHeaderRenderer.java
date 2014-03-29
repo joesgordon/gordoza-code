@@ -24,6 +24,11 @@ public class RowHeaderRenderer implements ListCellRenderer<Object>
         this.f = new Font( "Monospaced", Font.PLAIN, 12 );
     }
 
+    public Font getFont()
+    {
+        return f;
+    }
+
     public Component getListCellRendererComponent(
         JList<? extends Object> list, Object value, int index,
         boolean isSelected, boolean cellHasFocus )

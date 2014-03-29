@@ -39,7 +39,7 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
      **************************************************************************/
     public SpreadSheetView()
     {
-        this.rowHeaderModel = new RowListModel();
+        this.rowHeaderModel = new RowListModel( this );
         this.rowHeader = new JList<String>( rowHeaderModel );
         this.model = new SheetModel();
         this.table = new JTable( model );
@@ -47,8 +47,10 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
         this.cornerLabel = new JLabel();
         this.view = new JPanel( new BorderLayout() );
 
+        RowHeaderRenderer rhr = new RowHeaderRenderer( table );
+
         rowHeader.setSelectionMode( ListSelectionModel.SINGLE_INTERVAL_SELECTION );
-        rowHeader.setCellRenderer( new RowHeaderRenderer( table ) );
+        rowHeader.setCellRenderer( rhr );
         rowHeader.setFixedCellHeight( table.getRowHeight() );
         rowHeader.setMinimumSize( new Dimension( 50, 5 ) );
         rowHeader.setBackground( ( Color )UIManager.get( PropConstants.UI_PANEL_COLOR ) );
@@ -68,7 +70,7 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
 
         view.add( scrollpane, BorderLayout.CENTER );
 
-        FontMetrics fm = rowHeader.getFontMetrics( rowHeader.getFont() );
+        FontMetrics fm = rowHeader.getFontMetrics( rhr.getFont() );
         this.rowHeaderFontWidth = fm.charWidth( 'W' );
     }
 
@@ -231,14 +233,18 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
     private static class RowListModel extends AbstractListModel<String>
     {
         /**  */
+        private final SpreadSheetView view;
+        /**  */
         private int rowCount;
         /**  */
         private int stringSize;
 
-        public RowListModel()
+        public RowListModel( SpreadSheetView view )
         {
-            rowCount = 1;
-            stringSize = 1;
+            this.view = view;
+
+            this.rowCount = 1;
+            this.stringSize = 1;
         }
 
         @Override
@@ -255,16 +261,16 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
         public void setSize( int count )
         {
             rowCount = count;
-            int w = Integer.toString( count ).length();
+            int w = view.model.getData().getRowHeader( count ).length();
 
-            stringSize = w + 1;
+            stringSize = w;
 
             super.fireContentsChanged( this, 0, count );
         }
 
         public String getElementAt( int index )
         {
-            return Integer.toString( index + 1 );
+            return view.model.getData().getRowHeader( index );
         }
     }
 
