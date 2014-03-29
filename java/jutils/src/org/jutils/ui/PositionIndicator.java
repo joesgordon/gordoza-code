@@ -17,6 +17,9 @@ public class PositionIndicator extends JComponent
         unitLength = 10;
         length = 100;
         offset = 50;
+
+        setMinimumSize( new Dimension( 20, 20 ) );
+        setPreferredSize( new Dimension( 20, 20 ) );
     }
 
     public void setUnitColor( Color c )
@@ -62,7 +65,7 @@ public class PositionIndicator extends JComponent
         int w = ( int )( getWidth() * unitLength / ( double )length ) - 2;
         int h = getHeight() - 2;
 
-        w = Math.max( w, 20 );
+        // w = Math.max( w, 20 );
 
         g2.fillRoundRect( x, y, w, h, 8, 8 );
 
