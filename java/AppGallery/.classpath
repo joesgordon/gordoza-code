@@ -8,5 +8,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/jutils"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Duak"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Budgey"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/EagleSheet"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JChartLib"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
