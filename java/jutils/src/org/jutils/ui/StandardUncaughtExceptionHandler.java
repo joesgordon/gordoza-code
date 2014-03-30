@@ -28,14 +28,28 @@ public class StandardUncaughtExceptionHandler implements
     /***************************************************************************
      * 
      **************************************************************************/
-    public void uncaughtException( Thread t, Throwable e )
+    @Override
+    public void uncaughtException( Thread thread, Throwable ex )
     {
-        e.printStackTrace();
+        try
+        {
+            displayException( ex );
+        }
+        catch( Throwable th )
+        {
+            th.printStackTrace();
+            System.exit( -2 );
+        }
+    }
+
+    private void displayException( Throwable ex )
+    {
+        ex.printStackTrace();
 
         JOptionPane optionPane = new JOptionPane(
             "The following error has occurred. You may " +
                 "choose to ignore and continue or quit." + Utils.NEW_LINE +
-                e.getMessage(), JOptionPane.ERROR_MESSAGE );
+                ex.getMessage(), JOptionPane.ERROR_MESSAGE );
         JButton continueButton = new JButton( "Continue" );
         JButton quitButton = new JButton( "Quit" );
 
