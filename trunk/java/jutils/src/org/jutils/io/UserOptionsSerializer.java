@@ -95,7 +95,7 @@ public class UserOptionsSerializer<T>
         {
             options = getDefault();
             write();
-            System.out.println( "WARNING: User options file does not exist: " +
+            LogUtils.printWarning( " User options file does not exist: " +
                 file.getAbsolutePath() );
         }
         catch( IOException ex )
@@ -110,9 +110,9 @@ public class UserOptionsSerializer<T>
                 file.getName() + ".broken" ) );
             options = getDefault();
             write();
-            System.out.println( "WARNING: User options file is out of date: " +
+            LogUtils.printWarning( "User options file is out of date: " +
                 file.getAbsolutePath() );
-            System.out.println( "WARNING: because: " + ex.getMessage() );
+            LogUtils.printWarning( "because: " + ex.getMessage() );
         }
 
         if( obj != null )
@@ -263,7 +263,7 @@ public class UserOptionsSerializer<T>
         {
             if( !dir.mkdirs() )
             {
-                System.out.println( "WARNING: User options directory cannot be created: " +
+                LogUtils.printWarning( "User options directory cannot be created: " +
                     dir.getAbsolutePath() );
             }
         }

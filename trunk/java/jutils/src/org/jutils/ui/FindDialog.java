@@ -1,20 +1,23 @@
 package org.jutils.ui;
 
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.regex.PatternSyntaxException;
 
 import javax.swing.*;
+
+import org.jutils.SwingUtils;
 
 /*******************************************************************************
  *
  ******************************************************************************/
 public class FindDialog extends JDialog
 {
-    // --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // Main panel widgets.
-    // --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     /**  */
     private JPanel contentPane = new JPanel();
 
@@ -61,26 +64,6 @@ public class FindDialog extends JDialog
     private ArrayList<FindListener> findListeners = new ArrayList<FindListener>();
 
     /***************************************************************************
-     * @param owner Frame
-     * @param title String
-     * @param modal boolean
-     **************************************************************************/
-    public FindDialog( Frame owner, String title, boolean modal )
-    {
-        super( owner, title, modal );
-        try
-        {
-            setDefaultCloseOperation( DISPOSE_ON_CLOSE );
-            jbInit();
-            pack();
-        }
-        catch( Exception exception )
-        {
-            exception.printStackTrace();
-        }
-    }
-
-    /***************************************************************************
      *
      **************************************************************************/
     public FindDialog()
@@ -89,11 +72,18 @@ public class FindDialog extends JDialog
     }
 
     /***************************************************************************
-     * @throws Exception
+     * @param owner Frame
+     * @param title String
+     * @param modal boolean
      **************************************************************************/
-    private void jbInit() throws Exception
+    public FindDialog( Frame owner, String title, boolean modal )
     {
-        KeyAdapter escListener = new FindDialog_this_keyAdapter( this );
+        super( owner, title, modal );
+
+        setDefaultCloseOperation( DISPOSE_ON_CLOSE );
+        pack();
+
+        SwingUtils.installEscapeCloseOperation( this );
 
         // ----------------------------------------------------------------------
         // Setup Options Panel
@@ -103,12 +93,10 @@ public class FindDialog extends JDialog
             BorderFactory.createEtchedBorder(), "Options" ) );
 
         matchCheckBox.setText( "Match Case" );
-        matchCheckBox.addKeyListener( escListener );
 
         regexCheckBox.setText( "Regular Expression" );
-        regexCheckBox.addKeyListener( escListener );
+
         wrapCheckBox.setText( "Wrap Around" );
-        wrapCheckBox.addKeyListener( escListener );
 
         optionsPanel.add( matchCheckBox, new GridBagConstraints( 0, 0, 2, 1,
             0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
@@ -120,28 +108,22 @@ public class FindDialog extends JDialog
             0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
             new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-        // ----------------------------------------------------------------------
+        // ---------------------------------------------------------------------
         // Setup Main Panel
-        // ----------------------------------------------------------------------
-        addKeyListener( escListener );
+        // ---------------------------------------------------------------------
 
         contentPane.setLayout( contentLayout );
 
         findLable.setText( "Find What:" );
         findTextField.setColumns( 25 );
-        findTextField.addKeyListener( escListener );
 
         this.getRootPane().setDefaultButton( findButton );
         findButton.setText( "Find" );
-        findButton.addActionListener( new FindDialog_findButton_actionAdapter(
-            this ) );
+        findButton.addActionListener( new FindTextListener( this ) );
         findButton.setDefaultCapable( true );
-        findButton.addKeyListener( escListener );
 
         cancelButton.setText( "Cancel" );
-        cancelButton.addActionListener( new FindDialog_cancelButton_actionAdapter(
-            this ) );
-        cancelButton.addKeyListener( escListener );
+        cancelButton.addActionListener( new CancelListener( this ) );
 
         errorLabel.setText( "" );
         errorLabel.setEditable( false );
@@ -232,7 +214,7 @@ public class FindDialog extends JDialog
     /***************************************************************************
      * @param e ActionEvent
      **************************************************************************/
-    public void findButton_actionPerformed( ActionEvent e )
+    public void findText()
     {
         FindOptions options = getOptions();
         if( options.textToFind.length() > 0 )
@@ -287,67 +269,38 @@ public class FindDialog extends JDialog
     }
 
     /***************************************************************************
-     * @param e ActionEvent
+     * 
      **************************************************************************/
-    public void cancelButton_actionPerformed( ActionEvent e )
+    private static class CancelListener implements ActionListener
     {
-        setVisible( false );
+        private FindDialog adaptee;
+
+        public CancelListener( FindDialog adaptee )
+        {
+            this.adaptee = adaptee;
+        }
+
+        public void actionPerformed( ActionEvent e )
+        {
+            ExitListener.doDefaultCloseOperation( adaptee );
+        }
     }
 
     /***************************************************************************
-     * @param e KeyEvent
+     * 
      **************************************************************************/
-    public void this_keyReleased( KeyEvent e )
+    private static class FindTextListener implements ActionListener
     {
-        if( e.getKeyCode() == KeyEvent.VK_ESCAPE )
+        private FindDialog adaptee;
+
+        public FindTextListener( FindDialog adaptee )
         {
-            // System.out.println( "ESC Pressed" );
-            this.dispose();
+            this.adaptee = adaptee;
         }
-    }
-}
 
-class FindDialog_this_keyAdapter extends KeyAdapter
-{
-    private FindDialog adaptee;
-
-    FindDialog_this_keyAdapter( FindDialog adaptee )
-    {
-        this.adaptee = adaptee;
-    }
-
-    public void keyReleased( KeyEvent e )
-    {
-        adaptee.this_keyReleased( e );
-    }
-}
-
-class FindDialog_cancelButton_actionAdapter implements ActionListener
-{
-    private FindDialog adaptee;
-
-    FindDialog_cancelButton_actionAdapter( FindDialog adaptee )
-    {
-        this.adaptee = adaptee;
-    }
-
-    public void actionPerformed( ActionEvent e )
-    {
-        adaptee.cancelButton_actionPerformed( e );
-    }
-}
-
-class FindDialog_findButton_actionAdapter implements ActionListener
-{
-    private FindDialog adaptee;
-
-    FindDialog_findButton_actionAdapter( FindDialog adaptee )
-    {
-        this.adaptee = adaptee;
-    }
-
-    public void actionPerformed( ActionEvent e )
-    {
-        adaptee.findButton_actionPerformed( e );
+        public void actionPerformed( ActionEvent e )
+        {
+            adaptee.findText();
+        }
     }
 }

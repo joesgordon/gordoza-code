@@ -15,8 +15,7 @@ import javax.swing.text.*;
 import org.jutils.*;
 import org.jutils.apps.filespy.data.*;
 import org.jutils.apps.filespy.search.Searcher;
-import org.jutils.io.UFile;
-import org.jutils.io.UserOptionsSerializer;
+import org.jutils.io.*;
 import org.jutils.ui.*;
 import org.jutils.ui.calendar.CalendarField;
 import org.jutils.ui.event.ItemActionEvent;
@@ -877,10 +876,12 @@ public class SearchView implements IDataView<SearchParams>
             StyleConstants.setUnderline( headerStyle, true );
             StyleConstants.setFontSize( headerStyle, 16 );
 
-            // System.out.println( record.getFile().getAbsolutePath() +
+            // LogUtils.printDebug( record.getFile().getAbsolutePath() +
             // " clicked." );
 
             rightResultsPane.setText( "" );
+
+            // Remove exception.
 
             try
             {
@@ -892,7 +893,7 @@ public class SearchView implements IDataView<SearchParams>
                 for( int i = 0; i < lines.size(); i++ )
                 {
                     LineMatch line = ( LineMatch )lines.get( i );
-                    // System.out.println( "\tWriting line:" + i );
+                    // LogUtils.printDebug( "\tWriting line:" + i );
 
                     rightResultsPane.appendText( line.lineNumber + ": \t", null );
                     rightResultsPane.appendText( line.preMatch, null );
@@ -901,11 +902,11 @@ public class SearchView implements IDataView<SearchParams>
                     rightResultsPane.appendText( Utils.NEW_LINE, null );
                 }
 
-                // System.out.println( "Text:" + rightResultsPane.getText() );
+                // LogUtils.printDebug( "Text:" + rightResultsPane.getText() );
             }
             catch( Exception ex )
             {
-                System.out.println( "\tGot an exception!" );
+                LogUtils.printError( "\tGot an exception!" );
                 ex.printStackTrace();
             }
         }
@@ -1030,14 +1031,14 @@ public class SearchView implements IDataView<SearchParams>
     private static class CheckBoxEnabler_actionAdapter implements
         ActionListener
     {
-        private JComponent [] components;
+        private JComponent[] components;
 
         public CheckBoxEnabler_actionAdapter( JComponent component )
         {
             this( new JComponent[] { component } );
         }
 
-        public CheckBoxEnabler_actionAdapter( JComponent [] components )
+        public CheckBoxEnabler_actionAdapter( JComponent[] components )
         {
             this.components = components;
         }

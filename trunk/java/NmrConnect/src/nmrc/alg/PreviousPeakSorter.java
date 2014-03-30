@@ -5,6 +5,8 @@ import java.util.List;
 import nmrc.data.PeakMatch;
 import nmrc.model.*;
 
+import org.jutils.io.LogUtils;
+
 /*******************************************************************************
  * 
  ******************************************************************************/
@@ -104,7 +106,7 @@ public class PreviousPeakSorter
         }
         else
         {
-            System.out.println( "Peak " + peak.getRecord().getPeakName() +
+            LogUtils.printDebug( "Peak " + peak.getRecord().getPeakName() +
                 " has no previous peak." );
         }
     }

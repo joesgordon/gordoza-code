@@ -94,9 +94,9 @@ public class ChartView implements IView<JComponent>
 
             addSeries( s, addData );
 
-            // System.out.format( "x => (%f,%f)", chart.plot.context.xMin,
+            // LogUtils.printDebug( "x => (%f,%f)", chart.plot.context.xMin,
             // chart.plot.context.xMax );
-            // System.out.println();
+            // LogUtils.printDebug("");
 
             chart.plot.seriesLayer.repaint = true;
             mainPanel.repaint();
@@ -175,7 +175,7 @@ public class ChartView implements IView<JComponent>
             ScreenPlotTransformer trans = new ScreenPlotTransformer(
                 view.chart.plot.context );
 
-            // System.out.println( "here: " + mx );
+            // LogUtils.printDebug( "here: " + mx );
 
             for( Series s : view.chart.plot.serieses )
             {
@@ -185,7 +185,7 @@ public class ChartView implements IView<JComponent>
                 xy = new XYPoint( s.data.get( idx ) );
                 trans.fromChart( xy, p );
 
-                // System.out.println( "here: " + xy.x );
+                // LogUtils.printDebug( "here: " + xy.x );
 
                 s.highlightMarker.setLocation( new Point( p ) );
             }

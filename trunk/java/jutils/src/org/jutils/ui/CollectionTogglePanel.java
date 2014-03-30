@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.swing.*;
 
+import org.jutils.io.LogUtils;
+
 import com.jgoodies.looks.Options;
 
 /*******************************************************************************
@@ -190,7 +192,7 @@ public class CollectionTogglePanel<T> extends JPanel
      * debugging purposes only.
      * @param args Ignored arguments to this application.
      **************************************************************************/
-    public static void main( String [] args )
+    public static void main( String[] args )
     {
         SwingUtilities.invokeLater( new Runnable()
         {
@@ -225,7 +227,7 @@ public class CollectionTogglePanel<T> extends JPanel
                         String str = te != null ? te.toString() : "NULL";
                         String cls = te != null ? te.getClass().getName() : "";
                         label.setText( str );
-                        System.out.println( "Clicked [" + cls + "]: " + str );
+                        LogUtils.printDebug( "Clicked [" + cls + "]: " + str );
                         cp1.setValue( te );
                     }
                 } );
@@ -261,11 +263,7 @@ public class CollectionTogglePanel<T> extends JPanel
      **************************************************************************/
     private enum TestEnum
     {
-        FIRST,
-        SECOND,
-        THIRD,
-        FORTH,
-        FIFTH_SIXTH_SEVENTH;
+        FIRST, SECOND, THIRD, FORTH, FIFTH_SIXTH_SEVENTH;
 
         public String toString()
         {

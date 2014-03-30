@@ -11,6 +11,7 @@ import javax.swing.*;
 
 import org.jutils.IconConstants;
 import org.jutils.NumberParsingUtils;
+import org.jutils.io.LogUtils;
 import org.jutils.io.UserOptionsSerializer;
 import org.jutils.ui.*;
 import org.jutils.ui.event.*;
@@ -27,10 +28,10 @@ public class JHexFrame implements IView<JFrame>
 {
     // TODO create enum of sizes.
     /** The text description of the sizes. */
-    private static final String [] choices = new String[] { "Xtra-Small (1kb)",
+    private static final String[] choices = new String[] { "Xtra-Small (1kb)",
         "Small (64kb)", "Medium (512 kb)", "Large (1 Mb)" };
     /** The size of the buffer in bytes. */
-    private static final int [] sizes = new int[] { 0x400, 0x10000, 0x80000,
+    private static final int[] sizes = new int[] { 0x400, 0x10000, 0x80000,
         0x100000 };
 
     // -------------------------------------------------------------------------
@@ -481,7 +482,7 @@ public class JHexFrame implements IView<JFrame>
                 return;
             }
 
-            byte [] bytes = new byte[strBytes.length() / 2];
+            byte[] bytes = new byte[strBytes.length() / 2];
 
             try
             {
@@ -495,7 +496,7 @@ public class JHexFrame implements IView<JFrame>
                     b = NumberParsingUtils.digitFromHex( strBytes.charAt( i * 2 + 1 ) ) & 0x0F;
                     bytes[i] |= ( byte )b;
                 }
-                System.out.println( HexUtils.toHexString( bytes ) );
+                LogUtils.printDebug( HexUtils.toHexString( bytes ) );
 
                 // TODO actually find the bytes.
             }
@@ -692,14 +693,14 @@ public class JHexFrame implements IView<JFrame>
         @Override
         public void windowClosing( WindowEvent e )
         {
-            // System.out.println( "Window Closing" );
+            // LogUtils.printDebug( "Window Closing" );
             frame.closeFile();
         }
 
         @Override
         public void windowClosed( WindowEvent e )
         {
-            // System.out.println( "Window Closed" );
+            // LogUtils.printDebug( "Window Closed" );
             frame.closeFile();
         }
     }
@@ -832,7 +833,8 @@ public class JHexFrame implements IView<JFrame>
         {
             frame.valuePanel.setBytes( frame.editor.getBuffer().getBytes(), end );
 
-            // System.out.println( "col: " + col + ", row: " + row + ", start: "
+            // LogUtils.printDebug( "col: " + col + ", row: " + row +
+            // ", start: "
             // +
             // start + ", end: " + end );
         }

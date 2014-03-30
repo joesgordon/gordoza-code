@@ -19,8 +19,7 @@ import org.cc.edit.ui.nodes.AppModelNode;
 import org.cc.edit.ui.undo.ButtonLister;
 import org.cc.edit.ui.undo.ItemPanel;
 import org.jutils.IconConstants;
-import org.jutils.io.DataStream;
-import org.jutils.io.FileStream;
+import org.jutils.io.*;
 import org.jutils.ui.*;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
@@ -119,7 +118,7 @@ public class CceFrame extends JFrame
             @Override
             public void actionPerformed( ItemActionEvent<String> event )
             {
-                System.out.println( event.getItem() + " was selected" );
+                LogUtils.printDebug( event.getItem() + " was selected" );
             }
         };
 

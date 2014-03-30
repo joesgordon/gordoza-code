@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import org.jutils.io.LogUtils;
 import org.jutils.ui.JGoodiesToolBar;
 import org.jutils.ui.app.FrameApplication;
 import org.jutils.ui.app.IFrameApp;
@@ -133,7 +134,7 @@ public class SnapTester implements IFrameApp
                 doDeselectedAction();
             }
 
-            System.out.println( "Selected dir " + promptForFolder( snapPanel ) );
+            LogUtils.printDebug( "Selected dir " + promptForFolder( snapPanel ) );
         }
 
         protected abstract void doSelectedAction();

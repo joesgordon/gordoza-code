@@ -1,4 +1,4 @@
-package utesting;
+package testbed;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -7,6 +7,8 @@ import java.util.Date;
 
 import javax.swing.*;
 import javax.swing.table.*;
+
+import org.jutils.io.LogUtils;
 
 import com.jgoodies.looks.Options;
 
@@ -129,7 +131,7 @@ public class TableButton3 extends JFrame
         public void actionPerformed( ActionEvent e )
         {
             fireEditingStopped();
-            System.out.println( e.getActionCommand() + " : " +
+            LogUtils.printDebug( e.getActionCommand() + " : " +
                 table.getSelectedRow() );
         }
     }

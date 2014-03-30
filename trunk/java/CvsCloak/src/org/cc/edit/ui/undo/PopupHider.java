@@ -102,11 +102,11 @@ public class PopupHider
                 // mLoc.x -= pLoc.x;
                 // mLoc.y -= pLoc.y;
 
-                // System.out.println( "min: [" + min.x + ", " + min.y + "]"
+                // LogUtils.printDebug( "min: [" + min.x + ", " + min.y + "]"
                 // );
-                // System.out.println( "max: [" + max.x + ", " + max.y + "]"
+                // LogUtils.printDebug( "max: [" + max.x + ", " + max.y + "]"
                 // );
-                // System.out.println( "mpt: [" + max.x + ", " + mpt.y + "]"
+                // LogUtils.printDebug( "mpt: [" + max.x + ", " + mpt.y + "]"
                 // );
 
                 if( !( mpt.x < min.x || mpt.x > max.x || mpt.y < min.y || mpt.y > max.y ) )

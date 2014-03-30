@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 
 import javax.swing.*;
 
+import org.jutils.io.LogUtils;
+
 public class TransitionPanel extends JPanel
 {
     private JLayeredPane layeredPane;
@@ -24,7 +26,7 @@ public class TransitionPanel extends JPanel
 
     public void transitionTo( JComponent comp )
     {
-        System.out.println( "Adding shiznit to layer " + layer );
+        LogUtils.printDebug( "Adding shiznit to layer " + layer );
         comp.setVisible( true );
         layeredPane.add( comp, new Integer( layer ) );
         // layeredPane.add( new InternalFrame( "", comp ), new Integer( layer )

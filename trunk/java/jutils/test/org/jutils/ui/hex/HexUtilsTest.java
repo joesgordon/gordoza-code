@@ -4,6 +4,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 import org.jutils.NumberParsingUtils;
+import org.jutils.io.LogUtils;
 
 public class HexUtilsTest
 {
@@ -48,6 +49,6 @@ public class HexUtilsTest
         }
         long estTime = System.nanoTime() - start;
         double sec = estTime / 1000000000.0;
-        System.out.println( String.format( "Took: %3fs", sec ) );
+        LogUtils.printDebug( String.format( "Took: %3fs", sec ) );
     }
 }

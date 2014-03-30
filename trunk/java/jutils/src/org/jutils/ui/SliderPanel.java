@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.swing.*;
 
+import org.jutils.io.LogUtils;
+
 public class SliderPanel extends JPanel
 {
     private GridLayout gl;
@@ -66,7 +68,7 @@ public class SliderPanel extends JPanel
     {
         super.setPreferredSize( dim );
 
-        System.out.println( "Preferred size set to " + dim.toString() );
+        LogUtils.printDebug( "Preferred size set to " + dim.toString() );
 
         Dimension spDim = new Dimension( dim );
         spDim.width *= panels.size();

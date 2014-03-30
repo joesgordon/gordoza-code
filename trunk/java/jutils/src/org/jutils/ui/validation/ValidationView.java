@@ -136,7 +136,7 @@ public class ValidationView implements IView<JPanel>
         @Override
         public void signalValid()
         {
-            // System.out.println( "Valid" );
+            // LogUtils.printDebug( "Valid" );
             view.setErrorFieldVisible( false );
             view.errorField.setText( "" );
         }
@@ -144,7 +144,7 @@ public class ValidationView implements IView<JPanel>
         @Override
         public void signalInvalid( String reason )
         {
-            // System.out.println( "Invalid" );
+            // LogUtils.printDebug( "Invalid: " + reason );
             view.setErrorFieldVisible( true );
             view.errorField.setText( "ERROR: " + reason );
         }

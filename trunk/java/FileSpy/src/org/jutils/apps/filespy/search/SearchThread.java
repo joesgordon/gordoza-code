@@ -191,7 +191,7 @@ public class SearchThread implements IStoppableTask
             {
                 if( file.canRead() )
                 {
-                    // System.out.println( "Found record for file " +
+                    // LogUtils.printDebug( "Found record for file " +
                     // record.getFile().getAbsolutePath() );
                     contentsConsumer.addData( record );
                 }

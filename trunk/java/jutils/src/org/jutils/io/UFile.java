@@ -21,12 +21,12 @@ public final class UFile
 
         while( ( descendant != null ) && !ancestor.equals( descendant ) )
         {
-            // System.out.println( "\tChecking: " + descendant.getAbsolutePath()
-            // );
+            // LogUtils.printDebug( "\tChecking: " +
+            // descendant.getAbsolutePath() );
             descendant = descendant.getParentFile();
             // if( descendant == null )
             // {
-            // System.out.println( "\t\tHas no parent!" );
+            // LogUtils.printDebug( "\t\tHas no parent!" );
             // }
         }
 
@@ -37,10 +37,10 @@ public final class UFile
      * @param paths
      * @return
      **************************************************************************/
-    public static File [] getFilesFromString( String paths )
+    public static File[] getFilesFromString( String paths )
     {
-        String [] dirPaths = paths.split( File.pathSeparator );
-        File [] dirs = new File[dirPaths.length];
+        String[] dirPaths = paths.split( File.pathSeparator );
+        File[] dirs = new File[dirPaths.length];
 
         for( int i = 0; i < dirs.length; i++ )
         {
@@ -54,7 +54,7 @@ public final class UFile
      * @param files
      * @return
      **************************************************************************/
-    public static String getStringFromFiles( File [] files )
+    public static String getStringFromFiles( File[] files )
     {
         String paths = null;
 

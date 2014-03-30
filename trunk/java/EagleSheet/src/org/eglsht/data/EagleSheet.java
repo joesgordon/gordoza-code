@@ -79,7 +79,6 @@ public class EagleSheet implements ISpreadSheet
     @Override
     public String getColumnHeader( int col )
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -110,5 +109,14 @@ public class EagleSheet implements ISpreadSheet
     public String getCornerName()
     {
         return cornerName;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public boolean isEditable( int row, int col )
+    {
+        return false;
     }
 }

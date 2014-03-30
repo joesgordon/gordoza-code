@@ -91,7 +91,7 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
         LineNumberReader lineReader = new LineNumberReader( reader );
 
         boolean matched = false;
-        // System.out.println( "Searching file " + file.getAbsolutePath() );
+        // LogUtils.printDebug( "Searching file " + file.getAbsolutePath() );
         try
         {
             while( ( line = lineReader.readLine() ) != null &&

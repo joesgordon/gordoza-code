@@ -128,7 +128,7 @@ public class AggregateValidityChangedManager
 
         for( IValidationField field : fields )
         {
-            // System.out.println( "Field " + field.getView().getName() +
+            // LogUtils.printDebug( "Field " + field.getView().getName() +
             // ", validity: " + field.isValid() );
             newValidity &= field.isValid();
             if( !newValidity )

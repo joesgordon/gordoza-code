@@ -10,6 +10,7 @@ import org.budgey.BudgeyIconConstants;
 import org.budgey.data.*;
 import org.budgey.model.BalanceCalculator;
 import org.jutils.IconConstants;
+import org.jutils.io.LogUtils;
 import org.jutils.ui.*;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
@@ -300,8 +301,8 @@ public class BudgeyPanel extends JPanel
 
             transactionView.setTransaction( trans );
 
-            System.out.println( "Trans: " + trans.getSecondParty() );
-            System.out.println( "Amount: " + trans.getAmount() );
+            LogUtils.printDebug( "Trans: " + trans.getSecondParty() );
+            LogUtils.printDebug( "Amount: " + trans.getAmount() );
 
             showTransactionScreen();
         }

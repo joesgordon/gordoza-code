@@ -118,7 +118,7 @@ public class SliderTestFrame extends JFrame
 
     private JPanel createPanel4()
     {
-        return new RegexPanel();
+        return new RegexPanel().getView();
     }
 
     private void resetButtonStates()
