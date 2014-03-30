@@ -87,7 +87,7 @@ public class ClosableTabbedPane extends JTabbedPane
     protected void fireTabRemoved( Component comp, int index )
     {
         // Guaranteed to return a non-null array
-        Object [] listeners = listenerList.getListenerList();
+        Object[] listeners = listenerList.getListenerList();
         // Process the listeners last to first, notifying
         // those that are interested in this event
         for( int i = listeners.length - 2; i >= 0; i -= 2 )
@@ -191,7 +191,7 @@ class CloseTabIcon implements Icon
     {
         paintIcon( c, c.getGraphics(), x_pos, y_pos );
         // c.repaint();
-        // System.out.println( "Class: " + c.getClass().toString() );
+        // LogUtils.printDebug( "Class: " + c.getClass().toString() );
     }
 
     public void paintIcon( Component c, Graphics g, int x, int y )
@@ -200,7 +200,7 @@ class CloseTabIcon implements Icon
         this.y_pos = y;
         this.c = c;
 
-        // System.out.println( "painting..." );
+        // LogUtils.printDebug( "painting..." );
 
         Color col = g.getColor();
         int y_p = y + 2;

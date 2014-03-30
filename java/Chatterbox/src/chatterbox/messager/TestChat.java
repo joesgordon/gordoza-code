@@ -2,6 +2,8 @@ package chatterbox.messager;
 
 import java.util.List;
 
+import org.jutils.io.LogUtils;
+
 import chatterbox.data.ChatUser;
 import chatterbox.model.IConversation;
 import chatterbox.model.IUser;
@@ -49,7 +51,7 @@ public class TestChat extends AbstractChat
 
         addConversation( conv );
 
-        System.out.println( id );
+        LogUtils.printDebug( id );
 
         return conv;
     }

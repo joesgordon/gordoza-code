@@ -15,6 +15,7 @@ import nmrc.ui.tables.models.AminoAcidTableModel;
 import nmrc.ui.tables.models.PeakTableModel;
 
 import org.jutils.Utils;
+import org.jutils.io.LogUtils;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
 
@@ -311,7 +312,7 @@ class PeakToAminoAcidAssigner
 
             if( aa.getPeak() == null && nextAa.getPeak() != null )
             {
-                System.out.println( "\tEnd Point: " + i );
+                LogUtils.printDebug( "\tEnd Point: " + i );
                 points.add( i );
             }
         }

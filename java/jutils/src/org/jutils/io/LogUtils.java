@@ -19,6 +19,16 @@ public class LogUtils
         printMessage( "DEBUG", message );
     }
 
+    public static void printWarning( String message )
+    {
+        printMessage( "WARNING", message );
+    }
+
+    public static void printError( String message )
+    {
+        printMessage( "ERROR", message );
+    }
+
     private static void printMessage( String msgClass, String message )
     {
         System.out.print( msgClass );

@@ -212,7 +212,7 @@ public class StatusBarPanel
      **************************************************************************/
     private void evalMem( double percentUsed )
     {
-        // System.out.println( "% used = " + percentUsed );
+        // LogUtils.printDebug( "% used = " + percentUsed );
 
         if( percentUsed > 0.95 )
         {
@@ -347,7 +347,7 @@ public class StatusBarPanel
         {
             if( e.getButton() == MouseEvent.BUTTON3 )
             {
-                // System.out.println( "Right-click" );
+                // LogUtils.printDebug( "Right-click" );
                 popup.show( e.getComponent(), e.getX(),
                     e.getY() - popup.getPreferredSize().height );
             }

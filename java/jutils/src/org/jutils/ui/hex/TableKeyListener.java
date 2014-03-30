@@ -5,6 +5,8 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JTable;
 
+import org.jutils.io.LogUtils;
+
 //TODO comments
 
 public class TableKeyListener extends KeyAdapter
@@ -20,7 +22,7 @@ public class TableKeyListener extends KeyAdapter
         int col = idx % table.getColumnCount();
         int row = idx / table.getRowCount() + 1;
 
-        System.out.println( "At [" + row + ", " + col + "] going " + code );
+        LogUtils.printDebug( "At [" + row + ", " + col + "] going " + code );
 
         switch( code )
         {

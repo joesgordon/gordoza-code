@@ -43,7 +43,7 @@ public class PeakReader implements IReader<IPeakRecord, LineNumberReader>
         {
             String[] records = line.split( "\\s*,\\s*", 8 );
 
-            // System.out.println( "Line " + reader.getLineNumber() + ": " +
+            // LogUtils.printDebug( "Line " + reader.getLineNumber() + ": " +
             // line );
 
             if( records.length != 8 )

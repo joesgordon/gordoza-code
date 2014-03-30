@@ -325,7 +325,7 @@ public class FileSpyFrameView implements IView<JFrame>
     {
         JDialog dialog = new JDialog( frame );
         dialog.setTitle( "Regex Friend" );
-        dialog.setContentPane( new RegexPanel() );
+        dialog.setContentPane( new RegexPanel().getView() );
         dialog.setSize( new Dimension( 500, 500 ) );
         dialog.validate();
         dialog.setLocationRelativeTo( null );

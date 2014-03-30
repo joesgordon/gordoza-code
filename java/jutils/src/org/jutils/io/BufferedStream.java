@@ -111,7 +111,7 @@ public class BufferedStream implements IStream
      * 
      **************************************************************************/
     @Override
-    public int read( byte [] buf ) throws IOException
+    public int read( byte[] buf ) throws IOException
     {
         int len = read( buf, 0, buf.length );
 
@@ -124,7 +124,7 @@ public class BufferedStream implements IStream
      * 
      **************************************************************************/
     @Override
-    public void readFully( byte [] buf ) throws IOException
+    public void readFully( byte[] buf ) throws IOException
     {
         readFully( buf, 0, buf.length );
     }
@@ -133,7 +133,7 @@ public class BufferedStream implements IStream
      * 
      **************************************************************************/
     @Override
-    public int read( byte [] buf, int off, int len ) throws IOException
+    public int read( byte[] buf, int off, int len ) throws IOException
     {
         int bytesRead = 0;
         int bytesRemaining = len;
@@ -178,7 +178,7 @@ public class BufferedStream implements IStream
      * 
      **************************************************************************/
     @Override
-    public void readFully( byte [] buf, int off, int len ) throws EOFException,
+    public void readFully( byte[] buf, int off, int len ) throws EOFException,
         IOException
     {
         int totalRead = 0;
@@ -303,7 +303,7 @@ public class BufferedStream implements IStream
      * 
      **************************************************************************/
     @Override
-    public void write( byte [] buf ) throws IOException
+    public void write( byte[] buf ) throws IOException
     {
         write( buf, 0, buf.length );
     }
@@ -312,7 +312,7 @@ public class BufferedStream implements IStream
      * 
      **************************************************************************/
     @Override
-    public void write( byte [] buf, int off, int len ) throws IOException
+    public void write( byte[] buf, int off, int len ) throws IOException
     {
         if( buffer.isWriteCached( position ) )
         {
@@ -363,10 +363,10 @@ public class BufferedStream implements IStream
      **************************************************************************/
     protected void printDebug( String msg )
     {
-        System.out.print( "---------------------------- " + msg );
-        System.out.println( "----------------------------" );
+        LogUtils.printDebug( "---------------------------- " + msg );
+        LogUtils.printDebug( "----------------------------" );
         buffer.printDebug();
-        System.out.println();
+        LogUtils.printDebug( "" );
     }
 
     /***************************************************************************

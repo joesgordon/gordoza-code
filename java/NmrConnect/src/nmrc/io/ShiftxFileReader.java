@@ -27,7 +27,7 @@ public class ShiftxFileReader implements
 
         reader.readLine();
 
-        // System.out.println( "Read first line: " + reader.readLine() );
+        // LogUtils.printDebug( "Read first line: " + reader.readLine() );
 
         while( ( record = recordReader.read( reader ) ) != null )
         {

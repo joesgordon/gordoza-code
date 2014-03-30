@@ -79,7 +79,7 @@ public class McComm
     {
         McMessage msg = new McMessage();
 
-        // System.out.println( "Sending message..." );
+        // LogUtils.printDebug( "Sending message..." );
 
         DatagramPacket pack = new DatagramPacket( buf, buf.length, address,
             port );
@@ -99,7 +99,7 @@ public class McComm
     {
         McMessage msg = new McMessage();
 
-        // System.out.println( "Receiving message..." );
+        // LogUtils.printDebug( "Receiving message..." );
 
         socket.receive( rxPacket );
 

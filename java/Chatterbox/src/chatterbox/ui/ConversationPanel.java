@@ -11,6 +11,7 @@ import javax.swing.text.*;
 
 import org.jutils.IconConstants;
 import org.jutils.Utils;
+import org.jutils.io.LogUtils;
 import org.jutils.ui.FontChooserDialog;
 import org.jutils.ui.event.*;
 
@@ -97,7 +98,7 @@ public class ConversationPanel extends JPanel implements IConversationView
             @Override
             public void actionPerformed( ItemActionEvent<IUser> event )
             {
-                System.out.println( event.getItem().getDisplayName() +
+                LogUtils.printDebug( event.getItem().getDisplayName() +
                     " is now available" );
                 int index = userModel.indexOf( event.getItem() );
                 userModel.set( index, event.getItem() );

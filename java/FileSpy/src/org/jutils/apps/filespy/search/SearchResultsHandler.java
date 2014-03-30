@@ -34,7 +34,7 @@ public class SearchResultsHandler
      **************************************************************************/
     public void addFile( SearchRecord record )
     {
-        // System.out.println( "Found record for file " +
+        // LogUtils.printDebug( "Found record for file " +
         // record.getFile().getAbsolutePath() );
         SwingUtilities.invokeLater( new UiFileAdder( searchPanel, record ) );
     }
@@ -93,8 +93,7 @@ public class SearchResultsHandler
 
         private final List<? extends ExplorerItem> list;
 
-        public UiFilesAdder( SearchView panel,
-            List<? extends ExplorerItem> list )
+        public UiFilesAdder( SearchView panel, List<? extends ExplorerItem> list )
         {
             this.searchPanel = panel;
             this.list = list;
@@ -103,7 +102,7 @@ public class SearchResultsHandler
         public void run()
         {
             searchPanel.addRecords( list );
-            // System.out.println( "Adding record: " +
+            // LogUtils.printDebug( "Adding record: " +
             // record.getFile().toString()
             // );
         }
@@ -127,7 +126,7 @@ public class SearchResultsHandler
         public void run()
         {
             searchPanel.addRecord( record );
-            // System.out.println( "Adding record: " +
+            // LogUtils.printDebug( "Adding record: " +
             // record.getFile().toString()
             // );
         }

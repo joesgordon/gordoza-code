@@ -5,6 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import org.jutils.apps.filespy.ui.RegexPanel;
+import org.jutils.io.LogUtils;
 import org.jutils.ui.*;
 
 public class LayeredTestFrame extends JFrame
@@ -21,7 +22,7 @@ public class LayeredTestFrame extends JFrame
         JPanel contentPane = new JPanel( new BorderLayout() );
         TransitionPanel xpanel = new TransitionPanel();
 
-        System.out.println( "Adding shiznit" );
+        LogUtils.printDebug( "Adding shiznit" );
         xpanel.transitionTo( createPanel2() );
         xpanel.transitionTo( new JLabel( "blah" ) );
 
@@ -54,6 +55,6 @@ public class LayeredTestFrame extends JFrame
     @SuppressWarnings( "unused")
     private JPanel createPanel4()
     {
-        return new RegexPanel();
+        return new RegexPanel().getView();
     }
 }

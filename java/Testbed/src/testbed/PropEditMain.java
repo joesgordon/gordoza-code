@@ -1,24 +1,29 @@
-package utesting;
+package testbed;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import org.jutils.ui.GradientButtonUI;
+import org.jutils.ui.PropEditPanel;
 import org.jutils.ui.app.FrameApplication;
 import org.jutils.ui.app.IFrameApp;
 
-public class ButtonTestFrame implements IFrameApp
+public class PropEditMain implements IFrameApp
 {
     @Override
     public JFrame createFrame()
     {
         JFrame frame = new JFrame();
+        PropEditPanel panel = new PropEditPanel();
 
-        frame.setContentPane( createContentPane() );
+        UIDefaults defaults = UIManager.getDefaults();
 
+        panel.setProperties( defaults );
+
+        frame.setContentPane( createContentPane( panel ) );
         frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         frame.setSize( 500, 500 );
 
@@ -43,12 +48,13 @@ public class ButtonTestFrame implements IFrameApp
         return panel;
     }
 
-    private JComponent createContentPane()
+    private JComponent createContentPane( PropEditPanel propPanel )
     {
         JPanel panel = new JPanel( new BorderLayout() );
+        JScrollPane scrollPane = new JScrollPane( propPanel.getView() );
 
         panel.add( createToolbar(), BorderLayout.NORTH );
-        panel.add( Box.createHorizontalStrut( 0 ), BorderLayout.CENTER );
+        panel.add( scrollPane, BorderLayout.CENTER );
 
         return panel;
     }
@@ -58,28 +64,23 @@ public class ButtonTestFrame implements IFrameApp
     {
     }
 
-    /**
-     * @param args
-     */
     public static void main( String[] args )
     {
-        UIManager.put( "ButtonUI", GradientButtonUI.class.getName() );
-        UIManager.put( "Panel.background", new Color( 0x808080 ) );
-        UIManager.put( "RadioButton.background", new Color( 0x808080 ) );
-        UIManager.put( "ColorChooser.background", new Color( 0x808080 ) );
-        UIManager.put( "TabbedPane.background", new Color( 0x808080 ) );
-        UIManager.put( "Slider.background", new Color( 0x808080 ) );
-        UIManager.put( "CheckBox.background", new Color( 0x808080 ) );
-        UIManager.put( "Button.background", Color.black );
-        UIManager.put( "Button.foreground", Color.white );
-        UIManager.put( "RadioButtonMenuItem.background", new Color( 0x808080 ) );
-        UIManager.put( "ToolBar.background", new Color( 0x808080 ) );
+        // Color stadBg = new Color( 0x808080 );
+        //
+        // UIManager.put( "Panel.background", stadBg );
+        // UIManager.put( "RadioButton.background", stadBg );
+        // UIManager.put( "ColorChooser.background", stadBg );
+        // UIManager.put( "TabbedPane.background", stadBg );
+        // UIManager.put( "Slider.background", stadBg );
+        // UIManager.put( "CheckBox.background", stadBg );
+        // UIManager.put( "Button.background", Color.black );
+        // UIManager.put( "Button.foreground", Color.white );
+        // UIManager.put( "RadioButtonMenuItem.background", stadBg );
+        // UIManager.put( "ToolBar.background", stadBg );
+        // UIManager.put( "OptionPane.background", stadBg );
 
-        System.out.println( "ButtonUI = " +
-            UIManager.getDefaults().getString( "ButtonUI" ) );
-
-        FrameApplication.invokeLater( new ButtonTestFrame(), true,
-            UIManager.getCrossPlatformLookAndFeelClassName() );
+        FrameApplication.invokeLater( new PropEditMain(), true );
     }
 
     private static class ShowMsgListener implements ActionListener
@@ -113,7 +114,9 @@ public class ButtonTestFrame implements IFrameApp
 
             SwingUtilities.updateComponentTreeUI( frame );
 
+            frame.invalidate();
             frame.validate();
+            frame.repaint();
         }
     }
 }

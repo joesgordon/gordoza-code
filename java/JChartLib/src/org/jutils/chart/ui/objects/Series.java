@@ -56,7 +56,7 @@ public class Series implements IChadget
 
         ScreenPlotTransformer trans = new ScreenPlotTransformer( context );
 
-        // System.out.println( "w: " + width + ", h: " + height );
+        // LogUtils.printDebug( "w: " + width + ", h: " + height );
 
         for( int i = 0; i < data.getCount(); i++ )
         {

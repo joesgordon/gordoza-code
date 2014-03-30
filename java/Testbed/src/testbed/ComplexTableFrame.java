@@ -1,4 +1,4 @@
-package utesting;
+package testbed;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,6 +12,7 @@ import javax.swing.table.*;
 
 import org.jutils.IconConstants;
 import org.jutils.Utils;
+import org.jutils.io.LogUtils;
 
 import com.jgoodies.looks.Options;
 
@@ -241,7 +242,7 @@ class StateColumnCell extends AbstractCellEditor implements TableCellRenderer,
     private void buttonPressed( ActionEvent e )
     {
         fireEditingStopped();
-        System.out.println( state + " : " + table.getSelectedRow() );
+        LogUtils.printDebug( state + " : " + table.getSelectedRow() );
     }
 
     /***************************************************************************

@@ -1,4 +1,4 @@
-package utesting;
+package testbed;
 
 import javax.swing.JFrame;
 

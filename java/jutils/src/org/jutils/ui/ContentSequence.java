@@ -79,7 +79,7 @@ public class ContentSequence implements CharSequence
                 " does not exist in Content!" );
         }
 
-        // System.out.println( "charAt( " + index + " ) = " + seg.first() );
+        // LogUtils.printDebug( "charAt( " + index + " ) = " + seg.first() );
 
         return seg.first();
     }
@@ -91,7 +91,8 @@ public class ContentSequence implements CharSequence
      **************************************************************************/
     public CharSequence subSequence( int newStart, int newEnd )
     {
-        // System.out.println( "subSequence( " + newStart + ", " + newEnd + " )"
+        // LogUtils.printDebug( "subSequence( " + newStart + ", " + newEnd +
+        // " )"
         // );
         return new ContentSequence( content, start + newStart, start + newEnd );
     }
@@ -112,7 +113,7 @@ public class ContentSequence implements CharSequence
             throw new ArrayIndexOutOfBoundsException( "Location " + length +
                 " does not exist in Content! Contact you local programmer, he screwed up!" );
         }
-        // System.out.println( "toString()=" + seg.toString() );
+        // LogUtils.printDebug( "toString()=" + seg.toString() );
 
         return seg.toString();
     }
@@ -122,7 +123,7 @@ public class ContentSequence implements CharSequence
      **************************************************************************/
     public int length()
     {
-        // System.out.println( "length() = " + ( end - start) );
+        // LogUtils.printDebug( "length() = " + ( end - start) );
         return end - start;
     }
 }

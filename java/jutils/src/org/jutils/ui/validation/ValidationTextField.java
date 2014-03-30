@@ -125,8 +125,8 @@ public final class ValidationTextField implements IValidationField
                 setComponentValid( validity );
             }
 
-            // System.out.println( ">>>Validating text \"" + textfield.getText()
-            // +
+            // LogUtils.printDebug( ">>>Validating text \"" +
+            // textfield.getText() +
             // "\", old validity: " + listenerList.isValid() +
             // ", new validity: " + validity );
             // Utils.printStackTrace();
@@ -237,21 +237,21 @@ public final class ValidationTextField implements IValidationField
         @Override
         public void removeUpdate( DocumentEvent e )
         {
-            // System.out.println( "Updating text" );
+            // LogUtils.printDebug( "Updating text" );
             field.validateText();
         }
 
         @Override
         public void insertUpdate( DocumentEvent e )
         {
-            // System.out.println( "Inserting text" );
+            // LogUtils.printDebug( "Inserting text" );
             field.validateText();
         }
 
         @Override
         public void changedUpdate( DocumentEvent e )
         {
-            // System.out.println( "Changing text" );
+            // LogUtils.printDebug( "Changing text" );
             field.validateText();
         }
     }

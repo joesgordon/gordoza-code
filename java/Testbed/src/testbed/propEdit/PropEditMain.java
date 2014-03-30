@@ -6,6 +6,8 @@ import java.util.Map.Entry;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 
+import org.jutils.io.LogUtils;
+
 public class PropEditMain
 {
     public static void main( String[] args )
@@ -44,7 +46,7 @@ public class PropEditMain
 
             if( valueString != null )
             {
-                System.out.println( "ERROR: [" + key + "] = " + valueString +
+                LogUtils.printError( "[" + key + "] = " + valueString +
                     " instead of " + entryValueString );
             }
         }

@@ -4,6 +4,8 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jutils.io.LogUtils;
+
 public class LongParse
 {
     public static void main( String[] args )
@@ -46,7 +48,7 @@ public class LongParse
             }
             catch( NumberFormatException ex )
             {
-                System.out.println( parser.getName() + " : BROKEN because \"" +
+                LogUtils.printError( parser.getName() + " : BROKEN because \"" +
                     ex.getMessage() + "\"" );
                 return;
             }
@@ -54,7 +56,7 @@ public class LongParse
         long estTime = System.nanoTime() - start;
         double sec = estTime / 1000000000.0;
 
-        System.out.println( parser.getName() +
+        LogUtils.printDebug( parser.getName() +
             String.format( " took: %3f", sec ) );
     }
 

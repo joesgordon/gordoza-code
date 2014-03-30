@@ -78,7 +78,7 @@ public class AutoComplete<T> extends JComboBox<T> implements
         }
         else
         {
-            // System.out.println(lap);
+            // LogUtils.printDebug(lap);
             // Kam nie hier vorbei.
             if( lap + 1000 < now )
                 searchFor = "" + aKey;

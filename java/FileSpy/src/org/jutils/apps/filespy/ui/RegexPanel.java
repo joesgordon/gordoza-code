@@ -8,106 +8,126 @@ import java.util.regex.*;
 import javax.swing.*;
 
 import org.jutils.Utils;
-import org.jutils.ui.SearchableTextArea;
+import org.jutils.ui.*;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
+import org.jutils.ui.model.IView;
 
 import com.jgoodies.forms.builder.ButtonStackBuilder;
-import com.jgoodies.looks.Options;
 
 /*******************************************************************************
  *
  ******************************************************************************/
-public class RegexPanel extends JPanel
+public class RegexPanel implements IView<JPanel>
 {
     /**  */
-    private GridBagLayout mainLayout = new GridBagLayout();
-
-    /**  */
-    private JPanel optionsPanel = new JPanel();
-
-    /**  */
-    private GridBagLayout optionsLayout = new GridBagLayout();
-
-    /**  */
-    private JCheckBox caseCheckBox = new JCheckBox();
-
-    /**  */
-    private JCheckBox multilineCheckBox = new JCheckBox();
-
-    /**  */
-    private JCheckBox commentsCheckBox = new JCheckBox();
-
-    /**  */
-    private JCheckBox globalCheckBox = new JCheckBox();
-
-    /**  */
-    private JPanel regexPanel = new JPanel();
-
-    /**  */
-    private GridBagLayout regexLayout = new GridBagLayout();
-
-    /**  */
-    private JScrollPane regexScrollPane = new JScrollPane();
+    private final JPanel view;
 
     /**  */
     private SearchableTextArea regexTextArea = new SearchableTextArea();
-
     /**  */
-    private JButton testButton = new JButton();
-
-    /**  */
-    private JButton closeButton = new JButton();
-
-    /**  */
-    private JPanel testPanel = new JPanel();
-
-    /**  */
-    private GridBagLayout testLayout = new GridBagLayout();
-
-    /**  */
-    private JScrollPane testScrollPane = new JScrollPane();
-
+    private SearchableTextArea resultTextArea = new SearchableTextArea();
     /**  */
     private SearchableTextArea testTextArea = new SearchableTextArea();
 
     /**  */
-    private JPanel resultPanel = new JPanel();
-
+    private JCheckBox caseCheckBox = new JCheckBox();
     /**  */
-    private GridBagLayout resultLayout = new GridBagLayout();
-
+    private JCheckBox multilineCheckBox = new JCheckBox();
     /**  */
-    private JScrollPane resultScrollPane = new JScrollPane();
-
+    private JCheckBox commentsCheckBox = new JCheckBox();
     /**  */
-    private SearchableTextArea resultTextArea = new SearchableTextArea();
+    private JCheckBox globalCheckBox = new JCheckBox();
 
     /***************************************************************************
      *
      **************************************************************************/
     public RegexPanel()
     {
-        try
-        {
-            jbInit();
-        }
-        catch( Exception exception )
-        {
-            exception.printStackTrace();
-        }
+        this.view = createView();
     }
 
     /***************************************************************************
-     * @throws Exception
+     * @return
      **************************************************************************/
-    private void jbInit() throws Exception
+    private JPanel createView()
     {
-        ButtonStackBuilder builder;
+        StandardFormView form = new StandardFormView();
+        JScrollPane resultScrollPane = new JScrollPane( resultTextArea );
+        JScrollPane testScrollPane = new JScrollPane( testTextArea );
 
-        // ----------------------------------------------------------------------
-        // Setup options panel
-        // ----------------------------------------------------------------------
-        optionsPanel.setLayout( optionsLayout );
-        optionsPanel.setBorder( BorderFactory.createTitledBorder( "Options" ) );
+        testTextArea.setText( "Here is" + Utils.NEW_LINE + "some text with" +
+            Utils.NEW_LINE + "the word blah in it" + Utils.NEW_LINE +
+            "at some" + Utils.NEW_LINE + "point." );
+
+        form.setHorizontalStretch( true );
+
+        form.addField( "Regex", createRegexPanel() );
+        form.addField( "Test Text", testScrollPane );
+        form.addField( "Results", resultScrollPane );
+
+        return form.getView();
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Component createRegexPanel()
+    {
+        JScrollPane regexScrollPane = new JScrollPane();
+        JPanel regexPanel = new JPanel( new GridBagLayout() );
+
+        regexTextArea.setText( "blah" );
+        regexScrollPane.setViewportView( regexTextArea );
+
+        Dimension dim = regexScrollPane.getPreferredSize();
+        dim.height = 100;
+        regexScrollPane.setMinimumSize( dim );
+        regexScrollPane.setPreferredSize( dim );
+
+        regexPanel.add( regexScrollPane, new GridBagConstraints( 0, 0, 1, 2,
+            1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 0, 0, 8 ), 0, 0 ) );
+
+        regexPanel.add( createButtonPanel(), new GridBagConstraints( 1, 0, 1,
+            1, 0.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 0, 4, 0 ), 0, 0 ) );
+
+        regexPanel.add( createOptionsPanel(), new GridBagConstraints( 1, 1, 1,
+            1, 0.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+
+        return regexPanel;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Component createButtonPanel()
+    {
+        ButtonStackBuilder builder = new ButtonStackBuilder();
+        JButton closeButton = new JButton();
+        JButton testButton = new JButton();
+
+        testButton.setText( "Test" );
+        testButton.addActionListener( new TestRegexListener( this ) );
+
+        closeButton.setText( "Close" );
+        closeButton.addActionListener( new CloseListener( this ) );
+
+        builder.addFixed( testButton );
+        builder.addRelatedGap();
+        builder.addFixed( closeButton );
+
+        return builder.getPanel();
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Component createOptionsPanel()
+    {
+        StandardFormView form = new StandardFormView();
 
         caseCheckBox.setText( "Case-Insensitive" );
         caseCheckBox.setToolTipText( "Enables case-insensitive matching." );
@@ -122,125 +142,30 @@ public class RegexPanel extends JPanel
         globalCheckBox.setText( "Global" );
         globalCheckBox.setToolTipText( ". matches any character, including a "
             + "line terminator." );
-        testButton.addActionListener( new RegexPanel_testButton_actionAdapter(
-            this ) );
-        closeButton.addActionListener( new RegexPanel_closeButton_actionAdapter(
-            this ) );
 
-        optionsPanel.add( caseCheckBox, new GridBagConstraints( 0, 0, 1, 1,
-            1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        optionsPanel.add( multilineCheckBox, new GridBagConstraints( 0, 1, 1,
-            1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        optionsPanel.add( commentsCheckBox, new GridBagConstraints( 0, 2, 1, 1,
-            1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        optionsPanel.add( globalCheckBox, new GridBagConstraints( 0, 3, 1, 1,
-            1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        optionsPanel.add( Box.createVerticalStrut( 0 ), new GridBagConstraints(
-            0, 4, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER,
-            GridBagConstraints.BOTH, new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        form.addField( null, caseCheckBox );
+        form.addField( null, multilineCheckBox );
+        form.addField( null, commentsCheckBox );
+        form.addField( null, globalCheckBox );
 
-        // ----------------------------------------------------------------------
-        // Setup regex panel.
-        // ----------------------------------------------------------------------
-        builder = new ButtonStackBuilder();
-        regexPanel.setLayout( regexLayout );
-        // regexPanel.setBorder( BorderFactory.createTitledBorder( "Regex" ) );
-        // regexPanel.
+        form.getView().setBorder( BorderFactory.createTitledBorder( "Options" ) );
 
-        regexTextArea.setText( "blah" );
-        regexScrollPane.setViewportView( regexTextArea );
-
-        Dimension dim = regexScrollPane.getPreferredSize();
-        dim.height = 100;
-        regexScrollPane.setMinimumSize( dim );
-        regexScrollPane.setPreferredSize( dim );
-
-        testButton.setText( "Test" );
-        closeButton.setText( "Close" );
-
-        builder.addFixed( testButton );
-        builder.addRelatedGap();
-        builder.addFixed( closeButton );
-
-        regexPanel.add( new JLabel( "Regex" ), new GridBagConstraints( 0, 0, 2,
-            1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 2, 2, 4, 2 ), 0, 0 ) );
-
-        regexPanel.add( regexScrollPane, new GridBagConstraints( 0, 1, 1, 2,
-            1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-
-        regexPanel.add( builder.getPanel(), new GridBagConstraints( 1, 1, 1, 1,
-            0.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-
-        regexPanel.add( optionsPanel, new GridBagConstraints( 1, 2, 1, 1, 0.0,
-            1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-
-        // ----------------------------------------------------------------------
-        // Setup test panel
-        // ----------------------------------------------------------------------
-        testPanel.setLayout( testLayout );
-        // testPanel.setBorder( BorderFactory.createTitledBorder( "Test Text" )
-        // );
-
-        testTextArea.setText( "Here is" + Utils.NEW_LINE + "some text with" +
-            Utils.NEW_LINE + "the word blah in it" + Utils.NEW_LINE +
-            "at some" + Utils.NEW_LINE + "point." );
-        testScrollPane.setViewportView( testTextArea );
-
-        testPanel.add( testScrollPane, new GridBagConstraints( 0, 0, 1, 1, 1.0,
-            1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-
-        // ----------------------------------------------------------------------
-        // Setup result panel
-        // ----------------------------------------------------------------------
-        resultPanel.setLayout( resultLayout );
-        // resultPanel.setBorder( BorderFactory.createTitledBorder( "Result" )
-        // );
-
-        resultScrollPane.setViewportView( resultTextArea );
-
-        resultPanel.add( resultScrollPane, new GridBagConstraints( 0, 0, 1, 1,
-            1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-
-        // ----------------------------------------------------------------------
-        // Setup main panel
-        // ----------------------------------------------------------------------
-        this.setLayout( mainLayout );
-
-        this.add( regexPanel, new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 2,
-                2, 2, 2 ), 0, 0 ) );
-
-        this.add( new JLabel( "Test Text" ), new GridBagConstraints( 0, 1, 1,
-            1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 2, 2, 4, 2 ), 0, 0 ) );
-
-        this.add( testPanel, new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 2,
-                2, 2, 2 ), 0, 0 ) );
-
-        this.add( new JLabel( "Result" ), new GridBagConstraints( 0, 3, 1, 1,
-            1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 2, 2, 4, 2 ), 0, 0 ) );
-
-        this.add( resultPanel, new GridBagConstraints( 0, 4, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 2,
-                2, 2, 2 ), 0, 0 ) );
+        return form.getView();
     }
 
     /***************************************************************************
-     * @param e ActionEvent
+     * 
      **************************************************************************/
-    public void testButton_actionPerformed( ActionEvent e )
+    @Override
+    public JPanel getView()
+    {
+        return view;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public void testRegex()
     {
         boolean caseFlag = caseCheckBox.isSelected();
         boolean multilineFlag = multilineCheckBox.isSelected();
@@ -291,7 +216,7 @@ public class RegexPanel extends JPanel
         }
         catch( PatternSyntaxException ex )
         {
-            JOptionPane.showMessageDialog( Utils.getComponentsWindow( this ),
+            JOptionPane.showMessageDialog( Utils.getComponentsWindow( view ),
                 ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE );
             regexTextArea.requestFocus();
             regexTextArea.select( ex.getIndex() - 1, ex.getIndex() );
@@ -299,66 +224,71 @@ public class RegexPanel extends JPanel
     }
 
     /***************************************************************************
-     * @param e ActionEvent
+     * @param args
      **************************************************************************/
-    public void closeButton_actionPerformed( ActionEvent e )
-    {
-        Utils.getComponentsWindow( this ).dispose();
-    }
-
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new Runnable()
+        IFrameApp app = new IFrameApp()
         {
-            public void run()
+            @Override
+            public void finalizeGui()
             {
-                try
-                {
-                    UIManager.setLookAndFeel( Options.PLASTICXP_NAME );
-                }
-                catch( Exception exception )
-                {
-                    exception.printStackTrace();
-                }
-                JFrame frame = new JFrame();
+            }
+
+            @Override
+            public JFrame createFrame()
+            {
+                RegexPanel view = new RegexPanel();
+                StandardFrameView frameView = new StandardFrameView();
+                JFrame frame = frameView.getView();
+
                 frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
                 frame.setTitle( "Regex Friend" );
-                frame.setContentPane( new RegexPanel() );
+                frame.setContentPane( view.getView() );
                 frame.setSize( new Dimension( 500, 500 ) );
-                frame.validate();
-                frame.setLocationRelativeTo( null );
-                frame.setVisible( true );
+
+                return frame;
             }
-        } );
-    }
-}
+        };
 
-class RegexPanel_closeButton_actionAdapter implements ActionListener
-{
-    private RegexPanel adaptee;
-
-    RegexPanel_closeButton_actionAdapter( RegexPanel adaptee )
-    {
-        this.adaptee = adaptee;
+        FrameApplication.invokeLater( app );
     }
 
-    public void actionPerformed( ActionEvent e )
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class CloseListener implements ActionListener
     {
-        adaptee.closeButton_actionPerformed( e );
+        private RegexPanel view;
+
+        public CloseListener( RegexPanel adaptee )
+        {
+            this.view = adaptee;
+        }
+
+        public void actionPerformed( ActionEvent e )
+        {
+            Window win = Utils.getComponentsWindow( view.view );
+
+            ExitListener.doDefaultCloseOperation( win );
+        }
     }
-}
 
-class RegexPanel_testButton_actionAdapter implements ActionListener
-{
-    private RegexPanel adaptee;
-
-    RegexPanel_testButton_actionAdapter( RegexPanel adaptee )
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class TestRegexListener implements ActionListener
     {
-        this.adaptee = adaptee;
-    }
+        private RegexPanel view;
 
-    public void actionPerformed( ActionEvent e )
-    {
-        adaptee.testButton_actionPerformed( e );
+        public TestRegexListener( RegexPanel adaptee )
+        {
+            this.view = adaptee;
+        }
+
+        public void actionPerformed( ActionEvent e )
+        {
+            view.testRegex();
+        }
     }
 }

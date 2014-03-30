@@ -3,6 +3,8 @@ package testbed;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import org.jutils.io.LogUtils;
+
 public class CalcWorkDays
 {
     public static int MILLIS_IN_DAY = 1000 * 60 * 60 * 24;
@@ -192,7 +194,7 @@ public class CalcWorkDays
         numDays = days( start.getTime(), end.getTime() );
         printNumDays( numDays, start, end );
 
-        System.out.println();
+        LogUtils.printDebug( "" );
     }
 
     /***************************************************************************
@@ -202,12 +204,14 @@ public class CalcWorkDays
      **************************************************************************/
     public static void printNumDays( int numDays, Calendar start, Calendar end )
     {
-        System.out.print( "The number of days between " );
+        String msg = "The number of days between ";
 
         sdf.setTimeZone( start.getTimeZone() );
-        System.out.print( sdf.format( start.getTime() ) + " and " );
+        msg += sdf.format( start.getTime() ) + " and ";
 
         sdf.setTimeZone( end.getTimeZone() );
-        System.out.println( sdf.format( end.getTime() ) + " is " + numDays );
+        msg += sdf.format( end.getTime() ) + " is " + numDays;
+
+        LogUtils.printDebug( msg );
     }
 }

@@ -8,6 +8,7 @@ import javax.swing.JTextArea;
 import javax.swing.text.*;
 
 import org.jutils.Utils;
+import org.jutils.io.LogUtils;
 
 /*******************************************************************************
  *
@@ -83,8 +84,8 @@ public class SearchableTextArea extends JTextArea
         if( options.matcher.find( position ) )
         {
             found = true;
-            // System.out.println( "m.start: " + m.start( 1 ) );
-            // System.out.println( "m.end: " + m.end( 1 ) );
+            // LogUtils.printDebug( "m.start: " + m.start( 1 ) );
+            // LogUtils.printDebug( "m.end: " + m.end( 1 ) );
         }
         else if( options.wrapAround )
         {
@@ -99,10 +100,10 @@ public class SearchableTextArea extends JTextArea
         {
             select( options.matcher.start(), options.matcher.end() );
         }
-        // System.out.print( "****************************************" );
-        // System.out.println( "****************************************" );
 
-        // System.out.println( "" );
+        // LogUtils.printDebug( "****************************************" );
+
+        // LogUtils.printDebug( "" );
 
         lastOptions = options;
 
@@ -128,13 +129,13 @@ public class SearchableTextArea extends JTextArea
 
         options.pattern = Pattern.compile( expression, flags );
 
-        System.out.println( "Building options..." );
-        // System.out.println( "expression: " + expression );
-        // System.out.println( "flags: " + Integer.toHexString( flags ) );
-        // System.out.println( "startPos: " + startPos );
-        // System.out.println( "endPos: " + content.length() );
-        // System.out.println( "content: " );
-        // System.out.println( sequence.toString() );
+        LogUtils.printDebug( "Building options..." );
+        // LogUtils.printDebug( "expression: " + expression );
+        // LogUtils.printDebug( "flags: " + Integer.toHexString( flags ) );
+        // LogUtils.printDebug( "startPos: " + startPos );
+        // LogUtils.printDebug( "endPos: " + content.length() );
+        // LogUtils.printDebug( "content: " );
+        // LogUtils.printDebug( sequence.toString() );
 
         return found;
     }
@@ -199,14 +200,14 @@ class SearchableTextArea_keyAdapter implements KeyListener
 
     public void keyPressed( KeyEvent e )
     {
-        // System.out.print( "keyPressed" );
+        // LogUtils.printDebug( "keyPressed" );
     }
 
     public void keyReleased( KeyEvent e )
     {
         if( e.getKeyCode() == KeyEvent.VK_F3 )
         {
-            // System.out.println( "F3 Released" );
+            // LogUtils.printDebug( "F3 Released" );
             textArea.reFind();
         }
     }
@@ -220,7 +221,7 @@ class SearchableTextArea_keyAdapter implements KeyListener
         {
             if( keyTyped == 'f' - 'a' + 1 )
             {
-                // System.out.println( "CTRL+F Typed" );
+                // LogUtils.printDebug( "CTRL+F Typed" );
                 textArea.showFind();
             }
         }

@@ -9,8 +9,7 @@ import java.util.*;
 import javax.swing.*;
 
 import org.jutils.*;
-import org.jutils.io.BitBuffer;
-import org.jutils.io.BitPosition;
+import org.jutils.io.*;
 import org.jutils.ui.model.IView;
 
 //TODO comments
@@ -78,7 +77,7 @@ public class ShiftHexView implements IView<JComponent>
         return toolbar;
     }
 
-    public void setData( byte [] bytes )
+    public void setData( byte[] bytes )
     {
         this.orig = new BitBuffer( bytes );
         this.buffer = new BitBuffer( Arrays.copyOf( bytes, bytes.length + 1 ) );
@@ -167,7 +166,7 @@ public class ShiftHexView implements IView<JComponent>
 
                     start = start > -1 ? start : 0;
 
-                    System.out.println( "Starting from " + start );
+                    LogUtils.printDebug( "Starting from " + start );
 
                     BitPosition pos = view.orig.find( bits, start );
 
@@ -182,7 +181,7 @@ public class ShiftHexView implements IView<JComponent>
                         int off = pos.getBit() == 0 ? 0 : 1;
                         off += pos.getByte();
 
-                        System.out.println( "Found @" + off );
+                        LogUtils.printDebug( "Found @" + off );
 
                         view.hexPanel.setSelected( off, off );
                     }

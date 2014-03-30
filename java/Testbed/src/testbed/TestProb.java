@@ -3,6 +3,8 @@ package testbed;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.jutils.io.LogUtils;
+
 public class TestProb
 {
     public static void main( String[] args )
@@ -27,7 +29,7 @@ public class TestProb
             }
         }
 
-        System.out.println( "# of matches: " + numMatched );
+        LogUtils.printDebug( "# of matches: " + numMatched );
     }
 
     private static int[] getRandomArray( int len, Random rand )
