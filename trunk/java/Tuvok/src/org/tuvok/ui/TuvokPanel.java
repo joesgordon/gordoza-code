@@ -1,4 +1,4 @@
-package org.tuvok;
+package org.tuvok.ui;
 
 import java.awt.*;
 import java.util.Vector;
@@ -10,7 +10,7 @@ import org.tuvok.data.Project;
 /*******************************************************************************
  * Displays all the main components of the 2DLs interface.
  ******************************************************************************/
-public class ToDLsPanel extends JPanel
+public class TuvokPanel extends JPanel
 {
     // --------------------------------------------------------------------------
     // GUI Components.
@@ -24,7 +24,7 @@ public class ToDLsPanel extends JPanel
     /** Scroll pane used to allow the content pane to scroll. */
     private JScrollPane rightScrollPane = new JScrollPane();
     /** The tree contains all the open projects. */
-    private ToDLsList tree = new ToDLsList();
+    private TuvokList tree = new TuvokList();
     /** Displays the context of the currently viewed item. */
     private JTextField addressTextField = new JTextField();
     // --------------------------------------------------------------------------
@@ -36,7 +36,7 @@ public class ToDLsPanel extends JPanel
     /***************************************************************************
      * Creates a new panel.
      **************************************************************************/
-    public ToDLsPanel()
+    public TuvokPanel()
     {
         try
         {

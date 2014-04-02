@@ -1,26 +1,24 @@
-package org.jutils.appgallery;
+package org.tuvok;
 
-import java.awt.Component;
-
-import javax.swing.Icon;
+import org.jutils.ui.app.FrameApplication;
 
 /*******************************************************************************
- * 
+ *
  ******************************************************************************/
-public interface ILibraryApp
+public class TuvokMain
 {
     /***************************************************************************
-     * @return
+     *
      **************************************************************************/
-    public Icon getIcon32();
+    private TuvokMain()
+    {
+    }
 
     /***************************************************************************
-     * @return
+     * @param args String[]
      **************************************************************************/
-    public String getName();
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public Component createApp();
+    public static void main( String [] args )
+    {
+        FrameApplication.invokeLater( new TuvokApp() );
+    }
 }

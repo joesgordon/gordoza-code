@@ -12,7 +12,7 @@ import org.jutils.ui.app.IFrameApp;
 public class ChartApp implements ILibraryApp
 {
     @Override
-    public Icon getIcon()
+    public Icon getIcon32()
     {
         return ChartIcons.loader.getIcon( ChartIcons.CHART_032 );
     }

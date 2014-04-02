@@ -51,16 +51,20 @@ public class XStreamUtils
     public static <T> T readObjectXStream( File file )
         throws FileNotFoundException, IOException, XStreamException
     {
-        FileInputStream fis = new FileInputStream( file );
+        FileInputStream fis = null;
         Object obj;
 
         try
         {
+            fis = new FileInputStream( file );
             obj = readObjectXStream( fis );
         }
         finally
         {
-            fis.close();
+            if( fis != null )
+            {
+                fis.close();
+            }
         }
 
         return ( T )obj;

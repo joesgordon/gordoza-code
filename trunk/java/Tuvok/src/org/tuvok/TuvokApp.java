@@ -7,37 +7,24 @@ import javax.swing.JFrame;
 
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
-import org.jutils.ui.app.FrameApplication;
 import org.jutils.ui.app.IFrameApp;
+import org.tuvok.ui.TuvokFrameView;
+import org.tuvok.ui.TuvokMenu;
 
 /*******************************************************************************
- *
+ * 
  ******************************************************************************/
-public class ToDLsMain implements IFrameApp
+public class TuvokApp implements IFrameApp
 {
-    /***************************************************************************
-     *
-     **************************************************************************/
-    public ToDLsMain()
-    {
-    }
-
-    /***************************************************************************
-     * @param args String[]
-     **************************************************************************/
-    public static void main( String[] args )
-    {
-        FrameApplication.invokeLater( new ToDLsMain() );
-    }
-
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
     public JFrame createFrame()
     {
-        ToDLsFrame frame = new ToDLsFrame();
-        ToDLsMenu popup = new ToDLsMenu( frame );
+        TuvokFrameView frameView = new TuvokFrameView();
+        JFrame frame = frameView.getView();
+        TuvokMenu popup = new TuvokMenu( frameView );
         Image img = IconConstants.loader.getImage( IconConstants.CALENDAR_16 );
 
         SwingUtils.createTrayIcon( img, "Tuvok", frame, popup );
@@ -49,6 +36,9 @@ public class ToDLsMain implements IFrameApp
         return frame;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void finalizeGui()
     {

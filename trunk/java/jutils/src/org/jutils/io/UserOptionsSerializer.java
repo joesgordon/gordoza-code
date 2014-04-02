@@ -85,34 +85,43 @@ public class UserOptionsSerializer<T>
 
         options = null;
 
-        try
+        if( file.isFile() )
         {
-            options = getDefault();
+            try
+            {
+                options = getDefault();
 
-            obj = XStreamUtils.readObjectXStream( file );
+                obj = XStreamUtils.readObjectXStream( file );
+            }
+            catch( FileNotFoundException ex )
+            {
+                options = getDefault();
+                write();
+                LogUtils.printWarning( " User options file does not exist: " +
+                    file.getAbsolutePath() );
+            }
+            catch( IOException ex )
+            {
+                options = getDefault();
+                write();
+                ex.printStackTrace();
+            }
+            catch( XStreamException ex )
+            {
+                file.renameTo( new File(
+                    file.getAbsoluteFile().getParentFile(), file.getName() +
+                        ".broken" ) );
+                options = getDefault();
+                write();
+                LogUtils.printWarning( "User options file is out of date: " +
+                    file.getAbsolutePath() );
+                LogUtils.printWarning( "because: " + ex.getMessage() );
+            }
         }
-        catch( FileNotFoundException ex )
+        else
         {
-            options = getDefault();
-            write();
-            LogUtils.printWarning( " User options file does not exist: " +
+            LogUtils.printWarning( "File does not exist and will be created: " +
                 file.getAbsolutePath() );
-        }
-        catch( IOException ex )
-        {
-            options = getDefault();
-            write();
-            ex.printStackTrace();
-        }
-        catch( XStreamException ex )
-        {
-            file.renameTo( new File( file.getAbsoluteFile().getParentFile(),
-                file.getName() + ".broken" ) );
-            options = getDefault();
-            write();
-            LogUtils.printWarning( "User options file is out of date: " +
-                file.getAbsolutePath() );
-            LogUtils.printWarning( "because: " + ex.getMessage() );
         }
 
         if( obj != null )

@@ -11,7 +11,7 @@ import org.jutils.ui.app.IFrameApp;
 public class FileSpyApp implements ILibraryApp
 {
     @Override
-    public Icon getIcon()
+    public Icon getIcon32()
     {
         return IconConstants.loader.getIcon( IconConstants.PAGEMAG_32 );
     }

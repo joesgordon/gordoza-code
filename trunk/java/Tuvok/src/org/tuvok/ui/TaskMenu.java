@@ -1,4 +1,4 @@
-package org.tuvok;
+package org.tuvok.ui;
 
 import java.awt.Menu;
 import java.awt.MenuItem;

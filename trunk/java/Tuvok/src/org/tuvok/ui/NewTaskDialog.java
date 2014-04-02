@@ -1,4 +1,4 @@
-package org.tuvok;
+package org.tuvok.ui;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;

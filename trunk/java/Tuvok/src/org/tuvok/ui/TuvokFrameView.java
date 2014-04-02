@@ -1,4 +1,4 @@
-package org.tuvok;
+package org.tuvok.ui;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -10,19 +10,28 @@ import javax.swing.filechooser.FileFilter;
 
 import org.jutils.IconConstants;
 import org.jutils.ui.*;
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  *
  ******************************************************************************/
-public class ToDLsFrame extends JFrame
+public class TuvokFrameView implements IView<JFrame>
 {
+    /**  */
+    private final StandardFrameView frameView;
+    /**  */
+    private final JFrame frame;
+
     /***************************************************************************
      *
      **************************************************************************/
-    public ToDLsFrame()
+    public TuvokFrameView()
     {
+        this.frameView = new StandardFrameView();
+        this.frame = new JFrame();
+
         JPanel contentPanel = new JPanel( new BorderLayout() );
-        ToDLsPanel mainPanel = new ToDLsPanel();
+        TuvokPanel mainPanel = new TuvokPanel();
 
         contentPanel.add( createToolBar(), java.awt.BorderLayout.NORTH );
         contentPanel.add( mainPanel, java.awt.BorderLayout.CENTER );
@@ -32,12 +41,13 @@ public class ToDLsFrame extends JFrame
         // ---------------------------------------------------------------------
         // Add content
         // ---------------------------------------------------------------------
-        setTitle( "Tuvok" );
+        frame.setTitle( "Tuvok" );
 
-        setJMenuBar( createMenuBar() );
-        setContentPane( contentPanel );
+        createMenuBar( frameView.getMenuBar() );
 
-        setIconImages( IconConstants.loader.getImages(
+        frameView.setContent( contentPanel );
+
+        frame.setIconImages( IconConstants.loader.getImages(
             IconConstants.CALENDAR_16, IconConstants.CALENDAR_32 ) );
     }
 
@@ -87,49 +97,40 @@ public class ToDLsFrame extends JFrame
     }
 
     /***************************************************************************
+     * @param jMenuBar
      * @return
      **************************************************************************/
-    private JMenuBar createMenuBar()
+    private void createMenuBar( JMenuBar menuBar )
     {
-        JMenuBar mainMenuBar = new JGoodiesMenuBar();
+        createFileMenu( frameView.getFileMenu() );
 
-        mainMenuBar.add( createFileMenu() );
-        mainMenuBar.add( createViewMenu() );
-        mainMenuBar.add( createToolsMenu() );
-        mainMenuBar.add( createHelpMenu() );
-
-        return mainMenuBar;
+        menuBar.add( createViewMenu() );
+        menuBar.add( createToolsMenu() );
+        menuBar.add( createHelpMenu() );
     }
 
     /***************************************************************************
+     * @param jMenu
      * @return
      **************************************************************************/
-    private JMenu createFileMenu()
+    private void createFileMenu( JMenu fileMenu )
     {
-        JMenu fileMenu = new JMenu( "File" );
-
         JMenuItem newMenuItem = new JMenuItem( "New" );
         newMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
         newMenuItem.addActionListener( new NewListener() );
 
         JMenuItem openMenuItem = new JMenuItem( "Open" );
         openMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
-        openMenuItem.addActionListener( new OpenListener() );
+        openMenuItem.addActionListener( new OpenListener( this ) );
 
         JMenuItem saveMenuItem = new JMenuItem( "Save" );
         saveMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
-        saveMenuItem.addActionListener( new SaveListener() );
+        saveMenuItem.addActionListener( new SaveListener( this ) );
 
-        JMenuItem exitMenuItem = new JMenuItem( "Exit" );
-        exitMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
-        exitMenuItem.addActionListener( new ExitListener( this ) );
-
-        fileMenu.add( newMenuItem );
-        fileMenu.add( openMenuItem );
-        fileMenu.add( saveMenuItem );
-        fileMenu.add( exitMenuItem );
-
-        return fileMenu;
+        fileMenu.add( newMenuItem, 0 );
+        fileMenu.add( openMenuItem, 1 );
+        fileMenu.add( saveMenuItem, 2 );
+        fileMenu.add( new JSeparator(), 3 );
     }
 
     /***************************************************************************
@@ -174,33 +175,56 @@ public class ToDLsFrame extends JFrame
     /***************************************************************************
      * 
      **************************************************************************/
-    private class SaveListener implements ActionListener
+    @Override
+    public JFrame getView()
     {
+        return frameView.getView();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class SaveListener implements ActionListener
+    {
+        private final TuvokFrameView view;
+
+        public SaveListener( TuvokFrameView view )
+        {
+            this.view = view;
+        }
+
         public void actionPerformed( ActionEvent e )
         {
             JFileChooser jfc = new JFileChooser();
             jfc.setFileFilter( new TdlFileFilter() );
-            jfc.showSaveDialog( ToDLsFrame.this );
+            jfc.showSaveDialog( view.frame );
         }
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private class OpenListener implements ActionListener
+    private static class OpenListener implements ActionListener
     {
+        private final TuvokFrameView view;
+
+        public OpenListener( TuvokFrameView view )
+        {
+            this.view = view;
+        }
+
         public void actionPerformed( ActionEvent e )
         {
             JFileChooser jfc = new JFileChooser();
             jfc.setFileFilter( new TdlFileFilter() );
-            jfc.showOpenDialog( ToDLsFrame.this );
+            jfc.showOpenDialog( view.frame );
         }
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private class NewListener implements ActionListener
+    private static class NewListener implements ActionListener
     {
         public void actionPerformed( ActionEvent e )
         {
@@ -210,7 +234,7 @@ public class ToDLsFrame extends JFrame
     /***************************************************************************
      * 
      **************************************************************************/
-    private class TdlFileFilter extends FileFilter
+    private static class TdlFileFilter extends FileFilter
     {
         @Override
         public boolean accept( File f )

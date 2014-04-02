@@ -10,7 +10,7 @@ import org.jutils.ui.app.IFrameApp;
 public class DuakApp implements ILibraryApp
 {
     @Override
-    public Icon getIcon()
+    public Icon getIcon32()
     {
         return IconConstants.loader.getIcon( IconConstants.ATOMIC_32 );
     }
