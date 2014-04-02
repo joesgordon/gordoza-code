@@ -30,6 +30,7 @@ public enum ChatMessageType
      * @return
      **************************************************************************/
     public static ChatMessageType fromShort( short type )
+        throws IllegalArgumentException
     {
         switch( type )
         {
@@ -41,6 +42,6 @@ public enum ChatMessageType
                 return UserLeft;
         }
 
-        throw new RuntimeException( "Unknown message type: " + type );
+        throw new IllegalArgumentException( "Unknown message type: " + type );
     }
 }

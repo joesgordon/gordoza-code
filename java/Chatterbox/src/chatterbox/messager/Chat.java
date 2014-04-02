@@ -229,13 +229,17 @@ public class Chat extends AbstractChat
      **************************************************************************/
     public void sendMessage( UserAvailableMessage message ) throws IOException
     {
-        ByteArrayStream stream = new ByteArrayStream( 1024 );
+        ByteArrayStream stream = new ByteArrayStream( 1 );
         DataStream out = new DataStream( stream );
 
+        // ---------------------------------------------------------------------
         // Get the message bytes.
+        // ---------------------------------------------------------------------
         userAvailableMessageSerializer.write( message, out );
 
-        sendBytes( ChatMessageType.UserAvailable, stream.toByteArray() );
+        byte[] array = stream.toByteArray();
+
+        sendBytes( ChatMessageType.UserAvailable, array );
         stream.close();
     }
 
