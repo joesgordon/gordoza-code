@@ -4,30 +4,30 @@ import java.awt.Component;
 
 import javax.swing.Icon;
 
-import org.eglsht.EagleSheetApp;
-import org.eglsht.EagleSheetIcons;
+import org.jutils.IconConstants;
 import org.jutils.appgallery.ILibraryApp;
-import org.jutils.ui.app.IFrameApp;
+import org.tuvok.TuvokApp;
 
-public class SheetApp implements ILibraryApp
+public class TuvokLibApp implements ILibraryApp
 {
     @Override
     public Icon getIcon32()
     {
-        return EagleSheetIcons.getApp32();
+        return IconConstants.loader.getIcon( IconConstants.CALENDAR_32 );
     }
 
     @Override
     public String getName()
     {
-        return "EagleSheet";
+        return "Tuvok";
     }
 
     @Override
     public Component createApp()
     {
-        IFrameApp app = new EagleSheetApp();
+        TuvokApp app = new TuvokApp();
 
         return app.createFrame();
     }
+
 }

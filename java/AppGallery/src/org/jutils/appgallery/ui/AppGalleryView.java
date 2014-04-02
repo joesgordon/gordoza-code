@@ -94,7 +94,6 @@ public class AppGalleryView implements IComponentView
      **************************************************************************/
     private static class AppRenderer extends DefaultListCellRenderer
     {
-
         public Component getListCellRendererComponent( JList<?> list,
             Object value, int index, boolean isSelected, boolean cellHasFocus )
         {
@@ -104,7 +103,7 @@ public class AppGalleryView implements IComponentView
             if( value != null )
             {
                 ILibraryApp app = ( ILibraryApp )value;
-                setIcon( app.getIcon() );
+                setIcon( app.getIcon32() );
                 setText( app.getName() );
             }
 

@@ -1,4 +1,4 @@
-package org.tuvok;
+package org.tuvok.ui;
 
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
@@ -10,7 +10,7 @@ import org.jutils.ui.ExitListener;
 /*******************************************************************************
  *
  ******************************************************************************/
-public class ToDLsMenu extends PopupMenu
+public class TuvokMenu extends PopupMenu
 {
     /**  */
     private MenuItem openMenuItem = new MenuItem();
@@ -20,12 +20,12 @@ public class ToDLsMenu extends PopupMenu
     private MenuItem exitMenuItem = new MenuItem();
 
     /**  */
-    private ToDLsFrame frame = null;
+    private TuvokFrameView frame = null;
 
     /***************************************************************************
      * @param frame ToDLsFrame
      **************************************************************************/
-    public ToDLsMenu( ToDLsFrame frame )
+    public TuvokMenu( TuvokFrameView frame )
     {
         this.frame = frame;
 
@@ -35,7 +35,7 @@ public class ToDLsMenu extends PopupMenu
         loadTaskMenuItem.setLabel( "Load Task" );
 
         exitMenuItem.setLabel( "Quit" );
-        exitMenuItem.addActionListener( new ExitListener( frame ) );
+        exitMenuItem.addActionListener( new ExitListener( frame.getView() ) );
 
         this.add( openMenuItem );
         this.add( loadTaskMenuItem );
@@ -54,7 +54,7 @@ public class ToDLsMenu extends PopupMenu
     {
         public void actionPerformed( ActionEvent e )
         {
-            frame.setVisible( true );
+            frame.getView().setVisible( true );
         }
     }
 }

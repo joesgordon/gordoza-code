@@ -17,7 +17,7 @@ import org.jutils.ui.app.IFrameApp;
 public class BudgeyApp implements ILibraryApp
 {
     @Override
-    public Icon getIcon()
+    public Icon getIcon32()
     {
         return BudgeyIconConstants.getWallet32Icon();
     }
