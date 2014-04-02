@@ -14,15 +14,6 @@ public class ChatHeader
      * @param messageType
      * @param messageLength
      **************************************************************************/
-    public ChatHeader( short messageType, int messageLength )
-    {
-        this( ChatMessageType.fromShort( messageType ), messageLength );
-    }
-
-    /***************************************************************************
-     * @param messageType
-     * @param messageLength
-     **************************************************************************/
     public ChatHeader( ChatMessageType messageType, int messageLength )
     {
         this.messageType = messageType;

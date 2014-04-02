@@ -8,6 +8,8 @@ import org.jutils.io.IDataStream;
 
 public class StringSerializer implements IDataSerializer<String>
 {
+    private static final Charset ASCII_CHARSET = Charset.forName( "US-ASCII" );
+
     public StringSerializer()
     {
         ;
@@ -21,13 +23,13 @@ public class StringSerializer implements IDataSerializer<String>
 
         stream.readFully( bytes );
 
-        return new String( bytes );
+        return new String( bytes, ASCII_CHARSET );
     }
 
     @Override
     public void write( String string, IDataStream stream ) throws IOException
     {
         stream.writeInt( string.length() );
-        stream.write( string.getBytes( Charset.forName( "US-ASCII" ) ) );
+        stream.write( string.getBytes( ASCII_CHARSET ), 0, string.length() );
     }
 }

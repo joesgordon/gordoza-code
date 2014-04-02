@@ -180,16 +180,16 @@ public class ByteArrayStream implements IStream
             throw new EOFException( "Tried to read past end of stream" );
         }
 
-        int bytesToRead = ( int )getAvailableByteCount();
+        int bytesRead = len;
 
-        if( len < bytesToRead )
+        if( bytesRead < len )
         {
-            bytesToRead = len;
+            bytesRead = ( int )getAvailableByteCount();
         }
 
         try
         {
-            System.arraycopy( buffer, position, buf, off, bytesToRead );
+            System.arraycopy( buffer, position, buf, off, bytesRead );
         }
         catch( ArrayIndexOutOfBoundsException ex )
         {
@@ -199,7 +199,9 @@ public class ByteArrayStream implements IStream
                 buf.length + " items starting at index " + off, ex );
         }
 
-        return bytesToRead;
+        position += bytesRead;
+
+        return bytesRead;
     }
 
     /***************************************************************************
@@ -225,6 +227,8 @@ public class ByteArrayStream implements IStream
         }
 
         System.arraycopy( buffer, position, buf, off, len );
+
+        position += len;
     }
 
     /***************************************************************************

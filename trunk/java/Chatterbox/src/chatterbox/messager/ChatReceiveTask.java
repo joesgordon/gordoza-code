@@ -75,8 +75,11 @@ public class ChatReceiveTask implements IStoppableTask
                 }
                 catch( IOException ex )
                 {
-                    // TODO log this exception
-                    ex.printStackTrace();
+                    LogUtils.printError( "I/O error: " + ex.getMessage() );
+                }
+                catch( RuntimeFormatException ex )
+                {
+                    LogUtils.printWarning( ex.getMessage() );
                 }
             }
             catch( SocketTimeoutException ex )
@@ -98,7 +101,8 @@ public class ChatReceiveTask implements IStoppableTask
      * @param stream
      * @throws IOException
      **************************************************************************/
-    private void parseMessage( IStream stream ) throws IOException
+    private void parseMessage( IStream stream ) throws IOException,
+        RuntimeFormatException
     {
         DataStream inStream = new DataStream( stream );
         ChatHeader header = headerSerializer.read( inStream );
