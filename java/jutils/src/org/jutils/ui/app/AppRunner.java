@@ -39,6 +39,7 @@ public class AppRunner implements Runnable
             {
                 UIManager.put( "TabbedPaneUI",
                     BasicTabbedPaneUI.class.getCanonicalName() );
+
                 PlasticLookAndFeel.setPlasticTheme( new DesertBluer() );
                 Options.setSelectOnFocusGainEnabled( true );
 

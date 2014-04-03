@@ -1,6 +1,8 @@
 package org.jutils.ui.sheet;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -34,6 +36,9 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
     /**  */
     private final JLabel cornerLabel;
 
+    /**  */
+    private JPopupMenu popup;
+
     /***************************************************************************
      * 
      **************************************************************************/
@@ -47,6 +52,8 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
         this.cornerLabel = new JLabel();
         this.view = new JPanel( new BorderLayout() );
 
+        this.popup = null;
+
         RowHeaderRenderer rhr = new RowHeaderRenderer( table );
 
         rowHeader.setSelectionMode( ListSelectionModel.SINGLE_INTERVAL_SELECTION );
@@ -56,8 +63,11 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
         rowHeader.setBackground( ( Color )UIManager.get( PropConstants.UI_PANEL_COLOR ) );
         rowHeader.setFixedCellWidth( 50 );
 
+        table.addMouseListener( new TableMouseListener( this ) );
+        table.setColumnSelectionAllowed( false );
+        table.setRowSelectionAllowed( false );
+        table.setCellSelectionEnabled( true );
         table.setSelectionMode( ListSelectionModel.SINGLE_INTERVAL_SELECTION );
-        table.setColumnSelectionAllowed( true );
         table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
 
         // scrollpane.getViewport().setBackground(table.getBackground());
@@ -91,6 +101,19 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
     public void setRenderer( TableCellRenderer renderer )
     {
         table.setDefaultRenderer( Object.class, renderer );
+    }
+
+    public void setPopup( JPopupMenu popup )
+    {
+        this.popup = popup;
+    }
+
+    public int getSelectedIndex()
+    {
+        int index = table.getColumnCount() * table.getSelectedRow() +
+            table.getSelectedColumn();
+
+        return index;
     }
 
     /***************************************************************************
@@ -325,6 +348,60 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
         public boolean isEditable( int row, int col )
         {
             return false;
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class TableMouseListener extends MouseAdapter
+    {
+        private SpreadSheetView view;
+
+        public TableMouseListener( SpreadSheetView view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void mousePressed( MouseEvent e )
+        {
+            if( e.isPopupTrigger() )
+            {
+                selectCellAt( e.getPoint() );
+            }
+        }
+
+        @Override
+        public void mouseReleased( MouseEvent e )
+        {
+            if( e.isPopupTrigger() )
+            {
+                selectCellAt( e.getPoint() );
+            }
+        }
+
+        private void selectCellAt( Point p )
+        {
+            int col = view.table.columnAtPoint( p );
+            int row = view.table.rowAtPoint( p );
+
+            if( row > -1 && col > -1 )
+            {
+                view.table.setRowSelectionInterval( row, row );
+                view.table.setColumnSelectionInterval( col, col );
+                view.model.fireTableCellUpdated( row, col );
+
+                if( view.popup != null )
+                {
+                    view.popup.show( view.table, ( int )p.getX(),
+                        ( int )p.getY() );
+                }
+            }
+            else
+            {
+                view.table.clearSelection();
+            }
         }
     }
 }

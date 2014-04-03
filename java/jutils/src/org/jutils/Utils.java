@@ -2,6 +2,7 @@ package org.jutils;
 
 import java.awt.*;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -374,5 +375,15 @@ public final class Utils
     {
         table.scrollRectToVisible( new Rectangle( table.getCellRect( row, col,
             true ) ) );
+    }
+
+    public static BufferedImage createTransparentImage( int width, int height )
+    {
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        GraphicsConfiguration gc = gd.getDefaultConfiguration();
+
+        return gc.createCompatibleImage( width, height,
+            Transparency.TRANSLUCENT );
     }
 }
