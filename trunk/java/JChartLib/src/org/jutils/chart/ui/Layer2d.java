@@ -3,6 +3,8 @@ package org.jutils.chart.ui;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+import org.jutils.Utils;
+
 /*******************************************************************************
  * 
  ******************************************************************************/
@@ -22,8 +24,7 @@ public class Layer2d
 
     private void createImage( int width, int height )
     {
-        img = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(
-            width, height, Transparency.TRANSLUCENT );
+        img = Utils.createTransparentImage( width, height );
 
         graphics = img.createGraphics();
 
