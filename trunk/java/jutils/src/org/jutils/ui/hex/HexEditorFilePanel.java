@@ -331,9 +331,11 @@ public class HexEditorFilePanel implements IView<JPanel>
         @Override
         public void actionPerformed( ItemActionEvent<Long> event )
         {
+            long pos = ( event.getItem() / view.maxBufferSize ) *
+                view.maxBufferSize;
             try
             {
-                view.setStartOffset( event.getItem() );
+                view.setStartOffset( pos );
             }
             catch( IOException ex )
             {

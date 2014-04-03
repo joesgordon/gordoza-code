@@ -157,6 +157,16 @@ public class PositionIndicator extends JComponent
     {
         int xCnt = getWidth() - 2;
         int xIdx = x - 1;
+
+        if( xIdx < 0 )
+        {
+            xIdx = 0;
+        }
+        else if( xIdx >= xCnt )
+        {
+            xIdx = xCnt - 1;
+        }
+
         double xpc = xIdx / ( double )( xCnt );
 
         int posCnt = getWidth() - 1 - thumbRect.width;
@@ -167,8 +177,8 @@ public class PositionIndicator extends JComponent
         int unitIdx = ( int )( posPc * unitCount );
         long position = ( long )( unitIdx * unitLength );
 
-        position = Math.max( position, 0 );
-        position = Math.min( position, length - 1 );
+        // position = Math.max( position, 0 );
+        // position = Math.min( position, length - 1 );
 
         // LogUtils.printDebug( String.format(
         // "%d %d %d: [%d:%d] {%d:%d => %f}, {%d:%d => %f}, {%d:%d => %d}",
