@@ -7,6 +7,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import org.jutils.ui.*;
+import org.jutils.ui.event.ItemActionEvent;
+import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
 import org.jutils.ui.model.IView;
 
@@ -96,6 +98,7 @@ public class HexEditorFilePanel implements IView<JPanel>
         progressBar.setLength( 100 );
         progressBar.setOffset( 0 );
         progressBar.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
+        progressBar.addPositionListener( new PositionChanged( this ) );
 
         // editor.setAlternateRowBG( true );
         // editor.setShowGrid( true );
@@ -124,7 +127,7 @@ public class HexEditorFilePanel implements IView<JPanel>
     private void loadBuffer() throws IOException
     {
         int bufLen = ( int )Math.min( maxBufferSize, fileLength - startOffset );
-        byte[] buffer = new byte[bufLen];
+        byte [] buffer = new byte[bufLen];
         long nextOffset = startOffset + bufLen;
 
         // LogUtils.printDebug( "Loading buffer @ " + startOffset + " , " +
@@ -295,7 +298,7 @@ public class HexEditorFilePanel implements IView<JPanel>
 
         FileOutputStream fileStream = new FileOutputStream( file );
 
-        byte[] buffer = hexView.getBuffer().getBytes();
+        byte [] buffer = hexView.getBuffer().getBytes();
         fileStream.write( buffer );
         fileStream.close();
 
@@ -314,5 +317,29 @@ public class HexEditorFilePanel implements IView<JPanel>
     public JPanel getNonTitleView()
     {
         return titleContent;
+    }
+
+    private static class PositionChanged implements ItemActionListener<Long>
+    {
+        private final HexEditorFilePanel view;
+
+        public PositionChanged( HexEditorFilePanel view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ItemActionEvent<Long> event )
+        {
+            try
+            {
+                view.setStartOffset( event.getItem() );
+            }
+            catch( IOException ex )
+            {
+                JOptionPane.showMessageDialog( view.view, ex.getMessage(),
+                    "ERROR", JOptionPane.ERROR_MESSAGE );
+            }
+        }
     }
 }
