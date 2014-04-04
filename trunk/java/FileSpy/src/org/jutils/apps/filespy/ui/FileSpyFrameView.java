@@ -154,6 +154,11 @@ public class FileSpyFrameView implements IView<JFrame>
 
         JMenuItem menuItem;
 
+        menuItem = new JMenuItem( "JG Windows" );
+        menuItem.addActionListener( new SetLafListener(
+            Options.JGOODIES_WINDOWS_NAME ) );
+        viewMenu.add( menuItem );
+
         menuItem = new JMenuItem( "Plastic" );
         menuItem.addActionListener( new SetLafListener( Options.PLASTIC_NAME ) );
         viewMenu.add( menuItem );
