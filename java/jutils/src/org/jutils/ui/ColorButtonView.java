@@ -17,6 +17,8 @@ public class ColorButtonView implements IDataView<Color>
 {
     /**  */
     private final JButton button;
+    /**  */
+    private final ColorIcon icon;
 
     /***************************************************************************
      * 
@@ -31,7 +33,8 @@ public class ColorButtonView implements IDataView<Color>
      **************************************************************************/
     public ColorButtonView( Color c )
     {
-        button = new JButton( " " );
+        icon = new ColorIcon( c, 32 );
+        button = new JButton( icon );
 
         Dimension dim = button.getPreferredSize();
         dim.width = dim.height;
@@ -39,9 +42,9 @@ public class ColorButtonView implements IDataView<Color>
         button.setMinimumSize( dim );
         button.setMaximumSize( dim );
 
-        button.setBackground( c );
-
         button.addActionListener( new ColorButtonListener( button ) );
+
+        setData( c );
     }
 
     /***************************************************************************
@@ -59,16 +62,17 @@ public class ColorButtonView implements IDataView<Color>
     @Override
     public Color getData()
     {
-        return button.getBackground();
+        return icon.getColor();
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void setData( Color data )
+    public void setData( Color color )
     {
-        button.setBackground( data );
+        icon.setColor( color );
+        button.setText( color.toString() );
     }
 
     /***************************************************************************
