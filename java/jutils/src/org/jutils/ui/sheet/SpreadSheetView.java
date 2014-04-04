@@ -6,7 +6,6 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 
 import org.jutils.PropConstants;
@@ -98,14 +97,19 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
         ResizingTable.resizeTable( table );
     }
 
+    public void setPopup( JPopupMenu popup )
+    {
+        this.popup = popup;
+    }
+
     public void setRenderer( TableCellRenderer renderer )
     {
         table.setDefaultRenderer( Object.class, renderer );
     }
 
-    public void setPopup( JPopupMenu popup )
+    public void setTransferHandler( TransferHandler handler )
     {
-        this.popup = popup;
+        table.setTransferHandler( handler );
     }
 
     public int getSelectedIndex()
@@ -147,29 +151,6 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
     }
 
     /***************************************************************************
-     * @param col
-     * @return
-     **************************************************************************/
-    private static String generateDefautColumnName( int col )
-    {
-        String name = "";
-        int val;
-        char c;
-
-        do
-        {
-            val = col % 26;
-            c = ( char )( ( int )'A' + val );
-            name = c + name;
-
-            col /= 26;
-            col--;
-        } while( col > -1 );
-
-        return name;
-    }
-
-    /***************************************************************************
      * 
      **************************************************************************/
     private void refreshRowHeader()
@@ -180,74 +161,6 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
 
         rowHeader.setFixedCellWidth( len );
         rowHeader.repaint();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class SheetModel extends AbstractTableModel
-    {
-        private ISpreadSheet sheet;
-
-        public SheetModel()
-        {
-            sheet = new NullSheet();
-        }
-
-        public void setData( ISpreadSheet file )
-        {
-            this.sheet = file;
-
-            super.fireTableStructureChanged();
-        }
-
-        public ISpreadSheet getData()
-        {
-            return sheet;
-        }
-
-        @Override
-        public boolean isCellEditable( int row, int col )
-        {
-            return sheet.isEditable( row, col );
-        }
-
-        @Override
-        public String getColumnName( int col )
-        {
-            String name = sheet.getColumnHeader( col );
-
-            if( name == null )
-            {
-                name = generateDefautColumnName( col );
-            }
-
-            return name;
-        }
-
-        @Override
-        public Object getValueAt( int row, int col )
-        {
-            return sheet.getValueAt( row, col );
-        }
-
-        @Override
-        public void setValueAt( Object value, int row, int col )
-        {
-            sheet.setValueAt( value.toString(), row, col );
-        }
-
-        @Override
-        public int getRowCount()
-        {
-            return sheet.getRowCount();
-        }
-
-        @Override
-        public int getColumnCount()
-        {
-            return sheet.getColumnCount();
-        }
     }
 
     /***************************************************************************
@@ -294,60 +207,6 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
         public String getElementAt( int index )
         {
             return view.model.getData().getRowHeader( index );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class NullSheet implements ISpreadSheet
-    {
-        @Override
-        public int getColumnCount()
-        {
-            return 0;
-        }
-
-        @Override
-        public int getRowCount()
-        {
-            return 0;
-        }
-
-        @Override
-        public Object getValueAt( int row, int col )
-        {
-            return null;
-        }
-
-        @Override
-        public String getColumnHeader( int col )
-        {
-            return null;
-        }
-
-        @Override
-        public String getRowHeader( int row )
-        {
-            return null;
-        }
-
-        @Override
-        public void setValueAt( Object string, int row, int col )
-        {
-            ;
-        }
-
-        @Override
-        public String getCornerName()
-        {
-            return null;
-        }
-
-        @Override
-        public boolean isEditable( int row, int col )
-        {
-            return false;
         }
     }
 
