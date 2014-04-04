@@ -38,6 +38,11 @@ public class ColorIcon implements Icon
         this.color = color;
     }
 
+    public Color getColor()
+    {
+        return this.color;
+    }
+
     public void setIconHeight( int height )
     {
         this.height = height;
@@ -60,7 +65,16 @@ public class ColorIcon implements Icon
 
     public void paintIcon( Component c, Graphics g, int x, int y )
     {
+        Graphics2D g2 = ( Graphics2D )g;
+
+        Object aaHint = g2.getRenderingHint( RenderingHints.KEY_ANTIALIASING );
+
+        g2.setRenderingHint( RenderingHints.KEY_ANTIALIASING,
+            RenderingHints.VALUE_ANTIALIAS_ON );
+
         g.setColor( color );
         g.fill3DRect( x, y, getIconWidth(), getIconHeight(), true );
+
+        g2.setRenderingHint( RenderingHints.KEY_ANTIALIASING, aaHint );
     }
 }
