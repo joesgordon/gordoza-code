@@ -73,6 +73,8 @@ public class StandardFrameView implements IView<JFrame>
     {
         JMenuBar menubar = new JGoodiesMenuBar();
 
+        fileMenu.setMnemonic( 'F' );
+
         menubar.add( fileMenu );
 
         fileMenu.add( ExitListener.createStandardExitAction( frame ) );

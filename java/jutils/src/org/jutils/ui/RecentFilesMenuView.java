@@ -64,6 +64,7 @@ public class RecentFilesMenuView implements IDataView<List<File>>
             File file = files.get( i );
             item = new JMenuItem( ( i + 1 ) + " " + file.getName() );
             item.addActionListener( new ItemSelected( this, file ) );
+            item.setMnemonic( item.getText().charAt( 0 ) );
             menu.add( item );
         }
     }
