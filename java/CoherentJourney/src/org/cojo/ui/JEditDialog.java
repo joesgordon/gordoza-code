@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import com.jgoodies.forms.builder.ButtonBarBuilder2;
+import com.jgoodies.forms.builder.ButtonBarBuilder;
 
 public class JEditDialog extends JDialog
 {
@@ -59,7 +59,7 @@ public class JEditDialog extends JDialog
 
     private JPanel createButtonPanel()
     {
-        ButtonBarBuilder2 bbb = new ButtonBarBuilder2();
+        ButtonBarBuilder bbb = new ButtonBarBuilder();
 
         JButton okButton = new JButton( "Ok" );
         JButton cancelButton = new JButton( "Cancel" );
