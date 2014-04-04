@@ -42,8 +42,14 @@ public class ExitListener implements ActionListener
      **************************************************************************/
     public static Action createStandardExitAction( Window win )
     {
-        return new ActionAdapter( new ExitListener( win ), "Exit",
+        Action action;
+
+        action = new ActionAdapter( new ExitListener( win ), "Exit",
             IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
+
+        action.putValue( Action.MNEMONIC_KEY, ( int )'x' );
+
+        return action;
     }
 
     /***************************************************************************

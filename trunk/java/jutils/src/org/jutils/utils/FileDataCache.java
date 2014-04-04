@@ -174,8 +174,7 @@ public class FileDataCache<T> implements Iterable<CacheItem<T>>
         @Override
         public int hashCode()
         {
-            throw new IllegalStateException(
-                "Hashcode is not supported for this object." );
+            return path.hashCode();
         }
 
         /***********************************************************************
@@ -208,7 +207,7 @@ public class FileDataCache<T> implements Iterable<CacheItem<T>>
          **********************************************************************/
         public boolean equals( CacheItem<?> item )
         {
-            return fileLength == item.fileLength && path.equals( item.path );
+            return path.equals( item.path );
         }
     }
 
