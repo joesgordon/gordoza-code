@@ -12,6 +12,9 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.plaf.ColorUIResource;
 
+import org.jutils.ui.event.ItemActionEvent;
+import org.jutils.ui.event.ItemActionListener;
+
 /*******************************************************************************
  * 
  ******************************************************************************/
@@ -342,69 +345,38 @@ public class PropEditPanel
         public JComponent createWidget( Map<Object, Object> props, Object key,
             Color c )
         {
-            ColorButton button = new ColorButton();
+            ColorButtonView button = new ColorButtonView();
 
-            button.setColor( c );
+            button.setData( c );
 
-            button.addActionListener( new ButtonListener( button, c, props, key ) );
+            button.addUpdateListener( new ButtonListener( button, props, key ) );
 
-            return button;
+            return button.getView();
         }
 
-        private static class ColorButton extends JButton
+        private static class ButtonListener implements
+            ItemActionListener<Color>
         {
-            private Color color;
-
-            public void setColor( Color c )
-            {
-                color = c;
-
-                String desc = String.format( "0x%06X", c.getRGB() );
-
-                setText( desc );
-                setToolTipText( desc );
-                setBackground( c );
-            }
-
-            @Override
-            public void updateUI()
-            {
-                super.updateUI();
-                setBackground( color );
-            }
-        }
-
-        private static class ButtonListener implements ActionListener
-        {
-            private final ColorButton button;
+            private final ColorButtonView button;
             private final Map<Object, Object> props;
             private final Object key;
 
-            private Color color;
-
-            public ButtonListener( ColorButton button, Color color,
+            public ButtonListener( ColorButtonView button,
                 Map<Object, Object> props, Object key )
             {
                 this.button = button;
-                this.color = color;
                 this.props = props;
                 this.key = key;
             }
 
             @Override
-            public void actionPerformed( ActionEvent e )
+            public void actionPerformed( ItemActionEvent<Color> event )
             {
-                Color c = JColorChooser.showDialog( button, "Choose a color",
-                    color );
+                Color c = event.getItem();
 
-                if( c != null )
-                {
-                    this.color = c;
+                button.setData( c );
 
-                    button.setColor( c );
-
-                    props.put( key, c );
-                }
+                props.put( key, c );
             }
         }
     }

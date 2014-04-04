@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 
+import org.jutils.ui.event.ItemActionList;
+import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
@@ -19,6 +21,9 @@ public class ColorButtonView implements IDataView<Color>
     private final JButton button;
     /**  */
     private final ColorIcon icon;
+
+    /**  */
+    private final ItemActionList<Color> updateListeners;
 
     /***************************************************************************
      * 
@@ -33,8 +38,9 @@ public class ColorButtonView implements IDataView<Color>
      **************************************************************************/
     public ColorButtonView( Color c )
     {
-        icon = new ColorIcon( c, 32 );
-        button = new JButton( icon );
+        this.icon = new ColorIcon( c, 32 );
+        this.button = new JButton( icon );
+        this.updateListeners = new ItemActionList<>();
 
         Dimension dim = button.getPreferredSize();
         dim.width = dim.height;
@@ -42,9 +48,14 @@ public class ColorButtonView implements IDataView<Color>
         button.setMinimumSize( dim );
         button.setMaximumSize( dim );
 
-        button.addActionListener( new ColorButtonListener( button ) );
+        button.addActionListener( new ColorButtonListener( this ) );
 
         setData( c );
+    }
+
+    public void addUpdateListener( ItemActionListener<Color> l )
+    {
+        updateListeners.addListener( l );
     }
 
     /***************************************************************************
@@ -71,8 +82,10 @@ public class ColorButtonView implements IDataView<Color>
     @Override
     public void setData( Color color )
     {
+        String text = String.format( "%02X%02X%02X:%02X", color.getRed(),
+            color.getGreen(), color.getBlue(), color.getAlpha() );
         icon.setColor( color );
-        button.setText( color.toString() );
+        button.setText( text );
     }
 
     /***************************************************************************
@@ -80,20 +93,24 @@ public class ColorButtonView implements IDataView<Color>
      **************************************************************************/
     private class ColorButtonListener implements ActionListener
     {
-        private final JButton button;
+        private final ColorButtonView view;
 
-        public ColorButtonListener( JButton button )
+        public ColorButtonListener( ColorButtonView button )
         {
-            this.button = button;
+            this.view = button;
         }
 
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            Color c = JColorChooser.showDialog( button, "Choose new color",
-                button.getBackground() );
+            Color c = JColorChooser.showDialog( view.getView(),
+                "Choose new color", view.getData() );
 
-            button.setBackground( c );
+            if( c != null )
+            {
+                view.setData( c );
+                view.updateListeners.fireListeners( view, c );
+            }
         }
     }
 }

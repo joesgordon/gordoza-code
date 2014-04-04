@@ -7,17 +7,20 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import org.jutils.Utils;
 import org.jutils.ui.PropEditPanel;
 import org.jutils.ui.app.FrameApplication;
 import org.jutils.ui.app.IFrameApp;
 
 public class PropEditMain implements IFrameApp
 {
+    private PropEditPanel panel;
+
     @Override
     public JFrame createFrame()
     {
         JFrame frame = new JFrame();
-        PropEditPanel panel = new PropEditPanel();
+        panel = new PropEditPanel();
 
         UIDefaults defaults = UIManager.getDefaults();
 
@@ -38,8 +41,10 @@ public class PropEditMain implements IFrameApp
         JButton openButton = new JButton( "Show Open Dialog" );
 
         showButton.addActionListener( new ShowMsgListener() );
-        refreshButton.addActionListener( new RefreshUiListener() );
+        refreshButton.addActionListener( new RefreshUiListener( this ) );
         openButton.addActionListener( new OpenListener() );
+
+        Utils.setMaxComponentSize( showButton, refreshButton, openButton );
 
         panel.add( showButton );
         panel.add( openButton );
@@ -106,17 +111,33 @@ public class PropEditMain implements IFrameApp
 
     private static class RefreshUiListener implements ActionListener
     {
+        private final PropEditMain pem;
+
+        public RefreshUiListener( PropEditMain pem )
+        {
+            this.pem = pem;
+        }
+
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            JFrame frame = ( JFrame )SwingUtilities.getAncestorOfClass(
-                JFrame.class, ( Component )e.getSource() );
+            SwingUtilities.invokeLater( new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    JFrame frame = ( JFrame )SwingUtilities.getAncestorOfClass(
+                        JFrame.class, pem.panel.getView() );
 
-            SwingUtilities.updateComponentTreeUI( frame );
+                    SwingUtilities.updateComponentTreeUI( frame );
 
-            frame.invalidate();
-            frame.validate();
-            frame.repaint();
+                    frame.invalidate();
+                    frame.validate();
+                    frame.repaint();
+
+                    pem.panel.setProperties( UIManager.getDefaults() );
+                }
+            } );
         }
     }
 }
