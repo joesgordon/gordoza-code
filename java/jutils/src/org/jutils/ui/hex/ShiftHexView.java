@@ -4,7 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -77,7 +78,7 @@ public class ShiftHexView implements IView<JComponent>
         return toolbar;
     }
 
-    public void setData( byte[] bytes )
+    public void setData( byte [] bytes )
     {
         this.orig = new BitBuffer( bytes );
         this.buffer = new BitBuffer( Arrays.copyOf( bytes, bytes.length + 1 ) );
@@ -160,7 +161,7 @@ public class ShiftHexView implements IView<JComponent>
                 {
                     binaryString = binaryString.replace( " ", "" );
 
-                    bits = fromBinaryString( binaryString );
+                    bits = NumberParsingUtils.fromBinaryString( binaryString );
 
                     int start = view.hexPanel.getSelectedByte();
 
@@ -200,33 +201,6 @@ public class ShiftHexView implements IView<JComponent>
                         JOptionPane.ERROR_MESSAGE );
                 }
             }
-        }
-
-        private static List<Boolean> fromBinaryString( String str )
-        {
-            List<Boolean> bits = new ArrayList<>( str.length() );
-
-            for( int i = 0; i < str.length(); i++ )
-            {
-                switch( str.charAt( i ) )
-                {
-                    case '0':
-                        bits.add( false );
-                        break;
-
-                    case '1':
-                        bits.add( true );
-                        break;
-
-                    default:
-                        throw new NumberFormatException(
-                            "Non-binary character '" + str.charAt( i ) +
-                                "' found at index " + i + " in string " + str );
-                }
-                ;
-            }
-
-            return bits;
         }
     }
 }
