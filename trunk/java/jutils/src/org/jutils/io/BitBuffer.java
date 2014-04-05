@@ -91,11 +91,17 @@ public class BitBuffer
         return new BitPosition( position );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public int getByte()
     {
         return position.getByte();
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public int getBit()
     {
         return position.getBit();
@@ -156,11 +162,19 @@ public class BitBuffer
         return bits;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public int remainingBytes()
     {
         return buffer.length - position.getByte();
     }
 
+    /***************************************************************************
+     * @param bits
+     * @param start
+     * @return
+     **************************************************************************/
     public BitPosition find( List<Boolean> bits, int start )
     {
         BitPosition curPos = new BitPosition( position );

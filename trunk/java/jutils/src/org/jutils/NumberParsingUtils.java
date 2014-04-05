@@ -1,5 +1,8 @@
 package org.jutils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /*******************************************************************************
  * Static helper class for parsing numbers. This class exists because the java
  * standard library is, IMHO, broken. If you have a long (int, short, and byte
@@ -171,5 +174,33 @@ public final class NumberParsingUtils
 
         throw new NumberFormatException( "'" + c +
             "' is not a hexadecimal digit" );
+    }
+
+    public static List<Boolean> fromBinaryString( String str )
+        throws NumberFormatException
+    {
+        List<Boolean> bits = new ArrayList<>( str.length() );
+
+        for( int i = 0; i < str.length(); i++ )
+        {
+            switch( str.charAt( i ) )
+            {
+                case '0':
+                    bits.add( false );
+                    break;
+
+                case '1':
+                    bits.add( true );
+                    break;
+
+                default:
+                    throw new NumberFormatException( "Non-binary character '" +
+                        str.charAt( i ) + "' found at index " + i +
+                        " in string " + str );
+            }
+            ;
+        }
+
+        return bits;
     }
 }
