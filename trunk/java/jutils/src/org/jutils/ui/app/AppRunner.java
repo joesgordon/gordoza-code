@@ -1,5 +1,10 @@
 package org.jutils.ui.app;
 
+import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import javax.swing.JComponent;
 import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 
@@ -48,12 +53,43 @@ public class AppRunner implements Runnable
 
             UIManager.setLookAndFeel( lafName );
 
+            KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(
+                "focusOwner", new ScrollPaneFocusListener() );
+
             app.createAndShowUi();
         }
         catch( Throwable ex )
         {
             ex.printStackTrace();
             System.exit( 1 );
+        }
+    }
+
+    private static class ScrollPaneFocusListener implements
+        PropertyChangeListener
+    {
+        @Override
+        public void propertyChange( PropertyChangeEvent evt )
+        {
+            if( !( evt.getNewValue() instanceof JComponent ) )
+            {
+                return;
+            }
+
+            Object focusedObj = evt.getNewValue();
+
+            if( focusedObj instanceof Component )
+            {
+                Component focused = ( Component )focusedObj;
+                Container parent = focused.getParent();
+
+                if( parent instanceof JComponent )
+                {
+                    JComponent focusedParent = ( JComponent )parent;
+
+                    focusedParent.scrollRectToVisible( focused.getBounds() );
+                }
+            }
         }
     }
 }
