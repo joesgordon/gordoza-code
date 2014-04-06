@@ -194,7 +194,14 @@ public class PositionIndicator extends JComponent
      **************************************************************************/
     private int getUnitCount()
     {
-        return ( int )( ( length + unitLength - 1 ) / unitLength );
+        int count = 0;
+
+        if( unitLength != 0 )
+        {
+            count = ( int )( ( length + unitLength - 1 ) / unitLength );
+        }
+
+        return count;
     }
 
     /***************************************************************************
@@ -226,7 +233,7 @@ public class PositionIndicator extends JComponent
 
         if( unitLength > 0 )
         {
-            w = Math.max( w, 8 );
+            w = Math.max( w, 16 );
         }
 
         x = ( int )( unitIndex / ( double )unitCount * ( getWidth() - 2 ) ) + 1;
