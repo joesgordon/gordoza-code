@@ -306,4 +306,28 @@ public final class SwingUtils
             win.dispatchEvent( new WindowEvent( win, WindowEvent.WINDOW_CLOSING ) );
         }
     }
+
+    public static boolean showOkCancelDialog( Component parent, Object msg,
+        String title, String okText, final Runnable initialFocusSelector )
+    {
+        JDialog dialog;
+
+        JOptionPane pane = new JOptionPane( msg, JOptionPane.QUESTION_MESSAGE,
+            JOptionPane.OK_CANCEL_OPTION, null,
+            new String[] { okText, "Cancel" }, okText )
+        {
+            @Override
+            public void selectInitialValue()
+            {
+                initialFocusSelector.run();
+            }
+        };
+
+        dialog = pane.createDialog( parent, title );
+
+        dialog.setSize( 500, dialog.getHeight() );
+        dialog.setVisible( true );
+
+        return okText == pane.getValue();
+    }
 }
