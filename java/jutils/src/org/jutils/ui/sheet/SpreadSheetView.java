@@ -129,6 +129,11 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
         return view;
     }
 
+    public JTable getTable()
+    {
+        return table;
+    }
+
     /***************************************************************************
      * 
      **************************************************************************/

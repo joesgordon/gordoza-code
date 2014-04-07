@@ -181,6 +181,11 @@ public final class NumberParsingUtils
     {
         List<Boolean> bits = new ArrayList<>( str.length() );
 
+        if( str.isEmpty() )
+        {
+            throw new NumberFormatException( "The string is empty" );
+        }
+
         for( int i = 0; i < str.length(); i++ )
         {
             switch( str.charAt( i ) )
@@ -202,5 +207,17 @@ public final class NumberParsingUtils
         }
 
         return bits;
+    }
+
+    public static String toBinaryString( List<Boolean> bits )
+    {
+        StringBuilder builder = new StringBuilder( bits.size() );
+
+        for( Boolean bit : bits )
+        {
+            builder.append( bit ? "1" : 0 );
+        }
+
+        return builder.toString();
     }
 }
