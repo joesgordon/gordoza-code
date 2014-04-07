@@ -193,6 +193,7 @@ public final class SwingUtils
         button.setFocusable( false );
         button.setText( null );
         button.setToolTipText( action.getValue( Action.NAME ).toString() );
+        button.setMnemonic( -1 );
         toolbar.add( button );
     }
 

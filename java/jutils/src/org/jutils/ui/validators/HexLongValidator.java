@@ -7,19 +7,19 @@ import org.jutils.ui.validation.ValidationException;
  * A validator that ensures that the provided text represents a hexadecimal
  * integer.
  ******************************************************************************/
-public class HexIntegerValidator implements IDataValidator<Integer>
+public class HexLongValidator implements IDataValidator<Long>
 {
     /** The minimum bound, inclusive; not checked if {@code null}. */
-    private final Integer min;
+    private final Long min;
     /** The maximum bound, inclusive; not checked if {@code null}. */
-    private final Integer max;
+    private final Long max;
 
-    public HexIntegerValidator()
+    public HexLongValidator()
     {
         this( null, null );
     }
 
-    public HexIntegerValidator( Integer min, Integer max )
+    public HexLongValidator( Long min, Long max )
     {
         this.min = min;
         this.max = max;
@@ -29,24 +29,24 @@ public class HexIntegerValidator implements IDataValidator<Integer>
      * 
      **************************************************************************/
     @Override
-    public Integer validate( String text ) throws ValidationException
+    public Long validate( String text ) throws ValidationException
     {
         try
         {
-            int i = NumberParsingUtils.parseHexInteger( text );
+            long i = NumberParsingUtils.parseHexLong( text );
 
             if( min != null && i < min )
             {
                 throw new ValidationException( "Value less than minimum: " +
-                    Integer.toHexString( i ).toUpperCase() + " < " +
-                    Integer.toHexString( min ).toUpperCase() );
+                    Long.toHexString( i ).toUpperCase() + " < " +
+                    Long.toHexString( min ).toUpperCase() );
             }
 
             if( max != null && i > max )
             {
                 throw new ValidationException( "Value greater than maximum: " +
-                    Integer.toHexString( i ).toUpperCase() + " > " +
-                    Integer.toHexString( max ).toUpperCase() );
+                    Long.toHexString( i ).toUpperCase() + " > " +
+                    Long.toHexString( max ).toUpperCase() );
             }
 
             return i;
