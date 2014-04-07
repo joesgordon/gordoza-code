@@ -1,4 +1,4 @@
-package testbed;
+package testbed.propEdit;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -12,7 +12,7 @@ import org.jutils.ui.PropEditPanel;
 import org.jutils.ui.app.FrameApplication;
 import org.jutils.ui.app.IFrameApp;
 
-public class PropEditMain implements IFrameApp
+public class PropEditUiMain implements IFrameApp
 {
     private PropEditPanel panel;
 
@@ -85,7 +85,7 @@ public class PropEditMain implements IFrameApp
         // UIManager.put( "ToolBar.background", stadBg );
         // UIManager.put( "OptionPane.background", stadBg );
 
-        FrameApplication.invokeLater( new PropEditMain(), true );
+        FrameApplication.invokeLater( new PropEditUiMain(), true );
     }
 
     private static class ShowMsgListener implements ActionListener
@@ -111,9 +111,9 @@ public class PropEditMain implements IFrameApp
 
     private static class RefreshUiListener implements ActionListener
     {
-        private final PropEditMain pem;
+        private final PropEditUiMain pem;
 
-        public RefreshUiListener( PropEditMain pem )
+        public RefreshUiListener( PropEditUiMain pem )
         {
             this.pem = pem;
         }
