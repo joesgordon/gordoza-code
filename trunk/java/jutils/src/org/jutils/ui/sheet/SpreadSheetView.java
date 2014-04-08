@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableCellRenderer;
 
 import org.jutils.PropConstants;
+import org.jutils.Utils;
 import org.jutils.ui.ResizingTable;
 import org.jutils.ui.RowHeaderRenderer;
 import org.jutils.ui.model.IDataView;
@@ -114,10 +115,34 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
 
     public int getSelectedIndex()
     {
-        int index = table.getColumnCount() * table.getSelectedRow() +
-            table.getSelectedColumn();
+        int row = table.getSelectedRow();
+        int col = table.getSelectedColumn();
+        int index = -1;
+
+        if( row > -1 && col > -1 )
+        {
+            index = table.getColumnCount() * row + col;
+        }
 
         return index;
+    }
+
+    /***************************************************************************
+     * @param index0
+     * @param index1
+     **************************************************************************/
+    public void setSelected( int index0, int index1 )
+    {
+        int row0 = index0 / table.getColumnCount();
+        int col0 = index0 % table.getColumnCount();
+
+        int row1 = index1 / table.getColumnCount();
+        int col1 = index1 % table.getColumnCount();
+
+        table.setRowSelectionInterval( row0, row1 );
+        table.setColumnSelectionInterval( col0, col1 );
+
+        Utils.scrollToVisible( table, row0, col0 );
     }
 
     /***************************************************************************
