@@ -215,6 +215,14 @@ public final class ValidationTextField implements IValidationField
     }
 
     /***************************************************************************
+     * @return
+     **************************************************************************/
+    public String getText()
+    {
+        return textfield.getText();
+    }
+
+    /***************************************************************************
      * @param columns
      **************************************************************************/
     public void setColumns( int columns )

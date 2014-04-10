@@ -171,9 +171,11 @@ public class BitBuffer
     }
 
     /***************************************************************************
-     * @param bits
-     * @param start
-     * @return
+     * Finds the specified bits starting at the provided byte index.
+     * @param bits the bits to be found.
+     * @param start the beginning byte index to start looking.
+     * @return the bit position where the provided bits were found or null if
+     * not found.
      **************************************************************************/
     public BitPosition find( List<Boolean> bits, int start )
     {
