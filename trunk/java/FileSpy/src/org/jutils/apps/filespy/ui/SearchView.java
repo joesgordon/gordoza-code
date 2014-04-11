@@ -965,7 +965,7 @@ public class SearchView implements IDataView<SearchParams>
 
             paths = chooser.getSelectedPaths();
 
-            if( paths.length() > 0 )
+            if( paths != null && paths.length() > 0 )
             {
                 panel.searchInComboBox.setSelectedItem( paths );
             }
@@ -1031,14 +1031,14 @@ public class SearchView implements IDataView<SearchParams>
     private static class CheckBoxEnabler_actionAdapter implements
         ActionListener
     {
-        private JComponent[] components;
+        private JComponent [] components;
 
         public CheckBoxEnabler_actionAdapter( JComponent component )
         {
             this( new JComponent[] { component } );
         }
 
-        public CheckBoxEnabler_actionAdapter( JComponent[] components )
+        public CheckBoxEnabler_actionAdapter( JComponent [] components )
         {
             this.components = components;
         }
