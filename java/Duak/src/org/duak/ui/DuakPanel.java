@@ -183,8 +183,26 @@ public class DuakPanel extends JPanel
                 if( row > -1 )
                 {
                     row = table.convertRowIndexToModel( row );
-                    folderOpenedListeners.fireListeners( DuakPanel.this,
-                        tableModel.getRow( row ) );
+                    FileInfo fi = tableModel.getRow( row );
+                    File f = fi.getFile();
+
+                    if( f.isFile() )
+                    {
+                        try
+                        {
+                            Desktop.getDesktop().open( f );
+                        }
+                        catch( IOException ex )
+                        {
+                            ExceptionView.showExceptionDialog( table,
+                                "Cannot open file: " + f.getName(),
+                                "I/O Error", ex );
+                        }
+                    }
+                    else
+                    {
+                        folderOpenedListeners.fireListeners( DuakPanel.this, fi );
+                    }
                 }
             }
         }

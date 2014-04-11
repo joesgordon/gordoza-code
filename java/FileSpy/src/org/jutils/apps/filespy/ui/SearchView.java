@@ -257,10 +257,10 @@ public class SearchView implements IDataView<SearchParams>
      **************************************************************************/
     private JPanel createSizePanel()
     {
-        JPanel advancedPanel = new JPanel( new GridBagLayout() );
+        JPanel sizePanel = new JPanel( new GridBagLayout() );
         GridBagConstraints constraints;
 
-        advancedPanel.setBorder( BorderFactory.createTitledBorder( "Size (kb)" ) );
+        sizePanel.setBorder( BorderFactory.createTitledBorder( "Size (kb)" ) );
 
         moreThanCheckBox.setText( "More Than :" );
         moreThanCheckBox.setToolTipText( "Specifies that files should be "
@@ -285,23 +285,25 @@ public class SearchView implements IDataView<SearchParams>
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 0, 0, 0 ), 0, 0 );
-        advancedPanel.add(
+        sizePanel.add(
             createRightSidedPanel( moreThanCheckBox, moreThanTextField ),
             constraints );
 
         constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 0, 0, 0 ), 0, 0 );
-        advancedPanel.add(
+        sizePanel.add(
             createRightSidedPanel( lessThanCheckBox, lessThanTextField ),
             constraints );
 
         constraints = new GridBagConstraints( 0, 2, 3, 1, 1.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
                 0, 0, 0 ), 0, 0 );
-        advancedPanel.add( Box.createHorizontalStrut( 0 ), constraints );
+        sizePanel.add( Box.createHorizontalStrut( 0 ), constraints );
 
-        return advancedPanel;
+        sizePanel.setMinimumSize( sizePanel.getPreferredSize() );
+
+        return sizePanel;
     }
 
     private JPanel createTimePanel()
