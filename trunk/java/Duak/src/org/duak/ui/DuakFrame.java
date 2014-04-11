@@ -1,6 +1,5 @@
 package org.duak.ui;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -13,48 +12,72 @@ import org.duak.utils.HistoryList;
 import org.jutils.IconConstants;
 import org.jutils.concurrent.*;
 import org.jutils.ui.*;
-import org.jutils.ui.event.ItemActionEvent;
-import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.event.*;
+import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class DuakFrame extends JFrame
+public class DuakFrame implements IView<JFrame>
 {
-    JButton previousButton;
-    JButton nextButton;
+    private StandardFrameView frameView;
+    private JButton previousButton;
+    private JButton nextButton;
 
-    private DuakPanel duakPanel;
-    private HistoryList<FileInfo> history;
+    private final DuakPanel duakPanel;
+    private final HistoryList<FileInfo> history;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public DuakFrame()
     {
-        history = new HistoryList<FileInfo>();
-
-        setTitle( "Disk Usage Analysis Kit" );
-
-        setContentPane( createContentPanel() );
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    private JComponent createContentPanel()
-    {
-        JPanel panel = new JPanel( new BorderLayout() );
-
-        duakPanel = new DuakPanel();
+        this.frameView = new StandardFrameView();
+        this.history = new HistoryList<FileInfo>();
+        this.duakPanel = new DuakPanel();
 
         duakPanel.addFolderOpenedListener( new FolderOpenedListener() );
 
-        panel.add( createToolbar(), BorderLayout.NORTH );
-        panel.add( duakPanel, BorderLayout.CENTER );
-        panel.add( new StatusBarPanel().getView(), BorderLayout.SOUTH );
+        JFrame frame = frameView.getView();
 
-        return panel;
+        frame.setTitle( "Disk Usage Analysis Kit" );
+
+        frameView.setToolbar( createToolbar() );
+        frameView.setContent( duakPanel );
+
+        frame.setDropTarget( new FileDropTarget( new FileDropped( this ) ) );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public JFrame getView()
+    {
+        return frameView.getView();
+    }
+
+    private void open( File file )
+    {
+        ProgressDialog dialog = new ProgressDialog( getView(),
+            "Analysis Progress" );
+        AnalysisThread analysisThread = new AnalysisThread( this, file, dialog );
+        Stoppable stoppable = new Stoppable( analysisThread );
+        Thread thread = new Thread( stoppable );
+
+        dialog.setLocationRelativeTo( getView() );
+        dialog.addCancelListener( new CancelListener( stoppable ) );
+        thread.start();
+        dialog.setVisible( true );
+    }
+
+    /***************************************************************************
+     * @param results
+     **************************************************************************/
+    private void setResults( FileInfo results )
+    {
+        duakPanel.setResults( results );
     }
 
     /***************************************************************************
@@ -69,7 +92,7 @@ public class DuakFrame extends JFrame
         button = new JButton(
             IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
         button.setFocusable( false );
-        button.addActionListener( new OpenListener() );
+        button.addActionListener( new OpenListener( this ) );
         toolbar.add( button );
 
         button = new JButton(
@@ -89,14 +112,6 @@ public class DuakFrame extends JFrame
         nextButton = button;
 
         return toolbar;
-    }
-
-    /***************************************************************************
-     * @param results
-     **************************************************************************/
-    private void setResults( FileInfo results )
-    {
-        duakPanel.setResults( results );
     }
 
     /***************************************************************************
@@ -155,30 +170,27 @@ public class DuakFrame extends JFrame
     /***************************************************************************
      * 
      **************************************************************************/
-    private class OpenListener implements ActionListener
+    private static class OpenListener implements ActionListener
     {
+        private final DuakFrame view;
+
+        public OpenListener( DuakFrame view )
+        {
+            this.view = view;
+        }
+
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            JFrame frame = DuakFrame.this;
+            JFrame frame = view.getView();
             DirectoryChooser fd = new DirectoryChooser( frame );
             fd.setSelected( new File[] { new File( "/Files/JosephsFiles/" ) } );
             fd.setVisible( true );
 
-            File[] selectedFiles = fd.getSelected();
+            File [] selectedFiles = fd.getSelected();
             if( selectedFiles != null )
             {
-                ProgressDialog dialog = new ProgressDialog( frame,
-                    "Analysis Progress" );
-                AnalysisThread analysisThread = new AnalysisThread(
-                    selectedFiles[0], dialog );
-                Stoppable stoppable = new Stoppable( analysisThread );
-                Thread thread = new Thread( stoppable );
-
-                dialog.setLocationRelativeTo( frame );
-                dialog.addCancelListener( new CancelListener( stoppable ) );
-                thread.start();
-                dialog.setVisible( true );
+                view.open( selectedFiles[0] );
             }
         }
     }
@@ -186,7 +198,7 @@ public class DuakFrame extends JFrame
     /***************************************************************************
      * 
      **************************************************************************/
-    private class CancelListener implements ActionListener
+    private static class CancelListener implements ActionListener
     {
         private Stoppable stoppable;
 
@@ -211,15 +223,18 @@ public class DuakFrame extends JFrame
     /***************************************************************************
      * 
      **************************************************************************/
-    private class AnalysisThread implements IStoppableTask
+    private static class AnalysisThread implements IStoppableTask
     {
         private final File dir;
         private final ProgressDialog dialog;
+        private final DuakFrame view;
 
-        public AnalysisThread( File directory, ProgressDialog progressDialog )
+        public AnalysisThread( DuakFrame view, File directory,
+            ProgressDialog progressDialog )
         {
-            dir = directory;
-            dialog = progressDialog;
+            this.view = view;
+            this.dir = directory;
+            this.dialog = progressDialog;
         }
 
         @Override
@@ -231,7 +246,8 @@ public class DuakFrame extends JFrame
 
             if( results != null )
             {
-                SwingUtilities.invokeLater( new PanelUpdater( results, dialog ) );
+                SwingUtilities.invokeLater( new PanelUpdater( view, results,
+                    dialog ) );
             }
         }
     }
@@ -239,13 +255,16 @@ public class DuakFrame extends JFrame
     /***************************************************************************
      * 
      **************************************************************************/
-    private class PanelUpdater implements Runnable
+    private static class PanelUpdater implements Runnable
     {
         private FileInfo results;
         private ProgressDialog dialog;
+        private final DuakFrame view;
 
-        public PanelUpdater( FileInfo results, ProgressDialog dialog )
+        public PanelUpdater( DuakFrame view, FileInfo results,
+            ProgressDialog dialog )
         {
+            this.view = view;
             this.results = results;
             this.dialog = dialog;
         }
@@ -254,10 +273,30 @@ public class DuakFrame extends JFrame
         public void run()
         {
             dialog.dispose();
-            history.clear();
-            history.add( results );
-            setResults( results );
-            refreshButtons();
+            view.history.clear();
+            view.history.add( results );
+            view.setResults( results );
+            view.refreshButtons();
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class FileDropped implements
+        ItemActionListener<IFileDropEvent>
+    {
+        private final DuakFrame view;
+
+        public FileDropped( DuakFrame view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ItemActionEvent<IFileDropEvent> event )
+        {
+            view.open( event.getItem().getFiles().get( 0 ) );
         }
     }
 }
