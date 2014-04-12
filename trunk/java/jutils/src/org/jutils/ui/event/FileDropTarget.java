@@ -5,8 +5,7 @@ import java.awt.dnd.*;
 import java.io.File;
 import java.util.List;
 
-import javax.swing.JComponent;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 /*******************************************************************************
  * Class be added to a {@link JComponent} when the user drags a file onto the
@@ -49,7 +48,7 @@ public class FileDropTarget extends DropTarget
             dfde = new DefaultFileDropEvent( evt, droppedFiles, action );
             iae = new ItemActionEvent<IFileDropEvent>( this, dfde );
 
-            droppedListener.actionPerformed( iae );
+            ItemActionRunnable.invokeLater( droppedListener, iae );
         }
         catch( Exception ex )
         {
@@ -57,6 +56,10 @@ public class FileDropTarget extends DropTarget
         }
     }
 
+    /**
+     * @param action
+     * @return
+     */
     private static DropActionType getAction( int action )
     {
         switch( action )
@@ -72,6 +75,9 @@ public class FileDropTarget extends DropTarget
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public static interface IFileDropEvent
     {
         public DropTargetDropEvent getEvent();
@@ -81,13 +87,43 @@ public class FileDropTarget extends DropTarget
         public DropActionType getActionType();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public static enum DropActionType
     {
-        LINK,
-        COPY,
-        MOVE;
+        LINK, COPY, MOVE;
     }
 
+    private static class ItemActionRunnable<T> implements Runnable
+    {
+        private final ItemActionListener<T> listener;
+        private final ItemActionEvent<T> event;
+
+        public ItemActionRunnable( ItemActionListener<T> listener,
+            ItemActionEvent<T> event )
+        {
+            this.listener = listener;
+            this.event = event;
+        }
+
+        @Override
+        public void run()
+        {
+            listener.actionPerformed( event );
+        }
+
+        public static <T> void invokeLater( ItemActionListener<T> listener,
+            ItemActionEvent<T> event )
+        {
+            SwingUtilities.invokeLater( new ItemActionRunnable<>( listener,
+                event ) );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class DefaultFileDropEvent implements IFileDropEvent
     {
         private final DropTargetDropEvent event;
