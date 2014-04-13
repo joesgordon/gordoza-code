@@ -111,12 +111,17 @@ public class MaxQueue<T> implements Iterable<T>
      * max size will be added.
      * @param items the items to be added to this queue.
      **************************************************************************/
-    public void addAll( List<T> items )
+    public void addAll( Iterable<T> items )
     {
         for( T t : items )
         {
             push( t );
         }
+    }
+
+    public T first()
+    {
+        return elements.isEmpty() ? null : elements.getFirst();
     }
 
     /***************************************************************************
@@ -126,5 +131,20 @@ public class MaxQueue<T> implements Iterable<T>
     public T last()
     {
         return elements.isEmpty() ? null : elements.getLast();
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public List<T> toList()
+    {
+        List<T> items = new ArrayList<>();
+
+        for( T item : this )
+        {
+            items.add( item );
+        }
+
+        return items;
     }
 }

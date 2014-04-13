@@ -180,7 +180,7 @@ public class BitBuffer
     public BitPosition find( List<Boolean> bits, int start )
     {
         BitPosition curPos = new BitPosition( position );
-        int b = 0;
+        int idx = 0;
         boolean bit;
         BitPosition pos = null;
 
@@ -190,10 +190,11 @@ public class BitBuffer
         {
             bit = readBit();
 
-            if( bit == bits.get( b ) )
+            if( bit == bits.get( idx ) )
             {
-                b++;
-                if( b >= bits.size() )
+                idx++;
+
+                if( idx >= bits.size() )
                 {
                     pos = new BitPosition( position );
                     pos.increment( -bits.size() );
@@ -202,7 +203,8 @@ public class BitBuffer
             }
             else
             {
-                b = 0;
+                position.increment( -idx );
+                idx = 0;
             }
         }
 

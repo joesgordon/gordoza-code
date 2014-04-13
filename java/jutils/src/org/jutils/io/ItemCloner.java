@@ -23,6 +23,8 @@ public class ItemCloner<T>
 
         try
         {
+            stream.setLength( 0 );
+
             stream.seek( 0 );
             XStreamUtils.writeObjectXStream( item, outputStream );
 

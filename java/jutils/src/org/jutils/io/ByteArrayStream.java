@@ -37,7 +37,7 @@ public class ByteArrayStream implements IStream
      **************************************************************************/
     public ByteArrayStream( int size )
     {
-        this( new byte[size], size );
+        this( new byte[size], 0 );
     }
 
     /***************************************************************************
@@ -125,7 +125,7 @@ public class ByteArrayStream implements IStream
      **************************************************************************/
     private long getAvailableByteCount()
     {
-        return buffer.length - position;
+        return bufferSize - position;
     }
 
     /***************************************************************************
@@ -182,7 +182,7 @@ public class ByteArrayStream implements IStream
 
         int bytesRead = len;
 
-        if( bytesRead < len )
+        if( bytesRead > getAvailableByteCount() )
         {
             bytesRead = ( int )getAvailableByteCount();
         }
@@ -193,10 +193,10 @@ public class ByteArrayStream implements IStream
         }
         catch( ArrayIndexOutOfBoundsException ex )
         {
-            throw new RuntimeException( "Cannot copy " + len +
-                " items into an array of " + buffer.length +
-                " items starting at index " + position + " from an array of " +
-                buf.length + " items starting at index " + off, ex );
+            throw new RuntimeException( "Cannot copy " + bytesRead +
+                " items into an array of " + buf.length +
+                " items starting at index " + off + " from an array of " +
+                buffer.length + " items starting at index " + position, ex );
         }
 
         position += bytesRead;
@@ -322,5 +322,13 @@ public class ByteArrayStream implements IStream
         System.arraycopy( buffer, 0, bytes, 0, bufferSize );
 
         return bytes;
+    }
+
+    /***************************************************************************
+     * @param i
+     **************************************************************************/
+    public void setLength( int len )
+    {
+        this.bufferSize = len;
     }
 }
