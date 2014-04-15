@@ -84,6 +84,30 @@ public class BitBuffer
     }
 
     /***************************************************************************
+     * @param bitCount
+     **************************************************************************/
+    public void increment( int bitCount )
+    {
+        position.increment( bitCount );
+
+        if( position.getByte() >= buffer.length )
+        {
+            throw new IllegalArgumentException( "The byte index (" +
+                position.getByte() + ") must be < the buffer length (" +
+                buffer.length + ")" );
+        }
+
+    }
+
+    /***************************************************************************
+     * @param pos
+     **************************************************************************/
+    public void setPosition( BitPosition pos )
+    {
+        setPosition( pos.getByte(), pos.getBit() );
+    }
+
+    /***************************************************************************
      * Returns the position of the next read/write operation.
      **************************************************************************/
     public BitPosition getPosition()
