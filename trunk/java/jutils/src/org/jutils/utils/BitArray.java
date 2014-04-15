@@ -37,6 +37,11 @@ public class BitArray implements Iterable<Boolean>
         }
     }
 
+    public List<Boolean> toList()
+    {
+        return new ArrayList<>( bits );
+    }
+
     public byte [] getLeftAligned()
     {
         int byteCount = ( bits.size() + 7 ) / 8;
