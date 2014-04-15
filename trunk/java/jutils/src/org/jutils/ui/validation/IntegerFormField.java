@@ -99,6 +99,17 @@ public class IntegerFormField implements IFormField
         return textField.getView();
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public IValidationField getValidationField()
+    {
+        return textField.getField();
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public JTextField getTextField()
     {
         return textField.getField().getView();
