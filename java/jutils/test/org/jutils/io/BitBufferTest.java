@@ -1,10 +1,11 @@
 package org.jutils.io;
 
+import java.util.List;
 import java.util.Random;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
+import org.jutils.NumberParsingUtils;
 
 public class BitBufferTest
 {
@@ -31,6 +32,20 @@ public class BitBufferTest
         }
 
         Assert.assertTrue( "The from array is all zeros", false );
+    }
+
+    @Test
+    public void testFind()
+    {
+        byte [] bytes = new byte[] { ( byte )0x9E, ( byte )0xFE };
+        BitBuffer buf = new BitBuffer( bytes );
+        List<Boolean> bits = NumberParsingUtils.fromBinaryString( "111011111110" );
+
+        BitPosition pos = buf.find( bits, 0 );
+
+        Assert.assertNotNull( pos );
+        Assert.assertEquals( 0, pos.getByte() );
+        Assert.assertEquals( 4, pos.getBit() );
     }
 
     @Test

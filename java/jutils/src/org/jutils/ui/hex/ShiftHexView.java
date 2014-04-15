@@ -179,10 +179,12 @@ public class ShiftHexView implements IView<JComponent>
 
                         view.resetData();
 
-                        int off = pos.getBit() == 0 ? 0 : 1;
-                        off += pos.getByte();
+                        int off = pos.getByte();
 
-                        LogUtils.printDebug( "Found @" + off );
+                        off += pos.getBit() == 0 ? 0 : 1;
+
+                        LogUtils.printDebug( "Found " + binaryString + " @ " +
+                            off );
 
                         view.hexPanel.setSelected( off, off );
                     }
