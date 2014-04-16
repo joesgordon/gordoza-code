@@ -2,8 +2,7 @@ package org.jutils.ui.hex;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -11,23 +10,38 @@ import javax.swing.*;
 
 import org.jutils.*;
 import org.jutils.io.*;
+import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.model.IView;
 
 //TODO comments
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class ShiftHexView implements IView<JComponent>
 {
+    /**  */
     private final JPanel view;
+    /**  */
     private final HexPanel hexPanel;
+    /**  */
     private final JButton leftButton;
+    /**  */
     private final JButton rightButton;
+    /**  */
     private final JLabel offLabel;
 
+    /**  */
     private BitBuffer orig;
+    /**  */
     private BitBuffer buffer;
 
+    /**  */
     private int bitOffset;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public ShiftHexView()
     {
         this.hexPanel = new HexPanel();
@@ -42,34 +56,83 @@ public class ShiftHexView implements IView<JComponent>
         setData( new byte[] { 0 } );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private JPanel createView()
     {
         JPanel panel = new JPanel( new BorderLayout() );
 
-        panel.add( createButtons(), BorderLayout.NORTH );
+        panel.add( createButtons( panel ), BorderLayout.NORTH );
         panel.add( hexPanel.getView(), BorderLayout.CENTER );
 
         return panel;
     }
 
-    private Component createButtons()
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Component createButtons( JPanel panel )
     {
         JToolBar toolbar = new JToolBar();
+        Action action;
+        Icon icon;
+        KeyStroke key;
+        InputMap inMap = panel.getInputMap( JComponent.WHEN_IN_FOCUSED_WINDOW );
+        ActionMap acMap = panel.getActionMap();
 
         SwingUtils.setToolbarDefaults( toolbar );
 
-        leftButton.setIcon( IconConstants.loader.getIcon( IconConstants.BACK_16 ) );
-        leftButton.addActionListener( new ShiftListener( this, -1 ) );
-        toolbar.add( leftButton );
+        // ---------------------------------------------------------------------
+        // Setup left shift.
+        // ---------------------------------------------------------------------
+        icon = IconConstants.loader.getIcon( IconConstants.BACK_16 );
+        action = new ActionAdapter( new ShiftListener( this, -1 ),
+            "Shift Left", icon );
+        SwingUtils.addActionToToolbar( toolbar, action, leftButton );
 
-        rightButton.setIcon( IconConstants.loader.getIcon( IconConstants.FORWARD_16 ) );
-        rightButton.addActionListener( new ShiftListener( this, 1 ) );
-        toolbar.add( rightButton );
+        key = KeyStroke.getKeyStroke( KeyEvent.VK_LEFT,
+            InputEvent.ALT_DOWN_MASK, false );
+        action.putValue( Action.ACCELERATOR_KEY, key );
+        inMap.put( key, "prevAction" );
+        acMap.put( "prevAction", action );
 
-        JButton button = new JButton();
-        button.setIcon( IconConstants.loader.getIcon( IconConstants.FIND_16 ) );
-        button.addActionListener( new FindListener( this ) );
-        toolbar.add( button );
+        // ---------------------------------------------------------------------
+        // Setup right shift.
+        // ---------------------------------------------------------------------
+        icon = IconConstants.loader.getIcon( IconConstants.FORWARD_16 );
+        action = new ActionAdapter( new ShiftListener( this, 1 ),
+            "Shift Right", icon );
+        SwingUtils.addActionToToolbar( toolbar, action, rightButton );
+
+        key = KeyStroke.getKeyStroke( KeyEvent.VK_RIGHT,
+            InputEvent.ALT_DOWN_MASK, false );
+        action.putValue( Action.ACCELERATOR_KEY, key );
+        inMap.put( key, "nextAction" );
+        acMap.put( "nextAction", action );
+
+        // ---------------------------------------------------------------------
+        // Setup find.
+        // ---------------------------------------------------------------------
+        icon = IconConstants.loader.getIcon( IconConstants.FIND_16 );
+        action = new ActionAdapter( new FindListener( this ), "Find Bits", icon );
+        SwingUtils.addActionToToolbar( toolbar, action );
+
+        key = KeyStroke.getKeyStroke( "control F" );
+        action.putValue( Action.ACCELERATOR_KEY, key );
+        inMap.put( key, "findAction" );
+        acMap.put( "findAction", action );
+        // action.putValue( Action.MNEMONIC_KEY, ( int )'n' );
+
+        // key = KeyStroke.getKeyStroke( "F3" );
+        // action.putValue( Action.ACCELERATOR_KEY, key );
+        // inMap.put( key, "findNextAction" );
+        // acMap.put( "findNextAction", action );
+        //
+        // key = KeyStroke.getKeyStroke( "shift F3" );
+        // action.putValue( Action.ACCELERATOR_KEY, key );
+        // inMap.put( key, "findPrevAction" );
+        // acMap.put( "findPrevAction", action );
 
         toolbar.addSeparator();
 
@@ -78,6 +141,9 @@ public class ShiftHexView implements IView<JComponent>
         return toolbar;
     }
 
+    /***************************************************************************
+     * @param bytes
+     **************************************************************************/
     public void setData( byte [] bytes )
     {
         this.orig = new BitBuffer( bytes );
@@ -87,6 +153,9 @@ public class ShiftHexView implements IView<JComponent>
         resetData();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private void resetData()
     {
         leftButton.setEnabled( bitOffset > 0 );
@@ -96,12 +165,18 @@ public class ShiftHexView implements IView<JComponent>
         hexPanel.setBuffer( new ByteBuffer( buffer.buffer ) );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public JComponent getView()
     {
         return view;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private void shitTo()
     {
         int bit = bitOffset % 8;
@@ -117,6 +192,9 @@ public class ShiftHexView implements IView<JComponent>
         resetData();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class ShiftListener implements ActionListener
     {
         private final ShiftHexView view;
@@ -131,12 +209,20 @@ public class ShiftHexView implements IView<JComponent>
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            view.bitOffset += dir;
+            int off = view.bitOffset + dir;
 
-            view.shitTo();
+            if( off > -1 && off < 8 )
+            {
+                view.bitOffset += dir;
+
+                view.shitTo();
+            }
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class FindListener implements ActionListener
     {
         private final ShiftHexView view;
