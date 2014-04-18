@@ -48,7 +48,6 @@ public class ResizingTable<T extends TableModel> extends JTable
         int widths[] = new int[model.getColumnCount()];
         Component cellRenderer;
         TableCellRenderer tableCellRenderer;
-        int totalWidth = 0;
         int defaultWidth;
 
         // ---------------------------------------------------------------------
@@ -58,12 +57,6 @@ public class ResizingTable<T extends TableModel> extends JTable
         {
             colName = model.getColumnName( col );
             defaultWidth = 65;
-
-            if( table.getAutoResizeMode() != JTable.AUTO_RESIZE_OFF &&
-                col < colCount - 1 )
-            {
-                defaultWidth = table.getWidth() - totalWidth;
-            }
 
             // -----------------------------------------------------------------
             // Compute header width.
@@ -99,8 +92,6 @@ public class ResizingTable<T extends TableModel> extends JTable
                 }
                 widths[col] = Math.max( widths[col], width );
             }
-
-            totalWidth += widths[col];
         }
 
         TableColumnModel colModel = table.getColumnModel();
@@ -111,6 +102,7 @@ public class ResizingTable<T extends TableModel> extends JTable
         for( int i = 0; i < colCount; i++ )
         {
             colModel.getColumn( i ).setPreferredWidth( widths[i] );
+            // colModel.getColumn( i ).setMinWidth( widths[i] );
         }
     }
 
