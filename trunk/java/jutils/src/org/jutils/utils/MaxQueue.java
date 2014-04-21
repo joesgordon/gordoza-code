@@ -26,6 +26,12 @@ public class MaxQueue<T> implements Iterable<T>
         this.elements = new ArrayDeque<T>( maxElementCount );
     }
 
+    public MaxQueue( MaxQueue<T> queue )
+    {
+        this.maxCount = queue.maxCount;
+        this.elements = new ArrayDeque<>( queue.elements );
+    }
+
     /***************************************************************************
      * 
      **************************************************************************/
