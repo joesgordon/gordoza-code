@@ -350,10 +350,12 @@ public class BufferedStream implements IStream
             // Otherwise, write directly to the stream and cache afterwards.
             // -----------------------------------------------------------------
             flush();
+
             stream.seek( position );
             stream.write( buf, off, len );
             position += len;
-            buffer.readFromStream( stream );
+
+            loadBufferFromFile( position );
         }
     }
 

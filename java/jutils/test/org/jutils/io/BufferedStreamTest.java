@@ -373,6 +373,82 @@ public class BufferedStreamTest
      * 
      **************************************************************************/
     @Test
+    public void testWriteToDataStream3()
+    {
+        byte [] expected = new byte[7];
+        byte [] actual = new byte[expected.length];
+        int WRITE_COUNT = 235;
+
+        BufferedStream stream = null;
+
+        for( int i = 0; i < expected.length; i++ )
+        {
+            expected[i] = ( byte )( i );
+        }
+
+        try
+        {
+            File file = File.createTempFile( getClass().getSimpleName() + "_",
+                ".bin" );
+            file.deleteOnExit();
+
+            try
+            {
+                FileStream fstream;
+
+                fstream = new FileStream( file );
+                stream = new BufferedStream( fstream, 16 );
+
+                for( int i = 0; i < WRITE_COUNT; i++ )
+                {
+                    stream.write( expected );
+                }
+
+                stream.write( ( byte )0 );
+                stream.write( ( byte )10 );
+                stream.write( ( byte )20 );
+                stream.write( ( byte )30 );
+            }
+            finally
+            {
+                stream.close();
+            }
+
+            Assert.assertEquals( WRITE_COUNT * expected.length + 4,
+                file.length() );
+
+            try
+            {
+                FileStream fstream;
+
+                fstream = new FileStream( file, true );
+                stream = new BufferedStream( fstream, 16 );
+
+                stream.seek( 0 );
+                for( int i = 0; i < WRITE_COUNT; i++ )
+                {
+                    stream.readFully( actual );
+
+                    Assert.assertArrayEquals( expected, actual );
+                }
+            }
+            finally
+            {
+                stream.close();
+            }
+
+        }
+        catch( IOException ex )
+        {
+            ex.printStackTrace();
+            Assert.fail( ex.getMessage() );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Test
     public void testWriteToDataStream()
     {
         byte [] buffer = new byte[100];
