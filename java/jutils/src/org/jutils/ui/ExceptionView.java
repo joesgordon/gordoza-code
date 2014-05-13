@@ -1,6 +1,7 @@
 package org.jutils.ui;
 
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -95,6 +96,14 @@ public class ExceptionView implements IView<JComponent>
         IApplication app = new DefaultApp( ex, title, message );
 
         SwingUtilities.invokeLater( new AppRunner( app ) );
+    }
+
+    public static void invokeAndWait( Throwable ex, String title, String message )
+        throws InvocationTargetException, InterruptedException
+    {
+        IApplication app = new DefaultApp( ex, title, message );
+
+        SwingUtilities.invokeAndWait( new AppRunner( app ) );
     }
 
     public static void main( String [] args )
