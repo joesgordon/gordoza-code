@@ -373,10 +373,21 @@ public final class Utils
      **************************************************************************/
     public static void scrollToVisible( JTable table, int row, int col )
     {
-        table.scrollRectToVisible( new Rectangle( table.getCellRect( row, col,
-            true ) ) );
+        Rectangle rect = table.getCellRect( row, col, true );
+
+        rect = new Rectangle( rect );
+
+        // LogUtils.printDebug( "Scrolling to: " + row + ", " + col + ":" +
+        // rect.toString() );
+
+        table.scrollRectToVisible( rect );
     }
 
+    /***************************************************************************
+     * Creates a transparent buffered image for the current device.
+     * @param width the width of the image to be created.
+     * @param height the height of the image to be created.
+     **************************************************************************/
     public static BufferedImage createTransparentImage( int width, int height )
     {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
