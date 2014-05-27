@@ -126,7 +126,7 @@ public class LongFormField implements IFormField
     /***************************************************************************
      * @param value
      **************************************************************************/
-    public void setValue( int value )
+    public void setValue( long value )
     {
         this.value = value;
         textField.setText( "" + value );

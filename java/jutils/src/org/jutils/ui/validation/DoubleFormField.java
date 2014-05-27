@@ -78,6 +78,14 @@ public class DoubleFormField implements IFormField
     }
 
     /***************************************************************************
+     * @return
+     **************************************************************************/
+    public IValidationField getValidationField()
+    {
+        return textField.getField();
+    }
+
+    /***************************************************************************
      * @param value
      **************************************************************************/
     public void setValue( double value )

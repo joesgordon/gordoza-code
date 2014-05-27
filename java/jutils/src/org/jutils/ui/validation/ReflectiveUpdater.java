@@ -42,6 +42,13 @@ public class ReflectiveUpdater<T> implements IUpdater<T>
             structField.setAccessible( true );
 
             Object struct = structField.get( obj );
+
+            if( struct == null )
+            {
+                throw new IllegalStateException( "Object not initialized: " +
+                    objClass.getSimpleName() + "." + structureName );
+            }
+
             Class<?> structClass = struct.getClass();
             Field dataField = structClass.getField( dataName );
             dataField.set( struct, data );
