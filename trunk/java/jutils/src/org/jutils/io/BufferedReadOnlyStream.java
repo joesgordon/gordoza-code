@@ -10,7 +10,7 @@ public class BufferedReadOnlyStream implements IStream
     public static int DEFAULT_BUFFER_SIZE = 8 * 1024 * 1024;
 
     private final IStream stream;
-    private final byte[] buffer;
+    private final byte [] buffer;
 
     private int index;
     private int fillCount;
@@ -52,19 +52,19 @@ public class BufferedReadOnlyStream implements IStream
     }
 
     @Override
-    public int read( byte[] buf ) throws IOException
+    public int read( byte [] buf ) throws IOException
     {
         return read( buf, 0, buf.length );
     }
 
     @Override
-    public void readFully( byte[] buf ) throws EOFException, IOException
+    public void readFully( byte [] buf ) throws EOFException, IOException
     {
         readFully( buf, 0, buf.length );
     }
 
     @Override
-    public int read( byte[] buf, int off, int len ) throws IOException
+    public int read( byte [] buf, int off, int len ) throws IOException
     {
         int bufAvailable = fillCount - index;
         int totalRead = 0;
@@ -87,15 +87,20 @@ public class BufferedReadOnlyStream implements IStream
         // ---------------------------------------------------------------------
         if( totalRead < len )
         {
-            totalRead += stream.read( buf, off + totalRead, len - totalRead );
+            toCopy = stream.read( buf, off + totalRead, len - totalRead );
 
-            try
+            if( toCopy > -1 )
             {
-                fillBuffer( stream.getPosition() );
-            }
-            catch( EOFException ex )
-            {
-                ;
+                totalRead += toCopy;
+
+                try
+                {
+                    fillBuffer( stream.getPosition() );
+                }
+                catch( EOFException ex )
+                {
+                    ;
+                }
             }
         }
 
@@ -103,7 +108,7 @@ public class BufferedReadOnlyStream implements IStream
     }
 
     @Override
-    public void readFully( byte[] buf, int off, int len ) throws EOFException,
+    public void readFully( byte [] buf, int off, int len ) throws EOFException,
         IOException
     {
         int bytesRead = 0;
@@ -205,13 +210,13 @@ public class BufferedReadOnlyStream implements IStream
     }
 
     @Override
-    public void write( byte[] buf ) throws IOException
+    public void write( byte [] buf ) throws IOException
     {
         throw new IOException( "Cannot write to a read only stream." );
     }
 
     @Override
-    public void write( byte[] buf, int off, int len ) throws IOException
+    public void write( byte [] buf, int off, int len ) throws IOException
     {
         throw new IOException( "Cannot write to a read only stream." );
     }
