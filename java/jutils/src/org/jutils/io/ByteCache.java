@@ -12,7 +12,7 @@ public class ByteCache
     public static final int DEFAULT_SIZE = 0x800000;
 
     /** The actual cache of bytes to be used. */
-    private final byte[] cache;
+    private final byte [] cache;
 
     /** The position this cache represents in a stream. */
     private long position;
@@ -41,7 +41,7 @@ public class ByteCache
     /***************************************************************************
      * @param bytes
      **************************************************************************/
-    public ByteCache( byte[] bytes )
+    public ByteCache( byte [] bytes )
     {
         this.cache = bytes;
         this.position = -1;
@@ -56,7 +56,7 @@ public class ByteCache
     {
         LogUtils.printDebug( "  bufPos: " + position );
         LogUtils.printDebug( "bufIndex: " + index );
-        LogUtils.printDebug( "  bufLen: " + cacheLen );
+        LogUtils.printDebug( "cacheLen: " + cacheLen );
         LogUtils.printDebug( " bufSize: " + cache.length );
         LogUtils.printDebug( "   empty: " + ( position < 0 ) );
     }
@@ -191,7 +191,7 @@ public class ByteCache
      * @param len the length of the data to copy.
      * @see {@link System#arraycopy(Object, int, Object, int, int)}
      **************************************************************************/
-    public void read( byte[] buf, int off, int len )
+    public void read( byte [] buf, int off, int len )
         throws IndexOutOfBoundsException
     {
         System.arraycopy( cache, index, buf, off, len );
@@ -238,7 +238,7 @@ public class ByteCache
      * @param len the number of bytes to write.
      * @see {@link System#arraycopy(Object, int, Object, int, int)}
      **************************************************************************/
-    public void write( byte[] buf, int off, int len )
+    public void write( byte [] buf, int off, int len )
     {
         System.arraycopy( buf, off, cache, index, len );
         index += len;

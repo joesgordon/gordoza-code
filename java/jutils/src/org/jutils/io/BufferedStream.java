@@ -134,42 +134,44 @@ public class BufferedStream implements IStream
     public int read( byte [] buf, int off, int len ) throws IOException
     {
         int bytesRead = 0;
-        int bytesRemaining = len;
 
-        while( bytesRemaining > 0 )
+        // printDebug( "read-pre" );
+
+        if( buffer.remainingRead() > 0 )
         {
-            // printDebug( "read-pre" );
+            int toRead = Math.min( buffer.remainingRead(), len );
 
-            ensureReadCache();
+            buffer.read( buf, off, toRead );
 
-            if( getPosition() >= getLength() )
-            {
-                break;
-            }
-
-            // -----------------------------------------------------------------
-            // Determine how many bytes can be read out of this cache.
-            // -----------------------------------------------------------------
-            bytesRead = buffer.remainingRead();
-
-            if( bytesRemaining < bytesRead )
-            {
-                bytesRead = bytesRemaining;
-            }
-
-            // -----------------------------------------------------------------
-            // Copy these bytes into the client buffer.
-            // -----------------------------------------------------------------
-            buffer.read( buf, off, bytesRead );
-
-            bytesRemaining -= bytesRead;
-            off += bytesRead;
-            position += bytesRead;
-
-            // printDebug( "read-post: " + bytesRemaining );
+            bytesRead = toRead;
+            position += toRead;
         }
 
-        return len - bytesRemaining;
+        if( bytesRead < len )
+        {
+            // stream.seek( position );
+
+            int byteCount = stream.read( buf, off + bytesRead, len - bytesRead );
+
+            if( byteCount > -1 )
+            {
+                position += byteCount;
+                bytesRead += byteCount;
+
+                ensureReadCache();
+            }
+
+            ensureReadCache();
+        }
+
+        if( bytesRead == 0 )
+        {
+            bytesRead = -1;
+        }
+
+        // printDebug( "read-post: " + bytesRead );
+
+        return bytesRead;
     }
 
     /***************************************************************************
@@ -364,7 +366,8 @@ public class BufferedStream implements IStream
      **************************************************************************/
     protected void printDebug( String msg )
     {
-        LogUtils.printDebug( "---------------------------- " + msg );
+        LogUtils.printDebug( "----------------------------" );
+        LogUtils.printDebug( "- " + msg );
         LogUtils.printDebug( "----------------------------" );
         buffer.printDebug();
         LogUtils.printDebug( "" );
