@@ -115,8 +115,6 @@ public class BufferedStream implements IStream
     {
         int len = read( buf, 0, buf.length );
 
-        position += len;
-
         return len;
     }
 
