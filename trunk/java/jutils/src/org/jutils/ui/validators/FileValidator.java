@@ -6,14 +6,14 @@ import org.jutils.ui.validation.ValidationException;
 
 public class FileValidator implements IDataValidator<File>
 {
-    private final ExistanceType type;
+    private final ExistenceType type;
 
     public FileValidator()
     {
-        this( ExistanceType.FILE_ONLY );
+        this( ExistenceType.FILE_ONLY );
     }
 
-    public FileValidator( ExistanceType type )
+    public FileValidator( ExistenceType type )
     {
         this.type = type;
     }
@@ -30,7 +30,7 @@ public class FileValidator implements IDataValidator<File>
 
         // LogUtils.printDebug( "Testing path " + text );
 
-        if( !f.exists() )
+        if( type != ExistenceType.DO_NOT_CHECK && !f.exists() )
         {
             throw new ValidationException( "Path does not exist" );
         }
@@ -38,24 +38,30 @@ public class FileValidator implements IDataValidator<File>
         boolean isFile = f.isFile();
         boolean isDir = f.isDirectory();
 
-        if( type == ExistanceType.DIRECTORY_ONLY && !isDir )
+        if( type != ExistenceType.DO_NOT_CHECK )
         {
-            throw new ValidationException( "Path is not a directory" );
-        }
-        else if( type == ExistanceType.FILE_ONLY && !isFile )
-        {
-            throw new ValidationException( "Path is not a file" );
-        }
-        else if( type == ExistanceType.FILE_OR_DIRECTORY && !isFile && !isDir )
-        {
-            throw new ValidationException( "Path is not a file or directory" );
+            if( type == ExistenceType.DIRECTORY_ONLY && !isDir )
+            {
+                throw new ValidationException( "Path is not a directory" );
+            }
+            else if( type == ExistenceType.FILE_ONLY && !isFile )
+            {
+                throw new ValidationException( "Path is not a file" );
+            }
+            else if( type == ExistenceType.FILE_OR_DIRECTORY && !isFile &&
+                !isDir )
+            {
+                throw new ValidationException(
+                    "Path is not a file or directory" );
+            }
         }
 
         return f.getAbsoluteFile();
     }
 
-    public static enum ExistanceType
+    public static enum ExistenceType
     {
+        DO_NOT_CHECK,
         FILE_ONLY,
         DIRECTORY_ONLY,
         FILE_OR_DIRECTORY;
