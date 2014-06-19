@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.swing.*;
 
+import org.jutils.ui.validators.FileValidator.ExistenceType;
+
 /*******************************************************************************
  * Class be added to a {@link JComponent} when the user drags a file onto the
  * component.
@@ -92,7 +94,9 @@ public class FileDropTarget extends DropTarget
      **************************************************************************/
     public static enum DropActionType
     {
-        LINK, COPY, MOVE;
+        LINK,
+        COPY,
+        MOVE;
     }
 
     private static class ItemActionRunnable<T> implements Runnable
@@ -165,16 +169,17 @@ public class FileDropTarget extends DropTarget
         ItemActionListener<IFileDropEvent>
     {
         private final JTextField field;
-        private final boolean directoryOnly;
+        private final ExistenceType existence;
 
         public JTextFieldFilesListener( JTextField field )
         {
-            this( field, false );
+            this( field, ExistenceType.FILE_ONLY );
         }
 
-        public JTextFieldFilesListener( JTextField field, boolean directoryOnly )
+        public JTextFieldFilesListener( JTextField field,
+            ExistenceType existence )
         {
-            this.directoryOnly = directoryOnly;
+            this.existence = existence;
             this.field = field;
         }
 
@@ -188,7 +193,17 @@ public class FileDropTarget extends DropTarget
             {
                 File file = files.get( i );
 
-                if( directoryOnly && !file.isDirectory() )
+                if( existence == ExistenceType.DIRECTORY_ONLY &&
+                    !file.isDirectory() )
+                {
+                    continue;
+                }
+                else if( existence == ExistenceType.FILE_ONLY && !file.isFile() )
+                {
+                    continue;
+                }
+                else if( existence == ExistenceType.FILE_OR_DIRECTORY &&
+                    !file.exists() )
                 {
                     continue;
                 }
