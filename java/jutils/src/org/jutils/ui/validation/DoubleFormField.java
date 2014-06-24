@@ -99,7 +99,7 @@ public class DoubleFormField implements IFormField
      **************************************************************************/
     public void setEditable( boolean editable )
     {
-        textField.getField().getView().setEditable( false );
+        textField.getField().setEditable( editable );
     }
 
     /***************************************************************************
