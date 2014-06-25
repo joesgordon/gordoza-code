@@ -236,4 +236,12 @@ public class BitBuffer
 
         return pos;
     }
+
+    /***************************************************************************
+     * Resets the current position to the beginning of the bit buffer.
+     **************************************************************************/
+    public void reset()
+    {
+        position.reset();
+    }
 }
