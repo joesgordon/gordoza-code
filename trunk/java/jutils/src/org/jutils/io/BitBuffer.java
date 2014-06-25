@@ -30,7 +30,7 @@ public class BitBuffer
     public final byte [] buffer;
     /** The current position into the byte array. */
     private final BitPosition position;
-    /**  */
+    /** The number of bits in this buffer. */
     private final int bits;
 
     /***************************************************************************
@@ -179,7 +179,7 @@ public class BitBuffer
     }
 
     /***************************************************************************
-     * @return
+     * Returns the number of bits in this buffer
      **************************************************************************/
     public int bitCount()
     {
@@ -187,7 +187,7 @@ public class BitBuffer
     }
 
     /***************************************************************************
-     * @return
+     * returns the number of bytes remaining in this buffer.
      **************************************************************************/
     public int remainingBytes()
     {
