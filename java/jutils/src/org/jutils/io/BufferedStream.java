@@ -137,9 +137,11 @@ public class BufferedStream implements IStream
 
         // printDebug( "read-pre" );
 
-        if( buffer.remainingRead() > 0 )
+        if( buffer.isReadCached( position ) && buffer.remainingRead() > 0 )
         {
             int toRead = Math.min( buffer.remainingRead(), len );
+
+            buffer.setPosition( position );
 
             buffer.read( buf, off, toRead );
 
@@ -149,7 +151,10 @@ public class BufferedStream implements IStream
 
         if( bytesRead < len )
         {
-            // stream.seek( position );
+            if( position != stream.getPosition() )
+            {
+                stream.seek( position );
+            }
 
             int byteCount = stream.read( buf, off + bytesRead, len - bytesRead );
 
@@ -160,8 +165,6 @@ public class BufferedStream implements IStream
 
                 ensureReadCache();
             }
-
-            ensureReadCache();
         }
 
         if( bytesRead == 0 )
