@@ -21,7 +21,7 @@ public class FileValidator implements IDataValidator<File>
     @Override
     public File validate( String text ) throws ValidationException
     {
-        if( text.length() < 1 )
+        if( type != ExistenceType.DO_NOT_CHECK && text.length() < 1 )
         {
             throw new ValidationException( "Empty path string" );
         }
