@@ -2,5 +2,5 @@ package org.jutils.io;
 
 public interface IParser<T>
 {
-    public T parseItem( String str ) throws IllegalArgumentException;
+    public T parse( String str ) throws RuntimeFormatException;
 }
