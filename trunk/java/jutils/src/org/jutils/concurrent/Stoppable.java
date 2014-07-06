@@ -8,7 +8,7 @@ import org.jutils.ui.event.ItemActionListener;
 public class Stoppable implements Runnable
 {
     /** Object used to hold the continue/stop state. */
-    private final TaskStopManager stopper;
+    private final ITaskStopManager stopper;
     /** The task to run */
     private final IStoppableTask task;
 
@@ -43,7 +43,7 @@ public class Stoppable implements Runnable
     /***************************************************************************
      * Creates the {@link Runnable}
      **************************************************************************/
-    public Stoppable( IStoppableTask task, TaskStopManager stopper )
+    public Stoppable( IStoppableTask task, ITaskStopManager stopper )
     {
         this.stopper = stopper;
         this.task = task;
