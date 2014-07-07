@@ -88,6 +88,9 @@ public class FileStream implements IStream
         return raf.read( buf, off, len );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void readFully( byte [] buf, int off, int len ) throws IOException
     {

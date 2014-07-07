@@ -89,7 +89,7 @@ public class BitPosition
         if( bitIndex < 0 || bitIndex > 7 )
         {
             throw new IllegalArgumentException(
-                "The byte index must be > -1 and < 8: " + bitIndex );
+                "The bit index must be > -1 and < 8: " + bitIndex );
         }
 
         this.byteIndex = byteIndex;
