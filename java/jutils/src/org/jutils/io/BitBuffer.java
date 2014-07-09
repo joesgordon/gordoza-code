@@ -84,6 +84,18 @@ public class BitBuffer
     }
 
     /***************************************************************************
+     * Sets the absolute bit index position.
+     * @param bitIndex the index of the bit.
+     **************************************************************************/
+    public void setPosition( int bitIndex )
+    {
+        int bytePos = bitIndex / 8;
+        int bitPos = bitIndex % 8;
+
+        setPosition( bytePos, bitPos );
+    }
+
+    /***************************************************************************
      * @param bitCount
      **************************************************************************/
     public void increment( int bitCount )
