@@ -55,8 +55,14 @@ public class Stoppable implements Runnable
     @Override
     public void run()
     {
-        task.run( stopper );
-        stopper.signalFinished();
+        try
+        {
+            task.run( stopper );
+        }
+        finally
+        {
+            stopper.signalFinished();
+        }
     }
 
     /***************************************************************************
