@@ -17,15 +17,9 @@ public class XStreamUtils
     public static void writeObjectXStream( Object obj, File file )
         throws IOException, XStreamException
     {
-        FileOutputStream stream = new FileOutputStream( file );
-
-        try
+        try( FileOutputStream stream = new FileOutputStream( file ) )
         {
             writeObjectXStream( obj, stream );
-        }
-        finally
-        {
-            stream.close();
         }
     }
 
@@ -51,20 +45,11 @@ public class XStreamUtils
     public static <T> T readObjectXStream( File file )
         throws FileNotFoundException, IOException, XStreamException
     {
-        FileInputStream fis = null;
         Object obj;
 
-        try
+        try( FileInputStream fis = new FileInputStream( file ) )
         {
-            fis = new FileInputStream( file );
             obj = readObjectXStream( fis );
-        }
-        finally
-        {
-            if( fis != null )
-            {
-                fis.close();
-            }
         }
 
         return ( T )obj;
@@ -95,20 +80,23 @@ public class XStreamUtils
     public static <T> T cloneObject( T obj )
     {
         T clone = null;
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ByteArrayInputStream inputStream = null;
 
-        try
+        try( ByteArrayOutputStream outputStream = new ByteArrayOutputStream() )
         {
             writeObjectXStream( obj, outputStream );
-            inputStream = new ByteArrayInputStream( outputStream.toByteArray(),
-                0, outputStream.size() );
-            outputStream.close();
 
-            @SuppressWarnings( "unchecked")
-            T t = ( T )readObjectXStream( inputStream );
-            inputStream.close();
-            clone = t;
+            byte [] buf = outputStream.toByteArray();
+
+            try( ByteArrayInputStream inputStream = new ByteArrayInputStream(
+                buf, 0, buf.length ) )
+            {
+                outputStream.close();
+
+                @SuppressWarnings( "unchecked")
+                T t = ( T )readObjectXStream( inputStream );
+                inputStream.close();
+                clone = t;
+            }
         }
         catch( IOException ex )
         {

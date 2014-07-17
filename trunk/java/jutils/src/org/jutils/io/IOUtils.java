@@ -268,24 +268,15 @@ public final class IOUtils
         throws FileNotFoundException, IOException
     {
         List<String> lines = new ArrayList<String>();
-        BufferedReader reader = null;
 
-        try
+        try( FileReader fr = new FileReader( file );
+             BufferedReader reader = new BufferedReader( fr ) )
         {
-            reader = new BufferedReader( new FileReader( file ) );
-
             String line;
 
             while( ( line = reader.readLine() ) != null )
             {
                 lines.add( line );
-            }
-        }
-        finally
-        {
-            if( reader != null )
-            {
-                reader.close();
             }
         }
 

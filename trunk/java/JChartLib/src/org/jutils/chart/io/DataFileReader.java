@@ -4,7 +4,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jutils.chart.data.*;
+import org.jutils.chart.data.DefaultSeries;
+import org.jutils.chart.data.XYPoint;
 import org.jutils.chart.model.ISeriesData;
 import org.jutils.io.IReader;
 import org.jutils.io.RuntimeFormatException;
@@ -16,15 +17,15 @@ public class DataFileReader implements IReader<ISeriesData, File>
     }
 
     @Override
-    public ISeriesData read( File f ) throws IOException, RuntimeFormatException
+    public ISeriesData read( File f ) throws IOException,
+        RuntimeFormatException
     {
         List<XYPoint> points = new ArrayList<>();
-        BufferedReader reader = new BufferedReader( new FileReader( f ) );
         String line;
         double x;
         double y;
 
-        try
+        try( BufferedReader reader = new BufferedReader( new FileReader( f ) ) )
         {
             while( ( line = reader.readLine() ) != null )
             {
@@ -35,7 +36,7 @@ public class DataFileReader implements IReader<ISeriesData, File>
 
                 line = line.trim();
 
-                String[] values = line.split( "\\s+" );
+                String [] values = line.split( "\\s+" );
 
                 if( values.length < 2 )
                 {
@@ -54,10 +55,6 @@ public class DataFileReader implements IReader<ISeriesData, File>
                     // ignore/don't add point.
                 }
             }
-        }
-        finally
-        {
-            reader.close();
         }
 
         return new DefaultSeries( points );

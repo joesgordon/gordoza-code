@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/libs/jgoodies.jar"/>
 	<classpathentry kind="lib" path="/libs/xstream-1.4.jar">
 		<attributes>
@@ -16,5 +15,6 @@
 			<attribute name="javadoc_location" value="http://www.xmlpull.org/v1/doc/api/org/xmlpull/v1/package-summary.html"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
