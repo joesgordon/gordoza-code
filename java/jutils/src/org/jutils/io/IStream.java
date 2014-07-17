@@ -1,13 +1,12 @@
 package org.jutils.io;
 
-import java.io.EOFException;
-import java.io.IOException;
+import java.io.*;
 
 /*******************************************************************************
  * IStream is a generic interface for reading and writing to a location (disk,
  * memory, socket, etc). @
  ******************************************************************************/
-public interface IStream
+public interface IStream extends Closeable
 {
     /***************************************************************************
      * Reads a single byte from the stream.

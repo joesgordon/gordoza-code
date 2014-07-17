@@ -35,23 +35,14 @@ public class FileOpener<T>
         if( choice == JFileChooser.APPROVE_OPTION )
         {
             File file = chooser.getSelectedFile();
-            FileInputStream stream = null;
 
             try
             {
-                try
+                try( FileInputStream stream = new FileInputStream( file ) )
                 {
-                    stream = new FileInputStream( file );
                     item = serializer.read( stream );
 
                     saver.saveLastOpenDir( file.getParentFile() );
-                }
-                finally
-                {
-                    if( stream != null )
-                    {
-                        stream.close();
-                    }
                 }
             }
             catch( IOException ex )
@@ -81,7 +72,6 @@ public class FileOpener<T>
         if( choice == JFileChooser.APPROVE_OPTION )
         {
             File file = chooser.getSelectedFile();
-            FileOutputStream stream = null;
 
             if( !file.getName().endsWith( extension ) )
             {
@@ -91,20 +81,12 @@ public class FileOpener<T>
 
             try
             {
-                try
+                try( FileOutputStream stream = new FileOutputStream( file ) )
                 {
-                    stream = new FileOutputStream( file );
                     serializer.write( item, stream );
 
                     saver.saveLastSaveDir( file.getParentFile() );
                     saved = true;
-                }
-                finally
-                {
-                    if( stream != null )
-                    {
-                        stream.close();
-                    }
                 }
             }
             catch( IOException ex )

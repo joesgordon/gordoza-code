@@ -23,14 +23,16 @@ public class BufferedStreamTest
      **************************************************************************/
     private byte [] loadTestBytes() throws IOException
     {
-        InputStream stream = IconConstants.loader.loader.getUrl(
-            IconConstants.ATOMIC_32 ).openStream();
-        byte [] bytes = new byte[stream.available()];
+        try( InputStream stream = IconConstants.loader.loader.getUrl(
+            IconConstants.ATOMIC_32 ).openStream() )
+        {
+            byte [] bytes = new byte[stream.available()];
 
-        stream.read( bytes );
-        stream.close();
+            stream.read( bytes );
+            stream.close();
 
-        return bytes;
+            return bytes;
+        }
     }
 
     /***************************************************************************
@@ -74,9 +76,7 @@ public class BufferedStreamTest
     @Test
     public void testRead()
     {
-        BufferedStream stream = new BufferedStream( byteStream );
-
-        try
+        try( BufferedStream stream = new BufferedStream( byteStream ) )
         {
             byte b = stream.read();
             Assert.assertEquals( bytes[0], b );
@@ -94,9 +94,7 @@ public class BufferedStreamTest
     @Test
     public void testReadByteArray()
     {
-        BufferedStream stream = new BufferedStream( byteStream, 75 );
-
-        try
+        try( BufferedStream stream = new BufferedStream( byteStream, 75 ) )
         {
             byte [] buf = new byte[bytes.length];
             stream.read( buf );
@@ -115,9 +113,7 @@ public class BufferedStreamTest
     @Test
     public void testReadFullyByteArray()
     {
-        BufferedStream stream = new BufferedStream( byteStream );
-
-        try
+        try( BufferedStream stream = new BufferedStream( byteStream ) )
         {
             byte [] buf = new byte[bytes.length];
             stream.readFully( buf );
@@ -136,9 +132,7 @@ public class BufferedStreamTest
     @Test
     public void testReadFullyGreaterThanAvailable()
     {
-        BufferedStream stream = new BufferedStream( byteStream );
-
-        try
+        try( BufferedStream stream = new BufferedStream( byteStream ) )
         {
             byte [] buf = new byte[bytes.length + 10];
             stream.readFully( buf );
@@ -161,9 +155,7 @@ public class BufferedStreamTest
     @Test
     public void testReadByteArrayIntInt()
     {
-        BufferedStream stream = new BufferedStream( byteStream );
-
-        try
+        try( BufferedStream stream = new BufferedStream( byteStream ) )
         {
             byte [] buf = new byte[bytes.length];
             stream.read( buf, 0, buf.length );
@@ -182,9 +174,7 @@ public class BufferedStreamTest
     @Test
     public void testReadFullyByteArrayIntInt()
     {
-        BufferedStream stream = new BufferedStream( byteStream );
-
-        try
+        try( BufferedStream stream = new BufferedStream( byteStream ) )
         {
             byte [] buf = new byte[bytes.length];
             stream.readFully( buf, 0, buf.length );
@@ -205,9 +195,8 @@ public class BufferedStreamTest
     {
         int off = ( int )( bytes.length / 3.0 );
         int len = ( int )( bytes.length * 2 / 3.0 );
-        BufferedStream stream = new BufferedStream( byteStream, 5 );
 
-        try
+        try( BufferedStream stream = new BufferedStream( byteStream, 5 ) )
         {
             stream.seek( off );
             Assert.assertEquals( off, stream.getPosition() );
@@ -231,11 +220,8 @@ public class BufferedStreamTest
     @Test
     public void testClose()
     {
-        BufferedStream stream = new BufferedStream( byteStream );
-
-        try
+        try( BufferedStream stream = new BufferedStream( byteStream ) )
         {
-            stream.close();
         }
         catch( IOException ex )
         {
@@ -250,9 +236,7 @@ public class BufferedStreamTest
     @Test
     public void testGetPosition()
     {
-        BufferedStream stream = new BufferedStream( byteStream );
-
-        try
+        try( BufferedStream stream = new BufferedStream( byteStream ) )
         {
             Assert.assertEquals( 0, stream.getPosition() );
         }
@@ -269,9 +253,7 @@ public class BufferedStreamTest
     @Test
     public void testGetLength()
     {
-        BufferedStream stream = new BufferedStream( byteStream );
-
-        try
+        try( BufferedStream stream = new BufferedStream( byteStream ) )
         {
             Assert.assertEquals( bytes.length, stream.getLength() );
         }
@@ -288,41 +270,32 @@ public class BufferedStreamTest
     @Test
     public void testWriteData()
     {
-        ByteArrayStream byteStream = new ByteArrayStream( 0 );
-        BufferedStream stream = new BufferedStream( byteStream );
-
-        try
+        try( ByteArrayStream byteStream = new ByteArrayStream( 0 );
+             BufferedStream stream = new BufferedStream( byteStream ) )
         {
             int len = 0;
 
-            try
+            int count = ( int )( ByteCache.DEFAULT_SIZE / bytes.length ) + 1;
+
+            count = 1;
+            Assert.assertEquals( 0, stream.getLength() );
+
+            stream.write( ( byte )55 );
+            stream.write( ( byte )55 );
+            stream.write( ( byte )55 );
+            stream.write( ( byte )55 );
+
+            len += 4;
+
+            Assert.assertEquals( 4, stream.getLength() );
+
+            for( int i = 0; i < count; i++ )
             {
-                int count = ( int )( ByteCache.DEFAULT_SIZE / bytes.length ) + 1;
-
-                count = 1;
-                Assert.assertEquals( 0, stream.getLength() );
-
-                stream.write( ( byte )55 );
-                stream.write( ( byte )55 );
-                stream.write( ( byte )55 );
-                stream.write( ( byte )55 );
-
-                len += 4;
-
-                Assert.assertEquals( 4, stream.getLength() );
-
-                for( int i = 0; i < count; i++ )
-                {
-                    stream.write( bytes );
-                    len += bytes.length;
-                }
-
-                Assert.assertEquals( len, stream.getLength() );
+                stream.write( bytes );
+                len += bytes.length;
             }
-            finally
-            {
-                stream.close();
-            }
+
+            Assert.assertEquals( len, stream.getLength() );
         }
         catch( IOException ex )
         {
@@ -339,28 +312,20 @@ public class BufferedStreamTest
     {
         byte [] expected = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
         byte [] buffer = new byte[expected.length];
-        ByteArrayStream byteStream = new ByteArrayStream( buffer );
-        BufferedStream stream = new BufferedStream( byteStream );
 
-        try
+        try( ByteArrayStream byteStream = new ByteArrayStream( buffer );
+             BufferedStream stream = new BufferedStream( byteStream ) )
         {
-            try
-            {
-                stream.write( expected, 0, 4 );
-                stream.write( expected[4] );
-                stream.write( expected, 5, 6 );
+            stream.write( expected, 0, 4 );
+            stream.write( expected[4] );
+            stream.write( expected, 5, 6 );
 
-                byte [] actual = new byte[expected.length];
+            byte [] actual = new byte[expected.length];
 
-                stream.seek( 0 );
-                stream.readFully( actual );
+            stream.seek( 0 );
+            stream.readFully( actual );
 
-                Assert.assertArrayEquals( expected, actual );
-            }
-            finally
-            {
-                stream.close();
-            }
+            Assert.assertArrayEquals( expected, actual );
         }
         catch( IOException ex )
         {
@@ -379,8 +344,6 @@ public class BufferedStreamTest
         byte [] actual = new byte[expected.length];
         int WRITE_COUNT = 235;
 
-        BufferedStream stream = null;
-
         for( int i = 0; i < expected.length; i++ )
         {
             expected[i] = ( byte )( i );
@@ -392,13 +355,9 @@ public class BufferedStreamTest
                 ".bin" );
             file.deleteOnExit();
 
-            try
+            try( FileStream fstream = new FileStream( file );
+                 BufferedStream stream = new BufferedStream( fstream, 16 ) )
             {
-                FileStream fstream;
-
-                fstream = new FileStream( file );
-                stream = new BufferedStream( fstream, 16 );
-
                 for( int i = 0; i < WRITE_COUNT; i++ )
                 {
                     stream.write( expected );
@@ -409,21 +368,13 @@ public class BufferedStreamTest
                 stream.write( ( byte )20 );
                 stream.write( ( byte )30 );
             }
-            finally
-            {
-                stream.close();
-            }
 
             Assert.assertEquals( WRITE_COUNT * expected.length + 4,
                 file.length() );
 
-            try
+            try( FileStream fstream = new FileStream( file, true );
+                 BufferedStream stream = new BufferedStream( fstream, 16 ) )
             {
-                FileStream fstream;
-
-                fstream = new FileStream( file, true );
-                stream = new BufferedStream( fstream, 16 );
-
                 stream.seek( 0 );
                 for( int i = 0; i < WRITE_COUNT; i++ )
                 {
@@ -431,10 +382,6 @@ public class BufferedStreamTest
 
                     Assert.assertArrayEquals( expected, actual );
                 }
-            }
-            finally
-            {
-                stream.close();
             }
 
         }
@@ -452,38 +399,30 @@ public class BufferedStreamTest
     public void testWriteToDataStream()
     {
         byte [] buffer = new byte[100];
-        ByteArrayStream byteStream = new ByteArrayStream( buffer );
-        BufferedStream bufStream = new BufferedStream( byteStream );
-        DataStream stream = new DataStream( bufStream );
 
-        try
+        try( ByteArrayStream byteStream = new ByteArrayStream( buffer );
+             BufferedStream bufStream = new BufferedStream( byteStream );
+             DataStream stream = new DataStream( bufStream ) )
         {
-            try
-            {
-                stream.writeInt( 4 );
+            stream.writeInt( 4 );
 
-                stream.write( ( byte )42 );
+            stream.write( ( byte )42 );
 
-                Assert.assertEquals( 5, stream.getPosition() );
+            Assert.assertEquals( 5, stream.getPosition() );
 
-                stream.seek( 0 );
+            stream.seek( 0 );
 
-                Assert.assertEquals( 0, stream.getPosition() );
+            Assert.assertEquals( 0, stream.getPosition() );
 
-                stream.readInt();
+            stream.readInt();
 
-                Assert.assertEquals( 4, stream.getPosition() );
+            Assert.assertEquals( 4, stream.getPosition() );
 
-                byte b = stream.read();
+            byte b = stream.read();
 
-                Assert.assertEquals( 5, stream.getPosition() );
+            Assert.assertEquals( 5, stream.getPosition() );
 
-                Assert.assertEquals( 42, b );
-            }
-            finally
-            {
-                stream.close();
-            }
+            Assert.assertEquals( 42, b );
         }
         catch( IOException ex )
         {
@@ -499,30 +438,22 @@ public class BufferedStreamTest
     public void testWriteMockDataToDataStream()
     {
         byte [] buffer = new byte[100];
-        ByteArrayStream byteStream = new ByteArrayStream( buffer );
-        BufferedStream bufStream = new BufferedStream( byteStream );
-        DataStream stream = new DataStream( bufStream );
 
         MockObjectSerializer serializer = new MockObjectSerializer();
         MockObject expected = new MockObject();
         MockObject actual;
 
-        try
+        try( ByteArrayStream byteStream = new ByteArrayStream( buffer );
+             BufferedStream bufStream = new BufferedStream( byteStream );
+             DataStream stream = new DataStream( bufStream ) )
         {
-            try
-            {
-                serializer.write( expected, stream );
+            serializer.write( expected, stream );
 
-                stream.seek( 0 );
+            stream.seek( 0 );
 
-                actual = serializer.read( stream );
+            actual = serializer.read( stream );
 
-                Assert.assertEquals( expected, actual );
-            }
-            finally
-            {
-                stream.close();
-            }
+            Assert.assertEquals( expected, actual );
         }
         catch( IOException ex )
         {

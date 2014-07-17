@@ -26,7 +26,7 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
         int lineNumber )
     {
         boolean matched = false;
-        byte[] chars = str.getBytes();
+        byte [] chars = str.getBytes();
         ByteCharSequence sequence = new ByteCharSequence( chars );
         Matcher matcher = contentsPattern.matcher( sequence );
 
@@ -53,7 +53,7 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
      * @param lineNum
      * @return
      **********************************************************************/
-    private LineMatch createLineMatch( byte[] chars, Matcher matcher,
+    private LineMatch createLineMatch( byte [] chars, Matcher matcher,
         int lineNum )
     {
         int lineStart = 0;
@@ -87,12 +87,13 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
     {
         File file = record.getFile();
         String line;
-        FileReader reader = new FileReader( file );
-        LineNumberReader lineReader = new LineNumberReader( reader );
 
         boolean matched = false;
+
         // LogUtils.printDebug( "Searching file " + file.getAbsolutePath() );
-        try
+
+        try( FileReader reader = new FileReader( file );
+             LineNumberReader lineReader = new LineNumberReader( reader ) )
         {
             while( ( line = lineReader.readLine() ) != null &&
                 stopper.continueProcessing() )
@@ -109,8 +110,6 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
         }
         finally
         {
-            lineReader.close();
-
             if( matched )
             {
                 searchHandler.addFile( record );
