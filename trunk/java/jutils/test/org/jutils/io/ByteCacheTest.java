@@ -12,23 +12,13 @@ public class ByteCacheTest
 {
     private static byte [] loadBytes( URL url ) throws IOException
     {
-        InputStream stream = null;
         byte [] bytes;
 
-        stream = url.openStream();
-
-        try
+        try( InputStream stream = url.openStream() )
         {
             bytes = new byte[stream.available()];
 
             stream.read( bytes );
-        }
-        finally
-        {
-            if( stream != null )
-            {
-                stream.close();
-            }
         }
 
         return bytes;
@@ -85,44 +75,31 @@ public class ByteCacheTest
     public void testRemainingRead()
     {
         ByteCache cache = new ByteCache();
-        ByteArrayStream stream = null;
         byte [] bytes = getTestBytes();
         byte [] buf = new byte[10];
 
-        try
+        try( ByteArrayStream stream = new ByteArrayStream( bytes ) )
         {
-            stream = new ByteArrayStream( bytes );
+            cache.readFromStream( stream );
 
-            try
-            {
-                cache.readFromStream( stream );
+            int value = Math.min( cache.getSize(), bytes.length );
 
-                int value = Math.min( cache.getSize(), bytes.length );
+            Assert.assertEquals( value, cache.remainingRead() );
 
-                Assert.assertEquals( value, cache.remainingRead() );
+            cache.read();
+            value--;
 
-                cache.read();
-                value--;
+            Assert.assertEquals( value, cache.remainingRead() );
 
-                Assert.assertEquals( value, cache.remainingRead() );
+            cache.read( buf, 0, buf.length );
+            value -= buf.length;
 
-                cache.read( buf, 0, buf.length );
-                value -= buf.length;
+            Assert.assertEquals( value, cache.remainingRead() );
 
-                Assert.assertEquals( value, cache.remainingRead() );
+            cache.write( ( byte )0 );
+            value--;
 
-                cache.write( ( byte )0 );
-                value--;
-
-                Assert.assertEquals( value, cache.remainingRead() );
-            }
-            finally
-            {
-                if( stream != null )
-                {
-                    stream.close();
-                }
-            }
+            Assert.assertEquals( value, cache.remainingRead() );
         }
         catch( IOException ex )
         {
