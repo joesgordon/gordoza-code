@@ -296,11 +296,12 @@ public class HexEditorFilePanel implements IView<JPanel>
             raFile.close();
         }
 
-        FileOutputStream fileStream = new FileOutputStream( file );
-
-        byte [] buffer = hexView.getBuffer().getBytes();
-        fileStream.write( buffer );
-        fileStream.close();
+        try( FileOutputStream fileStream = new FileOutputStream( file ) )
+        {
+            byte [] buffer = hexView.getBuffer().getBytes();
+            fileStream.write( buffer );
+            fileStream.close();
+        }
 
         if( file.compareTo( currentFile ) == 0 )
         {
