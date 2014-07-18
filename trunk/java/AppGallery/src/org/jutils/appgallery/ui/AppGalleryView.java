@@ -59,6 +59,9 @@ public class AppGalleryView implements IComponentView
         return view;
     }
 
+    /***************************************************************************
+     * @param app
+     **************************************************************************/
     public static void displayApp( ILibraryApp app )
     {
         Component comp = app.createApp();
@@ -111,6 +114,9 @@ public class AppGalleryView implements IComponentView
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class ListMouseListener extends MouseAdapter
     {
         private final JList<ILibraryApp> list;
@@ -122,7 +128,8 @@ public class AppGalleryView implements IComponentView
 
         public void mouseClicked( MouseEvent e )
         {
-            if( e.getClickCount() == 2 )
+            if( !SwingUtilities.isRightMouseButton( e ) &&
+                e.getClickCount() == 2 && !e.isConsumed() )
             {
                 ILibraryApp app = list.getSelectedValue();
 
@@ -132,5 +139,5 @@ public class AppGalleryView implements IComponentView
                 }
             }
         }
-    };
+    }
 }
