@@ -65,7 +65,7 @@ public class ChartView implements IView<JComponent>
     {
         if( !addData )
         {
-            chart.plot.serieses.clear();
+            clear();
         }
 
         Color c = palette.next();
@@ -76,6 +76,17 @@ public class ChartView implements IView<JComponent>
         // s.line = null;
 
         chart.plot.calculateRanges();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public void clear()
+    {
+        chart.plot.serieses.clear();
+        chart.plot.highlightLayer.repaint = true;
+        chart.plot.seriesLayer.repaint = true;
+        mainPanel.repaint();
     }
 
     /***************************************************************************

@@ -85,6 +85,12 @@ public class JChartFrameView implements IView<JFrame>
         JMenu menu = new JMenu( "File" );
         JMenuItem item;
 
+        item = new JMenuItem( "Clear" );
+        item.addActionListener( new ClearListener( this ) );
+        menu.add( item );
+
+        menu.addSeparator();
+
         item = new JMenuItem( "Exit" );
         item.addActionListener( new ExitListener( frame ) );
         menu.add( item );
@@ -173,6 +179,22 @@ public class JChartFrameView implements IView<JFrame>
             {
                 d.setVisible( true );
             }
+        }
+    }
+
+    private static class ClearListener implements ActionListener
+    {
+        private final JChartFrameView view;
+
+        public ClearListener( JChartFrameView view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            view.chartView.clear();
         }
     }
 }
