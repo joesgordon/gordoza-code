@@ -3,30 +3,30 @@ package org.cc.edit.io;
 import java.io.IOException;
 
 import org.cc.data.LockInfo;
-import org.jutils.io.IDataSerializer;
-import org.jutils.io.IDataStream;
+import org.jutils.io.*;
 
-/**
+/*******************************************************************************
  * 
- */
+ ******************************************************************************/
 public class LockInfoSerializer implements IDataSerializer<LockInfo>
 {
     /**  */
     private StringSerializer ss;
 
-    /**
+    /***************************************************************************
      * 
-     */
+     **************************************************************************/
     public LockInfoSerializer()
     {
         ss = new StringSerializer();
     }
 
-    /**
+    /***************************************************************************
      * 
-     */
+     **************************************************************************/
     @Override
-    public LockInfo read( IDataStream stream ) throws IOException
+    public LockInfo read( IDataStream stream ) throws IOException,
+        RuntimeFormatException
     {
         LockInfo info = null;
         boolean locked = stream.readBoolean();
@@ -43,9 +43,9 @@ public class LockInfoSerializer implements IDataSerializer<LockInfo>
         return info;
     }
 
-    /**
+    /***************************************************************************
      * 
-     */
+     **************************************************************************/
     @Override
     public void write( LockInfo t, IDataStream stream ) throws IOException
     {

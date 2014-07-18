@@ -89,14 +89,12 @@ public class NmrConnectController
     {
         IPeakFile peakFile = null;
 
-        try
+        try( FileReader reader = new FileReader( file );
+             LineNumberReader lnReader = new LineNumberReader( reader ) )
         {
-            FileReader reader = new FileReader( file );
-            LineNumberReader lnReader = new LineNumberReader( reader );
             PeakFileReader pfReader = new PeakFileReader( reader );
 
             peakFile = pfReader.read( lnReader );
-            reader.close();
         }
         catch( IOException ex )
         {
@@ -114,11 +112,11 @@ public class NmrConnectController
     {
         List<IShiftxRecord> records = null;
         URL shiftxUrl = NmrConnectMain.class.getResource( "shiftX.shx" );
-        try
+
+        try( InputStream stream = shiftxUrl.openStream();
+             InputStreamReader reader = new InputStreamReader( stream );
+             LineNumberReader lnReader = new LineNumberReader( reader ) )
         {
-            InputStream stream = shiftxUrl.openStream();
-            InputStreamReader reader = new InputStreamReader( stream );
-            LineNumberReader lnReader = new LineNumberReader( reader );
             ShiftxFileReader shiftxReader = new ShiftxFileReader( reader );
 
             records = shiftxReader.read( lnReader );
@@ -156,23 +154,10 @@ public class NmrConnectController
     {
         NmrDataSerializer serializer = new NmrDataSerializer();
 
-        try
+        try( FileInputStream stream = new FileInputStream( file ) )
         {
-            FileInputStream stream = null;
-
-            try
-            {
-                stream = new FileInputStream( file );
-                INmrData data = serializer.read( stream );
-                nmrFrame.setData( data );
-            }
-            finally
-            {
-                if( stream != null )
-                {
-                    stream.close();
-                }
-            }
+            INmrData data = serializer.read( stream );
+            nmrFrame.setData( data );
         }
         catch( IOException ex )
         {
@@ -189,22 +174,9 @@ public class NmrConnectController
     {
         NmrDataSerializer serializer = new NmrDataSerializer();
 
-        try
+        try( FileOutputStream stream = new FileOutputStream( file ) )
         {
-            FileOutputStream stream = null;
-
-            try
-            {
-                stream = new FileOutputStream( file );
-                serializer.write( nmrFrame.getData(), stream );
-            }
-            finally
-            {
-                if( stream != null )
-                {
-                    stream.close();
-                }
-            }
+            serializer.write( nmrFrame.getData(), stream );
         }
         catch( IOException ex )
         {

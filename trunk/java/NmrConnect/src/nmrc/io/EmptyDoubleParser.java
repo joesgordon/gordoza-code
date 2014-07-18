@@ -5,7 +5,7 @@ import org.jutils.io.IParser;
 public class EmptyDoubleParser implements IParser<Double>
 {
     @Override
-    public Double parseItem( String str ) throws IllegalArgumentException
+    public Double parse( String str ) throws IllegalArgumentException
     {
         Double d = null;
 

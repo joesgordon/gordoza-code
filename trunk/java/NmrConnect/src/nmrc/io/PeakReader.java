@@ -70,8 +70,8 @@ public class PeakReader implements IReader<IPeakRecord, LineNumberReader>
 
             String name = records[0];
 
-            double hn = doubleParser.parseItem( records[1] );
-            double n15 = doubleParser.parseItem( records[2] );
+            double hn = doubleParser.parse( records[1] );
+            double n15 = doubleParser.parse( records[2] );
 
             List<Double> alphas = getDoubleList( records[3] );
             List<Double> betas = getDoubleList( records[4] );
@@ -107,14 +107,14 @@ public class PeakReader implements IReader<IPeakRecord, LineNumberReader>
                 dList = new ArrayList<Double>( nums.length );
                 for( String num : nums )
                 {
-                    dList.add( doubleParser.parseItem( num ) );
+                    dList.add( doubleParser.parse( num ) );
                 }
             }
         }
         else if( list.length() > 0 )
         {
             dList = new ArrayList<Double>( 1 );
-            dList.add( doubleParser.parseItem( list ) );
+            dList.add( doubleParser.parse( list ) );
         }
 
         return dList;

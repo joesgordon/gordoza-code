@@ -5,8 +5,7 @@ import java.net.*;
 import java.util.*;
 
 import org.jutils.concurrent.Stoppable;
-import org.jutils.io.ByteArrayStream;
-import org.jutils.io.DataStream;
+import org.jutils.io.*;
 
 import chatterbox.data.ChatHeader;
 import chatterbox.data.ChatMessageType;
@@ -229,18 +228,18 @@ public class Chat extends AbstractChat
      **************************************************************************/
     public void sendMessage( UserAvailableMessage message ) throws IOException
     {
-        ByteArrayStream stream = new ByteArrayStream( 1 );
-        DataStream out = new DataStream( stream );
+        try( ByteArrayStream stream = new ByteArrayStream( 1 );
+             DataStream out = new DataStream( stream ) )
+        {
+            // -----------------------------------------------------------------
+            // Get the message bytes.
+            // -----------------------------------------------------------------
+            userAvailableMessageSerializer.write( message, out );
 
-        // ---------------------------------------------------------------------
-        // Get the message bytes.
-        // ---------------------------------------------------------------------
-        userAvailableMessageSerializer.write( message, out );
+            byte[] array = stream.toByteArray();
 
-        byte[] array = stream.toByteArray();
-
-        sendBytes( ChatMessageType.UserAvailable, array );
-        stream.close();
+            sendBytes( ChatMessageType.UserAvailable, array );
+        }
     }
 
     /***************************************************************************
@@ -249,14 +248,16 @@ public class Chat extends AbstractChat
      **************************************************************************/
     public void sendMessage( UserLeftMessage message ) throws IOException
     {
-        ByteArrayStream stream = new ByteArrayStream( 1024 );
-        DataStream out = new DataStream( stream );
+        try( ByteArrayStream stream = new ByteArrayStream( 1024 );
+             DataStream out = new DataStream( stream ) )
+        {
+            // -----------------------------------------------------------------
+            // Get the message bytes.
+            // -----------------------------------------------------------------
+            userLeftMessageSerializer.write( message, out );
 
-        // Get the message bytes.
-        userLeftMessageSerializer.write( message, out );
-
-        sendBytes( ChatMessageType.UserLeft, stream.toByteArray() );
-        stream.close();
+            sendBytes( ChatMessageType.UserLeft, stream.toByteArray() );
+        }
     }
 
     /***************************************************************************
@@ -265,14 +266,16 @@ public class Chat extends AbstractChat
      **************************************************************************/
     public void sendMessage( IChatMessage message ) throws IOException
     {
-        ByteArrayStream stream = new ByteArrayStream( 1024 );
-        DataStream out = new DataStream( stream );
+        try( ByteArrayStream stream = new ByteArrayStream( 1024 );
+             DataStream out = new DataStream( stream ) )
+        {
+            // -----------------------------------------------------------------
+            // Get the message bytes.
+            // -----------------------------------------------------------------
+            chatMessageSerializer.write( message, out );
 
-        // Get the message bytes.
-        chatMessageSerializer.write( message, out );
-
-        sendBytes( ChatMessageType.Chat, stream.toByteArray() );
-        stream.close();
+            sendBytes( ChatMessageType.Chat, stream.toByteArray() );
+        }
     }
 
     /***************************************************************************
@@ -280,29 +283,31 @@ public class Chat extends AbstractChat
      * @throws IOException
      **************************************************************************/
     private void sendBytes( ChatMessageType messageType, byte[] msgBytes )
-        throws IOException
+        throws IOException, RuntimeFormatException
     {
         ChatHeader header;
         DatagramPacket packet;
-        ByteArrayStream stream;
-        DataStream out;
 
         // Put the header bytes before the message.
         header = new ChatHeader( messageType, msgBytes.length );
-        stream = new ByteArrayStream( msgBytes.length + 64 );
-        out = new DataStream( stream );
-        headerSerializer.write( header, out );
-        stream.write( msgBytes );
-        msgBytes = stream.toByteArray();
-        stream.close();
 
-        if( msgBytes.length > 65535 )
+        try( ByteArrayStream stream = new ByteArrayStream( msgBytes.length + 64 );
+             DataStream out = new DataStream( stream ) )
         {
-            throw new IOException( "Message is too long: " + msgBytes.length );
-        }
+            headerSerializer.write( header, out );
+            stream.write( msgBytes );
+            msgBytes = stream.toByteArray();
 
-        packet = new DatagramPacket( msgBytes, msgBytes.length, address, port );
-        socket.send( packet );
+            if( msgBytes.length > 65535 )
+            {
+                throw new RuntimeFormatException( "Message is too long: " +
+                    msgBytes.length );
+            }
+
+            packet = new DatagramPacket( msgBytes, msgBytes.length, address,
+                port );
+            socket.send( packet );
+        }
     }
 
     @Override

@@ -58,7 +58,7 @@ public class ChatReceiveTask implements IStoppableTask
     public void run( ITaskStopManager stopper )
     {
         byte[] messageBytes;
-        ByteArrayStream byteStream;
+        ;
 
         while( stopper.continueProcessing() )
         {
@@ -67,11 +67,12 @@ public class ChatReceiveTask implements IStoppableTask
                 socket.receive( rxPacket );
                 messageBytes = Arrays.copyOf( rxPacket.getData(),
                     rxPacket.getLength() );
-                byteStream = new ByteArrayStream( messageBytes );
 
-                try
+                try( ByteArrayStream byteStream = new ByteArrayStream(
+                         messageBytes );
+                     IDataStream stream = new DataStream( byteStream ); )
                 {
-                    parseMessage( byteStream );
+                    parseMessage( stream );
                 }
                 catch( IOException ex )
                 {
@@ -101,29 +102,28 @@ public class ChatReceiveTask implements IStoppableTask
      * @param stream
      * @throws IOException
      **************************************************************************/
-    private void parseMessage( IStream stream ) throws IOException,
+    private void parseMessage( IDataStream stream ) throws IOException,
         RuntimeFormatException
     {
-        DataStream inStream = new DataStream( stream );
-        ChatHeader header = headerSerializer.read( inStream );
+        ChatHeader header = headerSerializer.read( stream );
 
         switch( header.getMessageType() )
         {
             case Chat:
             {
-                IChatMessage message = messageSerializer.read( inStream );
+                IChatMessage message = messageSerializer.read( stream );
                 chat.receiveMessage( message );
                 break;
             }
             case UserAvailable:
             {
-                UserAvailableMessage message = userAvailSerializer.read( inStream );
+                UserAvailableMessage message = userAvailSerializer.read( stream );
                 chat.setUserAvailable( message.getUser(), true );
                 break;
             }
             case UserLeft:
             {
-                UserLeftMessage message = userLeftSerializer.read( inStream );
+                UserLeftMessage message = userLeftSerializer.read( stream );
                 chat.removeUser( message.getConversationId(), message.getUser() );
                 break;
             }

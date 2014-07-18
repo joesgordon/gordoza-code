@@ -246,12 +246,10 @@ public class CceFrame extends JFrame
             if( fc.showSaveDialog( CceFrame.this ) == JFileChooser.APPROVE_OPTION )
             {
                 File file = fc.getSelectedFile();
-                FileStream out;
 
-                try
+                try( IStream out = new FileStream( file );
+                     IDataStream leout = new DataStream( out ) )
                 {
-                    out = new FileStream( file );
-                    DataStream leout = new DataStream( out );
                     AppModelSerializer serializer = new AppModelSerializer();
                     serializer.write( model, leout );
                 }
@@ -284,15 +282,36 @@ public class CceFrame extends JFrame
             if( fc.showOpenDialog( CceFrame.this ) == JFileChooser.APPROVE_OPTION )
             {
                 File file = fc.getSelectedFile();
-                FileStream out = null;
-                DataStream leout = null;
 
-                try
+                IStream stream = null;
+
+                try( FileStream out = new FileStream( file );
+                     DataStream leout = new DataStream( out,
+                         ByteOrder.LITTLE_ENDIAN ) )
                 {
-                    out = new FileStream( file );
-                    leout = new DataStream( out, ByteOrder.LITTLE_ENDIAN );
+                    stream = leout;
+
                     AppModelSerializer serializer = new AppModelSerializer();
                     setData( serializer.read( leout ) );
+                }
+                catch( RuntimeFormatException ex )
+                {
+                    String posStr = "????";
+                    if( stream != null )
+                    {
+                        try
+                        {
+                            long l = stream.getPosition();
+                            posStr = String.format( "0x%016X", l );
+                        }
+                        catch( IOException ex1 )
+                        {
+                        }
+                    }
+
+                    JOptionPane.showMessageDialog( CceFrame.this,
+                        ex.getMessage() + " @ 0x" + posStr, "ERROR",
+                        JOptionPane.ERROR_MESSAGE );
                 }
                 catch( FileNotFoundException ex )
                 {
@@ -302,21 +321,8 @@ public class CceFrame extends JFrame
                 }
                 catch( IOException ex )
                 {
-                    String posStr = "????";
-                    if( leout != null )
-                    {
-                        try
-                        {
-                            long l = leout.getPosition();
-                            posStr = String.format( "0x%016X", l );
-                        }
-                        catch( IOException e1 )
-                        {
-                        }
-                    }
-
                     JOptionPane.showMessageDialog( CceFrame.this,
-                        ex.getMessage() + " @ 0x" + posStr, "ERROR",
+                        "I/O Error: " + ex.getMessage(), "I/O ERROR",
                         JOptionPane.ERROR_MESSAGE );
                 }
             }
