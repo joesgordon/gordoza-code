@@ -74,10 +74,10 @@ public class ShiftxRecordReader implements
      **************************************************************************/
     private IShiftxRecord getRecord( String[] values ) throws IOException
     {
-        Double h = doubleParser.parseItem( values[2] );
-        Double n = doubleParser.parseItem( values[3] );
-        Double cA = doubleParser.parseItem( values[4] );
-        Double cB = doubleParser.parseItem( values[5] );
+        Double h = doubleParser.parse( values[2] );
+        Double n = doubleParser.parse( values[3] );
+        Double cA = doubleParser.parse( values[4] );
+        Double cB = doubleParser.parse( values[5] );
 
         return new ShiftxRecord( values[0], values[1], h, n, cA, cB );
     }
