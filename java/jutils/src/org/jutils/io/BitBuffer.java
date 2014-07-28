@@ -89,6 +89,12 @@ public class BitBuffer
      **************************************************************************/
     public void setPosition( int bitIndex )
     {
+        if( bitIndex >= bitCount() )
+        {
+            throw new IllegalArgumentException( "The bit index (" + bitIndex +
+                ") must be < the bit count (" + bitCount() + ")" );
+        }
+
         int bytePos = bitIndex / 8;
         int bitPos = bitIndex % 8;
 
