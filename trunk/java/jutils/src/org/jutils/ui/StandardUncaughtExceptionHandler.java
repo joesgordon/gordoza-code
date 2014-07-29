@@ -6,8 +6,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import org.jutils.Utils;
-
 /*******************************************************************************
  * 
  ******************************************************************************/
@@ -42,14 +40,21 @@ public class StandardUncaughtExceptionHandler implements
         }
     }
 
+    /***************************************************************************
+     * @param ex
+     **************************************************************************/
     private void displayException( Throwable ex )
     {
         ex.printStackTrace();
+        MessageExceptionView exView = new MessageExceptionView();
 
-        JOptionPane optionPane = new JOptionPane(
-            "The following error has occurred. You may " +
-                "choose to ignore and continue or quit." + Utils.NEW_LINE +
-                ex.getMessage(), JOptionPane.ERROR_MESSAGE );
+        exView.setMessage( "The following error has occurred. You may "
+            + "choose to ignore and continue or quit." );
+
+        exView.setException( ex );
+
+        JOptionPane optionPane = new JOptionPane( exView.getView(),
+            JOptionPane.ERROR_MESSAGE );
         JButton continueButton = new JButton( "Continue" );
         JButton quitButton = new JButton( "Quit" );
 
@@ -69,6 +74,8 @@ public class StandardUncaughtExceptionHandler implements
         optionPane.setOptions( new Object[] { continueButton, quitButton } );
 
         JDialog dialog = optionPane.createDialog( frame, "ERROR" );
+
+        dialog.setResizable( true );
 
         continueButton.addActionListener( new ContinueListener( dialog ) );
 
