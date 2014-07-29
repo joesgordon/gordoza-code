@@ -3,6 +3,7 @@ package org.jutils.io;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.*;
 
 //TODO comments
@@ -371,5 +372,23 @@ public final class IOUtils
         }
 
         return files;
+    }
+
+    public static void removeContents( File dir ) throws IOException
+    {
+        File [] files = dir.listFiles();
+
+        if( files != null )
+        {
+            for( File f : files )
+            {
+                if( f.isDirectory() )
+                {
+                    removeContents( f );
+                }
+
+                Files.delete( f.toPath() );
+            }
+        }
     }
 }
