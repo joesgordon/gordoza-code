@@ -100,7 +100,7 @@ public class MaxQueue<T> implements Iterable<T>
         }
         else
         {
-            changed = elements.add( e );
+            elements.addFirst( e );
 
             if( size() > maxCount )
             {
