@@ -51,11 +51,13 @@ public class ValidationView implements IView<JPanel>
         Dimension dim = errorField.getPreferredSize();
         dim.width = field.getView().getPreferredSize().width;
 
+        errorField.setText( "ERROR: " + field.getInvalidationReason() );
         errorField.setPreferredSize( dim );
         errorField.setEditable( false );
 
         this.view = createView();
 
+        // LogUtils.printDebug( "Adding validity changed listner" );
         field.addValidityChanged( new FieldValidityChangedListener( this ) );
 
         setErrorFieldVisible( true );
