@@ -57,6 +57,8 @@ public class ValidationView implements IView<JPanel>
         this.view = createView();
 
         field.addValidityChanged( new FieldValidityChangedListener( this ) );
+
+        setErrorFieldVisible( true );
     }
 
     /***************************************************************************
