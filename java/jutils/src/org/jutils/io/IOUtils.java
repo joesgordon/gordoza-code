@@ -221,6 +221,20 @@ public final class IOUtils
 
     /***************************************************************************
      * @param file
+     * @param ext
+     * @return
+     **************************************************************************/
+    public static File replaceExtension( File file, String ext )
+    {
+        File parent = file.getAbsoluteFile().getParentFile();
+        String name = removeFilenameExtension( file ) + "." + ext;
+        File f = new File( parent, name );
+
+        return f;
+    }
+
+    /***************************************************************************
+     * @param file
      * @return
      **************************************************************************/
     public static String removeFilenameExtension( File file )
