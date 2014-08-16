@@ -161,13 +161,20 @@ public final class ValidationTextField implements IValidationField
      **************************************************************************/
     private void setComponentValid( boolean valid )
     {
-        if( valid )
+        if( textfield.isEditable() && textfield.isEnabled() )
         {
-            textfield.setBackground( validBackground );
+            if( valid )
+            {
+                textfield.setBackground( validBackground );
+            }
+            else
+            {
+                textfield.setBackground( invalidBackground );
+            }
         }
         else
         {
-            textfield.setBackground( invalidBackground );
+            textfield.setBackground( null );
         }
     }
 
