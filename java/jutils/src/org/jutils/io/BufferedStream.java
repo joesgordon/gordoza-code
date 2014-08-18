@@ -199,6 +199,8 @@ public class BufferedStream implements IStream
         }
     }
 
+    // TODO seek break contract with interface.
+
     /***************************************************************************
      * 
      **************************************************************************/
@@ -214,6 +216,11 @@ public class BufferedStream implements IStream
         else
         {
             position = pos;
+        }
+
+        if( position < 0 )
+        {
+            throw new IOException( "Negative seek offset" );
         }
 
         // printDebug( "seek-post" );
