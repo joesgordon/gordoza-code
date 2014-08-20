@@ -4,6 +4,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import org.jutils.ui.fields.IValidationField;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************

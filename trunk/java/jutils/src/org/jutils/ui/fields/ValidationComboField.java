@@ -1,14 +1,16 @@
-package org.jutils.ui.validation;
+package org.jutils.ui.fields;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JComboBox;
 
+import org.jutils.ui.event.updater.ComboBoxUpdater;
+import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.model.ItemComboBoxModel;
+import org.jutils.ui.validation.IValidityChangedListener;
+import org.jutils.ui.validation.ValidityListenerList;
 
 /*******************************************************************************
  * 
@@ -48,7 +50,8 @@ public final class ValidationComboField<T> implements IValidationField
         this.invalidBackground = Color.red;
 
         field.setBackground( validBackground );
-        field.addActionListener( new ValidationActionListener( this ) );
+        field.addItemListener( new ComboBoxUpdater<T>(
+            new ValidationActionListener<T>( this ) ) );
     }
 
     /***************************************************************************
@@ -150,17 +153,17 @@ public final class ValidationComboField<T> implements IValidationField
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class ValidationActionListener implements ActionListener
+    private static class ValidationActionListener<T> implements IUpdater<T>
     {
-        private ValidationComboField<?> field;
+        private ValidationComboField<T> field;
 
-        public ValidationActionListener( ValidationComboField<?> field )
+        public ValidationActionListener( ValidationComboField<T> field )
         {
             this.field = field;
         }
 
         @Override
-        public void actionPerformed( ActionEvent e )
+        public void update( T data )
         {
             Object item = field.field.getSelectedItem();
 

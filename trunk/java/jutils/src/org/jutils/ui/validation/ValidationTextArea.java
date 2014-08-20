@@ -6,6 +6,7 @@ import javax.swing.JTextArea;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.jutils.ui.fields.IValidationField;
 import org.jutils.ui.validators.ITextValidator;
 
 public class ValidationTextArea implements IValidationField

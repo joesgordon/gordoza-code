@@ -1,8 +1,9 @@
-package org.jutils.ui.validation;
+package org.jutils.ui.fields;
 
 import java.awt.Color;
 
 import org.jutils.ui.model.IComponentView;
+import org.jutils.ui.validation.IValidityChangedListener;
 
 /*******************************************************************************
  * Defines an {@link IComponentView} that supports validation.

@@ -1,4 +1,4 @@
-package org.jutils.ui.validation;
+package org.jutils.ui.fields;
 
 import java.awt.Color;
 
@@ -6,6 +6,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.jutils.ui.validation.*;
 import org.jutils.ui.validators.ITextValidator;
 
 /*******************************************************************************

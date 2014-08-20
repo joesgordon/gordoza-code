@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jutils.ui.fields.IValidationField;
+
 /*******************************************************************************
  * This class will monitor the changes in validity to many
  * {@link IValidationField}s and will notify the provided listener only when the

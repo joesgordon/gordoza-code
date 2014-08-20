@@ -1,4 +1,4 @@
-package org.jutils.ui.validation;
+package org.jutils.ui.fields;
 
 import java.awt.Component;
 
@@ -6,29 +6,31 @@ import javax.swing.JTextField;
 
 import org.jutils.ui.StandardFormView.IFormField;
 import org.jutils.ui.event.updater.IUpdater;
+import org.jutils.ui.hex.HexUtils;
+import org.jutils.ui.validation.ValidationTextView;
 import org.jutils.ui.validators.*;
 
 /*******************************************************************************
  * Defines an {@link IFormField} that contains a double validater.
  ******************************************************************************/
-public class LongFormField implements IFormField
+public class HexByteFormField implements IFormField
 {
     /**  */
     private final String name;
     /**  */
     private final ValidationTextView textField;
-    /**  */
-    private final IUpdater<Long> updater;
 
     /**  */
-    private long value;
+    private IUpdater<Byte> updater;
+    /**  */
+    private byte value;
 
     /***************************************************************************
      * @param name
      * @param units
      * @param columns
      **************************************************************************/
-    public LongFormField( String name )
+    public HexByteFormField( String name )
     {
         this( name, ( String )null );
     }
@@ -37,7 +39,7 @@ public class LongFormField implements IFormField
      * @param name
      * @param updater
      **************************************************************************/
-    public LongFormField( String name, IUpdater<Long> updater )
+    public HexByteFormField( String name, IUpdater<Byte> updater )
     {
         this( name, null, 20, updater );
     }
@@ -46,7 +48,7 @@ public class LongFormField implements IFormField
      * @param name
      * @param units
      **************************************************************************/
-    public LongFormField( String name, String units )
+    public HexByteFormField( String name, String units )
     {
         this( name, units, 20, null );
     }
@@ -56,9 +58,20 @@ public class LongFormField implements IFormField
      * @param units
      * @param columns
      **************************************************************************/
-    public LongFormField( String name, String units, int columns )
+    public HexByteFormField( String name, String units, int columns )
     {
         this( name, units, columns, null );
+    }
+
+    public HexByteFormField( String name, String units, Byte min, Byte max )
+    {
+        this( name, units, 20, null, min, max );
+    }
+
+    public HexByteFormField( String name, String units, int columns,
+        IUpdater<Byte> updater )
+    {
+        this( name, units, columns, updater, null, null );
     }
 
     /***************************************************************************
@@ -67,8 +80,8 @@ public class LongFormField implements IFormField
      * @param columns
      * @param updater
      **************************************************************************/
-    public LongFormField( String name, String units, int columns,
-        IUpdater<Long> updater )
+    public HexByteFormField( String name, String units, int columns,
+        IUpdater<Byte> updater, Byte min, Byte max )
     {
         this.name = name;
         this.textField = new ValidationTextView( units, columns );
@@ -76,8 +89,8 @@ public class LongFormField implements IFormField
 
         ITextValidator textValidator;
 
-        textValidator = new DataTextValidator<>( new LongValidator(),
-            new ValueUpdater( this ) );
+        textValidator = new DataTextValidator<>(
+            new HexByteValidator( min, max ), new ValueUpdater( this ) );
         textField.getField().setValidator( textValidator );
     }
 
@@ -118,7 +131,7 @@ public class LongFormField implements IFormField
     /***************************************************************************
      * @return
      **************************************************************************/
-    public long getValue()
+    public byte getValue()
     {
         return value;
     }
@@ -126,10 +139,15 @@ public class LongFormField implements IFormField
     /***************************************************************************
      * @param value
      **************************************************************************/
-    public void setValue( long value )
+    public void setValue( byte value )
     {
         this.value = value;
-        textField.setText( "" + value );
+        textField.setText( HexUtils.toHexString( value ) );
+    }
+
+    public void setUpdater( IUpdater<Byte> updater )
+    {
+        this.updater = updater;
     }
 
     /***************************************************************************
@@ -143,17 +161,17 @@ public class LongFormField implements IFormField
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class ValueUpdater implements IUpdater<Long>
+    private static class ValueUpdater implements IUpdater<Byte>
     {
-        private final LongFormField view;
+        private final HexByteFormField view;
 
-        public ValueUpdater( LongFormField view )
+        public ValueUpdater( HexByteFormField view )
         {
             this.view = view;
         }
 
         @Override
-        public void update( Long data )
+        public void update( Byte data )
         {
             view.value = data;
             if( view.updater != null )

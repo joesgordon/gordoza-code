@@ -1,62 +1,33 @@
-package org.jutils.ui.validation;
+package org.jutils.ui.fields;
 
 import java.awt.Component;
 
-import javax.swing.JTextField;
-
 import org.jutils.ui.StandardFormView.IFormField;
 import org.jutils.ui.event.updater.IUpdater;
+import org.jutils.ui.validation.ValidationTextView;
 import org.jutils.ui.validators.*;
 
 /*******************************************************************************
  * Defines an {@link IFormField} that contains a double validater.
  ******************************************************************************/
-public class IntegerFormField implements IFormField
+public class DoubleFormField implements IFormField
 {
     /**  */
     private final String name;
     /**  */
     private final ValidationTextView textField;
     /**  */
-    private final IUpdater<Integer> updater;
+    private final IUpdater<Double> updater;
 
     /**  */
-    private int value;
+    private double value;
 
     /***************************************************************************
      * @param name
      * @param units
      * @param columns
      **************************************************************************/
-    public IntegerFormField( String name )
-    {
-        this( name, ( String )null );
-    }
-
-    /***************************************************************************
-     * @param name
-     * @param updater
-     **************************************************************************/
-    public IntegerFormField( String name, IUpdater<Integer> updater )
-    {
-        this( name, null, 20, updater );
-    }
-
-    /***************************************************************************
-     * @param name
-     * @param units
-     **************************************************************************/
-    public IntegerFormField( String name, String units )
-    {
-        this( name, units, 20, null );
-    }
-
-    /***************************************************************************
-     * @param name
-     * @param units
-     * @param columns
-     **************************************************************************/
-    public IntegerFormField( String name, String units, int columns )
+    public DoubleFormField( String name, String units, int columns )
     {
         this( name, units, columns, null );
     }
@@ -67,8 +38,8 @@ public class IntegerFormField implements IFormField
      * @param columns
      * @param updater
      **************************************************************************/
-    public IntegerFormField( String name, String units, int columns,
-        IUpdater<Integer> updater )
+    public DoubleFormField( String name, String units, int columns,
+        IUpdater<Double> updater )
     {
         this.name = name;
         this.textField = new ValidationTextView( units, columns );
@@ -76,7 +47,7 @@ public class IntegerFormField implements IFormField
 
         ITextValidator textValidator;
 
-        textValidator = new DataTextValidator<>( new IntegerValidator(),
+        textValidator = new DataTextValidator<>( new DoubleValidator(),
             new ValueUpdater( this ) );
         textField.getField().setValidator( textValidator );
     }
@@ -102,31 +73,23 @@ public class IntegerFormField implements IFormField
     /***************************************************************************
      * @return
      **************************************************************************/
+    public double getValue()
+    {
+        return value;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public IValidationField getValidationField()
     {
         return textField.getField();
     }
 
     /***************************************************************************
-     * @return
-     **************************************************************************/
-    public JTextField getTextField()
-    {
-        return textField.getField().getView();
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public int getValue()
-    {
-        return value;
-    }
-
-    /***************************************************************************
      * @param value
      **************************************************************************/
-    public void setValue( int value )
+    public void setValue( double value )
     {
         this.value = value;
         textField.setText( "" + value );
@@ -143,17 +106,17 @@ public class IntegerFormField implements IFormField
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class ValueUpdater implements IUpdater<Integer>
+    private static class ValueUpdater implements IUpdater<Double>
     {
-        private final IntegerFormField view;
+        private final DoubleFormField view;
 
-        public ValueUpdater( IntegerFormField view )
+        public ValueUpdater( DoubleFormField view )
         {
             this.view = view;
         }
 
         @Override
-        public void update( Integer data )
+        public void update( Double data )
         {
             view.value = data;
             if( view.updater != null )

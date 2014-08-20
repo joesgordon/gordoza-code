@@ -1,26 +1,26 @@
 package org.jutils.ui.event.updater;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
-import javax.swing.JComboBox;
-
-public class ComboBoxUpdater<T> implements ActionListener
+public class ComboBoxUpdater<T> implements ItemListener
 {
-    private final IUpdater<T> updater;
-    private final JComboBox<T> comboBox;
+    private IUpdater<T> updater;
 
-    public ComboBoxUpdater( JComboBox<T> comboBox, IUpdater<T> dataUpdater )
+    public ComboBoxUpdater( IUpdater<T> updater )
     {
-        this.comboBox = comboBox;
-        this.updater = dataUpdater;
+        this.updater = updater;
     }
 
     @Override
-    public void actionPerformed( ActionEvent e )
+    public final void itemStateChanged( ItemEvent event )
     {
-        @SuppressWarnings( "unchecked")
-        T selectedObject = ( T )comboBox.getSelectedItem();
-        updater.update( selectedObject );
+        if( event.getStateChange() == ItemEvent.SELECTED )
+        {
+            @SuppressWarnings( "unchecked")
+            T item = ( T )event.getItem();
+
+            updater.update( item );
+        }
     }
 }
