@@ -2,6 +2,7 @@ package org.jutils.ui.validation;
 
 import javax.swing.JPanel;
 
+import org.jutils.ui.fields.ValidationTextField;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************

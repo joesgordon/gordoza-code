@@ -195,6 +195,24 @@ public final class HexUtils
         return asArray( byteList );
     }
 
+    public static byte parseHex( String text ) throws NumberFormatException
+    {
+        if( text.length() != 2 )
+        {
+            throw new NumberFormatException(
+                "Incorrect length to specify a byte in hexadecimal" );
+        }
+
+        int b = 0;
+        char c = text.charAt( 0 );
+
+        b = NumberParsingUtils.digitFromHex( c );
+        b = b << 4;
+        b |= NumberParsingUtils.digitFromHex( c );
+
+        return ( byte )b;
+    }
+
     /***************************************************************************
      * Converts a string of hexadecimal digits to a list of bytes.
      * @param text the string to be converted.

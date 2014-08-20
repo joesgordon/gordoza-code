@@ -1,4 +1,4 @@
-package org.jutils.ui.validation;
+package org.jutils.ui.fields;
 
 import org.jutils.ui.model.IDataView;
 
