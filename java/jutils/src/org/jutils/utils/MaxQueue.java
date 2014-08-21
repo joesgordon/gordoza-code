@@ -125,6 +125,9 @@ public class MaxQueue<T> implements Iterable<T>
         }
     }
 
+    /***************************************************************************
+     * Returns the first item in the queue or {@code null} if empty.
+     **************************************************************************/
     public T first()
     {
         return elements.isEmpty() ? null : elements.getFirst();
@@ -132,7 +135,6 @@ public class MaxQueue<T> implements Iterable<T>
 
     /***************************************************************************
      * Returns the last item in the queue, or {@code null} if empty.
-     * @return the last item in the queue, or {@code null} if empty.
      **************************************************************************/
     public T last()
     {
