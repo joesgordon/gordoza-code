@@ -7,6 +7,7 @@ import org.jutils.ui.validation.ValidationException;
 public class FileValidator implements IDataValidator<File>
 {
     private final ExistenceType type;
+    private final boolean required;
 
     public FileValidator()
     {
@@ -15,27 +16,48 @@ public class FileValidator implements IDataValidator<File>
 
     public FileValidator( ExistenceType type )
     {
-        this.type = type;
+        this( type, true );
     }
 
+    public FileValidator( ExistenceType type, boolean required )
+    {
+        this.type = type;
+        this.required = required;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public File validate( String text ) throws ValidationException
     {
-        if( type != ExistenceType.DO_NOT_CHECK && text.isEmpty() )
+        if( text.isEmpty() )
         {
-            throw new ValidationException( "Empty path string" );
-        }
-
-        if( text.isEmpty() && type == ExistenceType.DO_NOT_CHECK )
-        {
-            return null;
+            if( required )
+            {
+                throw new ValidationException( "Empty path string" );
+            }
+            else
+            {
+                return null;
+            }
         }
 
         File f = new File( text );
 
+        if( type == ExistenceType.DO_NOT_CHECK )
+        {
+            if( !f.getAbsoluteFile().getParentFile().exists() )
+            {
+                throw new ValidationException( "Parent Path does not exist" );
+            }
+
+            return f;
+        }
+
         // LogUtils.printDebug( "Testing path " + text );
 
-        if( type != ExistenceType.DO_NOT_CHECK && !f.exists() )
+        if( !f.exists() )
         {
             throw new ValidationException( "Path does not exist" );
         }
@@ -64,6 +86,9 @@ public class FileValidator implements IDataValidator<File>
         return f.getAbsoluteFile();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public static enum ExistenceType
     {
         DO_NOT_CHECK,
