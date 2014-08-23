@@ -2,6 +2,8 @@ package org.jutils.ui.event.updater;
 
 import java.lang.reflect.Field;
 
+import org.jutils.io.LogUtils;
+
 /*******************************************************************************
  * @param <T>
  ******************************************************************************/
@@ -10,20 +12,28 @@ public class ReflectiveUpdater<T> implements IUpdater<T>
     /**  */
     private final Object obj;
     /**  */
-    private final String structureName;
-    /**  */
-    private final String dataName;
+    private final String [] dataPath;
 
     /***************************************************************************
      * @param obj
      * @param structureName
      * @param dataName
      **************************************************************************/
-    public ReflectiveUpdater( Object obj, String structureName, String dataName )
+    public ReflectiveUpdater( Object obj, String dataPath )
     {
         this.obj = obj;
-        this.structureName = structureName;
-        this.dataName = dataName;
+        this.dataPath = dataPath.split( "\\." );
+
+        if( this.dataPath.length == 0 )
+        {
+            throw new IllegalArgumentException(
+                "No field names found in data path: " + dataPath );
+        }
+    }
+
+    public ReflectiveUpdater( Object obj, String structureName, String dataName )
+    {
+        this( obj, structureName + "." + dataName );
     }
 
     /***************************************************************************
@@ -34,22 +44,40 @@ public class ReflectiveUpdater<T> implements IUpdater<T>
     {
         try
         {
-            Class<?> objClass = obj.getClass();
-            Field structField = objClass.getDeclaredField( structureName );
+            Object obj = this.obj;
+            Class<?> clazz = null;
+            Field field = null;
 
-            structField.setAccessible( true );
+            LogUtils.printDebug( "Data type: " +
+                data.getClass().getSimpleName() );
 
-            Object struct = structField.get( obj );
-
-            if( struct == null )
+            for( int i = 0; i < dataPath.length; i++ )
             {
-                throw new IllegalStateException( "Object not initialized: " +
-                    objClass.getSimpleName() + "." + structureName );
+                String name = dataPath[i];
+                clazz = obj.getClass();
+
+                field = clazz.getDeclaredField( name );
+
+                field.setAccessible( true );
+
+                if( i < dataPath.length - 1 )
+                {
+                    obj = field.get( obj );
+
+                    if( obj == null )
+                    {
+                        throw new IllegalStateException(
+                            "Object not initialized: " + clazz.getSimpleName() +
+                                "." + name );
+                    }
+
+                    LogUtils.printDebug( clazz.getSimpleName() +
+                        " has a field " + name + " of type " +
+                        obj.getClass().getSimpleName() );
+                }
             }
 
-            Class<?> structClass = struct.getClass();
-            Field dataField = structClass.getField( dataName );
-            dataField.set( struct, data );
+            field.set( obj, data );
         }
         catch( NoSuchFieldException ex )
         {
