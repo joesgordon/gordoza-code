@@ -61,7 +61,7 @@ public class ValidationView implements IView<JPanel>
         // LogUtils.printDebug( "Adding validity changed listner" );
         field.addValidityChanged( new FieldValidityChangedListener( this ) );
 
-        setErrorFieldVisible( true );
+        setErrorFieldVisible( !field.isValid() );
     }
 
     /***************************************************************************
