@@ -2,8 +2,6 @@ package org.jutils.ui.event.updater;
 
 import java.lang.reflect.Field;
 
-import org.jutils.io.LogUtils;
-
 /*******************************************************************************
  * @param <T>
  ******************************************************************************/
@@ -48,8 +46,8 @@ public class ReflectiveUpdater<T> implements IUpdater<T>
             Class<?> clazz = null;
             Field field = null;
 
-            LogUtils.printDebug( "Data type: " +
-                data.getClass().getSimpleName() );
+            // LogUtils.printDebug( "Data type: " +
+            // data.getClass().getSimpleName() );
 
             for( int i = 0; i < dataPath.length; i++ )
             {
@@ -71,9 +69,9 @@ public class ReflectiveUpdater<T> implements IUpdater<T>
                                 "." + name );
                     }
 
-                    LogUtils.printDebug( clazz.getSimpleName() +
-                        " has a field " + name + " of type " +
-                        obj.getClass().getSimpleName() );
+                    // LogUtils.printDebug( clazz.getSimpleName() +
+                    // " has a field " + name + " of type " +
+                    // obj.getClass().getSimpleName() );
                 }
             }
 
