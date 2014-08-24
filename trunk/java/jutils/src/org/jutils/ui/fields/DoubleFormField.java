@@ -16,8 +16,9 @@ public class DoubleFormField implements IFormField
     private final String name;
     /**  */
     private final ValidationTextView textField;
+
     /**  */
-    private final IUpdater<Double> updater;
+    private IUpdater<Double> updater;
 
     /**  */
     private double value;
@@ -118,6 +119,11 @@ public class DoubleFormField implements IFormField
     public void setEditable( boolean editable )
     {
         textField.getField().setEditable( editable );
+    }
+
+    public void setUpdater( IUpdater<Double> updater )
+    {
+        this.updater = updater;
     }
 
     /***************************************************************************
