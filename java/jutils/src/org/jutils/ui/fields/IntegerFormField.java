@@ -141,6 +141,11 @@ public class IntegerFormField implements IFormField
         textField.getField().setEditable( editable );
     }
 
+    public void setUpdater( IUpdater<Integer> updater )
+    {
+        this.updater = updater;
+    }
+
     /***************************************************************************
      * 
      **************************************************************************/
@@ -162,10 +167,5 @@ public class IntegerFormField implements IFormField
                 view.updater.update( data );
             }
         }
-    }
-
-    public void setUpdater( IUpdater<Integer> updater )
-    {
-        this.updater = updater;
     }
 }
