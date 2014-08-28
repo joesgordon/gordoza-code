@@ -6,6 +6,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.*;
 
+import org.jutils.ui.validation.ValidationException;
+
 //TODO comments
 
 /*******************************************************************************
@@ -358,6 +360,10 @@ public final class IOUtils
         }
     }
 
+    /***************************************************************************
+     * @param file
+     * @return
+     **************************************************************************/
     public static String getFileExtension( File file )
     {
         String fileName = file.getName();
@@ -373,6 +379,10 @@ public final class IOUtils
         return extension;
     }
 
+    /***************************************************************************
+     * @param file
+     * @return
+     **************************************************************************/
     public static List<File> getAncestors( File file )
     {
         List<File> files = new ArrayList<>();
@@ -388,6 +398,10 @@ public final class IOUtils
         return files;
     }
 
+    /***************************************************************************
+     * @param dir
+     * @throws IOException
+     **************************************************************************/
     public static void removeContents( File dir ) throws IOException
     {
         File [] files = dir.listFiles();
@@ -403,6 +417,117 @@ public final class IOUtils
 
                 Files.delete( f.toPath() );
             }
+        }
+    }
+
+    /***************************************************************************
+     * @param file
+     * @param name
+     * @throws ValidationException
+     **************************************************************************/
+    public static void validateFileInput( File file, String name )
+        throws ValidationException
+    {
+        if( !file.exists() )
+        {
+            throw new ValidationException( "The specified " + name +
+                " file does not exist: " + file.getName() );
+        }
+        else if( !file.isFile() )
+        {
+            throw new ValidationException( "The specified " + name +
+                " file exists, but is not a file: " + file.getName() );
+        }
+        else if( !file.canRead() )
+        {
+            throw new ValidationException( "Cannot read from the specified " +
+                name + " file: " + file.getName() );
+        }
+    }
+
+    /***************************************************************************
+     * @param dir
+     * @param name
+     * @throws ValidationException
+     **************************************************************************/
+    public static void validateDirInput( File dir, String name )
+        throws ValidationException
+    {
+        if( !dir.exists() )
+        {
+            throw new ValidationException( "The specified " + name +
+                " directory does not exist: " + dir.getName() );
+        }
+        else if( !dir.isFile() )
+        {
+            throw new ValidationException( "The specified " + name +
+                " directory exists, but is not a directory: " + dir.getName() );
+        }
+        else if( !dir.canRead() )
+        {
+            throw new ValidationException( "Cannot read from the specified " +
+                name + " directory: " + dir.getName() );
+        }
+    }
+
+    /***************************************************************************
+     * @param outputFile
+     * @param string
+     * @throws ValidationException
+     **************************************************************************/
+    public static void validateFileOuput( File file, String name )
+        throws ValidationException
+    {
+        if( !file.exists() )
+        {
+            File parent = file.getAbsoluteFile().getParentFile();
+            if( !parent.exists() )
+            {
+                throw new ValidationException( "The specified " + name +
+                    " file's parent directory does not exist: " +
+                    parent.getName() );
+            }
+            else if( !parent.canWrite() )
+            {
+                throw new ValidationException(
+                    "Cannot write to the specified " + name +
+                        " file's parent directory: " + parent.getName() );
+            }
+        }
+        else if( !file.isDirectory() )
+        {
+            throw new ValidationException( "The specified " + name +
+                " file directory is not a directory: " + file.getName() );
+        }
+        else if( !file.canWrite() )
+        {
+            throw new ValidationException( "Cannot write to the specified " +
+                name + " file: " + file.getName() );
+        }
+    }
+
+    /***************************************************************************
+     * @param dir
+     * @param name
+     * @throws ValidationException
+     **************************************************************************/
+    public static void validateDirOuput( File dir, String name )
+        throws ValidationException
+    {
+        if( !dir.exists() )
+        {
+            throw new ValidationException( "The specified " + name +
+                " directory does not exist: " + dir.getName() );
+        }
+        else if( !dir.isDirectory() )
+        {
+            throw new ValidationException( "The specified " + name +
+                " directory directory is not a directory: " + dir.getName() );
+        }
+        else if( !dir.canWrite() )
+        {
+            throw new ValidationException( "Cannot write to the specified " +
+                name + " directory: " + dir.getName() );
         }
     }
 }
