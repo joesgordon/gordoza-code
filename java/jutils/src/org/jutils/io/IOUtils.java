@@ -494,7 +494,7 @@ public final class IOUtils
                         " file's parent directory: " + parent.getName() );
             }
         }
-        else if( !file.isDirectory() )
+        else if( !file.isFile() )
         {
             throw new ValidationException( "The specified " + name +
                 " file directory is not a directory: " + file.getName() );
