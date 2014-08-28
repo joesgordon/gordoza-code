@@ -7,8 +7,6 @@ import javax.swing.*;
 
 import org.jutils.ui.StatusBarPanel;
 
-//TODO comments
-
 /*******************************************************************************
  * 
  ******************************************************************************/
@@ -362,5 +360,86 @@ public final class SwingUtils
         dialog.setVisible( true );
 
         return okText == pane.getValue();
+    }
+
+    public static void addTrayMenu( TrayIcon icon, JPopupMenu popup )
+    {
+        icon.addMouseListener( new TrayMouseListener( popup ) );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class TrayMouseListener extends MouseAdapter
+    {
+        private final JPopupMenu popup;
+        private final JDialog dialog;
+
+        public TrayMouseListener( JPopupMenu popup )
+        {
+            this.popup = popup;
+            this.dialog = new JDialog();
+
+            popup.validate();
+
+            dialog.setUndecorated( true );
+            dialog.setSize( 10, 10 );
+            dialog.validate();
+
+            dialog.addWindowFocusListener( new WindowFocusListener()
+            {
+                @Override
+                public void windowLostFocus( WindowEvent we )
+                {
+                    dialog.setVisible( false );
+                }
+
+                @Override
+                public void windowGainedFocus( WindowEvent we )
+                {
+                }
+            } );
+        }
+
+        @Override
+        public void mouseReleased( MouseEvent e )
+        {
+            if( SwingUtilities.isRightMouseButton( e ) &&
+                e.getClickCount() == 1 && !e.isConsumed() )
+            {
+                Point p = calcLocation( e.getPoint(), e.getLocationOnScreen() );
+
+                popup.setLocation( p.x, p.y );
+                dialog.setLocation( p.x, p.y );
+                dialog.setMinimumSize( new Dimension( 0, 0 ) );
+                dialog.setSize( 0, 0 );
+                popup.setInvoker( dialog );
+                dialog.setVisible( true );
+                popup.setVisible( true );
+            }
+        }
+
+        private Point calcLocation( Point p, Point loc )
+        {
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            GraphicsDevice [] gs = ge.getScreenDevices();
+
+            for( int i = 0; i < gs.length; i++ )
+            {
+                DisplayMode dm = gs[i].getDisplayMode();
+                GraphicsConfiguration gc = gs[i].getDefaultConfiguration();
+                Rectangle r = new Rectangle( gc.getBounds() );
+
+                if( r.contains( loc ) )
+                {
+                    if( ( dm.getHeight() + popup.getHeight() + 8 ) > p.y )
+                    {
+                        p.y -= ( popup.getHeight() + 8 );
+                    }
+                }
+            }
+
+            return p;
+        }
     }
 }
