@@ -216,7 +216,7 @@ public final class SwingUtils
 
         if( SystemTray.isSupported() )
         {
-            ActionListener trayListener = new TrayIconListener( frame );
+            ActionListener trayListener = new MiniMaximizeListener( frame );
 
             SystemTray tray = SystemTray.getSystemTray();
 
@@ -226,7 +226,7 @@ public final class SwingUtils
             try
             {
                 tray.add( icon );
-                frame.addWindowListener( new MinimizeListener( frame ) );
+                frame.addWindowListener( new HideOnMinimizeListener( frame ) );
             }
             catch( AWTException ex )
             {
@@ -240,14 +240,57 @@ public final class SwingUtils
         return icon;
     }
 
+    private static void handleExtendedState( JFrame f )
+    {
+        if( f.isVisible() )
+        {
+            // -------------------------------------------------------------
+            // This stinks because it cannot retain the extended state.
+            // I've tried all sorts of ways and this is the only thing
+            // that doesn't pop the window up behind other things and still
+            // give it focus. So, don't remove it.
+            // -------------------------------------------------------------
+            f.setExtendedState( JFrame.NORMAL );
+            f.requestFocus();
+            f.toFront();
+        }
+    }
+
     /***************************************************************************
      * 
      **************************************************************************/
-    protected static class TrayIconListener implements ActionListener
+    public static class ShowFrameListener implements ActionListener
     {
         private JFrame f;
 
-        public TrayIconListener( JFrame frame )
+        public ShowFrameListener( JFrame frame )
+        {
+            f = frame;
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            if( f.isVisible() )
+            {
+                f.toFront();
+            }
+            else
+            {
+                f.setVisible( true );
+                handleExtendedState( f );
+            }
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    protected static class MiniMaximizeListener implements ActionListener
+    {
+        private JFrame f;
+
+        public MiniMaximizeListener( JFrame frame )
         {
             f = frame;
         }
@@ -256,29 +299,18 @@ public final class SwingUtils
         public void actionPerformed( ActionEvent e )
         {
             f.setVisible( !f.isVisible() );
-            if( f.isVisible() )
-            {
-                // -------------------------------------------------------------
-                // This stinks because it cannot retain the extended state.
-                // I've tried all sorts of ways and this is the only thing
-                // that doesn't pop the window up behind other things a still
-                // give it focus. So, don't remove it.
-                // -------------------------------------------------------------
-                f.setExtendedState( JFrame.NORMAL );
-                f.requestFocus();
-                f.toFront();
-            }
+            SwingUtils.handleExtendedState( f );
         }
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    protected static class MinimizeListener extends WindowAdapter
+    protected static class HideOnMinimizeListener extends WindowAdapter
     {
         private JFrame frame;
 
-        public MinimizeListener( JFrame f )
+        public HideOnMinimizeListener( JFrame f )
         {
             frame = f;
         }
