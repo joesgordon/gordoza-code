@@ -3,9 +3,9 @@ package org.jutils.ui.app;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.reflect.InvocationTargetException;
 
-import javax.swing.JComponent;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 
 import com.jgoodies.looks.Options;
@@ -138,6 +138,47 @@ public class AppRunner implements Runnable
                     focusedParent.scrollRectToVisible( focused.getBounds() );
                 }
             }
+        }
+    }
+
+    public static void invokeError( String message, String title )
+    {
+        ErrorApp app = new ErrorApp( message, title );
+
+        try
+        {
+            SwingUtilities.invokeAndWait( new AppRunner( app ) );
+        }
+        catch( InvocationTargetException ex )
+        {
+        }
+        catch( InterruptedException ex )
+        {
+        }
+    }
+
+    private static class ErrorApp implements IApplication
+    {
+        private final String message;
+        private final String title;
+
+        public ErrorApp( String message, String title )
+        {
+            this.message = message;
+            this.title = title;
+        }
+
+        @Override
+        public String getLookAndFeelName()
+        {
+            return null;
+        }
+
+        @Override
+        public void createAndShowUi()
+        {
+            JOptionPane.showMessageDialog( null, message, title,
+                JOptionPane.ERROR_MESSAGE );
         }
     }
 }

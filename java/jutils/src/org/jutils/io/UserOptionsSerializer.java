@@ -266,15 +266,10 @@ public class UserOptionsSerializer<T>
     public static <T> UserOptionsSerializer<T> getUserIO(
         IUserOptionsCreator<T> creator, File file )
     {
-        File dir = file.getAbsoluteFile().getParentFile();
-
-        if( !dir.isDirectory() )
+        if( !IOUtils.ensureParentExists( file ) )
         {
-            if( !dir.mkdirs() )
-            {
-                LogUtils.printWarning( "User options directory cannot be created: " +
-                    dir.getAbsolutePath() );
-            }
+            LogUtils.printWarning( "User options directory cannot be created: " +
+                file.getParentFile().getAbsolutePath() );
         }
 
         return new UserOptionsSerializer<T>( creator, file );

@@ -530,4 +530,19 @@ public final class IOUtils
                 name + " directory: " + dir.getName() );
         }
     }
+
+    public static boolean ensureParentExists( File file )
+    {
+        File dir = file.getAbsoluteFile().getParentFile();
+
+        if( !dir.isDirectory() )
+        {
+            if( !dir.mkdirs() )
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
