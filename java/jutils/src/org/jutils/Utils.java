@@ -37,6 +37,12 @@ public final class Utils
     {
     }
 
+    /***************************************************************************
+     * @param a
+     * @param b
+     * @param epsilon
+     * @return
+     **************************************************************************/
     public static boolean doubleEquals( double a, double b, double epsilon )
     {
         return a == b ? true : Math.abs( a - b ) < epsilon;
@@ -164,6 +170,10 @@ public final class Utils
         return win != null ? ( Frame )win : null;
     }
 
+    /***************************************************************************
+     * @param comp
+     * @return
+     **************************************************************************/
     public static JFrame getComponentsJFrame( Component comp )
     {
         Object win = getParentOfType( comp, JFrame.class );
@@ -396,5 +406,49 @@ public final class Utils
 
         return gc.createCompatibleImage( width, height,
             Transparency.TRANSLUCENT );
+    }
+
+    /***************************************************************************
+     * @param src
+     * @param srcPos
+     * @param dest
+     * @param destPos
+     * @param length
+     **************************************************************************/
+    public static <T> void arrayCopy( T [] src, int srcPos, T [] dest,
+        int destPos, int length )
+    {
+        try
+        {
+            System.arraycopy( src, srcPos, dest, destPos, length );
+        }
+        catch( ArrayIndexOutOfBoundsException ex )
+        {
+            throw new ArrayIndexOutOfBoundsException( "Unable to copy " +
+                length + " items from array of length " + src.length + " @ " +
+                srcPos + " to array of length " + dest.length + " @ " + destPos );
+        }
+    }
+
+    /***************************************************************************
+     * @param src
+     * @param srcPos
+     * @param dest
+     * @param destPos
+     * @param length
+     **************************************************************************/
+    public static <T> void byteArrayCopy( byte [] src, int srcPos,
+        byte [] dest, int destPos, int length )
+    {
+        try
+        {
+            System.arraycopy( src, srcPos, dest, destPos, length );
+        }
+        catch( ArrayIndexOutOfBoundsException ex )
+        {
+            throw new ArrayIndexOutOfBoundsException( "Unable to copy " +
+                length + " bytes from array of length " + src.length + " @ " +
+                srcPos + " to array of length " + dest.length + " @ " + destPos );
+        }
     }
 }

@@ -4,6 +4,8 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.jutils.Utils;
+
 /*******************************************************************************
  * Implements an {@link IStream} in memory backed by a {@code byte []}.
  ******************************************************************************/
@@ -187,17 +189,7 @@ public class ByteArrayStream implements IStream
             bytesRead = ( int )getAvailableByteCount();
         }
 
-        try
-        {
-            System.arraycopy( buffer, position, buf, off, bytesRead );
-        }
-        catch( ArrayIndexOutOfBoundsException ex )
-        {
-            throw new RuntimeException( "Cannot copy " + bytesRead +
-                " items into an array of " + buf.length +
-                " items starting at index " + off + " from an array of " +
-                buffer.length + " items starting at index " + position, ex );
-        }
+        Utils.byteArrayCopy( buffer, position, buf, off, bytesRead );
 
         position += bytesRead;
 
@@ -306,7 +298,7 @@ public class ByteArrayStream implements IStream
     {
         ensureWrite( len );
 
-        System.arraycopy( buf, off, buffer, position, len );
+        Utils.byteArrayCopy( buf, off, buffer, position, len );
 
         position += len;
     }
@@ -319,7 +311,7 @@ public class ByteArrayStream implements IStream
     {
         byte [] bytes = new byte[bufferSize];
 
-        System.arraycopy( buffer, 0, bytes, 0, bufferSize );
+        Utils.byteArrayCopy( buffer, 0, bytes, 0, bufferSize );
 
         return bytes;
     }

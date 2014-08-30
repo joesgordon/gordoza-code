@@ -3,6 +3,8 @@ package org.jutils.io;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.jutils.Utils;
+
 /***************************************************************************
  * Designed to assist with buffering of {@link IStream}s.
  **************************************************************************/
@@ -189,12 +191,11 @@ public class ByteCache
      * @param buf the buffer to which the data will be copied.
      * @param off the offset into the buffer at which the data will be copied.
      * @param len the length of the data to copy.
-     * @see {@link System#arraycopy(Object, int, Object, int, int)}
      **************************************************************************/
     public void read( byte [] buf, int off, int len )
         throws IndexOutOfBoundsException
     {
-        System.arraycopy( cache, index, buf, off, len );
+        Utils.byteArrayCopy( buf, off, cache, index, len );
         index += len;
     }
 
@@ -236,11 +237,10 @@ public class ByteCache
      * @param buf the buffer of bytes to be written to the cache.
      * @param off the offset at which to start writing from the provided buffer.
      * @param len the number of bytes to write.
-     * @see {@link System#arraycopy(Object, int, Object, int, int)}
      **************************************************************************/
     public void write( byte [] buf, int off, int len )
     {
-        System.arraycopy( buf, off, cache, index, len );
+        Utils.byteArrayCopy( buf, off, cache, index, len );
         index += len;
 
         if( index >= cacheLen )

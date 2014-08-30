@@ -3,6 +3,8 @@ package org.jutils.io;
 import java.io.EOFException;
 import java.io.IOException;
 
+import org.jutils.Utils;
+
 //TODO comments
 
 public class BufferedReadOnlyStream implements IStream
@@ -76,7 +78,7 @@ public class BufferedReadOnlyStream implements IStream
         if( bufAvailable > 0 )
         {
             toCopy = Math.min( len - totalRead, bufAvailable );
-            System.arraycopy( buffer, index, buf, off, toCopy );
+            Utils.byteArrayCopy( buffer, index, buf, off, toCopy );
 
             totalRead += toCopy;
             this.index += toCopy;
