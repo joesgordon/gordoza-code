@@ -139,9 +139,9 @@ public class BufferedStream implements IStream
 
         if( buffer.isReadCached( position ) && buffer.remainingRead() > 0 )
         {
-            int toRead = Math.min( buffer.remainingRead(), len );
-
             buffer.setPosition( position );
+
+            int toRead = Math.min( buffer.remainingRead(), len );
 
             buffer.read( buf, off, toRead );
 
