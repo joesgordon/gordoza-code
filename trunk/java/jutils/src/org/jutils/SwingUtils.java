@@ -238,6 +238,9 @@ public final class SwingUtils
         return icon;
     }
 
+    /***************************************************************************
+     * @param f
+     **************************************************************************/
     private static void handleExtendedState( JFrame f )
     {
         if( f.isVisible() )
@@ -338,6 +341,9 @@ public final class SwingUtils
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public static boolean showOkCancelDialog( Component parent, Object msg,
         String title, String okText, final Runnable initialFocusSelector )
     {
