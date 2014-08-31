@@ -62,11 +62,23 @@ public class LongFormField implements IFormField
         this( name, units, columns, null );
     }
 
+    /***************************************************************************
+     * @param name
+     * @param units
+     * @param min
+     * @param max
+     **************************************************************************/
     public LongFormField( String name, String units, Long min, Long max )
     {
         this( name, units, 20, null, min, max );
     }
 
+    /***************************************************************************
+     * @param name
+     * @param units
+     * @param columns
+     * @param updater
+     **************************************************************************/
     public LongFormField( String name, String units, int columns,
         IUpdater<Long> updater )
     {

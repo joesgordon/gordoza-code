@@ -195,7 +195,7 @@ public class ByteCache
     public void read( byte [] buf, int off, int len )
         throws IndexOutOfBoundsException
     {
-        Utils.byteArrayCopy( buf, off, cache, index, len );
+        Utils.byteArrayCopy( cache, index, buf, off, len );
         index += len;
     }
 
