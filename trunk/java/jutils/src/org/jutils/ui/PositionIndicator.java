@@ -50,7 +50,6 @@ public class PositionIndicator extends JComponent
         this.posWin = createWindow();
         this.posititonListeners = new ItemActionList<>();
 
-        // this.thumbColor = new Color( 0x3A6EA7 );
         this.thumbColor = UIManager.getColor( "ScrollBar.thumb" );
         this.thumbShadow = UIManager.getColor( "ScrollBar.thumbShadow" );
         this.unitLength = 10;
@@ -81,7 +80,6 @@ public class PositionIndicator extends JComponent
 
         panel.setBackground( new Color( 0x006699 ) );
         panel.setBorder( new LineBorder( Color.darkGray ) );
-        // panel.setBorder( new EtchedBorder() );
 
         panel.add( posLabel, BorderLayout.CENTER );
 
@@ -177,15 +175,6 @@ public class PositionIndicator extends JComponent
         int unitIdx = ( int )( posPc * unitCount );
         long position = ( long )( unitIdx * unitLength );
 
-        // position = Math.max( position, 0 );
-        // position = Math.min( position, length - 1 );
-
-        // LogUtils.printDebug( String.format(
-        // "%d %d %d: [%d:%d] {%d:%d => %f}, {%d:%d => %f}, {%d:%d => %d}",
-        // length, unitLength, offset, x, getWidth(), xIdx, xCnt, xpc, posIdx,
-        // posCnt,
-        // posPc, unitIdx, unitCount, position ) );
-
         return position;
     }
 
@@ -222,9 +211,6 @@ public class PositionIndicator extends JComponent
         long off = dragOffset == null ? offset : dragOffset;
         int unitCount = getUnitCount();
         int unitIndex = ( int )( ( double )unitCount * off / ( double )length );
-
-        // LogUtils.printDebug( String.format( "%d %d %d %d %d", length,
-        // unitLength, off, unitCount, unitIndex ) );
 
         int x = 0;
         int y = 1;
@@ -309,9 +295,6 @@ public class PositionIndicator extends JComponent
                 Point csp = pi.getLocationOnScreen();
                 Point msp = e.getLocationOnScreen();
 
-                // msp.x = Math.max( msp.x, csp.x );
-                // msp.x = Math.min( msp.x,
-                // csp.x + pi.getWidth() - pi.posWin.getWidth() );
                 msp.x = ( int )( csp.x + pi.getWidth() / 2.0 - pi.posWin.getWidth() / 2.0 );
                 msp.y = csp.y + pi.getHeight() + 2;
 
@@ -380,10 +363,6 @@ public class PositionIndicator extends JComponent
                         final int ui = ( int )( percent * uc );
 
                         final long offset = ui * size;
-
-                        // LogUtils.printDebug( String.format(
-                        // "%d / %d = %f %% => %d:%d * %d %d", position, len,
-                        // ( percent * 100.0 ), ui, uc, size, offset ) );
 
                         pi.setOffset( offset );
                     }
