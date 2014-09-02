@@ -2,6 +2,8 @@ package org.jutils.ui.fields;
 
 import java.awt.Component;
 
+import javax.swing.JTextField;
+
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.validation.ValidationTextView;
 import org.jutils.ui.validators.*;
@@ -9,7 +11,7 @@ import org.jutils.ui.validators.*;
 /*******************************************************************************
  * Defines an {@link IFormField} that contains a double validater.
  ******************************************************************************/
-public class DoubleFormField implements IDataFormField<Double>
+public class StringFormField implements IDataFormField<String>
 {
     /**  */
     private final String name;
@@ -17,55 +19,36 @@ public class DoubleFormField implements IDataFormField<Double>
     private final ValidationTextView textField;
 
     /**  */
-    private IUpdater<Double> updater;
-
+    private IUpdater<String> updater;
     /**  */
-    private double value;
+    private String value;
 
     /***************************************************************************
      * @param name
      **************************************************************************/
-    public DoubleFormField( String name )
+    public StringFormField( String name )
     {
-        this( name, null );
+        this( name, 20, 1, null );
     }
 
     /***************************************************************************
      * @param name
-     * @param units
-     **************************************************************************/
-    public DoubleFormField( String name, String units )
-    {
-        this( name, units, 20 );
-    }
-
-    /***************************************************************************
-     * @param name
-     * @param units
      * @param columns
      **************************************************************************/
-    public DoubleFormField( String name, String units, int columns )
-    {
-        this( name, units, columns, null );
-    }
-
-    /***************************************************************************
-     * @param name
-     * @param units
-     * @param columns
-     * @param updater
-     **************************************************************************/
-    public DoubleFormField( String name, String units, int columns,
-        IUpdater<Double> updater )
+    public StringFormField( String name, int columns, Integer minLen,
+        Integer maxLen )
     {
         this.name = name;
-        this.textField = new ValidationTextView( units, columns );
-        this.updater = updater;
+        this.textField = new ValidationTextView( null, columns );
+
+        this.updater = null;
 
         ITextValidator textValidator;
+        IDataValidator<String> dataValidator;
+        IUpdater<String> updater = new ValueUpdater( this );
 
-        textValidator = new DataTextValidator<>( new DoubleValidator(),
-            new ValueUpdater( this ) );
+        dataValidator = new StringLengthValidator( minLen, maxLen );
+        textValidator = new DataTextValidator<>( dataValidator, updater );
         textField.getField().setValidator( textValidator );
     }
 
@@ -91,7 +74,7 @@ public class DoubleFormField implements IDataFormField<Double>
      * 
      **************************************************************************/
     @Override
-    public Double getValue()
+    public String getValue()
     {
         return value;
     }
@@ -100,18 +83,10 @@ public class DoubleFormField implements IDataFormField<Double>
      * 
      **************************************************************************/
     @Override
-    public void setValue( Double value )
+    public void setValue( String value )
     {
         this.value = value;
         textField.setText( "" + value );
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public IValidationField getValidationField()
-    {
-        return textField.getField();
     }
 
     /***************************************************************************
@@ -123,9 +98,26 @@ public class DoubleFormField implements IDataFormField<Double>
     }
 
     /***************************************************************************
+     * @return
+     **************************************************************************/
+    public IValidationField getValidationField()
+    {
+        return textField.getField();
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public JTextField getTextField()
+    {
+        return textField.getField().getView();
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
-    public void setUpdater( IUpdater<Double> updater )
+    @Override
+    public void setUpdater( IUpdater<String> updater )
     {
         this.updater = updater;
     }
@@ -133,17 +125,17 @@ public class DoubleFormField implements IDataFormField<Double>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class ValueUpdater implements IUpdater<Double>
+    private static class ValueUpdater implements IUpdater<String>
     {
-        private final DoubleFormField view;
+        private final StringFormField view;
 
-        public ValueUpdater( DoubleFormField view )
+        public ValueUpdater( StringFormField view )
         {
             this.view = view;
         }
 
         @Override
-        public void update( Double data )
+        public void update( String data )
         {
             view.value = data;
             if( view.updater != null )
