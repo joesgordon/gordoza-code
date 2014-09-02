@@ -448,4 +448,9 @@ public final class SwingUtils
             return p;
         }
     }
+
+    public static Font getFixedFont( int size )
+    {
+        return new Font( Font.MONOSPACED, Font.PLAIN, size );
+    }
 }
