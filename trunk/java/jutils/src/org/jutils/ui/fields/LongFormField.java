@@ -4,7 +4,6 @@ import java.awt.Component;
 
 import javax.swing.JTextField;
 
-import org.jutils.ui.StandardFormView.IFormField;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.validation.ValidationTextView;
 import org.jutils.ui.validators.*;
@@ -12,7 +11,7 @@ import org.jutils.ui.validators.*;
 /*******************************************************************************
  * Defines an {@link IFormField} that contains a double validater.
  ******************************************************************************/
-public class LongFormField implements IFormField
+public class LongFormField implements IDataFormField<Long>
 {
     /**  */
     private final String name;
@@ -124,6 +123,34 @@ public class LongFormField implements IFormField
     }
 
     /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Long getValue()
+    {
+        return value;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void setValue( Long value )
+    {
+        this.value = value;
+        textField.setText( "" + value );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void setUpdater( IUpdater<Long> updater )
+    {
+        this.updater = updater;
+    }
+
+    /***************************************************************************
      * @return
      **************************************************************************/
     public IValidationField getValidationField()
@@ -137,28 +164,6 @@ public class LongFormField implements IFormField
     public JTextField getTextField()
     {
         return textField.getField().getView();
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public long getValue()
-    {
-        return value;
-    }
-
-    /***************************************************************************
-     * @param value
-     **************************************************************************/
-    public void setValue( long value )
-    {
-        this.value = value;
-        textField.setText( "" + value );
-    }
-
-    public void setUpdater( IUpdater<Long> updater )
-    {
-        this.updater = updater;
     }
 
     /***************************************************************************

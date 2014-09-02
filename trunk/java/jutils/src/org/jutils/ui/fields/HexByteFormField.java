@@ -4,7 +4,6 @@ import java.awt.Component;
 
 import javax.swing.JTextField;
 
-import org.jutils.ui.StandardFormView.IFormField;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.hex.HexUtils;
 import org.jutils.ui.validation.ValidationTextView;
@@ -13,7 +12,7 @@ import org.jutils.ui.validators.*;
 /*******************************************************************************
  * Defines an {@link IFormField} that contains a double validater.
  ******************************************************************************/
-public class HexByteFormField implements IFormField
+public class HexByteFormField implements IDataFormField<Byte>
 {
     /**  */
     private final String name;
@@ -113,6 +112,34 @@ public class HexByteFormField implements IFormField
     }
 
     /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Byte getValue()
+    {
+        return value;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void setValue( Byte value )
+    {
+        this.value = value;
+        textField.setText( HexUtils.toHexString( value ) );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void setUpdater( IUpdater<Byte> updater )
+    {
+        this.updater = updater;
+    }
+
+    /***************************************************************************
      * @return
      **************************************************************************/
     public IValidationField getValidationField()
@@ -126,28 +153,6 @@ public class HexByteFormField implements IFormField
     public JTextField getTextField()
     {
         return textField.getField().getView();
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public byte getValue()
-    {
-        return value;
-    }
-
-    /***************************************************************************
-     * @param value
-     **************************************************************************/
-    public void setValue( byte value )
-    {
-        this.value = value;
-        textField.setText( HexUtils.toHexString( value ) );
-    }
-
-    public void setUpdater( IUpdater<Byte> updater )
-    {
-        this.updater = updater;
     }
 
     /***************************************************************************

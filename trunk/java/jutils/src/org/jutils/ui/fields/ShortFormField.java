@@ -4,7 +4,6 @@ import java.awt.Component;
 
 import javax.swing.JTextField;
 
-import org.jutils.ui.StandardFormView.IFormField;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.validation.ValidationTextView;
 import org.jutils.ui.validators.*;
@@ -12,7 +11,7 @@ import org.jutils.ui.validators.*;
 /*******************************************************************************
  * Defines an {@link IFormField} that contains a double validater.
  ******************************************************************************/
-public class ShortFormField implements IFormField
+public class ShortFormField implements IDataFormField<Short>
 {
     /**  */
     private final String name;
@@ -101,6 +100,34 @@ public class ShortFormField implements IFormField
     }
 
     /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Short getValue()
+    {
+        return value;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void setValue( Short value )
+    {
+        this.value = value;
+        textField.setText( "" + value );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void setUpdater( IUpdater<Short> updater )
+    {
+        this.updater = updater;
+    }
+
+    /***************************************************************************
      * @return
      **************************************************************************/
     public IValidationField getValidationField()
@@ -117,33 +144,11 @@ public class ShortFormField implements IFormField
     }
 
     /***************************************************************************
-     * @return
-     **************************************************************************/
-    public short getValue()
-    {
-        return value;
-    }
-
-    /***************************************************************************
-     * @param value
-     **************************************************************************/
-    public void setValue( short value )
-    {
-        this.value = value;
-        textField.setText( "" + value );
-    }
-
-    /***************************************************************************
      * @param editable
      **************************************************************************/
     public void setEditable( boolean editable )
     {
         textField.getField().setEditable( editable );
-    }
-
-    public void setUpdater( IUpdater<Short> updater )
-    {
-        this.updater = updater;
     }
 
     /***************************************************************************

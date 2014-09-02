@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.swing.*;
 
+import org.jutils.ui.fields.IFormField;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
@@ -275,16 +276,6 @@ public class StandardFormView implements IView<JPanel>
             this.label = label;
             this.field = field;
         }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public static interface IFormField
-    {
-        public String getFieldName();
-
-        public Component getField();
     }
 
     /***************************************************************************

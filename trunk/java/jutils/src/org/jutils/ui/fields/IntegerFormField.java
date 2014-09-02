@@ -4,7 +4,6 @@ import java.awt.Component;
 
 import javax.swing.JTextField;
 
-import org.jutils.ui.StandardFormView.IFormField;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.validation.ValidationTextView;
 import org.jutils.ui.validators.*;
@@ -12,7 +11,7 @@ import org.jutils.ui.validators.*;
 /*******************************************************************************
  * Defines an {@link IFormField} that contains a double validater.
  ******************************************************************************/
-public class IntegerFormField implements IFormField
+public class IntegerFormField implements IDataFormField<Integer>
 {
     /**  */
     private final String name;
@@ -101,6 +100,34 @@ public class IntegerFormField implements IFormField
     }
 
     /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Integer getValue()
+    {
+        return value;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void setValue( Integer value )
+    {
+        this.value = value;
+        textField.setText( "" + value );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void setUpdater( IUpdater<Integer> updater )
+    {
+        this.updater = updater;
+    }
+
+    /***************************************************************************
      * @return
      **************************************************************************/
     public IValidationField getValidationField()
@@ -117,33 +144,11 @@ public class IntegerFormField implements IFormField
     }
 
     /***************************************************************************
-     * @return
-     **************************************************************************/
-    public int getValue()
-    {
-        return value;
-    }
-
-    /***************************************************************************
-     * @param value
-     **************************************************************************/
-    public void setValue( int value )
-    {
-        this.value = value;
-        textField.setText( "" + value );
-    }
-
-    /***************************************************************************
      * @param editable
      **************************************************************************/
     public void setEditable( boolean editable )
     {
         textField.getField().setEditable( editable );
-    }
-
-    public void setUpdater( IUpdater<Integer> updater )
-    {
-        this.updater = updater;
     }
 
     /***************************************************************************
