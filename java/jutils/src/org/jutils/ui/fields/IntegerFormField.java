@@ -25,21 +25,20 @@ public class IntegerFormField implements IDataFormField<Integer>
 
     /***************************************************************************
      * @param name
-     * @param units
-     * @param columns
      **************************************************************************/
     public IntegerFormField( String name )
     {
-        this( name, ( String )null );
+        this( name, null );
     }
 
     /***************************************************************************
      * @param name
-     * @param updater
+     * @param min
+     * @param max
      **************************************************************************/
-    public IntegerFormField( String name, IUpdater<Integer> updater )
+    public IntegerFormField( String name, Integer min, Integer max )
     {
-        this( name, null, 20, updater );
+        this( name, null, 20, min, max );
     }
 
     /***************************************************************************
@@ -48,7 +47,18 @@ public class IntegerFormField implements IDataFormField<Integer>
      **************************************************************************/
     public IntegerFormField( String name, String units )
     {
-        this( name, units, 20, null );
+        this( name, units, 20, null, null );
+    }
+
+    /***************************************************************************
+     * @param name
+     * @param units
+     * @param min
+     * @param max
+     **************************************************************************/
+    public IntegerFormField( String name, String units, Integer min, Integer max )
+    {
+        this( name, units, 20, min, max );
     }
 
     /***************************************************************************
@@ -58,26 +68,27 @@ public class IntegerFormField implements IDataFormField<Integer>
      **************************************************************************/
     public IntegerFormField( String name, String units, int columns )
     {
-        this( name, units, columns, null );
+        this( name, units, columns, null, null );
     }
 
     /***************************************************************************
      * @param name
      * @param units
      * @param columns
-     * @param updater
+     * @param min
+     * @param max
      **************************************************************************/
     public IntegerFormField( String name, String units, int columns,
-        IUpdater<Integer> updater )
+        Integer min, Integer max )
     {
         this.name = name;
         this.textField = new ValidationTextView( units, columns );
-        this.updater = updater;
+        this.updater = null;
 
         ITextValidator textValidator;
 
-        textValidator = new DataTextValidator<>( new IntegerValidator(),
-            new ValueUpdater( this ) );
+        textValidator = new DataTextValidator<>(
+            new IntegerValidator( min, max ), new ValueUpdater( this ) );
         textField.getField().setValidator( textValidator );
     }
 
