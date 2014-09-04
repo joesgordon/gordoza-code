@@ -10,6 +10,7 @@ import org.jutils.ui.ExitListener;
 import org.jutils.ui.StandardFormView;
 import org.jutils.ui.app.FrameApplication;
 import org.jutils.ui.app.IFrameApp;
+import org.jutils.ui.fields.ValidationTextField;
 import org.jutils.ui.validation.*;
 import org.jutils.ui.validators.ITextValidator;
 

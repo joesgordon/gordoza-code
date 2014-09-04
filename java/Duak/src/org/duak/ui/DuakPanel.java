@@ -14,7 +14,7 @@ import javax.swing.table.TableRowSorter;
 import org.duak.data.FileInfo;
 import org.duak.utils.FileSize;
 import org.jutils.IconConstants;
-import org.jutils.ui.ExceptionView;
+import org.jutils.ui.MessageExceptionView;
 import org.jutils.ui.ResizingTable;
 import org.jutils.ui.event.*;
 
@@ -56,7 +56,7 @@ public class DuakPanel extends JPanel
 
         sorter = new TableRowSorter<FileResultsTableModel>( tableModel );
         // sorter.setComparator( 1, new FileResultsComparer() );
-        RowSorter.SortKey[] keys = new RowSorter.SortKey[] { new RowSorter.SortKey(
+        RowSorter.SortKey [] keys = new RowSorter.SortKey[] { new RowSorter.SortKey(
             1, SortOrder.DESCENDING ) };
         sorter.setSortKeys( Arrays.asList( keys ) );
         // sorter.toggleSortOrder( 1 );
@@ -194,7 +194,7 @@ public class DuakPanel extends JPanel
                         }
                         catch( IOException ex )
                         {
-                            ExceptionView.showExceptionDialog( table,
+                            MessageExceptionView.showExceptionDialog( table,
                                 "Cannot open file: " + f.getName(),
                                 "I/O Error", ex );
                         }
@@ -237,7 +237,7 @@ public class DuakPanel extends JPanel
                 }
                 catch( IOException ex )
                 {
-                    ExceptionView.showExceptionDialog( panel,
+                    MessageExceptionView.showExceptionDialog( panel,
                         "Cannot open file " + fi.getFile().getName(),
                         "I/O Error", ex );
                 }
@@ -274,7 +274,7 @@ public class DuakPanel extends JPanel
                 }
                 catch( IOException ex )
                 {
-                    ExceptionView.showExceptionDialog( panel,
+                    MessageExceptionView.showExceptionDialog( panel,
                         "Cannot open file " + fi.getFile().getName(),
                         "I/O Error", ex );
                 }

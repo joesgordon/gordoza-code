@@ -8,8 +8,8 @@ import org.jutils.ui.model.ItemTableModel;
 
 public class CrTableModel extends ItemTableModel<IChangeRequest>
 {
-    public static final String[] COLUMN_HEADING = { "#", "Title", "State" };
-    public static final Class<?>[] COLUMN_CLASSES = { Integer.class,
+    public static final String [] COLUMN_HEADING = { "#", "Title", "State" };
+    public static final Class<?> [] COLUMN_CLASSES = { Integer.class,
         String.class, CrState.class };
 
     public CrTableModel()

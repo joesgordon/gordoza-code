@@ -26,14 +26,14 @@ import org.jutils.ui.model.IDataView;
 public class CalendarPanel implements IDataView<Long>
 {
     /** Month strings to be used in the months' spinner box. */
-    private static final String[] MONTHS = new String[] { "January",
+    private static final String [] MONTHS = new String[] { "January",
         "February", "March", "April", "May", "June", "July", "August",
         "September", "October", "November", "December" };
     /**
      * Week day single letter abbreviations to be used as the header in the
      * calendar.
      */
-    private static final String[] WEEK_DAYS = new String[] { "S", "M", "T",
+    private static final String [] WEEK_DAYS = new String[] { "S", "M", "T",
         "W", "R", "F", "S" };
     /** The background of the header labels. */
     private static final Color HEADER_BACKGROUND = new Color( 0x8D, 0x8D, 0x8D );
@@ -49,9 +49,9 @@ public class CalendarPanel implements IDataView<Long>
     /**  */
     private final AutoSpinner yearSpinner;
     /**  */
-    private final JLabel[] weekdayLabels;
+    private final JLabel [] weekdayLabels;
     /**  */
-    private final DayLabel[] dayLabels;
+    private final DayLabel [] dayLabels;
     /**  */
     private final ItemActionList<Long> dateChangedListeners;
 

@@ -7,9 +7,9 @@ import org.jutils.ui.model.ItemTableModel;
 
 public class StfTableModel extends ItemTableModel<ISoftwareTask>
 {
-    public static final String[] COLUMN_HEADING = { "#", "Title", "Lead",
+    public static final String [] COLUMN_HEADING = { "#", "Title", "Lead",
         "Est Hours", "Act Hours" };
-    public static final Class<?>[] COLUMN_CLASSES = { Integer.class,
+    public static final Class<?> [] COLUMN_CLASSES = { Integer.class,
         String.class, String.class, Integer.class, Integer.class };
 
     public StfTableModel()

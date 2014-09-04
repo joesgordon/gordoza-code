@@ -55,11 +55,11 @@ public class SearchThread implements IStoppableTask
 
         contentsSearcherThread.start();
 
-        File[] searchPaths = params.getSearchFolders();
+        File [] searchPaths = params.getSearchFolders();
 
         for( File searchFolder : searchPaths )
         {
-            File[] files = searchFolder.listFiles();
+            File [] files = searchFolder.listFiles();
 
             for( File file : files )
             {
@@ -209,7 +209,7 @@ public class SearchThread implements IStoppableTask
 
         if( stopper.continueProcessing() && isDir && params.searchSubfolders )
         {
-            File[] children = file.listFiles();
+            File [] children = file.listFiles();
 
             if( children == null )
             {

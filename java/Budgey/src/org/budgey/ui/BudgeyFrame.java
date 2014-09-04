@@ -14,8 +14,8 @@ import org.budgey.io.BudgetSerializer;
 import org.jutils.IconConstants;
 import org.jutils.io.FileOpener;
 import org.jutils.io.FileOpener.LastDirectorySaver;
-import org.jutils.ui.StatusBarPanel;
 import org.jutils.ui.JGoodiesToolBar;
+import org.jutils.ui.StatusBarPanel;
 
 /*******************************************************************************
  * 

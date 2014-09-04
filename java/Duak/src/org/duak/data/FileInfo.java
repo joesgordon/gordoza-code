@@ -60,7 +60,7 @@ public class FileInfo implements Comparable<FileInfo>
     {
         if( dir.isDirectory() )
         {
-            File[] fs = dir.listFiles();
+            File [] fs = dir.listFiles();
 
             children.clear();
 

@@ -54,9 +54,9 @@ public class AppModelPanel extends InfoPanel<VersioningSystem>
         reposPanel = new ListInfoPanel<Repository>();
 
         ComboBoxUpdater<File> defaultUpdater = new ComboBoxUpdater<File>(
-            defaultField, new DefaultRepoUpdater( this ) );
+            new DefaultRepoUpdater( this ) );
 
-        defaultField.addActionListener( defaultUpdater );
+        defaultField.addItemListener( defaultUpdater );
 
         lockPanel.addLockSelectedListener( new LockSelectedListener() );
 

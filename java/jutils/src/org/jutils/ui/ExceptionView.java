@@ -11,8 +11,11 @@ import org.jutils.ui.model.IView;
 
 public class ExceptionView implements IView<JComponent>
 {
+    /**  */
     private final TitleView titlePanel;
+    /**  */
     private final JTextField messageField;
+    /**  */
     private final JTextArea stacktraceField;
 
     public ExceptionView()

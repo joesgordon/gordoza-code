@@ -9,9 +9,9 @@ import org.jutils.ui.model.ItemTableModel;
 
 public class TransactionTableModel extends ItemTableModel<Transaction>
 {
-    private static final String[] COLUMN_NAMES = { "Date", "Location",
+    private static final String [] COLUMN_NAMES = { "Date", "Location",
         "Amount", "Balance", "Tags" };
-    private static final Class<?>[] COLUMN_CLASSES = { Date.class,
+    private static final Class<?> [] COLUMN_CLASSES = { Date.class,
         String.class, Money.class, Money.class, String.class };
 
     public TransactionTableModel()

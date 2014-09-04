@@ -38,7 +38,7 @@ public enum Month
 
     public static Month fromCalendarMonth( int i )
     {
-        Month[] vals = Month.values();
+        Month [] vals = Month.values();
 
         for( Month m : vals )
         {

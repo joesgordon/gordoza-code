@@ -8,8 +8,8 @@ import javax.swing.JComponent;
 import javax.swing.JFormattedTextField.AbstractFormatter;
 
 import org.budgey.data.Money;
+import org.jutils.ui.fields.ValidationTextField;
 import org.jutils.ui.model.IComponentView;
-import org.jutils.ui.validation.ValidationTextField;
 import org.jutils.ui.validators.ITextValidator;
 
 public class MoneyTextField implements IComponentView

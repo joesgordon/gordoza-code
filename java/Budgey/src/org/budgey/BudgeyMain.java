@@ -54,7 +54,7 @@ public class BudgeyMain implements IFrameApp
     /***************************************************************************
      * @param args
      **************************************************************************/
-    public static void main( String[] args )
+    public static void main( String [] args )
     {
         BudgeyOptions options = BudgeyOptions.read( OPTIONS_FILE );
 

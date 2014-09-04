@@ -174,15 +174,13 @@ public class EagleSheetFrameView implements IView<JFrame>
 
         toolbar.addSeparator();
 
-        button = new JButton(
-            EagleSheetIcons.getInsertColumnBeforeIcon() );
+        button = new JButton( EagleSheetIcons.getInsertColumnBeforeIcon() );
         button.setToolTipText( "Insert Column Before" );
         button.setFocusable( false );
         button.addActionListener( new InsertColumnListener( this ) );
         toolbar.add( button );
 
-        button = new JButton(
-            EagleSheetIcons.getInsertColumnAfterIcon() );
+        button = new JButton( EagleSheetIcons.getInsertColumnAfterIcon() );
         button.setToolTipText( "Insert Column After" );
         button.setFocusable( false );
         button.addActionListener( new InsertColumnListener( this, 1 ) );

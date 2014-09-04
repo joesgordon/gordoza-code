@@ -344,7 +344,7 @@ public class JExplorerFrame extends JFrame
     private void showDirInTable( File dir )
     {
         ArrayList<DefaultExplorerItem> list = new ArrayList<DefaultExplorerItem>();
-        File[] children = dir.listFiles();
+        File [] children = dir.listFiles();
 
         this.setTitle( dir.getName() + " - JExplorer" );
 
@@ -463,7 +463,7 @@ public class JExplorerFrame extends JFrame
      **************************************************************************/
     public void listener_dirTree_valueChanged( TreeSelectionEvent e )
     {
-        File[] dirsSelected = dirTree.getSelected();
+        File [] dirsSelected = dirTree.getSelected();
         if( dirsSelected != null && dirsSelected.length == 1 )
         {
             File f = dirsSelected[dirsSelected.length - 1];
@@ -502,7 +502,7 @@ public class JExplorerFrame extends JFrame
      **************************************************************************/
     public void listener_dirTree_mouseClicked( MouseEvent e )
     {
-        File[] dirsSelected = dirTree.getSelected();
+        File [] dirsSelected = dirTree.getSelected();
 
         if( dirsSelected != null && dirsSelected.length > 0 )
         {

@@ -8,7 +8,7 @@ import org.jutils.ui.app.IFrameApp;
 
 public class CoJoMain implements IFrameApp
 {
-    public static void main( String[] args )
+    public static void main( String [] args )
     {
         FrameApplication.invokeLater( new CoJoMain() );
     }

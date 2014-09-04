@@ -73,7 +73,7 @@ public class SearchParams extends XObject
      * Sets the paths to be search with the provided files.
      * @param paths The paths to be searched.
      **************************************************************************/
-    public void setSearchFolders( File[] paths )
+    public void setSearchFolders( File [] paths )
     {
         searchIn = UFile.getStringFromFiles( paths );
     }
@@ -82,7 +82,7 @@ public class SearchParams extends XObject
      * Returns the files to be searched.
      * @return the files to be searched.
      **************************************************************************/
-    public File[] getSearchFolders()
+    public File [] getSearchFolders()
     {
         return UFile.getFilesFromString( searchIn );
     }

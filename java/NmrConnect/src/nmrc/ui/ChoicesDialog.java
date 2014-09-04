@@ -8,7 +8,8 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.table.TableModel;
 
-import nmrc.ui.tables.*;
+import nmrc.ui.tables.DefaultObjectTable;
+import nmrc.ui.tables.ItemTable;
 
 import org.jutils.ui.ResizingTable;
 import org.jutils.ui.model.ItemTableModel;

@@ -2,7 +2,14 @@ package org.cojo.model;
 
 public enum CrState
 {
-    New, AwatingSccb, AwatingIccb, Deferred, Approved, InWork, Implemented, Closed;
+    New,
+    AwatingSccb,
+    AwatingIccb,
+    Deferred,
+    Approved,
+    InWork,
+    Implemented,
+    Closed;
 
     public String toString()
     {
