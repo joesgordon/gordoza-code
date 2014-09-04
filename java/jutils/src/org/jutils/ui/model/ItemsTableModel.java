@@ -165,6 +165,17 @@ public class ItemsTableModel<T> extends AbstractTableModel
     }
 
     /***************************************************************************
+     * @param names
+     **************************************************************************/
+    public void setColumnNames( List<String> names )
+    {
+        columnNames.clear();
+        columnNames.addAll( names );
+
+        fireTableStructureChanged();
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     @Override
