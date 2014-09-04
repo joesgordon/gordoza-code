@@ -25,12 +25,12 @@ public class CountingInputStream extends FilterInputStream
         return b;
     }
 
-    public int read( byte b[] ) throws IOException
+    public int read( byte b [] ) throws IOException
     {
         return read( b, 0, b.length );
     }
 
-    public int read( byte b[], int off, int len ) throws IOException
+    public int read( byte b [], int off, int len ) throws IOException
     {
         int bytesRead = super.read( b, off, len );
 

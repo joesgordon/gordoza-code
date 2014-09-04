@@ -122,7 +122,7 @@ public class TristateCheckBox extends JCheckBox
      * @param args String[]
      * @throws Exception
      **************************************************************************/
-    public static void main( String args[] ) throws Exception
+    public static void main( String args [] ) throws Exception
     {
         SwingUtilities.invokeLater( new Runnable()
         {

@@ -8,9 +8,9 @@ import org.jutils.ui.model.ItemTableModel;
 
 public class FindingTableModel extends ItemTableModel<IFinding>
 {
-    public static final String[] COLUMN_HEADING = { "#", "User", "Date",
+    public static final String [] COLUMN_HEADING = { "#", "User", "Date",
         "Accepted" };
-    public static final Class<?>[] COLUMN_CLASSES = { Integer.class,
+    public static final Class<?> [] COLUMN_CLASSES = { Integer.class,
         String.class, Date.class, Boolean.class };
 
     public FindingTableModel()

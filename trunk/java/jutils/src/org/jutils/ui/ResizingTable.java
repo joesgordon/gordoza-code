@@ -45,7 +45,7 @@ public class ResizingTable<T extends TableModel> extends JTable
         TableModel model = table.getModel();
         int colCount = model.getColumnCount();
         int rowCount = model.getRowCount();
-        int widths[] = new int[model.getColumnCount()];
+        int widths [] = new int[model.getColumnCount()];
         Component cellRenderer;
         TableCellRenderer tableCellRenderer;
         int defaultWidth;

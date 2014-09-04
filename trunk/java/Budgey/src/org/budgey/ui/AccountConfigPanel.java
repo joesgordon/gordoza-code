@@ -9,7 +9,9 @@ import javax.swing.JPanel;
 import org.budgey.data.Account;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
-import org.jutils.ui.validation.*;
+import org.jutils.ui.fields.ValidationTextField;
+import org.jutils.ui.validation.IValidityChangedListener;
+import org.jutils.ui.validation.ValidationException;
 import org.jutils.ui.validators.ITextValidator;
 
 /*******************************************************************************

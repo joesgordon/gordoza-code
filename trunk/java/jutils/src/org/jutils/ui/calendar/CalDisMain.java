@@ -18,7 +18,7 @@ public class CalDisMain
      * Defines the main entry point for this application. Arguments are ignored.
      * @param args ignored.
      **************************************************************************/
-    public static void main( String[] args )
+    public static void main( String [] args )
     {
         FrameApplication.invokeLater( new CalDisApp() );
     }

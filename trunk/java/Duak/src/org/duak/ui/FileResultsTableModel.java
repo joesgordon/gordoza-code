@@ -12,10 +12,10 @@ import org.jutils.ui.model.ItemTableModel;
 public class FileResultsTableModel extends ItemTableModel<FileInfo>
 {
     /**  */
-    private static Class<?>[] classes = new Class<?>[] { FileInfo.class,
+    private static Class<?> [] classes = new Class<?>[] { FileInfo.class,
         FileSize.class };
     /**  */
-    private static String[] column_names = new String[] { "Filename", "Size" };
+    private static String [] column_names = new String[] { "Filename", "Size" };
 
     /***************************************************************************
      * 

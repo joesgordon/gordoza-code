@@ -7,7 +7,6 @@ import javax.swing.undo.UndoableEdit;
 
 import org.cc.edit.ui.undo.event.UndoChangedListener;
 
-
 /*******************************************************************************
  * Manages <code>UndoableEdit</code>s. Provides a storage mechanism, methods to
  * initiate the un/re doing, and the ability to listen for changes in the

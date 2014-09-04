@@ -18,8 +18,8 @@ public class ChartIcons
     public static final String [] CHART_NAMES = new String[] { CHART_016,
         CHART_024, CHART_032, CHART_064, CHART_128, CHART_256 };
 
-    public static final IconLoader loader = new IconLoader(
-        ChartIcons.class, "icons" );
+    public static final IconLoader loader = new IconLoader( ChartIcons.class,
+        "icons" );
 
     private ChartIcons()
     {

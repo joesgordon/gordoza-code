@@ -1,6 +1,7 @@
 package org.tuvok.data;
 
-import java.util.*;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 import org.tuvok.model.INote;
 import org.tuvok.model.IUpdate;
