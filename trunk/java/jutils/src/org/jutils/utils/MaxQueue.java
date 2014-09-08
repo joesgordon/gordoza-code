@@ -26,6 +26,9 @@ public class MaxQueue<T> implements Iterable<T>
         this.elements = new ArrayDeque<T>( maxElementCount );
     }
 
+    /***************************************************************************
+     * @param queue
+     **************************************************************************/
     public MaxQueue( MaxQueue<T> queue )
     {
         this.maxCount = queue.maxCount;
@@ -113,15 +116,26 @@ public class MaxQueue<T> implements Iterable<T>
 
     /***************************************************************************
      * Adds the provided items to this queue. If the size of the provided list
-     * is larger than the maximum size of this queue, only the last items up to
+     * is larger than the maximum size of this queue, only the first items up to
      * max size will be added.
      * @param items the items to be added to this queue.
      **************************************************************************/
     public void addAll( Iterable<T> items )
     {
+        List<T> buf = new ArrayList<T>( elements );
+
+        elements.clear();
+
         for( T t : items )
         {
-            push( t );
+            elements.add( t );
+        }
+
+        elements.addAll( buf );
+
+        while( elements.size() > maxCount )
+        {
+            elements.removeLast();
         }
     }
 
