@@ -239,12 +239,17 @@ public final class Utils
      **************************************************************************/
     public static String arrayToString( Object [] items )
     {
+        return arrayToString( items, ", " );
+    }
+
+    public static String arrayToString( Object [] items, String delimiter )
+    {
         StringBuffer buf = new StringBuffer();
         for( int i = 0; i < items.length; i++ )
         {
             if( i > 0 )
             {
-                buf.append( ", " );
+                buf.append( delimiter );
             }
             buf.append( items[i].toString() );
         }
@@ -266,23 +271,18 @@ public final class Utils
     /***************************************************************************
      * Performs the same operations as {@link #arrayToString(Object[])} but with
      * a list rather than an array.
-     * @param items the list to convert to a string.
-     * @return the comma separated list of items.
-     **************************************************************************/
-    public static String listToString( java.util.List<? extends Object> items )
-    {
-        return arrayToString( items.toArray() );
-    }
-
-    /***************************************************************************
-     * Performs the same operations as {@link #arrayToString(Object[])} but with
-     * a list rather than an array.
      * @param items the collection to convert to a string.
      * @return the comma separated list of items.
      **************************************************************************/
     public static String collectionToString( Collection<?> items )
     {
         return arrayToString( items.toArray() );
+    }
+
+    public static String collectionToString( Collection<?> items,
+        String delimiter )
+    {
+        return arrayToString( items.toArray(), delimiter );
     }
 
     /***************************************************************************

@@ -132,4 +132,20 @@ public class BitArray implements Iterable<Boolean>
         return bits.iterator();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public String toString()
+    {
+        char [] str = new char[bits.size()];
+
+        for( int i = 0; i < str.length; i++ )
+        {
+            Boolean b = bits.get( i );
+            str[i] = b ? '1' : '0';
+        }
+
+        return new String( str );
+    }
 }
