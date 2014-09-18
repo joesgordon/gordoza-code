@@ -107,7 +107,7 @@ public class MaxQueue<T> implements Iterable<T>
 
             if( size() > maxCount )
             {
-                elements.remove();
+                elements.removeLast();
             }
         }
 
