@@ -12,8 +12,6 @@ import com.jgoodies.looks.Options;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.jgoodies.looks.plastic.theme.DesertBluer;
 
-//TODO comments
-
 /*******************************************************************************
  * 
  ******************************************************************************/
@@ -113,6 +111,9 @@ public class AppRunner implements Runnable
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class ScrollPaneFocusListener implements
         PropertyChangeListener
     {
@@ -141,10 +142,67 @@ public class AppRunner implements Runnable
         }
     }
 
+    /***************************************************************************
+     * @param message
+     * @param title
+     * @param options
+     * @param defaultValue
+     * @return
+     **************************************************************************/
+    public static <T> T invokeOptions( String message, String title,
+        T [] options, T defaultValue )
+    {
+        OptionsApp<T> app = new OptionsApp<>( message, title, options,
+            defaultValue );
+
+        invokeAndWait( app );
+
+        return app.getAnswer();
+    }
+
+    /***************************************************************************
+     * @param message
+     * @param title
+     * @param options
+     * @param defaultValue
+     * @return
+     **************************************************************************/
+    public static <T> T invokeInput( String message, String title,
+        T [] options, T defaultValue )
+    {
+        InputApp<T> app = new InputApp<>( message, title, options, defaultValue );
+
+        invokeAndWait( app );
+
+        return app.getAnswer();
+    }
+
+    /***************************************************************************
+     * @param message
+     * @param title
+     **************************************************************************/
     public static void invokeError( String message, String title )
     {
-        ErrorApp app = new ErrorApp( message, title );
+        invokeMessage( message, title, JOptionPane.ERROR_MESSAGE );
+    }
 
+    /***************************************************************************
+     * @param message
+     * @param title
+     * @param type
+     **************************************************************************/
+    public static void invokeMessage( String message, String title, int type )
+    {
+        MessageApp app = new MessageApp( message, title, type );
+
+        invokeAndWait( app );
+    }
+
+    /***************************************************************************
+     * @param app
+     **************************************************************************/
+    public static void invokeAndWait( IApplication app )
+    {
         try
         {
             SwingUtilities.invokeAndWait( new AppRunner( app ) );
@@ -157,15 +215,20 @@ public class AppRunner implements Runnable
         }
     }
 
-    private static class ErrorApp implements IApplication
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class MessageApp implements IApplication
     {
         private final String message;
         private final String title;
+        private final int type;
 
-        public ErrorApp( String message, String title )
+        public MessageApp( String message, String title, int type )
         {
             this.message = message;
             this.title = title;
+            this.type = type;
         }
 
         @Override
@@ -177,8 +240,98 @@ public class AppRunner implements Runnable
         @Override
         public void createAndShowUi()
         {
-            JOptionPane.showMessageDialog( null, message, title,
-                JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog( null, message, title, type );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class InputApp<T> implements IApplication
+    {
+        private final String message;
+        private final String title;
+        private final T [] selections;
+        private final T defaultValue;
+
+        private T answer;
+
+        public InputApp( String message, String title, T [] selections,
+            T defaultValue )
+        {
+            this.message = message;
+            this.title = title;
+            this.selections = selections;
+            this.defaultValue = defaultValue;
+        }
+
+        @Override
+        public String getLookAndFeelName()
+        {
+            return null;
+        }
+
+        @Override
+        @SuppressWarnings( "unchecked")
+        public void createAndShowUi()
+        {
+            answer = ( T )JOptionPane.showInputDialog( null, message, title,
+                JOptionPane.QUESTION_MESSAGE, null, selections, defaultValue );
+        }
+
+        public T getAnswer()
+        {
+            return answer;
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class OptionsApp<T> implements IApplication
+    {
+        private final String message;
+        private final String title;
+        private final T [] selections;
+        private final T defaultValue;
+
+        private T answer;
+
+        public OptionsApp( String message, String title, T [] selections,
+            T defaultValue )
+        {
+            this.message = message;
+            this.title = title;
+            this.selections = selections;
+            this.defaultValue = defaultValue;
+        }
+
+        @Override
+        public String getLookAndFeelName()
+        {
+            return null;
+        }
+
+        @Override
+        public void createAndShowUi()
+        {
+            int idx = JOptionPane.showOptionDialog( null, message, title,
+                JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+                selections, defaultValue );
+
+            if( idx == JOptionPane.CLOSED_OPTION )
+            {
+                answer = null;
+            }
+            else
+            {
+                answer = selections[idx];
+            }
+        }
+
+        public T getAnswer()
+        {
+            return answer;
         }
     }
 }
