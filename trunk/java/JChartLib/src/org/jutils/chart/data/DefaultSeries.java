@@ -9,36 +9,73 @@ import org.jutils.chart.model.ISeriesData;
  ******************************************************************************/
 public class DefaultSeries implements ISeriesData
 {
+    /**  */
     private final List<XYPoint> points;
+    /**  */
     private final XYPoint min;
+    /**  */
     private final XYPoint max;
 
+    /***************************************************************************
+     * @param points
+     **************************************************************************/
     public DefaultSeries( List<XYPoint> points )
     {
         this.points = new ArrayList<XYPoint>( points );
-        this.min = new XYPoint( points.get( 0 ) );
-        this.max = new XYPoint( points.get( 0 ) );
+        this.min = new XYPoint( 0.0, 0.0 );
+        this.max = new XYPoint( 1.0, 1.0 );
+
+        boolean minxSet = false;
+        boolean maxxSet = false;
+        boolean minySet = false;
+        boolean maxySet = false;
 
         for( XYPoint p : points )
         {
-            if( p.x < min.x )
+            if( !Double.isNaN( p.x ) )
             {
-                min.x = p.x;
+                if( minxSet )
+                {
+                    min.x = Math.min( min.x, p.x );
+                }
+                else
+                {
+                    min.x = p.x;
+                    minxSet = true;
+                }
+
+                if( maxxSet )
+                {
+                    max.x = Math.max( max.x, p.x );
+                }
+                else
+                {
+                    max.x = p.x;
+                    maxxSet = true;
+                }
             }
 
-            if( p.y < min.y )
+            if( !Double.isNaN( p.y ) )
             {
-                min.y = p.y;
-            }
+                if( minySet )
+                {
+                    min.y = Math.min( min.y, p.y );
+                }
+                else
+                {
+                    min.y = p.y;
+                    minySet = true;
+                }
 
-            if( p.x > max.x )
-            {
-                max.x = p.x;
-            }
-
-            if( p.y > max.y )
-            {
-                max.y = p.y;
+                if( maxySet )
+                {
+                    max.y = Math.max( max.y, p.y );
+                }
+                else
+                {
+                    max.y = p.y;
+                    maxySet = true;
+                }
             }
         }
     }
@@ -104,5 +141,15 @@ public class DefaultSeries implements ISeriesData
     public XYPoint getMax()
     {
         return max;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public boolean isHidden( int index )
+    {
+        // TODO Auto-generated method stub
+        return false;
     }
 }

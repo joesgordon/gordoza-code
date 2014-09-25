@@ -105,9 +105,12 @@ public class ChartView implements IView<JComponent>
 
             addSeries( s, addData );
 
-            // LogUtils.printDebug( "x => (%f,%f)", chart.plot.context.xMin,
-            // chart.plot.context.xMax );
-            // LogUtils.printDebug("");
+            // LogUtils.printDebug( String.format( "x => (%f,%f)",
+            // chart.plot.context.xMin, chart.plot.context.xMax ) );
+            //
+            // LogUtils.printDebug( String.format( "y => (%f,%f)",
+            // chart.plot.context.yMin, chart.plot.context.yMax ) );
+            // LogUtils.printDebug( "" );
 
             chart.plot.seriesLayer.repaint = true;
             mainPanel.repaint();

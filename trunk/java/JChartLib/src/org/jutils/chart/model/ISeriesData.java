@@ -39,4 +39,10 @@ public interface ISeriesData extends Iterable<XYPoint>
      * @return
      **************************************************************************/
     public XYPoint get( int index );
+
+    /***************************************************************************
+     * @param index
+     * @return
+     **************************************************************************/
+    public boolean isHidden( int index );
 }

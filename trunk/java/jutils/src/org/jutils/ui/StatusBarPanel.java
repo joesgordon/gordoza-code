@@ -292,9 +292,25 @@ public class StatusBarPanel
      **************************************************************************/
     private class RefreshListener implements ActionListener
     {
+        // private final Robot robot;
+
+        public RefreshListener()
+        {
+            // try
+            // {
+            // this.robot = new Robot();
+            // }
+            // catch( AWTException ex )
+            // {
+            // throw new RuntimeException( ex );
+            // }
+        }
+
         public void actionPerformed( ActionEvent e )
         {
+            // robot.keyPress( KeyEvent.VK_PAUSE );
             refreshStatus( false );
+            // robot.keyRelease( KeyEvent.VK_PAUSE );
         }
     }
 
