@@ -1,6 +1,6 @@
 package org.jutils.chart.ui;
 
-import java.awt.*;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -9,7 +9,7 @@ import javax.swing.*;
 import org.jutils.chart.ChartIcons;
 import org.jutils.chart.ChartUtils;
 import org.jutils.chart.ui.objects.Series;
-import org.jutils.ui.*;
+import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
@@ -18,7 +18,7 @@ import org.jutils.ui.model.IView;
 public class JChartFrameView implements IView<JFrame>
 {
     /**  */
-    private final JFrame frame;
+    private final StandardFrameView frameView;
     /**  */
     private final ChartView chartView;
 
@@ -27,13 +27,15 @@ public class JChartFrameView implements IView<JFrame>
      **************************************************************************/
     public JChartFrameView( String title )
     {
-        this.frame = new JFrame();
+        this.frameView = new StandardFrameView();
         this.chartView = new ChartView();
 
-        frame.setTitle( title );
+        createMenubar( frameView.getMenuBar(), frameView.getFileMenu() );
+        frameView.setContent( chartView.getView() );
 
-        frame.setJMenuBar( createMenubar( frame ) );
-        frame.setContentPane( createContentPane() );
+        JFrame frame = frameView.getView();
+
+        frame.setTitle( title );
         frame.setIconImages( ChartIcons.getChartImages() );
 
         Series s;
@@ -63,14 +65,12 @@ public class JChartFrameView implements IView<JFrame>
     }
 
     /***************************************************************************
-     * @param frame
+     * @param menuBar
      * @return
      **************************************************************************/
-    private JMenuBar createMenubar( JFrame frame )
+    private JMenuBar createMenubar( JMenuBar menubar, JMenu fileMenu )
     {
-        JMenuBar menubar = new JGoodiesMenuBar();
-
-        menubar.add( createFileMenu() );
+        menubar.add( createFileMenu( fileMenu ) );
 
         menubar.add( createViewMenu() );
 
@@ -80,20 +80,15 @@ public class JChartFrameView implements IView<JFrame>
     /***************************************************************************
      * @return
      **************************************************************************/
-    private JMenu createFileMenu()
+    private JMenu createFileMenu( JMenu menu )
     {
-        JMenu menu = new JMenu( "File" );
         JMenuItem item;
 
         item = new JMenuItem( "Clear" );
         item.addActionListener( new ClearListener( this ) );
-        menu.add( item );
+        menu.add( item, 0 );
 
-        menu.addSeparator();
-
-        item = new JMenuItem( "Exit" );
-        item.addActionListener( new ExitListener( frame ) );
-        menu.add( item );
+        menu.add( new JSeparator(), 1 );
 
         return menu;
     }
@@ -114,40 +109,12 @@ public class JChartFrameView implements IView<JFrame>
     }
 
     /***************************************************************************
-     * @return
-     **************************************************************************/
-    private Container createContentPane()
-    {
-        JPanel panel = new JPanel( new GridBagLayout() );
-        StatusBarPanel statusView = new StatusBarPanel();
-
-        GridBagConstraints constraints;
-
-        constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 );
-        panel.add( chartView.getView(), constraints );
-
-        constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 );
-        panel.add( new JSeparator(), constraints );
-
-        constraints = new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 );
-        panel.add( statusView.getView(), constraints );
-
-        return panel;
-    }
-
-    /***************************************************************************
      * 
      **************************************************************************/
     @Override
     public JFrame getView()
     {
-        return frame;
+        return frameView.getView();
     }
 
     /***************************************************************************
@@ -161,13 +128,13 @@ public class JChartFrameView implements IView<JFrame>
         public DataDialogListener( JChartFrameView view )
         {
             this.dataView = new DataView();
-            this.dialog = new OkDialog( dataView, view.frame );
+            this.dialog = new OkDialog( dataView, view.getView() );
 
             JDialog d = dialog.getView();
 
             d.setSize( 300, 300 );
             d.validate();
-            d.setLocationRelativeTo( view.frame );
+            d.setLocationRelativeTo( view.getView() );
         }
 
         @Override
