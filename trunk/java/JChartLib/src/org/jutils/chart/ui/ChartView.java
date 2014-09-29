@@ -13,7 +13,7 @@ import org.jutils.chart.*;
 import org.jutils.chart.data.ScreenPlotTransformer;
 import org.jutils.chart.data.XYPoint;
 import org.jutils.chart.io.DataFileReader;
-import org.jutils.chart.model.ISeriesData;
+import org.jutils.chart.model.Series;
 import org.jutils.chart.ui.objects.ChartWidget;
 import org.jutils.chart.ui.objects.SeriesWidget;
 import org.jutils.ui.event.*;
@@ -65,7 +65,7 @@ public class ChartView implements IView<JComponent>
     /***************************************************************************
      * @param s
      **************************************************************************/
-    public void addSeries( SeriesWidget s )
+    public void addSeries( Series s )
     {
         addSeries( s, false );
     }
@@ -74,19 +74,14 @@ public class ChartView implements IView<JComponent>
      * @param s
      * @param addData
      **************************************************************************/
-    public void addSeries( SeriesWidget s, boolean addData )
+    public void addSeries( Series s, boolean addData )
     {
         if( !addData )
         {
             clear();
         }
 
-        Color c = palette.next();
-        chart.plot.serieses.add( s );
-        s.marker.setColor( c );
-        s.highlightMarker.setColor( c );
-        s.line.setColor( c );
-        // s.line = null;
+        chart.plot.serieses.add( new SeriesWidget( s ) );
 
         chart.plot.calculateRanges();
     }
@@ -125,10 +120,18 @@ public class ChartView implements IView<JComponent>
         try
         {
             DataFileReader reader = new DataFileReader();
-            ISeriesData data = reader.read( file );
-            SeriesWidget s = new SeriesWidget( data );
+            Series s = new Series();
 
+            Color c;
+
+            s.data = reader.read( file );
             s.name = file.getName();
+
+            c = palette.next();
+
+            s.marker.color = c;
+            s.highlight.color = c;
+            s.line.color = c;
 
             addSeries( s, addData );
 
@@ -222,14 +225,14 @@ public class ChartView implements IView<JComponent>
             for( SeriesWidget s : view.chart.plot.serieses )
             {
                 trans.fromScreen( p, xy );
-                idx = ChartUtils.findNearest( s.data, xy.x );
+                idx = ChartUtils.findNearest( s.series.data, xy.x );
 
-                xy = new XYPoint( s.data.get( idx ) );
+                xy = new XYPoint( s.series.data.get( idx ) );
                 trans.fromChart( xy, p );
 
                 // LogUtils.printDebug( "here: " + xy.x );
 
-                s.highlightMarker.setLocation( new Point( p ) );
+                s.highlight.setLocation( new Point( p ) );
             }
 
             view.chart.plot.highlightLayer.repaint = true;

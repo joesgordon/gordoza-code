@@ -81,7 +81,7 @@ public class PlotWidget implements IChadget
 
             for( SeriesWidget s : serieses )
             {
-                s.highlightMarker.paint( g2d, width, height );
+                s.highlight.paint( g2d, width, height );
             }
 
             highlightLayer.repaint = false;
@@ -99,14 +99,14 @@ public class PlotWidget implements IChadget
 
         if( !serieses.isEmpty() )
         {
-            min = new XYPoint( serieses.get( 0 ).data.getMin() );
-            max = new XYPoint( serieses.get( 0 ).data.getMax() );
+            min = new XYPoint( serieses.get( 0 ).series.data.getMin() );
+            max = new XYPoint( serieses.get( 0 ).series.data.getMax() );
         }
 
         for( SeriesWidget s : serieses )
         {
-            XYPoint.min( min, s.data.getMin(), min );
-            XYPoint.max( max, s.data.getMax(), max );
+            XYPoint.min( min, s.series.data.getMin(), min );
+            XYPoint.max( max, s.series.data.getMax(), max );
         }
 
         context.xMin = min.x;

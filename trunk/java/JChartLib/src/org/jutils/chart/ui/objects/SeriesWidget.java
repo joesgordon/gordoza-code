@@ -13,32 +13,35 @@ import org.jutils.chart.ui.IChadget;
 public class SeriesWidget implements IChadget
 {
     /**  */
-    public final ISeriesData data;
+    public final Series series;
 
     /**  */
-    public IMarker marker;
+    public final IMarker marker;
     /**  */
-    public IMarker highlightMarker;
+    public final IMarker highlight;
     /**  */
-    public ILine line;
+    public final ILine line;
 
     /**  */
     public ChartContext context;
-    /**  */
-    public String name;
 
     /***************************************************************************
      * @param data
      **************************************************************************/
-    public SeriesWidget( ISeriesData data )
+    public SeriesWidget( Series series )
     {
-        this.data = data;
+        this.series = series;
 
         this.marker = new CircleMarker();
-        this.highlightMarker = new CircleMarker();
+        this.highlight = new CircleMarker();
         this.line = new SimpleLine();
 
-        highlightMarker.setRadius( 10 );
+        this.marker.setColor( series.marker.color );
+        this.highlight.setColor( series.highlight.color );
+        this.line.setColor( series.line.color );
+        this.line.setSize( series.line.weight );
+
+        highlight.setRadius( 10 );
 
         marker.setBorderVisible( false );
     }
@@ -58,9 +61,9 @@ public class SeriesWidget implements IChadget
 
         // LogUtils.printDebug( "w: " + width + ", h: " + height );
 
-        for( int i = 0; i < data.getCount(); i++ )
+        for( int i = 0; i < series.data.getCount(); i++ )
         {
-            xy = data.get( i );
+            xy = series.data.get( i );
 
             trans.fromChart( xy, p );
 
