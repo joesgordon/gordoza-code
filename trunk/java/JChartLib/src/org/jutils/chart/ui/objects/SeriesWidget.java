@@ -10,7 +10,7 @@ import org.jutils.chart.ui.IChadget;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class Series implements IChadget
+public class SeriesWidget implements IChadget
 {
     /**  */
     public final ISeriesData data;
@@ -30,7 +30,7 @@ public class Series implements IChadget
     /***************************************************************************
      * @param data
      **************************************************************************/
-    public Series( ISeriesData data )
+    public SeriesWidget( ISeriesData data )
     {
         this.data = data;
 
