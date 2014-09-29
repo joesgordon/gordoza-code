@@ -7,17 +7,19 @@ import org.jutils.chart.ui.IChadget;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class Chart implements IChadget
+public class ChartWidget implements IChadget
 {
-    public final Plot plot;
+    /**  */
+    public final PlotWidget plot;
+    /**  */
     public final ChartElements elements;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public Chart()
+    public ChartWidget()
     {
-        this.plot = new Plot();
+        this.plot = new PlotWidget();
         this.elements = new ChartElements();
     }
 

@@ -14,8 +14,8 @@ import org.jutils.chart.data.ScreenPlotTransformer;
 import org.jutils.chart.data.XYPoint;
 import org.jutils.chart.io.DataFileReader;
 import org.jutils.chart.model.ISeriesData;
-import org.jutils.chart.ui.objects.Chart;
-import org.jutils.chart.ui.objects.Series;
+import org.jutils.chart.ui.objects.ChartWidget;
+import org.jutils.chart.ui.objects.SeriesWidget;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.DropActionType;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
@@ -29,7 +29,7 @@ public class ChartView implements IView<JComponent>
     /**  */
     private final ChadgetPanel mainPanel;
     /**  */
-    private final Chart chart;
+    private final ChartWidget chart;
     /**  */
     private final IPalette palette;
 
@@ -42,7 +42,7 @@ public class ChartView implements IView<JComponent>
     public ChartView()
     {
         this.mainPanel = new ChadgetPanel();
-        this.chart = new Chart();
+        this.chart = new ChartWidget();
         this.palette = new PresetPalette();
 
         this.fileLoadedListeners = new ItemActionList<>();
@@ -65,7 +65,7 @@ public class ChartView implements IView<JComponent>
     /***************************************************************************
      * @param s
      **************************************************************************/
-    public void addSeries( Series s )
+    public void addSeries( SeriesWidget s )
     {
         addSeries( s, false );
     }
@@ -74,7 +74,7 @@ public class ChartView implements IView<JComponent>
      * @param s
      * @param addData
      **************************************************************************/
-    public void addSeries( Series s, boolean addData )
+    public void addSeries( SeriesWidget s, boolean addData )
     {
         if( !addData )
         {
@@ -126,7 +126,7 @@ public class ChartView implements IView<JComponent>
         {
             DataFileReader reader = new DataFileReader();
             ISeriesData data = reader.read( file );
-            Series s = new Series( data );
+            SeriesWidget s = new SeriesWidget( data );
 
             s.name = file.getName();
 
@@ -219,7 +219,7 @@ public class ChartView implements IView<JComponent>
 
             // LogUtils.printDebug( "here: " + mx );
 
-            for( Series s : view.chart.plot.serieses )
+            for( SeriesWidget s : view.chart.plot.serieses )
             {
                 trans.fromScreen( p, xy );
                 idx = ChartUtils.findNearest( s.data, xy.x );

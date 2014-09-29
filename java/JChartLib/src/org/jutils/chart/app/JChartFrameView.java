@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -13,7 +14,7 @@ import org.jutils.SwingUtils;
 import org.jutils.chart.ChartIcons;
 import org.jutils.chart.ChartUtils;
 import org.jutils.chart.ui.*;
-import org.jutils.chart.ui.objects.Series;
+import org.jutils.chart.ui.objects.SeriesWidget;
 import org.jutils.io.UserOptionsSerializer;
 import org.jutils.ui.*;
 import org.jutils.ui.event.*;
@@ -64,24 +65,24 @@ public class JChartFrameView implements IView<JFrame>
 
         recentFiles.setData( userio.getOptions().recentFiles.toList() );
 
-        Series s;
+        SeriesWidget s;
 
-        s = new Series( ChartUtils.createLineSeries( 1000000, 1.0, 0.0, -5.0,
-            5.0 ) );
+        s = new SeriesWidget( ChartUtils.createLineSeries( 1000000, 1.0, 0.0,
+            -5.0, 5.0 ) );
         s.line.setSize( 4 );
         // s.line = null;
         chartView.addSeries( s );
 
-        s = new Series( ChartUtils.createLineSeries( 1000000, -1.0, 0.0, -5.0,
-            5.0 ) );
+        s = new SeriesWidget( ChartUtils.createLineSeries( 1000000, -1.0, 0.0,
+            -5.0, 5.0 ) );
         s.marker.setColor( new Color( 0xFF9933 ) );
         s.highlightMarker.setColor( new Color( 0xFF9933 ) );
         s.line.setColor( new Color( 0xCC6622 ) );
         // s.line = null;
         chartView.addSeries( s, true );
 
-        s = new Series( ChartUtils.createSinSeries( 1000000, 1.0, 4.0, 0.0,
-            -5.0, 5.0 ) );
+        s = new SeriesWidget( ChartUtils.createSinSeries( 1000000, 1.0, 4.0,
+            0.0, -5.0, 5.0 ) );
         s.marker.setColor( new Color( 0x339933 ) );
         s.highlightMarker.setColor( new Color( 0x339933 ) );
         s.line.setColor( new Color( 0x227722 ) );
@@ -242,6 +243,8 @@ public class JChartFrameView implements IView<JFrame>
             view.userio.getOptions().recentFiles.push( event.getItem() );
             view.userio.write();
             view.recentFiles.setData( view.userio.getOptions().recentFiles.toList() );
+
+            view.chartView.importData( event.getItem(), false );
         }
     }
 
@@ -266,7 +269,13 @@ public class JChartFrameView implements IView<JFrame>
         @Override
         public void filesChosen( File [] files )
         {
-            view.chartView.importData( Arrays.asList( files ) );
+            List<File> fileList = Arrays.asList( files );
+
+            view.userio.getOptions().recentFiles.addAll( fileList );
+            view.userio.write();
+            view.recentFiles.setData( view.userio.getOptions().recentFiles.toList() );
+
+            view.chartView.importData( fileList );
         }
     }
 }

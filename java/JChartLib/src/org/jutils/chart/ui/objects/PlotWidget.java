@@ -12,7 +12,7 @@ import org.jutils.chart.ui.Layer2d;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class Plot implements IChadget
+public class PlotWidget implements IChadget
 {
     /**  */
     public final Layer2d seriesLayer;
@@ -20,7 +20,7 @@ public class Plot implements IChadget
     public final Layer2d highlightLayer;
 
     /**  */
-    public final List<Series> serieses;
+    public final List<SeriesWidget> serieses;
 
     /**  */
     public final ChartContext context;
@@ -33,7 +33,7 @@ public class Plot implements IChadget
     /***************************************************************************
      * 
      **************************************************************************/
-    public Plot()
+    public PlotWidget()
     {
         this.context = new ChartContext();
         this.serieses = new ArrayList<>();
@@ -61,7 +61,7 @@ public class Plot implements IChadget
         {
             seriesLayer.clear();
 
-            for( Series s : serieses )
+            for( SeriesWidget s : serieses )
             {
                 s.context = context;
                 s.paint( g2d, width, height );
@@ -79,7 +79,7 @@ public class Plot implements IChadget
         {
             highlightLayer.clear();
 
-            for( Series s : serieses )
+            for( SeriesWidget s : serieses )
             {
                 s.highlightMarker.paint( g2d, width, height );
             }
@@ -103,7 +103,7 @@ public class Plot implements IChadget
             max = new XYPoint( serieses.get( 0 ).data.getMax() );
         }
 
-        for( Series s : serieses )
+        for( SeriesWidget s : serieses )
         {
             XYPoint.min( min, s.data.getMin(), min );
             XYPoint.max( max, s.data.getMax(), max );

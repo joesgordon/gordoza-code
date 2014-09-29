@@ -7,11 +7,11 @@ import org.jutils.chart.ui.IChadget;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class Axis implements IChadget
+public class AxisWidget implements IChadget
 {
     public final AxisTicks ticks;
 
-    public Axis()
+    public AxisWidget()
     {
         this.ticks = new AxisTicks();
     }
