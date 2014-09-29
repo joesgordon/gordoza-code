@@ -33,6 +33,9 @@ public class ChartView implements IView<JComponent>
     /**  */
     private final IPalette palette;
 
+    /**  */
+    private final ItemActionList<File> fileLoadedListeners;
+
     /***************************************************************************
      * 
      **************************************************************************/
@@ -42,11 +45,21 @@ public class ChartView implements IView<JComponent>
         this.chart = new Chart();
         this.palette = new PresetPalette();
 
+        this.fileLoadedListeners = new ItemActionList<>();
+
         mainPanel.setObject( chart );
 
         mainPanel.addComponentListener( new ChartComponentListener( this ) );
         mainPanel.addMouseMotionListener( new ChartMouseListenter( this ) );
         mainPanel.setDropTarget( new FileDropTarget( new ChartDropTarget( this ) ) );
+    }
+
+    /***************************************************************************
+     * @param l
+     **************************************************************************/
+    public void addFileLoadedListener( ItemActionListener<File> l )
+    {
+        fileLoadedListeners.addListener( l );
     }
 
     /***************************************************************************
@@ -87,6 +100,20 @@ public class ChartView implements IView<JComponent>
         chart.plot.highlightLayer.repaint = true;
         chart.plot.seriesLayer.repaint = true;
         mainPanel.repaint();
+    }
+
+    /***************************************************************************
+     * @param files
+     **************************************************************************/
+    public void importData( List<File> files )
+    {
+        boolean addData = false;
+
+        for( File file : files )
+        {
+            importData( file, addData );
+            addData = true;
+        }
     }
 
     /***************************************************************************
@@ -162,6 +189,7 @@ public class ChartView implements IView<JComponent>
             for( int i = 0; i < files.size(); i++ )
             {
                 view.importData( files.get( i ), addData );
+                view.fileLoadedListeners.fireListeners( view, files.get( i ) );
                 addData = true;
             }
         }
