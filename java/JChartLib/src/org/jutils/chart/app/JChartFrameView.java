@@ -13,8 +13,8 @@ import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
 import org.jutils.chart.ChartIcons;
 import org.jutils.chart.ChartUtils;
+import org.jutils.chart.model.Series;
 import org.jutils.chart.ui.*;
-import org.jutils.chart.ui.objects.SeriesWidget;
 import org.jutils.io.UserOptionsSerializer;
 import org.jutils.ui.*;
 import org.jutils.ui.event.*;
@@ -64,29 +64,28 @@ public class JChartFrameView implements IView<JFrame>
         chartView.addFileLoadedListener( new FileLoadedListener( this ) );
 
         recentFiles.setData( userio.getOptions().recentFiles.toList() );
+        recentFiles.addSelectedListener( new FileSelected( this ) );
 
-        SeriesWidget s;
+        Series s;
 
-        s = new SeriesWidget( ChartUtils.createLineSeries( 1000000, 1.0, 0.0,
-            -5.0, 5.0 ) );
-        s.line.setSize( 4 );
-        // s.line = null;
+        s = new Series();
+        s.data = ChartUtils.createLineSeries( 1000000, 1.0, 0.0, -5.0, 5.0 );
+        s.line.weight = 4;
         chartView.addSeries( s );
 
-        s = new SeriesWidget( ChartUtils.createLineSeries( 1000000, -1.0, 0.0,
-            -5.0, 5.0 ) );
-        s.marker.setColor( new Color( 0xFF9933 ) );
-        s.highlightMarker.setColor( new Color( 0xFF9933 ) );
-        s.line.setColor( new Color( 0xCC6622 ) );
-        // s.line = null;
+        s = new Series();
+        s.data = ChartUtils.createLineSeries( 1000000, -1.0, 0.0, -5.0, 5.0 );
+        s.marker.color = new Color( 0xFF9933 );
+        s.highlight.color = new Color( 0xFF9933 );
+        s.line.color = new Color( 0xCC6622 );
         chartView.addSeries( s, true );
 
-        s = new SeriesWidget( ChartUtils.createSinSeries( 1000000, 1.0, 4.0,
-            0.0, -5.0, 5.0 ) );
-        s.marker.setColor( new Color( 0x339933 ) );
-        s.highlightMarker.setColor( new Color( 0x339933 ) );
-        s.line.setColor( new Color( 0x227722 ) );
-        s.line.setSize( 4 );
+        s = new Series();
+        s.data = ChartUtils.createSinSeries( 1000000, 1.0, 4.0, 0.0, -5.0, 5.0 );
+        s.marker.color = new Color( 0x339933 );
+        s.highlight.color = new Color( 0x339933 );
+        s.line.color = new Color( 0x227722 );
+        s.line.weight = 4;
         // s.line = null;
         chartView.addSeries( s, true );
     }
@@ -243,8 +242,6 @@ public class JChartFrameView implements IView<JFrame>
             view.userio.getOptions().recentFiles.push( event.getItem() );
             view.userio.write();
             view.recentFiles.setData( view.userio.getOptions().recentFiles.toList() );
-
-            view.chartView.importData( event.getItem(), false );
         }
     }
 
@@ -271,11 +268,26 @@ public class JChartFrameView implements IView<JFrame>
         {
             List<File> fileList = Arrays.asList( files );
 
-            view.userio.getOptions().recentFiles.addAll( fileList );
-            view.userio.write();
-            view.recentFiles.setData( view.userio.getOptions().recentFiles.toList() );
-
             view.chartView.importData( fileList );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class FileSelected implements ItemActionListener<File>
+    {
+        private final JChartFrameView view;
+
+        public FileSelected( JChartFrameView view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ItemActionEvent<File> event )
+        {
+            view.chartView.importData( event.getItem(), false );
         }
     }
 }
