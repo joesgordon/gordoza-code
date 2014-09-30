@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.filechooser.FileSystemView;
 
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
@@ -85,12 +86,16 @@ public class RecentFilesMenuView implements IDataView<List<File>>
         menu.removeAll();
         int count = Math.min( maxFileCount, files.size() );
 
+        FileSystemView view = FileSystemView.getFileSystemView();
+
         for( int i = 0; i < count; i++ )
         {
             File file = files.get( i );
+
             if( file.exists() )
             {
                 item = new JMenuItem( ( i + 1 ) + " " + file.getName() );
+                item.setIcon( view.getSystemIcon( file ) );
                 item.addActionListener( new ItemSelected( this, file ) );
                 item.setToolTipText( file.getAbsolutePath() );
                 item.setMnemonic( item.getText().charAt( 0 ) );

@@ -7,26 +7,39 @@ import javax.swing.Icon;
 import org.jutils.appgallery.ILibraryApp;
 import org.jutils.chart.ChartIcons;
 import org.jutils.chart.app.JChartApp;
+import org.jutils.chart.app.JChartAppConstants;
 import org.jutils.ui.app.IFrameApp;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class ChartApp implements ILibraryApp
 {
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public Icon getIcon32()
     {
         return ChartIcons.loader.getIcon( ChartIcons.CHART_032 );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public String getName()
     {
         return "JChart";
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public Component createApp()
     {
-        IFrameApp app = new JChartApp();
+        IFrameApp app = new JChartApp( JChartAppConstants.getUserIO() );
 
         return app.createFrame();
     }

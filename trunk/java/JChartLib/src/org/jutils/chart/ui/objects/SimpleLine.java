@@ -29,7 +29,7 @@ public class SimpleLine implements ILine
      * 
      **************************************************************************/
     @Override
-    public void paint( Graphics2D graphics, int width, int height )
+    public void draw( Graphics2D graphics, int x, int y, int width, int height )
     {
         graphics.setColor( color );
 
@@ -70,5 +70,14 @@ public class SimpleLine implements ILine
     public double getSize()
     {
         return 1;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Dimension calculateSize()
+    {
+        return null;
     }
 }

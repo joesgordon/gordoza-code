@@ -8,23 +8,34 @@ import javax.swing.JComponent;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ChadgetPanel extends JComponent
+public class ChartWidgetPanel extends JComponent
 {
-    private IChadget object;
+    /**  */
+    private IChartWidget object;
+    /**  */
     private final Object lock;
 
-    public ChadgetPanel()
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public ChartWidgetPanel()
     {
         this( null );
     }
 
-    public ChadgetPanel( IChadget object )
+    /***************************************************************************
+     * @param object
+     **************************************************************************/
+    public ChartWidgetPanel( IChartWidget object )
     {
         this.lock = new Object();
         this.object = object;
     }
 
-    public void setObject( IChadget obj )
+    /***************************************************************************
+     * @param obj
+     **************************************************************************/
+    public void setObject( IChartWidget obj )
     {
         this.object = obj;
     }
@@ -37,7 +48,7 @@ public class ChadgetPanel extends JComponent
     {
         super.paintComponent( g );
 
-        IChadget obj = null;
+        IChartWidget obj = null;
 
         synchronized( lock )
         {
@@ -49,6 +60,8 @@ public class ChadgetPanel extends JComponent
             return;
         }
 
-        obj.paint( ( Graphics2D )g, getWidth(), getHeight() );
+        Graphics2D g2d = ( Graphics2D )g;
+
+        obj.draw( g2d, 0, 0, getWidth(), getHeight() );
     }
 }

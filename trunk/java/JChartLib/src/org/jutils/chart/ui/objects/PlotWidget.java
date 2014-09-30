@@ -1,18 +1,19 @@
 package org.jutils.chart.ui.objects;
 
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jutils.chart.data.ChartContext;
 import org.jutils.chart.data.XYPoint;
-import org.jutils.chart.ui.IChadget;
+import org.jutils.chart.ui.IChartWidget;
 import org.jutils.chart.ui.Layer2d;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class PlotWidget implements IChadget
+public class PlotWidget implements IChartWidget
 {
     /**  */
     public final Layer2d seriesLayer;
@@ -24,11 +25,6 @@ public class PlotWidget implements IChadget
 
     /**  */
     public final ChartContext context;
-
-    /**  */
-    public int x;
-    /**  */
-    public int y;
 
     /***************************************************************************
      * 
@@ -46,7 +42,7 @@ public class PlotWidget implements IChadget
      * 
      **************************************************************************/
     @Override
-    public void paint( Graphics2D graphics, int width, int height )
+    public void draw( Graphics2D graphics, int x, int y, int width, int height )
     {
         Graphics2D g2d;
 
@@ -64,7 +60,7 @@ public class PlotWidget implements IChadget
             for( SeriesWidget s : serieses )
             {
                 s.context = context;
-                s.paint( g2d, width, height );
+                s.draw( g2d, x, y, width, height );
             }
 
             seriesLayer.repaint = false;
@@ -81,7 +77,7 @@ public class PlotWidget implements IChadget
 
             for( SeriesWidget s : serieses )
             {
-                s.highlight.paint( g2d, width, height );
+                s.highlight.draw( g2d, 0, 0, width, height );
             }
 
             highlightLayer.repaint = false;
@@ -115,7 +111,16 @@ public class PlotWidget implements IChadget
         context.xMax = max.x;
         context.yMax = max.y;
 
+        context.xMin -= ( context.xMax - context.xMin ) * .03;
+        context.xMax += ( context.xMax - context.xMin ) * .03;
+
         context.yMin -= ( context.yMax - context.yMin ) * .03;
         context.yMax += ( context.yMax - context.yMin ) * .03;
+    }
+
+    @Override
+    public Dimension calculateSize()
+    {
+        return null;
     }
 }
