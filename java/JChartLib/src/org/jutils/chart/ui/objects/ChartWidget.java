@@ -11,6 +11,10 @@ import org.jutils.chart.ui.IChartWidget;
 public class ChartWidget implements IChartWidget
 {
     /**  */
+    public final TextWidget topBottom;
+    /**  */
+    public final TextWidget title;
+    /**  */
     public final PlotWidget plot;
     /**  */
     public final AxesWidget axes;
@@ -23,10 +27,11 @@ public class ChartWidget implements IChartWidget
      **************************************************************************/
     public ChartWidget()
     {
+        this.chart = new Chart();
+        this.topBottom = new TextWidget( chart.topBottomLabel );
+        this.title = new TextWidget( chart.title );
         this.plot = new PlotWidget();
         this.axes = new AxesWidget();
-
-        this.chart = new Chart();
 
         axes.chart = this.chart;
     }
@@ -45,18 +50,51 @@ public class ChartWidget implements IChartWidget
         graphics.setColor( Color.white );
         graphics.fillRect( 0, 0, width, height );
 
-        int w = width - 40;
-        int h = height - 40;
+        int titleHeight = title.calculateSize().height;
+
+        int w = width;
+        int h = height;
+
+        Dimension d;
+
+        // ---------------------------------------------------------------------
+        // Draw top/bottom.
+        // ---------------------------------------------------------------------
+        if( chart.topBottomLabel.visible )
+        {
+            d = topBottom.calculateSize();
+
+            topBottom.draw( graphics, 0, 0, w, d.height );
+            topBottom.draw( graphics, 0, h - d.height, w, d.height );
+
+            y += d.height;
+            h -= 2 * d.height;
+        }
+
+        y += 10;
+        h -= 20;
+
+        // ---------------------------------------------------------------------
+        // Draw title.
+        // ---------------------------------------------------------------------
+        title.draw( graphics, x, y, w, titleHeight );
+
+        x += 20;
+        y += 10 + titleHeight;
+        w -= 40;
+        h -= ( 20 + titleHeight );
+
+        d = axes.calculateSize();
+
+        // ---------------------------------------------------------------------
+        // Draw axes.
+        // ---------------------------------------------------------------------
+        axes.draw( graphics, x, y, w, h );
 
         // ---------------------------------------------------------------------
         // Draw plot.
         // ---------------------------------------------------------------------
-        plot.draw( graphics, 20, 20, w, h );
-
-        // ---------------------------------------------------------------------
-        // Draw chart elements.
-        // ---------------------------------------------------------------------
-        axes.draw( graphics, 20, 20, w, h );
+        plot.draw( graphics, x, y, w, h );
     }
 
     /***************************************************************************

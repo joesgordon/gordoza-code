@@ -16,4 +16,12 @@ public class TextLabel
     public Font font;
     /**  */
     public Color color;
+
+    public TextLabel()
+    {
+        this.visible = true;
+        this.text = "Title";
+        this.font = new Font( "Helvetica", Font.PLAIN, 24 );
+        this.color = Color.black;
+    }
 }

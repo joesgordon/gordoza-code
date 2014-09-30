@@ -10,14 +10,19 @@ public class Axis
     /**  */
     public int minorSectionCount;
     /**  */
-    public TextLabel title;
+    public final TextLabel title;
     /**  */
-    public TextLabel subtitle;
+    public final TextLabel subtitle;
     /**  */
     public boolean dockZero;
 
     public Axis()
     {
         this.majorSectionCount = 10;
+        this.title = new TextLabel();
+        this.subtitle = new TextLabel();
+        this.dockZero = false;
+
+        subtitle.visible = false;
     }
 }
