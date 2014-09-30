@@ -10,11 +10,17 @@ import org.jutils.Utils;
  ******************************************************************************/
 public class Layer2d
 {
+    /**  */
     private BufferedImage img;
+    /**  */
     private Graphics2D graphics;
 
+    /**  */
     public boolean repaint;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public Layer2d()
     {
         repaint = true;
@@ -22,6 +28,10 @@ public class Layer2d
         createImage( 100, 100 );
     }
 
+    /***************************************************************************
+     * @param width
+     * @param height
+     **************************************************************************/
     private void createImage( int width, int height )
     {
         img = Utils.createTransparentImage( width, height );
@@ -32,11 +42,17 @@ public class Layer2d
             RenderingHints.VALUE_ANTIALIAS_ON );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public Graphics2D getGraphics()
     {
         return graphics;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public void clear()
     {
         graphics.setComposite( AlphaComposite.Clear );
@@ -44,6 +60,11 @@ public class Layer2d
         graphics.setComposite( AlphaComposite.SrcOver );
     }
 
+    /***************************************************************************
+     * @param width
+     * @param height
+     * @return
+     **************************************************************************/
     public Graphics2D setSize( int width, int height )
     {
         if( width != img.getWidth() || height != img.getHeight() )
@@ -54,11 +75,19 @@ public class Layer2d
         return getGraphics();
     }
 
+    /***************************************************************************
+     * @param graphics
+     **************************************************************************/
     public void paint( Graphics2D graphics )
     {
         paint( graphics, 0, 0 );
     }
 
+    /***************************************************************************
+     * @param graphics
+     * @param x
+     * @param y
+     **************************************************************************/
     public void paint( Graphics2D graphics, int x, int y )
     {
         graphics.drawImage( img, x, y, null );

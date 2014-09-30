@@ -27,7 +27,7 @@ import org.jutils.ui.model.IView;
 public class ChartView implements IView<JComponent>
 {
     /**  */
-    private final ChadgetPanel mainPanel;
+    private final ChartWidgetPanel mainPanel;
     /**  */
     private final ChartWidget chart;
     /**  */
@@ -41,7 +41,7 @@ public class ChartView implements IView<JComponent>
      **************************************************************************/
     public ChartView()
     {
-        this.mainPanel = new ChadgetPanel();
+        this.mainPanel = new ChartWidgetPanel();
         this.chart = new ChartWidget();
         this.palette = new PresetPalette();
 
@@ -144,6 +144,8 @@ public class ChartView implements IView<JComponent>
 
             chart.plot.seriesLayer.repaint = true;
             mainPanel.repaint();
+
+            fileLoadedListeners.fireListeners( this, file );
         }
         catch( FileNotFoundException ex )
         {
@@ -192,7 +194,6 @@ public class ChartView implements IView<JComponent>
             for( int i = 0; i < files.size(); i++ )
             {
                 view.importData( files.get( i ), addData );
-                view.fileLoadedListeners.fireListeners( view, files.get( i ) );
                 addData = true;
             }
         }
@@ -256,7 +257,7 @@ public class ChartView implements IView<JComponent>
         @Override
         public void componentResized( ComponentEvent e )
         {
-            view.chart.elements.axesLayer.repaint = true;
+            view.chart.axes.axesLayer.repaint = true;
             view.chart.plot.seriesLayer.repaint = true;
             view.chart.plot.highlightLayer.clear();
             view.chart.plot.highlightLayer.repaint = false;

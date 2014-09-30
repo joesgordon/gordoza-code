@@ -1,15 +1,16 @@
 package org.jutils.chart.ui;
 
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 
 //TODO Use or lose!
 
-public class LayeredObject implements IChadget
+public class LayeredObject implements IChartWidget
 {
     private final Layer2d layer;
-    private final IChadget object;
+    private final IChartWidget object;
 
-    public LayeredObject( IChadget obj )
+    public LayeredObject( IChartWidget obj )
     {
         this.object = obj;
 
@@ -17,7 +18,7 @@ public class LayeredObject implements IChadget
     }
 
     @Override
-    public void paint( Graphics2D graphics, int width, int height )
+    public void draw( Graphics2D graphics, int x, int y, int width, int height )
     {
         Graphics2D g2d;
 
@@ -25,9 +26,15 @@ public class LayeredObject implements IChadget
 
         if( layer.repaint )
         {
-            object.paint( g2d, width, height );
+            object.draw( g2d, x, y, width, height );
         }
 
         layer.paint( graphics, 0, 0 );
+    }
+
+    @Override
+    public Dimension calculateSize()
+    {
+        return object.calculateSize();
     }
 }

@@ -1,16 +1,15 @@
 package org.jutils.chart.ui.objects;
 
-import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.*;
 
 import org.jutils.chart.data.*;
 import org.jutils.chart.model.*;
-import org.jutils.chart.ui.IChadget;
+import org.jutils.chart.ui.IChartWidget;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class SeriesWidget implements IChadget
+public class SeriesWidget implements IChartWidget
 {
     /**  */
     public final Series series;
@@ -18,7 +17,7 @@ public class SeriesWidget implements IChadget
     /**  */
     public final IMarker marker;
     /**  */
-    public final IMarker highlight;
+    public final CircleBorderMarker highlight;
     /**  */
     public final ILine line;
 
@@ -33,7 +32,7 @@ public class SeriesWidget implements IChadget
         this.series = series;
 
         this.marker = new CircleMarker();
-        this.highlight = new CircleMarker();
+        this.highlight = new CircleBorderMarker();
         this.line = new SimpleLine();
 
         this.marker.setColor( series.marker.color );
@@ -50,7 +49,7 @@ public class SeriesWidget implements IChadget
      *
      **************************************************************************/
     @Override
-    public void paint( Graphics2D graphics, int width, int height )
+    public void draw( Graphics2D graphics, int x, int y, int width, int height )
     {
         Point p = new Point();
         Point lastmp = new Point();
@@ -59,7 +58,7 @@ public class SeriesWidget implements IChadget
 
         ScreenPlotTransformer trans = new ScreenPlotTransformer( context );
 
-        // LogUtils.printDebug( "w: " + width + ", h: " + height );
+        // LogUtils.printDebug( "series: w: " + width + ", h: " + height );
 
         for( int i = 0; i < series.data.getCount(); i++ )
         {
@@ -73,7 +72,7 @@ public class SeriesWidget implements IChadget
                 {
                     line.setPoints( lastlp, p );
 
-                    line.paint( graphics, width, height );
+                    line.draw( graphics, 0, 0, width, height );
 
                     lastlp.x = p.x;
                     lastlp.y = p.y;
@@ -84,7 +83,7 @@ public class SeriesWidget implements IChadget
             {
                 marker.setLocation( p );
 
-                marker.paint( graphics, width, height );
+                marker.draw( graphics, 0, 0, width, height );
 
                 lastmp.x = p.x;
                 lastmp.y = p.y;
@@ -104,10 +103,16 @@ public class SeriesWidget implements IChadget
         {
             marker.setLocation( lastmp );
 
-            marker.paint( graphics, width, height );
+            marker.draw( graphics, 0, 0, width, height );
 
             lastmp.x = p.x;
             lastmp.y = p.y;
         }
+    }
+
+    @Override
+    public Dimension calculateSize()
+    {
+        return null;
     }
 }

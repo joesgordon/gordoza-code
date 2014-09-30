@@ -138,13 +138,16 @@ public class JChartFrameView implements IView<JFrame>
     {
         JMenuItem item;
 
-        menu.add( recentFiles.getView(), 0 );
+        item = new JMenuItem( openAction );
+        menu.add( item, 0 );
+
+        menu.add( recentFiles.getView(), 1 );
 
         item = new JMenuItem( "Clear" );
         item.addActionListener( new ClearListener( this ) );
-        menu.add( item, 1 );
+        menu.add( item, 2 );
 
-        menu.add( new JSeparator(), 2 );
+        menu.add( new JSeparator(), 3 );
 
         return menu;
     }

@@ -2,17 +2,21 @@ package org.jutils.chart.ui.objects;
 
 import java.awt.*;
 
-import org.jutils.chart.ui.IChadget;
+import org.jutils.chart.model.Chart;
+import org.jutils.chart.ui.IChartWidget;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ChartWidget implements IChadget
+public class ChartWidget implements IChartWidget
 {
     /**  */
     public final PlotWidget plot;
     /**  */
-    public final ChartElements elements;
+    public final AxesWidget axes;
+
+    /**  */
+    public Chart chart;
 
     /***************************************************************************
      * 
@@ -20,32 +24,47 @@ public class ChartWidget implements IChadget
     public ChartWidget()
     {
         this.plot = new PlotWidget();
-        this.elements = new ChartElements();
+        this.axes = new AxesWidget();
+
+        this.chart = new Chart();
+
+        axes.chart = this.chart;
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void paint( Graphics2D graphics, int width, int height )
+    public void draw( Graphics2D graphics, int x, int y, int width, int height )
     {
-        graphics.setRenderingHint( RenderingHints.KEY_ANTIALIASING,
-            RenderingHints.VALUE_ANTIALIAS_ON );
+        // LogUtils.printDebug( "chart: w: " + width + ", h: " + height );
 
+        // ---------------------------------------------------------------------
+        // Clear
+        // ---------------------------------------------------------------------
         graphics.setColor( Color.white );
-
         graphics.fillRect( 0, 0, width, height );
+
+        int w = width - 40;
+        int h = height - 40;
 
         // ---------------------------------------------------------------------
         // Draw plot.
         // ---------------------------------------------------------------------
-        plot.x = 20;
-        plot.y = 20;
-        plot.paint( graphics, width - 40, height - 40 );
+        plot.draw( graphics, 20, 20, w, h );
 
         // ---------------------------------------------------------------------
         // Draw chart elements.
         // ---------------------------------------------------------------------
-        elements.paint( graphics, width, height );
+        axes.draw( graphics, 20, 20, w, h );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Dimension calculateSize()
+    {
+        return null;
     }
 }

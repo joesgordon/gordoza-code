@@ -2,55 +2,79 @@ package org.jutils.chart.ui.objects;
 
 import java.awt.*;
 
-import org.jutils.chart.model.ILine;
+import org.jutils.chart.model.IMarker;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class SolidLine implements ILine
+public class CircleBorderMarker implements IMarker
 {
     /**  */
-    public Color color;
+    private Color color;
     /**  */
-    public int size;
+    private Color borderColor;
     /**  */
-    public Point p1;
+    private int radius;
     /**  */
-    public Point p2;
-
+    private int radiusHalf;
     /**  */
-    private BasicStroke solidStroke;
+    private int x;
+    /**  */
+    private int y;
+    /**  */
+    private boolean hasBorder;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public SolidLine()
+    public CircleBorderMarker()
     {
-        this.color = new Color( 0x0066CC );
-        this.setSize( 4 );
+        color = new Color( 0x0066CC );
+        borderColor = new Color( 0xCC0000 );
+
+        setRadius( 6 );
+        x = 5;
+        y = 5;
+
+        hasBorder = true;
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void draw( Graphics2D graphics, int x, int y, int width, int height )
+    public void draw( Graphics2D g, int x2, int y2, int width, int height )
     {
-        graphics.setColor( color );
+        if( hasBorder )
+        {
+            g.setColor( borderColor );
 
-        graphics.setStroke( solidStroke );
+            g.fillOval( x - radiusHalf - 2, y - radiusHalf - 2, radius + 4,
+                radius + 4 );
+        }
 
-        graphics.drawLine( p1.x, p1.y, p2.x, p2.y );
+        g.setColor( color );
+
+        g.fillOval( x - radiusHalf, y - radiusHalf, radius, radius );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void setPoints( Point p1, Point p2 )
+    public void setBorderVisible( boolean visible )
     {
-        this.p1 = p1;
-        this.p2 = p2;
+        hasBorder = visible;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void setLocation( Point p )
+    {
+        this.x = p.x;
+        this.y = p.y;
     }
 
     /***************************************************************************
@@ -66,28 +90,25 @@ public class SolidLine implements ILine
      * 
      **************************************************************************/
     @Override
-    public void setSize( int size )
+    public void setBorderColor( Color color )
     {
-        this.size = size;
-        this.solidStroke = new BasicStroke( size, BasicStroke.CAP_ROUND,
-            BasicStroke.JOIN_ROUND );
+        this.borderColor = color;
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public double getSize()
+    public void setRadius( int r )
     {
-        return size;
+        this.radius = r;
+        this.radiusHalf = r / 2;
     }
 
-    /***************************************************************************
-     * 
-     **************************************************************************/
     @Override
     public Dimension calculateSize()
     {
-        return null;
+        // TODO Auto-generated method stub
+        return new Dimension( radius, radius );
     }
 }
