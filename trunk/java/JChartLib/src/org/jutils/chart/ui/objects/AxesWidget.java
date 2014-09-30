@@ -112,7 +112,6 @@ public class AxesWidget implements IChartWidget
     @Override
     public Dimension calculateSize()
     {
-        // TODO Auto-generated method stub
         return null;
     }
 }

@@ -94,6 +94,7 @@ public class ChartView implements IView<JComponent>
         chart.plot.serieses.clear();
         chart.plot.highlightLayer.repaint = true;
         chart.plot.seriesLayer.repaint = true;
+        setTitle( "Title" );
         mainPanel.repaint();
     }
 
@@ -159,6 +160,11 @@ public class ChartView implements IView<JComponent>
                 "I/O Exception: " + ex.getMessage(), "I/O Exception",
                 JOptionPane.ERROR_MESSAGE );
         }
+
+        if( chart.plot.serieses.size() < 2 )
+        {
+            setTitle( file.getName() );
+        }
     }
 
     /***************************************************************************
@@ -168,6 +174,12 @@ public class ChartView implements IView<JComponent>
     public JComponent getView()
     {
         return mainPanel;
+    }
+
+    public void setTitle( String title )
+    {
+        chart.chart.title.text = title;
+        chart.title.repaint();
     }
 
     /***************************************************************************

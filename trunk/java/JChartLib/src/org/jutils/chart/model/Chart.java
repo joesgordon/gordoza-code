@@ -12,13 +12,13 @@ public class Chart
     /**  */
     public boolean gridlinesVisible;
     /**  */
-    public Integer height;
-    /**  */
     public Integer width;
     /**  */
-    public TextLabel title;
+    public Integer height;
     /**  */
-    public TextLabel topBottomLabel;
+    public final TextLabel title;
+    /**  */
+    public final TextLabel topBottomLabel;
 
     // public List<Series> series;
     /**  */
@@ -26,10 +26,22 @@ public class Chart
     /**  */
     public final Axis rangeAxis;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public Chart()
     {
-        gridlinesVisible = true;
-        domainAxis = new Axis();
-        rangeAxis = new Axis();
+        this.antialias = true;
+        this.textAntiAlias = true;
+        this.gridlinesVisible = true;
+        this.width = null;
+        this.height = null;
+        this.title = new TextLabel();
+        this.topBottomLabel = new TextLabel();
+        this.domainAxis = new Axis();
+        this.rangeAxis = new Axis();
+
+        topBottomLabel.font = topBottomLabel.font.deriveFont( 10.0f );
+        topBottomLabel.visible = false;
     }
 }
