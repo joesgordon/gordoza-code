@@ -40,7 +40,25 @@ public class ScreenPlotTransformer
      **************************************************************************/
     public void fromScreen( Point p, XYPoint xy )
     {
-        xy.x = p.x / xScale + context.xMin;
-        xy.y = -1 * p.y / yScale + context.yMin;
+        xy.x = fromScreenDomain( p.x );
+        xy.y = fromScreenRange( p.y );
+    }
+
+    /***************************************************************************
+     * @param i
+     * @return
+     **************************************************************************/
+    public double fromScreenDomain( int i )
+    {
+        return i / xScale + context.xMin;
+    }
+
+    /***************************************************************************
+     * @param i
+     * @return
+     **************************************************************************/
+    public double fromScreenRange( int i )
+    {
+        return -1 * i / yScale + context.yMin;
     }
 }

@@ -31,8 +31,8 @@ public class TextWidget implements IChartWidget
         {
             Graphics2D g2d = layer.setSize( textWidth, textHeight );
 
-            g2d.setColor( Color.white );
-            g2d.fillRect( 0, 0, width, height );
+            layer.clear();
+
             g2d.setColor( label.color );
             g2d.setFont( label.font );
             g2d.drawString( label.text, 0, label.font.getSize() );
