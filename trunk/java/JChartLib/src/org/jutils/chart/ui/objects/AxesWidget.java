@@ -22,6 +22,15 @@ public class AxesWidget implements IChartWidget
     /**  */
     public Chart chart;
     /**  */
+    public int plotX;
+    /**  */
+    public int plotY;
+    /**  */
+    public int plotWidth;
+    /**  */
+    public int plotHeight;
+
+    /**  */
     private final BasicStroke majorStroke;
     /**  */
     private final BasicStroke gridStroke;
@@ -67,12 +76,20 @@ public class AxesWidget implements IChartWidget
             Graphics2D g2d = axesLayer.setSize( width, height );
             ScreenPlotTransformer trans = new ScreenPlotTransformer( context );
 
+            domainLabel.text = String.format( "%.3f", context.xMin );
+            int textLeft = domainText.calculateSize().width / 2;
+
+            domainLabel.text = String.format( "%.3f", context.xMax );
+            int textRight = domainText.calculateSize().width / 2;
+
             int th = domainText.calculateSize().height + 4;
 
             context.height -= th;
 
-            int w = width - weight / 2;
-            int h = height - weight / 2 - th;
+            plotX = x + textLeft;
+            plotY = y;
+            plotWidth = width - weight / 2 - textLeft - textRight;
+            plotHeight = height - weight / 2 - th;
 
             axesLayer.clear();
 
@@ -85,44 +102,49 @@ public class AxesWidget implements IChartWidget
 
                 for( int i = 1; i < chart.domainAxis.majorSectionCount; i++ )
                 {
-                    int tickx = ( int )( w * ( double )i / chart.domainAxis.majorSectionCount );
+                    int tickx = textLeft +
+                        ( int )( plotWidth * ( double )i / chart.domainAxis.majorSectionCount );
 
-                    g2d.drawLine( tickx, 12, tickx, h - 12 );
+                    g2d.drawLine( tickx, 12, tickx, plotHeight - 12 );
                 }
 
                 for( int i = 1; i < chart.rangeAxis.majorSectionCount; i++ )
                 {
-                    int ticky = ( int )( h * ( double )i / chart.rangeAxis.majorSectionCount );
+                    int ticky = ( int )( plotHeight * ( double )i / chart.rangeAxis.majorSectionCount );
 
-                    g2d.drawLine( 12, ticky, w - 12, ticky );
+                    g2d.drawLine( textLeft + 12, ticky, textLeft + plotWidth -
+                        12, ticky );
                 }
             }
 
             g2d.setColor( Color.black );
             g2d.setStroke( majorStroke );
 
-            g2d.drawRect( 0, 0, w, h );
+            g2d.drawRect( textLeft, 0, plotWidth, plotHeight );
 
-            drawDomainLabel( trans, g2d, 0, h + 2, th );
+            drawDomainLabel( trans, g2d, textLeft, plotHeight + 2, th );
 
             for( int i = 1; i < chart.domainAxis.majorSectionCount; i++ )
             {
-                int tickx = ( int )( w * ( double )i / chart.domainAxis.majorSectionCount );
+                int tickx = textLeft +
+                    ( int )( plotWidth * ( double )i / chart.domainAxis.majorSectionCount );
 
                 g2d.drawLine( tickx, 0, tickx, 12 );
-                g2d.drawLine( tickx, h - 12, tickx, h );
+                g2d.drawLine( tickx, plotHeight - 12, tickx, plotHeight );
 
-                drawDomainLabel( trans, g2d, tickx, h + 2, th );
+                drawDomainLabel( trans, g2d, tickx, plotHeight + 2, th );
             }
 
-            drawDomainLabel( trans, g2d, w, h + 2, th );
+            drawDomainLabel( trans, g2d, plotWidth + textRight, plotHeight + 2,
+                th );
 
             for( int i = 1; i < chart.domainAxis.majorSectionCount; i++ )
             {
-                int ticky = ( int )( h * ( double )i / chart.rangeAxis.majorSectionCount );
+                int ticky = ( int )( plotHeight * ( double )i / chart.rangeAxis.majorSectionCount );
 
-                g2d.drawLine( 0, ticky, 12, ticky );
-                g2d.drawLine( w, ticky, w - 12, ticky );
+                g2d.drawLine( textLeft, ticky, textLeft + 12, ticky );
+                g2d.drawLine( textLeft + plotWidth, ticky, textLeft +
+                    plotWidth - 12, ticky );
             }
 
             axesLayer.repaint = false;
@@ -131,6 +153,13 @@ public class AxesWidget implements IChartWidget
         axesLayer.paint( graphics, x, y );
     }
 
+    /***************************************************************************
+     * @param trans
+     * @param g2d
+     * @param x
+     * @param y
+     * @param h
+     **************************************************************************/
     private void drawDomainLabel( ScreenPlotTransformer trans, Graphics2D g2d,
         int x, int y, int h )
     {
