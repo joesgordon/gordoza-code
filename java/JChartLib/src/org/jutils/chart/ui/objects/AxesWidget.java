@@ -3,8 +3,10 @@ package org.jutils.chart.ui.objects;
 import java.awt.*;
 
 import org.jutils.chart.model.Chart;
+import org.jutils.chart.model.TextLabel;
 import org.jutils.chart.ui.IChartWidget;
 import org.jutils.chart.ui.Layer2d;
+import org.jutils.io.LogUtils;
 
 /*******************************************************************************
  * 
@@ -22,6 +24,10 @@ public class AxesWidget implements IChartWidget
     private final BasicStroke gridStroke;
     /**  */
     private int weight;
+    /**  */
+    private final TextLabel domainLabel;
+    /**  */
+    private final TextWidget domainText;
 
     /***************************************************************************
      * 
@@ -32,9 +38,13 @@ public class AxesWidget implements IChartWidget
         this.axesLayer = new Layer2d();
         this.majorStroke = new BasicStroke( weight, BasicStroke.CAP_ROUND,
             BasicStroke.JOIN_ROUND );
-        final float dash1 [] = { 8.0f };
         this.gridStroke = new BasicStroke( 1.0f, BasicStroke.CAP_BUTT,
-            BasicStroke.JOIN_MITER, 10.0f, dash1, 0.0f );
+            BasicStroke.JOIN_MITER, 10.0f, new float[] { 8.0f }, 0.0f );
+        this.domainLabel = new TextLabel();
+
+        domainLabel.font = new Font( "Helvetica", Font.PLAIN, 12 );
+
+        this.domainText = new TextWidget( domainLabel );
     }
 
     /***************************************************************************
@@ -52,8 +62,13 @@ public class AxesWidget implements IChartWidget
         {
             Graphics2D g2d = axesLayer.setSize( width, height );
 
+            // ScreenPlotTransformer trans = new ScreenPlotTransformer( context
+            // );
+
+            int th = domainText.calculateSize().height;
+
             int w = width - weight / 2;
-            int h = height - weight / 2;
+            int h = height - weight / 2 - th;
 
             axesLayer.clear();
 
@@ -64,14 +79,31 @@ public class AxesWidget implements IChartWidget
                 g2d.setColor( Color.lightGray );
                 g2d.setStroke( gridStroke );
 
+                domainLabel.text = "" + 0;
+                int tw = domainText.calculateSize().width;
+                domainText.repaint();
+                domainText.draw( g2d, 0 - tw / 2, h, tw, th );
+
                 for( int i = 1; i < chart.domainAxis.majorSectionCount; i++ )
                 {
                     int tickx = ( int )( w * ( double )i / chart.domainAxis.majorSectionCount );
 
                     g2d.drawLine( tickx, 12, tickx, h - 12 );
+
+                    domainLabel.text = "" + tickx;
+                    tw = domainText.calculateSize().width;
+                    domainText.repaint();
+                    domainText.draw( g2d, tickx - tw / 2, h, tw, th );
+
+                    LogUtils.printDebug( domainLabel.text );
                 }
 
-                for( int i = 1; i < chart.domainAxis.majorSectionCount; i++ )
+                domainLabel.text = "" + w;
+                tw = domainText.calculateSize().width;
+                domainText.repaint();
+                domainText.draw( g2d, w - tw / 2, h, tw, th );
+
+                for( int i = 1; i < chart.rangeAxis.majorSectionCount; i++ )
                 {
                     int ticky = ( int )( h * ( double )i / chart.rangeAxis.majorSectionCount );
 
