@@ -1,55 +1,59 @@
 package org.jutils.ui.fields;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.JTextField;
+import javax.swing.JCheckBox;
+import javax.swing.JPanel;
 
 import org.jutils.ui.event.updater.IUpdater;
-import org.jutils.ui.validation.ValidationTextView;
-import org.jutils.ui.validators.*;
+import org.jutils.ui.event.updater.ReflectiveUpdater;
+import org.jutils.utils.Usable;
 
 /*******************************************************************************
- * Defines an {@link IFormField} that contains a double validater.
+ * 
  ******************************************************************************/
-public class StringFormField implements IDataFormField<String>
+public class UsableFormField<T> implements IDataFormField<Usable<T>>
 {
     /**  */
-    private final String name;
+    private final JPanel panel;
     /**  */
-    private final ValidationTextView textField;
+    private final JCheckBox usedField;
+    /**  */
+    private final IDataFormField<T> field;
 
     /**  */
-    private IUpdater<String> updater;
+    private Usable<T> usable;
     /**  */
-    private String value;
+    private IUpdater<Usable<T>> updater;
 
     /***************************************************************************
-     * @param name
+     * @param field
      **************************************************************************/
-    public StringFormField( String name )
+    public UsableFormField( IDataFormField<T> field )
     {
-        this( name, 20, 1, null );
+        this.field = field;
+        this.usedField = new JCheckBox();
+        this.panel = createView();
+
+        field.setUpdater( new ReflectiveUpdater<T>( this, "usable.data" ) );
     }
 
     /***************************************************************************
-     * @param name
-     * @param columns
+     * @return
      **************************************************************************/
-    public StringFormField( String name, int columns, Integer minLen,
-        Integer maxLen )
+    private JPanel createView()
     {
-        this.name = name;
-        this.textField = new ValidationTextView( null, columns );
+        JPanel panel = new JPanel( new BorderLayout() );
 
-        this.updater = null;
+        usedField.addActionListener( new UsedListener<T>( this ) );
 
-        ITextValidator textValidator;
-        IDataValidator<String> dataValidator;
-        IUpdater<String> updater = new ValueUpdater( this );
+        panel.add( usedField, BorderLayout.WEST );
+        panel.add( field.getField(), BorderLayout.CENTER );
 
-        dataValidator = new StringLengthValidator( minLen, maxLen );
-        textValidator = new DataTextValidator<>( dataValidator, updater );
-        textField.getField().setValidator( textValidator );
+        return panel;
     }
 
     /***************************************************************************
@@ -58,7 +62,7 @@ public class StringFormField implements IDataFormField<String>
     @Override
     public String getFieldName()
     {
-        return name;
+        return field.getFieldName();
     }
 
     /***************************************************************************
@@ -67,58 +71,38 @@ public class StringFormField implements IDataFormField<String>
     @Override
     public Component getField()
     {
-        return textField.getView();
+        return panel;
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public String getValue()
+    public Usable<T> getValue()
     {
-        return value;
+        return usable;
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void setValue( String value )
+    public void setValue( Usable<T> value )
     {
-        this.value = value;
-        textField.setText( "" + value );
-    }
+        this.usable = value;
 
-    /***************************************************************************
-     * @param editable
-     **************************************************************************/
-    public void setEditable( boolean editable )
-    {
-        textField.getField().setEditable( editable );
-    }
+        usedField.setSelected( value.isUsed );
 
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public IValidationField getValidationField()
-    {
-        return textField.getField();
-    }
+        field.setValue( value.data );
 
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public JTextField getTextField()
-    {
-        return textField.getField().getView();
+        field.setEditable( value.isUsed );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void setUpdater( IUpdater<String> updater )
+    public void setUpdater( IUpdater<Usable<T>> updater )
     {
         this.updater = updater;
     }
@@ -127,7 +111,7 @@ public class StringFormField implements IDataFormField<String>
      * 
      **************************************************************************/
     @Override
-    public IUpdater<String> getUpdater()
+    public IUpdater<Usable<T>> getUpdater()
     {
         return updater;
     }
@@ -135,23 +119,39 @@ public class StringFormField implements IDataFormField<String>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class ValueUpdater implements IUpdater<String>
+    @Override
+    public IValidationField getValidationField()
     {
-        private final StringFormField view;
+        return field.getValidationField();
+    }
 
-        public ValueUpdater( StringFormField view )
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void setEditable( boolean editable )
+    {
+        field.setEditable( editable );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class UsedListener<T> implements ActionListener
+    {
+        private final UsableFormField<T> field;
+
+        public UsedListener( UsableFormField<T> field )
         {
-            this.view = view;
+            this.field = field;
         }
 
         @Override
-        public void update( String data )
+        public void actionPerformed( ActionEvent e )
         {
-            view.value = data;
-            if( view.updater != null )
-            {
-                view.updater.update( data );
-            }
+            field.usable.isUsed = field.usedField.isSelected();
+            field.updater.update( field.usable );
+            field.field.setEditable( field.usable.isUsed );
         }
     }
 }

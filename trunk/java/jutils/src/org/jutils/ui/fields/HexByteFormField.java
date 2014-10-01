@@ -62,11 +62,23 @@ public class HexByteFormField implements IDataFormField<Byte>
         this( name, units, columns, null );
     }
 
+    /***************************************************************************
+     * @param name
+     * @param units
+     * @param min
+     * @param max
+     **************************************************************************/
     public HexByteFormField( String name, String units, Byte min, Byte max )
     {
         this( name, units, 20, null, min, max );
     }
 
+    /***************************************************************************
+     * @param name
+     * @param units
+     * @param columns
+     * @param updater
+     **************************************************************************/
     public HexByteFormField( String name, String units, int columns,
         IUpdater<Byte> updater )
     {
@@ -137,6 +149,15 @@ public class HexByteFormField implements IDataFormField<Byte>
     public void setUpdater( IUpdater<Byte> updater )
     {
         this.updater = updater;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public IUpdater<Byte> getUpdater()
+    {
+        return updater;
     }
 
     /***************************************************************************

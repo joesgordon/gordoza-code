@@ -128,8 +128,18 @@ public class ShortFormField implements IDataFormField<Short>
     }
 
     /***************************************************************************
-     * @return
+     * 
      **************************************************************************/
+    @Override
+    public IUpdater<Short> getUpdater()
+    {
+        return updater;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
     public IValidationField getValidationField()
     {
         return textField.getField();

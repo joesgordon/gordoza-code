@@ -9,7 +9,7 @@ import org.jutils.ui.validation.ValidationTextView;
 import org.jutils.ui.validators.*;
 
 /*******************************************************************************
- * Defines an {@link IFormField} that contains a double validater.
+ * Defines an {@link IFormField} that contains a integer validator.
  ******************************************************************************/
 public class IntegerFormField implements IDataFormField<Integer>
 {
@@ -136,6 +136,15 @@ public class IntegerFormField implements IDataFormField<Integer>
     public void setUpdater( IUpdater<Integer> updater )
     {
         this.updater = updater;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public IUpdater<Integer> getUpdater()
+    {
+        return updater;
     }
 
     /***************************************************************************
