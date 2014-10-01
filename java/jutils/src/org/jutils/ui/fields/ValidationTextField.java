@@ -155,6 +155,11 @@ public final class ValidationTextField implements IValidationField
         {
             setComponentValid( isValid() );
         }
+        else
+        {
+            setComponentValid( true );
+            listenerList.signalValid();
+        }
     }
 
     /***************************************************************************

@@ -133,6 +133,15 @@ public class DoubleFormField implements IDataFormField<Double>
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
+    public IUpdater<Double> getUpdater()
+    {
+        return updater;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class ValueUpdater implements IUpdater<Double>
     {
         private final DoubleFormField view;
