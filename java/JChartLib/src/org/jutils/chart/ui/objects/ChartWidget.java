@@ -95,13 +95,14 @@ public class ChartWidget implements IChartWidget
         // ---------------------------------------------------------------------
         axes.draw( graphics, x, y, w, h );
 
-        context.width = w;
-        context.height = h;
+        context.width = axes.plotWidth;
+        context.height = axes.plotHeight;
 
         // ---------------------------------------------------------------------
         // Draw plot.
         // ---------------------------------------------------------------------
-        plot.draw( graphics, x, y, w, h );
+        plot.draw( graphics, axes.plotX, axes.plotY, axes.plotWidth,
+            axes.plotHeight );
     }
 
     /***************************************************************************
