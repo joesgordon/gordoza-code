@@ -83,7 +83,7 @@ public class ChartView implements IView<JComponent>
 
         chart.plot.serieses.add( new SeriesWidget( s ) );
 
-        chart.plot.calculateRanges();
+        chart.plot.calculateRanges( chart.context );
     }
 
     /***************************************************************************

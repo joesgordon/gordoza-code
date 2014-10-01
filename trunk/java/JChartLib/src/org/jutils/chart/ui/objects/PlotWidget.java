@@ -27,11 +27,11 @@ public class PlotWidget implements IChartWidget
     public final ChartContext context;
 
     /***************************************************************************
-     * 
+     * @param context
      **************************************************************************/
-    public PlotWidget()
+    public PlotWidget( ChartContext context )
     {
-        this.context = new ChartContext();
+        this.context = context;
         this.serieses = new ArrayList<>();
         this.seriesLayer = new Layer2d();
         this.highlightLayer = new Layer2d();
@@ -45,9 +45,6 @@ public class PlotWidget implements IChartWidget
     public void draw( Graphics2D graphics, int x, int y, int width, int height )
     {
         Graphics2D g2d;
-
-        context.width = width;
-        context.height = height;
 
         // ---------------------------------------------------------------------
         // Draw series layer.
@@ -88,7 +85,7 @@ public class PlotWidget implements IChartWidget
     /***************************************************************************
      * 
      **************************************************************************/
-    public void calculateRanges()
+    public void calculateRanges( ChartContext context )
     {
         XYPoint min = new XYPoint( -5, 5 );
         XYPoint max = new XYPoint( -5, 5 );
@@ -118,6 +115,9 @@ public class PlotWidget implements IChartWidget
         context.yMax += ( context.yMax - context.yMin ) * .03;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public Dimension calculateSize()
     {

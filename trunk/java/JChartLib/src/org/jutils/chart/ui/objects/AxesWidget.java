@@ -2,11 +2,12 @@ package org.jutils.chart.ui.objects;
 
 import java.awt.*;
 
+import org.jutils.chart.data.ChartContext;
+import org.jutils.chart.data.ScreenPlotTransformer;
 import org.jutils.chart.model.Chart;
 import org.jutils.chart.model.TextLabel;
 import org.jutils.chart.ui.IChartWidget;
 import org.jutils.chart.ui.Layer2d;
-import org.jutils.io.LogUtils;
 
 /*******************************************************************************
  * 
@@ -15,6 +16,8 @@ public class AxesWidget implements IChartWidget
 {
     /**  */
     public final Layer2d axesLayer;
+    /**  */
+    public final ChartContext context;
 
     /**  */
     public Chart chart;
@@ -30,10 +33,11 @@ public class AxesWidget implements IChartWidget
     private final TextWidget domainText;
 
     /***************************************************************************
-     * 
+     * @param context
      **************************************************************************/
-    public AxesWidget()
+    public AxesWidget( ChartContext context )
     {
+        this.context = context;
         this.weight = 2;
         this.axesLayer = new Layer2d();
         this.majorStroke = new BasicStroke( weight, BasicStroke.CAP_ROUND,
@@ -61,11 +65,11 @@ public class AxesWidget implements IChartWidget
         if( axesLayer.repaint )
         {
             Graphics2D g2d = axesLayer.setSize( width, height );
+            ScreenPlotTransformer trans = new ScreenPlotTransformer( context );
 
-            // ScreenPlotTransformer trans = new ScreenPlotTransformer( context
-            // );
+            int th = domainText.calculateSize().height + 4;
 
-            int th = domainText.calculateSize().height;
+            context.height -= th;
 
             int w = width - weight / 2;
             int h = height - weight / 2 - th;
@@ -79,29 +83,12 @@ public class AxesWidget implements IChartWidget
                 g2d.setColor( Color.lightGray );
                 g2d.setStroke( gridStroke );
 
-                domainLabel.text = "" + 0;
-                int tw = domainText.calculateSize().width;
-                domainText.repaint();
-                domainText.draw( g2d, 0 - tw / 2, h, tw, th );
-
                 for( int i = 1; i < chart.domainAxis.majorSectionCount; i++ )
                 {
                     int tickx = ( int )( w * ( double )i / chart.domainAxis.majorSectionCount );
 
                     g2d.drawLine( tickx, 12, tickx, h - 12 );
-
-                    domainLabel.text = "" + tickx;
-                    tw = domainText.calculateSize().width;
-                    domainText.repaint();
-                    domainText.draw( g2d, tickx - tw / 2, h, tw, th );
-
-                    LogUtils.printDebug( domainLabel.text );
                 }
-
-                domainLabel.text = "" + w;
-                tw = domainText.calculateSize().width;
-                domainText.repaint();
-                domainText.draw( g2d, w - tw / 2, h, tw, th );
 
                 for( int i = 1; i < chart.rangeAxis.majorSectionCount; i++ )
                 {
@@ -116,13 +103,19 @@ public class AxesWidget implements IChartWidget
 
             g2d.drawRect( 0, 0, w, h );
 
+            drawDomainLabel( trans, g2d, 0, h + 2, th );
+
             for( int i = 1; i < chart.domainAxis.majorSectionCount; i++ )
             {
                 int tickx = ( int )( w * ( double )i / chart.domainAxis.majorSectionCount );
 
                 g2d.drawLine( tickx, 0, tickx, 12 );
                 g2d.drawLine( tickx, h - 12, tickx, h );
+
+                drawDomainLabel( trans, g2d, tickx, h + 2, th );
             }
+
+            drawDomainLabel( trans, g2d, w, h + 2, th );
 
             for( int i = 1; i < chart.domainAxis.majorSectionCount; i++ )
             {
@@ -136,6 +129,16 @@ public class AxesWidget implements IChartWidget
         }
 
         axesLayer.paint( graphics, x, y );
+    }
+
+    private void drawDomainLabel( ScreenPlotTransformer trans, Graphics2D g2d,
+        int x, int y, int h )
+    {
+        double d = trans.fromScreenDomain( x );
+        domainLabel.text = String.format( "%.3f", d );
+        int tw = domainText.calculateSize().width;
+        domainText.repaint();
+        domainText.draw( g2d, x - tw / 2, y, tw, h );
     }
 
     /***************************************************************************

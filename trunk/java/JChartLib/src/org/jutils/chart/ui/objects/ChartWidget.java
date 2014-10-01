@@ -2,6 +2,7 @@ package org.jutils.chart.ui.objects;
 
 import java.awt.*;
 
+import org.jutils.chart.data.ChartContext;
 import org.jutils.chart.model.Chart;
 import org.jutils.chart.ui.IChartWidget;
 
@@ -10,6 +11,8 @@ import org.jutils.chart.ui.IChartWidget;
  ******************************************************************************/
 public class ChartWidget implements IChartWidget
 {
+    /**  */
+    public final ChartContext context;
     /**  */
     public final TextWidget topBottom;
     /**  */
@@ -27,11 +30,12 @@ public class ChartWidget implements IChartWidget
      **************************************************************************/
     public ChartWidget()
     {
+        this.context = new ChartContext();
         this.chart = new Chart();
         this.topBottom = new TextWidget( chart.topBottomLabel );
         this.title = new TextWidget( chart.title );
-        this.plot = new PlotWidget();
-        this.axes = new AxesWidget();
+        this.plot = new PlotWidget( context );
+        this.axes = new AxesWidget( context );
 
         axes.chart = this.chart;
     }
@@ -90,6 +94,9 @@ public class ChartWidget implements IChartWidget
         // Draw axes.
         // ---------------------------------------------------------------------
         axes.draw( graphics, x, y, w, h );
+
+        context.width = w;
+        context.height = h;
 
         // ---------------------------------------------------------------------
         // Draw plot.
