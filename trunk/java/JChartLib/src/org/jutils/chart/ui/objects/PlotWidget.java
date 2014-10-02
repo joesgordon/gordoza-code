@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jutils.chart.data.ChartContext;
-import org.jutils.chart.data.XYPoint;
 import org.jutils.chart.ui.IChartWidget;
 import org.jutils.chart.ui.Layer2d;
 
@@ -80,39 +79,6 @@ public class PlotWidget implements IChartWidget
             highlightLayer.repaint = false;
         }
         highlightLayer.paint( graphics, x, y );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public void calculateRanges( ChartContext context )
-    {
-        XYPoint min = new XYPoint( -5, 5 );
-        XYPoint max = new XYPoint( -5, 5 );
-
-        if( !serieses.isEmpty() )
-        {
-            min = new XYPoint( serieses.get( 0 ).series.data.getMin() );
-            max = new XYPoint( serieses.get( 0 ).series.data.getMax() );
-        }
-
-        for( SeriesWidget s : serieses )
-        {
-            XYPoint.min( min, s.series.data.getMin(), min );
-            XYPoint.max( max, s.series.data.getMax(), max );
-        }
-
-        context.xMin = min.x;
-        context.yMin = min.y;
-
-        context.xMax = max.x;
-        context.yMax = max.y;
-
-        context.xMin -= ( context.xMax - context.xMin ) * .03;
-        context.xMax += ( context.xMax - context.xMin ) * .03;
-
-        context.yMin -= ( context.yMax - context.yMin ) * .03;
-        context.yMax += ( context.yMax - context.yMin ) * .03;
     }
 
     /***************************************************************************

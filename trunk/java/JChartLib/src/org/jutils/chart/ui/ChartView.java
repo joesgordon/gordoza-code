@@ -10,10 +10,10 @@ import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
 import org.jutils.chart.*;
-import org.jutils.chart.data.ScreenPlotTransformer;
-import org.jutils.chart.data.XYPoint;
+import org.jutils.chart.data.*;
+import org.jutils.chart.data.ChartContext.IDimensionCoords;
 import org.jutils.chart.io.DataFileReader;
-import org.jutils.chart.model.Series;
+import org.jutils.chart.model.*;
 import org.jutils.chart.ui.objects.ChartWidget;
 import org.jutils.chart.ui.objects.SeriesWidget;
 import org.jutils.ui.event.*;
@@ -29,25 +29,29 @@ public class ChartView implements IView<JComponent>
     /**  */
     private final ChartWidgetPanel mainPanel;
     /**  */
-    private final ChartWidget chart;
+    private final ChartWidget chartWidget;
     /**  */
     private final IPalette palette;
 
     /**  */
     private final ItemActionList<File> fileLoadedListeners;
 
+    /**  */
+    private Chart chart;
+
     /***************************************************************************
      * 
      **************************************************************************/
     public ChartView()
     {
+        this.chart = new Chart();
         this.mainPanel = new ChartWidgetPanel();
-        this.chart = new ChartWidget();
+        this.chartWidget = new ChartWidget( chart );
         this.palette = new PresetPalette();
 
         this.fileLoadedListeners = new ItemActionList<>();
 
-        mainPanel.setObject( chart );
+        mainPanel.setObject( chartWidget );
 
         mainPanel.addComponentListener( new ChartComponentListener( this ) );
         mainPanel.addMouseMotionListener( new ChartMouseListenter( this ) );
@@ -81,9 +85,13 @@ public class ChartView implements IView<JComponent>
             clear();
         }
 
-        chart.plot.serieses.add( new SeriesWidget( s ) );
+        chart.series.add( s );
+        chartWidget.plot.serieses.add( new SeriesWidget( chart, s ) );
 
-        chart.plot.calculateRanges( chart.context );
+        chartWidget.calculateBounds();
+        chartWidget.plot.seriesLayer.repaint = true;
+        chartWidget.axes.axesLayer.repaint = true;
+        mainPanel.repaint();
     }
 
     /***************************************************************************
@@ -91,9 +99,10 @@ public class ChartView implements IView<JComponent>
      **************************************************************************/
     public void clear()
     {
-        chart.plot.serieses.clear();
-        chart.plot.highlightLayer.repaint = true;
-        chart.plot.seriesLayer.repaint = true;
+        chart.series.clear();
+        chartWidget.plot.serieses.clear();
+        chartWidget.plot.highlightLayer.repaint = true;
+        chartWidget.plot.seriesLayer.repaint = true;
         setTitle( "Title" );
         mainPanel.repaint();
     }
@@ -121,14 +130,12 @@ public class ChartView implements IView<JComponent>
         try
         {
             DataFileReader reader = new DataFileReader();
-            Series s = new Series();
+            ISeriesData data = reader.read( file );
+            Series s = new Series( data );
 
-            Color c;
+            Color c = palette.next();
 
-            s.data = reader.read( file );
             s.name = file.getName();
-
-            c = palette.next();
 
             s.marker.color = c;
             s.highlight.color = c;
@@ -142,9 +149,6 @@ public class ChartView implements IView<JComponent>
             // LogUtils.printDebug( String.format( "y => (%f,%f)",
             // chart.plot.context.yMin, chart.plot.context.yMax ) );
             // LogUtils.printDebug( "" );
-
-            chart.plot.seriesLayer.repaint = true;
-            mainPanel.repaint();
 
             fileLoadedListeners.fireListeners( this, file );
         }
@@ -161,7 +165,7 @@ public class ChartView implements IView<JComponent>
                 JOptionPane.ERROR_MESSAGE );
         }
 
-        if( chart.plot.serieses.size() < 2 )
+        if( chartWidget.plot.serieses.size() < 2 )
         {
             setTitle( file.getName() );
         }
@@ -176,10 +180,13 @@ public class ChartView implements IView<JComponent>
         return mainPanel;
     }
 
+    /***************************************************************************
+     * @param title
+     **************************************************************************/
     public void setTitle( String title )
     {
-        chart.chart.title.text = title;
-        chart.title.repaint();
+        chart.title.text = title;
+        chartWidget.title.repaint();
     }
 
     /***************************************************************************
@@ -226,29 +233,53 @@ public class ChartView implements IView<JComponent>
         @Override
         public void mouseMoved( MouseEvent e )
         {
-            Point p = new Point( e.getX() - 20, e.getY() - 20 );
+            Point p = new Point( e.getX() - view.chartWidget.context.x,
+                e.getY() - 20 );
             XYPoint xy = new XYPoint();
             int idx;
 
-            ScreenPlotTransformer trans = new ScreenPlotTransformer(
-                view.chart.plot.context );
+            ChartContext context = view.chartWidget.context;
+
+            context.latchCoords();
 
             // LogUtils.printDebug( "here: " + mx );
 
-            for( SeriesWidget s : view.chart.plot.serieses )
+            for( SeriesWidget s : view.chartWidget.plot.serieses )
             {
-                trans.fromScreen( p, xy );
+                IDimensionCoords domainCoords;
+                IDimensionCoords rangeCoords;
+
+                if( s.series.isPrimaryDomain )
+                {
+                    domainCoords = context.domain.primary;
+                }
+                else
+                {
+                    domainCoords = context.domain.secondary;
+                }
+
+                if( s.series.isPrimaryRange )
+                {
+                    rangeCoords = context.range.primary;
+                }
+                else
+                {
+                    rangeCoords = context.range.secondary;
+                }
+
+                xy.x = domainCoords.fromScreen( p.x );
                 idx = ChartUtils.findNearest( s.series.data, xy.x );
 
                 xy = new XYPoint( s.series.data.get( idx ) );
-                trans.fromChart( xy, p );
+                p.x = domainCoords.fromCoord( xy.x );
+                p.y = rangeCoords.fromCoord( xy.y );
 
                 // LogUtils.printDebug( "here: " + xy.x );
 
                 s.highlight.setLocation( new Point( p ) );
             }
 
-            view.chart.plot.highlightLayer.repaint = true;
+            view.chartWidget.plot.highlightLayer.repaint = true;
 
             view.mainPanel.repaint();
         }
@@ -269,10 +300,10 @@ public class ChartView implements IView<JComponent>
         @Override
         public void componentResized( ComponentEvent e )
         {
-            view.chart.axes.axesLayer.repaint = true;
-            view.chart.plot.seriesLayer.repaint = true;
-            view.chart.plot.highlightLayer.clear();
-            view.chart.plot.highlightLayer.repaint = false;
+            view.chartWidget.axes.axesLayer.repaint = true;
+            view.chartWidget.plot.seriesLayer.repaint = true;
+            view.chartWidget.plot.highlightLayer.clear();
+            view.chartWidget.plot.highlightLayer.repaint = false;
             view.mainPanel.repaint();
         }
     }

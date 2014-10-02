@@ -21,23 +21,23 @@ public class ChartWidget implements IChartWidget
     public final PlotWidget plot;
     /**  */
     public final AxesWidget axes;
-
     /**  */
-    public Chart chart;
+    private final Chart chart;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public ChartWidget()
+    public ChartWidget( Chart chart )
     {
+        this.chart = chart;
+
         this.context = new ChartContext();
-        this.chart = new Chart();
         this.topBottom = new TextWidget( chart.topBottomLabel );
         this.title = new TextWidget( chart.title );
         this.plot = new PlotWidget( context );
         this.axes = new AxesWidget( context );
 
-        axes.chart = this.chart;
+        axes.chart = chart;
     }
 
     /***************************************************************************
@@ -95,14 +95,11 @@ public class ChartWidget implements IChartWidget
         // ---------------------------------------------------------------------
         axes.draw( graphics, x, y, w, h );
 
-        context.width = axes.plotWidth;
-        context.height = axes.plotHeight;
-
         // ---------------------------------------------------------------------
         // Draw plot.
         // ---------------------------------------------------------------------
-        plot.draw( graphics, axes.plotX, axes.plotY, axes.plotWidth,
-            axes.plotHeight );
+        plot.draw( graphics, context.x, context.y, context.width,
+            context.height );
     }
 
     /***************************************************************************
@@ -112,5 +109,13 @@ public class ChartWidget implements IChartWidget
     public Dimension calculateSize()
     {
         return null;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public void calculateBounds()
+    {
+        context.calculate( chart );
     }
 }

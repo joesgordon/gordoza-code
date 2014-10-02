@@ -3,28 +3,28 @@ package org.jutils.chart.model;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class Axis
+public class ChartOptions
 {
     /**  */
-    public int majorSectionCount;
+    public boolean antialias;
     /**  */
-    public int minorSectionCount;
+    public boolean textAntiAlias;
     /**  */
-    public boolean dockZero;
+    public boolean gridlinesVisible;
     /**  */
-    public final DimSpace primary;
+    public Integer width;
     /**  */
-    public final DimSpace secondary;
+    public Integer height;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public Axis()
+    public ChartOptions()
     {
-        this.majorSectionCount = 10;
-        this.minorSectionCount = 4;
-        this.dockZero = false;
-        this.primary = new DimSpace();
-        this.secondary = new DimSpace();
+        this.antialias = true;
+        this.textAntiAlias = true;
+        this.gridlinesVisible = true;
+        this.width = null;
+        this.height = null;
     }
 }

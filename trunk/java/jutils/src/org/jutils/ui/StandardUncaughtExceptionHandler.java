@@ -14,6 +14,7 @@ public class StandardUncaughtExceptionHandler implements
 {
     /**  */
     private final JFrame frame;
+    private final MessageExceptionView exView;
 
     /***************************************************************************
      * @param frame
@@ -21,6 +22,7 @@ public class StandardUncaughtExceptionHandler implements
     public StandardUncaughtExceptionHandler( JFrame frame )
     {
         this.frame = frame;
+        this.exView = new MessageExceptionView();
     }
 
     /***************************************************************************
@@ -29,14 +31,19 @@ public class StandardUncaughtExceptionHandler implements
     @Override
     public void uncaughtException( Thread thread, Throwable ex )
     {
-        try
+        ex.printStackTrace();
+
+        if( !exView.getView().isShowing() )
         {
-            displayException( ex );
-        }
-        catch( Throwable th )
-        {
-            th.printStackTrace();
-            System.exit( -2 );
+            try
+            {
+                displayException( ex );
+            }
+            catch( Throwable th )
+            {
+                th.printStackTrace();
+                System.exit( -2 );
+            }
         }
     }
 
@@ -45,9 +52,6 @@ public class StandardUncaughtExceptionHandler implements
      **************************************************************************/
     private void displayException( Throwable ex )
     {
-        ex.printStackTrace();
-        MessageExceptionView exView = new MessageExceptionView();
-
         exView.setMessage( "The following error has occurred. You may "
             + "choose to ignore and continue or quit." );
 
