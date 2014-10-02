@@ -13,6 +13,7 @@ import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
 import org.jutils.chart.ChartIcons;
 import org.jutils.chart.ChartUtils;
+import org.jutils.chart.model.ISeriesData;
 import org.jutils.chart.model.Series;
 import org.jutils.chart.ui.*;
 import org.jutils.io.UserOptionsSerializer;
@@ -67,29 +68,34 @@ public class JChartFrameView implements IView<JFrame>
         recentFiles.addSelectedListener( new FileSelected( this ) );
 
         Series s;
+        ISeriesData data;
 
-        s = new Series();
-        s.data = ChartUtils.createLineSeries( 1000000, 1.0, 0.0, -5.0, 5.0 );
+        data = ChartUtils.createLineSeries( 1000000, 1.0, 0.0, -5.0, 5.0 );
+        s = new Series( data );
         s.line.weight = 4;
+        s.isPrimaryDomain = false;
+        s.isPrimaryRange = false;
         chartView.addSeries( s );
 
-        s = new Series();
-        s.data = ChartUtils.createLineSeries( 1000000, -1.0, 0.0, -5.0, 5.0 );
+        data = ChartUtils.createLineSeries( 1000000, -1.0, 0.0, -5.0, 5.0 );
+        s = new Series( data );
         s.marker.color = new Color( 0xFF9933 );
         s.highlight.color = new Color( 0xFF9933 );
         s.line.color = new Color( 0xCC6622 );
         chartView.addSeries( s, true );
 
-        s = new Series();
-        s.data = ChartUtils.createSinSeries( 1000000, 1.0, 4.0, 0.0, -5.0, 5.0 );
+        data = ChartUtils.createSinSeries( 1000000, 1.0, 4.0, 0.0, -5.0, 5.0 );
+        s = new Series( data );
         s.marker.color = new Color( 0x339933 );
         s.highlight.color = new Color( 0x339933 );
         s.line.color = new Color( 0x227722 );
         s.line.weight = 4;
-        // s.line = null;
         chartView.addSeries( s, true );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private Action createOpenAction()
     {
         Action action;

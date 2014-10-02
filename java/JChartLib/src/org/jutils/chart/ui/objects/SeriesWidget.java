@@ -2,7 +2,8 @@ package org.jutils.chart.ui.objects;
 
 import java.awt.*;
 
-import org.jutils.chart.data.*;
+import org.jutils.chart.data.ChartContext;
+import org.jutils.chart.data.XYPoint;
 import org.jutils.chart.model.*;
 import org.jutils.chart.ui.IChartWidget;
 
@@ -11,6 +12,8 @@ import org.jutils.chart.ui.IChartWidget;
  ******************************************************************************/
 public class SeriesWidget implements IChartWidget
 {
+    /**  */
+    public final Chart chart;
     /**  */
     public final Series series;
 
@@ -27,8 +30,9 @@ public class SeriesWidget implements IChartWidget
     /***************************************************************************
      * @param data
      **************************************************************************/
-    public SeriesWidget( Series series )
+    public SeriesWidget( Chart chart, Series series )
     {
+        this.chart = chart;
         this.series = series;
 
         this.marker = new CircleMarker();
@@ -56,15 +60,14 @@ public class SeriesWidget implements IChartWidget
         Point lastlp = new Point();
         XYPoint xy;
 
-        ScreenPlotTransformer trans = new ScreenPlotTransformer( context );
-
         // LogUtils.printDebug( "series: w: " + width + ", h: " + height );
 
         for( int i = 0; i < series.data.getCount(); i++ )
         {
             xy = series.data.get( i );
 
-            trans.fromChart( xy, p );
+            p.x = context.domain.primary.fromCoord( xy.x );
+            p.y = context.range.primary.fromCoord( xy.y );
 
             if( line != null && i > 0 )
             {

@@ -1,13 +1,15 @@
 package org.jutils.chart.ui.objects;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jutils.chart.data.ChartContext;
-import org.jutils.chart.data.ScreenPlotTransformer;
-import org.jutils.chart.model.Chart;
-import org.jutils.chart.model.TextLabel;
+import org.jutils.chart.data.ChartContext.IDimensionCoords;
+import org.jutils.chart.model.*;
 import org.jutils.chart.ui.IChartWidget;
 import org.jutils.chart.ui.Layer2d;
+import org.jutils.io.LogUtils;
 
 /*******************************************************************************
  * 
@@ -21,14 +23,6 @@ public class AxesWidget implements IChartWidget
 
     /**  */
     public Chart chart;
-    /**  */
-    public int plotX;
-    /**  */
-    public int plotY;
-    /**  */
-    public int plotWidth;
-    /**  */
-    public int plotHeight;
 
     /**  */
     private final BasicStroke majorStroke;
@@ -40,6 +34,13 @@ public class AxesWidget implements IChartWidget
     private final TextLabel domainLabel;
     /**  */
     private final TextWidget domainText;
+    /**  */
+    private final TextLabel rangeLabel;
+    /**  */
+    private final TextWidget rangeText;
+
+    /**  */
+    private static final int MAJOR_TICK_LEN = 12;
 
     /***************************************************************************
      * @param context
@@ -58,6 +59,12 @@ public class AxesWidget implements IChartWidget
         domainLabel.font = new Font( "Helvetica", Font.PLAIN, 12 );
 
         this.domainText = new TextWidget( domainLabel );
+
+        this.rangeLabel = new TextLabel();
+
+        rangeLabel.font = new Font( "Helvetica", Font.PLAIN, 12 );
+
+        this.rangeText = new TextWidget( rangeLabel );
     }
 
     /***************************************************************************
@@ -74,77 +81,111 @@ public class AxesWidget implements IChartWidget
         if( axesLayer.repaint )
         {
             Graphics2D g2d = axesLayer.setSize( width, height );
-            ScreenPlotTransformer trans = new ScreenPlotTransformer( context );
-
-            domainLabel.text = String.format( "%.3f", context.xMin );
-            int textLeft = domainText.calculateSize().width / 2;
-
-            domainLabel.text = String.format( "%.3f", context.xMax );
-            int textRight = domainText.calculateSize().width / 2;
-
-            int th = domainText.calculateSize().height + 4;
-
-            context.height -= th;
-
-            plotX = x + textLeft;
-            plotY = y;
-            plotWidth = width - weight / 2 - textLeft - textRight;
-            plotHeight = height - weight / 2 - th;
 
             axesLayer.clear();
 
-            // LogUtils.printDebug( "axes: w: " + w + ", h: " + h );
+            g2d.setColor( Color.red );
+            g2d.setStroke( new BasicStroke( 1.0f ) );
+            g2d.drawRect( 0, 0, width - 1, height - 1 );
 
-            if( chart.gridlinesVisible )
+            // -----------------------------------------------------------------
+            // Calculate label widths
+            // -----------------------------------------------------------------
+            Insets textSpace = calculateLabelInsets();
+
+            context.x = x + textSpace.left;
+            context.y = y + textSpace.top;
+
+            context.width = width - weight / 2 - textSpace.left -
+                textSpace.right;
+            context.height = height - weight / 2 - textSpace.top -
+                textSpace.bottom;
+
+            context.latchCoords();
+
+            // LogUtils.printDebug( "axes: w: " + w + ", h: " + h );
+            // LogUtils.printDebug( "axes: xr: " + context.getXRange() );
+            // LogUtils.printDebug( "axes: xmin: " + context.xMin );
+            // LogUtils.printDebug( "axes: xmax: " + context.xMax );
+            // LogUtils.printDebug( "axes: width: " + context.width );
+            LogUtils.printDebug( "axes: textSpace: " + textSpace );
+
+            // -----------------------------------------------------------------
+            // Calculate ticks.
+            // -----------------------------------------------------------------
+            List<Tick> domainTicks = genTicks( textSpace.left, context.width,
+                chart.domainAxis.majorSectionCount, context.domain.primary );
+            List<Tick> rangeTicks = genTicks( textSpace.top, context.height,
+                chart.rangeAxis.majorSectionCount, context.range.primary );
+            Tick t;
+
+            // -----------------------------------------------------------------
+            // Draw grid lines.
+            // -----------------------------------------------------------------
+            if( chart.options.gridlinesVisible )
             {
                 g2d.setColor( Color.lightGray );
                 g2d.setStroke( gridStroke );
 
-                for( int i = 1; i < chart.domainAxis.majorSectionCount; i++ )
+                for( int i = 1; i < domainTicks.size() - 1; i++ )
                 {
-                    int tickx = textLeft +
-                        ( int )( plotWidth * ( double )i / chart.domainAxis.majorSectionCount );
-
-                    g2d.drawLine( tickx, 12, tickx, plotHeight - 12 );
+                    t = domainTicks.get( i );
+                    g2d.drawLine( t.offset, textSpace.top + MAJOR_TICK_LEN,
+                        t.offset, textSpace.top + context.height -
+                            MAJOR_TICK_LEN );
                 }
 
-                for( int i = 1; i < chart.rangeAxis.majorSectionCount; i++ )
+                for( int i = 1; i < rangeTicks.size() - 1; i++ )
                 {
-                    int ticky = ( int )( plotHeight * ( double )i / chart.rangeAxis.majorSectionCount );
+                    t = rangeTicks.get( i );
 
-                    g2d.drawLine( textLeft + 12, ticky, textLeft + plotWidth -
-                        12, ticky );
+                    g2d.drawLine( textSpace.left + MAJOR_TICK_LEN, t.offset,
+                        textSpace.left + context.width - MAJOR_TICK_LEN,
+                        t.offset );
                 }
             }
 
+            // -----------------------------------------------------------------
+            // Draw axes.
+            // -----------------------------------------------------------------
             g2d.setColor( Color.black );
             g2d.setStroke( majorStroke );
 
-            g2d.drawRect( textLeft, 0, plotWidth, plotHeight );
+            g2d.drawRect( textSpace.left, textSpace.top, context.width,
+                context.height );
 
-            drawDomainLabel( trans, g2d, textLeft, plotHeight + 2, th );
+            // -----------------------------------------------------------------
+            // Draw ticks and labels.
+            // -----------------------------------------------------------------
+            t = domainTicks.get( 0 );
+            drawDomainLabel( g2d, t, textSpace.top + context.height + 2,
+                textSpace.bottom );
 
-            for( int i = 1; i < chart.domainAxis.majorSectionCount; i++ )
+            for( int i = 1; i < domainTicks.size() - 1; i++ )
             {
-                int tickx = textLeft +
-                    ( int )( plotWidth * ( double )i / chart.domainAxis.majorSectionCount );
+                t = domainTicks.get( i );
 
-                g2d.drawLine( tickx, 0, tickx, 12 );
-                g2d.drawLine( tickx, plotHeight - 12, tickx, plotHeight );
+                g2d.drawLine( t.offset, textSpace.top, t.offset, textSpace.top +
+                    MAJOR_TICK_LEN );
+                g2d.drawLine( t.offset, textSpace.top + context.height -
+                    MAJOR_TICK_LEN, t.offset, textSpace.top + context.height );
 
-                drawDomainLabel( trans, g2d, tickx, plotHeight + 2, th );
+                drawDomainLabel( g2d, t, textSpace.top + context.height + 2,
+                    textSpace.bottom );
             }
 
-            drawDomainLabel( trans, g2d, plotWidth + textRight, plotHeight + 2,
-                th );
+            t = domainTicks.get( domainTicks.size() - 1 );
+            drawDomainLabel( g2d, t, textSpace.top + context.height + 2,
+                textSpace.bottom );
 
             for( int i = 1; i < chart.domainAxis.majorSectionCount; i++ )
             {
-                int ticky = ( int )( plotHeight * ( double )i / chart.rangeAxis.majorSectionCount );
+                t = rangeTicks.get( i );
 
-                g2d.drawLine( textLeft, ticky, textLeft + 12, ticky );
-                g2d.drawLine( textLeft + plotWidth, ticky, textLeft +
-                    plotWidth - 12, ticky );
+                g2d.drawLine( textSpace.left, t.offset, textSpace.left +
+                    MAJOR_TICK_LEN, t.offset );
+                g2d.drawLine( textSpace.left + context.width, t.offset,
+                    textSpace.left + context.width - MAJOR_TICK_LEN, t.offset );
             }
 
             axesLayer.repaint = false;
@@ -154,20 +195,73 @@ public class AxesWidget implements IChartWidget
     }
 
     /***************************************************************************
+     * @param offset
+     * @param dist
+     * @param sectionCount
+     * @param min
+     * @param max
+     * @return
+     **************************************************************************/
+    private static List<Tick> genTicks( int offset, int dist, int sectionCount,
+        IDimensionCoords coords )
+    {
+        List<Tick> ticks = new ArrayList<>();
+        Span span = coords.getSpan();
+
+        double sectionSize = coords.getSpan().range / sectionCount;
+
+        ticks.add( new Tick( offset, span.min ) );
+
+        for( int i = 1; i < sectionCount; i++ )
+        {
+            double d = span.min + i * sectionSize;
+            int off = offset + coords.fromCoord( d );
+            ticks.add( new Tick( off, d ) );
+        }
+
+        ticks.add( new Tick( offset + dist, span.max ) );
+
+        return ticks;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Insets calculateLabelInsets()
+    {
+        Insets textSpace = new Insets( 0, 0, 0, 0 );
+
+        domainLabel.text = String.format( "%.3f", context.primaryDomainSpan.min );
+        Dimension xMinSize = domainText.calculateSize();
+        domainLabel.text = String.format( "%.3f", context.primaryDomainSpan.max );
+        Dimension xMaxSize = domainText.calculateSize();
+
+        rangeLabel.text = String.format( "%.3f", context.primaryRangeSpan.min );
+        Dimension yMinSize = rangeText.calculateSize();
+        rangeLabel.text = String.format( "%.3f", context.primaryRangeSpan.max );
+        Dimension yMaxSize = rangeText.calculateSize();
+
+        textSpace.left = Math.max( xMinSize.width / 2, yMinSize.height / 2 ) + 4;
+        textSpace.right = xMaxSize.width / 2;
+        textSpace.bottom = Math.max( xMinSize.height, yMinSize.height / 2 ) + 4;
+        textSpace.top = yMaxSize.width / 2;
+
+        return textSpace;
+    }
+
+    /***************************************************************************
      * @param trans
      * @param g2d
      * @param x
      * @param y
      * @param h
      **************************************************************************/
-    private void drawDomainLabel( ScreenPlotTransformer trans, Graphics2D g2d,
-        int x, int y, int h )
+    private void drawDomainLabel( Graphics2D g2d, Tick t, int y, int h )
     {
-        double d = trans.fromScreenDomain( x );
-        domainLabel.text = String.format( "%.3f", d );
+        domainLabel.text = String.format( "%.3f", t.value );
         int tw = domainText.calculateSize().width;
         domainText.repaint();
-        domainText.draw( g2d, x - tw / 2, y, tw, h );
+        domainText.draw( g2d, t.offset - tw / 2, y, tw, h );
     }
 
     /***************************************************************************
@@ -177,5 +271,20 @@ public class AxesWidget implements IChartWidget
     public Dimension calculateSize()
     {
         return null;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class Tick
+    {
+        public final int offset;
+        public final double value;
+
+        public Tick( int off, double v )
+        {
+            this.offset = off;
+            this.value = v;
+        }
     }
 }

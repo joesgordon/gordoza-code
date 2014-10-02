@@ -4,7 +4,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jutils.chart.data.*;
+import org.jutils.chart.data.DefaultSeries;
+import org.jutils.chart.data.XYPoint;
 import org.jutils.chart.model.ISeriesData;
 
 /*******************************************************************************
@@ -17,30 +18,6 @@ public final class ChartUtils
      **************************************************************************/
     private ChartUtils()
     {
-    }
-
-    public static Point valueToChartCoords( double x, double y, int chartWidth,
-        int chartHeight, ChartContext context )
-    {
-        Point p = new Point();
-
-        valueToChartCoords( x, y, chartWidth, chartHeight, context, p );
-
-        return p;
-    }
-
-    public static void valueToChartCoords( double x, double y, int chartWidth,
-        int chartHeight, ChartContext context, Point p )
-    {
-        p.x = ( int )( ( x - context.xMin ) / context.getXRange() * chartWidth );
-        p.y = ( int )( chartHeight - ( y - context.yMin ) /
-            context.getYRange() * chartHeight );
-    }
-
-    public static double coordsToValueX( int x, int chartWidth,
-        ChartContext context )
-    {
-        return x * context.getXRange() / chartWidth + context.xMin;
     }
 
     public static ISeriesData createLineSeries( int count, double slope,
