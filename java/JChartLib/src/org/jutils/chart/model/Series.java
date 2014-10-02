@@ -19,6 +19,8 @@ public class Series
     public Series( ISeriesData data )
     {
         this.data = data;
+        this.isPrimaryDomain = true;
+        this.isPrimaryRange = true;
 
         if( data.getCount() == 0 )
         {
