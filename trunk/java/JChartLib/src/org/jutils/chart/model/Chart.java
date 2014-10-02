@@ -78,7 +78,9 @@ public class Chart
             max = 5.0;
         }
 
-        return new Span( min, max );
+        double r = max - min;
+
+        return new Span( min - 0.03 * r, max + 0.03 * r );
     }
 
     /***************************************************************************
@@ -114,7 +116,9 @@ public class Chart
             max = 5.0;
         }
 
-        return new Span( min, max );
+        double r = max - min;
+
+        return new Span( min - 0.03 * r, max + 0.03 * r );
     }
 
     /***************************************************************************
@@ -149,7 +153,9 @@ public class Chart
             return null;
         }
 
-        return new Span( min, max );
+        double r = max - min;
+
+        return new Span( min - 0.03 * r, max + 0.03 * r );
     }
 
     /***************************************************************************
@@ -184,6 +190,8 @@ public class Chart
             return null;
         }
 
-        return new Span( min, max );
+        double r = max - min;
+
+        return new Span( min - 0.03 * r, max + 0.03 * r );
     }
 }

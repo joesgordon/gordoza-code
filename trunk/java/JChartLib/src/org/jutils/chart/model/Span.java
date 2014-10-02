@@ -18,9 +18,8 @@ public class Span
      **************************************************************************/
     public Span( double min, double max )
     {
-        double r = max - min;
-        this.min = min - 0.003 * r;
-        this.max = max + 0.003 * r;
+        this.min = min;
+        this.max = max;
         this.range = this.max - this.min;
     }
 }
