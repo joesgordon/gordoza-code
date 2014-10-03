@@ -18,6 +18,8 @@ public class PlotWidget implements IChartWidget
     public final Layer2d seriesLayer;
     /**  */
     public final Layer2d highlightLayer;
+    /**  */
+    public final SelectionWidget selection;
 
     /**  */
     public final List<SeriesWidget> serieses;
@@ -31,10 +33,13 @@ public class PlotWidget implements IChartWidget
     public PlotWidget( ChartContext context )
     {
         this.context = context;
-        this.serieses = new ArrayList<>();
+
         this.seriesLayer = new Layer2d();
         this.highlightLayer = new Layer2d();
-        this.highlightLayer.repaint = false;
+        this.selection = new SelectionWidget( context );
+        this.serieses = new ArrayList<>();
+
+        highlightLayer.repaint = false;
     }
 
     /***************************************************************************
@@ -80,6 +85,9 @@ public class PlotWidget implements IChartWidget
             }
 
             highlightLayer.repaint = false;
+
+            selection.draw( g2d, context.x, context.y, context.width,
+                context.height );
         }
         highlightLayer.paint( graphics, x, y );
     }
