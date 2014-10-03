@@ -53,6 +53,7 @@ public class PlotWidget implements IChartWidget
         // ---------------------------------------------------------------------
         // Draw series layer.
         // ---------------------------------------------------------------------
+
         g2d = seriesLayer.setSize( width, height );
         if( seriesLayer.repaint )
         {
@@ -60,7 +61,6 @@ public class PlotWidget implements IChartWidget
 
             for( SeriesWidget s : serieses )
             {
-                s.context = context;
                 s.draw( g2d, x, y, width, height );
             }
 
