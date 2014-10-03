@@ -1,11 +1,12 @@
 package org.jutils.chart.ui;
 
-import java.awt.Color;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
@@ -14,8 +15,7 @@ import org.jutils.chart.data.*;
 import org.jutils.chart.data.ChartContext.IDimensionCoords;
 import org.jutils.chart.io.DataFileReader;
 import org.jutils.chart.model.*;
-import org.jutils.chart.ui.objects.ChartWidget;
-import org.jutils.chart.ui.objects.SeriesWidget;
+import org.jutils.chart.ui.objects.*;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.DropActionType;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
@@ -87,11 +87,7 @@ public class ChartView implements IView<JComponent>
 
         chart.series.add( s );
         chartWidget.plot.serieses.add( new SeriesWidget( chart, s ) );
-
-        chartWidget.calculateBounds();
-        chartWidget.plot.seriesLayer.repaint = true;
-        chartWidget.axes.axesLayer.repaint = true;
-        mainPanel.repaint();
+        repaintChart();
     }
 
     /***************************************************************************
@@ -104,6 +100,18 @@ public class ChartView implements IView<JComponent>
         chartWidget.plot.highlightLayer.repaint = true;
         chartWidget.plot.seriesLayer.repaint = true;
         setTitle( "Title" );
+
+        repaintChart();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private void repaintChart()
+    {
+        chartWidget.calculateBounds();
+        chartWidget.plot.seriesLayer.repaint = true;
+        chartWidget.axes.axesLayer.repaint = true;
         mainPanel.repaint();
     }
 
@@ -187,6 +195,43 @@ public class ChartView implements IView<JComponent>
     {
         chart.title.text = title;
         chartWidget.title.repaint();
+    }
+
+    /***************************************************************************
+     * @param file
+     **************************************************************************/
+    public void saveAsImage( File file )
+    {
+        int w = 640;
+        int h = 480;
+
+        BufferedImage bImg = new BufferedImage( w, h,
+            BufferedImage.TYPE_INT_RGB );
+        Graphics2D cg = bImg.createGraphics();
+
+        mainPanel.setObject( new CircleMarker() );
+        chartWidget.setVolatileVisible( false );
+        repaintChart();
+
+        chartWidget.draw( cg, 0, 0, w, h );
+        chartWidget.setVolatileVisible( true );
+
+        mainPanel.setObject( chartWidget );
+        repaintChart();
+
+        try
+        {
+            if( ImageIO.write( bImg, "png", file ) )
+            {
+                System.out.println( "-- saved" );
+            }
+        }
+        catch( IOException ex )
+        {
+            JOptionPane.showMessageDialog( mainPanel,
+                "I/O Exception: " + ex.getMessage(), "I/O Exception",
+                JOptionPane.ERROR_MESSAGE );
+        }
     }
 
     /***************************************************************************

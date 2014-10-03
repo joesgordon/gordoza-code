@@ -52,7 +52,7 @@ public class ChartWidget implements IChartWidget
         // Clear
         // ---------------------------------------------------------------------
         graphics.setColor( Color.white );
-        graphics.fillRect( 0, 0, width, height );
+        graphics.fillRect( x, y, width, height );
 
         int titleHeight = title.calculateSize().height;
 
@@ -68,8 +68,8 @@ public class ChartWidget implements IChartWidget
         {
             d = topBottom.calculateSize();
 
-            topBottom.draw( graphics, 0, 0, w, d.height );
-            topBottom.draw( graphics, 0, h - d.height, w, d.height );
+            topBottom.draw( graphics, x, y, w, d.height );
+            topBottom.draw( graphics, x, y + h - d.height, w, d.height );
 
             y += d.height;
             h -= 2 * d.height;
@@ -109,6 +109,16 @@ public class ChartWidget implements IChartWidget
     public Dimension calculateSize()
     {
         return null;
+    }
+
+    public void setVolatileVisible( boolean visible )
+    {
+        for( SeriesWidget s : plot.serieses )
+        {
+            s.trackPoint = visible;
+        }
+
+        plot.highlightLayer.repaint = true;
     }
 
     /***************************************************************************

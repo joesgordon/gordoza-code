@@ -11,6 +11,8 @@ public class UserData
 {
     /**  */
     public final MaxQueue<File> recentFiles;
+    /**  */
+    public File lastImageFile;
 
     /***************************************************************************
      * 

@@ -73,7 +73,10 @@ public class PlotWidget implements IChartWidget
 
             for( SeriesWidget s : serieses )
             {
-                s.highlight.draw( g2d, 0, 0, width, height );
+                if( s.trackPoint && s.series.highlight.visible )
+                {
+                    s.highlight.draw( g2d, 0, 0, width, height );
+                }
             }
 
             highlightLayer.repaint = false;

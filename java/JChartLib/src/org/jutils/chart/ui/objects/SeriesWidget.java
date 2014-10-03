@@ -26,6 +26,8 @@ public class SeriesWidget implements IChartWidget
 
     /**  */
     public ChartContext context;
+    /**  */
+    public boolean trackPoint;
 
     /***************************************************************************
      * @param data
@@ -43,6 +45,8 @@ public class SeriesWidget implements IChartWidget
         this.highlight.setColor( series.highlight.color );
         this.line.setColor( series.line.color );
         this.line.setSize( series.line.weight );
+
+        this.trackPoint = true;
 
         highlight.setRadius( 10 );
 
