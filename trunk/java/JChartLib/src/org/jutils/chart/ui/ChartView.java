@@ -7,8 +7,7 @@ import java.io.*;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.swing.JComponent;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 import org.jutils.chart.*;
 import org.jutils.chart.data.*;
@@ -53,8 +52,11 @@ public class ChartView implements IView<JComponent>
 
         mainPanel.setObject( chartWidget );
 
+        ChartMouseListenter ml = new ChartMouseListenter( this );
+
         mainPanel.addComponentListener( new ChartComponentListener( this ) );
-        mainPanel.addMouseMotionListener( new ChartMouseListenter( this ) );
+        mainPanel.addMouseListener( ml );
+        mainPanel.addMouseMotionListener( ml );
         mainPanel.setDropTarget( new FileDropTarget( new ChartDropTarget( this ) ) );
     }
 
@@ -266,13 +268,97 @@ public class ChartView implements IView<JComponent>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class ChartMouseListenter extends MouseMotionAdapter
+    private static class ChartMouseListenter extends MouseAdapter
     {
         private final ChartView view;
 
         public ChartMouseListenter( ChartView view )
         {
             this.view = view;
+        }
+
+        @Override
+        public void mouseDragged( MouseEvent e )
+        {
+            view.chartWidget.plot.selection.visible = true;
+            view.chartWidget.plot.selection.end = e.getPoint();
+
+            view.chartWidget.plot.highlightLayer.repaint = true;
+            view.mainPanel.repaint();
+        }
+
+        public void mouseClicked( MouseEvent e )
+        {
+            if( SwingUtilities.isLeftMouseButton( e ) && e.getClickCount() == 2 )
+            {
+                view.chartWidget.context.restoreRanges();
+                view.chartWidget.plot.seriesLayer.repaint = true;
+                view.chartWidget.axes.axesLayer.repaint = true;
+                view.mainPanel.repaint();
+            }
+        }
+
+        @Override
+        public void mousePressed( MouseEvent e )
+        {
+            view.chartWidget.plot.selection.start = e.getPoint();
+        }
+
+        @Override
+        public void mouseReleased( MouseEvent evt )
+        {
+            if( !view.chartWidget.plot.selection.visible )
+            {
+                return;
+            }
+
+            view.chartWidget.plot.selection.visible = false;
+
+            ChartContext context = view.chartWidget.context;
+
+            Point s = view.chartWidget.plot.selection.start;
+            Point e = evt.getPoint();
+
+            s.x -= context.x;
+            e.x -= context.x;
+
+            s.y -= context.y;
+            e.y -= context.y;
+
+            int xmin = Math.min( s.x, e.x );
+            int xmax = Math.max( s.x, e.x );
+
+            int ymin = Math.min( s.y, e.y );
+            int ymax = Math.max( s.y, e.y );
+
+            double dmin;
+            double dmax;
+
+            dmin = context.domain.primary.fromScreen( xmin );
+            dmax = context.domain.primary.fromScreen( xmax );
+            context.primaryDomainSpan = new Span( dmin, dmax );
+
+            dmin = context.range.primary.fromScreen( ymin );
+            dmax = context.range.primary.fromScreen( ymax );
+            context.primaryRangeSpan = new Span( dmin, dmax );
+            // LogUtils.printDebug( "primary domain from " + ymin + " to " +
+            // ymax );
+            // LogUtils.printDebug( "primary domain from " + dmin + " to " +
+            // dmax );
+
+            dmin = context.domain.secondary.fromScreen( xmin );
+            dmax = context.domain.secondary.fromScreen( xmax );
+            context.secondaryDomainSpan = new Span( dmin, dmax );
+
+            dmin = context.range.secondary.fromScreen( ymin );
+            dmax = context.range.secondary.fromScreen( ymax );
+            context.secondaryRangeSpan = new Span( dmin, dmax );
+
+            context.latchCoords();
+
+            view.chartWidget.plot.seriesLayer.repaint = true;
+            view.chartWidget.axes.axesLayer.repaint = true;
+            view.mainPanel.repaint();
         }
 
         @Override
@@ -325,7 +411,6 @@ public class ChartView implements IView<JComponent>
             }
 
             view.chartWidget.plot.highlightLayer.repaint = true;
-
             view.mainPanel.repaint();
         }
     }

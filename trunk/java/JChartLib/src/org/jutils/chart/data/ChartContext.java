@@ -31,6 +31,9 @@ public class ChartContext
     /**  */
     public AxisCoords range;
 
+    /**  */
+    private final Spans lastCalcdSpans;
+
     /***************************************************************************
      * 
      **************************************************************************/
@@ -40,6 +43,8 @@ public class ChartContext
         y = 0;
         width = 0;
         height = 0;
+
+        this.lastCalcdSpans = new Spans();
     }
 
     /***************************************************************************
@@ -51,6 +56,21 @@ public class ChartContext
         primaryRangeSpan = chart.calculatePrimaryRangeSpan();
         secondaryDomainSpan = chart.calculateSecondaryDomainSpan();
         secondaryRangeSpan = chart.calculateSecondaryRangeSpan();
+
+        lastCalcdSpans.primaryDomainSpan = primaryDomainSpan;
+        lastCalcdSpans.primaryRangeSpan = primaryRangeSpan;
+        lastCalcdSpans.secondaryDomainSpan = secondaryDomainSpan;
+        lastCalcdSpans.secondaryRangeSpan = secondaryRangeSpan;
+    }
+
+    public void restoreRanges()
+    {
+        primaryDomainSpan = lastCalcdSpans.primaryDomainSpan;
+        primaryRangeSpan = lastCalcdSpans.primaryRangeSpan;
+        secondaryDomainSpan = lastCalcdSpans.secondaryDomainSpan;
+        secondaryRangeSpan = lastCalcdSpans.secondaryRangeSpan;
+
+        latchCoords();
     }
 
     /***************************************************************************
@@ -62,18 +82,6 @@ public class ChartContext
             secondaryDomainSpan );
         this.range = new AxisCoords( height, false, primaryRangeSpan,
             secondaryRangeSpan );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public static interface IDimensionCoords
-    {
-        public double fromScreen( int s );
-
-        public int fromCoord( double c );
-
-        public Span getSpan();
     }
 
     /***************************************************************************
@@ -142,6 +150,18 @@ public class ChartContext
     /***************************************************************************
      * 
      **************************************************************************/
+    public static interface IDimensionCoords
+    {
+        public double fromScreen( int s );
+
+        public int fromCoord( double c );
+
+        public Span getSpan();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class DomainDimensionCoords implements IDimensionCoords
     {
         public final DimensionStats stats;
@@ -185,7 +205,7 @@ public class ChartContext
         @Override
         public double fromScreen( int s )
         {
-            return -1 * s / stats.scale + stats.span.min;
+            return -1 * s / stats.scale + stats.span.max;
         }
 
         @Override
@@ -199,5 +219,17 @@ public class ChartContext
         {
             return stats.span;
         }
+    }
+
+    private static class Spans
+    {
+        /**  */
+        public Span primaryDomainSpan;
+        /**  */
+        public Span secondaryDomainSpan;
+        /**  */
+        public Span primaryRangeSpan;
+        /**  */
+        public Span secondaryRangeSpan;
     }
 }

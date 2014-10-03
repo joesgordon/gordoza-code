@@ -11,8 +11,6 @@ import org.jutils.ui.app.FrameApplication;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.event.*;
 
-//TODO comments
-
 /*******************************************************************************
  * 
  ******************************************************************************/
