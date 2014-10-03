@@ -2,10 +2,12 @@ package org.jutils.chart.ui.objects;
 
 import java.awt.*;
 
-import org.jutils.chart.data.ChartContext;
-import org.jutils.chart.data.XYPoint;
+import org.jutils.chart.ChartUtils;
+import org.jutils.chart.data.*;
+import org.jutils.chart.data.ChartContext.IDimensionCoords;
 import org.jutils.chart.model.*;
 import org.jutils.chart.ui.IChartWidget;
+import org.jutils.io.LogUtils;
 
 /*******************************************************************************
  * 
@@ -25,17 +27,18 @@ public class SeriesWidget implements IChartWidget
     public final ILine line;
 
     /**  */
-    public ChartContext context;
+    public final ChartContext context;
     /**  */
     public boolean trackPoint;
 
     /***************************************************************************
      * @param data
      **************************************************************************/
-    public SeriesWidget( Chart chart, Series series )
+    public SeriesWidget( Chart chart, Series series, ChartContext context )
     {
         this.chart = chart;
         this.series = series;
+        this.context = context;
 
         this.marker = new CircleMarker();
         this.highlight = new CircleBorderMarker();
@@ -66,12 +69,30 @@ public class SeriesWidget implements IChartWidget
 
         // LogUtils.printDebug( "series: w: " + width + ", h: " + height );
 
-        for( int i = 0; i < series.data.getCount(); i++ )
+        Span spanx = series.isPrimaryDomain ? context.primaryDomainSpan
+            : context.secondaryDomainSpan;
+        // Span spany = series.isPrimaryRange ? context.primaryRangeSpan
+        // : context.secondaryRangeSpan;
+
+        IDimensionCoords domain = series.isPrimaryDomain ? context.domain.primary
+            : context.domain.secondary;
+        IDimensionCoords range = series.isPrimaryRange ? context.range.primary
+            : context.range.secondary;
+
+        int start = ChartUtils.findNearest( series.data, spanx.min ) - 2;
+        int end = ChartUtils.findNearest( series.data, spanx.max ) + 2;
+
+        start = Math.max( start, 0 );
+        end = Math.min( end, series.data.getCount() - 1 );
+
+        LogUtils.printDebug( "series: start: " + start + ", end: " + end );
+
+        for( int i = start; i < end; i++ )
         {
             xy = series.data.get( i );
 
-            p.x = context.domain.primary.fromCoord( xy.x );
-            p.y = context.range.primary.fromCoord( xy.y );
+            p.x = domain.fromCoord( xy.x );
+            p.y = range.fromCoord( xy.y );
 
             if( line != null && i > 0 )
             {

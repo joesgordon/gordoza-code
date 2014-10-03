@@ -88,7 +88,8 @@ public class ChartView implements IView<JComponent>
         }
 
         chart.series.add( s );
-        chartWidget.plot.serieses.add( new SeriesWidget( chart, s ) );
+        chartWidget.plot.serieses.add( new SeriesWidget( chart, s,
+            chartWidget.context ) );
         repaintChart();
     }
 
@@ -113,6 +114,7 @@ public class ChartView implements IView<JComponent>
     {
         chartWidget.calculateBounds();
         chartWidget.plot.seriesLayer.repaint = true;
+        chartWidget.plot.highlightLayer.repaint = true;
         chartWidget.axes.axesLayer.repaint = true;
         mainPanel.repaint();
     }
@@ -319,6 +321,16 @@ public class ChartView implements IView<JComponent>
             Point s = view.chartWidget.plot.selection.start;
             Point e = evt.getPoint();
 
+            s.x = Math.max( s.x, context.x );
+            s.x = Math.min( s.x, context.x + context.width );
+            s.y = Math.max( s.y, context.y );
+            s.y = Math.min( s.y, context.y + context.height );
+
+            e.x = Math.max( e.x, context.x );
+            e.x = Math.min( e.x, context.x + context.width );
+            e.y = Math.max( e.y, context.y );
+            e.y = Math.min( e.y, context.y + context.height );
+
             s.x -= context.x;
             e.x -= context.x;
 
@@ -338,8 +350,8 @@ public class ChartView implements IView<JComponent>
             dmax = context.domain.primary.fromScreen( xmax );
             context.primaryDomainSpan = new Span( dmin, dmax );
 
-            dmin = context.range.primary.fromScreen( ymin );
-            dmax = context.range.primary.fromScreen( ymax );
+            dmin = context.range.primary.fromScreen( ymax );
+            dmax = context.range.primary.fromScreen( ymin );
             context.primaryRangeSpan = new Span( dmin, dmax );
             // LogUtils.printDebug( "primary domain from " + ymin + " to " +
             // ymax );
@@ -350,13 +362,14 @@ public class ChartView implements IView<JComponent>
             dmax = context.domain.secondary.fromScreen( xmax );
             context.secondaryDomainSpan = new Span( dmin, dmax );
 
-            dmin = context.range.secondary.fromScreen( ymin );
-            dmax = context.range.secondary.fromScreen( ymax );
+            dmin = context.range.secondary.fromScreen( ymax );
+            dmax = context.range.secondary.fromScreen( ymin );
             context.secondaryRangeSpan = new Span( dmin, dmax );
 
             context.latchCoords();
 
             view.chartWidget.plot.seriesLayer.repaint = true;
+            view.chartWidget.plot.highlightLayer.repaint = true;
             view.chartWidget.axes.axesLayer.repaint = true;
             view.mainPanel.repaint();
         }
