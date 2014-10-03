@@ -16,6 +16,7 @@ import org.jutils.chart.ChartUtils;
 import org.jutils.chart.model.ISeriesData;
 import org.jutils.chart.model.Series;
 import org.jutils.chart.ui.*;
+import org.jutils.io.IOUtils;
 import org.jutils.io.UserOptionsSerializer;
 import org.jutils.ui.*;
 import org.jutils.ui.event.*;
@@ -35,6 +36,8 @@ public class JChartFrameView implements IView<JFrame>
 
     /**  */
     private final Action openAction;
+    /**  */
+    private final Action saveAction;
 
     /**  */
     private final UserOptionsSerializer<UserData> userio;
@@ -52,6 +55,7 @@ public class JChartFrameView implements IView<JFrame>
         this.recentFiles = new RecentFilesMenuView();
 
         this.openAction = createOpenAction();
+        this.saveAction = createSaveAction();
 
         createMenubar( frameView.getMenuBar(), frameView.getFileMenu() );
         frameView.setToolbar( createToolbar() );
@@ -115,11 +119,32 @@ public class JChartFrameView implements IView<JFrame>
     /***************************************************************************
      * @return
      **************************************************************************/
+    private Action createSaveAction()
+    {
+        Action action;
+        FileChooserListener fcListener;
+        Icon icon;
+        String name;
+
+        name = "Save";
+        icon = IconConstants.loader.getIcon( IconConstants.SAVE_16 );
+        fcListener = new FileChooserListener( getView(), "Choose Image File",
+            new SaveListener( this ), true );
+        action = new ActionAdapter( fcListener, name, icon );
+
+        return action;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private JToolBar createToolbar()
     {
         JToolBar toolbar = new JGoodiesToolBar();
 
         SwingUtils.addActionToToolbar( toolbar, openAction );
+
+        SwingUtils.addActionToToolbar( toolbar, saveAction );
 
         return toolbar;
     }
@@ -143,17 +168,21 @@ public class JChartFrameView implements IView<JFrame>
     private JMenu createFileMenu( JMenu menu )
     {
         JMenuItem item;
+        int i = 0;
 
         item = new JMenuItem( openAction );
-        menu.add( item, 0 );
+        menu.add( item, i++ );
 
-        menu.add( recentFiles.getView(), 1 );
+        item = new JMenuItem( saveAction );
+        menu.add( item, i++ );
+
+        menu.add( recentFiles.getView(), i++ );
 
         item = new JMenuItem( "Clear" );
         item.addActionListener( new ClearListener( this ) );
-        menu.add( item, 2 );
+        menu.add( item, i++ );
 
-        menu.add( new JSeparator(), 3 );
+        menu.add( new JSeparator(), i++ );
 
         return menu;
     }
@@ -278,6 +307,44 @@ public class JChartFrameView implements IView<JFrame>
             List<File> fileList = Arrays.asList( files );
 
             view.chartView.importData( fileList );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class SaveListener implements IFileSelectionListener
+    {
+        private final JChartFrameView view;
+
+        public SaveListener( JChartFrameView view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public File getDefaultFile()
+        {
+            File f = view.userio.getOptions().lastImageFile;
+
+            if( f == null )
+            {
+                f = IOUtils.replaceExtension(
+                    view.userio.getOptions().recentFiles.first(), "png" );
+            }
+
+            return f;
+        }
+
+        @Override
+        public void filesChosen( File [] files )
+        {
+            File f = files[0];
+
+            view.userio.getOptions().lastImageFile = f;
+            view.userio.write();
+
+            view.chartView.saveAsImage( f );
         }
     }
 

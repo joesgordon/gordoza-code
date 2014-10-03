@@ -52,7 +52,7 @@ public class AxesWidget implements IChartWidget
         this.majorStroke = new BasicStroke( weight, BasicStroke.CAP_ROUND,
             BasicStroke.JOIN_ROUND );
         this.gridStroke = new BasicStroke( 1.0f, BasicStroke.CAP_BUTT,
-            BasicStroke.JOIN_MITER, 10.0f, new float[] { 8.0f }, 0.0f );
+            BasicStroke.JOIN_MITER, 10.0f, new float[] { 2.0f }, 0.0f );
         this.domainLabel = new TextLabel();
 
         domainLabel.font = new Font( "Helvetica", Font.PLAIN, 12 );
