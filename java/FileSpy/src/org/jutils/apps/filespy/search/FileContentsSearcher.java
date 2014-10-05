@@ -9,6 +9,7 @@ import org.jutils.apps.filespy.data.LineMatch;
 import org.jutils.apps.filespy.data.SearchRecord;
 import org.jutils.concurrent.IConsumer;
 import org.jutils.concurrent.ITaskStopManager;
+import org.jutils.io.LogUtils;
 
 public class FileContentsSearcher implements IConsumer<SearchRecord>
 {
@@ -90,7 +91,7 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
 
         boolean matched = false;
 
-        // LogUtils.printDebug( "Searching file " + file.getAbsolutePath() );
+        LogUtils.printDebug( "Searching file " + file.getAbsolutePath() );
 
         try( FileReader reader = new FileReader( file );
              LineNumberReader lineReader = new LineNumberReader( reader ) )

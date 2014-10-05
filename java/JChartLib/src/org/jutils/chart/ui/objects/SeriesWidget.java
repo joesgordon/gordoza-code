@@ -2,12 +2,12 @@ package org.jutils.chart.ui.objects;
 
 import java.awt.*;
 
+import org.jutils.SwingUtils;
 import org.jutils.chart.ChartUtils;
 import org.jutils.chart.data.*;
 import org.jutils.chart.data.ChartContext.IDimensionCoords;
 import org.jutils.chart.model.*;
 import org.jutils.chart.ui.IChartWidget;
-import org.jutils.io.LogUtils;
 
 /*******************************************************************************
  * 
@@ -21,6 +21,8 @@ public class SeriesWidget implements IChartWidget
 
     /**  */
     public final IMarker marker;
+    /**  */
+    public final IMarker selectedMarker;
     /**  */
     public final CircleBorderMarker highlight;
     /**  */
@@ -41,15 +43,17 @@ public class SeriesWidget implements IChartWidget
         this.context = context;
 
         this.marker = new CircleMarker();
+        this.selectedMarker = new CircleMarker();
         this.highlight = new CircleBorderMarker();
         this.line = new SimpleLine();
 
-        this.marker.setColor( series.marker.color );
-        this.highlight.setColor( series.highlight.color );
-        this.line.setColor( series.line.color );
-        this.line.setSize( series.line.weight );
+        marker.setColor( series.marker.color );
+        highlight.setColor( series.highlight.color );
+        line.setColor( series.line.color );
+        line.setSize( series.line.weight );
+        selectedMarker.setColor( SwingUtils.inverseColor( series.marker.color ) );
 
-        this.trackPoint = true;
+        trackPoint = true;
 
         highlight.setRadius( 10 );
 
@@ -63,8 +67,7 @@ public class SeriesWidget implements IChartWidget
     public void draw( Graphics2D graphics, int x, int y, int width, int height )
     {
         Point p = new Point();
-        Point lastmp = new Point();
-        Point lastlp = new Point();
+        Point last = new Point();
         XYPoint xy;
 
         // LogUtils.printDebug( "series: w: " + width + ", h: " + height );
@@ -83,64 +86,79 @@ public class SeriesWidget implements IChartWidget
         int end = ChartUtils.findNearest( series.data, spanx.max ) + 2;
 
         start = Math.max( start, 0 );
-        end = Math.min( end, series.data.getCount() - 1 );
+        end = Math.min( end, series.data.getCount() );
 
-        LogUtils.printDebug( "series: start: " + start + ", end: " + end );
+        // LogUtils.printDebug( "series: start: " + start + ", end: " + end );
 
+        boolean drawn = false;
         for( int i = start; i < end; i++ )
         {
             xy = series.data.get( i );
 
+            if( xy.hidden )
+            {
+                continue;
+            }
+
             p.x = domain.fromCoord( xy.x );
             p.y = range.fromCoord( xy.y );
 
-            if( line != null && i > 0 )
+            if( series.line.visible && drawn && !p.equals( last ) )
             {
-                if( !p.equals( lastlp ) )
-                {
-                    line.setPoints( lastlp, p );
+                line.setPoints( last, p );
 
-                    line.draw( graphics, 0, 0, width, height );
+                line.draw( graphics, 0, 0, width, height );
 
-                    lastlp.x = p.x;
-                    lastlp.y = p.y;
-                }
             }
 
-            if( marker != null && ( i == 0 || ( i > 0 && !p.equals( lastmp ) ) ) )
+            if( series.marker.visible && ( !drawn || !p.equals( last ) ) )
             {
-                marker.setLocation( p );
+                IMarker m = xy.selected ? selectedMarker : marker;
 
-                marker.draw( graphics, 0, 0, width, height );
+                m.setLocation( p );
 
-                lastmp.x = p.x;
-                lastmp.y = p.y;
+                m.draw( graphics, 0, 0, width, height );
             }
 
-            if( i == 0 )
-            {
-                lastmp.x = p.x;
-                lastmp.y = p.y;
-
-                lastlp.x = p.x;
-                lastlp.y = p.y;
-            }
-        }
-
-        if( marker != null )
-        {
-            marker.setLocation( lastmp );
-
-            marker.draw( graphics, 0, 0, width, height );
-
-            lastmp.x = p.x;
-            lastmp.y = p.y;
+            drawn = true;
+            last.x = p.x;
+            last.y = p.y;
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public Dimension calculateSize()
     {
         return null;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public void clearSelected()
+    {
+        for( XYPoint xy : series.data )
+        {
+            xy.selected = false;
+        }
+    }
+
+    /***************************************************************************
+     * @param domain
+     * @param range
+     **************************************************************************/
+    public void setSelected( Span domain, Span range )
+    {
+        for( XYPoint xy : series.data )
+        {
+            if( domain.min <= xy.x && xy.x <= domain.max && range.min <= xy.y &&
+                xy.y <= range.max )
+            {
+                xy.selected = true;
+            }
+        }
     }
 }

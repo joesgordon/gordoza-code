@@ -8,7 +8,7 @@ import javax.swing.JComponent;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ChartWidgetPanel extends JComponent
+public class WidgetPanel extends JComponent
 {
     /**  */
     private IChartWidget object;
@@ -18,7 +18,7 @@ public class ChartWidgetPanel extends JComponent
     /***************************************************************************
      * 
      **************************************************************************/
-    public ChartWidgetPanel()
+    public WidgetPanel()
     {
         this( null );
     }
@@ -26,7 +26,7 @@ public class ChartWidgetPanel extends JComponent
     /***************************************************************************
      * @param object
      **************************************************************************/
-    public ChartWidgetPanel( IChartWidget object )
+    public WidgetPanel( IChartWidget object )
     {
         this.lock = new Object();
         this.object = object;

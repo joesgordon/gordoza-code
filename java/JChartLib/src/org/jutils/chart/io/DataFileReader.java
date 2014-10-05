@@ -46,9 +46,24 @@ public class DataFileReader implements IReader<ISeriesData, File>
                 try
                 {
                     x = Double.parseDouble( values[0] );
-                    y = Double.parseDouble( values[values.length - 1] );
+
+                    String val = values[values.length - 1];
+
+                    if( val.equals( "999999999.999999999" ) )
+                    {
+                        y = Double.NaN;
+                    }
+                    else
+                    {
+                        y = Double.parseDouble( val );
+                    }
 
                     points.add( new XYPoint( x, y ) );
+
+                    if( Double.isNaN( y ) )
+                    {
+                        System.out.println( "here" );
+                    }
                 }
                 catch( NumberFormatException ex )
                 {

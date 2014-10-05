@@ -9,6 +9,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import org.jutils.Utils;
 import org.jutils.chart.*;
 import org.jutils.chart.data.*;
 import org.jutils.chart.data.ChartContext.IDimensionCoords;
@@ -26,7 +27,7 @@ import org.jutils.ui.model.IView;
 public class ChartView implements IView<JComponent>
 {
     /**  */
-    private final ChartWidgetPanel mainPanel;
+    private final WidgetPanel mainPanel;
     /**  */
     private final ChartWidget chartWidget;
     /**  */
@@ -44,7 +45,7 @@ public class ChartView implements IView<JComponent>
     public ChartView()
     {
         this.chart = new Chart();
-        this.mainPanel = new ChartWidgetPanel();
+        this.mainPanel = new WidgetPanel();
         this.chartWidget = new ChartWidget( chart );
         this.palette = new PresetPalette();
 
@@ -58,6 +59,17 @@ public class ChartView implements IView<JComponent>
         mainPanel.addMouseListener( ml );
         mainPanel.addMouseMotionListener( ml );
         mainPanel.setDropTarget( new FileDropTarget( new ChartDropTarget( this ) ) );
+
+        mainPanel.setFocusable( true );
+
+        String actionMapKey = "delete_point";
+        KeyStroke deleteKey = KeyStroke.getKeyStroke( KeyEvent.VK_DELETE, 0 );
+        ActionMap amap = mainPanel.getActionMap();
+        InputMap imap = mainPanel.getInputMap( JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT );
+
+        imap.put( deleteKey, actionMapKey );
+        amap.put( actionMapKey, new ActionAdapter( new DeletePointListener(
+            this ), actionMapKey, null ) );
     }
 
     /***************************************************************************
@@ -209,8 +221,7 @@ public class ChartView implements IView<JComponent>
         int w = 640;
         int h = 480;
 
-        BufferedImage bImg = new BufferedImage( w, h,
-            BufferedImage.TYPE_INT_RGB );
+        BufferedImage bImg = Utils.createTransparentImage( w, h );
         Graphics2D cg = bImg.createGraphics();
 
         mainPanel.setObject( new CircleMarker() );
@@ -298,6 +309,16 @@ public class ChartView implements IView<JComponent>
                 view.chartWidget.axes.axesLayer.repaint = true;
                 view.mainPanel.repaint();
             }
+            else if( SwingUtilities.isRightMouseButton( e ) &&
+                e.getClickCount() == 2 )
+            {
+                for( SeriesWidget sw : view.chartWidget.plot.serieses )
+                {
+                    sw.clearSelected();
+                    view.chartWidget.plot.seriesLayer.repaint = true;
+                    view.mainPanel.repaint();
+                }
+            }
         }
 
         @Override
@@ -346,31 +367,79 @@ public class ChartView implements IView<JComponent>
             double dmin;
             double dmax;
 
+            Span pds;
+            Span prs;
+            Span sds = null;
+            Span srs = null;
+
             dmin = context.domain.primary.fromScreen( xmin );
             dmax = context.domain.primary.fromScreen( xmax );
-            context.primaryDomainSpan = new Span( dmin, dmax );
+            pds = new Span( dmin, dmax );
 
             dmin = context.range.primary.fromScreen( ymax );
             dmax = context.range.primary.fromScreen( ymin );
-            context.primaryRangeSpan = new Span( dmin, dmax );
+            prs = new Span( dmin, dmax );
             // LogUtils.printDebug( "primary domain from " + ymin + " to " +
             // ymax );
             // LogUtils.printDebug( "primary domain from " + dmin + " to " +
             // dmax );
 
-            dmin = context.domain.secondary.fromScreen( xmin );
-            dmax = context.domain.secondary.fromScreen( xmax );
-            context.secondaryDomainSpan = new Span( dmin, dmax );
+            if( context.domain.secondary != null )
+            {
+                dmin = context.domain.secondary.fromScreen( xmin );
+                dmax = context.domain.secondary.fromScreen( xmax );
+                sds = new Span( dmin, dmax );
+            }
 
-            dmin = context.range.secondary.fromScreen( ymax );
-            dmax = context.range.secondary.fromScreen( ymin );
-            context.secondaryRangeSpan = new Span( dmin, dmax );
+            if( context.range.secondary != null )
+            {
+                dmin = context.range.secondary.fromScreen( ymax );
+                dmax = context.range.secondary.fromScreen( ymin );
+                srs = new Span( dmin, dmax );
+            }
 
-            context.latchCoords();
+            if( SwingUtilities.isLeftMouseButton( evt ) )
+            {
+                context.primaryDomainSpan = pds;
+                context.primaryRangeSpan = prs;
+                context.secondaryDomainSpan = sds;
+                context.secondaryRangeSpan = srs;
+
+                context.latchCoords();
+
+                view.chartWidget.axes.axesLayer.repaint = true;
+            }
+            else
+            {
+                Span ds;
+                Span rs;
+
+                for( SeriesWidget sw : view.chartWidget.plot.serieses )
+                {
+                    if( sw.series.isPrimaryDomain )
+                    {
+                        ds = pds;
+                    }
+                    else
+                    {
+                        ds = sds;
+                    }
+
+                    if( sw.series.isPrimaryRange )
+                    {
+                        rs = prs;
+                    }
+                    else
+                    {
+                        rs = srs;
+                    }
+
+                    sw.setSelected( ds, rs );
+                }
+            }
 
             view.chartWidget.plot.seriesLayer.repaint = true;
             view.chartWidget.plot.highlightLayer.repaint = true;
-            view.chartWidget.axes.axesLayer.repaint = true;
             view.mainPanel.repaint();
         }
 
@@ -414,13 +483,20 @@ public class ChartView implements IView<JComponent>
                 xy.x = domainCoords.fromScreen( p.x );
                 idx = ChartUtils.findNearest( s.series.data, xy.x );
 
-                xy = new XYPoint( s.series.data.get( idx ) );
-                p.x = domainCoords.fromCoord( xy.x );
-                p.y = rangeCoords.fromCoord( xy.y );
+                if( idx > -1 )
+                {
+                    xy = new XYPoint( s.series.data.get( idx ) );
+                    p.x = domainCoords.fromCoord( xy.x );
+                    p.y = rangeCoords.fromCoord( xy.y );
 
-                // LogUtils.printDebug( "here: " + xy.x );
+                    // LogUtils.printDebug( "hover: " + xy.x );
 
-                s.highlight.setLocation( new Point( p ) );
+                    s.highlight.setLocation( new Point( p ) );
+                }
+                else
+                {
+                    s.highlight.setLocation( new Point( -5, -5 ) );
+                }
             }
 
             view.chartWidget.plot.highlightLayer.repaint = true;
@@ -447,6 +523,40 @@ public class ChartView implements IView<JComponent>
             view.chartWidget.plot.seriesLayer.repaint = true;
             view.chartWidget.plot.highlightLayer.clear();
             view.chartWidget.plot.highlightLayer.repaint = false;
+            view.mainPanel.repaint();
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class DeletePointListener implements ActionListener
+    {
+        private final ChartView view;
+
+        public DeletePointListener( ChartView view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            // System.out.println( "Deleting points..." );
+
+            for( SeriesWidget series : view.chartWidget.plot.serieses )
+            {
+                for( XYPoint xy : series.series.data )
+                {
+                    if( xy.selected )
+                    {
+                        xy.hidden = true;
+                        xy.selected = false;
+                    }
+                }
+            }
+
+            view.chartWidget.plot.seriesLayer.repaint = true;
             view.mainPanel.repaint();
         }
     }

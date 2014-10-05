@@ -453,4 +453,14 @@ public final class SwingUtils
     {
         return new Font( Font.MONOSPACED, Font.PLAIN, size );
     }
+
+    public static Color inverseColor( Color color )
+    {
+        int a = color.getAlpha();
+        int r = a - color.getRed();
+        int g = a - color.getGreen();
+        int b = a - color.getBlue();
+
+        return new Color( r, g, b, a );
+    }
 }

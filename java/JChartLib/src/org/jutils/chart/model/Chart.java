@@ -118,6 +118,8 @@ public class Chart
 
         double r = max - min;
 
+        System.out.println( "max: " + max );
+
         return new Span( min - 0.03 * r, max + 0.03 * r );
     }
 
