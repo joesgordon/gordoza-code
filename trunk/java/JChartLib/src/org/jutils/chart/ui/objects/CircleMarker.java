@@ -25,11 +25,10 @@ public class CircleMarker implements IMarker
      **************************************************************************/
     public CircleMarker()
     {
-        color = new Color( 0x0066CC );
-
-        setRadius( 6 );
-        x = 5;
-        y = 5;
+        this.x = 5;
+        this.y = 5;
+        this.setRadius( 6 );
+        this.setColor( new Color( 0x0066CC ) );
     }
 
     /***************************************************************************

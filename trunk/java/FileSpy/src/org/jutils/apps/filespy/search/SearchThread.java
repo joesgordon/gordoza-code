@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import org.jutils.apps.filespy.data.SearchParams;
 import org.jutils.apps.filespy.data.SearchRecord;
 import org.jutils.concurrent.*;
+import org.jutils.io.LogUtils;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
 
@@ -174,9 +175,11 @@ public class SearchThread implements IStoppableTask
     {
         boolean isDir = file.isDirectory();
 
+        LogUtils.printDebug( "Searching file " + file.getName() );
+
         if( isDir )
         {
-            searchHandler.updateStatus( "Searching: " + file.getAbsolutePath() );
+            searchHandler.updateStatus( "Finding: " + file.getAbsolutePath() );
         }
 
         if( stopper.continueProcessing() && testMetrics( file ) )

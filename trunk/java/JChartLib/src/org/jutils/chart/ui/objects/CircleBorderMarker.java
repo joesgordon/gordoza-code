@@ -105,10 +105,12 @@ public class CircleBorderMarker implements IMarker
         this.radiusHalf = r / 2;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public Dimension calculateSize()
     {
-        // TODO Auto-generated method stub
         return new Dimension( radius, radius );
     }
 }

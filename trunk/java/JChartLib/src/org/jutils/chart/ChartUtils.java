@@ -7,6 +7,7 @@ import java.util.List;
 import org.jutils.chart.data.DefaultSeries;
 import org.jutils.chart.data.XYPoint;
 import org.jutils.chart.model.ISeriesData;
+import org.jutils.io.LogUtils;
 
 /*******************************************************************************
  * 
@@ -109,6 +110,47 @@ public final class ChartUtils
         {
             value++;
         }
+
+        if( value > -1 )
+        {
+            boolean found = false;
+            for( int i = 0; i < series.getCount(); i++ )
+            {
+                hi = value + i;
+                lo = value - i;
+
+                if( hi < series.getCount() )
+                {
+                    if( !series.isHidden( hi ) )
+                    {
+                        value = hi;
+                        found = true;
+                        break;
+                    }
+                }
+                else if( lo > -1 )
+                {
+                    if( !series.isHidden( lo ) )
+                    {
+                        value = lo;
+                        found = true;
+                        break;
+                    }
+                }
+                else
+                {
+                    value = -1;
+                    break;
+                }
+            }
+
+            if( !found )
+            {
+                value = -1;
+            }
+        }
+
+        LogUtils.printDebug( "nearest: " + value + " hi: " + hi + " lo: " + lo );
 
         return value;
     }

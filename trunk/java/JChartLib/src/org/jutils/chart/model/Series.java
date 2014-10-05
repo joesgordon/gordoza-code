@@ -35,7 +35,7 @@ public class Series
 
         for( XYPoint p : data )
         {
-            if( !p.hidden && !Double.isNaN( p.x ) )
+            if( !p.hidden )
             {
                 if( min == null )
                 {
@@ -60,7 +60,7 @@ public class Series
 
         for( XYPoint p : data )
         {
-            if( !p.hidden && !Double.isNaN( p.y ) )
+            if( !p.hidden )
             {
                 if( min == null )
                 {

@@ -18,14 +18,6 @@ public class DefaultSeries implements ISeriesData
     public DefaultSeries( List<XYPoint> points )
     {
         this.points = new ArrayList<XYPoint>( points );
-
-        for( XYPoint point : points )
-        {
-            if( point.isNan() )
-            {
-                point.hidden = false;
-            }
-        }
     }
 
     /***************************************************************************
