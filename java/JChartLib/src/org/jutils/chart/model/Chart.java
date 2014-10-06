@@ -59,6 +59,11 @@ public class Chart
             {
                 Span span = s.calcDomainSpan();
 
+                if( span == null )
+                {
+                    continue;
+                }
+
                 if( min == null )
                 {
                     min = span.min;
@@ -76,6 +81,11 @@ public class Chart
         {
             min = -5.0;
             max = 5.0;
+        }
+        else if( min.equals( max ) )
+        {
+            min -= 0.5;
+            max += 0.5;
         }
 
         double r = max - min;
@@ -97,6 +107,11 @@ public class Chart
             {
                 Span span = s.calcRangeSpan();
 
+                if( span == null )
+                {
+                    continue;
+                }
+
                 if( min == null )
                 {
                     min = span.min;
@@ -115,10 +130,13 @@ public class Chart
             min = -5.0;
             max = 5.0;
         }
+        else if( min.equals( max ) )
+        {
+            min -= 0.5;
+            max += 0.5;
+        }
 
         double r = max - min;
-
-        System.out.println( "max: " + max );
 
         return new Span( min - 0.03 * r, max + 0.03 * r );
     }
@@ -137,6 +155,11 @@ public class Chart
             {
                 Span span = s.calcDomainSpan();
 
+                if( span == null )
+                {
+                    continue;
+                }
+
                 if( min == null )
                 {
                     min = span.min;
@@ -153,6 +176,11 @@ public class Chart
         if( min == null )
         {
             return null;
+        }
+        else if( min.equals( max ) )
+        {
+            min -= 0.5;
+            max += 0.5;
         }
 
         double r = max - min;
@@ -174,6 +202,11 @@ public class Chart
             {
                 Span span = s.calcRangeSpan();
 
+                if( span == null )
+                {
+                    continue;
+                }
+
                 if( min == null )
                 {
                     min = span.min;
@@ -190,6 +223,11 @@ public class Chart
         if( min == null )
         {
             return null;
+        }
+        else if( min.equals( max ) )
+        {
+            min -= 0.5;
+            max += 0.5;
         }
 
         double r = max - min;

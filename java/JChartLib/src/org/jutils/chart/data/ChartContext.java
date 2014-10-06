@@ -63,6 +63,9 @@ public class ChartContext
         lastCalcdSpans.secondaryRangeSpan = secondaryRangeSpan;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public void restoreRanges()
     {
         primaryDomainSpan = lastCalcdSpans.primaryDomainSpan;
@@ -221,6 +224,11 @@ public class ChartContext
         }
     }
 
+    // TODO use spans
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class Spans
     {
         /**  */
