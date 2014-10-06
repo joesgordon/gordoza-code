@@ -74,6 +74,13 @@ public class JChartFrameView implements IView<JFrame>
         Series s;
         ISeriesData data;
 
+        // data = ChartUtils.createTestSeries();
+        // s = new Series( data );
+        // s.line.weight = 4;
+        // s.isPrimaryDomain = true;
+        // s.isPrimaryRange = true;
+        // chartView.addSeries( s );
+
         data = ChartUtils.createLineSeries( 1000000, 1.0, 0.0, -5.0, 5.0 );
         s = new Series( data );
         s.line.weight = 4;

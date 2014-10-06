@@ -1,7 +1,6 @@
 package org.jutils.chart.ui;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 
 import javax.swing.JComponent;
 
@@ -62,6 +61,12 @@ public class WidgetPanel extends JComponent
 
         Graphics2D g2d = ( Graphics2D )g;
 
-        obj.draw( g2d, 0, 0, getWidth(), getHeight() );
+        Dimension size = new Dimension( getWidth(), getHeight() );
+        Dimension min = getMinimumSize();
+
+        size.width = Math.max( size.width, min.width );
+        size.height = Math.max( size.height, min.height );
+
+        obj.draw( g2d, 0, 0, size.width, size.height );
     }
 }

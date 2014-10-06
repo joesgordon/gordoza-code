@@ -7,7 +7,6 @@ import java.util.List;
 import org.jutils.chart.data.DefaultSeries;
 import org.jutils.chart.data.XYPoint;
 import org.jutils.chart.model.ISeriesData;
-import org.jutils.io.LogUtils;
 
 /*******************************************************************************
  * 
@@ -150,8 +149,28 @@ public final class ChartUtils
             }
         }
 
-        LogUtils.printDebug( "nearest: " + value + " hi: " + hi + " lo: " + lo );
+        // LogUtils.printDebug( "nearest: " + value + " hi: " + hi + " lo: " +
+        // lo );
 
         return value;
+    }
+
+    public static ISeriesData createTestSeries()
+    {
+        List<XYPoint> points = new ArrayList<>();
+
+        points.add( new XYPoint( -5.0, -1.0 ) );
+        points.add( new XYPoint( -4.0, -1.0 ) );
+        points.add( new XYPoint( -3.0, -1.0 ) );
+        points.add( new XYPoint( -2.0, -1.0 ) );
+        points.add( new XYPoint( -1.0, -1.0 ) );
+        points.add( new XYPoint( 0.0, -1.0 ) );
+        points.add( new XYPoint( 1.0, -1.0 ) );
+        points.add( new XYPoint( 2.0, -1.0 ) );
+        points.add( new XYPoint( 3.0, -1.0 ) );
+        points.add( new XYPoint( 4.0, -1.0 ) );
+        points.add( new XYPoint( 5.0, -1.0 ) );
+
+        return new DefaultSeries( points );
     }
 }

@@ -70,6 +70,8 @@ public class ChartView implements IView<JComponent>
         imap.put( deleteKey, actionMapKey );
         amap.put( actionMapKey, new ActionAdapter( new DeletePointListener(
             this ), actionMapKey, null ) );
+
+        mainPanel.setMinimumSize( new Dimension( 150, 150 ) );
     }
 
     /***************************************************************************
@@ -398,6 +400,15 @@ public class ChartView implements IView<JComponent>
                 srs = new Span( dmin, dmax );
             }
 
+            if( pds.range == 0.0 || prs.range == 0.0 ||
+                ( sds != null && sds.range == 0.0 ) ||
+                ( srs != null && srs.range == 0.0 ) )
+            {
+                view.chartWidget.plot.highlightLayer.repaint = true;
+                view.mainPanel.repaint();
+                return;
+            }
+
             if( SwingUtilities.isLeftMouseButton( evt ) )
             {
                 context.primaryDomainSpan = pds;
@@ -455,7 +466,7 @@ public class ChartView implements IView<JComponent>
 
             context.latchCoords();
 
-            // LogUtils.printDebug( "here: " + mx );
+            // LogUtils.printDebug( "hover: " + mx );
 
             for( SeriesWidget s : view.chartWidget.plot.serieses )
             {
@@ -481,6 +492,7 @@ public class ChartView implements IView<JComponent>
                 }
 
                 xy.x = domainCoords.fromScreen( p.x );
+
                 idx = ChartUtils.findNearest( s.series.data, xy.x );
 
                 if( idx > -1 )
@@ -555,6 +567,20 @@ public class ChartView implements IView<JComponent>
                     }
                 }
             }
+
+            ChartContext context = view.chartWidget.context;
+
+            Span pds = context.primaryDomainSpan;
+            Span sds = context.secondaryDomainSpan;
+            Span prs = context.primaryRangeSpan;
+            Span srs = context.secondaryRangeSpan;
+
+            context.calculate( view.chart );
+
+            context.primaryDomainSpan = pds;
+            context.secondaryDomainSpan = sds;
+            context.primaryRangeSpan = prs;
+            context.secondaryRangeSpan = srs;
 
             view.chartWidget.plot.seriesLayer.repaint = true;
             view.mainPanel.repaint();

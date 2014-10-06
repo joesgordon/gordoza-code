@@ -59,11 +59,6 @@ public class DataFileReader implements IReader<ISeriesData, File>
                     }
 
                     points.add( new XYPoint( x, y ) );
-
-                    if( Double.isNaN( y ) )
-                    {
-                        System.out.println( "here" );
-                    }
                 }
                 catch( NumberFormatException ex )
                 {

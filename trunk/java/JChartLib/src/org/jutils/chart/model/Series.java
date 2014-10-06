@@ -50,6 +50,11 @@ public class Series
             }
         }
 
+        if( min == null )
+        {
+            return null;
+        }
+
         return new Span( min, max );
     }
 
@@ -73,6 +78,11 @@ public class Series
                     max = Math.max( max, p.y );
                 }
             }
+        }
+
+        if( min == null )
+        {
+            return null;
         }
 
         return new Span( min, max );
