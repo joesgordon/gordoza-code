@@ -41,11 +41,7 @@ public class DataView implements IView<JPanel>
 
     public void addSeries( Series series )
     {
-        DataSeriesView view = new DataSeriesView();
-
-        view.setData( series );
-
-        seriesTabs.addTab( series.name, view.getView() );
+        addSeries( series, seriesTabs.getTabCount() );
     }
 
     public void clearSeries()
@@ -57,5 +53,28 @@ public class DataView implements IView<JPanel>
     public JPanel getView()
     {
         return view;
+    }
+
+    /**
+     * @param series
+     * @param index
+     */
+    public void addSeries( Series series, int index )
+    {
+        DataSeriesView view = new DataSeriesView();
+
+        view.setData( series );
+
+        if( index > seriesTabs.getTabCount() )
+        {
+            index = seriesTabs.getTabCount();
+        }
+
+        seriesTabs.insertTab( series.name, null, view.getView(), null, index );
+    }
+
+    public void remove( int index )
+    {
+        seriesTabs.removeTabAt( index );
     }
 }
