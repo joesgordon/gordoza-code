@@ -35,6 +35,8 @@ public class ChartView implements IView<JComponent>
 
     /**  */
     private final ItemActionList<File> fileLoadedListeners;
+    /**  */
+    private final ItemActionList<SeriesChangedEvent> seriesListeners;
 
     /**  */
     private Chart chart;
@@ -50,6 +52,7 @@ public class ChartView implements IView<JComponent>
         this.palette = new PresetPalette();
 
         this.fileLoadedListeners = new ItemActionList<>();
+        this.seriesListeners = new ItemActionList<>();
 
         mainPanel.setObject( chartWidget );
 
@@ -83,6 +86,15 @@ public class ChartView implements IView<JComponent>
     }
 
     /***************************************************************************
+     * @param seriesChanged
+     **************************************************************************/
+    public void addSeriesChangedListener(
+        ItemActionListener<SeriesChangedEvent> l )
+    {
+        seriesListeners.addListener( l );
+    }
+
+    /***************************************************************************
      * @param s
      **************************************************************************/
     public void addSeries( Series s )
@@ -98,6 +110,13 @@ public class ChartView implements IView<JComponent>
     {
         if( !addData )
         {
+            for( int i = chart.series.size() - 1; i > -1; i-- )
+            {
+                SeriesChangedEvent sce = new SeriesChangedEvent(
+                    chart.series.get( i ), i, false );
+                seriesListeners.fireListeners( this, sce );
+            }
+
             clear();
         }
 
@@ -105,6 +124,10 @@ public class ChartView implements IView<JComponent>
         chartWidget.plot.serieses.add( new SeriesWidget( chart, s,
             chartWidget.context ) );
         repaintChart();
+
+        SeriesChangedEvent sce = new SeriesChangedEvent( s,
+            chart.series.size() - 1, true );
+        seriesListeners.fireListeners( this, sce );
     }
 
     /***************************************************************************
@@ -593,6 +616,23 @@ public class ChartView implements IView<JComponent>
 
             view.chartWidget.plot.seriesLayer.repaint = true;
             view.mainPanel.repaint();
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public static class SeriesChangedEvent
+    {
+        public final Series s;
+        public final int index;
+        public final boolean added;
+
+        public SeriesChangedEvent( Series s, int index, boolean added )
+        {
+            this.s = s;
+            this.index = index;
+            this.added = added;
         }
     }
 }

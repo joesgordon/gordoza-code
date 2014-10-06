@@ -185,7 +185,14 @@ public class DataSeriesView implements IDataView<Series>
 
     private static class DataCellRenderer extends DefaultTableCellRenderer
     {
+        private final Color defaultBackground;
+
         private Series series;
+
+        public DataCellRenderer()
+        {
+            this.defaultBackground = super.getBackground();
+        }
 
         public void setSeries( Series series )
         {
@@ -198,11 +205,15 @@ public class DataSeriesView implements IDataView<Series>
             super.getTableCellRendererComponent( table, value, isSelected,
                 hasFocus, row, col );
 
+            Color bg = defaultBackground;
+
             if( !isSelected && series.data.isHidden( row ) )
             {
-                Color bg = Color.LIGHT_GRAY;
+                bg = Color.LIGHT_GRAY;
                 setBackground( bg );
             }
+
+            setBackground( bg );
 
             return this;
         }

@@ -1,6 +1,7 @@
 package org.jutils.chart.app;
 
 import java.awt.Color;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -16,6 +17,7 @@ import org.jutils.chart.ChartUtils;
 import org.jutils.chart.model.ISeriesData;
 import org.jutils.chart.model.Series;
 import org.jutils.chart.ui.*;
+import org.jutils.chart.ui.ChartView.SeriesChangedEvent;
 import org.jutils.io.IOUtils;
 import org.jutils.io.UserOptionsSerializer;
 import org.jutils.ui.*;
@@ -33,6 +35,8 @@ public class JChartFrameView implements IView<JFrame>
     private final ChartView chartView;
     /**  */
     private final RecentFilesMenuView recentFiles;
+    /**  */
+    private final DataView dataView;
 
     /**  */
     private final Action openAction;
@@ -53,6 +57,7 @@ public class JChartFrameView implements IView<JFrame>
         this.frameView = new StandardFrameView();
         this.chartView = new ChartView();
         this.recentFiles = new RecentFilesMenuView();
+        this.dataView = new DataView();
 
         this.openAction = createOpenAction();
         this.saveAction = createSaveAction();
@@ -67,6 +72,7 @@ public class JChartFrameView implements IView<JFrame>
         frame.setIconImages( ChartIcons.getChartImages() );
 
         chartView.addFileLoadedListener( new FileLoadedListener( this ) );
+        chartView.addSeriesChangedListener( new SeriesChanged( this ) );
 
         recentFiles.setData( userio.getOptions().recentFiles.toList() );
         recentFiles.addSelectedListener( new FileSelected( this ) );
@@ -226,13 +232,12 @@ public class JChartFrameView implements IView<JFrame>
      **************************************************************************/
     private static class DataDialogListener implements ActionListener
     {
-        private final OkDialog dialog;
-        private final DataView dataView;
+        private final OkDialogView dialog;
 
         public DataDialogListener( JChartFrameView view )
         {
-            this.dataView = new DataView();
-            this.dialog = new OkDialog( dataView, view.getView() );
+            this.dialog = new OkDialogView( view.getView(),
+                view.dataView.getView(), ModalityType.MODELESS );
 
             JDialog d = dialog.getView();
 
@@ -374,6 +379,35 @@ public class JChartFrameView implements IView<JFrame>
         public void actionPerformed( ItemActionEvent<File> event )
         {
             view.chartView.importData( event.getItem(), false );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class SeriesChanged implements
+        ItemActionListener<SeriesChangedEvent>
+    {
+        private final JChartFrameView view;
+
+        public SeriesChanged( JChartFrameView view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ItemActionEvent<SeriesChangedEvent> event )
+        {
+            SeriesChangedEvent sce = event.getItem();
+
+            if( sce.added )
+            {
+                view.dataView.addSeries( sce.s, sce.index );
+            }
+            else
+            {
+                view.dataView.remove( sce.index );
+            }
         }
     }
 }
