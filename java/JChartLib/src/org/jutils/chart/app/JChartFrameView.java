@@ -83,6 +83,7 @@ public class JChartFrameView implements IView<JFrame>
 
         data = ChartUtils.createLineSeries( 1000000, 1.0, 0.0, -5.0, 5.0 );
         s = new Series( data );
+        s.name = "y = x";
         s.line.weight = 4;
         s.isPrimaryDomain = false;
         s.isPrimaryRange = false;
@@ -90,6 +91,7 @@ public class JChartFrameView implements IView<JFrame>
 
         data = ChartUtils.createLineSeries( 1000000, -1.0, 0.0, -5.0, 5.0 );
         s = new Series( data );
+        s.name = "y = -x";
         s.marker.color = new Color( 0xFF9933 );
         s.highlight.color = new Color( 0xFF9933 );
         s.line.color = new Color( 0xCC6622 );
@@ -97,6 +99,7 @@ public class JChartFrameView implements IView<JFrame>
 
         data = ChartUtils.createSinSeries( 1000000, 1.0, 4.0, 0.0, -5.0, 5.0 );
         s = new Series( data );
+        s.name = "y = sin(x)";
         s.marker.color = new Color( 0x339933 );
         s.highlight.color = new Color( 0x339933 );
         s.line.color = new Color( 0x227722 );

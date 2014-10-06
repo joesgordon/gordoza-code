@@ -479,6 +479,7 @@ public class ChartView implements IView<JComponent>
 
             for( SeriesWidget s : view.chartWidget.plot.serieses )
             {
+                Point sp = new Point( p );
                 IDimensionCoords domainCoords;
                 IDimensionCoords rangeCoords;
 
@@ -496,7 +497,7 @@ public class ChartView implements IView<JComponent>
                     continue;
                 }
 
-                xy.x = domainCoords.fromScreen( p.x );
+                xy.x = domainCoords.fromScreen( sp.x );
 
                 idx = ChartUtils.findNearest( s.series.data, xy.x );
 
@@ -512,12 +513,13 @@ public class ChartView implements IView<JComponent>
                     }
 
                     xy = new XYPoint( s.series.data.get( idx ) );
-                    p.x = domainCoords.fromCoord( xy.x );
-                    p.y = rangeCoords.fromCoord( xy.y );
+                    sp.x = domainCoords.fromCoord( xy.x );
+                    sp.y = rangeCoords.fromCoord( xy.y );
 
-                    // LogUtils.printDebug( "hover: " + xy.x );
+                    // LogUtils.printDebug( "hover [" + s.series.name + "]: " +
+                    // p.x + xy.x );
 
-                    s.highlight.setLocation( new Point( p ) );
+                    s.highlight.setLocation( new Point( sp ) );
                 }
                 else
                 {
