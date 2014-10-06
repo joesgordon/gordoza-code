@@ -12,8 +12,11 @@ import org.jutils.io.RuntimeFormatException;
 
 public class DataFileReader implements IReader<ISeriesData, File>
 {
+    private final DataLineReader lineReader;
+
     public DataFileReader()
     {
+        this.lineReader = new DataLineReader();
     }
 
     @Override
@@ -22,52 +25,21 @@ public class DataFileReader implements IReader<ISeriesData, File>
     {
         List<XYPoint> points = new ArrayList<>();
         String line;
-        double x;
-        double y;
+        XYPoint point;
 
         try( BufferedReader reader = new BufferedReader( new FileReader( f ) ) )
         {
             while( ( line = reader.readLine() ) != null )
             {
-                if( line.startsWith( "%" ) )
+                point = lineReader.read( line );
+
+                if( point != null )
                 {
-                    continue;
-                }
-
-                line = line.trim();
-
-                String [] values = line.split( "\\s+" );
-
-                if( values.length < 2 )
-                {
-                    continue;
-                }
-
-                try
-                {
-                    x = Double.parseDouble( values[0] );
-
-                    String val = values[values.length - 1];
-
-                    if( val.equals( "999999999.999999999" ) )
-                    {
-                        y = Double.NaN;
-                    }
-                    else
-                    {
-                        y = Double.parseDouble( val );
-                    }
-
-                    points.add( new XYPoint( x, y ) );
-                }
-                catch( NumberFormatException ex )
-                {
-                    // ignore/don't add point.
+                    points.add( point );
                 }
             }
         }
 
         return new DefaultSeries( points );
     }
-
 }
