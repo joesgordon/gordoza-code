@@ -113,6 +113,7 @@ public final class ChartUtils
         if( value > -1 )
         {
             boolean found = false;
+            boolean inBound;
             for( int i = 0; i < series.getCount(); i++ )
             {
                 hi = value + i;
@@ -126,8 +127,14 @@ public final class ChartUtils
                         found = true;
                         break;
                     }
+                    inBound = true;
                 }
-                else if( lo > -1 )
+                else
+                {
+                    inBound = false;
+                }
+
+                if( lo > -1 )
                 {
                     if( !series.isHidden( lo ) )
                     {
@@ -135,8 +142,14 @@ public final class ChartUtils
                         found = true;
                         break;
                     }
+                    inBound = true;
                 }
                 else
+                {
+                    inBound = false;
+                }
+
+                if( !inBound )
                 {
                     value = -1;
                     break;
