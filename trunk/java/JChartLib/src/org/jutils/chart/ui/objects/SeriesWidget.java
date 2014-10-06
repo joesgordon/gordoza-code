@@ -82,6 +82,11 @@ public class SeriesWidget implements IChartWidget
         IDimensionCoords range = series.isPrimaryRange ? context.range.primary
             : context.range.secondary;
 
+        if( spanx == null )
+        {
+            return;
+        }
+
         int start = ChartUtils.findNearest( series.data, spanx.min ) - 2;
         int end = ChartUtils.findNearest( series.data, spanx.max ) + 2;
 
