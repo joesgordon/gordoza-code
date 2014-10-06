@@ -61,6 +61,15 @@ public class BitBuffer
      **************************************************************************/
     public void writeTo( BitBuffer buf, int bitCount )
     {
+        // int remaining = remainingBits();
+        //
+        // if( bitCount > remaining )
+        // {
+        // throw new IllegalArgumentException(
+        // "Too few bits remaining in buffer; expected >= " + bitCount +
+        // ", found " + remaining );
+        // }
+
         for( int i = 0; i < bitCount; i++ )
         {
             buf.writeBit( this.readBit() );
