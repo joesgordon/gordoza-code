@@ -473,7 +473,14 @@ public class ChartView implements IView<JComponent>
 
             ChartContext context = view.chartWidget.context;
 
-            context.latchCoords();
+            // if( p.x < 0 || p.y < 0 || p.x > context.width ||
+            // p.y > context.height )
+            // {
+            // for( SeriesWidget s : view.chartWidget.plot.serieses )
+            // {
+            // s.highlight.setLocation( new Point( -5, -5 ) );
+            // }
+            // }
 
             // LogUtils.printDebug( "hover: " + mx );
 
@@ -520,10 +527,6 @@ public class ChartView implements IView<JComponent>
                     // p.x + xy.x );
 
                     s.highlight.setLocation( new Point( sp ) );
-                }
-                else
-                {
-                    s.highlight.setLocation( new Point( -5, -5 ) );
                 }
             }
 
