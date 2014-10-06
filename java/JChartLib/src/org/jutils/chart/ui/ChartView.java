@@ -223,14 +223,23 @@ public class ChartView implements IView<JComponent>
         int w = 640;
         int h = 480;
 
-        BufferedImage bImg = Utils.createTransparentImage( w, h );
-        Graphics2D cg = bImg.createGraphics();
+        BufferedImage image = Utils.createTransparentImage( w, h );
+        Graphics2D g2d = image.createGraphics();
+
+        g2d.setRenderingHint( RenderingHints.KEY_INTERPOLATION,
+            RenderingHints.VALUE_INTERPOLATION_BICUBIC );
+        g2d.setRenderingHint( RenderingHints.KEY_FRACTIONALMETRICS,
+            RenderingHints.VALUE_FRACTIONALMETRICS_ON );
+        g2d.setRenderingHint( RenderingHints.KEY_RENDERING,
+            RenderingHints.VALUE_RENDER_QUALITY );
+        g2d.setRenderingHint( RenderingHints.KEY_STROKE_CONTROL,
+            RenderingHints.VALUE_STROKE_PURE );
 
         mainPanel.setObject( new CircleMarker() );
         chartWidget.setVolatileVisible( false );
         repaintChart();
 
-        chartWidget.draw( cg, 0, 0, w, h );
+        chartWidget.draw( g2d, 0, 0, w, h );
         chartWidget.setVolatileVisible( true );
 
         mainPanel.setObject( chartWidget );
@@ -238,7 +247,7 @@ public class ChartView implements IView<JComponent>
 
         try
         {
-            if( ImageIO.write( bImg, "png", file ) )
+            if( ImageIO.write( image, "png", file ) )
             {
                 System.out.println( "-- saved" );
             }
@@ -482,15 +491,6 @@ public class ChartView implements IView<JComponent>
                     domainCoords = context.domain.secondary;
                 }
 
-                if( s.series.isPrimaryRange )
-                {
-                    rangeCoords = context.range.primary;
-                }
-                else
-                {
-                    rangeCoords = context.range.secondary;
-                }
-
                 if( domainCoords == null )
                 {
                     continue;
@@ -502,6 +502,15 @@ public class ChartView implements IView<JComponent>
 
                 if( idx > -1 )
                 {
+                    if( s.series.isPrimaryRange )
+                    {
+                        rangeCoords = context.range.primary;
+                    }
+                    else
+                    {
+                        rangeCoords = context.range.secondary;
+                    }
+
                     xy = new XYPoint( s.series.data.get( idx ) );
                     p.x = domainCoords.fromCoord( xy.x );
                     p.y = rangeCoords.fromCoord( xy.y );
