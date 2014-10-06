@@ -491,6 +491,11 @@ public class ChartView implements IView<JComponent>
                     rangeCoords = context.range.secondary;
                 }
 
+                if( domainCoords == null )
+                {
+                    continue;
+                }
+
                 xy.x = domainCoords.fromScreen( p.x );
 
                 idx = ChartUtils.findNearest( s.series.data, xy.x );
