@@ -18,21 +18,14 @@ public class ChartContext
     public int height;
 
     /**  */
-    public Span primaryDomainSpan;
+    private Bounds bounds;
     /**  */
-    public Span secondaryDomainSpan;
-    /**  */
-    public Span primaryRangeSpan;
-    /**  */
-    public Span secondaryRangeSpan;
+    private Bounds autoBounds;
 
     /**  */
     public AxisCoords domain;
     /**  */
     public AxisCoords range;
-
-    /**  */
-    private final Spans lastCalcdSpans;
 
     /***************************************************************************
      * 
@@ -44,34 +37,39 @@ public class ChartContext
         width = 0;
         height = 0;
 
-        this.lastCalcdSpans = new Spans();
+        this.bounds = new Bounds();
+        this.autoBounds = new Bounds();
     }
 
     /***************************************************************************
      * @param chart
      **************************************************************************/
-    public void calculate( Chart chart )
+    public void setAutoBounds( Chart chart )
     {
-        primaryDomainSpan = chart.calculatePrimaryDomainSpan();
-        primaryRangeSpan = chart.calculatePrimaryRangeSpan();
-        secondaryDomainSpan = chart.calculateSecondaryDomainSpan();
-        secondaryRangeSpan = chart.calculateSecondaryRangeSpan();
+        calculateAutoBounds( chart );
 
-        lastCalcdSpans.primaryDomainSpan = primaryDomainSpan;
-        lastCalcdSpans.primaryRangeSpan = primaryRangeSpan;
-        lastCalcdSpans.secondaryDomainSpan = secondaryDomainSpan;
-        lastCalcdSpans.secondaryRangeSpan = secondaryRangeSpan;
+        bounds = new Bounds( autoBounds );
+
+        latchCoords();
+    }
+
+    /***************************************************************************
+     * @param chart
+     **************************************************************************/
+    public void calculateAutoBounds( Chart chart )
+    {
+        autoBounds.primaryDomainSpan = chart.calculatePrimaryDomainSpan();
+        autoBounds.primaryRangeSpan = chart.calculatePrimaryRangeSpan();
+        autoBounds.secondaryDomainSpan = chart.calculateSecondaryDomainSpan();
+        autoBounds.secondaryRangeSpan = chart.calculateSecondaryRangeSpan();
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public void restoreRanges()
+    public void restoreAutoBounds()
     {
-        primaryDomainSpan = lastCalcdSpans.primaryDomainSpan;
-        primaryRangeSpan = lastCalcdSpans.primaryRangeSpan;
-        secondaryDomainSpan = lastCalcdSpans.secondaryDomainSpan;
-        secondaryRangeSpan = lastCalcdSpans.secondaryRangeSpan;
+        bounds = new Bounds( autoBounds );
 
         latchCoords();
     }
@@ -81,10 +79,28 @@ public class ChartContext
      **************************************************************************/
     public void latchCoords()
     {
-        this.domain = new AxisCoords( width, true, primaryDomainSpan,
-            secondaryDomainSpan );
-        this.range = new AxisCoords( height, false, primaryRangeSpan,
-            secondaryRangeSpan );
+        this.domain = new AxisCoords( width, true, bounds.primaryDomainSpan,
+            bounds.secondaryDomainSpan );
+        this.range = new AxisCoords( height, false, bounds.primaryRangeSpan,
+            bounds.secondaryRangeSpan );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public Bounds getBounds()
+    {
+        return new Bounds( bounds );
+    }
+
+    /***************************************************************************
+     * @param b
+     **************************************************************************/
+    public void setBounds( Bounds b )
+    {
+        this.bounds = new Bounds( b );
+
+        latchCoords();
     }
 
     /***************************************************************************
@@ -222,22 +238,5 @@ public class ChartContext
         {
             return stats.span;
         }
-    }
-
-    // TODO use spans
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class Spans
-    {
-        /**  */
-        public Span primaryDomainSpan;
-        /**  */
-        public Span secondaryDomainSpan;
-        /**  */
-        public Span primaryRangeSpan;
-        /**  */
-        public Span secondaryRangeSpan;
     }
 }

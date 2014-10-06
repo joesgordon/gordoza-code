@@ -315,7 +315,7 @@ public class ChartView implements IView<JComponent>
         {
             if( SwingUtilities.isLeftMouseButton( e ) && e.getClickCount() == 2 )
             {
-                view.chartWidget.context.restoreRanges();
+                view.chartWidget.context.restoreAutoBounds();
                 view.chartWidget.plot.seriesLayer.repaint = true;
                 view.chartWidget.axes.axesLayer.repaint = true;
                 view.mainPanel.repaint();
@@ -420,14 +420,14 @@ public class ChartView implements IView<JComponent>
 
             if( SwingUtilities.isLeftMouseButton( evt ) )
             {
-                context.primaryDomainSpan = pds;
-                context.primaryRangeSpan = prs;
-                context.secondaryDomainSpan = sds;
-                context.secondaryRangeSpan = srs;
+                Bounds b = context.getBounds();
 
-                context.latchCoords();
+                b.primaryDomainSpan = pds;
+                b.primaryRangeSpan = prs;
+                b.secondaryDomainSpan = sds;
+                b.secondaryRangeSpan = srs;
 
-                view.chartWidget.axes.axesLayer.repaint = true;
+                view.chartWidget.setBounds( b );
             }
             else
             {
@@ -589,17 +589,7 @@ public class ChartView implements IView<JComponent>
 
             ChartContext context = view.chartWidget.context;
 
-            Span pds = context.primaryDomainSpan;
-            Span sds = context.secondaryDomainSpan;
-            Span prs = context.primaryRangeSpan;
-            Span srs = context.secondaryRangeSpan;
-
-            context.calculate( view.chart );
-
-            context.primaryDomainSpan = pds;
-            context.secondaryDomainSpan = sds;
-            context.primaryRangeSpan = prs;
-            context.secondaryRangeSpan = srs;
+            context.calculateAutoBounds( view.chart );
 
             view.chartWidget.plot.seriesLayer.repaint = true;
             view.mainPanel.repaint();

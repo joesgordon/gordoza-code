@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jutils.chart.data.ChartContext;
+import org.jutils.chart.data.*;
 import org.jutils.chart.data.ChartContext.IDimensionCoords;
 import org.jutils.chart.model.*;
 import org.jutils.chart.ui.IChartWidget;
@@ -271,14 +271,16 @@ public class AxesWidget implements IChartWidget
     {
         Insets textSpace = new Insets( 0, 0, 0, 0 );
 
-        domainLabel.text = String.format( "%.3f", context.primaryDomainSpan.min );
+        Bounds b = context.getBounds();
+
+        domainLabel.text = String.format( "%.3f", b.primaryDomainSpan.min );
         Dimension xMinSize = domainText.calculateSize();
-        domainLabel.text = String.format( "%.3f", context.primaryDomainSpan.max );
+        domainLabel.text = String.format( "%.3f", b.primaryDomainSpan.max );
         Dimension xMaxSize = domainText.calculateSize();
 
-        rangeLabel.text = String.format( "%.3f", context.primaryRangeSpan.min );
+        rangeLabel.text = String.format( "%.3f", b.primaryRangeSpan.min );
         Dimension yMinSize = rangeText.calculateSize();
-        rangeLabel.text = String.format( "%.3f", context.primaryRangeSpan.max );
+        rangeLabel.text = String.format( "%.3f", b.primaryRangeSpan.max );
         Dimension yMaxSize = rangeText.calculateSize();
 
         textSpace.left = Math.max( xMinSize.width / 2, yMinSize.width ) + 4;

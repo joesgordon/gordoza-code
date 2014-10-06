@@ -69,11 +69,12 @@ public class SeriesWidget implements IChartWidget
         Point p = new Point();
         Point last = new Point();
         XYPoint xy;
+        Bounds b = context.getBounds();
 
         // LogUtils.printDebug( "series: w: " + width + ", h: " + height );
 
-        Span spanx = series.isPrimaryDomain ? context.primaryDomainSpan
-            : context.secondaryDomainSpan;
+        Span spanx = series.isPrimaryDomain ? b.primaryDomainSpan
+            : b.secondaryDomainSpan;
         // Span spany = series.isPrimaryRange ? context.primaryRangeSpan
         // : context.secondaryRangeSpan;
 
