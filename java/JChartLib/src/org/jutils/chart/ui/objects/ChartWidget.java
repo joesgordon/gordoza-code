@@ -2,6 +2,7 @@ package org.jutils.chart.ui.objects;
 
 import java.awt.*;
 
+import org.jutils.chart.data.Bounds;
 import org.jutils.chart.data.ChartContext;
 import org.jutils.chart.model.Chart;
 import org.jutils.chart.ui.IChartWidget;
@@ -126,6 +127,13 @@ public class ChartWidget implements IChartWidget
      **************************************************************************/
     public void calculateBounds()
     {
-        context.calculate( chart );
+        context.setAutoBounds( chart );
+    }
+
+    public void setBounds( Bounds b )
+    {
+        context.setBounds( b );
+
+        axes.axesLayer.repaint = true;
     }
 }

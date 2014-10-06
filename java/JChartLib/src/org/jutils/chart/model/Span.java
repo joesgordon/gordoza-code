@@ -22,4 +22,14 @@ public class Span
         this.max = max;
         this.range = this.max - this.min;
     }
+
+    /***************************************************************************
+     * @param s
+     **************************************************************************/
+    public Span( Span s )
+    {
+        this.min = s.min;
+        this.max = s.max;
+        this.range = s.range;
+    }
 }
