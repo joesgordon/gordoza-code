@@ -162,7 +162,7 @@ public class ChartView implements IView<JComponent>
         try
         {
             DataFileReader reader = new DataFileReader();
-            ISeriesData data = reader.read( file );
+            ISeriesData<?> data = reader.read( file );
             Series s = new Series( data );
 
             Color c = palette.next();
@@ -586,12 +586,12 @@ public class ChartView implements IView<JComponent>
 
             for( SeriesWidget series : view.chartWidget.plot.serieses )
             {
-                for( XYPoint xy : series.series.data )
+                for( IDataPoint xy : series.series.data )
                 {
-                    if( xy.selected )
+                    if( xy.isSelected() )
                     {
-                        xy.hidden = true;
-                        xy.selected = false;
+                        xy.setHidden( true );
+                        xy.setSelected( false );
                     }
                 }
             }

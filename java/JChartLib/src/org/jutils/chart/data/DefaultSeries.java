@@ -8,7 +8,7 @@ import org.jutils.chart.model.ISeriesData;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class DefaultSeries implements ISeriesData
+public class DefaultSeries implements ISeriesData<XYPoint>
 {
     /**  */
     private final List<XYPoint> points;

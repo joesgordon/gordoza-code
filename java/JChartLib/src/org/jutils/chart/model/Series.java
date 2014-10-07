@@ -2,8 +2,6 @@ package org.jutils.chart.model;
 
 import java.io.File;
 
-import org.jutils.chart.data.XYPoint;
-
 /*******************************************************************************
  * 
  ******************************************************************************/
@@ -11,7 +9,7 @@ public class Series
 {
     public String name;
     public String resource;
-    public final ISeriesData data;
+    public final ISeriesData<?> data;
     public boolean visible;
     public final MarkerStyle marker = new MarkerStyle();
     public final MarkerStyle highlight = new MarkerStyle();
@@ -19,7 +17,7 @@ public class Series
     public boolean isPrimaryDomain;
     public boolean isPrimaryRange;
 
-    public Series( ISeriesData data )
+    public Series( ISeriesData<?> data )
     {
         this.data = data;
         this.isPrimaryDomain = true;
@@ -36,19 +34,19 @@ public class Series
         Double min = null;
         Double max = null;
 
-        for( XYPoint p : data )
+        for( IDataPoint p : data )
         {
-            if( !p.hidden )
+            if( !p.isHidden() )
             {
                 if( min == null )
                 {
-                    min = p.x;
-                    max = p.x;
+                    min = p.getX();
+                    max = p.getX();
                 }
                 else
                 {
-                    min = Math.min( min, p.x );
-                    max = Math.max( max, p.x );
+                    min = Math.min( min, p.getX() );
+                    max = Math.max( max, p.getX() );
                 }
             }
         }
@@ -66,19 +64,19 @@ public class Series
         Double min = null;
         Double max = null;
 
-        for( XYPoint p : data )
+        for( IDataPoint p : data )
         {
-            if( !p.hidden )
+            if( !p.isHidden() )
             {
                 if( min == null )
                 {
-                    min = p.y;
-                    max = p.y;
+                    min = p.getY();
+                    max = p.getY();
                 }
                 else
                 {
-                    min = Math.min( min, p.y );
-                    max = Math.max( max, p.y );
+                    min = Math.min( min, p.getY() );
+                    max = Math.max( max, p.getY() );
                 }
             }
         }

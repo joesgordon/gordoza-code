@@ -68,7 +68,7 @@ public class SeriesWidget implements IChartWidget
     {
         Point p = new Point();
         Point last = new Point( -100, -100 );
-        XYPoint xy;
+        IDataPoint dp;
         Bounds b = context.getBounds();
 
         // LogUtils.printDebug( "series: w: " + width + ", h: " + height );
@@ -98,15 +98,15 @@ public class SeriesWidget implements IChartWidget
 
         for( int i = start; i < end; i++ )
         {
-            xy = series.data.get( i );
+            dp = series.data.get( i );
 
-            if( xy.hidden )
+            if( dp.isHidden() )
             {
                 continue;
             }
 
-            p.x = domain.fromCoord( xy.x );
-            p.y = range.fromCoord( xy.y );
+            p.x = domain.fromCoord( dp.getX() );
+            p.y = range.fromCoord( dp.getY() );
 
             if( p.x != last.x || p.y != last.y )
             {
@@ -120,7 +120,7 @@ public class SeriesWidget implements IChartWidget
 
                 if( series.marker.visible )
                 {
-                    IMarker m = xy.selected ? selectedMarker : marker;
+                    IMarker m = dp.isSelected() ? selectedMarker : marker;
 
                     m.setLocation( p );
 
@@ -147,9 +147,9 @@ public class SeriesWidget implements IChartWidget
      **************************************************************************/
     public void clearSelected()
     {
-        for( XYPoint xy : series.data )
+        for( IDataPoint xy : series.data )
         {
-            xy.selected = false;
+            xy.setSelected( false );
         }
     }
 
@@ -159,12 +159,12 @@ public class SeriesWidget implements IChartWidget
      **************************************************************************/
     public void setSelected( Span domain, Span range )
     {
-        for( XYPoint xy : series.data )
+        for( IDataPoint xy : series.data )
         {
-            if( domain.min <= xy.x && xy.x <= domain.max && range.min <= xy.y &&
-                xy.y <= range.max )
+            if( domain.min <= xy.getX() && xy.getX() <= domain.max &&
+                range.min <= xy.getY() && xy.getY() <= range.max )
             {
-                xy.selected = true;
+                xy.setSelected( true );
             }
         }
     }

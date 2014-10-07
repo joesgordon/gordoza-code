@@ -3,40 +3,35 @@ package org.jutils.chart.model;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public interface ISeriesData<T extends IDataPoint> extends Iterable<T>
+public interface IDataPoint
 {
     /***************************************************************************
      * @return
      **************************************************************************/
-    public int getCount();
+    public double getX();
 
     /***************************************************************************
-     * @param index
      * @return
      **************************************************************************/
-    public double getX( int index );
+    public double getY();
 
     /***************************************************************************
-     * @param index
      * @return
      **************************************************************************/
-    public double getY( int index );
+    public boolean isSelected();
 
     /***************************************************************************
-     * @param index
      * @return
      **************************************************************************/
-    public T get( int index );
+    public boolean isHidden();
 
     /***************************************************************************
-     * @param index
-     * @return
+     * @param selected
      **************************************************************************/
-    public boolean isHidden( int index );
+    public void setSelected( boolean selected );
 
     /***************************************************************************
-     * @param index
      * @param hidden
      **************************************************************************/
-    public void setHidden( int index, boolean hidden );
+    public void setHidden( boolean hidden );
 }
