@@ -1,5 +1,7 @@
 package org.jutils.chart.model;
 
+import java.io.File;
+
 import org.jutils.chart.data.XYPoint;
 
 /*******************************************************************************
@@ -8,6 +10,7 @@ import org.jutils.chart.data.XYPoint;
 public class Series
 {
     public String name;
+    public String resource;
     public final ISeriesData data;
     public boolean visible;
     public final MarkerStyle marker = new MarkerStyle();
@@ -86,5 +89,10 @@ public class Series
         }
 
         return new Span( min, max );
+    }
+
+    public File getResourceFile()
+    {
+        return resource == null ? null : new File( resource );
     }
 }

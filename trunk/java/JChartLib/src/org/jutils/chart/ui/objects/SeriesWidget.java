@@ -67,7 +67,7 @@ public class SeriesWidget implements IChartWidget
     public void draw( Graphics2D graphics, int x, int y, int width, int height )
     {
         Point p = new Point();
-        Point last = new Point();
+        Point last = new Point( -100, -100 );
         XYPoint xy;
         Bounds b = context.getBounds();
 
@@ -96,7 +96,6 @@ public class SeriesWidget implements IChartWidget
 
         // LogUtils.printDebug( "series: start: " + start + ", end: " + end );
 
-        boolean drawn = false;
         for( int i = start; i < end; i++ )
         {
             xy = series.data.get( i );
@@ -109,26 +108,28 @@ public class SeriesWidget implements IChartWidget
             p.x = domain.fromCoord( xy.x );
             p.y = range.fromCoord( xy.y );
 
-            if( series.line.visible && drawn && !p.equals( last ) )
+            if( p.x != last.x || p.y != last.y )
             {
-                line.setPoints( last, p );
+                if( series.line.visible && last.x != -100 )
+                {
+                    line.setPoints( last, p );
 
-                line.draw( graphics, 0, 0, width, height );
+                    line.draw( graphics, 0, 0, width, height );
 
+                }
+
+                if( series.marker.visible )
+                {
+                    IMarker m = xy.selected ? selectedMarker : marker;
+
+                    m.setLocation( p );
+
+                    m.draw( graphics, 0, 0, width, height );
+                }
+
+                last.x = p.x;
+                last.y = p.y;
             }
-
-            if( series.marker.visible && ( !drawn || !p.equals( last ) ) )
-            {
-                IMarker m = xy.selected ? selectedMarker : marker;
-
-                m.setLocation( p );
-
-                m.draw( graphics, 0, 0, width, height );
-            }
-
-            drawn = true;
-            last.x = p.x;
-            last.y = p.y;
         }
     }
 

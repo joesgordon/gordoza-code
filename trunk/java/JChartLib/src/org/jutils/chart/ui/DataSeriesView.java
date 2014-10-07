@@ -8,8 +8,7 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import org.jutils.IconConstants;
-import org.jutils.SwingUtils;
+import org.jutils.*;
 import org.jutils.chart.data.XYPoint;
 import org.jutils.chart.io.DataLineReader;
 import org.jutils.chart.model.Series;
@@ -28,11 +27,15 @@ public class DataSeriesView implements IDataView<Series>
     /**  */
     private final SeriesTableModel tableModel;
     /**  */
+    private final JTable table;
+    /**  */
     private final DataCellRenderer cellRenderer;
 
     /**  */
+    private final Action saveAction;
+
+    /**  */
     private Series series;
-    private File file;
 
     /***************************************************************************
      * 
@@ -40,11 +43,13 @@ public class DataSeriesView implements IDataView<Series>
     public DataSeriesView()
     {
         this.tableModel = new SeriesTableModel();
+        this.table = new JTable( tableModel );
         this.cellRenderer = new DataCellRenderer();
+
+        this.saveAction = createSaveAction();
 
         this.view = createView();
 
-        this.file = null;
         this.series = null;
     }
 
@@ -54,7 +59,6 @@ public class DataSeriesView implements IDataView<Series>
     private JPanel createView()
     {
         JPanel panel = new JPanel( new BorderLayout() );
-        JTable table = new JTable( tableModel );
         JScrollPane scrollPane = new JScrollPane( table );
 
         table.setDefaultRenderer( Double.class, this.cellRenderer );
@@ -65,19 +69,30 @@ public class DataSeriesView implements IDataView<Series>
         return panel;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private JToolBar createToolbar()
     {
         JToolBar toolbar = new JGoodiesToolBar();
+
+        SwingUtils.addActionToToolbar( toolbar, saveAction );
+
+        return toolbar;
+    }
+
+    private Action createSaveAction()
+    {
         Action action;
         ActionListener listener;
+        Icon icon;
 
         listener = new FileChooserListener( view, "Choose File to Save",
             new SaveListener( this ), true );
-        action = new ActionAdapter( listener, "Save",
-            IconConstants.loader.getIcon( IconConstants.SAVE_AS_16 ) );
-        SwingUtils.addActionToToolbar( toolbar, action );
+        icon = IconConstants.loader.getIcon( IconConstants.SAVE_AS_16 );
+        action = new ActionAdapter( listener, "Save", icon );
 
-        return toolbar;
+        return action;
     }
 
     /***************************************************************************
@@ -97,13 +112,19 @@ public class DataSeriesView implements IDataView<Series>
     {
         this.series = series;
 
+        saveAction.setEnabled( series.getResourceFile() != null );
+
         cellRenderer.setSeries( series );
         tableModel.setSeries( series );
     }
 
-    public void setFile( File file )
+    /***************************************************************************
+     * @param pointIdx
+     **************************************************************************/
+    public void setSelected( int pointIdx )
     {
-        this.file = file;
+        table.getSelectionModel().setSelectionInterval( pointIdx, pointIdx );
+        Utils.scrollToVisible( table, pointIdx, 0 );
     }
 
     /***************************************************************************
@@ -183,6 +204,9 @@ public class DataSeriesView implements IDataView<Series>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class DataCellRenderer extends DefaultTableCellRenderer
     {
         private final Color defaultBackground;
@@ -205,20 +229,24 @@ public class DataSeriesView implements IDataView<Series>
             super.getTableCellRendererComponent( table, value, isSelected,
                 hasFocus, row, col );
 
-            Color bg = defaultBackground;
-
-            if( !isSelected && series.data.isHidden( row ) )
+            if( !isSelected )
             {
-                bg = Color.LIGHT_GRAY;
+                Color bg = defaultBackground;
+                if( series.data.isHidden( row ) )
+                {
+                    bg = Color.LIGHT_GRAY;
+                    setBackground( bg );
+                }
                 setBackground( bg );
             }
-
-            setBackground( bg );
 
             return this;
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class SaveListener implements IFileSelectionListener
     {
         private DataSeriesView view;
@@ -231,7 +259,7 @@ public class DataSeriesView implements IDataView<Series>
         @Override
         public File getDefaultFile()
         {
-            File file = view.file;
+            File file = view.series.getResourceFile();
 
             if( file != null )
             {
@@ -249,7 +277,7 @@ public class DataSeriesView implements IDataView<Series>
         public void filesChosen( File [] files )
         {
             File tofile = files[0];
-            File fromFile = view.file;
+            File fromFile = view.series.getResourceFile();
 
             if( fromFile == null )
             {
@@ -289,7 +317,9 @@ public class DataSeriesView implements IDataView<Series>
             }
             catch( IOException ex )
             {
-                // TODO display error
+                JOptionPane.showMessageDialog( view.getView(),
+                    "Unable to save file: " + ex.getMessage(), "I/O Error",
+                    JOptionPane.ERROR_MESSAGE );
             }
         }
     }
