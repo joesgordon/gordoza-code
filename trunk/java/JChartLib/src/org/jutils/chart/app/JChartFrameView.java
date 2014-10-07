@@ -73,7 +73,7 @@ public class JChartFrameView implements IView<JFrame>
         recentFiles.addSelectedListener( new FileSelected( this ) );
 
         Series s;
-        ISeriesData data;
+        ISeriesData<?> data;
 
         // data = ChartUtils.createTestSeries();
         // s = new Series( data );
