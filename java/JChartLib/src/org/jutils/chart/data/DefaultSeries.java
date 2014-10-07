@@ -1,6 +1,7 @@
 package org.jutils.chart.data;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
 
 import org.jutils.chart.model.ISeriesData;
 
@@ -17,7 +18,7 @@ public class DefaultSeries implements ISeriesData
      **************************************************************************/
     public DefaultSeries( List<XYPoint> points )
     {
-        this.points = new ArrayList<XYPoint>( points );
+        this.points = points;
     }
 
     /***************************************************************************

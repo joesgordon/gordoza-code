@@ -32,11 +32,11 @@ public class ChartView implements IView<JComponent>
     private final ChartWidget chartWidget;
     /**  */
     private final IPalette palette;
+    /**  */
+    public final DataView dataView;
 
     /**  */
     private final ItemActionList<File> fileLoadedListeners;
-    /**  */
-    private final ItemActionList<SeriesChangedEvent> seriesListeners;
 
     /**  */
     private Chart chart;
@@ -50,9 +50,9 @@ public class ChartView implements IView<JComponent>
         this.mainPanel = new WidgetPanel();
         this.chartWidget = new ChartWidget( chart );
         this.palette = new PresetPalette();
+        this.dataView = new DataView();
 
         this.fileLoadedListeners = new ItemActionList<>();
-        this.seriesListeners = new ItemActionList<>();
 
         mainPanel.setObject( chartWidget );
 
@@ -86,15 +86,6 @@ public class ChartView implements IView<JComponent>
     }
 
     /***************************************************************************
-     * @param seriesChanged
-     **************************************************************************/
-    public void addSeriesChangedListener(
-        ItemActionListener<SeriesChangedEvent> l )
-    {
-        seriesListeners.addListener( l );
-    }
-
-    /***************************************************************************
      * @param s
      **************************************************************************/
     public void addSeries( Series s )
@@ -110,14 +101,8 @@ public class ChartView implements IView<JComponent>
     {
         if( !addData )
         {
-            for( int i = chart.series.size() - 1; i > -1; i-- )
-            {
-                SeriesChangedEvent sce = new SeriesChangedEvent(
-                    chart.series.get( i ), i, false );
-                seriesListeners.fireListeners( this, sce );
-            }
-
             clear();
+            dataView.removeAllSeries();
         }
 
         chart.series.add( s );
@@ -125,9 +110,7 @@ public class ChartView implements IView<JComponent>
             chartWidget.context ) );
         repaintChart();
 
-        SeriesChangedEvent sce = new SeriesChangedEvent( s,
-            chart.series.size() - 1, true );
-        seriesListeners.fireListeners( this, sce );
+        dataView.addSeries( s, chart.series.size() );
     }
 
     /***************************************************************************
@@ -185,7 +168,7 @@ public class ChartView implements IView<JComponent>
             Color c = palette.next();
 
             s.name = file.getName();
-
+            s.resource = file.getAbsolutePath();
             s.marker.color = c;
             s.highlight.color = c;
             s.line.color = c;
@@ -507,6 +490,7 @@ public class ChartView implements IView<JComponent>
 
             // LogUtils.printDebug( "hover: " + mx );
 
+            int seriesIdx = 0;
             for( SeriesWidget s : view.chartWidget.plot.serieses )
             {
                 Point sp = new Point( p );
@@ -522,35 +506,37 @@ public class ChartView implements IView<JComponent>
                     domainCoords = context.domain.secondary;
                 }
 
-                if( domainCoords == null )
+                if( domainCoords != null )
                 {
-                    continue;
-                }
+                    xy.x = domainCoords.fromScreen( sp.x );
 
-                xy.x = domainCoords.fromScreen( sp.x );
+                    idx = ChartUtils.findNearest( s.series.data, xy.x );
 
-                idx = ChartUtils.findNearest( s.series.data, xy.x );
-
-                if( idx > -1 )
-                {
-                    if( s.series.isPrimaryRange )
+                    if( idx > -1 )
                     {
-                        rangeCoords = context.range.primary;
+                        if( s.series.isPrimaryRange )
+                        {
+                            rangeCoords = context.range.primary;
+                        }
+                        else
+                        {
+                            rangeCoords = context.range.secondary;
+                        }
+
+                        xy = new XYPoint( s.series.data.get( idx ) );
+                        sp.x = domainCoords.fromCoord( xy.x );
+                        sp.y = rangeCoords.fromCoord( xy.y );
+
+                        // LogUtils.printDebug( "hover [" + s.series.name +
+                        // "]: " +
+                        // p.x + xy.x );
+
+                        s.highlight.setLocation( new Point( sp ) );
+
+                        view.dataView.setSelected( seriesIdx, idx );
                     }
-                    else
-                    {
-                        rangeCoords = context.range.secondary;
-                    }
-
-                    xy = new XYPoint( s.series.data.get( idx ) );
-                    sp.x = domainCoords.fromCoord( xy.x );
-                    sp.y = rangeCoords.fromCoord( xy.y );
-
-                    // LogUtils.printDebug( "hover [" + s.series.name + "]: " +
-                    // p.x + xy.x );
-
-                    s.highlight.setLocation( new Point( sp ) );
                 }
+                seriesIdx++;
             }
 
             view.chartWidget.plot.highlightLayer.repaint = true;
