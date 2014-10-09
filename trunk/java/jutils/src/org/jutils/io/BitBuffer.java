@@ -80,8 +80,11 @@ public class BitBuffer
      * Sets the position of the next read/write operation.
      * @param byteIndex the index of the byte.
      * @param bitIndex the index of the bit (0 - 7).
+     * @throws IllegalArgumentException if either the byte or bit index is
+     * invalid.
      **************************************************************************/
     public void setPosition( int byteIndex, int bitIndex )
+        throws IllegalArgumentException
     {
         if( byteIndex >= buffer.length )
         {
@@ -95,8 +98,10 @@ public class BitBuffer
     /***************************************************************************
      * Sets the absolute bit index position.
      * @param bitIndex the index of the bit.
+     * @throws IllegalArgumentException if the bit index is invalid (< 0 or >=
+     * bit count).
      **************************************************************************/
-    public void setPosition( int bitIndex )
+    public void setPosition( int bitIndex ) throws IllegalArgumentException
     {
         if( bitIndex >= bitCount() )
         {
