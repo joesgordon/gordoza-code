@@ -1,4 +1,4 @@
-package org.utils.ui.progress;
+package org.jutils.ui.progress;
 
 import java.awt.*;
 import java.awt.Dialog.ModalityType;
@@ -8,7 +8,8 @@ import javax.swing.*;
 
 import org.jutils.IconConstants;
 import org.jutils.Utils;
-import org.jutils.concurrent.*;
+import org.jutils.concurrent.Stoppable;
+import org.jutils.concurrent.TaskStoppable;
 import org.jutils.ui.ExtensiveErrorView;
 import org.jutils.ui.MessageExceptionView;
 import org.jutils.ui.event.ActionListenerList;
@@ -17,7 +18,7 @@ import org.jutils.ui.model.IView;
 /*******************************************************************************
  * UI to show intermediate progress to the user.
  ******************************************************************************/
-public class ProgressView implements IProgressView, IView<JDialog>
+public class ProgressDialogView implements IProgressView, IView<JDialog>
 {
     /** The progress dialog. */
     private final JDialog dialog;
@@ -37,7 +38,7 @@ public class ProgressView implements IProgressView, IView<JDialog>
      * @param modalityType specifies whether dialog blocks input to other
      * windows when shown..
      **************************************************************************/
-    public ProgressView( Window parent, ModalityType modalityType )
+    public ProgressDialogView( Window parent, ModalityType modalityType )
     {
         JPanel contentPanel;
         GridBagConstraints constraints;
@@ -218,11 +219,11 @@ public class ProgressView implements IProgressView, IView<JDialog>
      * @param comp
      * @param task
      **************************************************************************/
-    public static ProgressView startAndShow( Component comp,
+    public static ProgressDialogView startAndShow( Component comp,
         IProgressTask task, String title )
     {
         Window parent = Utils.getComponentsWindow( comp );
-        ProgressView view = new ProgressView( parent,
+        ProgressDialogView view = new ProgressDialogView( parent,
             ModalityType.APPLICATION_MODAL );
         EdtProgressViewAdapter edtView = new EdtProgressViewAdapter( view );
         TaskStoppable istoppable = new TaskStoppable( edtView, task );
@@ -238,14 +239,6 @@ public class ProgressView implements IProgressView, IView<JDialog>
         view.setVisible( true );
 
         return view;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public static interface IProgressTask
-    {
-        public void run( ITaskStopManager stopManager, IProgressView progress );
     }
 
     /***************************************************************************
@@ -294,9 +287,9 @@ public class ProgressView implements IProgressView, IView<JDialog>
      **************************************************************************/
     private class DialogCloseListener extends WindowAdapter
     {
-        private final ProgressView view;
+        private final ProgressDialogView view;
 
-        public DialogCloseListener( ProgressView view )
+        public DialogCloseListener( ProgressDialogView view )
         {
             this.view = view;
         }
