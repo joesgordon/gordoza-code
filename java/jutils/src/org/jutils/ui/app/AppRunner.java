@@ -40,9 +40,6 @@ public class AppRunner implements Runnable
 
             if( lafName == null )
             {
-                UIManager.put( "TabbedPaneUI",
-                    BasicTabbedPaneUI.class.getCanonicalName() );
-
                 Color c;
 
                 c = new Color( 0x3A6EA7 );
@@ -95,6 +92,9 @@ public class AppRunner implements Runnable
                 Options.setSelectOnFocusGainEnabled( true );
 
                 lafName = Options.PLASTICXP_NAME;
+
+                UIManager.put( "TabbedPaneUI",
+                    BasicTabbedPaneUI.class.getCanonicalName() );
             }
 
             UIManager.setLookAndFeel( lafName );

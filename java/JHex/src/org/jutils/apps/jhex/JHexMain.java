@@ -6,8 +6,6 @@ import org.jutils.io.IOUtils;
 import org.jutils.io.UserOptionsSerializer;
 import org.jutils.ui.app.FrameApplication;
 
-//TODO comments
-
 /*******************************************************************************
  * 
  ******************************************************************************/

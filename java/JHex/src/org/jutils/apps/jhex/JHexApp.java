@@ -8,8 +8,6 @@ import javax.swing.JFrame;
 import org.jutils.io.UserOptionsSerializer;
 import org.jutils.ui.app.IFrameApp;
 
-//TODO comments
-
 /***************************************************************************
  * 
  **************************************************************************/
