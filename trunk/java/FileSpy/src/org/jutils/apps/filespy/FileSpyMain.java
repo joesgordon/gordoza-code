@@ -6,6 +6,7 @@ import org.jutils.apps.filespy.data.FileSpyData;
 import org.jutils.io.*;
 import org.jutils.io.UserOptionsSerializer.IUserOptionsCreator;
 import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
 
 /*******************************************************************************
  *
@@ -22,7 +23,8 @@ public class FileSpyMain
      **************************************************************************/
     public static void main( String [] args )
     {
-        FrameApplication.invokeLater( new FileSpyApp( createUserIO() ) );
+        IFrameApp app = new FileSpyApp( createUserIO() );
+        FrameApplication.invokeLater( app );
     }
 
     /***************************************************************************
