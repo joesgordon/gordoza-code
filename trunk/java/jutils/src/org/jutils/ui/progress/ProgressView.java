@@ -35,9 +35,10 @@ public class ProgressView implements IView<JPanel>
     {
         this.msgLabel = new JLabel();
         this.progressBar = new JProgressBar();
-        this.view = createView();
 
         this.cancelListeners = new ActionListenerList();
+
+        this.view = createView();
     }
 
     /***************************************************************************

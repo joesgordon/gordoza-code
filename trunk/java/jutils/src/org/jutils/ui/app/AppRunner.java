@@ -201,6 +201,14 @@ public class AppRunner implements Runnable
     /***************************************************************************
      * @param app
      **************************************************************************/
+    public static void invokeLater( IApplication app )
+    {
+        SwingUtilities.invokeLater( new AppRunner( app ) );
+    }
+
+    /***************************************************************************
+     * @param app
+     **************************************************************************/
     public static void invokeAndWait( IApplication app )
     {
         try
