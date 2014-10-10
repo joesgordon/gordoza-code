@@ -1,4 +1,4 @@
-package org.utils.ui.progress;
+package org.jutils.ui.progress;
 
 import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;

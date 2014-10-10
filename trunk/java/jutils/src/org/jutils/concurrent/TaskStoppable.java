@@ -1,7 +1,7 @@
 package org.jutils.concurrent;
 
-import org.utils.ui.progress.IProgressView;
-import org.utils.ui.progress.ProgressView.IProgressTask;
+import org.jutils.ui.progress.IProgressTask;
+import org.jutils.ui.progress.IProgressView;
 
 /*******************************************************************************
  * 
