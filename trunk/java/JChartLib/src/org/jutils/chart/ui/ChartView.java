@@ -39,7 +39,7 @@ public class ChartView implements IView<JComponent>
     private final ItemActionList<File> fileLoadedListeners;
 
     /**  */
-    private Chart chart;
+    public final Chart chart;
 
     /***************************************************************************
      * 
@@ -122,7 +122,6 @@ public class ChartView implements IView<JComponent>
         chartWidget.plot.serieses.clear();
         chartWidget.plot.highlightLayer.repaint = true;
         chartWidget.plot.seriesLayer.repaint = true;
-        setTitle( "Title" );
 
         repaintChart();
     }
