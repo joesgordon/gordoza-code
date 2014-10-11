@@ -1,11 +1,10 @@
 package org.jutils.io;
 
-import java.util.List;
 import java.util.Random;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.jutils.NumberParsingUtils;
+import org.jutils.utils.BitArray;
 
 public class BitBufferTest
 {
@@ -39,7 +38,9 @@ public class BitBufferTest
     {
         byte [] bytes = new byte[] { ( byte )0x9E, ( byte )0xFE };
         BitBuffer buf = new BitBuffer( bytes );
-        List<Boolean> bits = NumberParsingUtils.fromBinaryString( "111011111110" );
+        BitArray bits = new BitArray();
+
+        bits.set( "111011111110" );
 
         BitPosition pos = buf.find( bits, 0 );
 

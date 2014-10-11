@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.*;
 import java.util.Arrays;
-import java.util.List;
 
 import javax.swing.*;
 
@@ -12,6 +11,7 @@ import org.jutils.*;
 import org.jutils.io.*;
 import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.model.IView;
+import org.jutils.utils.BitArray;
 
 //TODO comments
 
@@ -193,6 +193,42 @@ public class ShiftHexView implements IView<JComponent>
     }
 
     /***************************************************************************
+     * @param parent
+     * @return
+     **************************************************************************/
+    public static BitArray promptForBinaryString( Component parent )
+    {
+        BitArray bits = new BitArray();
+        String binaryString = JOptionPane.showInputDialog( parent,
+            "Enter binary string to be found:", "Enter Search String",
+            JOptionPane.QUESTION_MESSAGE );
+
+        if( binaryString != null )
+        {
+            try
+            {
+                binaryString = binaryString.replace( " ", "" );
+
+                bits.set( binaryString );
+            }
+            catch( NumberFormatException ex )
+            {
+                JOptionPane.showMessageDialog( parent,
+                    "Cannot parse " + binaryString + " as a binary string:" +
+                        Utils.NEW_LINE + ex.getMessage(), "Parse Error",
+                    JOptionPane.ERROR_MESSAGE );
+                bits = null;
+            }
+        }
+        else
+        {
+            bits = null;
+        }
+
+        return bits;
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     private static class ShiftListener implements ActionListener
@@ -235,20 +271,12 @@ public class ShiftHexView implements IView<JComponent>
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            String binaryString = JOptionPane.showInputDialog( view.view,
-                "Enter binary string to be found:", "Enter Search String",
-                JOptionPane.QUESTION_MESSAGE );
+            BitArray bits = promptForBinaryString( view.view );
 
-            if( binaryString != null )
+            if( bits != null )
             {
-                List<Boolean> bits;
-
                 try
                 {
-                    binaryString = binaryString.replace( " ", "" );
-
-                    bits = NumberParsingUtils.fromBinaryString( binaryString );
-
                     int start = view.hexPanel.getSelectedByte();
 
                     start = start > -1 ? start : 0;
@@ -269,23 +297,23 @@ public class ShiftHexView implements IView<JComponent>
 
                         off += pos.getBit() == 0 ? 0 : 1;
 
-                        LogUtils.printDebug( "Found " + binaryString + " @ " +
-                            off );
+                        LogUtils.printDebug( "Found " + bits.toString() +
+                            " @ " + off );
 
                         view.hexPanel.setSelected( off, off );
                     }
                     else
                     {
                         JOptionPane.showMessageDialog( view.view,
-                            "Pattern not found: " + binaryString,
+                            "Pattern not found: " + bits.toString(),
                             "Pattern Not Found", JOptionPane.ERROR_MESSAGE );
                     }
                 }
                 catch( NumberFormatException ex )
                 {
                     JOptionPane.showMessageDialog( view.view, "Cannot parse " +
-                        binaryString + " as a binary string:" + Utils.NEW_LINE +
-                        ex.getMessage(), "Parse Error",
+                        bits.toString() + " as a binary string:" +
+                        Utils.NEW_LINE + ex.getMessage(), "Parse Error",
                         JOptionPane.ERROR_MESSAGE );
                 }
             }
