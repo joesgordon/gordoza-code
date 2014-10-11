@@ -176,6 +176,11 @@ public final class NumberParsingUtils
             "' is not a hexadecimal digit" );
     }
 
+    /***************************************************************************
+     * @param str
+     * @return
+     * @throws NumberFormatException
+     **************************************************************************/
     public static List<Boolean> fromBinaryString( String str )
         throws NumberFormatException
     {
@@ -209,9 +214,13 @@ public final class NumberParsingUtils
         return bits;
     }
 
-    public static String toBinaryString( List<Boolean> bits )
+    /***************************************************************************
+     * @param bits
+     * @return
+     **************************************************************************/
+    public static String toBinaryString( Iterable<Boolean> bits )
     {
-        StringBuilder builder = new StringBuilder( bits.size() );
+        StringBuilder builder = new StringBuilder();
 
         for( Boolean bit : bits )
         {

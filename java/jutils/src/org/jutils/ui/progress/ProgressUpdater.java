@@ -28,6 +28,7 @@ public class ProgressUpdater
         this.percent = 0;
 
         progress.setIndeterminate( false );
+        progress.setPercentComplete( 0 );
     }
 
     /***************************************************************************

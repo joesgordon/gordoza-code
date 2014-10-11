@@ -1,6 +1,6 @@
 package org.jutils.io;
 
-import java.util.List;
+import org.jutils.utils.BitArray;
 
 //TODO comments
 
@@ -233,7 +233,7 @@ public class BitBuffer
      * @return the bit position where the provided bits were found or null if
      * not found.
      **************************************************************************/
-    public BitPosition find( List<Boolean> bits, int start )
+    public BitPosition find( BitArray bits, int start )
     {
         BitPosition curPos = new BitPosition( position );
         int idx = 0;

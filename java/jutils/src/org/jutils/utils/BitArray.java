@@ -20,6 +20,11 @@ public class BitArray implements Iterable<Boolean>
         bits = new ArrayList<>( 64 );
     }
 
+    public BitArray( BitArray bits )
+    {
+        this.bits = new ArrayList<>( bits.bits );
+    }
+
     /***************************************************************************
      * @param bytes
      **************************************************************************/
@@ -54,6 +59,10 @@ public class BitArray implements Iterable<Boolean>
             else if( c == '1' )
             {
                 bits.add( true );
+            }
+            else if( c == ' ' )
+            {
+                continue;
             }
             else
             {
@@ -147,5 +156,14 @@ public class BitArray implements Iterable<Boolean>
         }
 
         return new String( str );
+    }
+
+    /***************************************************************************
+     * @param idx
+     * @return
+     **************************************************************************/
+    public boolean get( int idx )
+    {
+        return bits.get( idx );
     }
 }
