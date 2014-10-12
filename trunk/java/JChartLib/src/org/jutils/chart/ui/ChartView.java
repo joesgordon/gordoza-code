@@ -4,18 +4,25 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-import org.jutils.Utils;
+import org.jutils.*;
 import org.jutils.chart.*;
+import org.jutils.chart.app.JChartAppConstants;
+import org.jutils.chart.app.UserData;
 import org.jutils.chart.data.*;
 import org.jutils.chart.data.ChartContext.IDimensionCoords;
 import org.jutils.chart.io.DataFileReader;
 import org.jutils.chart.model.*;
 import org.jutils.chart.ui.objects.*;
+import org.jutils.io.IOUtils;
+import org.jutils.io.UserOptionsSerializer;
+import org.jutils.ui.*;
+import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.DropActionType;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
@@ -27,6 +34,8 @@ import org.jutils.ui.model.IView;
 public class ChartView implements IView<JComponent>
 {
     /**  */
+    private final JPanel view;
+    /**  */
     private final WidgetPanel mainPanel;
     /**  */
     private final ChartWidget chartWidget;
@@ -36,7 +45,15 @@ public class ChartView implements IView<JComponent>
     public final DataView dataView;
 
     /**  */
+    public final Action openAction;
+    /**  */
+    public final Action saveAction;
+
+    /**  */
     private final ItemActionList<File> fileLoadedListeners;
+
+    /**  */
+    private final UserOptionsSerializer<UserData> userio;
 
     /**  */
     public final Chart chart;
@@ -46,11 +63,22 @@ public class ChartView implements IView<JComponent>
      **************************************************************************/
     public ChartView()
     {
+        this( true, true );
+    }
+
+    public ChartView( boolean allowOpen, boolean gradientToolbar )
+    {
+        this.userio = JChartAppConstants.getUserIO();
         this.chart = new Chart();
         this.mainPanel = new WidgetPanel();
         this.chartWidget = new ChartWidget( chart );
         this.palette = new PresetPalette();
         this.dataView = new DataView();
+
+        this.openAction = createOpenAction();
+        this.saveAction = createSaveAction();
+
+        this.view = createView( allowOpen, gradientToolbar );
 
         this.fileLoadedListeners = new ItemActionList<>();
 
@@ -61,7 +89,11 @@ public class ChartView implements IView<JComponent>
         mainPanel.addComponentListener( new ChartComponentListener( this ) );
         mainPanel.addMouseListener( ml );
         mainPanel.addMouseMotionListener( ml );
-        mainPanel.setDropTarget( new FileDropTarget( new ChartDropTarget( this ) ) );
+        if( allowOpen )
+        {
+            mainPanel.setDropTarget( new FileDropTarget( new ChartDropTarget(
+                this ) ) );
+        }
 
         mainPanel.setFocusable( true );
 
@@ -75,6 +107,90 @@ public class ChartView implements IView<JComponent>
             this ), actionMapKey, null ) );
 
         mainPanel.setMinimumSize( new Dimension( 150, 150 ) );
+    }
+
+    private JPanel createView( boolean allowOpen, boolean gradientToolbar )
+    {
+        JPanel panel = new JPanel( new GridBagLayout() );
+        GridBagConstraints constraints;
+
+        constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
+        panel.add( createToolbar( allowOpen, gradientToolbar ), constraints );
+
+        constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
+        panel.add( new JSeparator(), constraints );
+
+        constraints = new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
+                0, 0, 0 ), 0, 0 );
+        panel.add( mainPanel, constraints );
+
+        return panel;
+    }
+
+    private Component createToolbar( boolean allowOpen, boolean gradientToolbar )
+    {
+        JToolBar toolbar;
+
+        if( gradientToolbar )
+        {
+            toolbar = new JGoodiesToolBar();
+        }
+        else
+        {
+            toolbar = new JToolBar();
+            SwingUtils.setToolbarDefaults( toolbar );
+        }
+
+        if( allowOpen )
+        {
+            SwingUtils.addActionToToolbar( toolbar, openAction );
+        }
+
+        SwingUtils.addActionToToolbar( toolbar, saveAction );
+
+        return toolbar;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createOpenAction()
+    {
+        Action action;
+        FileChooserListener fcListener;
+        Icon icon;
+        String name;
+
+        name = "Open";
+        icon = IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 );
+        fcListener = new FileChooserListener( getView(), "Choose Data File",
+            new OpenListener( this ), false );
+        action = new ActionAdapter( fcListener, name, icon );
+
+        return action;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createSaveAction()
+    {
+        Action action;
+        ActionListener fcListener;
+        Icon icon;
+        String name;
+
+        name = "Save";
+        icon = IconConstants.loader.getIcon( IconConstants.SAVE_16 );
+        fcListener = new SaveListener( this );
+        action = new ActionAdapter( fcListener, name, icon );
+
+        return action;
     }
 
     /***************************************************************************
@@ -208,7 +324,7 @@ public class ChartView implements IView<JComponent>
     @Override
     public JComponent getView()
     {
-        return mainPanel;
+        return view;
     }
 
     /***************************************************************************
@@ -225,8 +341,19 @@ public class ChartView implements IView<JComponent>
      **************************************************************************/
     public void saveAsImage( File file )
     {
-        int w = 640;
-        int h = 480;
+        saveAsImage( file, new Dimension( 640, 480 ) );
+    }
+
+    /***************************************************************************
+     * @param file
+     * @param size
+     **************************************************************************/
+    public void saveAsImage( File file, Dimension size )
+    {
+        view.setCursor( Cursor.getPredefinedCursor( Cursor.WAIT_CURSOR ) );
+
+        int w = size.width;
+        int h = size.height;
 
         BufferedImage image = Utils.createTransparentImage( w, h );
         Graphics2D g2d = image.createGraphics();
@@ -252,17 +379,20 @@ public class ChartView implements IView<JComponent>
 
         try
         {
-            if( ImageIO.write( image, "png", file ) )
+            if( !ImageIO.write( image, "png", file ) )
             {
-                System.out.println( "-- saved" );
+                throw new IllegalStateException(
+                    "No writer found for PNG files!" );
             }
         }
         catch( IOException ex )
         {
             JOptionPane.showMessageDialog( mainPanel,
-                "I/O Exception: " + ex.getMessage(), "I/O Exception",
+                "I/O Error: " + ex.getMessage(), "I/O Error",
                 JOptionPane.ERROR_MESSAGE );
         }
+
+        view.setCursor( Cursor.getDefaultCursor() );
     }
 
     /***************************************************************************
@@ -540,6 +670,96 @@ public class ChartView implements IView<JComponent>
 
             view.chartWidget.plot.highlightLayer.repaint = true;
             view.mainPanel.repaint();
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class OpenListener implements IFileSelectionListener
+    {
+        private final ChartView view;
+
+        public OpenListener( ChartView view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public File getDefaultFile()
+        {
+            return view.userio.getOptions().recentFiles.first();
+        }
+
+        @Override
+        public void filesChosen( File [] files )
+        {
+            List<File> fileList = Arrays.asList( files );
+
+            view.importData( fileList );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class SaveListener implements ActionListener,
+        ItemActionListener<Boolean>
+    {
+        private final ChartView view;
+
+        private SaveView saveView;
+
+        public SaveListener( ChartView view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            saveView = new SaveView();
+            SaveOptions options = new SaveOptions();
+            OkDialogView okView = new OkDialogView( view.getView(),
+                saveView.getView(), OkDialogButtons.OK_CANCEL );
+            JDialog dialog = okView.getView();
+
+            options.file = getDefaultFile();
+            options.size.width = view.mainPanel.getWidth();
+            options.size.height = view.mainPanel.getHeight();
+
+            saveView.setData( options );
+
+            okView.addOkListener( this );
+
+            dialog.setTitle( "Save Chart" );
+            dialog.pack();
+            dialog.setLocationRelativeTo( view.getView() );
+            dialog.setVisible( true );
+        }
+
+        @Override
+        public void actionPerformed( ItemActionEvent<Boolean> event )
+        {
+            SaveOptions options = saveView.getData();
+
+            view.userio.getOptions().lastImageFile = options.file;
+            view.userio.write();
+
+            view.saveAsImage( options.file, options.size );
+        }
+
+        public File getDefaultFile()
+        {
+            File f = view.userio.getOptions().lastImageFile;
+
+            if( f == null )
+            {
+                f = IOUtils.replaceExtension(
+                    view.userio.getOptions().recentFiles.first(), "png" );
+            }
+
+            return f;
         }
     }
 

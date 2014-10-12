@@ -19,7 +19,7 @@ public class JChartAppMain
      **************************************************************************/
     public static void main( String [] args )
     {
-        JChartApp runnable = new JChartApp( JChartAppConstants.getUserIO() );
+        JChartApp runnable = new JChartApp();
 
         FrameApplication.invokeLater( runnable );
     }
