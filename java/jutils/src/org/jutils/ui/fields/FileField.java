@@ -264,11 +264,12 @@ public class FileField implements IDataView<File>, IValidationField
 
             if( f != null )
             {
-                while( !f.exists() )
+                while( !f.exists() && !f.getParentFile().exists() )
                 {
                     f = f.getParentFile();
                 }
             }
+
             return f;
         }
 
