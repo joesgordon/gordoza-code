@@ -251,7 +251,7 @@ public final class Utils
             {
                 buf.append( delimiter );
             }
-            buf.append( items[i].toString() );
+            buf.append( items[i] );
         }
 
         return buf.toString();
