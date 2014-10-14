@@ -1,7 +1,6 @@
 package org.jutils.chart.app;
 
 import java.awt.Color;
-import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -14,7 +13,8 @@ import org.jutils.chart.model.ISeriesData;
 import org.jutils.chart.model.Series;
 import org.jutils.chart.ui.ChartView;
 import org.jutils.io.UserOptionsSerializer;
-import org.jutils.ui.*;
+import org.jutils.ui.RecentFilesMenuView;
+import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.model.IView;
@@ -141,8 +141,7 @@ public class JChartFrameView implements IView<JFrame>
         JMenu menu = new JMenu( "View" );
         JMenuItem item;
 
-        item = new JMenuItem( "Data" );
-        item.addActionListener( new DataDialogListener( this ) );
+        item = new JMenuItem( chartView.dataAction );
         menu.add( item );
 
         return menu;
@@ -155,38 +154,6 @@ public class JChartFrameView implements IView<JFrame>
     public JFrame getView()
     {
         return frameView.getView();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class DataDialogListener implements ActionListener
-    {
-        private final OkDialogView dialog;
-
-        public DataDialogListener( JChartFrameView view )
-        {
-            this.dialog = new OkDialogView( view.getView(),
-                view.chartView.dataView.getView(), ModalityType.MODELESS );
-
-            JDialog d = dialog.getView();
-
-            d.setTitle( "Series Properties" );
-            d.setSize( 300, 300 );
-            d.validate();
-            d.setLocationRelativeTo( view.getView() );
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            JDialog d = dialog.getView();
-
-            if( !d.isVisible() )
-            {
-                d.setVisible( true );
-            }
-        }
     }
 
     /***************************************************************************

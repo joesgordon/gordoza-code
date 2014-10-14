@@ -148,6 +148,11 @@ public class OkDialogView implements IView<JDialog>
         {
             dialog.getRootPane().setDefaultButton( okButton );
         }
+
+        if( owner != null )
+        {
+            dialog.setIconImages( owner.getIconImages() );
+        }
     }
 
     public void setOkButtonText( String text )
