@@ -1,6 +1,7 @@
 package org.jutils.chart.ui;
 
 import java.awt.*;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -48,6 +49,8 @@ public class ChartView implements IView<JComponent>
     public final Action openAction;
     /**  */
     public final Action saveAction;
+    /**  */
+    public final Action dataAction;
 
     /**  */
     private final ItemActionList<File> fileLoadedListeners;
@@ -66,6 +69,10 @@ public class ChartView implements IView<JComponent>
         this( true, true );
     }
 
+    /***************************************************************************
+     * @param allowOpen
+     * @param gradientToolbar
+     **************************************************************************/
     public ChartView( boolean allowOpen, boolean gradientToolbar )
     {
         this.userio = JChartAppConstants.getUserIO();
@@ -77,6 +84,7 @@ public class ChartView implements IView<JComponent>
 
         this.openAction = createOpenAction();
         this.saveAction = createSaveAction();
+        this.dataAction = createDataAction();
 
         this.view = createView( allowOpen, gradientToolbar );
 
@@ -109,6 +117,11 @@ public class ChartView implements IView<JComponent>
         mainPanel.setMinimumSize( new Dimension( 150, 150 ) );
     }
 
+    /***************************************************************************
+     * @param allowOpen
+     * @param gradientToolbar
+     * @return
+     **************************************************************************/
     private JPanel createView( boolean allowOpen, boolean gradientToolbar )
     {
         JPanel panel = new JPanel( new GridBagLayout() );
@@ -132,6 +145,11 @@ public class ChartView implements IView<JComponent>
         return panel;
     }
 
+    /***************************************************************************
+     * @param allowOpen
+     * @param gradientToolbar
+     * @return
+     **************************************************************************/
     private Component createToolbar( boolean allowOpen, boolean gradientToolbar )
     {
         JToolBar toolbar;
@@ -153,6 +171,10 @@ public class ChartView implements IView<JComponent>
 
         SwingUtils.addActionToToolbar( toolbar, saveAction );
 
+        toolbar.addSeparator();
+
+        SwingUtils.addActionToToolbar( toolbar, dataAction );
+
         return toolbar;
     }
 
@@ -162,15 +184,15 @@ public class ChartView implements IView<JComponent>
     private Action createOpenAction()
     {
         Action action;
-        FileChooserListener fcListener;
+        FileChooserListener listener;
         Icon icon;
         String name;
 
         name = "Open";
         icon = IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 );
-        fcListener = new FileChooserListener( getView(), "Choose Data File",
+        listener = new FileChooserListener( getView(), "Choose Data File",
             new OpenListener( this ), false );
-        action = new ActionAdapter( fcListener, name, icon );
+        action = new ActionAdapter( listener, name, icon );
 
         return action;
     }
@@ -181,14 +203,32 @@ public class ChartView implements IView<JComponent>
     private Action createSaveAction()
     {
         Action action;
-        ActionListener fcListener;
+        ActionListener listener;
         Icon icon;
         String name;
 
         name = "Save";
         icon = IconConstants.loader.getIcon( IconConstants.SAVE_16 );
-        fcListener = new SaveListener( this );
-        action = new ActionAdapter( fcListener, name, icon );
+        listener = new SaveListener( this );
+        action = new ActionAdapter( listener, name, icon );
+
+        return action;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createDataAction()
+    {
+        Action action;
+        ActionListener listener;
+        Icon icon;
+        String name;
+
+        name = "Show Data";
+        icon = IconConstants.loader.getIcon( IconConstants.CONFIG_16 );
+        listener = new DataDialogListener( this );
+        action = new ActionAdapter( listener, name, icon );
 
         return action;
     }
@@ -838,6 +878,50 @@ public class ChartView implements IView<JComponent>
             this.s = s;
             this.index = index;
             this.added = added;
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class DataDialogListener implements ActionListener
+    {
+        private final ChartView view;
+
+        private OkDialogView okView;
+
+        public DataDialogListener( ChartView view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            if( okView == null )
+            {
+                createDialog();
+            }
+
+            JDialog dialog = okView.getView();
+
+            if( !dialog.isVisible() )
+            {
+                dialog.setVisible( true );
+            }
+        }
+
+        private void createDialog()
+        {
+            this.okView = new OkDialogView( view.getView(),
+                view.dataView.getView(), ModalityType.MODELESS );
+
+            JDialog d = okView.getView();
+
+            d.setTitle( "Series Properties" );
+            d.setSize( 300, 300 );
+            d.validate();
+            d.setLocationRelativeTo( view.getView() );
         }
     }
 }
