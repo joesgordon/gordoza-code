@@ -48,6 +48,8 @@ public final class IconConstants
 
     public final static String FIND_32 = "find32.png";
 
+    public final static String FONT_16 = "font16.png";
+
     public final static String FONT_24 = "font24.png";
 
     public final static String FORWARD_16 = "forward16.png";

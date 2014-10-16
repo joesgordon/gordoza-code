@@ -7,18 +7,31 @@ import java.io.File;
  ******************************************************************************/
 public class Series
 {
-    public String name;
+    /**  */
+    public final TextLabel title;
+    /**  */
     public String resource;
+    /**  */
     public final ISeriesData<?> data;
+    /**  */
     public boolean visible;
+    /**  */
     public final MarkerStyle marker = new MarkerStyle();
+    /**  */
     public final MarkerStyle highlight = new MarkerStyle();
+    /**  */
     public final LineStyle line = new LineStyle();
+    /**  */
     public boolean isPrimaryDomain;
+    /**  */
     public boolean isPrimaryRange;
 
+    /***************************************************************************
+     * @param data
+     **************************************************************************/
     public Series( ISeriesData<?> data )
     {
+        this.title = new TextLabel();
         this.data = data;
         this.isPrimaryDomain = true;
         this.isPrimaryRange = true;
@@ -29,6 +42,9 @@ public class Series
         }
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public Span calcDomainSpan()
     {
         Double min = null;
@@ -59,6 +75,9 @@ public class Series
         return new Span( min, max );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public Span calcRangeSpan()
     {
         Double min = null;
@@ -89,6 +108,9 @@ public class Series
         return new Span( min, max );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public File getResourceFile()
     {
         return resource == null ? null : new File( resource );

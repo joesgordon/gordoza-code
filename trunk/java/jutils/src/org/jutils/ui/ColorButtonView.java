@@ -1,7 +1,6 @@
 package org.jutils.ui;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -24,6 +23,8 @@ public class ColorButtonView implements IDataView<Color>
 
     /**  */
     private final ItemActionList<Color> updateListeners;
+    /**  */
+    private boolean showDescription;
 
     /***************************************************************************
      * 
@@ -38,21 +39,39 @@ public class ColorButtonView implements IDataView<Color>
      **************************************************************************/
     public ColorButtonView( Color c )
     {
-        this.icon = new ColorIcon( c, 32 );
+        this( c, 32 );
+    }
+
+    /***************************************************************************
+     * @param c
+     * @param size
+     **************************************************************************/
+    public ColorButtonView( Color c, int size )
+    {
+        this( c, size, true );
+    }
+
+    public ColorButtonView( Color c, int size, boolean showDescription )
+    {
+        this.icon = new ColorIcon( c, size );
         this.button = new JButton( icon );
         this.updateListeners = new ItemActionList<>();
+        this.showDescription = showDescription;
 
-        Dimension dim = button.getPreferredSize();
-        dim.width = dim.height;
-        button.setPreferredSize( dim );
-        button.setMinimumSize( dim );
-        button.setMaximumSize( dim );
+        // Dimension dim = button.getPreferredSize();
+        // dim.width = dim.height;
+        // button.setPreferredSize( dim );
+        // button.setMinimumSize( dim );
+        // button.setMaximumSize( dim );
 
         button.addActionListener( new ColorButtonListener( this ) );
 
         setData( c );
     }
 
+    /***************************************************************************
+     * @param l
+     **************************************************************************/
     public void addUpdateListener( ItemActionListener<Color> l )
     {
         updateListeners.addListener( l );
@@ -85,7 +104,10 @@ public class ColorButtonView implements IDataView<Color>
         String text = String.format( "%02X%02X%02X:%02X", color.getRed(),
             color.getGreen(), color.getBlue(), color.getAlpha() );
         icon.setColor( color );
-        button.setText( text );
+        if( showDescription )
+        {
+            button.setText( text );
+        }
     }
 
     /***************************************************************************

@@ -91,7 +91,8 @@ public class DataView implements IView<JPanel>
             index = seriesTabs.getTabCount();
         }
 
-        seriesTabs.insertTab( series.name, null, view.getView(), null, index );
+        seriesTabs.insertTab( series.title.text, null, view.getView(), null,
+            index );
     }
 
     /***************************************************************************

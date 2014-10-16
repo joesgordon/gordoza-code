@@ -236,6 +236,8 @@ public final class IOUtils
     }
 
     /***************************************************************************
+     * Returns the file name minus the extension. Does not include path
+     * information.
      * @param file
      * @return
      **************************************************************************/

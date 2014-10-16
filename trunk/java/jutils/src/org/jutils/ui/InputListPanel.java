@@ -3,45 +3,99 @@ package org.jutils.ui;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-/**
+import org.jutils.ui.event.ItemActionList;
+import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.model.CollectionListModel;
+import org.jutils.ui.model.IDataView;
+
+/*******************************************************************************
  * 
- */
-public class InputListPanel extends JPanel implements ListSelectionListener,
-    ActionListener
+ ******************************************************************************/
+public class InputListPanel<T> implements IDataView<List<T>>
 {
-    private JTextField textfield;
+    /**  */
+    private final JPanel view;
+    /**  */
+    private final JTextField textfield;
+    /**  */
+    private final CollectionListModel<T> itemsListModel;
+    /**  */
+    private final JList<T> list;
 
-    private JList<String> list;
+    /**  */
+    private final ItemActionList<T> selectionListeners;
 
-    private JScrollPane scroll;
+    /**  */
+    private List<T> items;
 
     /***************************************************************************
      * @param data
      * @param title
      **************************************************************************/
-    public InputListPanel( String [] data, String title )
+    public InputListPanel( T [] data, String title )
     {
-        textfield = new JTextField( 5 );
-        list = new JList<String>( data );
-        scroll = new JScrollPane( list );
+        this.textfield = new JTextField( 5 );
+        this.itemsListModel = new CollectionListModel<>();
+        this.list = new JList<>( itemsListModel );
+        this.view = createView();
 
-        setLayout( new GridBagLayout() );
+        this.selectionListeners = new ItemActionList<>();
 
-        textfield.addActionListener( this );
+        setData( data );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private JPanel createView()
+    {
+        JPanel panel = new JPanel( new GridBagLayout() );
+        JScrollPane scroll = new JScrollPane( list );
+
+        textfield.addActionListener( new EnterListener<T>( this ) );
         // list.setVisibleRowCount( 4 );
-        list.addListSelectionListener( this );
+        list.addListSelectionListener( new ItemSelected<T>( this ) );
+        list.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 
-        add( textfield, new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+        panel.add( textfield, new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 0, 0, 0 ), 0, 0 ) );
-        add( scroll, new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
+        panel.add( scroll, new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
                 0, 0, 0 ), 0, 0 ) );
+
+        return panel;
+    }
+
+    @Override
+    public JPanel getView()
+    {
+        return view;
+    }
+
+    @Override
+    public List<T> getData()
+    {
+        return items;
+    }
+
+    @Override
+    public void setData( List<T> data )
+    {
+        this.items = data;
+        itemsListModel.setData( data );
+    }
+
+    public void setData( T [] data )
+    {
+        setData( Arrays.asList( data ) );
     }
 
     /***************************************************************************
@@ -49,7 +103,7 @@ public class InputListPanel extends JPanel implements ListSelectionListener,
      **************************************************************************/
     public void setToolTipText( String text )
     {
-        super.setToolTipText( text );
+        view.setToolTipText( text );
         textfield.setToolTipText( text );
         list.setToolTipText( text );
     }
@@ -61,54 +115,82 @@ public class InputListPanel extends JPanel implements ListSelectionListener,
         textfield.setText( sel );
     }
 
-    public String getSelected()
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public T getSelected()
     {
-        return textfield.getText();
+        return list.getSelectedValue();
     }
 
+    /***************************************************************************
+     * @param value
+     **************************************************************************/
     public void setSelectedInt( int value )
     {
         setSelected( Integer.toString( value ) );
     }
 
-    public int getSelectedInt()
+    /***************************************************************************
+     * @param l
+     **************************************************************************/
+    public void addSelectionListener( ItemActionListener<T> l )
     {
-        try
-        {
-            return Integer.parseInt( getSelected() );
-        }
-        catch( NumberFormatException ex )
-        {
-            return -1;
-        }
+        selectionListeners.addListener( l );
     }
 
-    public void valueChanged( ListSelectionEvent e )
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class EnterListener<T> implements ActionListener
     {
-        Object obj = list.getSelectedValue();
-        if( obj != null )
-        {
-            textfield.setText( obj.toString() );
-        }
-    }
+        private final InputListPanel<T> view;
 
-    public void actionPerformed( ActionEvent e )
-    {
-        ListModel<String> model = list.getModel();
-        String key = textfield.getText().toLowerCase();
-        for( int k = 0; k < model.getSize(); k++ )
+        public EnterListener( InputListPanel<T> view )
         {
-            String data = ( String )model.getElementAt( k );
-            if( data.toLowerCase().startsWith( key ) )
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            ListModel<T> model = view.list.getModel();
+            String key = view.textfield.getText().toLowerCase();
+            for( int k = 0; k < model.getSize(); k++ )
             {
-                list.setSelectedValue( data, true );
-                break;
+                String data = ( String )model.getElementAt( k );
+                if( data.toLowerCase().startsWith( key ) )
+                {
+                    view.list.setSelectedValue( data, true );
+                    break;
+                }
             }
         }
     }
 
-    public void addListSelectionListener( ListSelectionListener lst )
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class ItemSelected<T> implements ListSelectionListener
     {
-        list.addListSelectionListener( lst );
+        private final InputListPanel<T> view;
+
+        public ItemSelected( InputListPanel<T> view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void valueChanged( ListSelectionEvent e )
+        {
+            T obj = view.list.getSelectedValue();
+
+            if( obj != null )
+            {
+                view.textfield.setText( obj.toString() );
+            }
+
+            view.selectionListeners.fireListeners( view, obj );
+        }
     }
 }

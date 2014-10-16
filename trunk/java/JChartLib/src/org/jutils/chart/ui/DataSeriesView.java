@@ -30,6 +30,8 @@ public class DataSeriesView implements IDataView<Series>
     private final JTable table;
     /**  */
     private final DataCellRenderer cellRenderer;
+    /**  */
+    private final SeriesView seriesView;
 
     /**  */
     private final Action saveAction;
@@ -45,6 +47,7 @@ public class DataSeriesView implements IDataView<Series>
         this.tableModel = new SeriesTableModel();
         this.table = new JTable( tableModel );
         this.cellRenderer = new DataCellRenderer();
+        this.seriesView = new SeriesView();
 
         this.saveAction = createSaveAction();
 
@@ -59,12 +62,28 @@ public class DataSeriesView implements IDataView<Series>
     private JPanel createView()
     {
         JPanel panel = new JPanel( new BorderLayout() );
+
+        panel.add( createToolbar(), BorderLayout.NORTH );
+        panel.add( createPanels(), BorderLayout.CENTER );
+
+        return panel;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Component createPanels()
+    {
+        JPanel panel = new JPanel( new BorderLayout() );
         JScrollPane scrollPane = new JScrollPane( table );
+
+        scrollPane.setPreferredSize( new Dimension( 300, 200 ) );
+        scrollPane.setMinimumSize( new Dimension( 300, 200 ) );
 
         table.setDefaultRenderer( Double.class, this.cellRenderer );
 
-        panel.add( createToolbar(), BorderLayout.NORTH );
-        panel.add( scrollPane, BorderLayout.CENTER );
+        panel.add( scrollPane, BorderLayout.WEST );
+        panel.add( seriesView.getView(), BorderLayout.CENTER );
 
         return panel;
     }
@@ -112,6 +131,7 @@ public class DataSeriesView implements IDataView<Series>
     {
         this.series = series;
 
+        seriesView.setData( series );
         saveAction.setEnabled( series.getResourceFile() != null );
 
         cellRenderer.setSeries( series );
@@ -157,7 +177,7 @@ public class DataSeriesView implements IDataView<Series>
         @Override
         public int getColumnCount()
         {
-            return 2;
+            return 3;
         }
 
         public Class<?> getColumnClass( int columnIndex )
@@ -170,9 +190,12 @@ public class DataSeriesView implements IDataView<Series>
             switch( col )
             {
                 case 0:
-                    return "X";
+                    return "Index";
 
                 case 1:
+                    return "X";
+
+                case 2:
                     return "Y";
 
                 default:
@@ -187,9 +210,12 @@ public class DataSeriesView implements IDataView<Series>
             switch( col )
             {
                 case 0:
-                    return series.data.getX( row );
+                    return row;
 
                 case 1:
+                    return series.data.getX( row );
+
+                case 2:
                     return series.data.getY( row );
 
                 default:
