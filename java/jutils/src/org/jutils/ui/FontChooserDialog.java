@@ -5,13 +5,13 @@ import java.awt.event.*;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.text.*;
 
 import org.jutils.Utils;
 import org.jutils.ui.app.AppRunner;
 import org.jutils.ui.app.IApplication;
+import org.jutils.ui.event.ItemActionEvent;
+import org.jutils.ui.event.ItemActionListener;
 
 /*******************************************************************************
  * 
@@ -21,12 +21,12 @@ public class FontChooserDialog extends JDialog
     /**  */
     public final static String [] FONT_NAMES;
     /**  */
-    public final static String [] FONT_SIZES;
+    public final static Integer [] FONT_SIZES;
 
     /**  */
-    private final InputListPanel fontNameInputList;
+    private final InputListPanel<String> fontNameInputList;
     /**  */
-    private final InputListPanel fontSizeInputList;
+    private final InputListPanel<Integer> fontSizeInputList;
     /**  */
     private final JCheckBox boldCheckBox;
     /**  */
@@ -53,8 +53,8 @@ public class FontChooserDialog extends JDialog
     {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         FONT_NAMES = ge.getAvailableFontFamilyNames();
-        FONT_SIZES = new String[] { "8", "9", "10", "11", "12", "14", "16",
-            "18", "20", "22", "24", "26", "28", "36", "48", "72" };
+        FONT_SIZES = new Integer[] { 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24,
+            26, 28, 36, 48, 72 };
     }
 
     /***************************************************************************
@@ -64,8 +64,8 @@ public class FontChooserDialog extends JDialog
     {
         super( owner, "Font Chooser", true );
 
-        this.fontNameInputList = new InputListPanel( FONT_NAMES, "Name:" );
-        this.fontSizeInputList = new InputListPanel( FONT_SIZES, "Size:" );
+        this.fontNameInputList = new InputListPanel<>( FONT_NAMES, "Name:" );
+        this.fontSizeInputList = new InputListPanel<>( FONT_SIZES, "Size:" );
         this.boldCheckBox = new JCheckBox( "Bold" );
         this.italicCheckBox = new JCheckBox( "Italic" );
         this.underlineCheckBox = new JCheckBox( "Underline" );
@@ -81,24 +81,18 @@ public class FontChooserDialog extends JDialog
         // Setup font panel.
         // ---------------------------------------------------------------------
         JPanel fontPanel = new JPanel( new GridBagLayout() );
-        Dimension dim = fontNameInputList.getPreferredSize();
         fontPanel.setBorder( BorderFactory.createTitledBorder( "Font" ) );
 
         fontNameInputList.setToolTipText( "Font name" );
-
         fontSizeInputList.setToolTipText( "Font size" );
-        fontSizeInputList.setPreferredSize( dim );
-        fontSizeInputList.setMinimumSize( dim );
 
-        fontNameInputList.setMinimumSize( dim );
+        fontPanel.add( fontNameInputList.getView(), new GridBagConstraints( 0,
+            0, 1, 1, 0.5, 1.0, GridBagConstraints.CENTER,
+            GridBagConstraints.BOTH, new Insets( 0, 4, 4, 2 ), 0, 0 ) );
 
-        fontPanel.add( fontNameInputList, new GridBagConstraints( 0, 0, 1, 1,
-            0.5, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 4, 4, 2 ), 0, 0 ) );
-
-        fontPanel.add( fontSizeInputList, new GridBagConstraints( 1, 0, 1, 1,
-            0.5, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 2, 4, 4 ), 0, 0 ) );
+        fontPanel.add( fontSizeInputList.getView(), new GridBagConstraints( 1,
+            0, 1, 1, 0.5, 1.0, GridBagConstraints.CENTER,
+            GridBagConstraints.BOTH, new Insets( 0, 2, 4, 4 ), 0, 0 ) );
 
         // ---------------------------------------------------------------------
         // Setup color panel.
@@ -227,15 +221,25 @@ public class FontChooserDialog extends JDialog
 
         setContentPane( contentPanel );
 
-        ListSelectionListener listSelectListener = new ListSelectionListener()
+        ItemActionListener<String> nameSelectListener = new ItemActionListener<String>()
         {
-            public void valueChanged( ListSelectionEvent e )
+            @Override
+            public void actionPerformed( ItemActionEvent<String> event )
             {
                 updatePreview();
             }
         };
-        fontNameInputList.addListSelectionListener( listSelectListener );
-        fontSizeInputList.addListSelectionListener( listSelectListener );
+
+        ItemActionListener<Integer> sizeSelectListener = new ItemActionListener<Integer>()
+        {
+            @Override
+            public void actionPerformed( ItemActionEvent<Integer> event )
+            {
+                updatePreview();
+            }
+        };
+        fontNameInputList.addSelectionListener( nameSelectListener );
+        fontSizeInputList.addSelectionListener( sizeSelectListener );
 
         ActionListener actionListener = new ActionListener()
         {
@@ -293,7 +297,13 @@ public class FontChooserDialog extends JDialog
         }
 
         String font = fontNameInputList.getSelected();
-        int size = fontSizeInputList.getSelectedInt();
+        Integer size = fontSizeInputList.getSelected();
+
+        if( font == null || size == null )
+        {
+            return null;
+        }
+
         boolean bold = boldCheckBox.isSelected();
         boolean italic = italicCheckBox.isSelected();
         boolean underline = underlineCheckBox.isSelected();

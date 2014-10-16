@@ -322,7 +322,7 @@ public class ChartView implements IView<JComponent>
 
             Color c = palette.next();
 
-            s.name = file.getName();
+            s.title.text = IOUtils.removeFilenameExtension( file );
             s.resource = file.getAbsolutePath();
             s.marker.color = c;
             s.highlight.color = c;
@@ -919,7 +919,7 @@ public class ChartView implements IView<JComponent>
             JDialog d = okView.getView();
 
             d.setTitle( "Series Properties" );
-            d.setSize( 300, 300 );
+            d.setSize( 650, 400 );
             d.validate();
             d.setLocationRelativeTo( view.getView() );
         }
