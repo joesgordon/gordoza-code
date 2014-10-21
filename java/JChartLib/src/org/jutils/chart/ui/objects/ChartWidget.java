@@ -82,12 +82,16 @@ public class ChartWidget implements IChartWidget
         // ---------------------------------------------------------------------
         // Draw title.
         // ---------------------------------------------------------------------
-        title.draw( graphics, x, y, w, titleHeight );
+        if( chart.title.visible )
+        {
+            title.draw( graphics, x, y, w, titleHeight );
+
+            y += 10 + titleHeight;
+            h -= ( 20 + titleHeight );
+        }
 
         x += 20;
-        y += 10 + titleHeight;
         w -= 40;
-        h -= ( 20 + titleHeight );
 
         d = axes.calculateSize();
 
