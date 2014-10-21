@@ -69,6 +69,8 @@ public class JChartFrameView implements IView<JFrame>
         // s.isPrimaryRange = true;
         // chartView.addSeries( s );
 
+        chartView.chart.title.text = "Example Data Sets";
+
         data = ChartUtils.createLineSeries( 1000000, 1.0, 0.0, -5.0, 5.0 );
         s = new Series( data );
         s.title.text = "y = x";

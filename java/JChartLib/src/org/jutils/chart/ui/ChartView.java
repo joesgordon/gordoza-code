@@ -286,6 +286,7 @@ public class ChartView implements IView<JComponent>
     private void repaintChart()
     {
         chartWidget.calculateBounds();
+        chartWidget.title.repaint();
         chartWidget.plot.seriesLayer.repaint = true;
         chartWidget.plot.highlightLayer.repaint = true;
         chartWidget.axes.axesLayer.repaint = true;
@@ -937,8 +938,7 @@ public class ChartView implements IView<JComponent>
         {
             if( event.getItem() )
             {
-                view.chartWidget.plot.seriesLayer.repaint = true;
-                view.mainPanel.repaint();
+                view.repaintChart();
             }
         }
     }
