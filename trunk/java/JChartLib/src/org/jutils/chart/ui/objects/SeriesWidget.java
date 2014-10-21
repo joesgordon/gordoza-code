@@ -55,9 +55,7 @@ public class SeriesWidget implements IChartWidget
 
         trackPoint = true;
 
-        highlight.setRadius( 10 );
-
-        marker.setBorderVisible( false );
+        highlight.setSize( 10 );
     }
 
     /***************************************************************************
@@ -66,6 +64,18 @@ public class SeriesWidget implements IChartWidget
     @Override
     public void draw( Graphics2D graphics, int x, int y, int width, int height )
     {
+        if( !series.visible )
+        {
+            return;
+        }
+
+        marker.setColor( series.marker.color );
+        marker.setSize( series.marker.weight );
+        highlight.setColor( series.highlight.color );
+        line.setColor( series.line.color );
+        line.setSize( series.line.weight );
+        selectedMarker.setColor( SwingUtils.inverseColor( series.marker.color ) );
+
         Point p = new Point();
         Point last = new Point( -100, -100 );
         IDataPoint dp;

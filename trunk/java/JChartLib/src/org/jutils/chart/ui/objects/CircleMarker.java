@@ -27,7 +27,7 @@ public class CircleMarker implements IMarker
     {
         this.x = 5;
         this.y = 5;
-        this.setRadius( 6 );
+        this.setSize( 6 );
         this.setColor( new Color( 0x0066CC ) );
     }
 
@@ -40,14 +40,6 @@ public class CircleMarker implements IMarker
         g.setColor( color );
 
         g.fillOval( x - radiusHalf, y - radiusHalf, radius, radius );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setBorderVisible( boolean visible )
-    {
     }
 
     /***************************************************************************
@@ -73,15 +65,7 @@ public class CircleMarker implements IMarker
      * 
      **************************************************************************/
     @Override
-    public void setBorderColor( Color color )
-    {
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setRadius( int r )
+    public void setSize( int r )
     {
         this.radius = r;
         this.radiusHalf = r / 2;

@@ -1,5 +1,6 @@
 package org.jutils.chart.ui;
 
+import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.*;
@@ -8,6 +9,7 @@ import org.jutils.chart.model.LineStyle;
 import org.jutils.chart.model.LineType;
 import org.jutils.ui.ColorButtonView;
 import org.jutils.ui.StandardFormView;
+import org.jutils.ui.event.updater.*;
 import org.jutils.ui.fields.IntegerFormField;
 import org.jutils.ui.model.IDataView;
 
@@ -25,7 +27,7 @@ public class LineStyleView implements IDataView<LineStyle>
     private final ColorButtonView colorField;
 
     /**  */
-    private LineStyle marker;
+    private LineStyle line;
 
     /***************************************************************************
      * 
@@ -38,6 +40,17 @@ public class LineStyleView implements IDataView<LineStyle>
         this.colorField = new ColorButtonView();
 
         this.view = createView();
+
+        setData( new LineStyle() );
+
+        visibleField.addActionListener( new CheckBoxUpdater(
+            new ReflectiveUpdater<Boolean>( this, "line.visible" ) ) );
+        shapeField.addItemListener( new ComboBoxUpdater<>(
+            new ReflectiveUpdater<>( this, "line.type" ) ) );
+        weightField.setUpdater( new ReflectiveUpdater<Integer>( this,
+            "line.weight" ) );
+        colorField.addUpdateListener( new ItemActionUpdater<>(
+            new ReflectiveUpdater<Color>( this, "line.color" ) ) );
     }
 
     /***************************************************************************
@@ -72,7 +85,7 @@ public class LineStyleView implements IDataView<LineStyle>
     @Override
     public LineStyle getData()
     {
-        return marker;
+        return line;
     }
 
     /***************************************************************************
@@ -81,7 +94,7 @@ public class LineStyleView implements IDataView<LineStyle>
     @Override
     public void setData( LineStyle data )
     {
-        this.marker = data;
+        this.line = data;
 
         visibleField.setSelected( data.visible );
         shapeField.setSelectedItem( data.type );

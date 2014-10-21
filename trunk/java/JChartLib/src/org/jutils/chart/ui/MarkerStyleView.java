@@ -1,5 +1,6 @@
 package org.jutils.chart.ui;
 
+import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.*;
@@ -8,6 +9,7 @@ import org.jutils.chart.model.MarkerStyle;
 import org.jutils.chart.model.MarkerType;
 import org.jutils.ui.ColorButtonView;
 import org.jutils.ui.StandardFormView;
+import org.jutils.ui.event.updater.*;
 import org.jutils.ui.fields.IntegerFormField;
 import org.jutils.ui.model.IDataView;
 
@@ -38,6 +40,17 @@ public class MarkerStyleView implements IDataView<MarkerStyle>
         this.colorField = new ColorButtonView();
 
         this.view = createView();
+
+        setData( new MarkerStyle() );
+
+        visibleField.addActionListener( new CheckBoxUpdater(
+            new ReflectiveUpdater<Boolean>( this, "marker.visible" ) ) );
+        shapeField.addItemListener( new ComboBoxUpdater<>(
+            new ReflectiveUpdater<>( this, "marker.type" ) ) );
+        weightField.setUpdater( new ReflectiveUpdater<Integer>( this,
+            "marker.weight" ) );
+        colorField.addUpdateListener( new ItemActionUpdater<>(
+            new ReflectiveUpdater<Color>( this, "marker.color" ) ) );
     }
 
     /***************************************************************************

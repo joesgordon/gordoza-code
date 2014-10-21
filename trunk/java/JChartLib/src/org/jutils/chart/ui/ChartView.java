@@ -276,8 +276,6 @@ public class ChartView implements IView<JComponent>
     {
         chart.series.clear();
         chartWidget.plot.serieses.clear();
-        chartWidget.plot.highlightLayer.repaint = true;
-        chartWidget.plot.seriesLayer.repaint = true;
 
         repaintChart();
     }
@@ -666,6 +664,12 @@ public class ChartView implements IView<JComponent>
                 IDimensionCoords domainCoords;
                 IDimensionCoords rangeCoords;
 
+                if( !s.series.visible )
+                {
+                    s.highlight.setLocation( new Point( -10, -10 ) );
+                    continue;
+                }
+
                 if( s.series.isPrimaryDomain )
                 {
                     domainCoords = context.domain.primary;
@@ -884,7 +888,8 @@ public class ChartView implements IView<JComponent>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class PropertiesDialogListener implements ActionListener
+    private static class PropertiesDialogListener implements ActionListener,
+        ItemActionListener<Boolean>
     {
         private final ChartView view;
 
@@ -919,10 +924,22 @@ public class ChartView implements IView<JComponent>
 
             JDialog d = okView.getView();
 
+            okView.addOkListener( this );
+
             d.setTitle( "Series Properties" );
             d.setSize( 650, 400 );
             d.validate();
             d.setLocationRelativeTo( view.getView() );
+        }
+
+        @Override
+        public void actionPerformed( ItemActionEvent<Boolean> event )
+        {
+            if( event.getItem() )
+            {
+                view.chartWidget.plot.seriesLayer.repaint = true;
+                view.mainPanel.repaint();
+            }
         }
     }
 }
