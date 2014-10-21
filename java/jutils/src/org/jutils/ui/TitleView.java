@@ -4,19 +4,19 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import org.jutils.ui.model.IDataView;
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class TitleView implements IDataView<String>
+public class TitleView implements IView<JPanel>
 {
     /**  */
     private final JPanel view;
     /**  */
     private final JLabel titleField;
     /**  */
-    private final JPanel componentPanel;
+    private final ComponentView compView;
 
     /**  */
     private Component comp;
@@ -26,11 +26,31 @@ public class TitleView implements IDataView<String>
      **************************************************************************/
     public TitleView()
     {
-        GridBagConstraints constraints;
+        this( null, null );
+    }
 
-        componentPanel = new JPanel( new BorderLayout() );
-        view = new JPanel( new GridBagLayout() );
+    /***************************************************************************
+     * @param title
+     * @param comp
+     **************************************************************************/
+    public TitleView( String title, Component comp )
+    {
+
         titleField = new JLabel( "Title" );
+        compView = new ComponentView();
+        view = createView();
+
+        setTitle( title );
+        setComponent( comp );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private JPanel createView()
+    {
+        JPanel panel = new JPanel( new GridBagLayout() );
+        GridBagConstraints constraints;
         JSeparator separator = new JSeparator();
         GradientPanel titlePanel = createTitlePanel();
 
@@ -40,26 +60,28 @@ public class TitleView implements IDataView<String>
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 0, 0, 0 ), 0, 0 );
-        view.add( titlePanel, constraints );
+        panel.add( titlePanel, constraints );
 
         constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 0, 0, 0 ), 0, 0 );
-        view.add( separator, constraints );
+        panel.add( separator, constraints );
 
         constraints = new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
                 0, 0, 0 ), 0, 0 );
-        view.add( Box.createHorizontalStrut( 0 ), constraints );
+        panel.add( Box.createHorizontalStrut( 0 ), constraints );
 
         constraints = new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
                 0, 0, 0 ), 0, 0 );
-        view.add( componentPanel, constraints );
+        panel.add( compView.getView(), constraints );
 
         setComponent( Box.createVerticalStrut( 20 ) );
 
-        view.setBorder( BorderFactory.createLineBorder( Color.gray ) );
+        panel.setBorder( BorderFactory.createLineBorder( Color.gray ) );
+
+        return panel;
     }
 
     /***************************************************************************
@@ -99,36 +121,15 @@ public class TitleView implements IDataView<String>
     {
         this.comp = comp;
 
-        componentPanel.removeAll();
-        componentPanel.add( comp, BorderLayout.CENTER );
-        componentPanel.revalidate();
-        componentPanel.repaint();
+        compView.setComponent( comp );
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    public JComponent getView()
+    public JPanel getView()
     {
         return view;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public String getData()
-    {
-        return titleField.getText();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setData( String data )
-    {
-        titleField.setText( data );
     }
 
     /***************************************************************************
@@ -136,9 +137,12 @@ public class TitleView implements IDataView<String>
      **************************************************************************/
     public void setTitle( String title )
     {
-        setData( title );
+        titleField.setText( title );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public String getTitle()
     {
         return titleField.getText();

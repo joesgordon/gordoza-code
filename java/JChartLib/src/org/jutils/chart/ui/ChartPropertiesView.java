@@ -3,75 +3,65 @@ package org.jutils.chart.ui;
 import java.awt.Component;
 
 import javax.swing.JCheckBox;
-import javax.swing.JPanel;
 
-import org.jutils.chart.model.Series;
+import org.jutils.chart.model.Chart;
 import org.jutils.ui.StandardFormView;
-import org.jutils.ui.TitleView;
 import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class SeriesView implements IDataView<Series>
+public class ChartPropertiesView implements IDataView<Chart>
 {
     /**  */
-    private final JPanel view;
+    private final StandardFormView form;
     /**  */
     private final TextLabelField titleField;
     /**  */
-    private final JCheckBox visibleField;
+    private final TextLabelField subtitleField;
     /**  */
-    private final JCheckBox primaryDomainField;
+    private final TextLabelField topBottomField;
     /**  */
-    private final JCheckBox primaryRangeField;
+    private final JCheckBox gridlinesVisibleField;
     /**  */
-    private final MarkerStyleView markerView;
+    private final JCheckBox antiAliasField;
     /**  */
-    private final MarkerStyleView highlightView;
-    /**  */
-    private final LineStyleView lineView;
+    private final JCheckBox textAntiAliasField;
 
     /**  */
-    private Series series;
+    private Chart chart;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public SeriesView()
+    public ChartPropertiesView()
     {
         this.titleField = new TextLabelField( "Title" );
-        this.visibleField = new JCheckBox();
-        this.primaryDomainField = new JCheckBox();
-        this.primaryRangeField = new JCheckBox();
-        this.markerView = new MarkerStyleView();
-        this.highlightView = new MarkerStyleView();
-        this.lineView = new LineStyleView();
-
-        this.view = createView();
+        this.subtitleField = new TextLabelField( "Subtitle" );
+        this.topBottomField = new TextLabelField( "Top/Bottom" );
+        this.gridlinesVisibleField = new JCheckBox();
+        this.antiAliasField = new JCheckBox();
+        this.textAntiAliasField = new JCheckBox();
+        this.form = createView();
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    private JPanel createView()
+    private StandardFormView createView()
     {
         StandardFormView form = new StandardFormView();
 
         form.setHorizontalStretch( true );
 
         form.addField( titleField );
-        form.addField( "Visible", visibleField );
-        form.addField( "Is Primary Domain", primaryDomainField );
-        form.addField( "Is Primary Range", primaryRangeField );
-        form.addField( null,
-            new TitleView( "Marker", markerView.getView() ).getView() );
-        form.addField( null,
-            new TitleView( "Highlight", highlightView.getView() ).getView() );
-        form.addField( null,
-            new TitleView( "Line", lineView.getView() ).getView() );
+        form.addField( subtitleField );
+        form.addField( topBottomField );
+        form.addField( "Gridlines Visible", gridlinesVisibleField );
+        form.addField( "Anti-Alias", antiAliasField );
+        form.addField( "Text Anti-Alias", textAntiAliasField );
 
-        return form.getView();
+        return form;
     }
 
     /***************************************************************************
@@ -80,29 +70,31 @@ public class SeriesView implements IDataView<Series>
     @Override
     public Component getView()
     {
-        return view;
+        return form.getView();
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public Series getData()
+    public Chart getData()
     {
-        return series;
+        return chart;
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void setData( Series data )
+    public void setData( Chart data )
     {
-        this.series = data;
+        this.chart = data;
 
         titleField.setValue( data.title );
-        visibleField.setSelected( data.visible );
-        primaryDomainField.setSelected( data.isPrimaryDomain );
-        primaryRangeField.setSelected( data.isPrimaryRange );
+        subtitleField.setValue( data.subtitle );
+        topBottomField.setValue( data.topBottomLabel );
+        gridlinesVisibleField.setSelected( data.options.gridlinesVisible );
+        antiAliasField.setSelected( data.options.antialias );
+        textAntiAliasField.setSelected( data.options.textAntiAlias );
     }
 }

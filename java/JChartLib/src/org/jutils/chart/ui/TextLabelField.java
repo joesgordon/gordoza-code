@@ -231,6 +231,9 @@ public class TextLabelField implements IDataFormField<TextLabel>
             {
                 field.label.font = fontView.getData();
                 field.textField.getView().setFont( field.label.font );
+                // field.textField.getView().invalidate();
+                // field.getField().validate();
+                // field.getField().repaint();
             }
         }
     }

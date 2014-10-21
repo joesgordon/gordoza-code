@@ -1,26 +1,19 @@
 package org.jutils.chart.ui;
 
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.io.*;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import org.jutils.*;
-import org.jutils.chart.data.XYPoint;
-import org.jutils.chart.io.DataLineReader;
-import org.jutils.chart.model.Series;
-import org.jutils.io.IOUtils;
-import org.jutils.ui.JGoodiesToolBar;
-import org.jutils.ui.event.*;
+import org.jutils.Utils;
+import org.jutils.chart.model.ISeriesData;
 import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class DataSeriesView implements IDataView<Series>
+public class DataSeriesView implements IDataView<ISeriesData<?>>
 {
     /**  */
     private final JPanel view;
@@ -30,14 +23,9 @@ public class DataSeriesView implements IDataView<Series>
     private final JTable table;
     /**  */
     private final DataCellRenderer cellRenderer;
-    /**  */
-    private final SeriesView seriesView;
 
     /**  */
-    private final Action saveAction;
-
-    /**  */
-    private Series series;
+    private ISeriesData<?> series;
 
     /***************************************************************************
      * 
@@ -47,9 +35,6 @@ public class DataSeriesView implements IDataView<Series>
         this.tableModel = new SeriesTableModel();
         this.table = new JTable( tableModel );
         this.cellRenderer = new DataCellRenderer();
-        this.seriesView = new SeriesView();
-
-        this.saveAction = createSaveAction();
 
         this.view = createView();
 
@@ -62,19 +47,6 @@ public class DataSeriesView implements IDataView<Series>
     private JPanel createView()
     {
         JPanel panel = new JPanel( new BorderLayout() );
-
-        panel.add( createToolbar(), BorderLayout.NORTH );
-        panel.add( createPanels(), BorderLayout.CENTER );
-
-        return panel;
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    private Component createPanels()
-    {
-        JPanel panel = new JPanel( new BorderLayout() );
         JScrollPane scrollPane = new JScrollPane( table );
 
         scrollPane.setPreferredSize( new Dimension( 300, 200 ) );
@@ -82,43 +54,16 @@ public class DataSeriesView implements IDataView<Series>
 
         table.setDefaultRenderer( Double.class, this.cellRenderer );
 
-        panel.add( scrollPane, BorderLayout.WEST );
-        panel.add( seriesView.getView(), BorderLayout.CENTER );
+        panel.add( scrollPane, BorderLayout.CENTER );
 
         return panel;
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    private JToolBar createToolbar()
-    {
-        JToolBar toolbar = new JGoodiesToolBar();
-
-        SwingUtils.addActionToToolbar( toolbar, saveAction );
-
-        return toolbar;
-    }
-
-    private Action createSaveAction()
-    {
-        Action action;
-        ActionListener listener;
-        Icon icon;
-
-        listener = new FileChooserListener( view, "Choose File to Save",
-            new SaveListener( this ), true );
-        icon = IconConstants.loader.getIcon( IconConstants.SAVE_AS_16 );
-        action = new ActionAdapter( listener, "Save", icon );
-
-        return action;
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public Series getData()
+    public ISeriesData<?> getData()
     {
         return series;
     }
@@ -127,12 +72,9 @@ public class DataSeriesView implements IDataView<Series>
      * 
      **************************************************************************/
     @Override
-    public void setData( Series series )
+    public void setData( ISeriesData<?> series )
     {
         this.series = series;
-
-        seriesView.setData( series );
-        saveAction.setEnabled( series.getResourceFile() != null );
 
         cellRenderer.setSeries( series );
         tableModel.setSeries( series );
@@ -161,7 +103,7 @@ public class DataSeriesView implements IDataView<Series>
      **************************************************************************/
     private static class SeriesTableModel extends AbstractTableModel
     {
-        private Series series;
+        private ISeriesData<?> series;
 
         public SeriesTableModel()
         {
@@ -171,7 +113,7 @@ public class DataSeriesView implements IDataView<Series>
         @Override
         public int getRowCount()
         {
-            return series.data.getCount();
+            return series.getCount();
         }
 
         @Override
@@ -213,10 +155,10 @@ public class DataSeriesView implements IDataView<Series>
                     return row;
 
                 case 1:
-                    return series.data.getX( row );
+                    return series.getX( row );
 
                 case 2:
-                    return series.data.getY( row );
+                    return series.getY( row );
 
                 default:
                     throw new IllegalArgumentException(
@@ -224,7 +166,7 @@ public class DataSeriesView implements IDataView<Series>
             }
         }
 
-        public void setSeries( Series series )
+        public void setSeries( ISeriesData<?> series )
         {
             this.series = series;
         }
@@ -237,14 +179,14 @@ public class DataSeriesView implements IDataView<Series>
     {
         private final Color defaultBackground;
 
-        private Series series;
+        private ISeriesData<?> series;
 
         public DataCellRenderer()
         {
             this.defaultBackground = super.getBackground();
         }
 
-        public void setSeries( Series series )
+        public void setSeries( ISeriesData<?> series )
         {
             this.series = series;
         }
@@ -258,7 +200,7 @@ public class DataSeriesView implements IDataView<Series>
             if( !isSelected )
             {
                 Color bg = defaultBackground;
-                if( series.data.isHidden( row ) )
+                if( series.isHidden( row ) )
                 {
                     bg = Color.LIGHT_GRAY;
                     setBackground( bg );
@@ -267,86 +209,6 @@ public class DataSeriesView implements IDataView<Series>
             }
 
             return this;
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class SaveListener implements IFileSelectionListener
-    {
-        private DataSeriesView view;
-
-        public SaveListener( DataSeriesView view )
-        {
-            this.view = view;
-        }
-
-        @Override
-        public File getDefaultFile()
-        {
-            File file = view.series.getResourceFile();
-
-            if( file != null )
-            {
-                String ext = IOUtils.getFileExtension( file );
-                String name = IOUtils.removeFilenameExtension( file );
-
-                file = new File( file.getParentFile(), name + "_filtered." +
-                    ext );
-            }
-
-            return file;
-        }
-
-        @Override
-        public void filesChosen( File [] files )
-        {
-            File tofile = files[0];
-            File fromFile = view.series.getResourceFile();
-
-            if( fromFile == null )
-            {
-                // TODO display error
-                return;
-            }
-
-            try( FileReader fr = new FileReader( fromFile );
-                 BufferedReader reader = new BufferedReader( fr ) )
-            {
-                try( PrintStream stream = new PrintStream( tofile ) )
-                {
-                    DataLineReader lineReader = new DataLineReader();
-                    String line = null;
-                    int idx = 0;
-                    XYPoint point = null;
-
-                    while( ( line = reader.readLine() ) != null )
-                    {
-                        point = lineReader.read( line );
-
-                        if( point != null )
-                        {
-                            if( !view.series.data.isHidden( idx ) )
-                            {
-                                stream.println( line );
-                            }
-
-                            idx++;
-                        }
-                        else
-                        {
-                            stream.println( line );
-                        }
-                    }
-                }
-            }
-            catch( IOException ex )
-            {
-                JOptionPane.showMessageDialog( view.getView(),
-                    "Unable to save file: " + ex.getMessage(), "I/O Error",
-                    JOptionPane.ERROR_MESSAGE );
-            }
         }
     }
 }

@@ -43,7 +43,7 @@ public class ChartView implements IView<JComponent>
     /**  */
     private final IPalette palette;
     /**  */
-    public final DataView dataView;
+    public final PropertiesView propertiesView;
 
     /**  */
     public final Action openAction;
@@ -80,7 +80,7 @@ public class ChartView implements IView<JComponent>
         this.mainPanel = new WidgetPanel();
         this.chartWidget = new ChartWidget( chart );
         this.palette = new PresetPalette();
-        this.dataView = new DataView();
+        this.propertiesView = new PropertiesView( chart );
 
         this.openAction = createOpenAction();
         this.saveAction = createSaveAction();
@@ -227,7 +227,7 @@ public class ChartView implements IView<JComponent>
 
         name = "Show Data";
         icon = IconConstants.loader.getIcon( IconConstants.CONFIG_16 );
-        listener = new DataDialogListener( this );
+        listener = new PropertiesDialogListener( this );
         action = new ActionAdapter( listener, name, icon );
 
         return action;
@@ -258,7 +258,7 @@ public class ChartView implements IView<JComponent>
         if( !addData )
         {
             clear();
-            dataView.removeAllSeries();
+            propertiesView.removeAllSeries();
         }
 
         chart.series.add( s );
@@ -266,7 +266,7 @@ public class ChartView implements IView<JComponent>
             chartWidget.context ) );
         repaintChart();
 
-        dataView.addSeries( s, chart.series.size() );
+        propertiesView.addSeries( s, chart.series.size() );
     }
 
     /***************************************************************************
@@ -702,7 +702,7 @@ public class ChartView implements IView<JComponent>
 
                         s.highlight.setLocation( new Point( sp ) );
 
-                        view.dataView.setSelected( seriesIdx, idx );
+                        view.propertiesView.setSelected( seriesIdx, idx );
                     }
                 }
                 seriesIdx++;
@@ -884,13 +884,13 @@ public class ChartView implements IView<JComponent>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class DataDialogListener implements ActionListener
+    private static class PropertiesDialogListener implements ActionListener
     {
         private final ChartView view;
 
         private OkDialogView okView;
 
-        public DataDialogListener( ChartView view )
+        public PropertiesDialogListener( ChartView view )
         {
             this.view = view;
         }
@@ -914,7 +914,8 @@ public class ChartView implements IView<JComponent>
         private void createDialog()
         {
             this.okView = new OkDialogView( view.getView(),
-                view.dataView.getView(), ModalityType.MODELESS );
+                view.propertiesView.getView(), ModalityType.MODELESS,
+                OkDialogButtons.OK_APPLY );
 
             JDialog d = okView.getView();
 
