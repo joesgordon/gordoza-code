@@ -11,10 +11,6 @@ public class ChartOptions
     public boolean textAntiAlias;
     /**  */
     public boolean gridlinesVisible;
-    /**  */
-    public Integer width;
-    /**  */
-    public Integer height;
 
     /***************************************************************************
      * 
@@ -24,7 +20,5 @@ public class ChartOptions
         this.antialias = true;
         this.textAntiAlias = true;
         this.gridlinesVisible = true;
-        this.width = null;
-        this.height = null;
     }
 }
