@@ -11,8 +11,7 @@ import org.jutils.chart.model.TextLabel;
 import org.jutils.ui.ColorButtonView;
 import org.jutils.ui.OkDialogView;
 import org.jutils.ui.event.*;
-import org.jutils.ui.event.updater.IUpdater;
-import org.jutils.ui.event.updater.ReflectiveUpdater;
+import org.jutils.ui.event.updater.*;
 import org.jutils.ui.fields.*;
 import org.jutils.ui.validation.UpdaterItemListener;
 import org.jutils.ui.validators.*;
@@ -57,10 +56,13 @@ public class TextLabelField implements IDataFormField<TextLabel>
 
         ITextValidator itv;
 
+        visibleField.addActionListener( new CheckBoxUpdater(
+            new ReflectiveUpdater<Boolean>( this, "label.visible" ) ) );
+
         itv = new DataTextValidator<>( new StringLengthValidator( 0, null ),
             new ReflectiveUpdater<String>( this, "label.text" ) );
-
         textField.setValidator( itv );
+
         colorView.addUpdateListener( new UpdaterItemListener<>(
             new ReflectiveUpdater<Color>( this, "label.color" ) ) );
     }
@@ -161,8 +163,6 @@ public class TextLabelField implements IDataFormField<TextLabel>
     @Override
     public void setUpdater( IUpdater<TextLabel> updater )
     {
-        // TODO Auto-generated method stub
-
     }
 
     /***************************************************************************
@@ -171,7 +171,6 @@ public class TextLabelField implements IDataFormField<TextLabel>
     @Override
     public IUpdater<TextLabel> getUpdater()
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -231,6 +230,7 @@ public class TextLabelField implements IDataFormField<TextLabel>
             {
                 field.label.font = fontView.getData();
                 field.textField.getView().setFont( field.label.font );
+
                 // field.textField.getView().invalidate();
                 // field.getField().validate();
                 // field.getField().repaint();

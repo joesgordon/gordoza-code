@@ -21,8 +21,6 @@ public class CircleBorderMarker implements IMarker
     private int x;
     /**  */
     private int y;
-    /**  */
-    private boolean hasBorder;
 
     /***************************************************************************
      * 
@@ -32,11 +30,9 @@ public class CircleBorderMarker implements IMarker
         color = new Color( 0x0066CC );
         borderColor = new Color( 0xCC0000 );
 
-        setRadius( 6 );
+        setSize( 6 );
         x = 5;
         y = 5;
-
-        hasBorder = true;
     }
 
     /***************************************************************************
@@ -45,7 +41,6 @@ public class CircleBorderMarker implements IMarker
     @Override
     public void draw( Graphics2D g, int x2, int y2, int width, int height )
     {
-        if( hasBorder )
         {
             g.setColor( borderColor );
 
@@ -56,15 +51,6 @@ public class CircleBorderMarker implements IMarker
         g.setColor( color );
 
         g.fillOval( x - radiusHalf, y - radiusHalf, radius, radius );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setBorderVisible( boolean visible )
-    {
-        hasBorder = visible;
     }
 
     /***************************************************************************
@@ -89,7 +75,6 @@ public class CircleBorderMarker implements IMarker
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
     public void setBorderColor( Color color )
     {
         this.borderColor = color;
@@ -98,8 +83,7 @@ public class CircleBorderMarker implements IMarker
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
-    public void setRadius( int r )
+    public void setSize( int r )
     {
         this.radius = r;
         this.radiusHalf = r / 2;

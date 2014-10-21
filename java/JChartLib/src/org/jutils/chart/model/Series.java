@@ -12,34 +12,42 @@ public class Series
     /**  */
     public String resource;
     /**  */
-    public final ISeriesData<?> data;
-    /**  */
     public boolean visible;
-    /**  */
-    public final MarkerStyle marker = new MarkerStyle();
-    /**  */
-    public final MarkerStyle highlight = new MarkerStyle();
-    /**  */
-    public final LineStyle line = new LineStyle();
     /**  */
     public boolean isPrimaryDomain;
     /**  */
     public boolean isPrimaryRange;
+
+    /**  */
+    public final MarkerStyle marker;
+    /**  */
+    public final MarkerStyle highlight;
+    /**  */
+    public final LineStyle line;
+
+    /**  */
+    public final ISeriesData<?> data;
 
     /***************************************************************************
      * @param data
      **************************************************************************/
     public Series( ISeriesData<?> data )
     {
-        this.title = new TextLabel();
         this.data = data;
+
+        this.title = new TextLabel();
+        this.visible = true;
         this.isPrimaryDomain = true;
         this.isPrimaryRange = true;
 
-        if( data.getCount() == 0 )
-        {
-            throw new IllegalArgumentException( "The series contains no data" );
-        }
+        this.marker = new MarkerStyle();
+        this.highlight = new MarkerStyle();
+        this.line = new LineStyle();
+
+        // if( data.getCount() == 0 )
+        // {
+        // throw new IllegalArgumentException( "The series contains no data" );
+        // }
     }
 
     /***************************************************************************

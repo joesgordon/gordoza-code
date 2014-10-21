@@ -128,6 +128,11 @@ public class PropertiesView implements IView<JPanel>
     public void removeAllSeries()
     {
         seriesViews.clear();
+
+        while( navModel.size() > 3 )
+        {
+            navModel.remove( 3 );
+        }
     }
 
     /***************************************************************************
@@ -165,7 +170,7 @@ public class PropertiesView implements IView<JPanel>
 
         view.setData( null );
 
-        navModel.removeElementAt( index + 3 );
+        navModel.remove( index + 3 );
     }
 
     /***************************************************************************

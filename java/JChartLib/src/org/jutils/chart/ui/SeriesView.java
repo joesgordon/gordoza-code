@@ -1,13 +1,18 @@
 package org.jutils.chart.ui;
 
 import java.awt.Component;
+import java.util.ArrayList;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
+import org.jutils.chart.data.DefaultSeries;
+import org.jutils.chart.data.XYPoint;
 import org.jutils.chart.model.Series;
 import org.jutils.ui.StandardFormView;
 import org.jutils.ui.TitleView;
+import org.jutils.ui.event.updater.CheckBoxUpdater;
+import org.jutils.ui.event.updater.ReflectiveUpdater;
 import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
@@ -49,6 +54,17 @@ public class SeriesView implements IDataView<Series>
         this.lineView = new LineStyleView();
 
         this.view = createView();
+
+        setData( new Series( new DefaultSeries( new ArrayList<XYPoint>() ) ) );
+
+        visibleField.addActionListener( new CheckBoxUpdater(
+            new ReflectiveUpdater<Boolean>( this, "series.visible" ) ) );
+
+        primaryDomainField.addActionListener( new CheckBoxUpdater(
+            new ReflectiveUpdater<Boolean>( this, "series.isPrimaryDomain" ) ) );
+
+        primaryRangeField.addActionListener( new CheckBoxUpdater(
+            new ReflectiveUpdater<Boolean>( this, "series.isPrimaryRange" ) ) );
     }
 
     /***************************************************************************
@@ -104,5 +120,8 @@ public class SeriesView implements IDataView<Series>
         visibleField.setSelected( data.visible );
         primaryDomainField.setSelected( data.isPrimaryDomain );
         primaryRangeField.setSelected( data.isPrimaryRange );
+        markerView.setData( data.marker );
+        highlightView.setData( data.highlight );
+        lineView.setData( data.line );
     }
 }
