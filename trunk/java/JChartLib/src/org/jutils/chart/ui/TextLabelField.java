@@ -10,7 +10,7 @@ import org.jutils.IconConstants;
 import org.jutils.chart.model.TextLabel;
 import org.jutils.ui.ColorButtonView;
 import org.jutils.ui.OkDialogView;
-import org.jutils.ui.event.ActionAdapter;
+import org.jutils.ui.event.*;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.event.updater.ReflectiveUpdater;
 import org.jutils.ui.fields.*;
@@ -196,9 +196,11 @@ public class TextLabelField implements IDataFormField<TextLabel>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class FontListener implements ActionListener
+    private static class FontListener implements ActionListener,
+        ItemActionListener<Boolean>
     {
         private final TextLabelField field;
+        private FontView fontView;
 
         public FontListener( TextLabelField field )
         {
@@ -208,9 +210,28 @@ public class TextLabelField implements IDataFormField<TextLabel>
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            FontView fontView = new FontView();
+            fontView = new FontView();
             OkDialogView okView = new OkDialogView( field.getField(),
                 fontView.getView() );
+            JDialog dialog = okView.getView();
+
+            fontView.setData( field.label.font );
+            okView.addOkListener( this );
+
+            dialog.setTitle( "Choose Font" );
+            dialog.pack();
+            dialog.setLocationRelativeTo( field.getField() );
+            dialog.setVisible( true );
+        }
+
+        @Override
+        public void actionPerformed( ItemActionEvent<Boolean> event )
+        {
+            if( event.getItem() )
+            {
+                field.label.font = fontView.getData();
+                field.textField.getView().setFont( field.label.font );
+            }
         }
     }
 }
