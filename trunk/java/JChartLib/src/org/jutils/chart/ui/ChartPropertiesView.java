@@ -6,6 +6,8 @@ import javax.swing.JCheckBox;
 
 import org.jutils.chart.model.Chart;
 import org.jutils.ui.StandardFormView;
+import org.jutils.ui.event.updater.CheckBoxUpdater;
+import org.jutils.ui.event.updater.ReflectiveUpdater;
 import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
@@ -42,7 +44,19 @@ public class ChartPropertiesView implements IDataView<Chart>
         this.gridlinesVisibleField = new JCheckBox();
         this.antiAliasField = new JCheckBox();
         this.textAntiAliasField = new JCheckBox();
+
         this.form = createView();
+
+        setData( new Chart() );
+
+        gridlinesVisibleField.addActionListener( new CheckBoxUpdater(
+            new ReflectiveUpdater<Boolean>( this,
+                "chart.options.gridlinesVisible" ) ) );
+        antiAliasField.addActionListener( new CheckBoxUpdater(
+            new ReflectiveUpdater<Boolean>( this, "chart.options.antialias" ) ) );
+        textAntiAliasField.addActionListener( new CheckBoxUpdater(
+            new ReflectiveUpdater<Boolean>( this, "chart.options.textAntiAlias" ) ) );
+
     }
 
     /***************************************************************************
