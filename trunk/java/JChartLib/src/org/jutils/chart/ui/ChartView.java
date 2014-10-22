@@ -97,6 +97,8 @@ public class ChartView implements IView<JComponent>
         mainPanel.addComponentListener( new ChartComponentListener( this ) );
         mainPanel.addMouseListener( ml );
         mainPanel.addMouseMotionListener( ml );
+        mainPanel.addMouseWheelListener( ml );
+
         if( allowOpen )
         {
             mainPanel.setDropTarget( new FileDropTarget( new ChartDropTarget(
@@ -175,6 +177,12 @@ public class ChartView implements IView<JComponent>
 
         SwingUtils.addActionToToolbar( toolbar, dataAction );
 
+        toolbar.addSeparator();
+
+        SwingUtils.addActionToToolbar( toolbar, createZoomInAction() );
+
+        SwingUtils.addActionToToolbar( toolbar, createZoomOutAction() );
+
         return toolbar;
     }
 
@@ -234,6 +242,42 @@ public class ChartView implements IView<JComponent>
     }
 
     /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createZoomInAction()
+    {
+        Action action;
+        ActionListener listener;
+        Icon icon;
+        String name;
+
+        name = "Zoom In";
+        icon = ChartIcons.loader.getIcon( ChartIcons.ZOOM_IN_016 );
+        listener = new ZoomInListener( this );
+        action = new ActionAdapter( listener, name, icon );
+
+        return action;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createZoomOutAction()
+    {
+        Action action;
+        ActionListener listener;
+        Icon icon;
+        String name;
+
+        name = "Zoom Out";
+        icon = ChartIcons.loader.getIcon( ChartIcons.ZOOM_OUT_016 );
+        listener = new ZoomOutListener( this );
+        action = new ActionAdapter( listener, name, icon );
+
+        return action;
+    }
+
+    /***************************************************************************
      * @param l
      **************************************************************************/
     public void addFileLoadedListener( ItemActionListener<File> l )
@@ -264,7 +308,7 @@ public class ChartView implements IView<JComponent>
         chart.series.add( s );
         chartWidget.plot.serieses.add( new SeriesWidget( chart, s,
             chartWidget.context ) );
-        repaintChart();
+        restoreAndRepaintChart();
 
         propertiesView.addSeries( s, chart.series.size() );
     }
@@ -277,16 +321,88 @@ public class ChartView implements IView<JComponent>
         chart.series.clear();
         chartWidget.plot.serieses.clear();
 
-        repaintChart();
+        restoreAndRepaintChart();
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private void repaintChart()
+    public void zoomRestore()
+    {
+        chartWidget.context.restoreAutoBounds();
+        chartWidget.plot.seriesLayer.repaint = true;
+        chartWidget.axes.axesLayer.repaint = true;
+        mainPanel.repaint();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public void zoomIn()
+    {
+        Bounds b = chartWidget.context.getBounds();
+
+        b.primaryDomainSpan = b.primaryDomainSpan.zoomIn();
+        b.primaryRangeSpan = b.primaryRangeSpan.zoomIn();
+
+        if( b.secondaryDomainSpan != null )
+        {
+            b.secondaryDomainSpan = b.secondaryDomainSpan.zoomIn();
+        }
+
+        if( b.secondaryRangeSpan != null )
+        {
+            b.secondaryRangeSpan = b.secondaryRangeSpan.zoomIn();
+        }
+
+        chartWidget.context.setBounds( b );
+
+        chartWidget.plot.seriesLayer.repaint = true;
+        chartWidget.axes.axesLayer.repaint = true;
+        mainPanel.repaint();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public void zoomOut()
+    {
+        Bounds b = chartWidget.context.getBounds();
+
+        b.primaryDomainSpan = b.primaryDomainSpan.zoomOut();
+        b.primaryRangeSpan = b.primaryRangeSpan.zoomOut();
+
+        if( b.secondaryDomainSpan != null )
+        {
+            b.secondaryDomainSpan = b.secondaryDomainSpan.zoomOut();
+        }
+
+        if( b.secondaryRangeSpan != null )
+        {
+            b.secondaryRangeSpan = b.secondaryRangeSpan.zoomOut();
+        }
+
+        chartWidget.context.setBounds( b );
+
+        chartWidget.plot.seriesLayer.repaint = true;
+        chartWidget.axes.axesLayer.repaint = true;
+        mainPanel.repaint();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private void restoreAndRepaintChart()
     {
         chartWidget.calculateBounds();
+        repaintChart();
+    }
+
+    private void repaintChart()
+    {
         chartWidget.title.repaint();
+        chartWidget.subtitle.repaint();
+        chartWidget.topBottom.repaint();
         chartWidget.plot.seriesLayer.repaint = true;
         chartWidget.plot.highlightLayer.repaint = true;
         chartWidget.axes.axesLayer.repaint = true;
@@ -407,14 +523,14 @@ public class ChartView implements IView<JComponent>
             RenderingHints.VALUE_STROKE_PURE );
 
         mainPanel.setObject( new CircleMarker() );
-        chartWidget.setVolatileVisible( false );
-        repaintChart();
+        chartWidget.setTrackingVisible( false );
+        restoreAndRepaintChart();
 
         chartWidget.draw( g2d, 0, 0, w, h );
-        chartWidget.setVolatileVisible( true );
+        chartWidget.setTrackingVisible( true );
 
         mainPanel.setObject( chartWidget );
-        repaintChart();
+        restoreAndRepaintChart();
 
         try
         {
@@ -485,14 +601,28 @@ public class ChartView implements IView<JComponent>
             view.mainPanel.repaint();
         }
 
+        public void mouseWheelMoved( MouseWheelEvent e )
+        {
+            if( e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL )
+            {
+                int zoomAmount = e.getWheelRotation();
+
+                if( zoomAmount < 0 )
+                {
+                    view.zoomIn();
+                }
+                else
+                {
+                    view.zoomOut();
+                }
+            }
+        }
+
         public void mouseClicked( MouseEvent e )
         {
             if( SwingUtilities.isLeftMouseButton( e ) && e.getClickCount() == 2 )
             {
-                view.chartWidget.context.restoreAutoBounds();
-                view.chartWidget.plot.seriesLayer.repaint = true;
-                view.chartWidget.axes.axesLayer.repaint = true;
-                view.mainPanel.repaint();
+                view.zoomRestore();
             }
             else if( SwingUtilities.isRightMouseButton( e ) &&
                 e.getClickCount() == 2 )
@@ -938,8 +1068,46 @@ public class ChartView implements IView<JComponent>
         {
             if( event.getItem() )
             {
-                view.repaintChart();
+                view.restoreAndRepaintChart();
             }
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class ZoomInListener implements ActionListener
+    {
+        private final ChartView view;
+
+        public ZoomInListener( ChartView view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            view.zoomIn();
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class ZoomOutListener implements ActionListener
+    {
+        private final ChartView view;
+
+        public ZoomOutListener( ChartView view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            view.zoomOut();
         }
     }
 }

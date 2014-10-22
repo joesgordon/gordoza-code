@@ -19,6 +19,8 @@ public class ChartWidget implements IChartWidget
     /**  */
     public final TextWidget title;
     /**  */
+    public final TextWidget subtitle;
+    /**  */
     public final PlotWidget plot;
     /**  */
     public final AxesWidget axes;
@@ -26,7 +28,7 @@ public class ChartWidget implements IChartWidget
     private final Chart chart;
 
     /***************************************************************************
-     * 
+     * @param chart
      **************************************************************************/
     public ChartWidget( Chart chart )
     {
@@ -35,6 +37,7 @@ public class ChartWidget implements IChartWidget
         this.context = new ChartContext();
         this.topBottom = new TextWidget( chart.topBottomLabel );
         this.title = new TextWidget( chart.title );
+        this.subtitle = new TextWidget( chart.subtitle );
         this.plot = new PlotWidget( context );
         this.axes = new AxesWidget( context );
 
@@ -55,8 +58,6 @@ public class ChartWidget implements IChartWidget
         graphics.setColor( Color.white );
         graphics.fillRect( x, y, width, height );
 
-        int titleHeight = title.calculateSize().height;
-
         int w = width;
         int h = height;
 
@@ -69,31 +70,56 @@ public class ChartWidget implements IChartWidget
         {
             d = topBottom.calculateSize();
 
+            y += 4;
+
             topBottom.draw( graphics, x, y, w, d.height );
-            topBottom.draw( graphics, x, y + h - d.height, w, d.height );
+            topBottom.draw( graphics, x, y + h - d.height - 4, w, d.height );
 
             y += d.height;
-            h -= 2 * d.height;
+            h -= ( 2 * d.height + 4 );
         }
-
-        y += 10;
-        h -= 20;
 
         // ---------------------------------------------------------------------
         // Draw title.
         // ---------------------------------------------------------------------
         if( chart.title.visible )
         {
+            int titleHeight = title.calculateSize().height;
+
+            y += 10;
+
             title.draw( graphics, x, y, w, titleHeight );
 
-            y += 10 + titleHeight;
-            h -= ( 20 + titleHeight );
+            y += titleHeight;
+
+            titleHeight += 10;
+
+            h -= titleHeight;
+        }
+
+        // ---------------------------------------------------------------------
+        // Draw subtitle.
+        // ---------------------------------------------------------------------
+        if( chart.subtitle.visible )
+        {
+            int titleHeight = subtitle.calculateSize().height;
+
+            y += 4;
+
+            subtitle.draw( graphics, x, y, w, titleHeight );
+
+            y += titleHeight;
+
+            titleHeight += 4;
+
+            h -= titleHeight;
         }
 
         x += 20;
         w -= 40;
 
-        d = axes.calculateSize();
+        y += 10;
+        h -= 20;
 
         // ---------------------------------------------------------------------
         // Draw axes.
@@ -116,7 +142,10 @@ public class ChartWidget implements IChartWidget
         return null;
     }
 
-    public void setVolatileVisible( boolean visible )
+    /***************************************************************************
+     * @param visible
+     **************************************************************************/
+    public void setTrackingVisible( boolean visible )
     {
         for( SeriesWidget s : plot.serieses )
         {
@@ -134,6 +163,9 @@ public class ChartWidget implements IChartWidget
         context.setAutoBounds( chart );
     }
 
+    /***************************************************************************
+     * @param b
+     **************************************************************************/
     public void setBounds( Bounds b )
     {
         context.setBounds( b );

@@ -13,7 +13,7 @@ import org.jutils.ui.model.IDataView;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class DataSeriesView implements IDataView<ISeriesData<?>>
+public class SeriesDataView implements IDataView<ISeriesData<?>>
 {
     /**  */
     private final JPanel view;
@@ -30,7 +30,7 @@ public class DataSeriesView implements IDataView<ISeriesData<?>>
     /***************************************************************************
      * 
      **************************************************************************/
-    public DataSeriesView()
+    public SeriesDataView()
     {
         this.tableModel = new SeriesTableModel();
         this.table = new JTable( tableModel );

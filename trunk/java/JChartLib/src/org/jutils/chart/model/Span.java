@@ -32,4 +32,34 @@ public class Span
         this.max = s.max;
         this.range = s.range;
     }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public Span zoomIn()
+    {
+        double r;
+        double min;
+        double max;
+
+        r = range / 3.0;
+        min = this.min + r;
+        max = this.max - r;
+        return new Span( min, max );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public Span zoomOut()
+    {
+        double r;
+        double min;
+        double max;
+
+        r = range;
+        min = this.min - r;
+        max = this.max + r;
+        return new Span( min, max );
+    }
 }

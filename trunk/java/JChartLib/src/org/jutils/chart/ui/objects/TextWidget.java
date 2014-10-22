@@ -6,12 +6,21 @@ import org.jutils.chart.model.TextLabel;
 import org.jutils.chart.ui.IChartWidget;
 import org.jutils.chart.ui.Layer2d;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class TextWidget implements IChartWidget
 {
+    /**  */
     private TextLabel label;
+    /**  */
     private final Layer2d layer;
+    /**  */
     private FontMetrics metrics;
 
+    /***************************************************************************
+     * @param label
+     **************************************************************************/
     public TextWidget( TextLabel label )
     {
         this.label = label;
@@ -21,6 +30,9 @@ public class TextWidget implements IChartWidget
         metrics = layer.getGraphics().getFontMetrics();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void draw( Graphics2D graphics, int x, int y, int width, int height )
     {
@@ -52,6 +64,9 @@ public class TextWidget implements IChartWidget
         layer.paint( graphics, x, y );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public Dimension calculateSize()
     {
@@ -68,8 +83,13 @@ public class TextWidget implements IChartWidget
         return dim;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public void repaint()
     {
         layer.repaint = true;
+
+        metrics = layer.getGraphics().getFontMetrics();
     }
 }
