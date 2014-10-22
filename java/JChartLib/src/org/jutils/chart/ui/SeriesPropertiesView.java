@@ -25,7 +25,7 @@ public class SeriesPropertiesView implements IDataView<Series>
     /**  */
     private final JPanel view;
     /**  */
-    private final DataSeriesView dataView;
+    private final SeriesDataView dataView;
     /**  */
     private final SeriesView seriesView;
 
@@ -40,7 +40,7 @@ public class SeriesPropertiesView implements IDataView<Series>
      **************************************************************************/
     public SeriesPropertiesView()
     {
-        this.dataView = new DataSeriesView();
+        this.dataView = new SeriesDataView();
         this.seriesView = new SeriesView();
 
         this.saveAction = createSaveAction();

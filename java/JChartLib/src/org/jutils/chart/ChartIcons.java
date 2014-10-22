@@ -14,6 +14,8 @@ public class ChartIcons
     public static final String CHART_064 = "chart064.png";
     public static final String CHART_128 = "chart128.png";
     public static final String CHART_256 = "chart256.png";
+    public static final String ZOOM_OUT_016 = "zoom-out016.png";
+    public static final String ZOOM_IN_016 = "zoom-in016.png";
 
     public static final String [] CHART_NAMES = new String[] { CHART_016,
         CHART_024, CHART_032, CHART_064, CHART_128, CHART_256 };
