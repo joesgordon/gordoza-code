@@ -6,8 +6,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
 
-// TODO rename to TaskStopManager.
-
 /*******************************************************************************
  * This class is a sort of semaphore that represents the execution state
  * (executing or stopped) and the methods to modify said state.
