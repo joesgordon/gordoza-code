@@ -248,10 +248,13 @@ public class OkDialogView implements IView<JDialog>
                 0, 0, 0 ), 0, 0 );
         panel.add( Box.createHorizontalStrut( 0 ), constraints );
 
-        constraints = new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets( 8,
-                8, 8, 8 ), 50, 5 );
-        panel.add( okButton, constraints );
+        if( buttons.hasOk )
+        {
+            constraints = new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
+                    8, 8, 8, 8 ), 50, 5 );
+            panel.add( okButton, constraints );
+        }
 
         if( buttons.hasCancel )
         {
@@ -340,18 +343,21 @@ public class OkDialogView implements IView<JDialog>
 
     public static enum OkDialogButtons
     {
-        OK_ONLY( false, false ),
-        OK_CANCEL( true, false ),
-        OK_APPLY_CANCEL( true, true ),
-        OK_APPLY( false, true );
+        OK_ONLY( true, false, false ),
+        OK_CANCEL( false, false, true ),
+        OK_APPLY_CANCEL( true, true, true ),
+        OK_APPLY( true, true, true );
 
-        public final boolean hasCancel;
+        public final boolean hasOk;
         public final boolean hasApply;
+        public final boolean hasCancel;
 
-        private OkDialogButtons( boolean hasCancel, boolean hasApply )
+        private OkDialogButtons( boolean hasOk, boolean hasApply,
+            boolean hasCancel )
         {
-            this.hasCancel = hasCancel;
+            this.hasOk = hasOk;
             this.hasApply = hasApply;
+            this.hasCancel = hasCancel;
         }
 
         public ModalityType getModalityType()
