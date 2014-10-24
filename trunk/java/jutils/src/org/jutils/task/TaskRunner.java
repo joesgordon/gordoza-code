@@ -7,7 +7,7 @@ import org.jutils.ui.event.ItemActionListener;
 
 public class TaskRunner implements Runnable
 {
-    private final ITask task;
+    final ITask task;
     private final ITaskView view;
     private final ITaskStopManager stopManager;
 

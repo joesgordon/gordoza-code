@@ -1,7 +1,7 @@
 package org.jutils.task;
 
-import java.awt.Dialog.ModalityType;
 import java.awt.*;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
@@ -19,7 +19,7 @@ import org.jutils.ui.model.IView;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class MultiProgressView implements IView<JPanel>, IMultiTaskView
+public class MultiTaskView implements IView<JPanel>, IMultiTaskView
 {
     /**  */
     private final JPanel view;
@@ -38,7 +38,7 @@ public class MultiProgressView implements IView<JPanel>, IMultiTaskView
     /***************************************************************************
      * 
      **************************************************************************/
-    public MultiProgressView()
+    public MultiTaskView()
     {
         this.titleField = new JLabel();
         this.progressBar = new JProgressBar();
@@ -118,6 +118,16 @@ public class MultiProgressView implements IView<JPanel>, IMultiTaskView
      * 
      **************************************************************************/
     @Override
+    public void signalError( TaskError error )
+    {
+        JOptionPane.showMessageDialog( this.getView(), error.message,
+            error.name, JOptionPane.ERROR_MESSAGE );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
     public void setPercent( int percent )
     {
         if( percent > -1 )
@@ -137,7 +147,7 @@ public class MultiProgressView implements IView<JPanel>, IMultiTaskView
      * 
      **************************************************************************/
     @Override
-    public boolean continueProcessing()
+    public boolean canContinue()
     {
         return stopManager.continueProcessing();
     }
@@ -156,7 +166,29 @@ public class MultiProgressView implements IView<JPanel>, IMultiTaskView
      **************************************************************************/
     public static IMultiTaskView createEdtView()
     {
-        return new EdtMpv( new MultiProgressView() );
+        return new EdtMpv( new MultiTaskView() );
+    }
+
+    public static void startAndShow( Component comp, ITasker tasker,
+        String title, int numThreads )
+    {
+        Window parent = Utils.getComponentsWindow( comp );
+        MultiTaskView view = new MultiTaskView();
+        JDialog dialog = new JDialog( parent, ModalityType.DOCUMENT_MODAL );
+
+        dialog.setTitle( title );
+        dialog.setContentPane( view.getView() );
+        dialog.pack();
+        dialog.setSize( 400, 600 );
+        dialog.setLocationRelativeTo( parent );
+
+        MultiTaskRunner runner = new MultiTaskRunner( tasker, view, numThreads );
+
+        Thread thread = new Thread( runner, title );
+
+        thread.start();
+
+        dialog.setVisible( true );
     }
 
     /***************************************************************************
@@ -242,9 +274,23 @@ public class MultiProgressView implements IView<JPanel>, IMultiTaskView
         }
 
         @Override
-        public boolean continueProcessing()
+        public boolean canContinue()
         {
-            return view.continueProcessing();
+            return view.canContinue();
+        }
+
+        @Override
+        public void signalError( final TaskError error )
+        {
+            Runnable r = new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    view.signalError( error );
+                }
+            };
+            SwingUtilities.invokeLater( r );
         }
     }
 
@@ -276,10 +322,10 @@ public class MultiProgressView implements IView<JPanel>, IMultiTaskView
      **************************************************************************/
     private static class TaskCancelledListener implements ActionListener
     {
-        private final MultiProgressView view;
+        private final MultiTaskView view;
         private final ITaskView taskView;
 
-        public TaskCancelledListener( MultiProgressView view, ITaskView taskView )
+        public TaskCancelledListener( MultiTaskView view, ITaskView taskView )
         {
             this.view = view;
             this.taskView = taskView;
@@ -306,7 +352,7 @@ public class MultiProgressView implements IView<JPanel>, IMultiTaskView
         @Override
         public void createAndShowUi()
         {
-            MultiProgressView view = new MultiProgressView();
+            MultiTaskView view = new MultiTaskView();
 
             String message;
             ITaskView taskView;

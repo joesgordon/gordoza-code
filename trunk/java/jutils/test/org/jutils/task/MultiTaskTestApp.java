@@ -2,6 +2,7 @@ package org.jutils.task;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.*;
 
 import javax.swing.*;
 
@@ -14,7 +15,7 @@ import org.jutils.ui.app.FrameApplication;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.event.ActionAdapter;
 
-public class TaskTestApp implements IFrameApp
+public class MultiTaskTestApp implements IFrameApp
 {
     @Override
     public JFrame createFrame()
@@ -24,6 +25,7 @@ public class TaskTestApp implements IFrameApp
 
         frameView.setToolbar( createToolbar( frame ) );
 
+        frame.setTitle( "Testing Multi Tasking" );
         frame.setIconImages( IconConstants.getPageMagImages() );
         frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         frame.setSize( 400, 400 );
@@ -62,7 +64,7 @@ public class TaskTestApp implements IFrameApp
 
     public static void main( String [] args )
     {
-        FrameApplication.invokeLater( new TaskTestApp() );
+        FrameApplication.invokeLater( new MultiTaskTestApp() );
     }
 
     private static class GoListener implements ActionListener
@@ -77,33 +79,76 @@ public class TaskTestApp implements IFrameApp
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            TaskView.startAndShow( frame, new SampleTask(),
-                "Testing 1... 2... 3.." );
+            MultiTaskView.startAndShow( frame, new SampleTasker(),
+                "Testing 1... 2... 3..", 4 );
+        }
+    }
+
+    private static class SampleTasker implements ITasker
+    {
+        private final List<SampleTask> tasks;
+
+        public SampleTasker()
+        {
+            this.tasks = new ArrayList<>();
+
+            for( int i = 0; i < 10; i++ )
+            {
+                tasks.add( new SampleTask( ( i + 1 ) + " of " + 10 ) );
+            }
+        }
+
+        @Override
+        public ITask nextTask()
+        {
+            ITask task = null;
+
+            synchronized( tasks )
+            {
+                task = tasks.isEmpty() ? null : tasks.remove( 0 );
+            }
+
+            return task;
+        }
+
+        @Override
+        public int getTaskCount()
+        {
+            return 10;
+        }
+
+        @Override
+        public String getTaskAction()
+        {
+            return "Testing task";
         }
     }
 
     private static class SampleTask implements ITask
     {
+        private final String name;
+        private final long millis;
+
+        public SampleTask( String name )
+        {
+            this.name = name;
+            this.millis = 500 + new Random().nextInt( 1500 );
+        }
+
         @Override
         public void run( ITaskHandler handler )
         {
-            handler.signalMessage( "Executing" );
-
             for( int i = 0; i < 10 && handler.canContinue(); i++ )
             {
                 int percent = i * 100 / 10;
+
                 handler.signalPercentComplete( percent );
 
                 LogUtils.printDebug( "Percent : " + percent );
 
-                if( percent >= 70 )
-                {
-                    handler.signalMessage( "Almost there..." );
-                }
-
                 try
                 {
-                    Thread.sleep( 500 );
+                    Thread.sleep( millis );
                 }
                 catch( InterruptedException e )
                 {
@@ -117,7 +162,7 @@ public class TaskTestApp implements IFrameApp
         @Override
         public String getName()
         {
-            return "Sample Test Task";
+            return name;
         }
     }
 }

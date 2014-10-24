@@ -65,7 +65,7 @@ public class TaskView implements ITaskView
         progressBar.setMaximum( 100 );
 
         cancelButton.setIcon( IconConstants.loader.getIcon( IconConstants.STOP_16 ) );
-        cancelButton.addActionListener( new CancelListener( this ) );
+        cancelButton.addActionListener( new TaskCancelListener( this ) );
         cancelButton.setFocusable( false );
 
         int fieldCols = 1;
@@ -163,26 +163,6 @@ public class TaskView implements ITaskView
     }
 
     /***************************************************************************
-     * Listener to be added to the cancel button that, in turn, calls the cancel
-     * listeners added to this view.
-     **************************************************************************/
-    private static class CancelListener implements ActionListener
-    {
-        private final TaskView view;
-
-        public CancelListener( TaskView view )
-        {
-            this.view = view;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            view.cancelListeners.fireListeners( this, 0, null );
-        }
-    }
-
-    /***************************************************************************
      * @param background
      **************************************************************************/
     public void setBackground( Color background )
@@ -228,15 +208,35 @@ public class TaskView implements ITaskView
         dialog.setSize( 400, dialog.getHeight() + 20 );
         dialog.setLocationRelativeTo( parent );
 
-        Thread thread = new Thread( runner );
+        Thread thread = new Thread( runner, task.getName() );
 
-        view.addCancelListener( new TaskCancelListener( thread, runner ) );
+        view.addCancelListener( new TaskCancelledListener( thread, runner ) );
 
         thread.start();
 
         dialog.setVisible( true );
 
         return runner.getMetrics();
+    }
+
+    /***************************************************************************
+     * Listener to be added to the cancel button that, in turn, calls the cancel
+     * listeners added to this view.
+     **************************************************************************/
+    public static class TaskCancelListener implements ActionListener
+    {
+        private final TaskView view;
+
+        public TaskCancelListener( TaskView view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            view.cancelListeners.fireListeners( this, 0, null );
+        }
     }
 
     /***************************************************************************
@@ -318,12 +318,12 @@ public class TaskView implements ITaskView
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class TaskCancelListener implements ActionListener
+    public static class TaskCancelledListener implements ActionListener
     {
         private final Thread thread;
         private final TaskRunner runner;
 
-        public TaskCancelListener( Thread thread, TaskRunner runner )
+        public TaskCancelledListener( Thread thread, TaskRunner runner )
         {
             this.thread = thread;
             this.runner = runner;
