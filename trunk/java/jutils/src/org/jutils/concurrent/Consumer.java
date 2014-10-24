@@ -18,6 +18,9 @@ public class Consumer<T> implements IStoppableTask
     /**  */
     private final Runnable finalizer;
 
+    /***************************************************************************
+     * @param consumer
+     **************************************************************************/
     public Consumer( IConsumer<T> consumer )
     {
         this( consumer, null );
