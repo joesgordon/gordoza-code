@@ -8,6 +8,7 @@ import javax.swing.*;
 
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
+import org.jutils.io.LogUtils;
 import org.jutils.ui.JGoodiesToolBar;
 import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.app.FrameApplication;
@@ -146,9 +147,9 @@ public class MultiTaskTestApp implements IFrameApp
             {
                 int percent = i * 100 / 10;
 
-                handler.signalPercentComplete( percent );
+                handler.signalPercent( percent );
 
-                // LogUtils.printDebug( "Percent : " + percent );
+                LogUtils.printDebug( "Percent : " + percent );
 
                 try
                 {
@@ -160,7 +161,7 @@ public class MultiTaskTestApp implements IFrameApp
                 }
             }
 
-            handler.signalPercentComplete( 100 );
+            handler.signalPercent( 100 );
         }
 
         @Override

@@ -7,12 +7,9 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.*;
 
+import org.jutils.IconConstants;
 import org.jutils.Utils;
 import org.jutils.concurrent.TaskStopManager;
-import org.jutils.ui.OkDialogView;
-import org.jutils.ui.OkDialogView.OkDialogButtons;
-import org.jutils.ui.app.AppRunner;
-import org.jutils.ui.app.IApplication;
 
 /*******************************************************************************
  * 
@@ -26,9 +23,10 @@ public class MultiTaskView implements IMultiTaskView
     private final JLabel titleField;
     /** The progress bar. */
     private final JProgressBar progressBar;
-
     /**  */
     private final ViewList progressList;
+    /**  */
+    private final JButton cancelButton;
 
     /**  */
     private final TaskStopManager stopManager;
@@ -41,6 +39,7 @@ public class MultiTaskView implements IMultiTaskView
         this.titleField = new JLabel();
         this.progressBar = new JProgressBar();
         this.progressList = new ViewList();
+        this.cancelButton = new JButton();
 
         this.view = createView();
 
@@ -57,6 +56,9 @@ public class MultiTaskView implements IMultiTaskView
 
         progressBar.setStringPainted( true );
 
+        cancelButton.setText( "Cancel" );
+        cancelButton.setIcon( IconConstants.loader.getIcon( IconConstants.STOP_16 ) );
+
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
             GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL, new Insets(
                 4, 4, 2, 4 ), 0, 0 );
@@ -72,7 +74,17 @@ public class MultiTaskView implements IMultiTaskView
                 2, 4 ), 0, 0 );
         panel.add( progressList.getView(), constraints );
 
+        constraints = new GridBagConstraints( 0, 3, 1, 1, 1.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets( 4,
+                4, 4, 4 ), 20, 20 );
+        panel.add( cancelButton, constraints );
+
         return panel;
+    }
+
+    private void addCancelListener( ActionListener l )
+    {
+        cancelButton.addActionListener( l );
     }
 
     /***************************************************************************
@@ -84,7 +96,7 @@ public class MultiTaskView implements IMultiTaskView
         TaskView statusView = new TaskView( true );
 
         statusView.signalMessage( message );
-        statusView.signalPercentComplete( -1 );
+        statusView.signalPercent( -1 );
 
         progressList.addView( statusView );
 
@@ -162,9 +174,9 @@ public class MultiTaskView implements IMultiTaskView
     /***************************************************************************
      * @return
      **************************************************************************/
-    public static IMultiTaskView createEdtView()
+    public static IMultiTaskView createEdtView( IMultiTaskView view )
     {
-        return new EdtMpv( new MultiTaskView() );
+        return new EdtMpv( view );
     }
 
     /***************************************************************************
@@ -177,14 +189,18 @@ public class MultiTaskView implements IMultiTaskView
         String title, int numThreads )
     {
         Window parent = Utils.getComponentsWindow( comp );
-        IMultiTaskView view = MultiTaskView.createEdtView();
+        MultiTaskView mtv = new MultiTaskView();
+        IMultiTaskView view = MultiTaskView.createEdtView( mtv );
         JDialog dialog = new JDialog( parent, ModalityType.DOCUMENT_MODAL );
 
         MultiTaskRunner runner = new MultiTaskRunner( tasker, view, numThreads );
+        CancelListener cl = new CancelListener( runner );
+
+        mtv.addCancelListener( cl );
 
         runner.addFinishedListener( new FinishedListener( dialog ) );
 
-        dialog.addWindowListener( new DialogCloseListener( runner ) );
+        dialog.addWindowListener( new CancelListener( runner ) );
         dialog.setTitle( title );
         dialog.setContentPane( view.getView() );
         dialog.pack();
@@ -354,17 +370,24 @@ public class MultiTaskView implements IMultiTaskView
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class DialogCloseListener extends WindowAdapter
+    private static class CancelListener extends WindowAdapter implements
+        ActionListener
     {
         private final MultiTaskRunner runner;
 
-        public DialogCloseListener( MultiTaskRunner runner )
+        public CancelListener( MultiTaskRunner runner )
         {
             this.runner = runner;
         }
 
         @Override
         public void windowClosing( WindowEvent e )
+        {
+            runner.stop();
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e )
         {
             runner.stop();
         }
@@ -387,55 +410,5 @@ public class MultiTaskView implements IMultiTaskView
         {
             dialog.dispose();
         }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class MultiProgressViewApp implements IApplication
-    {
-        @Override
-        public String getLookAndFeelName()
-        {
-            return null;
-        }
-
-        @Override
-        public void createAndShowUi()
-        {
-            MultiTaskView view = new MultiTaskView();
-
-            String message;
-            ITaskView taskView;
-
-            message = "Set 7 of 120: 24 Parameters" + Utils.NEW_LINE;
-            message += "A01, A02, A03, A04, A05, A06, A07, A08, A09, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19, A20, A21, A22, A23, A24";
-            taskView = view.addTask( message );
-            taskView.signalPercentComplete( 34 );
-
-            message = "Set 6 of 120: 24 Parameters" + Utils.NEW_LINE;
-            message += "GPS01, GPS02, GPS03, GPS04, GPS05, GPS06, GPS07, GPS08, GPS09, GPS10, GPS11, GPS12, GPS13, GPS14, GPS15, GPS16, GPS17, GPS18, GPS19, GPS20, GPS21";
-            taskView = view.addTask( message );
-
-            view.setTitle( "Sets 5 of 120 completed" );
-            view.setPercent( 500 / 120 );
-
-            OkDialogView okView = new OkDialogView( null, view.getView(),
-                ModalityType.APPLICATION_MODAL, OkDialogButtons.OK_CANCEL );
-            JDialog dialog = okView.getView();
-
-            dialog.setTitle( "Decoding 2849 parameters" );
-            dialog.setSize( 400, 400 );
-            dialog.setLocationRelativeTo( null );
-            dialog.setVisible( true );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public static void main( String [] args )
-    {
-        AppRunner.invokeLater( new MultiProgressViewApp() );
     }
 }
