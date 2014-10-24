@@ -92,7 +92,7 @@ public class TaskTestApp implements IFrameApp
             for( int i = 0; i < 10 && handler.canContinue(); i++ )
             {
                 int percent = i * 100 / 10;
-                handler.signalPercentComplete( percent );
+                handler.signalPercent( percent );
 
                 LogUtils.printDebug( "Percent : " + percent );
 
@@ -111,7 +111,7 @@ public class TaskTestApp implements IFrameApp
                 }
             }
 
-            handler.signalPercentComplete( 100 );
+            handler.signalPercent( 100 );
         }
 
         @Override

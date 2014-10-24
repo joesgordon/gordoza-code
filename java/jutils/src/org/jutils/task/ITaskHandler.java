@@ -6,7 +6,7 @@ public interface ITaskHandler
 
     public void signalMessage( String message );
 
-    public void signalPercentComplete( int percent );
+    public void signalPercent( int percent );
 
     public void signalError( TaskError error );
 }

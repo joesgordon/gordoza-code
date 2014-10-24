@@ -129,7 +129,7 @@ public class TaskView implements ITaskView
      * 
      **************************************************************************/
     @Override
-    public void signalPercentComplete( int percent )
+    public void signalPercent( int percent )
     {
         if( percent < 0 )
         {
@@ -254,7 +254,7 @@ public class TaskView implements ITaskView
         }
 
         @Override
-        public void signalPercentComplete( final int percent )
+        public void signalPercent( final int percent )
         {
             if( percent == lastPercent )
             {
@@ -268,7 +268,7 @@ public class TaskView implements ITaskView
                 @Override
                 public void run()
                 {
-                    view.signalPercentComplete( percent );
+                    view.signalPercent( percent );
                 }
             };
             SwingUtilities.invokeLater( r );
