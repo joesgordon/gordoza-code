@@ -43,4 +43,22 @@ public class MultiTaskHandler implements IMultiTaskHandler
     {
         this.view.removeTask( view );
     }
+
+    @Override
+    public int getTaskCount()
+    {
+        return tasker.getTaskCount();
+    }
+
+    @Override
+    public void signalPercent( int percent )
+    {
+        view.setPercent( percent );
+    }
+
+    @Override
+    public void signalMessage( String message )
+    {
+        view.setTitle( message );
+    }
 }
