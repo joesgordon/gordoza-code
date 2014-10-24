@@ -1,6 +1,7 @@
 package org.jutils.task;
 
 import java.awt.*;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -8,7 +9,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import org.jutils.IconConstants;
-import org.jutils.ui.event.ActionListenerList;
+import org.jutils.Utils;
+import org.jutils.ui.event.*;
 
 public class TaskView implements ITaskView
 {
@@ -30,18 +32,24 @@ public class TaskView implements ITaskView
      **************************************************************************/
     public TaskView()
     {
+        this( false );
+    }
+
+    public TaskView( boolean inlineCancel )
+    {
         this.messageField = new JTextArea();
         this.progressBar = new JProgressBar();
         this.cancelListeners = new ActionListenerList();
         this.cancelButton = new JButton();
 
-        this.view = createView();
+        this.view = createView( inlineCancel );
     }
 
     /***************************************************************************
+     * @param inlineCancel
      * @return
      **************************************************************************/
-    private JPanel createView()
+    private JPanel createView( boolean inlineCancel )
     {
         JPanel contentPanel = new JPanel( new GridBagLayout() );
         GridBagConstraints constraints;
@@ -56,12 +64,32 @@ public class TaskView implements ITaskView
         progressBar.setMinimum( 0 );
         progressBar.setMaximum( 100 );
 
-        cancelButton.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
         cancelButton.setIcon( IconConstants.loader.getIcon( IconConstants.STOP_16 ) );
         cancelButton.addActionListener( new CancelListener( this ) );
-        cancelButton.setOpaque( false );
+        cancelButton.setFocusable( false );
 
-        constraints = new GridBagConstraints( 0, 0, 2, 1, 1.0, 0.0,
+        int fieldCols = 1;
+        int cancelCol = 0;
+        int cancelRow = 2;
+        int grow = 20;
+        int cancelTop = 10;
+
+        if( inlineCancel )
+        {
+            fieldCols = 2;
+            cancelCol = 1;
+            cancelRow = 1;
+            grow = 0;
+            cancelTop = 0;
+            cancelButton.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
+            cancelButton.setOpaque( false );
+        }
+        else
+        {
+            cancelButton.setText( "Cancel" );
+        }
+
+        constraints = new GridBagConstraints( 0, 0, fieldCols, 1, 1.0, 0.0,
             GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL, new Insets(
                 0, 4, 4, 4 ), 0, 0 );
         contentPanel.add( messageField, constraints );
@@ -71,9 +99,9 @@ public class TaskView implements ITaskView
             new Insets( 0, 4, 2, 4 ), 0, 0 );
         contentPanel.add( progressBar, constraints );
 
-        constraints = new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets( 0,
-                0, 2, 4 ), 0, 0 );
+        constraints = new GridBagConstraints( cancelCol, cancelRow, 1, 1, 0.0,
+            0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+            new Insets( cancelTop, 0, 2, 4 ), grow, grow );
         contentPanel.add( cancelButton, constraints );
 
         return contentPanel;
@@ -182,6 +210,36 @@ public class TaskView implements ITaskView
     }
 
     /***************************************************************************
+     * @param comp
+     * @param task
+     **************************************************************************/
+    public static TaskMetrics startAndShow( Component comp, ITask task,
+        String title )
+    {
+        Window parent = Utils.getComponentsWindow( comp );
+        TaskView view = new TaskView( true );
+        TaskRunner runner = new TaskRunner( task, TaskView.createEdtView( view ) );
+        JDialog dialog = new JDialog( parent, ModalityType.DOCUMENT_MODAL );
+        runner.addFinishedListener( new TaskFinishedListener( dialog ) );
+
+        dialog.setTitle( title );
+        dialog.setContentPane( view.getView() );
+        dialog.pack();
+        dialog.setSize( 400, dialog.getHeight() + 20 );
+        dialog.setLocationRelativeTo( parent );
+
+        Thread thread = new Thread( runner );
+
+        view.addCancelListener( new TaskCancelListener( thread, runner ) );
+
+        thread.start();
+
+        dialog.setVisible( true );
+
+        return runner.getMetrics();
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     private static class EdtTv implements ITaskView
@@ -254,6 +312,48 @@ public class TaskView implements ITaskView
         public void addCancelListener( ActionListener listener )
         {
             view.addCancelListener( listener );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class TaskCancelListener implements ActionListener
+    {
+        private final Thread thread;
+        private final TaskRunner runner;
+
+        public TaskCancelListener( Thread thread, TaskRunner runner )
+        {
+            this.thread = thread;
+            this.runner = runner;
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            runner.stop();
+            thread.interrupt();
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class TaskFinishedListener implements
+        ItemActionListener<Boolean>
+    {
+        private final JDialog dialog;
+
+        public TaskFinishedListener( JDialog dialog )
+        {
+            this.dialog = dialog;
+        }
+
+        @Override
+        public void actionPerformed( ItemActionEvent<Boolean> event )
+        {
+            dialog.setVisible( false );
         }
     }
 }
