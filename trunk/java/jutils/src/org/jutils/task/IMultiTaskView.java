@@ -1,9 +1,13 @@
 package org.jutils.task;
 
+import javax.swing.JPanel;
+
+import org.jutils.ui.model.IView;
+
 /*******************************************************************************
  * 
  ******************************************************************************/
-public interface IMultiTaskView
+public interface IMultiTaskView extends IView<JPanel>
 {
     /***************************************************************************
      * @param title

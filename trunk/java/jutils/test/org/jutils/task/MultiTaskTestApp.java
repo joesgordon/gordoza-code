@@ -8,7 +8,6 @@ import javax.swing.*;
 
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
-import org.jutils.io.LogUtils;
 import org.jutils.ui.JGoodiesToolBar;
 import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.app.FrameApplication;
@@ -88,6 +87,8 @@ public class MultiTaskTestApp implements IFrameApp
     {
         private final List<SampleTask> tasks;
 
+        private int i;
+
         public SampleTasker()
         {
             this.tasks = new ArrayList<>();
@@ -96,6 +97,8 @@ public class MultiTaskTestApp implements IFrameApp
             {
                 tasks.add( new SampleTask( ( i + 1 ) + " of " + 10 ) );
             }
+
+            this.i = 0;
         }
 
         @Override
@@ -105,7 +108,8 @@ public class MultiTaskTestApp implements IFrameApp
 
             synchronized( tasks )
             {
-                task = tasks.isEmpty() ? null : tasks.remove( 0 );
+                task = i < tasks.size() ? tasks.get( i ) : null;
+                i++;
             }
 
             return task;
@@ -132,7 +136,7 @@ public class MultiTaskTestApp implements IFrameApp
         public SampleTask( String name )
         {
             this.name = name;
-            this.millis = 500 + new Random().nextInt( 1500 );
+            this.millis = 500 + new Random().nextInt( 500 );
         }
 
         @Override
@@ -144,7 +148,7 @@ public class MultiTaskTestApp implements IFrameApp
 
                 handler.signalPercentComplete( percent );
 
-                LogUtils.printDebug( "Percent : " + percent );
+                // LogUtils.printDebug( "Percent : " + percent );
 
                 try
                 {

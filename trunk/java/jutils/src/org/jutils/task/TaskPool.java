@@ -121,7 +121,20 @@ public class TaskPool
         @Override
         public void complete()
         {
-            pool.startNext();
+            if( !pool.pool.isShutdown() )
+            {
+                pool.startNext();
+            }
+
+            int completedCount = ( int )pool.pool.getCompletedTaskCount() + 1;
+            int taskCount = pool.tasker.getTaskCount();
+            int percent = ( int )( completedCount * 100.0 / taskCount );
+            String message = "Sets " + completedCount + " of " + taskCount +
+                " completed";
+
+            pool.tasker.signalMessage( message );
+            pool.tasker.signalPercent( percent );
+            LogUtils.printDebug( "Percent : " + completedCount );
         }
 
         @Override

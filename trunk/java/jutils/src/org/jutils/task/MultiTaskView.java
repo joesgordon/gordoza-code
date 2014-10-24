@@ -2,8 +2,7 @@ package org.jutils.task;
 
 import java.awt.*;
 import java.awt.Dialog.ModalityType;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.*;
@@ -14,12 +13,11 @@ import org.jutils.ui.OkDialogView;
 import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.app.AppRunner;
 import org.jutils.ui.app.IApplication;
-import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class MultiTaskView implements IView<JPanel>, IMultiTaskView
+public class MultiTaskView implements IMultiTaskView
 {
     /**  */
     private final JPanel view;
@@ -169,20 +167,29 @@ public class MultiTaskView implements IView<JPanel>, IMultiTaskView
         return new EdtMpv( new MultiTaskView() );
     }
 
+    /***************************************************************************
+     * @param comp
+     * @param tasker
+     * @param title
+     * @param numThreads
+     **************************************************************************/
     public static void startAndShow( Component comp, ITasker tasker,
         String title, int numThreads )
     {
         Window parent = Utils.getComponentsWindow( comp );
-        MultiTaskView view = new MultiTaskView();
+        IMultiTaskView view = MultiTaskView.createEdtView();
         JDialog dialog = new JDialog( parent, ModalityType.DOCUMENT_MODAL );
 
+        MultiTaskRunner runner = new MultiTaskRunner( tasker, view, numThreads );
+
+        runner.addFinishedListener( new FinishedListener( dialog ) );
+
+        dialog.addWindowListener( new DialogCloseListener( runner ) );
         dialog.setTitle( title );
         dialog.setContentPane( view.getView() );
         dialog.pack();
         dialog.setSize( 400, 600 );
         dialog.setLocationRelativeTo( parent );
-
-        MultiTaskRunner runner = new MultiTaskRunner( tasker, view, numThreads );
 
         Thread thread = new Thread( runner, title );
 
@@ -292,6 +299,12 @@ public class MultiTaskView implements IView<JPanel>, IMultiTaskView
             };
             SwingUtilities.invokeLater( r );
         }
+
+        @Override
+        public JPanel getView()
+        {
+            return view.getView();
+        }
     }
 
     /***************************************************************************
@@ -335,6 +348,44 @@ public class MultiTaskView implements IView<JPanel>, IMultiTaskView
         public void actionPerformed( ActionEvent e )
         {
             view.removeTask( taskView );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class DialogCloseListener extends WindowAdapter
+    {
+        private final MultiTaskRunner runner;
+
+        public DialogCloseListener( MultiTaskRunner runner )
+        {
+            this.runner = runner;
+        }
+
+        @Override
+        public void windowClosing( WindowEvent e )
+        {
+            runner.stop();
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class FinishedListener implements ActionListener
+    {
+        private final JDialog dialog;
+
+        public FinishedListener( JDialog dialog )
+        {
+            this.dialog = dialog;
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            dialog.dispose();
         }
     }
 
