@@ -43,6 +43,8 @@ public class SafeExecutorService extends ThreadPoolExecutor
                 {
                     future.get();
                 }
+
+                finishedHandler.complete();
             }
             catch( CancellationException ce )
             {
@@ -61,10 +63,6 @@ public class SafeExecutorService extends ThreadPoolExecutor
         if( t != null )
         {
             finishedHandler.handleError( t );
-        }
-        else
-        {
-            finishedHandler.complete();
         }
     }
 }

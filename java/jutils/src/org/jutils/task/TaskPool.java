@@ -1,9 +1,13 @@
 package org.jutils.task;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.concurrent.TimeUnit;
 
-import org.jutils.concurrent.IFinishedHandler;
-import org.jutils.concurrent.SafeExecutorService;
+import org.jutils.concurrent.*;
+import org.jutils.io.LogUtils;
+import org.jutils.ui.event.ItemActionEvent;
+import org.jutils.ui.event.ItemActionListener;
 
 /*******************************************************************************
  * 
@@ -11,7 +15,7 @@ import org.jutils.concurrent.SafeExecutorService;
 public class TaskPool
 {
     /**  */
-    private final ITasker tasker;
+    private final IMultiTaskHandler tasker;
     /**  */
     private final int numThreads;
     /**  */
@@ -23,7 +27,7 @@ public class TaskPool
      * @param stopManager
      * @param view
      **************************************************************************/
-    public TaskPool( ITasker tasker, int numThreads )
+    public TaskPool( IMultiTaskHandler tasker, int numThreads )
     {
         this.tasker = tasker;
         this.numThreads = numThreads;
@@ -64,6 +68,7 @@ public class TaskPool
      **************************************************************************/
     public void shutdown()
     {
+        LogUtils.printDebug( "Shutting down" );
         this.pool.shutdown();
     }
 
@@ -74,22 +79,30 @@ public class TaskPool
     {
         ITask task = null;
 
-        if( tasker.canContinue() )
+        synchronized( this )
         {
-            task = tasker.nextTask();
-        }
+            if( tasker.canContinue() )
+            {
+                task = tasker.nextTask();
+            }
 
-        if( task != null )
-        {
-            ITaskView view = tasker.createView();
+            if( task != null )
+            {
+                ITaskView view = tasker.createView( task );
 
-            TaskRunner runner = new TaskRunner( task, view );
+                TaskStopManager stopManager = new TaskStopManager();
+                TaskRunner runner = new TaskRunner( task, view, stopManager );
 
-            pool.submit( runner );
-        }
-        else
-        {
-            pool.shutdown();
+                view.addCancelListener( new CancelListener( stopManager ) );
+                stopManager.addFinishedListener( new FinishedListener( tasker,
+                    view ) );
+
+                pool.submit( runner );
+            }
+            else
+            {
+                pool.shutdown();
+            }
         }
     }
 
@@ -117,6 +130,47 @@ public class TaskPool
             pool.tasker.signalError( new TaskError(
                 "An unrecoverable error occured", t ) );
             pool.shutdown();
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class CancelListener implements ActionListener
+    {
+        private ITaskStopManager stopManager;
+
+        public CancelListener( ITaskStopManager stopManager )
+        {
+            this.stopManager = stopManager;
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            stopManager.stop();
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class FinishedListener implements
+        ItemActionListener<Boolean>
+    {
+        private final IMultiTaskHandler tasker;
+        private final ITaskView view;
+
+        public FinishedListener( IMultiTaskHandler tasker, ITaskView view )
+        {
+            this.tasker = tasker;
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ItemActionEvent<Boolean> event )
+        {
+            tasker.removeView( view );
         }
     }
 }

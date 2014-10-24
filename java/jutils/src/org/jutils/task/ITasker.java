@@ -11,13 +11,12 @@ public interface ITasker
     public ITask nextTask();
 
     /***************************************************************************
-     * @param task
+     * @return
      **************************************************************************/
-    public void taskFinished( ITask task );
+    public int getTaskCount();
 
-    public boolean canContinue();
-
-    public ITaskView createView();
-
-    public void signalError( TaskError taskError );
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public String getTaskAction();
 }
