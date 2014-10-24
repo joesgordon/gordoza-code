@@ -2,9 +2,7 @@ package org.jutils;
 
 import java.util.Date;
 
-import org.jutils.concurrent.IStopwatch;
-
-public class Stopwatch implements IStopwatch
+public class Stopwatch
 {
     /** The start time in millis since epoch. */
     private long startTime;
@@ -22,20 +20,21 @@ public class Stopwatch implements IStopwatch
         start();
     }
 
-    @Override
-    public void start()
+    public long start()
     {
         startTime = System.currentTimeMillis();
         stopTime = 0;
+
+        return startTime;
     }
 
-    @Override
-    public void stop()
+    public long stop()
     {
         stopTime = System.currentTimeMillis();
+
+        return stopTime;
     }
 
-    @Override
     public boolean isStopped()
     {
         return stopped;
@@ -45,13 +44,11 @@ public class Stopwatch implements IStopwatch
      * Returns the elapsed time in a <code>Date</code> object.
      * @return the elapsed time in a <code>Date</code> object.
      **************************************************************************/
-    @Override
     public Date getElapsedDate()
     {
         return new Date( getElapsed() );
     }
 
-    @Override
     public long getElapsed()
     {
         if( stopTime == 0 )
