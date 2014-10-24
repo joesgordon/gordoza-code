@@ -9,7 +9,6 @@ import javax.swing.*;
 import org.jutils.IconConstants;
 import org.jutils.Utils;
 import org.jutils.concurrent.Stoppable;
-import org.jutils.concurrent.TaskStoppable;
 import org.jutils.ui.ExtensiveErrorView;
 import org.jutils.ui.MessageExceptionView;
 import org.jutils.ui.event.ActionListenerList;
@@ -226,7 +225,7 @@ public class ProgressView implements IProgressView, IView<JDialog>
         ProgressView view = new ProgressView( parent,
             ModalityType.APPLICATION_MODAL );
         EdtProgressViewAdapter edtView = new EdtProgressViewAdapter( view );
-        TaskStoppable istoppable = new TaskStoppable( edtView, task );
+        ProgressTask istoppable = new ProgressTask( edtView, task );
         Stoppable stoppable = new Stoppable( istoppable );
 
         view.addCancelListener( new DefaultCancelListener( stoppable ) );

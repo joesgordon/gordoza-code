@@ -1,12 +1,12 @@
-package org.jutils.concurrent;
+package org.jutils.ui.progress;
 
-import org.jutils.ui.progress.IProgressTask;
-import org.jutils.ui.progress.IProgressView;
+import org.jutils.concurrent.IStoppableTask;
+import org.jutils.concurrent.ITaskStopManager;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class TaskStoppable implements IStoppableTask
+public class ProgressTask implements IStoppableTask
 {
     /**  */
     private final IProgressView progress;
@@ -17,7 +17,7 @@ public class TaskStoppable implements IStoppableTask
      * @param progress
      * @param task
      **************************************************************************/
-    public TaskStoppable( IProgressView progress, IProgressTask task )
+    public ProgressTask( IProgressView progress, IProgressTask task )
     {
         this.progress = progress;
         this.task = task;
