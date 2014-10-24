@@ -91,7 +91,7 @@ public class MultiTaskView implements IMultiTaskView
      * 
      **************************************************************************/
     @Override
-    public ITaskView addTask( String message )
+    public ITaskView addTaskView( String message )
     {
         TaskView statusView = new TaskView( true );
 
@@ -130,8 +130,7 @@ public class MultiTaskView implements IMultiTaskView
     @Override
     public void signalError( TaskError error )
     {
-        JOptionPane.showMessageDialog( this.getView(), error.message,
-            error.name, JOptionPane.ERROR_MESSAGE );
+        TaskUtils.displayError( view, error );
     }
 
     /***************************************************************************
@@ -185,7 +184,7 @@ public class MultiTaskView implements IMultiTaskView
      * @param title
      * @param numThreads
      **************************************************************************/
-    public static void startAndShow( Component comp, ITasker tasker,
+    public static void startAndShow( Component comp, IMultiTask tasker,
         String title, int numThreads )
     {
         Window parent = Utils.getComponentsWindow( comp );
@@ -198,7 +197,8 @@ public class MultiTaskView implements IMultiTaskView
 
         mtv.addCancelListener( cl );
 
-        runner.addFinishedListener( new FinishedListener( dialog ) );
+        runner.addFinishedListener( new FinishedListener( dialog,
+            runner.handler ) );
 
         dialog.addWindowListener( new CancelListener( runner ) );
         dialog.setTitle( title );
@@ -229,7 +229,7 @@ public class MultiTaskView implements IMultiTaskView
         }
 
         @Override
-        public ITaskView addTask( final String message )
+        public ITaskView addTaskView( final String message )
         {
             EdtAddTask r = new EdtAddTask( view, message );
 
@@ -342,7 +342,7 @@ public class MultiTaskView implements IMultiTaskView
         @Override
         public void run()
         {
-            taskView = TaskView.createEdtView( view.addTask( message ) );
+            taskView = TaskView.createEdtView( view.addTaskView( message ) );
         }
     }
 
@@ -399,15 +399,22 @@ public class MultiTaskView implements IMultiTaskView
     private static class FinishedListener implements ActionListener
     {
         private final JDialog dialog;
+        private final MultiTaskHandler handler;
 
-        public FinishedListener( JDialog dialog )
+        public FinishedListener( JDialog dialog, MultiTaskHandler handler )
         {
             this.dialog = dialog;
+            this.handler = handler;
         }
 
         @Override
         public void actionPerformed( ActionEvent e )
         {
+            if( handler.error != null )
+            {
+                TaskUtils.displayError( dialog, handler.error );
+            }
+
             dialog.dispose();
         }
     }

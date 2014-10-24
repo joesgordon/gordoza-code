@@ -48,7 +48,7 @@ public class TxDialog
             {
                 try
                 {
-                    TxDialog.this.stopper.stopAndWaitFor();
+                    TxDialog.this.stopper.stopAndWait();
                 }
                 catch( InterruptedException ex )
                 {

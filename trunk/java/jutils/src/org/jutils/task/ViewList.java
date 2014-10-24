@@ -7,17 +7,28 @@ import javax.swing.border.LineBorder;
 
 import org.jutils.ui.model.IView;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class ViewList implements IView<JComponent>
 {
+    /**  */
     private final JComponent view;
+    /**  */
     private final JPanel itemsPanel;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public ViewList()
     {
         this.itemsPanel = new JPanel();
         this.view = createView();
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private JComponent createView()
     {
         itemsPanel.setLayout( new BoxLayout( itemsPanel, BoxLayout.Y_AXIS ) );
@@ -36,11 +47,17 @@ public class ViewList implements IView<JComponent>
         return scrollpane;
     }
 
+    /***************************************************************************
+     * @param view
+     **************************************************************************/
     public void addView( IView<? extends Component> view )
     {
         itemsPanel.add( view.getView() );
     }
 
+    /***************************************************************************
+     * @param view
+     **************************************************************************/
     public void removeView( IView<? extends Component> view )
     {
         itemsPanel.remove( view.getView() );
@@ -52,12 +69,18 @@ public class ViewList implements IView<JComponent>
         parent.repaint();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public JComponent getView()
     {
         return view;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class OnlyVerticalScrollPanel extends JPanel implements
         Scrollable
     {

@@ -10,14 +10,23 @@ import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.app.AppRunner;
 import org.jutils.ui.app.IApplication;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class MultTaskViewApp implements IApplication
 {
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public String getLookAndFeelName()
     {
         return null;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void createAndShowUi()
     {
@@ -28,12 +37,12 @@ public class MultTaskViewApp implements IApplication
 
         message = "Set 7 of 120: 24 Parameters" + Utils.NEW_LINE;
         message += "A01, A02, A03, A04, A05, A06, A07, A08, A09, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19, A20, A21, A22, A23, A24";
-        taskView = view.addTask( message );
+        taskView = view.addTaskView( message );
         taskView.signalPercent( 34 );
 
         message = "Set 6 of 120: 24 Parameters" + Utils.NEW_LINE;
         message += "GPS01, GPS02, GPS03, GPS04, GPS05, GPS06, GPS07, GPS08, GPS09, GPS10, GPS11, GPS12, GPS13, GPS14, GPS15, GPS16, GPS17, GPS18, GPS19, GPS20, GPS21";
-        taskView = view.addTask( message );
+        taskView = view.addTaskView( message );
 
         view.setTitle( "Sets 5 of 120 completed" );
         view.setPercent( 500 / 120 );
@@ -49,8 +58,8 @@ public class MultTaskViewApp implements IApplication
     }
 
     /***************************************************************************
- * 
- **************************************************************************/
+     * @param args
+     **************************************************************************/
     public static void main( String [] args )
     {
         AppRunner.invokeLater( new MultTaskViewApp() );

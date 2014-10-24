@@ -12,6 +12,9 @@ import org.jutils.IconConstants;
 import org.jutils.Utils;
 import org.jutils.ui.event.*;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class TaskView implements ITaskView
 {
     /**  */
@@ -35,6 +38,9 @@ public class TaskView implements ITaskView
         this( false );
     }
 
+    /***************************************************************************
+     * @param inlineCancel
+     **************************************************************************/
     public TaskView( boolean inlineCancel )
     {
         this.messageField = new JTextArea();
@@ -150,8 +156,7 @@ public class TaskView implements ITaskView
     @Override
     public void signalError( TaskError error )
     {
-        JOptionPane.showMessageDialog( this.getView(), error.message,
-            error.name, JOptionPane.ERROR_MESSAGE );
+        TaskUtils.displayError( view, error );
     }
 
     /***************************************************************************

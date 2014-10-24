@@ -90,10 +90,10 @@ public class Stoppable implements Runnable
     }
 
     /***************************************************************************
-     * @see TaskStopManager#stopAndWaitFor()
+     * @see TaskStopManager#stopAndWait()
      **************************************************************************/
     public void stopAndWaitFor() throws InterruptedException
     {
-        stopper.stopAndWaitFor();
+        stopper.stopAndWait();
     }
 }
