@@ -99,7 +99,7 @@ public class MultiTaskTestApp implements IFrameApp
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            MultiTaskView.startAndShow( frame, new SampleTasker(),
+            MultiTaskView.startAndShow( frame, new SampleTasker( 120 ),
                 "Testing 1... 2... 3..", 4 );
         }
     }
@@ -113,13 +113,13 @@ public class MultiTaskTestApp implements IFrameApp
 
         private int i;
 
-        public SampleTasker()
+        public SampleTasker( int numTasks )
         {
             this.tasks = new ArrayList<>();
 
-            for( int i = 0; i < 10; i++ )
+            for( int i = 0; i < numTasks; i++ )
             {
-                tasks.add( new SampleTask( ( i + 1 ) + " of " + 10 ) );
+                tasks.add( new SampleTask( ( i + 1 ) + " of " + numTasks ) );
             }
 
             this.i = 0;
@@ -134,7 +134,7 @@ public class MultiTaskTestApp implements IFrameApp
         @Override
         public int getTaskCount()
         {
-            return 10;
+            return tasks.size();
         }
 
         @Override
@@ -178,13 +178,13 @@ public class MultiTaskTestApp implements IFrameApp
                     break;
                 }
 
-                if( percent > 80 )
-                {
-                    handler.signalError( new TaskError( "Test Error",
-                        "Testing the error capabilities" ) );
-                    // throw new RuntimeException( "jdlfjlkfsdjlkfsdlkjdfsdlkj"
-                    // );
-                }
+                // if( percent > 80 )
+                // {
+                // handler.signalError( new TaskError( "Test Error",
+                // "Testing the error capabilities" ) );
+                // // throw new RuntimeException( "jdlfjlkfsdjlkfsdlkjdfsdlkj"
+                // // );
+                // }
             }
 
             handler.signalPercent( 100 );

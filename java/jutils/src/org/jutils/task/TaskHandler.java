@@ -1,5 +1,7 @@
 package org.jutils.task;
 
+import java.awt.Component;
+
 import org.jutils.concurrent.ITaskStopManager;
 import org.jutils.ui.event.ItemActionListener;
 
@@ -93,5 +95,14 @@ public class TaskHandler implements ITaskHandler
     public void addFinishedListener( ItemActionListener<Boolean> l )
     {
         stopManager.addFinishedListener( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Component getView()
+    {
+        return view.getView();
     }
 }

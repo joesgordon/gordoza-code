@@ -200,11 +200,12 @@ public class MultiTaskView implements IMultiTaskView
         runner.addFinishedListener( new FinishedListener( dialog,
             runner.handler ) );
 
+        dialog.setDefaultCloseOperation( JDialog.DO_NOTHING_ON_CLOSE );
         dialog.addWindowListener( new CancelListener( runner ) );
         dialog.setTitle( title );
         dialog.setContentPane( view.getView() );
         dialog.pack();
-        dialog.setSize( 400, 600 );
+        dialog.setSize( 600, 400 );
         dialog.setLocationRelativeTo( parent );
 
         Thread thread = new Thread( runner, title );
