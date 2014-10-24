@@ -1,5 +1,6 @@
 package org.jutils.task;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -293,6 +294,12 @@ public class TaskPool
         public void addFinishedListener( ItemActionListener<Boolean> l )
         {
             handler.addFinishedListener( l );
+        }
+
+        @Override
+        public Component getView()
+        {
+            return handler.getView();
         }
     }
 }

@@ -1,5 +1,7 @@
 package org.jutils.task;
 
+import java.awt.Component;
+
 import org.jutils.ui.event.ItemActionListener;
 
 /*******************************************************************************
@@ -46,4 +48,9 @@ public interface ITaskHandler
      * @param l
      **************************************************************************/
     public void addFinishedListener( ItemActionListener<Boolean> l );
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public Component getView();
 }
