@@ -1,6 +1,7 @@
 package org.jutils.task;
 
 import org.jutils.Stopwatch;
+import org.jutils.concurrent.ITaskStopManager;
 import org.jutils.concurrent.TaskStopManager;
 import org.jutils.ui.event.ItemActionListener;
 
@@ -8,15 +9,20 @@ public class TaskRunner implements Runnable
 {
     private final ITask task;
     private final ITaskView view;
-    private final TaskStopManager stopManager;
+    private final ITaskStopManager stopManager;
 
     private TaskMetrics metrics;
 
     public TaskRunner( ITask task, ITaskView view )
     {
+        this( task, view, new TaskStopManager() );
+    }
+
+    public TaskRunner( ITask task, ITaskView view, ITaskStopManager stopManager )
+    {
         this.task = task;
         this.view = view;
-        this.stopManager = new TaskStopManager();
+        this.stopManager = stopManager;
     }
 
     @Override

@@ -217,7 +217,7 @@ public class TaskView implements ITaskView
         String title )
     {
         Window parent = Utils.getComponentsWindow( comp );
-        TaskView view = new TaskView( true );
+        TaskView view = new TaskView();
         TaskRunner runner = new TaskRunner( task, TaskView.createEdtView( view ) );
         JDialog dialog = new JDialog( parent, ModalityType.DOCUMENT_MODAL );
         runner.addFinishedListener( new TaskFinishedListener( dialog ) );
