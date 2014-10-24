@@ -50,6 +50,11 @@ public class PlotWidget implements IChartWidget
     {
         Graphics2D g2d;
 
+        if( width < 1 || height < 1 )
+        {
+            return;
+        }
+
         // ---------------------------------------------------------------------
         // Draw series layer.
         // ---------------------------------------------------------------------

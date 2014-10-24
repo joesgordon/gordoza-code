@@ -100,6 +100,9 @@ public class AxesWidget implements IChartWidget
             context.height = height - weight / 2 - textSpace.top -
                 textSpace.bottom;
 
+            context.width = Math.max( 0, context.width );
+            context.height = Math.max( 0, context.height );
+
             context.latchCoords();
 
             // LogUtils.printDebug( "axes: w: " + w + ", h: " + h );
@@ -286,7 +289,7 @@ public class AxesWidget implements IChartWidget
         textSpace.left = Math.max( xMinSize.width / 2, yMinSize.width ) + 4;
         textSpace.right = xMaxSize.width / 2;
         textSpace.bottom = Math.max( xMinSize.height, yMinSize.height / 2 ) + 4;
-        textSpace.top = yMaxSize.width / 2;
+        textSpace.top = yMaxSize.height / 2;
 
         return textSpace;
     }
