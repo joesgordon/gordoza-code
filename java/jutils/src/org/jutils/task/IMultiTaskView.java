@@ -14,7 +14,7 @@ public interface IMultiTaskView extends IView<JPanel>
      * @param message
      * @return
      **************************************************************************/
-    public ITaskView addTask( String message );
+    public ITaskView addTaskView( String taskName );
 
     /***************************************************************************
      * @param view

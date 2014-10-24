@@ -5,31 +5,55 @@ import org.jutils.concurrent.ITaskStopManager;
 import org.jutils.concurrent.TaskStopManager;
 import org.jutils.ui.event.ItemActionListener;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class TaskRunner implements Runnable
 {
-    final ITask task;
-    private final ITaskView view;
-    private final ITaskStopManager stopManager;
+    /**  */
+    private final ITask task;
+    /**  */
+    private final ITaskHandler handler;
 
+    /**  */
     private TaskMetrics metrics;
 
+    /***************************************************************************
+     * @param task
+     * @param view
+     **************************************************************************/
     public TaskRunner( ITask task, ITaskView view )
     {
         this( task, view, new TaskStopManager() );
     }
 
+    /***************************************************************************
+     * @param task
+     * @param view
+     * @param stopManager
+     **************************************************************************/
     public TaskRunner( ITask task, ITaskView view, ITaskStopManager stopManager )
     {
-        this.task = task;
-        this.view = view;
-        this.stopManager = stopManager;
+        this( task, new TaskHandler( view, stopManager ) );
     }
 
+    /***************************************************************************
+     * @param task
+     * @param handler
+     **************************************************************************/
+    public TaskRunner( ITask task, ITaskHandler handler )
+    {
+        this.task = task;
+        this.handler = handler;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void run()
     {
         Stopwatch watch = new Stopwatch();
-        TaskHandler handler = new TaskHandler( view, stopManager );
 
         long start = watch.start();
 
@@ -43,27 +67,39 @@ public class TaskRunner implements Runnable
 
             metrics = new TaskMetrics( start, stop );
 
-            stopManager.signalFinished();
+            handler.signalFinished();
         }
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public TaskMetrics getMetrics()
     {
         return metrics;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public void stop()
     {
-        stopManager.stop();
+        handler.stop();
     }
 
-    public void stopAndWait()
+    /***************************************************************************
+     * @throws InterruptedException
+     **************************************************************************/
+    public void stopAndWait() throws InterruptedException
     {
-        stopManager.stop();
+        handler.stopAndWait();
     }
 
+    /***************************************************************************
+     * @param l
+     **************************************************************************/
     public void addFinishedListener( ItemActionListener<Boolean> l )
     {
-        stopManager.addFinishedListener( l );
+        handler.addFinishedListener( l );
     }
 }

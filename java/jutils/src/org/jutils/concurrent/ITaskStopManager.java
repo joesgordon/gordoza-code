@@ -31,7 +31,7 @@ public interface ITaskStopManager
      * @throws InterruptedException if the current thread is interrupted while
      * waiting on the task.
      **************************************************************************/
-    public void stopAndWaitFor() throws InterruptedException;
+    public void stopAndWait() throws InterruptedException;
 
     /***************************************************************************
      * Returns {@code true} if stop has not been requested, {@code false}

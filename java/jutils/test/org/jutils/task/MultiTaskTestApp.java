@@ -15,8 +15,14 @@ import org.jutils.ui.app.FrameApplication;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.event.ActionAdapter;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class MultiTaskTestApp implements IFrameApp
 {
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public JFrame createFrame()
     {
@@ -33,6 +39,10 @@ public class MultiTaskTestApp implements IFrameApp
         return frame;
     }
 
+    /***************************************************************************
+     * @param frame
+     * @return
+     **************************************************************************/
     private JToolBar createToolbar( JFrame frame )
     {
         JToolBar toolbar = new JGoodiesToolBar();
@@ -42,6 +52,10 @@ public class MultiTaskTestApp implements IFrameApp
         return toolbar;
     }
 
+    /***************************************************************************
+     * @param frame
+     * @return
+     **************************************************************************/
     private Action createGoAction( JFrame frame )
     {
         Action action;
@@ -57,6 +71,9 @@ public class MultiTaskTestApp implements IFrameApp
         return action;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void finalizeGui()
     {
@@ -67,6 +84,9 @@ public class MultiTaskTestApp implements IFrameApp
         FrameApplication.invokeLater( new MultiTaskTestApp() );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class GoListener implements ActionListener
     {
         private final JFrame frame;
@@ -84,7 +104,10 @@ public class MultiTaskTestApp implements IFrameApp
         }
     }
 
-    private static class SampleTasker implements ITasker
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class SampleTasker implements IMultiTask
     {
         private final List<SampleTask> tasks;
 
@@ -105,15 +128,7 @@ public class MultiTaskTestApp implements IFrameApp
         @Override
         public ITask nextTask()
         {
-            ITask task = null;
-
-            synchronized( tasks )
-            {
-                task = i < tasks.size() ? tasks.get( i ) : null;
-                i++;
-            }
-
-            return task;
+            return i < tasks.size() ? tasks.get( i++ ) : null;
         }
 
         @Override
@@ -129,6 +144,9 @@ public class MultiTaskTestApp implements IFrameApp
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class SampleTask implements ITask
     {
         private final String name;
@@ -158,6 +176,14 @@ public class MultiTaskTestApp implements IFrameApp
                 catch( InterruptedException e )
                 {
                     break;
+                }
+
+                if( percent > 80 )
+                {
+                    handler.signalError( new TaskError( "Test Error",
+                        "Testing the error capabilities" ) );
+                    // throw new RuntimeException( "jdlfjlkfsdjlkfsdlkjdfsdlkj"
+                    // );
                 }
             }
 

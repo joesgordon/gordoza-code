@@ -95,7 +95,7 @@ public final class TaskStopManager implements ITaskStopManager
      * 
      **************************************************************************/
     @Override
-    public void stopAndWaitFor() throws InterruptedException
+    public void stopAndWait() throws InterruptedException
     {
         stop();
         waitFor();
