@@ -41,16 +41,19 @@ public class TextWidget implements IChartWidget
 
         if( layer.repaint )
         {
-            Graphics2D g2d = layer.setSize( textWidth, textHeight );
-
             layer.clear();
 
-            g2d.setColor( label.color );
-            g2d.setFont( label.font );
-            g2d.drawString( label.text, 0, label.font.getSize() );
-            // g2d.drawRect( 0, 0, textWidth - 1, textHeight - 1 );
+            if( textHeight > 0 && textHeight > 0 )
+            {
+                Graphics2D g2d = layer.setSize( textWidth, textHeight );
 
-            layer.repaint = false;
+                g2d.setColor( label.color );
+                g2d.setFont( label.font );
+                g2d.drawString( label.text, 0, label.font.getSize() );
+                // g2d.drawRect( 0, 0, textWidth - 1, textHeight - 1 );
+
+                layer.repaint = false;
+            }
         }
 
         // LogUtils.printDebug( "text: x: " + x + ", y: " + y + ", w: " + width

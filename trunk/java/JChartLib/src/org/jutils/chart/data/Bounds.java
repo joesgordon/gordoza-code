@@ -51,4 +51,75 @@ public class Bounds
 
         return new Span( s );
     }
+
+    /***************************************************************************
+     * @param s
+     * @return
+     **************************************************************************/
+    @Override
+    public boolean equals( Object obj )
+    {
+        if( obj == null )
+        {
+            return false;
+        }
+
+        if( obj instanceof Bounds )
+        {
+            Bounds that = ( Bounds )obj;
+
+            if( !that.primaryDomainSpan.equals( primaryDomainSpan ) )
+            {
+                return false;
+            }
+            else if( !that.primaryRangeSpan.equals( primaryRangeSpan ) )
+            {
+                return false;
+            }
+            else if( that.secondaryDomainSpan != null &&
+                secondaryDomainSpan != null &&
+                !that.secondaryDomainSpan.equals( secondaryDomainSpan ) )
+            {
+                return false;
+            }
+            else if( that.secondaryDomainSpan != null &&
+                secondaryDomainSpan == null )
+            {
+                return false;
+            }
+            else if( that.secondaryDomainSpan == null &&
+                secondaryDomainSpan != null )
+            {
+                return false;
+            }
+            else if( that.secondaryRangeSpan != null &&
+                secondaryRangeSpan != null &&
+                !that.secondaryRangeSpan.equals( secondaryRangeSpan ) )
+            {
+                return false;
+            }
+            else if( that.secondaryRangeSpan != null &&
+                secondaryRangeSpan == null )
+            {
+                return false;
+            }
+            else if( that.secondaryRangeSpan == null &&
+                secondaryRangeSpan != null )
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return super.hashCode();
+    }
 }

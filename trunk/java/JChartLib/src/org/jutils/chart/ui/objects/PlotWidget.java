@@ -58,7 +58,6 @@ public class PlotWidget implements IChartWidget
         // ---------------------------------------------------------------------
         // Draw series layer.
         // ---------------------------------------------------------------------
-
         g2d = seriesLayer.setSize( width, height );
         if( seriesLayer.repaint )
         {
