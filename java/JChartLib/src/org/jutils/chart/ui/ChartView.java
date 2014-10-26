@@ -305,6 +305,11 @@ public class ChartView implements IView<JComponent>
             propertiesView.removeAllSeries();
         }
 
+        if( s.data.getCount() == 0 )
+        {
+            return;
+        }
+
         chart.series.add( s );
         chartWidget.plot.serieses.add( new SeriesWidget( chart, s,
             chartWidget.context ) );
