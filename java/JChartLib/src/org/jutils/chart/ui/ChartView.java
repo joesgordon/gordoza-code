@@ -110,7 +110,7 @@ public class ChartView implements IView<JComponent>
         String actionMapKey = "delete_point";
         KeyStroke deleteKey = KeyStroke.getKeyStroke( KeyEvent.VK_DELETE, 0 );
         ActionMap amap = mainPanel.getActionMap();
-        InputMap imap = mainPanel.getInputMap( JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT );
+        InputMap imap = mainPanel.getInputMap( JTable.WHEN_FOCUSED );
 
         imap.put( deleteKey, actionMapKey );
         amap.put( actionMapKey, new ActionAdapter( new DeletePointListener(
@@ -318,6 +318,7 @@ public class ChartView implements IView<JComponent>
      **************************************************************************/
     public void clear()
     {
+        chart.title.text = "Title";
         chart.series.clear();
         chartWidget.plot.serieses.clear();
 
@@ -639,6 +640,8 @@ public class ChartView implements IView<JComponent>
         @Override
         public void mousePressed( MouseEvent e )
         {
+            view.mainPanel.requestFocus();
+
             view.chartWidget.plot.selection.start = e.getPoint();
         }
 
@@ -992,7 +995,14 @@ public class ChartView implements IView<JComponent>
 
             ChartContext context = view.chartWidget.context;
 
-            context.calculateAutoBounds( view.chart );
+            if( context.isAutoBounds() )
+            {
+                context.setAutoBounds( view.chart );
+            }
+            else
+            {
+                context.calculateAutoBounds( view.chart );
+            }
 
             view.chartWidget.plot.seriesLayer.repaint = true;
             view.mainPanel.repaint();

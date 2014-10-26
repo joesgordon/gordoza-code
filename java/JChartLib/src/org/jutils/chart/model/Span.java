@@ -62,4 +62,34 @@ public class Span
         max = this.max + r;
         return new Span( min, max );
     }
+
+    @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        long temp;
+        temp = Double.doubleToLongBits( max );
+        result = prime * result + ( int )( temp ^ ( temp >>> 32 ) );
+        temp = Double.doubleToLongBits( min );
+        result = prime * result + ( int )( temp ^ ( temp >>> 32 ) );
+        return result;
+    }
+
+    @Override
+    public boolean equals( Object obj )
+    {
+        if( this == obj )
+            return true;
+        if( obj == null )
+            return false;
+        if( getClass() != obj.getClass() )
+            return false;
+        Span other = ( Span )obj;
+        if( Double.doubleToLongBits( max ) != Double.doubleToLongBits( other.max ) )
+            return false;
+        if( Double.doubleToLongBits( min ) != Double.doubleToLongBits( other.min ) )
+            return false;
+        return true;
+    }
 }
