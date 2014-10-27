@@ -319,6 +319,72 @@ public class ChartView implements IView<JComponent>
     }
 
     /***************************************************************************
+     * @param files
+     **************************************************************************/
+    public void importData( List<File> files )
+    {
+        boolean addData = false;
+
+        clear();
+
+        for( File file : files )
+        {
+            importData( file, addData );
+            addData = true;
+        }
+    }
+
+    /***************************************************************************
+     * @param file
+     * @param addData
+     **************************************************************************/
+    public void importData( File file, boolean addData )
+    {
+        try
+        {
+            DataFileReader reader = new DataFileReader();
+            ISeriesData<?> data = reader.read( file );
+            Series s = new Series( data );
+
+            Color c = palette.next();
+
+            s.title.text = IOUtils.removeFilenameExtension( file );
+            s.resource = file.getAbsolutePath();
+            s.marker.color = c;
+            s.highlight.color = c;
+            s.line.color = c;
+
+            addSeries( s, addData );
+
+            // LogUtils.printDebug( String.format( "x => (%f,%f)",
+            // chart.plot.context.xMin, chart.plot.context.xMax ) );
+            //
+            // LogUtils.printDebug( String.format( "y => (%f,%f)",
+            // chart.plot.context.yMin, chart.plot.context.yMax ) );
+            // LogUtils.printDebug( "" );
+
+            fileLoadedListeners.fireListeners( this, file );
+        }
+        catch( FileNotFoundException ex )
+        {
+            JOptionPane.showMessageDialog( mainPanel,
+                "The file was not found: " + file.getAbsolutePath(),
+                "File Not Found", JOptionPane.ERROR_MESSAGE );
+        }
+        catch( IOException ex )
+        {
+            JOptionPane.showMessageDialog( mainPanel,
+                "I/O Exception: " + ex.getMessage(), "I/O Exception",
+                JOptionPane.ERROR_MESSAGE );
+        }
+
+        if( chartWidget.plot.serieses.size() < 2 )
+        {
+            setTitle( file.getName() );
+        }
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     public void clear()
@@ -413,70 +479,6 @@ public class ChartView implements IView<JComponent>
         chartWidget.plot.highlightLayer.repaint = true;
         chartWidget.axes.axesLayer.repaint = true;
         mainPanel.repaint();
-    }
-
-    /***************************************************************************
-     * @param files
-     **************************************************************************/
-    public void importData( List<File> files )
-    {
-        boolean addData = false;
-
-        for( File file : files )
-        {
-            importData( file, addData );
-            addData = true;
-        }
-    }
-
-    /***************************************************************************
-     * @param file
-     * @param addData
-     **************************************************************************/
-    public void importData( File file, boolean addData )
-    {
-        try
-        {
-            DataFileReader reader = new DataFileReader();
-            ISeriesData<?> data = reader.read( file );
-            Series s = new Series( data );
-
-            Color c = palette.next();
-
-            s.title.text = IOUtils.removeFilenameExtension( file );
-            s.resource = file.getAbsolutePath();
-            s.marker.color = c;
-            s.highlight.color = c;
-            s.line.color = c;
-
-            addSeries( s, addData );
-
-            // LogUtils.printDebug( String.format( "x => (%f,%f)",
-            // chart.plot.context.xMin, chart.plot.context.xMax ) );
-            //
-            // LogUtils.printDebug( String.format( "y => (%f,%f)",
-            // chart.plot.context.yMin, chart.plot.context.yMax ) );
-            // LogUtils.printDebug( "" );
-
-            fileLoadedListeners.fireListeners( this, file );
-        }
-        catch( FileNotFoundException ex )
-        {
-            JOptionPane.showMessageDialog( mainPanel,
-                "The file was not found: " + file.getAbsolutePath(),
-                "File Not Found", JOptionPane.ERROR_MESSAGE );
-        }
-        catch( IOException ex )
-        {
-            JOptionPane.showMessageDialog( mainPanel,
-                "I/O Exception: " + ex.getMessage(), "I/O Exception",
-                JOptionPane.ERROR_MESSAGE );
-        }
-
-        if( chartWidget.plot.serieses.size() < 2 )
-        {
-            setTitle( file.getName() );
-        }
     }
 
     /***************************************************************************
@@ -924,6 +926,11 @@ public class ChartView implements IView<JComponent>
         @Override
         public void actionPerformed( ItemActionEvent<Boolean> event )
         {
+            if( !event.getItem() )
+            {
+                return;
+            }
+
             SaveOptions options = saveView.getData();
 
             view.userio.getOptions().lastImageFile = options.file;

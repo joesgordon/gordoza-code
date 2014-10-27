@@ -344,9 +344,9 @@ public class OkDialogView implements IView<JDialog>
     public static enum OkDialogButtons
     {
         OK_ONLY( true, false, false ),
-        OK_CANCEL( false, false, true ),
+        OK_CANCEL( true, false, true ),
         OK_APPLY_CANCEL( true, true, true ),
-        OK_APPLY( true, true, true );
+        OK_APPLY( true, true, false );
 
         public final boolean hasOk;
         public final boolean hasApply;
