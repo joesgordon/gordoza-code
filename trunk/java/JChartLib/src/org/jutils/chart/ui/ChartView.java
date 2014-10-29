@@ -667,6 +667,11 @@ public class ChartView implements IView<JComponent>
             Point s = view.chartWidget.plot.selection.start;
             Point e = evt.getPoint();
 
+            if( s == null )
+            {
+                return;
+            }
+
             s.x = Math.max( s.x, context.x );
             s.x = Math.min( s.x, context.x + context.width );
             s.y = Math.max( s.y, context.y );

@@ -43,7 +43,7 @@ public class TextWidget implements IChartWidget
         {
             layer.clear();
 
-            if( textHeight > 0 && textHeight > 0 )
+            if( textWidth > 0 && textHeight > 0 )
             {
                 Graphics2D g2d = layer.setSize( textWidth, textHeight );
 
