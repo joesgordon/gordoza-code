@@ -1022,6 +1022,7 @@ public class ChartView implements IView<JComponent>
             }
 
             view.chartWidget.plot.seriesLayer.repaint = true;
+            view.chartWidget.axes.axesLayer.repaint = true;
             view.mainPanel.repaint();
         }
     }
