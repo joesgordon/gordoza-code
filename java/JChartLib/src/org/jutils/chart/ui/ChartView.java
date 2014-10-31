@@ -19,7 +19,8 @@ import org.jutils.chart.data.*;
 import org.jutils.chart.data.ChartContext.IDimensionCoords;
 import org.jutils.chart.io.DataFileReader;
 import org.jutils.chart.model.*;
-import org.jutils.chart.ui.objects.*;
+import org.jutils.chart.ui.objects.ChartWidget;
+import org.jutils.chart.ui.objects.SeriesWidget;
 import org.jutils.io.IOUtils;
 import org.jutils.io.UserOptionsSerializer;
 import org.jutils.ui.*;
@@ -470,6 +471,9 @@ public class ChartView implements IView<JComponent>
         repaintChart();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private void repaintChart()
     {
         chartWidget.title.repaint();
@@ -530,15 +534,10 @@ public class ChartView implements IView<JComponent>
         g2d.setRenderingHint( RenderingHints.KEY_STROKE_CONTROL,
             RenderingHints.VALUE_STROKE_PURE );
 
-        mainPanel.setObject( new CircleMarker() );
+        repaintChart();
         chartWidget.setTrackingVisible( false );
-        restoreAndRepaintChart();
-
         chartWidget.draw( g2d, 0, 0, w, h );
         chartWidget.setTrackingVisible( true );
-
-        mainPanel.setObject( chartWidget );
-        restoreAndRepaintChart();
 
         try
         {
