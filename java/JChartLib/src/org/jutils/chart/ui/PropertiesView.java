@@ -251,7 +251,7 @@ public class PropertiesView implements IView<JPanel>
                     }
                 }
 
-                this.view.rightView.setTitle( title );
+                this.view.rightView.setTitle( title.trim() );
                 this.view.rightView.setComponent( comp );
             }
         }
