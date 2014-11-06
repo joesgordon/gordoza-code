@@ -71,14 +71,6 @@ public class JChartFrameView implements IView<JFrame>
 
         chartView.chart.title.text = "Example Data Sets";
 
-        data = ChartUtils.createLineSeries( 1000000, 1.0, 0.0, -5.0, 5.0 );
-        s = new Series( data );
-        s.title.text = "y = x";
-        s.line.weight = 4;
-        s.isPrimaryDomain = false;
-        s.isPrimaryRange = false;
-        chartView.addSeries( s );
-
         data = ChartUtils.createLineSeries( 1000000, -1.0, 0.0, -5.0, 5.0 );
         s = new Series( data );
         s.title.text = "y = -x";
@@ -94,6 +86,14 @@ public class JChartFrameView implements IView<JFrame>
         s.highlight.color = new Color( 0x339933 );
         s.line.color = new Color( 0x227722 );
         s.line.weight = 4;
+        chartView.addSeries( s, true );
+
+        data = ChartUtils.createLineSeries( 1000000, 1.0, 0.0, 5.0, 10.0 );
+        s = new Series( data );
+        s.title.text = "y = x";
+        s.line.weight = 4;
+        s.isPrimaryDomain = false;
+        s.isPrimaryRange = false;
         chartView.addSeries( s, true );
     }
 
