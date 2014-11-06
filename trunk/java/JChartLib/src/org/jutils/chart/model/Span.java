@@ -18,6 +18,12 @@ public class Span
      **************************************************************************/
     public Span( double min, double max )
     {
+        if( min == -0.0 && max == 0.0 )
+        {
+            min = -0.0001;
+            max = 0.0001;
+        }
+
         this.min = min;
         this.max = max;
         this.range = this.max - this.min;
