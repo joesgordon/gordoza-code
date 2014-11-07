@@ -207,7 +207,7 @@ public final class SwingUtils
      * @throws UnsupportedOperationException if {@link SystemTray#add(TrayIcon)}
      * throws an {@link AWTException}.
      **************************************************************************/
-    public static final TrayIcon createTrayIcon( Image img, String tooltip,
+    public static TrayIcon createTrayIcon( Image img, String tooltip,
         JFrame frame, PopupMenu popup ) throws UnsupportedOperationException
     {
         TrayIcon icon = null;
@@ -254,6 +254,101 @@ public final class SwingUtils
             f.setExtendedState( JFrame.NORMAL );
             f.requestFocus();
             f.toFront();
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public static boolean showOkCancelDialog( Component parent, Object msg,
+        String title, String okText, final Runnable initialFocusSelector )
+    {
+        JDialog dialog;
+
+        JOptionPane pane = new JOptionPane( msg, JOptionPane.QUESTION_MESSAGE,
+            JOptionPane.OK_CANCEL_OPTION, null,
+            new String[] { okText, "Cancel" }, okText )
+        {
+            @Override
+            public void selectInitialValue()
+            {
+                initialFocusSelector.run();
+            }
+        };
+
+        dialog = pane.createDialog( parent, title );
+
+        dialog.setSize( 500, dialog.getHeight() );
+        dialog.setVisible( true );
+
+        return okText == pane.getValue();
+    }
+
+    /***************************************************************************
+     * @param icon
+     * @param popup
+     **************************************************************************/
+    public static void addTrayMenu( TrayIcon icon, JPopupMenu popup )
+    {
+        icon.addMouseListener( new TrayMouseListener( popup ) );
+    }
+
+    /***************************************************************************
+     * @param size
+     * @return
+     **************************************************************************/
+    public static Font getFixedFont( int size )
+    {
+        return new Font( Font.MONOSPACED, Font.PLAIN, size );
+    }
+
+    /***************************************************************************
+     * @param color
+     * @return
+     **************************************************************************/
+    public static Color inverseColor( Color color )
+    {
+        int a = color.getAlpha();
+        int r = a - color.getRed();
+        int g = a - color.getGreen();
+        int b = a - color.getBlue();
+
+        return new Color( r, g, b, a );
+    }
+
+    /***************************************************************************
+     * @param frame
+     **************************************************************************/
+    public static void toFrontRestoreState( JFrame frame )
+    {
+        if( frame.isVisible() )
+        {
+            int extState = frame.getExtendedState();
+
+            if( ( extState & JFrame.ICONIFIED ) == JFrame.ICONIFIED )
+            {
+                if( ( extState & JFrame.MAXIMIZED_BOTH ) == JFrame.MAXIMIZED_BOTH )
+                {
+                    frame.setExtendedState( JFrame.MAXIMIZED_BOTH );
+                }
+                else if( ( extState & JFrame.MAXIMIZED_HORIZ ) == JFrame.MAXIMIZED_HORIZ )
+                {
+                    frame.setExtendedState( JFrame.MAXIMIZED_HORIZ );
+                }
+                else if( ( extState & JFrame.MAXIMIZED_VERT ) == JFrame.MAXIMIZED_VERT )
+                {
+                }
+                else
+                {
+                    frame.setExtendedState( JFrame.NORMAL );
+                }
+            }
+
+            frame.toFront();
+        }
+        else
+        {
+            frame.setVisible( true );
         }
     }
 
@@ -344,38 +439,6 @@ public final class SwingUtils
     /***************************************************************************
      * 
      **************************************************************************/
-    public static boolean showOkCancelDialog( Component parent, Object msg,
-        String title, String okText, final Runnable initialFocusSelector )
-    {
-        JDialog dialog;
-
-        JOptionPane pane = new JOptionPane( msg, JOptionPane.QUESTION_MESSAGE,
-            JOptionPane.OK_CANCEL_OPTION, null,
-            new String[] { okText, "Cancel" }, okText )
-        {
-            @Override
-            public void selectInitialValue()
-            {
-                initialFocusSelector.run();
-            }
-        };
-
-        dialog = pane.createDialog( parent, title );
-
-        dialog.setSize( 500, dialog.getHeight() );
-        dialog.setVisible( true );
-
-        return okText == pane.getValue();
-    }
-
-    public static void addTrayMenu( TrayIcon icon, JPopupMenu popup )
-    {
-        icon.addMouseListener( new TrayMouseListener( popup ) );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
     private static class TrayMouseListener extends MouseAdapter
     {
         private final JPopupMenu popup;
@@ -447,20 +510,5 @@ public final class SwingUtils
 
             return p;
         }
-    }
-
-    public static Font getFixedFont( int size )
-    {
-        return new Font( Font.MONOSPACED, Font.PLAIN, size );
-    }
-
-    public static Color inverseColor( Color color )
-    {
-        int a = color.getAlpha();
-        int r = a - color.getRed();
-        int g = a - color.getGreen();
-        int b = a - color.getBlue();
-
-        return new Color( r, g, b, a );
     }
 }
