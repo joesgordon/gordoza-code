@@ -4,14 +4,14 @@ import javax.swing.JFrame;
 
 import org.jutils.apps.filespy.data.FileSpyData;
 import org.jutils.apps.filespy.ui.FileSpyFrameView;
-import org.jutils.io.UserOptionsSerializer;
+import org.jutils.io.OptionsSerializer;
 import org.jutils.ui.app.IFrameApp;
 
 public class FileSpyApp implements IFrameApp
 {
-    private final UserOptionsSerializer<FileSpyData> userio;
+    private final OptionsSerializer<FileSpyData> userio;
 
-    public FileSpyApp( UserOptionsSerializer<FileSpyData> userio )
+    public FileSpyApp( OptionsSerializer<FileSpyData> userio )
     {
         this.userio = userio;
     }

@@ -12,7 +12,7 @@ import javax.swing.*;
 import org.jutils.IconConstants;
 import org.jutils.NumberParsingUtils;
 import org.jutils.io.LogUtils;
-import org.jutils.io.UserOptionsSerializer;
+import org.jutils.io.OptionsSerializer;
 import org.jutils.ui.*;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
@@ -42,7 +42,7 @@ public class JHexFrame implements IView<JFrame>
     /** The file tree displaying the directories in the given file system. */
     private final HexEditorFilePanel editor;
     /** The serializer to access user options. */
-    private final UserOptionsSerializer<JHexOptions> userio;
+    private final OptionsSerializer<JHexOptions> userio;
     /**
      * The dialog to show the data in different formats starting at the
      * currently selected byte.
@@ -65,12 +65,12 @@ public class JHexFrame implements IView<JFrame>
      * Creates a JHex frame.
      * @param userio the serializer used to access user data.
      **************************************************************************/
-    public JHexFrame( UserOptionsSerializer<JHexOptions> userio )
+    public JHexFrame( OptionsSerializer<JHexOptions> userio )
     {
         this( userio, true );
     }
 
-    public JHexFrame( UserOptionsSerializer<JHexOptions> userio,
+    public JHexFrame( OptionsSerializer<JHexOptions> userio,
         boolean closeFileWithFrame )
     {
         this.userio = userio;

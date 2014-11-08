@@ -12,7 +12,7 @@ import org.jutils.chart.ChartUtils;
 import org.jutils.chart.model.ISeriesData;
 import org.jutils.chart.model.Series;
 import org.jutils.chart.ui.ChartView;
-import org.jutils.io.UserOptionsSerializer;
+import org.jutils.io.OptionsSerializer;
 import org.jutils.ui.RecentFilesMenuView;
 import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.event.ItemActionEvent;
@@ -32,7 +32,7 @@ public class JChartFrameView implements IView<JFrame>
     private final RecentFilesMenuView recentFiles;
 
     /**  */
-    private final UserOptionsSerializer<UserData> userio;
+    private final OptionsSerializer<UserData> userio;
 
     /***************************************************************************
      * @param title

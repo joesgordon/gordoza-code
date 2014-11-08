@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.jutils.apps.filespy.data.FileSpyData;
 import org.jutils.io.*;
-import org.jutils.io.UserOptionsSerializer.IUserOptionsCreator;
+import org.jutils.io.OptionsSerializer.IOptionsCreator;
 import org.jutils.ui.app.FrameApplication;
 import org.jutils.ui.app.IFrameApp;
 
@@ -31,7 +31,7 @@ public class FileSpyMain
      * 
      **************************************************************************/
     private static class OptionsCreator implements
-        IUserOptionsCreator<FileSpyData>
+        IOptionsCreator<FileSpyData>
     {
         @Override
         public FileSpyData createDefaultOptions()
@@ -46,12 +46,18 @@ public class FileSpyMain
         {
             return new FileSpyData( item_read );
         }
+
+        @Override
+        public void warn( String message )
+        {
+            LogUtils.printWarning( message );
+        }
     }
 
-    public static UserOptionsSerializer<FileSpyData> createUserIO()
+    public static OptionsSerializer<FileSpyData> createUserIO()
     {
-        UserOptionsSerializer<FileSpyData> userio;
-        userio = UserOptionsSerializer.getUserIO( new OptionsCreator(),
+        OptionsSerializer<FileSpyData> userio;
+        userio = OptionsSerializer.getUserIO( new OptionsCreator(),
             USER_OPTIONS_FILE );
 
         return userio;

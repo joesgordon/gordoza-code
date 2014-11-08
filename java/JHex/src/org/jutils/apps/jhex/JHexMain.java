@@ -3,7 +3,7 @@ package org.jutils.apps.jhex;
 import java.io.File;
 
 import org.jutils.io.IOUtils;
-import org.jutils.io.UserOptionsSerializer;
+import org.jutils.io.OptionsSerializer;
 import org.jutils.ui.app.FrameApplication;
 
 /*******************************************************************************
@@ -40,9 +40,9 @@ public class JHexMain
     /***************************************************************************
      * @return
      **************************************************************************/
-    public static UserOptionsSerializer<JHexOptions> getUserIO()
+    public static OptionsSerializer<JHexOptions> getUserIO()
     {
-        return UserOptionsSerializer.getUserIO( JHexOptions.class,
+        return OptionsSerializer.getUserIO( JHexOptions.class,
             USER_OPTIONS_FILE );
     }
 }

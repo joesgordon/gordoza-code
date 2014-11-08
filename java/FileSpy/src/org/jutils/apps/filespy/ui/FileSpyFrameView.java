@@ -12,7 +12,7 @@ import javax.swing.*;
 import org.jutils.IconConstants;
 import org.jutils.apps.filespy.data.FileSpyData;
 import org.jutils.apps.filespy.data.SearchParams;
-import org.jutils.io.UserOptionsSerializer;
+import org.jutils.io.OptionsSerializer;
 import org.jutils.licensing.LicenseDialog;
 import org.jutils.ui.*;
 import org.jutils.ui.explorer.FileConfigurationDialog;
@@ -30,12 +30,12 @@ public class FileSpyFrameView implements IView<JFrame>
     /**  */
     private final JFrame frame;
     /**  */
-    private final UserOptionsSerializer<FileSpyData> userio;
+    private final OptionsSerializer<FileSpyData> userio;
 
     /***************************************************************************
      *
      **************************************************************************/
-    public FileSpyFrameView( UserOptionsSerializer<FileSpyData> userio )
+    public FileSpyFrameView( OptionsSerializer<FileSpyData> userio )
     {
         StatusBarPanel statusBar = new StatusBarPanel();
 
