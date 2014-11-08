@@ -5,8 +5,9 @@ import java.io.*;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.XStreamException;
 
-// TODO comments
-
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class XStreamUtils
 {
     /***************************************************************************

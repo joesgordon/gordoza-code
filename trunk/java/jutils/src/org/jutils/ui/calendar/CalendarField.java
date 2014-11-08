@@ -18,8 +18,6 @@ import org.jutils.ui.event.updater.DataUpdaterList;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.model.IView;
 
-//TODO comments
-
 /*******************************************************************************
  *
  ******************************************************************************/

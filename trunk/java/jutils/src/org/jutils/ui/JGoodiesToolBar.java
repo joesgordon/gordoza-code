@@ -7,10 +7,14 @@ import org.jutils.SwingUtils;
 import com.jgoodies.looks.HeaderStyle;
 import com.jgoodies.looks.Options;
 
-//TODO comments
-
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class JGoodiesToolBar extends JToolBar
 {
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public JGoodiesToolBar()
     {
         super();
@@ -18,6 +22,9 @@ public class JGoodiesToolBar extends JToolBar
         init();
     }
 
+    /***************************************************************************
+     * @param orientation
+     **************************************************************************/
     public JGoodiesToolBar( int orientation )
     {
         super( orientation );
@@ -25,6 +32,9 @@ public class JGoodiesToolBar extends JToolBar
         init();
     }
 
+    /***************************************************************************
+     * @param name
+     **************************************************************************/
     public JGoodiesToolBar( String name )
     {
         super( name );
@@ -32,6 +42,10 @@ public class JGoodiesToolBar extends JToolBar
         init();
     }
 
+    /***************************************************************************
+     * @param name
+     * @param orientation
+     **************************************************************************/
     public JGoodiesToolBar( String name, int orientation )
     {
         super( name, orientation );
@@ -39,6 +53,9 @@ public class JGoodiesToolBar extends JToolBar
         init();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private void init()
     {
         SwingUtils.setToolbarDefaults( this );

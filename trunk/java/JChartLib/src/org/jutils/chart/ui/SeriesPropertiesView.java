@@ -3,14 +3,13 @@ package org.jutils.chart.ui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.*;
 
-import org.jutils.IconConstants;
-import org.jutils.SwingUtils;
-import org.jutils.chart.data.XYPoint;
-import org.jutils.chart.io.DataLineReader;
+import org.jutils.*;
+import org.jutils.chart.io.FilteredWriter;
 import org.jutils.chart.model.Series;
 import org.jutils.io.IOUtils;
 import org.jutils.ui.JGoodiesToolBar;
@@ -125,7 +124,6 @@ public class SeriesPropertiesView implements IDataView<Series>
 
         dataView.setData( series.data );
         seriesView.setData( series );
-        saveAction.setEnabled( series.getResourceFile() != null );
     }
 
     /***************************************************************************
@@ -177,49 +175,28 @@ public class SeriesPropertiesView implements IDataView<Series>
         @Override
         public void filesChosen( File [] files )
         {
-            File tofile = files[0];
+            File toFile = files[0];
             File fromFile = view.series.getResourceFile();
+            FilteredWriter fw = new FilteredWriter();
 
-            if( fromFile == null )
+            try
             {
-                // TODO display error
-                return;
-            }
-
-            try( FileReader fr = new FileReader( fromFile );
-                 BufferedReader reader = new BufferedReader( fr ) )
-            {
-                try( PrintStream stream = new PrintStream( tofile ) )
+                if( fromFile == null )
                 {
-                    DataLineReader lineReader = new DataLineReader();
-                    String line = null;
-                    int idx = 0;
-                    XYPoint point = null;
-
-                    while( ( line = reader.readLine() ) != null )
-                    {
-                        point = lineReader.read( line );
-
-                        if( point != null )
-                        {
-                            if( !view.series.data.isHidden( idx ) )
-                            {
-                                stream.println( line );
-                            }
-
-                            idx++;
-                        }
-                        else
-                        {
-                            stream.println( line );
-                        }
-                    }
+                    fw.write( toFile, view.series.data );
+                }
+                else
+                {
+                    fw.write( fromFile, toFile, view.series.data );
                 }
             }
             catch( IOException ex )
             {
-                JOptionPane.showMessageDialog( view.getView(),
-                    "Unable to save file: " + ex.getMessage(), "I/O Error",
+                JOptionPane.showMessageDialog(
+                    view.getView(),
+                    "Unable to save file: " + Utils.NEW_LINE +
+                        toFile.getAbsolutePath() + Utils.NEW_LINE +
+                        Utils.NEW_LINE + ex.getMessage(), "I/O Error",
                     JOptionPane.ERROR_MESSAGE );
             }
         }

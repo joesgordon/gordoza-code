@@ -5,8 +5,6 @@ import java.util.*;
 
 import org.jutils.utils.FileDataCache.CacheItem;
 
-// TODO comments
-
 /*******************************************************************************
  * Defines a class that stores objects in association with a file.
  * @param <T> the type of objects to be stored.

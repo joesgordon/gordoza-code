@@ -5,10 +5,14 @@ import java.util.Random;
 import org.junit.Assert;
 import org.junit.Test;
 
-//TODO comments
-
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class ItemClonerTest
 {
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testSingleUse()
     {
@@ -24,6 +28,9 @@ public class ItemClonerTest
         Assert.assertNotSame( item, clone );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testMultipleUse()
     {
@@ -51,6 +58,10 @@ public class ItemClonerTest
         Assert.assertNotSame( item, clone );
     }
 
+    /***************************************************************************
+     * @param count
+     * @return
+     **************************************************************************/
     private static Object [] buildArray( int count )
     {
         Object [] values = new Object[count];

@@ -5,37 +5,54 @@ import java.io.IOException;
 
 import org.jutils.Utils;
 
-//TODO comments
-
+/***************************************************************************
+ * 
+ **************************************************************************/
 public class BufferedReadOnlyStream implements IStream
 {
+    /**  */
     public static int DEFAULT_BUFFER_SIZE = 8 * 1024 * 1024;
 
+    /**  */
     private final IStream stream;
+    /**  */
     private final byte [] buffer;
 
+    /**  */
     private int index;
+    /**  */
     private int fillCount;
+    /**  */
     private long position;
+    /**  */
     private Mutator<Long> length;
 
+    /***************************************************************************
+     * @param stream
+     **************************************************************************/
     public BufferedReadOnlyStream( IStream stream )
     {
         this( stream, DEFAULT_BUFFER_SIZE );
     }
 
+    /***************************************************************************
+     * @param stream
+     * @param bufferSize
+     **************************************************************************/
     public BufferedReadOnlyStream( IStream stream, int bufferSize )
     {
         this.stream = stream;
         this.buffer = new byte[bufferSize];
-        this.length = null;
 
         this.index = 0;
-        this.position = 0;
         this.fillCount = 0;
+        this.position = 0;
         this.length = null;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public byte read() throws EOFException, IOException
     {
@@ -53,18 +70,27 @@ public class BufferedReadOnlyStream implements IStream
         return buffer[index++];
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public int read( byte [] buf ) throws IOException
     {
         return read( buf, 0, buf.length );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void readFully( byte [] buf ) throws EOFException, IOException
     {
         readFully( buf, 0, buf.length );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public int read( byte [] buf, int off, int len ) throws IOException
     {
@@ -109,6 +135,9 @@ public class BufferedReadOnlyStream implements IStream
         return totalRead;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void readFully( byte [] buf, int off, int len ) throws EOFException,
         IOException
@@ -128,12 +157,18 @@ public class BufferedReadOnlyStream implements IStream
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void close() throws IOException
     {
         stream.close();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void seek( long pos ) throws IOException
     {
@@ -153,6 +188,11 @@ public class BufferedReadOnlyStream implements IStream
         }
     }
 
+    /***************************************************************************
+     * @param pos
+     * @throws EOFException
+     * @throws IOException
+     **************************************************************************/
     private void fillBuffer( long pos ) throws EOFException, IOException
     {
         stream.seek( pos );
@@ -169,24 +209,36 @@ public class BufferedReadOnlyStream implements IStream
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void skip( long count ) throws IOException
     {
         seek( getPosition() + count );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public long getAvailable() throws IOException
     {
         return getLength() - getPosition();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public long getPosition() throws IOException
     {
         return position + index;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public long getLength() throws IOException
     {
@@ -205,24 +257,36 @@ public class BufferedReadOnlyStream implements IStream
         return len;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void write( byte b ) throws IOException
     {
         throw new IOException( "Cannot write to a read only stream." );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void write( byte [] buf ) throws IOException
     {
         throw new IOException( "Cannot write to a read only stream." );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void write( byte [] buf, int off, int len ) throws IOException
     {
         throw new IOException( "Cannot write to a read only stream." );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class Mutator<T>
     {
         public T item;

@@ -9,8 +9,6 @@ import javax.swing.Action;
 import org.jutils.IconConstants;
 import org.jutils.ui.event.ActionAdapter;
 
-// TODO comments
-
 /*******************************************************************************
  * 
  ******************************************************************************/
