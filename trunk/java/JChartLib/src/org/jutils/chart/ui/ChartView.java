@@ -22,7 +22,7 @@ import org.jutils.chart.model.*;
 import org.jutils.chart.ui.objects.ChartWidget;
 import org.jutils.chart.ui.objects.SeriesWidget;
 import org.jutils.io.IOUtils;
-import org.jutils.io.UserOptionsSerializer;
+import org.jutils.io.OptionsSerializer;
 import org.jutils.ui.*;
 import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.event.*;
@@ -57,7 +57,7 @@ public class ChartView implements IView<JComponent>
     private final ItemActionList<File> fileLoadedListeners;
 
     /**  */
-    private final UserOptionsSerializer<UserData> userio;
+    private final OptionsSerializer<UserData> userio;
 
     /**  */
     public final Chart chart;

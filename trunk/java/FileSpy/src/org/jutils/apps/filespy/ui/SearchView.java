@@ -99,7 +99,7 @@ public class SearchView implements IDataView<SearchParams>
     private final StatusBarPanel statusBar;
 
     /**  */
-    private final UserOptionsSerializer<FileSpyData> userio;
+    private final OptionsSerializer<FileSpyData> userio;
 
     /**  */
     private Searcher searcher;
@@ -108,7 +108,7 @@ public class SearchView implements IDataView<SearchParams>
      *
      **************************************************************************/
     public SearchView( StatusBarPanel statusBar,
-        UserOptionsSerializer<FileSpyData> userio )
+        OptionsSerializer<FileSpyData> userio )
     {
         this.statusBar = statusBar;
         this.userio = userio;

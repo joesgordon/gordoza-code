@@ -5,7 +5,7 @@ import java.io.File;
 
 import javax.swing.JFrame;
 
-import org.jutils.io.UserOptionsSerializer;
+import org.jutils.io.OptionsSerializer;
 import org.jutils.ui.app.IFrameApp;
 
 /***************************************************************************
@@ -16,7 +16,7 @@ public class JHexApp implements IFrameApp
     /**  */
     private final File file;
     /**  */
-    private final UserOptionsSerializer<JHexOptions> userio;
+    private final OptionsSerializer<JHexOptions> userio;
     /**  */
     private final boolean closeFileWithFrame;
 
@@ -26,7 +26,7 @@ public class JHexApp implements IFrameApp
     /***************************************************************************
      * @param userio
      **************************************************************************/
-    public JHexApp( UserOptionsSerializer<JHexOptions> userio )
+    public JHexApp( OptionsSerializer<JHexOptions> userio )
     {
         this( userio, null );
     }
@@ -35,7 +35,7 @@ public class JHexApp implements IFrameApp
      * @param userio
      * @param file
      **************************************************************************/
-    public JHexApp( UserOptionsSerializer<JHexOptions> userio, File file )
+    public JHexApp( OptionsSerializer<JHexOptions> userio, File file )
     {
         this( userio, file, true );
     }
@@ -45,7 +45,7 @@ public class JHexApp implements IFrameApp
      * @param file
      * @param closeFileWithFrame
      **************************************************************************/
-    public JHexApp( UserOptionsSerializer<JHexOptions> userio, File file,
+    public JHexApp( OptionsSerializer<JHexOptions> userio, File file,
         boolean closeFileWithFrame )
     {
         this.userio = userio;

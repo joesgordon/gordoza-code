@@ -6,19 +6,17 @@ import java.lang.reflect.InvocationTargetException;
 
 import com.thoughtworks.xstream.XStreamException;
 
-// TODO Add a way for the errors to become warnings via callback or logging.
-
 /*******************************************************************************
  * Default serializer for user options.
  * @param <T> The type of options to be serialized.
  ******************************************************************************/
-public class UserOptionsSerializer<T>
+public class OptionsSerializer<T>
 {
     /**
      * The class to use to create default options when the options cannot be
      * read from file.
      */
-    private final IUserOptionsCreator<T> creator;
+    private final IOptionsCreator<T> creator;
     /** The file from which the options will be read and written. */
     private final File file;
 
@@ -33,7 +31,7 @@ public class UserOptionsSerializer<T>
      * options cannot be read from file.
      * @param file The file from which the options will be read and written.
      **************************************************************************/
-    public UserOptionsSerializer( IUserOptionsCreator<T> creator, File file )
+    public OptionsSerializer( IOptionsCreator<T> creator, File file )
     {
         this.creator = creator;
         this.file = file;
@@ -97,7 +95,7 @@ public class UserOptionsSerializer<T>
             {
                 options = getDefault();
                 write();
-                LogUtils.printWarning( " User options file does not exist: " +
+                creator.warn( " User options file does not exist: " +
                     file.getAbsolutePath() );
             }
             catch( IOException ex )
@@ -113,14 +111,13 @@ public class UserOptionsSerializer<T>
                         ".broken" ) );
                 options = getDefault();
                 write();
-                LogUtils.printWarning( "User options file is out of date: " +
-                    file.getAbsolutePath() );
-                LogUtils.printWarning( "because: " + ex.getMessage() );
+                creator.warn( "User options file is out of date: " +
+                    file.getAbsolutePath() + " because: " + ex.getMessage() );
             }
         }
         else
         {
-            LogUtils.printWarning( "File does not exist and will be created: " +
+            creator.warn( "File does not exist and will be created: " +
                 file.getAbsolutePath() );
         }
 
@@ -135,11 +132,10 @@ public class UserOptionsSerializer<T>
             }
             else
             {
-                throw new XStreamException(
-                    "Existing user options are of type " +
-                        obj.getClass().getName() +
-                        " and are not assignable to the type " +
-                        options.getClass() );
+                creator.warn( "Existing user options are of type " +
+                    obj.getClass().getName() +
+                    " and are not assignable to the type " + options.getClass() );
+                options = getDefault();
             }
         }
         else
@@ -176,11 +172,13 @@ public class UserOptionsSerializer<T>
         }
         catch( IOException ex )
         {
-            ex.printStackTrace();
+            creator.warn( "Unable to write options because of an I/O error: " +
+                ex.getMessage() );
         }
         catch( XStreamException ex )
         {
-            ex.printStackTrace();
+            creator.warn( "Unable to write options because of an serialization error: " +
+                ex.getMessage() );
         }
     }
 
@@ -189,20 +187,23 @@ public class UserOptionsSerializer<T>
      * during a read from file.
      * @param <T> The type of options to be created.
      **************************************************************************/
-    public static interface IUserOptionsCreator<T>
+    public static interface IOptionsCreator<T>
     {
         /** Creates a default set of options. */
         public T createDefaultOptions();
 
         /** Called to initialize fields that may have been read as null. */
         public T initialize( T item_read );
+
+        /** Called if there is any issue in reading or writing the file. */
+        public void warn( String message );
     }
 
     /***************************************************************************
      * @param <T>
      **************************************************************************/
     public static class DefaultOptionsCreator<T> implements
-        IUserOptionsCreator<T>
+        IOptionsCreator<T>
     {
         private final Constructor<T> dataConstructor;
 
@@ -254,6 +255,12 @@ public class UserOptionsSerializer<T>
         {
             return item_read;
         }
+
+        @Override
+        public void warn( String message )
+        {
+            LogUtils.printWarning( message );
+        }
     }
 
     /***************************************************************************
@@ -263,8 +270,8 @@ public class UserOptionsSerializer<T>
      * @param file the file to be used for serialization.
      * @return the new options serializer.
      **************************************************************************/
-    public static <T> UserOptionsSerializer<T> getUserIO(
-        IUserOptionsCreator<T> creator, File file )
+    public static <T> OptionsSerializer<T> getUserIO(
+        IOptionsCreator<T> creator, File file )
     {
         if( !IOUtils.ensureParentExists( file ) )
         {
@@ -272,13 +279,13 @@ public class UserOptionsSerializer<T>
                 file.getParentFile().getAbsolutePath() );
         }
 
-        return new UserOptionsSerializer<T>( creator, file );
+        return new OptionsSerializer<T>( creator, file );
     }
 
     /***************************************************************************
      * @param <T>
      **************************************************************************/
-    public static <T> UserOptionsSerializer<T> getUserIO( Class<T> cls,
+    public static <T> OptionsSerializer<T> getUserIO( Class<T> cls,
         File file )
     {
         return getUserIO( new DefaultOptionsCreator<T>( cls ), file );

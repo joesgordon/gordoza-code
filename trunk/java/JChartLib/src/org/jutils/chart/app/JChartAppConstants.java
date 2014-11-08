@@ -3,7 +3,7 @@ package org.jutils.chart.app;
 import java.io.File;
 
 import org.jutils.io.IOUtils;
-import org.jutils.io.UserOptionsSerializer;
+import org.jutils.io.OptionsSerializer;
 
 /*******************************************************************************
  * 
@@ -19,7 +19,7 @@ public class JChartAppConstants
         ".jutils", "jchart", "options.xml" );
 
     /**  */
-    private static UserOptionsSerializer<UserData> userio;
+    private static OptionsSerializer<UserData> userio;
 
     /***************************************************************************
      * 
@@ -31,11 +31,11 @@ public class JChartAppConstants
     /***************************************************************************
      * @return
      **************************************************************************/
-    public static UserOptionsSerializer<UserData> getUserIO()
+    public static OptionsSerializer<UserData> getUserIO()
     {
         if( userio == null )
         {
-            userio = UserOptionsSerializer.getUserIO( UserData.class,
+            userio = OptionsSerializer.getUserIO( UserData.class,
                 USER_OPTIONS_FILE );
         }
 
