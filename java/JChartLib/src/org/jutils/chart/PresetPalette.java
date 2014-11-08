@@ -13,10 +13,19 @@ public class PresetPalette implements IPalette
         List<Color> colors = new ArrayList<>();
 
         colors.add( Color.black );
-        colors.add( new Color( 0x0066CC ) );
-        colors.add( new Color( 0xFF9933 ) );
-        colors.add( new Color( 0xCC6622 ) );
-        colors.add( new Color( 0x339933 ) );
+        colors.add( new Color( 0x41B6C4 ) );
+        colors.add( new Color( 0x2C7FB8 ) );
+        colors.add( new Color( 0xFD8D3C ) );
+        colors.add( new Color( 0xF03B20 ) );
+        colors.add( new Color( 0x31A354 ) );
+        colors.add( new Color( 0xF768A1 ) );
+        colors.add( new Color( 0xD7B5D8 ) );
+        colors.add( new Color( 0x78C679 ) );
+        colors.add( new Color( 0xFECC5C ) );
+        colors.add( new Color( 0xC51B8A ) );
+        colors.add( new Color( 0x006837 ) );
+        colors.add( new Color( 0x7A0177 ) );
+        colors.add( new Color( 0xBD0026 ) );
 
         this.cycle = new CyclingPalette( colors );
     }

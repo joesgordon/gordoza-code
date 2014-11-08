@@ -8,8 +8,6 @@ import java.util.*;
 
 import org.jutils.ui.validation.ValidationException;
 
-//TODO comments
-
 /*******************************************************************************
  *
  ******************************************************************************/
@@ -121,6 +119,11 @@ public final class IOUtils
         return ans;
     }
 
+    /***************************************************************************
+     * @param str1
+     * @param str2
+     * @return
+     **************************************************************************/
     private static int findFirstDiff( String str1, String str2 )
     {
         int idx = 0;
@@ -533,6 +536,10 @@ public final class IOUtils
         }
     }
 
+    /***************************************************************************
+     * @param file
+     * @return
+     **************************************************************************/
     public static boolean ensureParentExists( File file )
     {
         File dir = file.getAbsoluteFile().getParentFile();

@@ -7,10 +7,14 @@ import javax.swing.JTable;
 
 import org.jutils.io.LogUtils;
 
-//TODO comments
-
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class TableKeyListener extends KeyAdapter
 {
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void keyPressed( KeyEvent e )
     {
@@ -49,6 +53,12 @@ public class TableKeyListener extends KeyAdapter
         }
     }
 
+    /***************************************************************************
+     * @param t
+     * @param row
+     * @param col
+     * @param extend
+     **************************************************************************/
     private void moveUp( JTable t, int row, int col, boolean extend )
     {
         row--;
@@ -60,6 +70,12 @@ public class TableKeyListener extends KeyAdapter
         t.changeSelection( row, col, false, extend );
     }
 
+    /***************************************************************************
+     * @param t
+     * @param row
+     * @param col
+     * @param extend
+     **************************************************************************/
     private void moveLeft( JTable t, int row, int col, boolean extend )
     {
         col--;
@@ -75,6 +91,12 @@ public class TableKeyListener extends KeyAdapter
         }
     }
 
+    /***************************************************************************
+     * @param t
+     * @param row
+     * @param col
+     * @param extend
+     **************************************************************************/
     private void moveRight( JTable t, int row, int col, boolean extend )
     {
         col++;
@@ -91,6 +113,12 @@ public class TableKeyListener extends KeyAdapter
         }
     }
 
+    /***************************************************************************
+     * @param t
+     * @param row
+     * @param col
+     * @param extend
+     **************************************************************************/
     private void moveDown( JTable t, int row, int col, boolean extend )
     {
         row++;

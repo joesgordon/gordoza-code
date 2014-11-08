@@ -7,8 +7,6 @@ import javax.swing.SwingUtilities;
 
 import org.jutils.ui.StandardUncaughtExceptionHandler;
 
-//TODO comments
-
 /*******************************************************************************
  * 
  ******************************************************************************/

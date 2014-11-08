@@ -13,8 +13,6 @@ import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.model.IView;
 import org.jutils.utils.BitArray;
 
-//TODO comments
-
 /*******************************************************************************
  * 
  ******************************************************************************/

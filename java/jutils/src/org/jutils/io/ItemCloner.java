@@ -2,14 +2,21 @@ package org.jutils.io;
 
 import java.io.IOException;
 
-//TODO comments
-
+/*******************************************************************************
+ * @param <T>
+ ******************************************************************************/
 public class ItemCloner<T>
 {
+    /**  */
     private final ByteArrayStream stream;
+    /**  */
     private final StreamOutput outputStream;
+    /**  */
     private final StreamInput inputStream;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public ItemCloner()
     {
         this.stream = new ByteArrayStream( 1024 );
@@ -17,6 +24,11 @@ public class ItemCloner<T>
         this.inputStream = new StreamInput( stream );
     }
 
+    /***************************************************************************
+     * @param item
+     * @return
+     * @throws IllegalStateException
+     **************************************************************************/
     public T cloneItem( T item ) throws IllegalStateException
     {
         T clone = null;

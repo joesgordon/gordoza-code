@@ -12,8 +12,6 @@ import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
 import org.jutils.ui.model.IView;
 
-//TODO comments
-
 /*******************************************************************************
  *
  ******************************************************************************/

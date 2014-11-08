@@ -2,8 +2,6 @@ package org.jutils.io;
 
 import org.jutils.utils.BitArray;
 
-//TODO comments
-
 /*******************************************************************************
  * Wraps a byte array and provides bit by bit access to the data.
  ******************************************************************************/

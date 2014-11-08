@@ -7,14 +7,12 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jutils.ui.AutoSpinner;
+import org.jutils.ui.SpinnerWheelListener;
 import org.jutils.ui.app.FrameApplication;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.event.updater.DataUpdaterList;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.model.IDataView;
-
-//TODO comments
 
 /*******************************************************************************
  * 
@@ -43,10 +41,12 @@ public class DateTimeView implements IDataView<Calendar>
         this.updaterList = new DataUpdaterList<Calendar>();
         this.timeModel = new SpinnerDateModel( new Date(), null, null,
             Calendar.AM_PM );
-        JSpinner spinner = new AutoSpinner( timeModel );
+        JSpinner spinner = new JSpinner( timeModel );
         JSpinner.DateEditor spinnerEditor = new JSpinner.DateEditor( spinner,
             "hh:mm:ss a" );
         spinner.setEditor( spinnerEditor );
+
+        SpinnerWheelListener.install( spinner );
 
         this.dateField = new CalendarField();
         this.timeChanged = new TimeListener( this, updaterList );

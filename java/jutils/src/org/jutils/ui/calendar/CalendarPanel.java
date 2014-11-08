@@ -12,13 +12,11 @@ import javax.swing.text.DateFormatter;
 import javax.swing.text.DefaultFormatterFactory;
 
 import org.jutils.io.LogUtils;
-import org.jutils.ui.AutoSpinner;
+import org.jutils.ui.SpinnerWheelListener;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.model.CyclingSpinnerListModel;
 import org.jutils.ui.model.IDataView;
-
-//TODO comments
 
 /*******************************************************************************
  *
@@ -43,11 +41,11 @@ public class CalendarPanel implements IDataView<Long>
     /**  */
     private final JPanel view;
     /**  */
-    private final AutoSpinner timeSpinner;
+    private final JSpinner timeSpinner;
     /**  */
-    private final AutoSpinner monthSpinner;
+    private final JSpinner monthSpinner;
     /**  */
-    private final AutoSpinner yearSpinner;
+    private final JSpinner yearSpinner;
     /**  */
     private final JLabel [] weekdayLabels;
     /**  */
@@ -92,14 +90,17 @@ public class CalendarPanel implements IDataView<Long>
     {
         this.showTime = showTime;
 
-        this.timeSpinner = new AutoSpinner( new SpinnerDateModel() );
-        this.monthSpinner = new AutoSpinner( new CyclingSpinnerListModel(
-            MONTHS ) );
-        this.yearSpinner = new AutoSpinner( new SpinnerNumberModel() );
+        this.timeSpinner = new JSpinner( new SpinnerDateModel() );
+        this.monthSpinner = new JSpinner( new CyclingSpinnerListModel( MONTHS ) );
+        this.yearSpinner = new JSpinner( new SpinnerNumberModel() );
         this.weekdayLabels = new JLabel[WEEK_DAYS.length];
         this.dayLabels = new DayLabel[42];
 
         this.dateChangedListeners = new ItemActionList<Long>();
+
+        SpinnerWheelListener.install( timeSpinner );
+        SpinnerWheelListener.install( monthSpinner );
+        SpinnerWheelListener.install( yearSpinner );
 
         for( int i = 0; i < weekdayLabels.length; i++ )
         {

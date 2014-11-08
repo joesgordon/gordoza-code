@@ -15,40 +15,57 @@ import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.model.IView;
 
-//TODO comments
-
 /*******************************************************************************
  * 
  ******************************************************************************/
 public class ValueView implements IView<JPanel>
 {
+    /**  */
     private static final int DEFAULT_COLS = 17;
 
+    /**  */
     private final JPanel view;
 
+    /**  */
     private final ButtonGroup highlightGroup;
 
+    /**  */
     private final JTextField sint08Field;
+    /**  */
     private final JTextField uint08Field;
 
+    /**  */
     private final JTextField sint16Field;
+    /**  */
     private final JTextField uint16Field;
 
+    /**  */
     private final JTextField sint32Field;
+    /**  */
     private final JTextField uint32Field;
 
+    /**  */
     private final JTextField sint64Field;
+    /**  */
     private final JTextField uint64Field;
 
+    /**  */
     private final JTextField floatField;
+    /**  */
     private final JTextField doubleField;
 
+    /**  */
     private final List<JTextField> fields;
+    /**  */
     private final List<ButtonByteSize> buttonSizes;
+    /**  */
     private final ItemActionList<Integer> selectionListeners;
 
+    /**  */
     private ByteOrder dataOrder;
+    /**  */
     private byte [] bytes;
+    /**  */
     private int offset;
 
     /***************************************************************************
@@ -86,6 +103,9 @@ public class ValueView implements IView<JPanel>
         this.offset = -1;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private JPanel createView()
     {
         JPanel panel = new JPanel( new GridBagLayout() );
@@ -160,6 +180,9 @@ public class ValueView implements IView<JPanel>
         return panel;
     }
 
+    /***************************************************************************
+     * @param panel
+     **************************************************************************/
     private void addEndiannessPanel( JPanel panel )
     {
         JPanel ep = new JPanel( new GridBagLayout() );
@@ -194,6 +217,13 @@ public class ValueView implements IView<JPanel>
         panel.add( ep, constraints );
     }
 
+    /***************************************************************************
+     * @param panel
+     * @param fieldName
+     * @param row
+     * @param rbutton
+     * @param field
+     **************************************************************************/
     private void addField( JPanel panel, String fieldName, int row,
         JRadioButton rbutton, JTextField field )
     {
@@ -223,11 +253,17 @@ public class ValueView implements IView<JPanel>
         panel.add( rbutton, constraints );
     }
 
+    /***************************************************************************
+     * @param l
+     **************************************************************************/
     public void addSizeSelectedListener( ItemActionListener<Integer> l )
     {
         selectionListeners.addListener( l );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public int getSelectedSize()
     {
         ButtonModel model = highlightGroup.getSelection();
@@ -243,6 +279,10 @@ public class ValueView implements IView<JPanel>
         return -1;
     }
 
+    /***************************************************************************
+     * @param bytes
+     * @param offset
+     **************************************************************************/
     public void setBytes( byte [] bytes, int offset )
     {
         this.bytes = bytes;
@@ -288,6 +328,9 @@ public class ValueView implements IView<JPanel>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private void setDefaultText()
     {
         for( JTextField field : fields )
@@ -296,6 +339,10 @@ public class ValueView implements IView<JPanel>
         }
     }
 
+    /***************************************************************************
+     * @param b
+     * @return
+     **************************************************************************/
     private String toUint08( byte b )
     {
         int i = b;
@@ -308,6 +355,10 @@ public class ValueView implements IView<JPanel>
         return "" + i;
     }
 
+    /***************************************************************************
+     * @param s
+     * @return
+     **************************************************************************/
     private String toUint16( short s )
     {
         int i = s;
@@ -320,6 +371,10 @@ public class ValueView implements IView<JPanel>
         return "" + i;
     }
 
+    /***************************************************************************
+     * @param i
+     * @return
+     **************************************************************************/
     private String toUint32( int i )
     {
         long l = i;
@@ -332,6 +387,10 @@ public class ValueView implements IView<JPanel>
         return "" + l;
     }
 
+    /***************************************************************************
+     * @param l
+     * @return
+     **************************************************************************/
     private String toUint64( long l )
     {
         ByteBuffer buf;
@@ -390,6 +449,9 @@ public class ValueView implements IView<JPanel>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class EndiannessListener implements ActionListener
     {
         private ValueView view;

@@ -6,8 +6,6 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
 
-//TODO comments
-
 /*******************************************************************************
  * According to <a
  * href="http://stackoverflow.com/a/5623638/1741">stackoverflow</a> and several
@@ -38,23 +36,46 @@ public class MappedStream implements IDataStream
     /**  */
     private MappedByteBuffer buffer;
 
+    /***************************************************************************
+     * @param file
+     * @throws FileNotFoundException
+     * @throws IOException
+     **************************************************************************/
     public MappedStream( File file ) throws FileNotFoundException, IOException
     {
         this( file, false );
     }
 
+    /***************************************************************************
+     * @param file
+     * @param readOnly
+     * @throws FileNotFoundException
+     **************************************************************************/
     public MappedStream( File file, boolean readOnly )
         throws FileNotFoundException
     {
         this( file, readOnly, ByteOrder.BIG_ENDIAN );
     }
 
+    /***************************************************************************
+     * @param file
+     * @param readOnly
+     * @param order
+     * @throws FileNotFoundException
+     **************************************************************************/
     public MappedStream( File file, boolean readOnly, ByteOrder order )
         throws FileNotFoundException
     {
         this( file, readOnly, order, DEFAULT_BUFFER_SIZE );
     }
 
+    /***************************************************************************
+     * @param file
+     * @param readOnly
+     * @param order
+     * @param bufferSize
+     * @throws FileNotFoundException
+     **************************************************************************/
     public MappedStream( File file, boolean readOnly, ByteOrder order,
         int bufferSize ) throws FileNotFoundException
     {
@@ -78,6 +99,10 @@ public class MappedStream implements IDataStream
         this.length = -1;
     }
 
+    /***************************************************************************
+     * @param position
+     * @throws IOException
+     **************************************************************************/
     private void readBuffer( long position ) throws IOException
     {
         int size = bufferSize;
@@ -101,6 +126,9 @@ public class MappedStream implements IDataStream
         bufferPos = position;
     }
 
+    /***************************************************************************
+     * @throws IOException
+     **************************************************************************/
     private void checkBuffer() throws IOException
     {
         if( buffer == null )
@@ -113,6 +141,10 @@ public class MappedStream implements IDataStream
         }
     }
 
+    /***************************************************************************
+     * @param smallSize
+     * @throws IOException
+     **************************************************************************/
     private void checkBuffer( int smallSize ) throws IOException
     {
         if( buffer == null )
@@ -130,6 +162,9 @@ public class MappedStream implements IDataStream
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public byte read() throws EOFException, IOException
     {
@@ -138,18 +173,27 @@ public class MappedStream implements IDataStream
         return buffer.get();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public int read( byte [] buf ) throws IOException
     {
         return read( buf, 0, buf.length );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void readFully( byte [] buf ) throws EOFException, IOException
     {
         readFully( buf, 0, buf.length );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public int read( byte [] buf, int off, int len ) throws IOException
     {
@@ -178,6 +222,9 @@ public class MappedStream implements IDataStream
         return len;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void readFully( byte [] buf, int off, int len ) throws EOFException,
         IOException
@@ -190,12 +237,18 @@ public class MappedStream implements IDataStream
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void close() throws IOException
     {
         raf.close();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void seek( long pos ) throws IOException
     {
@@ -215,24 +268,36 @@ public class MappedStream implements IDataStream
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void skip( long count ) throws IOException
     {
         seek( getPosition() + count );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public long getAvailable() throws IOException
     {
         return getLength() - getPosition();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public long getPosition() throws IOException
     {
         return bufferPos + ( buffer != null ? buffer.position() : 0 );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public long getLength() throws IOException
     {
@@ -244,18 +309,27 @@ public class MappedStream implements IDataStream
         return length;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void write( byte b ) throws IOException
     {
         throw new IOException( "Cannot write to a read only stream." );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void write( byte [] buf ) throws IOException
     {
         throw new IOException( "Cannot write to a read only stream." );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void write( byte [] buf, int off, int len ) throws IOException
     {
@@ -268,12 +342,18 @@ public class MappedStream implements IDataStream
     // -------------------------------------------------------------------------
     // -------------------------------------------------------------------------
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public ByteOrder getOrder()
     {
         return order;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public boolean readBoolean() throws IOException
     {
@@ -282,6 +362,9 @@ public class MappedStream implements IDataStream
         return buffer.get() != 0;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public short readShort() throws IOException
     {
@@ -290,6 +373,9 @@ public class MappedStream implements IDataStream
         return buffer.getShort();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public int readInt() throws IOException
     {
@@ -298,6 +384,9 @@ public class MappedStream implements IDataStream
         return buffer.getInt();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public long readLong() throws IOException
     {
@@ -306,6 +395,9 @@ public class MappedStream implements IDataStream
         return buffer.getLong();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public float readFloat() throws IOException
     {
@@ -314,6 +406,9 @@ public class MappedStream implements IDataStream
         return buffer.getFloat();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public double readDouble() throws IOException
     {
@@ -322,36 +417,54 @@ public class MappedStream implements IDataStream
         return buffer.getDouble();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void writeBoolean( boolean v ) throws IOException
     {
         throw new IOException( "Cannot write to a read only stream." );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void writeShort( short v ) throws IOException
     {
         throw new IOException( "Cannot write to a read only stream." );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void writeInt( int v ) throws IOException
     {
         throw new IOException( "Cannot write to a read only stream." );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void writeLong( long v ) throws IOException
     {
         throw new IOException( "Cannot write to a read only stream." );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void writeFloat( float v ) throws IOException
     {
         throw new IOException( "Cannot write to a read only stream." );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void writeDouble( double v ) throws IOException
     {
