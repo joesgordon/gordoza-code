@@ -106,8 +106,6 @@ public class AxisPropertiesView implements IDataView<Axis>
     {
         this.axis = data;
 
-        // TODO Auto-generated method stub
-
         majorSectionField.setValue( data.majorSectionCount );
         minorSectionField.setValue( data.minorSectionCount );
         dockZeroField.setSelected( data.dockZero );

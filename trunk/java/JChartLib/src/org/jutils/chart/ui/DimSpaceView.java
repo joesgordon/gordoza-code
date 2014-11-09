@@ -71,8 +71,6 @@ public class DimSpaceView implements IDataView<DimSpace>
     {
         this.axis = data;
 
-        // TODO Auto-generated method stub
-
         titleField.setValue( data.title );
         subtitleField.setValue( data.subtitle );
     }
