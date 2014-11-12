@@ -48,7 +48,17 @@ public class ChartWidget implements IChartWidget
      * 
      **************************************************************************/
     @Override
-    public void draw( Graphics2D graphics, int x, int y, int width, int height )
+    public Dimension calculateSize( Dimension canvasSize )
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void draw( Graphics2D graphics, Point location, Dimension size )
     {
         // LogUtils.printDebug( "chart: w: " + width + ", h: " + height );
 
@@ -56,27 +66,26 @@ public class ChartWidget implements IChartWidget
         // Clear
         // ---------------------------------------------------------------------
         graphics.setColor( Color.white );
-        graphics.fillRect( x, y, width, height );
+        graphics.fillRect( location.x, location.y, size.width, size.height );
 
-        int w = width;
-        int h = height;
-
-        Dimension d;
+        Point p = new Point( location.x, location.y );
+        Dimension d = new Dimension( size );
 
         // ---------------------------------------------------------------------
         // Draw top/bottom.
         // ---------------------------------------------------------------------
         if( chart.topBottomLabel.visible )
         {
-            d = topBottom.calculateSize();
+            d = topBottom.calculateSize( size );
 
-            y += 4;
+            p.y += 4;
+            topBottom.draw( graphics, p, d );
 
-            topBottom.draw( graphics, x, y, w, d.height );
-            topBottom.draw( graphics, x, y + h - d.height - 4, w, d.height );
+            p.y += 4 + size.height - d.height;
+            topBottom.draw( graphics, p, d );
 
-            y += d.height;
-            h -= ( 2 * d.height + 4 );
+            p.y += d.height;
+            d.height -= ( 2 * d.height + 4 );
         }
 
         // ---------------------------------------------------------------------
@@ -84,17 +93,17 @@ public class ChartWidget implements IChartWidget
         // ---------------------------------------------------------------------
         if( chart.title.visible )
         {
-            int titleHeight = title.calculateSize().height;
+            int titleHeight = title.calculateSize( size ).height;
 
-            y += 10;
+            p.y += 10;
 
-            title.draw( graphics, x, y, w, titleHeight );
+            title.draw( graphics, p, d );
 
-            y += titleHeight;
+            p.y += titleHeight;
 
             titleHeight += 10;
 
-            h -= titleHeight;
+            d.height -= titleHeight;
         }
 
         // ---------------------------------------------------------------------
@@ -102,44 +111,36 @@ public class ChartWidget implements IChartWidget
         // ---------------------------------------------------------------------
         if( chart.subtitle.visible )
         {
-            int titleHeight = subtitle.calculateSize().height;
+            int titleHeight = subtitle.calculateSize( size ).height;
 
-            y += 4;
+            p.y += 4;
 
-            subtitle.draw( graphics, x, y, w, titleHeight );
+            subtitle.draw( graphics, p, d );
 
-            y += titleHeight;
+            p.y += titleHeight;
 
             titleHeight += 4;
 
-            h -= titleHeight;
+            d.height -= titleHeight;
         }
 
-        x += 20;
-        w -= 40;
+        p.x += 20;
+        d.width -= 40;
 
-        y += 10;
-        h -= 20;
+        p.y += 10;
+        d.height -= 20;
 
         // ---------------------------------------------------------------------
         // Draw axes.
         // ---------------------------------------------------------------------
-        axes.draw( graphics, x, y, w, h );
+        axes.draw( graphics, p, d );
 
         // ---------------------------------------------------------------------
         // Draw plot.
         // ---------------------------------------------------------------------
-        plot.draw( graphics, context.x, context.y, context.width,
-            context.height );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public Dimension calculateSize()
-    {
-        return null;
+        p = new Point( context.x, context.y );
+        d = new Dimension( context.width, context.height );
+        plot.draw( graphics, p, d );
     }
 
     /***************************************************************************

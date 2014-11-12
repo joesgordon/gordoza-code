@@ -39,7 +39,7 @@ public class CircleBorderMarker implements IMarker
      * 
      **************************************************************************/
     @Override
-    public void draw( Graphics2D g, int x2, int y2, int width, int height )
+    public void draw( Graphics2D g, Point location, Dimension size )
     {
         {
             g.setColor( borderColor );
@@ -93,7 +93,7 @@ public class CircleBorderMarker implements IMarker
      * 
      **************************************************************************/
     @Override
-    public Dimension calculateSize()
+    public Dimension calculateSize( Dimension canvasSize )
     {
         return new Dimension( radius, radius );
     }

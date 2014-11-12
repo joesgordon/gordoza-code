@@ -536,7 +536,7 @@ public class ChartView implements IView<JComponent>
 
         repaintChart();
         chartWidget.setTrackingVisible( false );
-        chartWidget.draw( g2d, 0, 0, w, h );
+        chartWidget.draw( g2d, new Point(), size );
         chartWidget.setTrackingVisible( true );
 
         try

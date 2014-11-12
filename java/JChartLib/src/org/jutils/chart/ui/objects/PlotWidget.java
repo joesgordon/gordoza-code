@@ -1,7 +1,6 @@
 package org.jutils.chart.ui.objects;
 
-import java.awt.Dimension;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,9 +45,17 @@ public class PlotWidget implements IChartWidget
      * 
      **************************************************************************/
     @Override
-    public void draw( Graphics2D graphics, int x, int y, int width, int height )
+    public void draw( Graphics2D graphics, Point location, Dimension size )
     {
         Graphics2D g2d;
+
+        int x = location.x;
+        int y = location.y;
+        int width = size.width;
+        int height = size.height;
+
+        Point p;
+        Dimension d;
 
         if( width < 1 || height < 1 )
         {
@@ -65,7 +72,7 @@ public class PlotWidget implements IChartWidget
 
             for( SeriesWidget s : serieses )
             {
-                s.draw( g2d, x, y, width, height );
+                s.draw( g2d, location, size );
             }
 
             seriesLayer.repaint = false;
@@ -75,6 +82,8 @@ public class PlotWidget implements IChartWidget
         // ---------------------------------------------------------------------
         // Draw highlight layer.
         // ---------------------------------------------------------------------
+        p = new Point( context.x, context.y );
+        d = new Dimension( context.width, context.height );
         g2d = highlightLayer.setSize( width, height );
         if( highlightLayer.repaint )
         {
@@ -84,14 +93,13 @@ public class PlotWidget implements IChartWidget
             {
                 if( s.trackPoint && s.series.highlight.visible )
                 {
-                    s.highlight.draw( g2d, 0, 0, width, height );
+                    s.highlight.draw( g2d, location, size );
                 }
             }
 
             highlightLayer.repaint = false;
 
-            selection.draw( g2d, context.x, context.y, context.width,
-                context.height );
+            selection.draw( g2d, p, d );
         }
         highlightLayer.paint( graphics, x, y );
     }
@@ -100,7 +108,7 @@ public class PlotWidget implements IChartWidget
      * 
      **************************************************************************/
     @Override
-    public Dimension calculateSize()
+    public Dimension calculateSize( Dimension canvasSize )
     {
         return null;
     }

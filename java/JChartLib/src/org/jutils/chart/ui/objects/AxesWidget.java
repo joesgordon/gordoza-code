@@ -62,12 +62,26 @@ public class AxesWidget implements IChartWidget
         this.rangeText = new TextWidget( rangeLabel );
     }
 
+    @Override
+    public Dimension calculateSize( Dimension canvasSize )
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
     /***************************************************************************
-     * 
+     * Draws in the following order <ol> <li>chart legend</li> <li>grid
+     * lines</li> <li>axes</li> <li>tick labels</li> <li>ticks and
+     * labels</li></ol>
      **************************************************************************/
     @Override
-    public void draw( Graphics2D graphics, int x, int y, int width, int height )
+    public void draw( Graphics2D graphics, Point location, Dimension size )
     {
+        int x = location.x;
+        int y = location.y;
+        int width = size.width;
+        int height = size.height;
+
         // LogUtils.printDebug( "axes: w: " + width + ", h: " + height );
 
         // ---------------------------------------------------------------------
@@ -86,7 +100,7 @@ public class AxesWidget implements IChartWidget
             // -----------------------------------------------------------------
             // Calculate label widths
             // -----------------------------------------------------------------
-            Insets textSpace = calculateLabelInsets();
+            Insets textSpace = calculateLabelInsets( size );
 
             context.x = x + textSpace.left;
             context.y = y + textSpace.top;
@@ -167,14 +181,14 @@ public class AxesWidget implements IChartWidget
             drawDomainTicks( g2d, domainTicks, textSpace );
 
             drawDomainLabels( g2d, domainTicks, textSpace.top + context.height +
-                2, textSpace.bottom );
+                2, textSpace.bottom, size );
 
             // -----------------------------------------------------------------
             // Draw secondary range ticks and labels.
             // -----------------------------------------------------------------
             if( !secDomainTicks.isEmpty() )
             {
-                drawDomainLabels( g2d, secDomainTicks, 0, textSpace.top );
+                drawDomainLabels( g2d, secDomainTicks, 0, textSpace.top, size );
             }
 
             // -----------------------------------------------------------------
@@ -182,7 +196,7 @@ public class AxesWidget implements IChartWidget
             // -----------------------------------------------------------------
             drawRangeTicks( g2d, rangeTicks, textSpace );
 
-            drawRangeLabels( g2d, rangeTicks, -2, textSpace.left, false );
+            drawRangeLabels( g2d, rangeTicks, -2, textSpace.left, false, size );
 
             // -----------------------------------------------------------------
             // Draw secondary range ticks and labels.
@@ -190,7 +204,7 @@ public class AxesWidget implements IChartWidget
             if( !secRangeTicks.isEmpty() )
             {
                 drawRangeLabels( g2d, secRangeTicks, width - textSpace.right +
-                    2, textSpace.right, true );
+                    2, textSpace.right, true, size );
             }
 
             axesLayer.repaint = false;
@@ -227,11 +241,11 @@ public class AxesWidget implements IChartWidget
      * @param h
      **************************************************************************/
     private void drawDomainLabels( Graphics2D g2d, List<Tick> ticks, int y,
-        int h )
+        int h, Dimension canvasSize )
     {
         for( Tick t : ticks )
         {
-            drawDomainLabel( g2d, t, y, h );
+            drawDomainLabel( g2d, t, y, h, canvasSize );
         }
     }
 
@@ -264,11 +278,11 @@ public class AxesWidget implements IChartWidget
      * @param leftAlign
      **************************************************************************/
     private void drawRangeLabels( Graphics2D g2d, List<Tick> ticks, int x,
-        int w, boolean leftAlign )
+        int w, boolean leftAlign, Dimension canvasSize )
     {
         for( Tick t : ticks )
         {
-            drawRangeLabel( g2d, t, x, w, leftAlign );
+            drawRangeLabel( g2d, t, x, w, leftAlign, canvasSize );
         }
     }
 
@@ -310,7 +324,7 @@ public class AxesWidget implements IChartWidget
     /***************************************************************************
      * @return
      **************************************************************************/
-    private Insets calculateLabelInsets()
+    private Insets calculateLabelInsets( Dimension canvasSize )
     {
         Insets textSpace = new Insets( 0, 0, 0, 0 );
 
@@ -322,14 +336,14 @@ public class AxesWidget implements IChartWidget
         Dimension rMaxSize;
 
         domainLabel.text = String.format( "%.3f", b.primaryDomainSpan.min );
-        dMinSize = domainText.calculateSize();
+        dMinSize = domainText.calculateSize( canvasSize );
         domainLabel.text = String.format( "%.3f", b.primaryDomainSpan.max );
-        dMaxSize = domainText.calculateSize();
+        dMaxSize = domainText.calculateSize( canvasSize );
 
         rangeLabel.text = String.format( "%.3f", b.primaryRangeSpan.min );
-        rMinSize = rangeText.calculateSize();
+        rMinSize = rangeText.calculateSize( canvasSize );
         rangeLabel.text = String.format( "%.3f", b.primaryRangeSpan.max );
-        rMaxSize = rangeText.calculateSize();
+        rMaxSize = rangeText.calculateSize( canvasSize );
 
         textSpace.left = Math.max( dMinSize.width / 2, rMaxSize.width );
         textSpace.left = Math.max( textSpace.left, rMinSize.width );
@@ -340,9 +354,9 @@ public class AxesWidget implements IChartWidget
         if( b.secondaryDomainSpan != null )
         {
             domainLabel.text = String.format( "%.3f", b.secondaryDomainSpan.min );
-            dMinSize = domainText.calculateSize();
+            dMinSize = domainText.calculateSize( canvasSize );
             domainLabel.text = String.format( "%.3f", b.secondaryDomainSpan.max );
-            dMaxSize = domainText.calculateSize();
+            dMaxSize = domainText.calculateSize( canvasSize );
 
             textSpace.left = Math.max( textSpace.left, dMinSize.width / 2 );
             textSpace.right = Math.max( textSpace.right, dMaxSize.width / 2 );
@@ -354,9 +368,9 @@ public class AxesWidget implements IChartWidget
         if( b.secondaryRangeSpan != null )
         {
             rangeLabel.text = String.format( "%.3f", b.secondaryRangeSpan.min );
-            rMinSize = rangeText.calculateSize();
+            rMinSize = rangeText.calculateSize( canvasSize );
             rangeLabel.text = String.format( "%.3f", b.secondaryRangeSpan.max );
-            rMaxSize = rangeText.calculateSize();
+            rMaxSize = rangeText.calculateSize( canvasSize );
 
             textSpace.bottom = Math.max( textSpace.bottom, rMinSize.height / 2 );
             textSpace.right = Math.max( textSpace.right, rMinSize.width );
@@ -379,12 +393,15 @@ public class AxesWidget implements IChartWidget
      * @param y
      * @param h
      **************************************************************************/
-    private void drawDomainLabel( Graphics2D g2d, Tick t, int y, int h )
+    private void drawDomainLabel( Graphics2D g2d, Tick t, int y, int h,
+        Dimension canvasSize )
     {
         domainLabel.text = String.format( "%.3f", t.value );
-        int tw = domainText.calculateSize().width;
+        int tw = domainText.calculateSize( canvasSize ).width;
+        Point p = new Point( t.offset - tw / 2, y );
+        Dimension d = new Dimension( tw, h );
         domainText.repaint();
-        domainText.draw( g2d, t.offset - tw / 2, y, tw, h );
+        domainText.draw( g2d, p, d );
     }
 
     /***************************************************************************
@@ -396,24 +413,17 @@ public class AxesWidget implements IChartWidget
      * @param h
      **************************************************************************/
     private void drawRangeLabel( Graphics2D g2d, Tick t, int x, int w,
-        boolean leftAlign )
+        boolean leftAlign, Dimension canvasSize )
     {
         rangeLabel.text = String.format( "%.3f", t.value );
-        Dimension d = rangeText.calculateSize();
+        Dimension d = rangeText.calculateSize( canvasSize );
         int tw = d.width;
         int h = d.height;
         int tx = leftAlign ? x : x + w - tw;
-        rangeText.repaint();
-        rangeText.draw( g2d, tx, t.offset - h / 2, tw, h );
-    }
+        Point p = new Point( tx, t.offset - h / 2 );
 
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public Dimension calculateSize()
-    {
-        return null;
+        rangeText.repaint();
+        rangeText.draw( g2d, p, d );
     }
 
     /***************************************************************************

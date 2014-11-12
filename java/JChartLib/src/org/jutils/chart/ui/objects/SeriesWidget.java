@@ -62,7 +62,7 @@ public class SeriesWidget implements IChartWidget
      *
      **************************************************************************/
     @Override
-    public void draw( Graphics2D graphics, int x, int y, int width, int height )
+    public void draw( Graphics2D graphics, Point location, Dimension size )
     {
         if( !series.visible )
         {
@@ -124,7 +124,7 @@ public class SeriesWidget implements IChartWidget
                 {
                     line.setPoints( last, p );
 
-                    line.draw( graphics, 0, 0, width, height );
+                    line.draw( graphics, p, size );
 
                 }
 
@@ -134,7 +134,7 @@ public class SeriesWidget implements IChartWidget
 
                     m.setLocation( p );
 
-                    m.draw( graphics, 0, 0, width, height );
+                    m.draw( graphics, p, size );
                 }
 
                 last.x = p.x;
@@ -147,7 +147,7 @@ public class SeriesWidget implements IChartWidget
      * 
      **************************************************************************/
     @Override
-    public Dimension calculateSize()
+    public Dimension calculateSize( Dimension canvasSize )
     {
         return null;
     }
