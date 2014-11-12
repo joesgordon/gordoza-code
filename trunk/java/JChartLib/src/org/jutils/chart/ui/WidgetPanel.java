@@ -67,6 +67,6 @@ public class WidgetPanel extends JComponent
         size.width = Math.max( size.width, min.width );
         size.height = Math.max( size.height, min.height );
 
-        obj.draw( g2d, 0, 0, size.width, size.height );
+        obj.draw( g2d, new Point(), size );
     }
 }

@@ -34,10 +34,14 @@ public class TextWidget implements IChartWidget
      * 
      **************************************************************************/
     @Override
-    public void draw( Graphics2D graphics, int x, int y, int width, int height )
+    public void draw( Graphics2D graphics, Point location, Dimension size )
     {
         int textWidth = metrics.stringWidth( label.text );
         int textHeight = metrics.getHeight();
+
+        int x = location.x;
+        int y = location.y;
+        int width = size.width;
 
         if( layer.repaint )
         {
@@ -71,7 +75,7 @@ public class TextWidget implements IChartWidget
      * 
      **************************************************************************/
     @Override
-    public Dimension calculateSize()
+    public Dimension calculateSize( Dimension canvasSize )
     {
         Dimension dim = new Dimension();
 

@@ -5,17 +5,27 @@ import java.awt.*;
 import org.jutils.chart.data.ChartContext;
 import org.jutils.chart.ui.IChartWidget;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class SelectionWidget implements IChartWidget
 {
+    /**  */
     private ChartContext context;
 
+    /**  */
     private Stroke borderStroke;
+    /**  */
     public Color border;
+    /**  */
     public Color color;
 
+    /**  */
     public Point start;
+    /**  */
     public Point end;
 
+    /**  */
     public boolean visible;
 
     public SelectionWidget( ChartContext context )
@@ -26,14 +36,20 @@ public class SelectionWidget implements IChartWidget
         this.color = new Color( 0x70005EB0, true );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
-    public Dimension calculateSize()
+    public Dimension calculateSize( Dimension canvasSize )
     {
         return null;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
-    public void draw( Graphics2D graphics, int x, int y, int width, int height )
+    public void draw( Graphics2D graphics, Point location, Dimension size )
     {
         if( visible && start != null )
         {

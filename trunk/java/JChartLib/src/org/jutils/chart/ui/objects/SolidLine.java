@@ -34,7 +34,7 @@ public class SolidLine implements ILine
      * 
      **************************************************************************/
     @Override
-    public void draw( Graphics2D graphics, int x, int y, int width, int height )
+    public void draw( Graphics2D graphics, Point location, Dimension size )
     {
         graphics.setColor( color );
 
@@ -86,7 +86,7 @@ public class SolidLine implements ILine
      * 
      **************************************************************************/
     @Override
-    public Dimension calculateSize()
+    public Dimension calculateSize( Dimension canvasSize )
     {
         return null;
     }
