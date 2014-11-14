@@ -25,6 +25,8 @@ public class ChartWidget implements IChartWidget
     /**  */
     public final AxesWidget axes;
     /**  */
+    public final LegendWidget legend;
+    /**  */
     private final Chart chart;
 
     /***************************************************************************
@@ -40,6 +42,7 @@ public class ChartWidget implements IChartWidget
         this.subtitle = new TextWidget( chart.subtitle );
         this.plot = new PlotWidget( context );
         this.axes = new AxesWidget( context );
+        this.legend = new LegendWidget( chart );
 
         axes.chart = chart;
     }
@@ -55,7 +58,9 @@ public class ChartWidget implements IChartWidget
     }
 
     /***************************************************************************
-     * 
+     * Draws the chart in the following order:<ol> <li>Top/Bottom Labels</li>
+     * <li>Title</li> <li>Subtitle</li> <li>Legend</li> <li>Axes</li>
+     * <li>Plot</li> </ol>
      **************************************************************************/
     @Override
     public void draw( Graphics2D graphics, Point location, Dimension size )
@@ -68,79 +73,146 @@ public class ChartWidget implements IChartWidget
         graphics.setColor( Color.white );
         graphics.fillRect( location.x, location.y, size.width, size.height );
 
-        Point p = new Point( location.x, location.y );
-        Dimension d = new Dimension( size );
+        Point wLoc = new Point( location.x, location.y );
+        Dimension wSize = new Dimension( size );
+
+        drawTopBottom( graphics, wLoc, wSize );
+
+        drawTitle( graphics, wLoc, wSize );
+
+        drawSubtitle( graphics, wLoc, wSize );
+
+        drawLegend( graphics, wLoc, wSize );
 
         // ---------------------------------------------------------------------
-        // Draw top/bottom.
+        //
         // ---------------------------------------------------------------------
-        if( chart.topBottomLabel.visible )
-        {
-            d = topBottom.calculateSize( size );
+        wLoc.x += 20;
+        wSize.width -= 40;
 
-            p.y += 4;
-            topBottom.draw( graphics, p, d );
-
-            p.y += 4 + size.height - d.height;
-            topBottom.draw( graphics, p, d );
-
-            p.y += d.height;
-            d.height -= ( 2 * d.height + 4 );
-        }
-
-        // ---------------------------------------------------------------------
-        // Draw title.
-        // ---------------------------------------------------------------------
-        if( chart.title.visible )
-        {
-            int titleHeight = title.calculateSize( size ).height;
-
-            p.y += 10;
-
-            title.draw( graphics, p, d );
-
-            p.y += titleHeight;
-
-            titleHeight += 10;
-
-            d.height -= titleHeight;
-        }
-
-        // ---------------------------------------------------------------------
-        // Draw subtitle.
-        // ---------------------------------------------------------------------
-        if( chart.subtitle.visible )
-        {
-            int titleHeight = subtitle.calculateSize( size ).height;
-
-            p.y += 4;
-
-            subtitle.draw( graphics, p, d );
-
-            p.y += titleHeight;
-
-            titleHeight += 4;
-
-            d.height -= titleHeight;
-        }
-
-        p.x += 20;
-        d.width -= 40;
-
-        p.y += 10;
-        d.height -= 20;
+        wLoc.y += 10;
+        wSize.height -= 20;
 
         // ---------------------------------------------------------------------
         // Draw axes.
         // ---------------------------------------------------------------------
-        axes.draw( graphics, p, d );
+        axes.draw( graphics, wLoc, wSize );
 
         // ---------------------------------------------------------------------
         // Draw plot.
         // ---------------------------------------------------------------------
-        p = new Point( context.x, context.y );
-        d = new Dimension( context.width, context.height );
-        plot.draw( graphics, p, d );
+        wLoc = new Point( context.x, context.y );
+        wSize = new Dimension( context.width, context.height );
+        plot.draw( graphics, wLoc, wSize );
+    }
+
+    private void drawSubtitle( Graphics2D graphics, Point wLoc, Dimension wSize )
+    {
+        if( chart.subtitle.visible )
+        {
+            int titleHeight = subtitle.calculateSize( wSize ).height;
+
+            wLoc.y += 4;
+
+            subtitle.draw( graphics, wLoc, wSize );
+
+            wLoc.y += titleHeight;
+
+            titleHeight += 4;
+
+            wSize.height -= titleHeight;
+        }
+    }
+
+    private void drawTopBottom( Graphics2D graphics, Point wLoc, Dimension wSize )
+    {
+        if( chart.topBottomLabel.visible )
+        {
+            Dimension size = topBottom.calculateSize( wSize );
+            Point loc = new Point( wLoc );
+
+            size.width = wSize.width;
+
+            loc.y += 4;
+            topBottom.draw( graphics, loc, size );
+
+            loc.y = wSize.height - size.height - 4;
+            topBottom.draw( graphics, loc, size );
+
+            wLoc.y += size.height + 4;
+            wSize.height -= ( 2 * size.height + 8 );
+        }
+    }
+
+    private void drawTitle( Graphics2D graphics, Point wLoc, Dimension wSize )
+    {
+        if( chart.title.visible )
+        {
+            int titleHeight = title.calculateSize( wSize ).height;
+
+            wLoc.y += 10;
+
+            title.draw( graphics, wLoc, wSize );
+
+            wLoc.y += titleHeight;
+
+            titleHeight += 10;
+
+            wSize.height -= titleHeight;
+        }
+    }
+
+    private void drawLegend( Graphics2D graphics, Point wLoc, Dimension wSize )
+    {
+        if( chart.legend.visible )
+        {
+            Dimension size = legend.calculateSize( wSize );
+            Point loc = new Point( wLoc );
+
+            switch( chart.legend.side )
+            {
+                case TOP:
+                    size.width = wSize.width;
+                    break;
+
+                case LEFT:
+                    size.height = wSize.height;
+                    break;
+
+                case BOTTOM:
+                    loc.y = wLoc.y + wSize.height - size.height;
+                    size.width = wSize.width;
+                    break;
+
+                case RIGHT:
+                    loc.x = wLoc.x + wSize.width - size.width;
+                    size.height = wSize.height;
+                    break;
+            }
+
+            legend.draw( graphics, loc, size );
+
+            switch( chart.legend.side )
+            {
+                case TOP:
+                    wLoc.y += size.height;
+                    wSize.height -= size.height;
+                    break;
+
+                case LEFT:
+                    wLoc.x += size.width;
+                    wSize.width -= size.width;
+                    break;
+
+                case BOTTOM:
+                    wSize.height -= size.height;
+                    break;
+
+                case RIGHT:
+                    wSize.width -= size.width;
+                    break;
+            }
+        }
     }
 
     /***************************************************************************

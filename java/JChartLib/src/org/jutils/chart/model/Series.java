@@ -8,7 +8,7 @@ import java.io.File;
 public class Series
 {
     /**  */
-    public final TextLabel title;
+    public String name;
     /**  */
     public String resource;
     /**  */
@@ -35,7 +35,6 @@ public class Series
     {
         this.data = data;
 
-        this.title = new TextLabel();
         this.visible = true;
         this.isPrimaryDomain = true;
         this.isPrimaryRange = true;

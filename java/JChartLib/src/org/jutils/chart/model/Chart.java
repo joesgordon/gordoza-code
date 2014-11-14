@@ -20,6 +20,8 @@ public class Chart
     public final Axis domainAxis;
     /**  */
     public final Axis rangeAxis;
+    /**  */
+    public final Legend legend;
 
     /**  */
     public final List<Series> series;
@@ -35,11 +37,13 @@ public class Chart
         this.topBottomLabel = new TextLabel();
         this.domainAxis = new Axis();
         this.rangeAxis = new Axis();
+        this.legend = new Legend();
 
         this.series = new ArrayList<>();
 
         topBottomLabel.font = topBottomLabel.font.deriveFont( 10.0f );
         topBottomLabel.visible = false;
+        topBottomLabel.alignment = HorizontalAlignment.CENTER;
 
         subtitle.font = subtitle.font.deriveFont( 12.0f );
         subtitle.visible = false;

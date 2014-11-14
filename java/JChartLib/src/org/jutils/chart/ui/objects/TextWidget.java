@@ -51,6 +51,20 @@ public class TextWidget implements IChartWidget
             {
                 Graphics2D g2d = layer.setSize( textWidth, textHeight );
 
+                switch( label.alignment )
+                {
+                    case CENTER:
+                        x = x + ( width + textWidth ) / 2;
+                        break;
+
+                    case RIGHT:
+                        x = x + width - textWidth;
+                        break;
+
+                    default:
+                        break;
+                }
+
                 g2d.setColor( label.color );
                 g2d.setFont( label.font );
                 g2d.drawString( label.text, 0, label.font.getSize() );

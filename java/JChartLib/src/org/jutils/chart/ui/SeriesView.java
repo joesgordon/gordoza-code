@@ -13,6 +13,7 @@ import org.jutils.ui.StandardFormView;
 import org.jutils.ui.TitleView;
 import org.jutils.ui.event.updater.CheckBoxUpdater;
 import org.jutils.ui.event.updater.ReflectiveUpdater;
+import org.jutils.ui.fields.StringFormField;
 import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
@@ -23,7 +24,7 @@ public class SeriesView implements IDataView<Series>
     /**  */
     private final JPanel view;
     /**  */
-    private final TextLabelField titleField;
+    private final StringFormField titleField;
     /**  */
     private final JCheckBox visibleField;
     /**  */
@@ -45,7 +46,7 @@ public class SeriesView implements IDataView<Series>
      **************************************************************************/
     public SeriesView()
     {
-        this.titleField = new TextLabelField( "Title" );
+        this.titleField = new StringFormField( "Title" );
         this.visibleField = new JCheckBox();
         this.primaryDomainField = new JCheckBox();
         this.primaryRangeField = new JCheckBox();
@@ -56,6 +57,9 @@ public class SeriesView implements IDataView<Series>
         this.view = createView();
 
         setData( new Series( new DefaultSeries( new ArrayList<XYPoint>() ) ) );
+
+        titleField.setUpdater( new ReflectiveUpdater<String>( this,
+            "series.name" ) );
 
         visibleField.addActionListener( new CheckBoxUpdater(
             new ReflectiveUpdater<Boolean>( this, "series.visible" ) ) );
@@ -116,7 +120,7 @@ public class SeriesView implements IDataView<Series>
     {
         this.series = data;
 
-        titleField.setValue( data.title );
+        titleField.setValue( data.name );
         visibleField.setSelected( data.visible );
         primaryDomainField.setSelected( data.isPrimaryDomain );
         primaryRangeField.setSelected( data.isPrimaryRange );
