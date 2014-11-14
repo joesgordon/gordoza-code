@@ -143,7 +143,7 @@ public class JChartFrameView implements IView<JFrame>
         JMenu menu = new JMenu( "View" );
         JMenuItem item;
 
-        item = new JMenuItem( chartView.dataAction );
+        item = new JMenuItem( chartView.propertiesAction );
         menu.add( item );
 
         return menu;

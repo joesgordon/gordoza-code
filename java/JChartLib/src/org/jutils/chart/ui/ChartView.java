@@ -51,7 +51,7 @@ public class ChartView implements IView<JComponent>
     /**  */
     public final Action saveAction;
     /**  */
-    public final Action dataAction;
+    public final Action propertiesAction;
 
     /**  */
     private final ItemActionList<File> fileLoadedListeners;
@@ -85,7 +85,7 @@ public class ChartView implements IView<JComponent>
 
         this.openAction = createOpenAction();
         this.saveAction = createSaveAction();
-        this.dataAction = createDataAction();
+        this.propertiesAction = createPropertiesAction();
 
         this.view = createView( allowOpen, gradientToolbar );
 
@@ -176,7 +176,7 @@ public class ChartView implements IView<JComponent>
 
         toolbar.addSeparator();
 
-        SwingUtils.addActionToToolbar( toolbar, dataAction );
+        SwingUtils.addActionToToolbar( toolbar, propertiesAction );
 
         toolbar.addSeparator();
 
@@ -227,14 +227,14 @@ public class ChartView implements IView<JComponent>
     /***************************************************************************
      * @return
      **************************************************************************/
-    private Action createDataAction()
+    private Action createPropertiesAction()
     {
         Action action;
         ActionListener listener;
         Icon icon;
         String name;
 
-        name = "Show Data";
+        name = "Properties";
         icon = IconConstants.loader.getIcon( IconConstants.CONFIG_16 );
         listener = new PropertiesDialogListener( this );
         action = new ActionAdapter( listener, name, icon );

@@ -82,8 +82,6 @@ public class ChartWidget implements IChartWidget
 
         drawSubtitle( graphics, wLoc, wSize );
 
-        drawLegend( graphics, wLoc, wSize );
-
         // ---------------------------------------------------------------------
         //
         // ---------------------------------------------------------------------
@@ -92,6 +90,8 @@ public class ChartWidget implements IChartWidget
 
         wLoc.y += 10;
         wSize.height -= 20;
+
+        drawLegend( graphics, wLoc, wSize );
 
         // ---------------------------------------------------------------------
         // Draw axes.
