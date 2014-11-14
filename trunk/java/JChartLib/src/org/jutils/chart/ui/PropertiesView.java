@@ -35,6 +35,8 @@ public class PropertiesView implements IView<JPanel>
     /**  */
     private final ChartPropertiesView chartPropView;
     /**  */
+    private final LegendPropertiesView legendPropView;
+    /**  */
     private final AxisPropertiesView domainPropView;
 
     /**  */
@@ -55,6 +57,7 @@ public class PropertiesView implements IView<JPanel>
         this.rightView = new TitleView();
 
         this.chartPropView = new ChartPropertiesView();
+        this.legendPropView = new LegendPropertiesView();
         this.domainPropView = new AxisPropertiesView();
 
         this.view = createView();
@@ -102,6 +105,9 @@ public class PropertiesView implements IView<JPanel>
         ListNode<?> node;
 
         node = new ListNode<Chart>( "Chart", chart, chartPropView );
+        navModel.addElement( node );
+
+        node = new ListNode<Legend>( "Legend", chart.legend, legendPropView );
         navModel.addElement( node );
 
         node = new ListNode<Axis>( "Domain", chart.domainAxis, domainPropView );
