@@ -36,6 +36,6 @@ public class TextLabel
         this.text = "Title";
         this.font = font;
         this.color = Color.black;
-        this.alignment = HorizontalAlignment.CENTER;
+        this.alignment = HorizontalAlignment.LEFT;
     }
 }

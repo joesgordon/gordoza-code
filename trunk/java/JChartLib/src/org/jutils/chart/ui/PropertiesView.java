@@ -154,8 +154,8 @@ public class PropertiesView implements IView<JPanel>
 
         view.setData( series );
 
-        ListNode<?> node = new ListNode<Series>(
-            "        " + series.title.text, series, view );
+        ListNode<?> node = new ListNode<Series>( "        " + series.name,
+            series, view );
         navModel.addElement( node );
 
         seriesViews.add( view );

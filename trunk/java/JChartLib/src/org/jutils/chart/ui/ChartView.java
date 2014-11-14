@@ -349,7 +349,7 @@ public class ChartView implements IView<JComponent>
 
             Color c = palette.next();
 
-            s.title.text = IOUtils.removeFilenameExtension( file );
+            s.name = IOUtils.removeFilenameExtension( file );
             s.resource = file.getAbsolutePath();
             s.marker.color = c;
             s.highlight.color = c;
