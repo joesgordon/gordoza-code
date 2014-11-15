@@ -14,9 +14,9 @@ public class CircleBorderMarker implements IMarker
     /**  */
     private Color borderColor;
     /**  */
-    private int radius;
+    private int diameter;
     /**  */
-    private int radiusHalf;
+    private int radius;
     /**  */
     private int x;
     /**  */
@@ -44,13 +44,13 @@ public class CircleBorderMarker implements IMarker
         {
             g.setColor( borderColor );
 
-            g.fillOval( x - radiusHalf - 2, y - radiusHalf - 2, radius + 4,
-                radius + 4 );
+            g.fillOval( x - radius - 2, y - radius - 2, diameter + 4,
+                diameter + 4 );
         }
 
         g.setColor( color );
 
-        g.fillOval( x - radiusHalf, y - radiusHalf, radius, radius );
+        g.fillOval( x - radius, y - radius, diameter, diameter );
     }
 
     /***************************************************************************
@@ -85,8 +85,8 @@ public class CircleBorderMarker implements IMarker
      **************************************************************************/
     public void setSize( int r )
     {
-        this.radius = r;
-        this.radiusHalf = r / 2;
+        this.diameter = r;
+        this.radius = r / 2;
     }
 
     /***************************************************************************
@@ -95,6 +95,15 @@ public class CircleBorderMarker implements IMarker
     @Override
     public Dimension calculateSize( Dimension canvasSize )
     {
-        return new Dimension( radius, radius );
+        return new Dimension( diameter, diameter );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public int getSize()
+    {
+        return diameter;
     }
 }

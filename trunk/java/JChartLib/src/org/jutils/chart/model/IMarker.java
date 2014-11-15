@@ -12,4 +12,6 @@ public interface IMarker extends IChartWidget
     public void setColor( Color color );
 
     public void setSize( int r );
+
+    public int getSize();
 }

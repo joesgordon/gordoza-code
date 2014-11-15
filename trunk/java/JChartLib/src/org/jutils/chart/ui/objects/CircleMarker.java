@@ -12,9 +12,9 @@ public class CircleMarker implements IMarker
     /**  */
     private Color color;
     /**  */
-    private int radius;
+    private int diameter;
     /**  */
-    private int radiusHalf;
+    private int radius;
     /**  */
     private int x;
     /**  */
@@ -39,7 +39,7 @@ public class CircleMarker implements IMarker
     {
         g.setColor( color );
 
-        g.fillOval( x - radiusHalf, y - radiusHalf, radius, radius );
+        g.fillOval( x - radius, y - radius, diameter, diameter );
     }
 
     /***************************************************************************
@@ -67,8 +67,8 @@ public class CircleMarker implements IMarker
     @Override
     public void setSize( int r )
     {
-        this.radius = r;
-        this.radiusHalf = r / 2;
+        this.diameter = r;
+        this.radius = r / 2;
     }
 
     /***************************************************************************
@@ -77,6 +77,15 @@ public class CircleMarker implements IMarker
     @Override
     public Dimension calculateSize( Dimension canvasSize )
     {
-        return new Dimension( radius, radius );
+        return new Dimension( diameter, diameter );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public int getSize()
+    {
+        return diameter;
     }
 }

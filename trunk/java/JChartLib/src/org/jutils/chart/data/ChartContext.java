@@ -207,7 +207,7 @@ public class ChartContext
         @Override
         public int fromCoord( double c )
         {
-            return ( int )( ( c - stats.span.min ) * stats.scale );
+            return ( int )Math.round( ( c - stats.span.min ) * stats.scale );
         }
 
         @Override

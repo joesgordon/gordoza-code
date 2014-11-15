@@ -45,6 +45,9 @@ public class Chart
         topBottomLabel.visible = false;
         topBottomLabel.alignment = HorizontalAlignment.CENTER;
 
+        title.alignment = HorizontalAlignment.CENTER;
+
+        subtitle.alignment = HorizontalAlignment.CENTER;
         subtitle.font = subtitle.font.deriveFont( 12.0f );
         subtitle.visible = false;
 
