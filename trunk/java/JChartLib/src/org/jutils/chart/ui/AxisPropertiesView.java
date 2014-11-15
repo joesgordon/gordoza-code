@@ -109,5 +109,7 @@ public class AxisPropertiesView implements IDataView<Axis>
         majorSectionField.setValue( data.majorSectionCount );
         minorSectionField.setValue( data.minorSectionCount );
         dockZeroField.setSelected( data.dockZero );
+        primaryView.setData( data.primary );
+        secondaryView.setData( data.secondary );
     }
 }

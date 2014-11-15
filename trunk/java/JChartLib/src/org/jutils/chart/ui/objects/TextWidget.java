@@ -1,6 +1,7 @@
 package org.jutils.chart.ui.objects;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 
 import org.jutils.chart.model.TextLabel;
 import org.jutils.chart.ui.IChartWidget;
@@ -12,9 +13,12 @@ import org.jutils.chart.ui.Layer2d;
 public class TextWidget implements IChartWidget
 {
     /**  */
-    private TextLabel label;
+    private final TextLabel label;
     /**  */
     private final Layer2d layer;
+    /**  */
+    private final TextDirection direction;
+
     /**  */
     private FontMetrics metrics;
 
@@ -23,8 +27,18 @@ public class TextWidget implements IChartWidget
      **************************************************************************/
     public TextWidget( TextLabel label )
     {
+        this( label, TextDirection.DOWN );
+    }
+
+    /***************************************************************************
+     * @param label
+     * @param direction
+     **************************************************************************/
+    public TextWidget( TextLabel label, TextDirection direction )
+    {
         this.label = label;
         this.layer = new Layer2d();
+        this.direction = direction;
 
         layer.getGraphics().setFont( label.font );
         metrics = layer.getGraphics().getFontMetrics();
@@ -80,7 +94,25 @@ public class TextWidget implements IChartWidget
 
         // LogUtils.printDebug( "text2: x: " + x + ", textWidth: " + textWidth +
         // ", textHeight: " + textHeight );
-        layer.paint( graphics, x, y );
+        if( direction != TextDirection.DOWN )
+        {
+            int xp = x + textWidth / 2;
+            int yp = y + textHeight / 2;
+            AffineTransform t = graphics.getTransform();
+            AffineTransform r = AffineTransform.getRotateInstance(
+                direction.angle, xp, yp );
+
+            graphics.setTransform( r );
+            layer.paint( graphics, x, y );
+            // graphics.drawLine( xp, yp, xp, yp + 50 );
+
+            graphics.setTransform( t );
+            // layer.paint( graphics, x, y );
+        }
+        else
+        {
+            layer.paint( graphics, x, y );
+        }
 
         // graphics.drawRect( location.x, location.y, size.width - 1,
         // size.height - 1 );
@@ -101,6 +133,13 @@ public class TextWidget implements IChartWidget
 
         dim.width = metrics.stringWidth( label.text );
         dim.height = metrics.getHeight();
+
+        if( direction == TextDirection.RIGHT || direction == TextDirection.LEFT )
+        {
+            int i = dim.width;
+            dim.width = dim.height;
+            dim.height = i;
+        }
 
         return dim;
     }

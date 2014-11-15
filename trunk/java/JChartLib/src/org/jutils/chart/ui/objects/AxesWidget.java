@@ -16,12 +16,12 @@ import org.jutils.chart.ui.Layer2d;
 public class AxesWidget implements IChartWidget
 {
     /**  */
-    public final Layer2d axesLayer;
+    public final Chart chart;
     /**  */
     public final ChartContext context;
 
     /**  */
-    public Chart chart;
+    public final Layer2d axesLayer;
 
     /**  */
     private final BasicStroke majorStroke;
@@ -39,13 +39,23 @@ public class AxesWidget implements IChartWidget
     private final TextWidget rangeText;
 
     /**  */
+    private final TextWidget domainTitle;
+    /**  */
+    private final TextWidget rangeTitle;
+    /**  */
+    private final TextWidget sdomainTitle;
+    /**  */
+    private final TextWidget srangeTitle;
+
+    /**  */
     private static final int MAJOR_TICK_LEN = 12;
 
     /***************************************************************************
      * @param context
      **************************************************************************/
-    public AxesWidget( ChartContext context )
+    public AxesWidget( ChartContext context, Chart chart )
     {
+        this.chart = chart;
         this.context = context;
         this.weight = 2;
         this.axesLayer = new Layer2d();
@@ -60,12 +70,22 @@ public class AxesWidget implements IChartWidget
 
         this.rangeLabel = new TextLabel( new Font( "Helvetica", Font.PLAIN, 12 ) );
         this.rangeText = new TextWidget( rangeLabel );
+
+        this.domainTitle = new TextWidget( chart.domainAxis.primary.title );
+        this.sdomainTitle = new TextWidget( chart.domainAxis.secondary.title );
+
+        this.rangeTitle = new TextWidget( chart.rangeAxis.primary.title,
+            TextDirection.RIGHT );
+        this.srangeTitle = new TextWidget( chart.rangeAxis.secondary.title,
+            TextDirection.LEFT );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public Dimension calculateSize( Dimension canvasSize )
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -76,6 +96,98 @@ public class AxesWidget implements IChartWidget
      **************************************************************************/
     @Override
     public void draw( Graphics2D graphics, Point location, Dimension size )
+    {
+        Point p = new Point( location );
+        Dimension d = new Dimension( size );
+        Insets textSpace = calculateLabelInsets( size );
+
+        // ---------------------------------------------------------------------
+        // Draw secondary domain title
+        // ---------------------------------------------------------------------
+        if( chart.domainAxis.secondary.title.visible &&
+            context.domain.secondary != null )
+        {
+            d = sdomainTitle.calculateSize( size );
+
+            d.width = size.width - ( textSpace.left + textSpace.right );
+
+            p.x = textSpace.left + location.x;
+            p.y = location.y;
+
+            sdomainTitle.draw( graphics, p, d );
+
+            location.y += d.height;
+            size.height -= d.height;
+        }
+
+        // ---------------------------------------------------------------------
+        // Draw primary domain title
+        // ---------------------------------------------------------------------
+        if( chart.domainAxis.primary.title.visible )
+        {
+            d = domainTitle.calculateSize( size );
+
+            d.width = size.width - ( textSpace.left + textSpace.right );
+
+            p.x = textSpace.left + location.x;
+            p.y = location.y + size.height - d.height;
+
+            domainTitle.draw( graphics, p, d );
+
+            size.height -= d.height;
+        }
+
+        // ---------------------------------------------------------------------
+        // Draw secondary range title
+        // ---------------------------------------------------------------------
+        if( chart.rangeAxis.secondary.title.visible &&
+            context.range.secondary != null )
+        {
+            d = srangeTitle.calculateSize( size );
+
+            int h = size.height - ( textSpace.top + textSpace.bottom );
+
+            p.x = location.x + size.width - d.width;
+            p.y = location.y + textSpace.top + ( h - d.width ) / 2;
+
+            d.height = h;
+
+            srangeTitle.draw( graphics, p, d );
+
+            size.width -= d.width;
+        }
+
+        // ---------------------------------------------------------------------
+        // Draw primary rangetitle
+        // ---------------------------------------------------------------------
+        if( chart.rangeAxis.primary.title.visible )
+        {
+            d = rangeTitle.calculateSize( size );
+
+            int h = size.height - ( textSpace.top + textSpace.bottom );
+
+            p.x = location.x;
+            p.y = location.y + textSpace.top + ( h - d.width ) / 2;
+
+            d.height = h;
+
+            rangeTitle.draw( graphics, p, d );
+
+            location.x += d.width;
+            size.width -= d.width;
+        }
+
+        drawTicksAndAxes( graphics, location, size, textSpace );
+    }
+
+    /***************************************************************************
+     * @param graphics
+     * @param location
+     * @param size
+     * @param textSpace
+     **************************************************************************/
+    private void drawTicksAndAxes( Graphics2D graphics, Point location,
+        Dimension size, Insets textSpace )
     {
         int x = location.x;
         int y = location.y;
@@ -98,10 +210,8 @@ public class AxesWidget implements IChartWidget
             // g2d.drawRect( 0, 0, width - 1, height - 1 );
 
             // -----------------------------------------------------------------
-            // Calculate label widths
+            // Calculate context
             // -----------------------------------------------------------------
-            Insets textSpace = calculateLabelInsets( size );
-
             context.x = x + textSpace.left;
             context.y = y + textSpace.top;
 
