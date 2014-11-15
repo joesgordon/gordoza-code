@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jutils.chart.data.QuadSide;
-import org.jutils.chart.model.*;
+import org.jutils.chart.model.HorizontalAlignment;
+import org.jutils.chart.model.TextLabel;
 import org.jutils.chart.ui.IChartWidget;
 
 /*******************************************************************************
@@ -14,7 +15,7 @@ import org.jutils.chart.ui.IChartWidget;
 public class LegendWidget implements IChartWidget
 {
     /**  */
-    private final Chart chart;
+    private final ChartWidget chart;
     /**  */
     private final TextLabel nameLabel;
     /**  */
@@ -23,11 +24,14 @@ public class LegendWidget implements IChartWidget
     /***************************************************************************
      * @param chart
      **************************************************************************/
-    public LegendWidget( Chart chart )
+    public LegendWidget( ChartWidget chart )
     {
         this.chart = chart;
         this.nameLabel = new TextLabel();
         this.nameWidget = new TextWidget( nameLabel );
+
+        nameLabel.alignment = HorizontalAlignment.RIGHT;
+        nameLabel.font = nameLabel.font.deriveFont( 14.0f );
     }
 
     /***************************************************************************
@@ -38,12 +42,12 @@ public class LegendWidget implements IChartWidget
     {
         Dimension size = new Dimension();
 
-        if( chart.legend.visible )
+        if( chart.chart.legend.visible )
         {
             canvasSize.width = Math.max( canvasSize.width, 100 );
             canvasSize.height = Math.max( canvasSize.height, 100 );
 
-            switch( chart.legend.side )
+            switch( chart.chart.legend.side )
             {
                 case TOP:
                 case BOTTOM:
@@ -54,7 +58,7 @@ public class LegendWidget implements IChartWidget
             }
 
             throw new IllegalStateException( "Unsupported legend side: " +
-                chart.legend.side );
+                chart.chart.legend.side );
         }
 
         return size;
@@ -68,7 +72,7 @@ public class LegendWidget implements IChartWidget
     private Dimension caluclateSize( Dimension canvasSize, boolean isVertical )
     {
         Dimension size = new Dimension();
-        int extra = 16 + 2 * chart.legend.border.thickness;
+        int extra = 16 + 2 * chart.chart.legend.border.thickness;
         Dimension availSize = new Dimension( canvasSize );
 
         availSize.width -= extra;
@@ -83,21 +87,22 @@ public class LegendWidget implements IChartWidget
         return size;
     }
 
-    /**
+    /***************************************************************************
      * @param availSize
      * @param isVertical
      * @return
-     */
+     **************************************************************************/
     private PlacementGrid buildGrid( Dimension availSize, boolean isVertical )
     {
         List<SeriesKey> keys = new ArrayList<>();
 
-        for( Series s : chart.series )
+        for( SeriesWidget s : chart.plot.serieses )
         {
-            nameLabel.text = s.name;
+            nameLabel.text = s.series.name;
 
             Dimension keySize = nameWidget.calculateSize( availSize );
-            keySize.height = Math.max( keySize.height, s.marker.weight ) + 4;
+            keySize.height = Math.max( keySize.height, s.series.marker.weight ) + 4;
+            keySize.width += 8 + s.series.marker.weight * 2;
 
             SeriesKey key = new SeriesKey( s, keySize );
 
@@ -116,19 +121,21 @@ public class LegendWidget implements IChartWidget
         // ---------------------------------------------------------------------
         // Fill
         // ---------------------------------------------------------------------
-        graphics.setColor( chart.legend.fill );
+        graphics.setColor( chart.chart.legend.fill );
         graphics.fillRect( location.x, location.y, size.width, size.height );
 
         // ---------------------------------------------------------------------
         // Draw border
         // ---------------------------------------------------------------------
-        if( chart.legend.border.visible && chart.legend.border.thickness > 0 )
+        if( chart.chart.legend.border.visible &&
+            chart.chart.legend.border.thickness > 0 )
         {
-            int thickness = chart.legend.border.thickness;
+            int thickness = chart.chart.legend.border.thickness;
+            int half = thickness / 2;
             graphics.setStroke( new BasicStroke( thickness ) );
-            graphics.setColor( Color.black );
-            graphics.drawRect( location.x, location.y, size.width - thickness,
-                size.height - thickness );
+            graphics.setColor( chart.chart.legend.border.color );
+            graphics.drawRect( location.x + half, location.y + half,
+                size.width - thickness, size.height - thickness );
 
             location.x += thickness;
             location.y += thickness;
@@ -140,8 +147,8 @@ public class LegendWidget implements IChartWidget
         // ---------------------------------------------------------------------
         // Draw keys
         // ---------------------------------------------------------------------
-        boolean isVertical = chart.legend.side == QuadSide.LEFT ||
-            chart.legend.side == QuadSide.RIGHT;
+        boolean isVertical = chart.chart.legend.side == QuadSide.LEFT ||
+            chart.chart.legend.side == QuadSide.RIGHT;
         PlacementGrid grid = buildGrid( size, isVertical );
 
         graphics.setStroke( new BasicStroke( 2 ) );
@@ -156,13 +163,28 @@ public class LegendWidget implements IChartWidget
 
             for( SeriesKey key : list.keys )
             {
-                // LogUtils.printDebug( "\tdrawing series key at " + itemPoint
+                // LogUtils.printDebug( "\tdrawing series " + key.s.series.name
                 // );
                 int x = location.x + key.loc.x;
                 int y = location.y + key.loc.y;
+                Point p = new Point( x, y );
 
-                graphics.drawRect( x, y, key.size.width - 2,
-                    key.size.height - 2 );
+                // graphics.drawRect( x + 1, y + 1, key.size.width - 2,
+                // key.size.height - 2 );
+
+                nameLabel.text = key.s.series.name;
+                Dimension ts = nameWidget.calculateSize( key.size );
+                nameWidget.repaint();
+                nameWidget.draw( graphics, new Point( x, y +
+                    ( key.size.height - ts.height ) / 2 ), key.size );
+
+                p.x = p.x + 6;
+                p.y = p.y + key.size.height / 2;
+                int ms = key.s.marker.getSize();
+                key.s.marker.setSize( 10 );
+                key.s.marker.setLocation( p );
+                key.s.marker.draw( graphics, p, size );
+                key.s.marker.setSize( ms );
             }
         }
     }
@@ -242,13 +264,11 @@ public class LegendWidget implements IChartWidget
     private static class KeyList
     {
         public final List<SeriesKey> keys;
-        public final Point loc;
         public final Dimension size;
 
         public KeyList()
         {
             this.keys = new ArrayList<>();
-            this.loc = new Point();
             this.size = new Dimension();
         }
     }
@@ -258,11 +278,11 @@ public class LegendWidget implements IChartWidget
      **************************************************************************/
     private static class SeriesKey
     {
-        public final Series s;
+        public final SeriesWidget s;
         public final Point loc;
         public final Dimension size;
 
-        public SeriesKey( Series s, Dimension size )
+        public SeriesKey( SeriesWidget s, Dimension size )
         {
             this.s = s;
             this.loc = new Point();

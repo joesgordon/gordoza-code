@@ -27,7 +27,7 @@ public class ChartWidget implements IChartWidget
     /**  */
     public final LegendWidget legend;
     /**  */
-    private final Chart chart;
+    final Chart chart;
 
     /***************************************************************************
      * @param chart
@@ -42,7 +42,7 @@ public class ChartWidget implements IChartWidget
         this.subtitle = new TextWidget( chart.subtitle );
         this.plot = new PlotWidget( context );
         this.axes = new AxesWidget( context );
-        this.legend = new LegendWidget( chart );
+        this.legend = new LegendWidget( this );
 
         axes.chart = chart;
     }
@@ -195,21 +195,21 @@ public class ChartWidget implements IChartWidget
             switch( chart.legend.side )
             {
                 case TOP:
-                    wLoc.y += size.height;
-                    wSize.height -= size.height;
+                    wLoc.y += size.height + 8;
+                    wSize.height -= ( size.height + 8 );
                     break;
 
                 case LEFT:
-                    wLoc.x += size.width;
-                    wSize.width -= size.width;
+                    wLoc.x += size.width + 8;
+                    wSize.width -= ( size.width + 8 );
                     break;
 
                 case BOTTOM:
-                    wSize.height -= size.height;
+                    wSize.height -= ( size.height + 8 );
                     break;
 
                 case RIGHT:
-                    wSize.width -= size.width;
+                    wSize.width -= ( size.width + 8 );
                     break;
             }
         }

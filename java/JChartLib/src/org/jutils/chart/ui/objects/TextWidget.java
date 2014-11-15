@@ -39,10 +39,6 @@ public class TextWidget implements IChartWidget
         int textWidth = metrics.stringWidth( label.text );
         int textHeight = metrics.getHeight();
 
-        int x = location.x;
-        int y = location.y;
-        int width = size.width;
-
         if( layer.repaint )
         {
             layer.clear();
@@ -50,20 +46,6 @@ public class TextWidget implements IChartWidget
             if( textWidth > 0 && textHeight > 0 )
             {
                 Graphics2D g2d = layer.setSize( textWidth, textHeight );
-
-                switch( label.alignment )
-                {
-                    case CENTER:
-                        x = x + ( width + textWidth ) / 2;
-                        break;
-
-                    case RIGHT:
-                        x = x + width - textWidth;
-                        break;
-
-                    default:
-                        break;
-                }
 
                 g2d.setColor( label.color );
                 g2d.setFont( label.font );
@@ -74,15 +56,34 @@ public class TextWidget implements IChartWidget
             }
         }
 
+        int x = location.x;
+        int y = location.y;
+        int width = size.width;
+
+        switch( label.alignment )
+        {
+            case CENTER:
+                x = x + ( width - textWidth ) / 2;
+                break;
+
+            case RIGHT:
+                x = x + width - textWidth;
+                break;
+
+            default:
+                break;
+        }
+
         // LogUtils.printDebug( "text: x: " + x + ", y: " + y + ", w: " + width
         // +
         // ", h: " + height + ", t: " + label.text );
 
-        x = ( int )( x + ( width - textWidth ) / 2.0 );
         // LogUtils.printDebug( "text2: x: " + x + ", textWidth: " + textWidth +
         // ", textHeight: " + textHeight );
-
         layer.paint( graphics, x, y );
+
+        // graphics.drawRect( location.x, location.y, size.width - 1,
+        // size.height - 1 );
     }
 
     /***************************************************************************
