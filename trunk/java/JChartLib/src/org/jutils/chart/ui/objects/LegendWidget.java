@@ -147,15 +147,19 @@ public class LegendWidget implements IChartWidget
         // ---------------------------------------------------------------------
         // Draw keys
         // ---------------------------------------------------------------------
+        int extra = 8;
+        location.x += extra;
+        location.y += extra;
+
+        size.width -= 2 * extra;
+        size.height -= 2 * extra;
+
         boolean isVertical = chart.chart.legend.side == QuadSide.LEFT ||
             chart.chart.legend.side == QuadSide.RIGHT;
         PlacementGrid grid = buildGrid( size, isVertical );
 
         graphics.setStroke( new BasicStroke( 2 ) );
         graphics.setColor( Color.black );
-
-        location.x += 8;
-        location.y += 8;
 
         for( KeyList list : grid.items )
         {
@@ -218,9 +222,9 @@ public class LegendWidget implements IChartWidget
             for( SeriesKey key : keys )
             {
                 int len = getItemLen( list.size );
-                int addLen = getItemLen( key.size );
+                int nextLen = len + getItemLen( key.size );
 
-                if( len + addLen > directionLimit && !list.keys.isEmpty() )
+                if( nextLen > directionLimit && !list.keys.isEmpty() )
                 {
                     x = isVertical ? x + list.size.width + itemSpacing : 0;
                     y = isVertical ? 0 : y + list.size.height + itemSpacing;
@@ -234,14 +238,16 @@ public class LegendWidget implements IChartWidget
 
                 list.keys.add( key );
 
+                int space = list.keys.size() < 1 ? 0 : itemSpacing;
+
                 x += isVertical ? 0 : key.size.width + itemSpacing;
                 y += isVertical ? key.size.height + itemSpacing : 0;
 
                 list.size.width = isVertical ? Math.max( list.size.width,
-                    key.size.width ) : list.size.width + key.size.width;
+                    key.size.width ) : list.size.width + key.size.width + space;
 
                 list.size.height = isVertical ? list.size.height +
-                    key.size.height : Math.max( list.size.height,
+                    key.size.height + space : Math.max( list.size.height,
                     key.size.height );
             }
 

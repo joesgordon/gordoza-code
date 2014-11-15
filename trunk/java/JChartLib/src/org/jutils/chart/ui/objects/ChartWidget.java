@@ -93,6 +93,11 @@ public class ChartWidget implements IChartWidget
 
         drawLegend( graphics, wLoc, wSize );
 
+        // graphics.setStroke( new BasicStroke( 1 ) );
+        // graphics.setColor( Color.red );
+        // graphics.drawRect( wLoc.x, wLoc.y, wSize.width - 1, wSize.height - 1
+        // );
+
         // ---------------------------------------------------------------------
         // Draw axes.
         // ---------------------------------------------------------------------
@@ -106,6 +111,11 @@ public class ChartWidget implements IChartWidget
         plot.draw( graphics, wLoc, wSize );
     }
 
+    /**
+     * @param graphics
+     * @param wLoc
+     * @param wSize
+     */
     private void drawSubtitle( Graphics2D graphics, Point wLoc, Dimension wSize )
     {
         if( chart.subtitle.visible )
@@ -124,6 +134,11 @@ public class ChartWidget implements IChartWidget
         }
     }
 
+    /**
+     * @param graphics
+     * @param wLoc
+     * @param wSize
+     */
     private void drawTopBottom( Graphics2D graphics, Point wLoc, Dimension wSize )
     {
         if( chart.topBottomLabel.visible )
@@ -144,6 +159,11 @@ public class ChartWidget implements IChartWidget
         }
     }
 
+    /**
+     * @param graphics
+     * @param wLoc
+     * @param wSize
+     */
     private void drawTitle( Graphics2D graphics, Point wLoc, Dimension wSize )
     {
         if( chart.title.visible )
@@ -162,6 +182,11 @@ public class ChartWidget implements IChartWidget
         }
     }
 
+    /**
+     * @param graphics
+     * @param wLoc
+     * @param wSize
+     */
     private void drawLegend( Graphics2D graphics, Point wLoc, Dimension wSize )
     {
         if( chart.legend.visible )
@@ -190,7 +215,7 @@ public class ChartWidget implements IChartWidget
                     break;
             }
 
-            legend.draw( graphics, loc, size );
+            legend.draw( graphics, loc, new Dimension( size ) );
 
             switch( chart.legend.side )
             {
