@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jutils.chart.data.QuadSide;
 import org.jutils.chart.model.*;
 import org.jutils.chart.ui.IChartWidget;
 
@@ -73,23 +74,37 @@ public class LegendWidget implements IChartWidget
         availSize.width -= extra;
         availSize.height -= extra;
 
-        PlacementGrid grid = new PlacementGrid( availSize, isVertical, 6 );
+        PlacementGrid grid = buildGrid( availSize, isVertical );
+
+        size = new Dimension( grid.size );
+        size.width += extra;
+        size.height += extra;
+
+        return size;
+    }
+
+    /**
+     * @param availSize
+     * @param isVertical
+     * @return
+     */
+    private PlacementGrid buildGrid( Dimension availSize, boolean isVertical )
+    {
+        List<SeriesKey> keys = new ArrayList<>();
 
         for( Series s : chart.series )
         {
             nameLabel.text = s.name;
 
-            Dimension labelSize = nameWidget.calculateSize( canvasSize );
-            labelSize.height = Math.max( labelSize.height, s.marker.weight ) + 4;
+            Dimension keySize = nameWidget.calculateSize( availSize );
+            keySize.height = Math.max( keySize.height, s.marker.weight ) + 4;
 
-            grid.addItem( labelSize );
+            SeriesKey key = new SeriesKey( s, keySize );
+
+            keys.add( key );
         }
 
-        size = grid.getSize();
-        size.width += extra;
-        size.height += extra;
-
-        return grid.getSize();
+        return new PlacementGrid( keys, availSize, isVertical, 6 );
     }
 
     /***************************************************************************
@@ -98,10 +113,58 @@ public class LegendWidget implements IChartWidget
     @Override
     public void draw( Graphics2D graphics, Point location, Dimension size )
     {
+        // ---------------------------------------------------------------------
+        // Fill
+        // ---------------------------------------------------------------------
+        graphics.setColor( chart.legend.fill );
+        graphics.fillRect( location.x, location.y, size.width, size.height );
+
+        // ---------------------------------------------------------------------
+        // Draw border
+        // ---------------------------------------------------------------------
+        if( chart.legend.border.visible && chart.legend.border.thickness > 0 )
+        {
+            int thickness = chart.legend.border.thickness;
+            graphics.setStroke( new BasicStroke( thickness ) );
+            graphics.setColor( Color.black );
+            graphics.drawRect( location.x, location.y, size.width - thickness,
+                size.height - thickness );
+
+            location.x += thickness;
+            location.y += thickness;
+
+            size.width -= 2 * thickness;
+            size.height -= 2 * thickness;
+        }
+
+        // ---------------------------------------------------------------------
+        // Draw keys
+        // ---------------------------------------------------------------------
+        boolean isVertical = chart.legend.side == QuadSide.LEFT ||
+            chart.legend.side == QuadSide.RIGHT;
+        PlacementGrid grid = buildGrid( size, isVertical );
+
         graphics.setStroke( new BasicStroke( 2 ) );
         graphics.setColor( Color.black );
-        graphics.drawRect( location.x + 1, location.y + 1, size.width - 2,
-            size.height - 2 );
+
+        location.x += 8;
+        location.y += 8;
+
+        for( KeyList list : grid.items )
+        {
+            // LogUtils.printDebug( "drawing series keys at " + colPoint );
+
+            for( SeriesKey key : list.keys )
+            {
+                // LogUtils.printDebug( "\tdrawing series key at " + itemPoint
+                // );
+                int x = location.x + key.loc.x;
+                int y = location.y + key.loc.y;
+
+                graphics.drawRect( x, y, key.size.width - 2,
+                    key.size.height - 2 );
+            }
+        }
     }
 
     /***************************************************************************
@@ -109,132 +172,101 @@ public class LegendWidget implements IChartWidget
      **************************************************************************/
     private static class PlacementGrid
     {
-        private final List<List<Dimension>> items;
-        private final boolean isVertical;
-        private final int directionLimit;
-        private final int itemSpacing;
+        public final List<KeyList> items;
+        public final Dimension size;
 
-        public PlacementGrid( Dimension availableSize, boolean isVertical,
-            int itemSpacing )
+        private final boolean isVertical;
+
+        public PlacementGrid( List<SeriesKey> keys, Dimension availableSize,
+            boolean isVertical, int itemSpacing )
         {
             this.items = new ArrayList<>();
             this.isVertical = isVertical;
-            this.itemSpacing = itemSpacing;
-            this.directionLimit = isVertical ? availableSize.height
+            this.size = new Dimension();
+
+            int directionLimit = isVertical ? availableSize.height
                 : availableSize.width;
 
-            items.add( new ArrayList<Dimension>() );
-        }
+            KeyList list = new KeyList();
+            int x = 0;
+            int y = 0;
 
-        public Dimension getSize()
-        {
-            Dimension size = new Dimension();
+            items.add( list );
 
-            for( List<Dimension> list : items )
+            for( SeriesKey key : keys )
             {
-                Dimension d = getListSize( list );
+                int len = getItemLen( list.size );
+                int addLen = getItemLen( key.size );
 
-                if( isVertical )
+                if( len + addLen > directionLimit && !list.keys.isEmpty() )
                 {
-                    size.width += d.width;
-                    size.height = Math.max( size.height, d.height );
-                }
-                else
-                {
-                    size.width = Math.max( size.width, d.width );
-                    size.height += d.height;
-                }
-            }
+                    x = isVertical ? x + list.size.width + itemSpacing : 0;
+                    y = isVertical ? 0 : y + list.size.height + itemSpacing;
 
-            int extra = ( items.size() - 1 ) * itemSpacing;
-
-            if( isVertical )
-            {
-                size.width += extra;
-            }
-            else
-            {
-                size.height += extra;
-            }
-
-            return size;
-        }
-
-        private Dimension getListSize( List<Dimension> list )
-        {
-            Dimension size = new Dimension();
-
-            for( Dimension d : list )
-            {
-                if( isVertical )
-                {
-                    size.width = Math.max( d.width, size.width );
-                    size.height += d.height;
-                }
-                else
-                {
-                    size.width += d.width;
-                    size.height = Math.max( d.height, size.height );
-                }
-            }
-
-            int extra = ( list.size() - 1 ) * itemSpacing;
-
-            if( isVertical )
-            {
-                size.height += extra;
-            }
-            else
-            {
-                size.width += extra;
-            }
-
-            return size;
-        }
-
-        public void addItem( Dimension nextItem )
-        {
-            List<Dimension> list = getCurrentList();
-
-            int len = getCurrentLen( list );
-            int addLen = getItemLen( nextItem );
-
-            if( len + addLen > directionLimit && !list.isEmpty() )
-            {
-                list = new ArrayList<>();
-                items.add( list );
-            }
-
-            list.add( nextItem );
-
-            // LogUtils.printDebug( "    item size: " + nextItem );
-        }
-
-        private List<Dimension> getCurrentList()
-        {
-            return items.isEmpty() ? null : items.get( items.size() - 1 );
-        }
-
-        private int getCurrentLen( List<Dimension> list )
-        {
-            int len = 0;
-
-            if( list != null )
-            {
-                for( Dimension dim : list )
-                {
-                    len += getItemLen( dim );
+                    list = new KeyList();
+                    items.add( list );
                 }
 
-                len += ( ( list.size() - 1 ) * itemSpacing );
+                key.loc.x = x;
+                key.loc.y = y;
+
+                list.keys.add( key );
+
+                x += isVertical ? 0 : key.size.width + itemSpacing;
+                y += isVertical ? key.size.height + itemSpacing : 0;
+
+                list.size.width = isVertical ? Math.max( list.size.width,
+                    key.size.width ) : list.size.width + key.size.width;
+
+                list.size.height = isVertical ? list.size.height +
+                    key.size.height : Math.max( list.size.height,
+                    key.size.height );
             }
 
-            return len;
+            for( KeyList kl : items )
+            {
+                size.width += kl.size.width;
+                size.height += kl.size.height;
+            }
         }
 
         private int getItemLen( Dimension item )
         {
             return isVertical ? item.height : item.width;
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class KeyList
+    {
+        public final List<SeriesKey> keys;
+        public final Point loc;
+        public final Dimension size;
+
+        public KeyList()
+        {
+            this.keys = new ArrayList<>();
+            this.loc = new Point();
+            this.size = new Dimension();
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class SeriesKey
+    {
+        public final Series s;
+        public final Point loc;
+        public final Dimension size;
+
+        public SeriesKey( Series s, Dimension size )
+        {
+            this.s = s;
+            this.loc = new Point();
+            this.size = size;
         }
     }
 }
