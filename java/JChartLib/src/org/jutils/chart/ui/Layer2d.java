@@ -11,7 +11,7 @@ import org.jutils.Utils;
 public class Layer2d
 {
     /**  */
-    private BufferedImage img;
+    public BufferedImage img;
     /**  */
     private Graphics2D graphics;
 

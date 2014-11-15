@@ -26,5 +26,11 @@ public class Axis
         this.dockZero = false;
         this.primary = new DimSpace();
         this.secondary = new DimSpace();
+
+        primary.title.visible = false;
+        primary.title.text = "primary";
+
+        secondary.title.visible = false;
+        secondary.title.text = "secondary";
     }
 }

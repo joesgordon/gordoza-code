@@ -41,10 +41,8 @@ public class ChartWidget implements IChartWidget
         this.title = new TextWidget( chart.title );
         this.subtitle = new TextWidget( chart.subtitle );
         this.plot = new PlotWidget( context );
-        this.axes = new AxesWidget( context );
+        this.axes = new AxesWidget( context, chart );
         this.legend = new LegendWidget( this );
-
-        axes.chart = chart;
     }
 
     /***************************************************************************
@@ -111,11 +109,11 @@ public class ChartWidget implements IChartWidget
         plot.draw( graphics, wLoc, wSize );
     }
 
-    /**
+    /***************************************************************************
      * @param graphics
      * @param wLoc
      * @param wSize
-     */
+     **************************************************************************/
     private void drawSubtitle( Graphics2D graphics, Point wLoc, Dimension wSize )
     {
         if( chart.subtitle.visible )
@@ -134,11 +132,11 @@ public class ChartWidget implements IChartWidget
         }
     }
 
-    /**
+    /***************************************************************************
      * @param graphics
      * @param wLoc
      * @param wSize
-     */
+     **************************************************************************/
     private void drawTopBottom( Graphics2D graphics, Point wLoc, Dimension wSize )
     {
         if( chart.topBottomLabel.visible )
@@ -159,11 +157,11 @@ public class ChartWidget implements IChartWidget
         }
     }
 
-    /**
+    /***************************************************************************
      * @param graphics
      * @param wLoc
      * @param wSize
-     */
+     **************************************************************************/
     private void drawTitle( Graphics2D graphics, Point wLoc, Dimension wSize )
     {
         if( chart.title.visible )
@@ -182,11 +180,11 @@ public class ChartWidget implements IChartWidget
         }
     }
 
-    /**
+    /***************************************************************************
      * @param graphics
      * @param wLoc
      * @param wSize
-     */
+     **************************************************************************/
     private void drawLegend( Graphics2D graphics, Point wLoc, Dimension wSize )
     {
         if( chart.legend.visible )
