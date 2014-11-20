@@ -95,6 +95,16 @@ public class JChartFrameView implements IView<JFrame>
         s.isPrimaryDomain = false;
         s.isPrimaryRange = false;
         chartView.addSeries( s, true );
+
+        // data = ChartUtils.createSinSeries( 1000000, 4.0, 40.0, 0.0, -5.0, 5.0
+        // );
+        // s = new Series( data );
+        // s.name = "y = sin(x)";
+        // s.marker.color = new Color( 0x393933 );
+        // s.highlight.color = new Color( 0x339933 );
+        // s.line.color = new Color( 0x227722 );
+        // s.line.weight = 4;
+        // chartView.addSeries( s, true );
     }
 
     /***************************************************************************
