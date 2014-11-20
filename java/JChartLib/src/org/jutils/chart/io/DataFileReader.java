@@ -2,14 +2,14 @@ package org.jutils.chart.io;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.jutils.chart.data.DefaultSeries;
 import org.jutils.chart.data.XYPoint;
+import org.jutils.chart.model.ISeriesData;
 import org.jutils.io.IReader;
 import org.jutils.io.RuntimeFormatException;
 
-public class DataFileReader implements IReader<DefaultSeries, File>
+public class DataFileReader implements IReader<ISeriesData<?>, File>
 {
     private final DataLineReader lineReader;
 
@@ -19,10 +19,10 @@ public class DataFileReader implements IReader<DefaultSeries, File>
     }
 
     @Override
-    public DefaultSeries read( File f ) throws IOException,
+    public ISeriesData<?> read( File f ) throws IOException,
         RuntimeFormatException
     {
-        List<XYPoint> points = new ArrayList<>();
+        ArrayList<XYPoint> points = new ArrayList<>();
         String line;
         XYPoint point;
 
@@ -38,6 +38,10 @@ public class DataFileReader implements IReader<DefaultSeries, File>
                 }
             }
         }
+
+        // XYPoint [] array = points.toArray( new XYPoint[points.size()] );
+        //
+        // return new ArraySeries( array );
 
         return new DefaultSeries( points );
     }

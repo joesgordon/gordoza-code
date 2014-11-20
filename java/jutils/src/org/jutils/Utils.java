@@ -7,6 +7,7 @@ import java.io.*;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -229,6 +230,46 @@ public final class Utils
     {
         URL url = c.getResource( resource );
         return url;
+    }
+
+    /***************************************************************************
+     * @param str
+     * @return
+     **************************************************************************/
+    public static List<String> split( String str )
+    {
+        List<String> fields = new ArrayList<>();
+        int start = 0;
+        int end;
+        char c;
+        boolean found = true;
+
+        for( int i = 0; i < str.length(); i++ )
+        {
+            c = str.charAt( i );
+
+            if( c == ' ' || c == '\t' )
+            {
+                if( found )
+                {
+                    end = i;
+
+                    fields.add( str.substring( start, end ) );
+                    found = false;
+                }
+            }
+            else
+            {
+                if( !found )
+                {
+                    start = i;
+                }
+
+                found = true;
+            }
+        }
+
+        return fields;
     }
 
     /***************************************************************************

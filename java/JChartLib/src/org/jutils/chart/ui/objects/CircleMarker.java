@@ -1,6 +1,7 @@
 package org.jutils.chart.ui.objects;
 
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 
 import org.jutils.chart.model.IMarker;
 
@@ -16,6 +17,8 @@ public class CircleMarker implements IMarker
     /**  */
     private int radius;
     /**  */
+    private final Ellipse2D.Float ellipse;
+    /**  */
     private int x;
     /**  */
     private int y;
@@ -25,10 +28,12 @@ public class CircleMarker implements IMarker
      **************************************************************************/
     public CircleMarker()
     {
-        this.x = 5;
-        this.y = 5;
-        this.setSize( 6 );
         this.setColor( new Color( 0x0066CC ) );
+        this.ellipse = new Ellipse2D.Float( 0, 0, 6, 6 );
+        this.x = -5;
+        this.y = -5;
+
+        setSize( 6 );
     }
 
     /***************************************************************************
@@ -39,7 +44,12 @@ public class CircleMarker implements IMarker
     {
         g.setColor( color );
 
-        g.fillOval( x - radius, y - radius, diameter, diameter );
+        ellipse.x = x - radius;
+        ellipse.y = y - radius;
+
+        g.fill( ellipse );
+
+        // g.fillOval( x - radius, y - radius, diameter, diameter );
     }
 
     /***************************************************************************
@@ -65,10 +75,12 @@ public class CircleMarker implements IMarker
      * 
      **************************************************************************/
     @Override
-    public void setSize( int r )
+    public void setSize( int diameter )
     {
-        this.diameter = r;
-        this.radius = r / 2;
+        this.ellipse.height = diameter;
+        this.ellipse.width = diameter;
+        this.diameter = diameter;
+        this.radius = diameter / 2;
     }
 
     /***************************************************************************

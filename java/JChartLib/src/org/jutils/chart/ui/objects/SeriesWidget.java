@@ -8,6 +8,7 @@ import org.jutils.chart.data.*;
 import org.jutils.chart.data.ChartContext.IDimensionCoords;
 import org.jutils.chart.model.*;
 import org.jutils.chart.ui.IChartWidget;
+import org.jutils.chart.ui.Layer2d;
 
 /*******************************************************************************
  * 
@@ -81,7 +82,8 @@ public class SeriesWidget implements IChartWidget
         IDataPoint dp;
         Bounds b = context.getBounds();
 
-        // LogUtils.printDebug( "series: w: " + width + ", h: " + height );
+        // LogUtils.printDebug( "series: " + series.name + " weight: " +
+        // series.marker.weight );
 
         Span spanx = series.isPrimaryDomain ? b.primaryDomainSpan
             : b.secondaryDomainSpan;
@@ -106,6 +108,25 @@ public class SeriesWidget implements IChartWidget
 
         // LogUtils.printDebug( "series: start: " + start + ", end: " + end );
 
+        Layer2d markerLayer = new Layer2d();
+        Layer2d selectedLayer = new Layer2d();
+        int d = series.marker.weight + 2;
+        int r = d / 2 + 1;
+
+        if( series.marker.visible )
+        {
+            Graphics2D g2d;
+            Point mp = new Point( r, r );
+
+            g2d = markerLayer.setSize( d, d );
+            marker.setLocation( mp );
+            marker.draw( g2d, mp, null );
+
+            g2d = selectedLayer.setSize( d, d );
+            selectedMarker.setLocation( mp );
+            selectedMarker.draw( g2d, mp, null );
+        }
+
         for( int i = start; i < end; i++ )
         {
             dp = series.data.get( i );
@@ -125,16 +146,14 @@ public class SeriesWidget implements IChartWidget
                     line.setPoints( last, p );
 
                     line.draw( graphics, p, size );
-
                 }
 
                 if( series.marker.visible )
                 {
-                    IMarker m = dp.isSelected() ? selectedMarker : marker;
+                    Layer2d l2d = dp.isSelected() ? selectedLayer : markerLayer;
 
-                    m.setLocation( p );
-
-                    m.draw( graphics, p, size );
+                    // m.draw( graphics, p, size );
+                    l2d.paint( graphics, p.x - r, p.y - r );
                 }
 
                 last.x = p.x;

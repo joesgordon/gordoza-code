@@ -811,7 +811,6 @@ public class ChartView implements IView<JComponent>
 
                 if( !s.series.visible )
                 {
-                    s.highlight.setLocation( new Point( -10, -10 ) );
                     continue;
                 }
 
@@ -839,6 +838,11 @@ public class ChartView implements IView<JComponent>
                         else
                         {
                             rangeCoords = context.range.secondary;
+                        }
+
+                        if( domainCoords == null || rangeCoords == null )
+                        {
+                            continue;
                         }
 
                         xy = new XYPoint( s.series.data.get( idx ) );

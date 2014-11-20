@@ -1,7 +1,8 @@
 package org.jutils.chart.io;
 
-import java.util.regex.Pattern;
+import java.util.List;
 
+import org.jutils.Utils;
 import org.jutils.chart.data.XYPoint;
 
 /*******************************************************************************
@@ -9,17 +10,6 @@ import org.jutils.chart.data.XYPoint;
  ******************************************************************************/
 public class DataLineReader
 {
-    /**  */
-    private final Pattern splitter;
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public DataLineReader()
-    {
-        this.splitter = Pattern.compile( "\\s+" );
-    }
-
     /***************************************************************************
      * @param line
      * @return
@@ -29,25 +19,25 @@ public class DataLineReader
         double x;
         double y;
 
-        if( line.charAt( 0 ) == '%' )
+        line = line.trim();
+
+        if( line.isEmpty() || line.charAt( 0 ) == '%' )
         {
             return null;
         }
 
-        line = line.trim();
+        List<String> values = Utils.split( line );
 
-        String [] values = splitter.split( line );
-
-        if( values.length < 2 )
+        if( values.size() < 2 )
         {
             return null;
         }
 
         try
         {
-            x = Double.parseDouble( values[0] );
+            x = Double.parseDouble( values.get( 0 ) );
 
-            String val = values[values.length - 1];
+            String val = values.get( values.size() - 1 );
 
             if( val.equals( "999999999.999999999" ) )
             {
