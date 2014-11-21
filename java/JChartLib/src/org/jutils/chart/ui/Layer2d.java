@@ -94,4 +94,12 @@ public class Layer2d
     {
         graphics.drawImage( img, x, y, null );
     }
+
+    /***************************************************************************
+     * @param size
+     **************************************************************************/
+    public void setSize( Dimension size )
+    {
+        setSize( size.width, size.height );
+    }
 }
