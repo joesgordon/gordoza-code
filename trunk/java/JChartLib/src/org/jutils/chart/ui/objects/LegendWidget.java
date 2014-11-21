@@ -8,6 +8,7 @@ import org.jutils.chart.data.QuadSide;
 import org.jutils.chart.model.HorizontalAlignment;
 import org.jutils.chart.model.TextLabel;
 import org.jutils.chart.ui.IChartWidget;
+import org.jutils.chart.ui.Layer2d;
 
 /*******************************************************************************
  * 
@@ -21,6 +22,9 @@ public class LegendWidget implements IChartWidget
     /**  */
     private final TextWidget nameWidget;
 
+    /**  */
+    private final Layer2d layer;
+
     /***************************************************************************
      * @param chart
      **************************************************************************/
@@ -29,9 +33,18 @@ public class LegendWidget implements IChartWidget
         this.chart = chart;
         this.nameLabel = new TextLabel();
         this.nameWidget = new TextWidget( nameLabel );
+        this.layer = new Layer2d();
 
         nameLabel.alignment = HorizontalAlignment.RIGHT;
         nameLabel.font = nameLabel.font.deriveFont( 14.0f );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public void repaint()
+    {
+        layer.repaint = true;
     }
 
     /***************************************************************************
@@ -118,6 +131,24 @@ public class LegendWidget implements IChartWidget
     @Override
     public void draw( Graphics2D graphics, Point location, Dimension size )
     {
+        layer.setSize( size );
+
+        if( layer.repaint )
+        {
+            draw( layer.getGraphics(), size );
+        }
+
+        layer.paint( graphics, location.x, location.y );
+    }
+
+    /***************************************************************************
+     * @param graphics
+     * @param size
+     **************************************************************************/
+    private void draw( Graphics2D graphics, Dimension size )
+    {
+        Point location = new Point();
+
         // ---------------------------------------------------------------------
         // Fill
         // ---------------------------------------------------------------------

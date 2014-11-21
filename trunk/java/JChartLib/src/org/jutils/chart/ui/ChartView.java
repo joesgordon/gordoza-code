@@ -479,6 +479,7 @@ public class ChartView implements IView<JComponent>
         chartWidget.title.repaint();
         chartWidget.subtitle.repaint();
         chartWidget.topBottom.repaint();
+        chartWidget.legend.repaint();
         chartWidget.plot.seriesLayer.repaint = true;
         chartWidget.plot.highlightLayer.repaint = true;
         chartWidget.axes.axesLayer.repaint = true;
