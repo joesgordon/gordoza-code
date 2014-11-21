@@ -64,7 +64,7 @@ public class Chart
 
         for( Series s : series )
         {
-            if( s.isPrimaryDomain )
+            if( s.visible && s.isPrimaryDomain )
             {
                 Span span = s.calcDomainSpan();
 
@@ -112,7 +112,7 @@ public class Chart
 
         for( Series s : series )
         {
-            if( s.isPrimaryRange )
+            if( s.visible && s.isPrimaryRange )
             {
                 Span span = s.calcRangeSpan();
 
@@ -160,7 +160,7 @@ public class Chart
 
         for( Series s : series )
         {
-            if( !s.isPrimaryDomain )
+            if( s.visible && !s.isPrimaryDomain )
             {
                 Span span = s.calcDomainSpan();
 
@@ -207,7 +207,7 @@ public class Chart
 
         for( Series s : series )
         {
-            if( !s.isPrimaryRange )
+            if( s.visible && !s.isPrimaryRange )
             {
                 Span span = s.calcRangeSpan();
 

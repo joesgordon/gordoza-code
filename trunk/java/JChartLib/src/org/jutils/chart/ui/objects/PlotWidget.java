@@ -91,7 +91,8 @@ public class PlotWidget implements IChartWidget
 
             for( SeriesWidget s : serieses )
             {
-                if( s.trackPoint && s.series.highlight.visible )
+                if( s.series.visible && s.trackPoint &&
+                    s.series.highlight.visible )
                 {
                     s.highlight.draw( g2d, location, size );
                 }
