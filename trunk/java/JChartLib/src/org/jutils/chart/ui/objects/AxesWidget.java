@@ -445,14 +445,14 @@ public class AxesWidget implements IChartWidget
         Dimension rMinSize;
         Dimension rMaxSize;
 
-        domainLabel.text = String.format( "%.3f", b.primaryDomainSpan.min );
+        domainLabel.text = getTickText( b.primaryDomainSpan.min );
         dMinSize = domainText.calculateSize( canvasSize );
-        domainLabel.text = String.format( "%.3f", b.primaryDomainSpan.max );
+        domainLabel.text = getTickText( b.primaryDomainSpan.max );
         dMaxSize = domainText.calculateSize( canvasSize );
 
-        rangeLabel.text = String.format( "%.3f", b.primaryRangeSpan.min );
+        rangeLabel.text = getTickText( b.primaryRangeSpan.min );
         rMinSize = rangeText.calculateSize( canvasSize );
-        rangeLabel.text = String.format( "%.3f", b.primaryRangeSpan.max );
+        rangeLabel.text = getTickText( b.primaryRangeSpan.max );
         rMaxSize = rangeText.calculateSize( canvasSize );
 
         textSpace.left = Math.max( dMinSize.width / 2, rMaxSize.width );
@@ -463,9 +463,9 @@ public class AxesWidget implements IChartWidget
 
         if( b.secondaryDomainSpan != null )
         {
-            domainLabel.text = String.format( "%.3f", b.secondaryDomainSpan.min );
+            domainLabel.text = getTickText( b.secondaryDomainSpan.min );
             dMinSize = domainText.calculateSize( canvasSize );
-            domainLabel.text = String.format( "%.3f", b.secondaryDomainSpan.max );
+            domainLabel.text = getTickText( b.secondaryDomainSpan.max );
             dMaxSize = domainText.calculateSize( canvasSize );
 
             textSpace.left = Math.max( textSpace.left, dMinSize.width / 2 );
@@ -477,9 +477,9 @@ public class AxesWidget implements IChartWidget
 
         if( b.secondaryRangeSpan != null )
         {
-            rangeLabel.text = String.format( "%.3f", b.secondaryRangeSpan.min );
+            rangeLabel.text = getTickText( b.secondaryRangeSpan.min );
             rMinSize = rangeText.calculateSize( canvasSize );
-            rangeLabel.text = String.format( "%.3f", b.secondaryRangeSpan.max );
+            rangeLabel.text = getTickText( b.secondaryRangeSpan.max );
             rMaxSize = rangeText.calculateSize( canvasSize );
 
             textSpace.bottom = Math.max( textSpace.bottom, rMinSize.height / 2 );
@@ -506,12 +506,28 @@ public class AxesWidget implements IChartWidget
     private void drawDomainLabel( Graphics2D g2d, Tick t, int y, int h,
         Dimension canvasSize )
     {
-        domainLabel.text = String.format( "%.3f", t.value );
+        domainLabel.text = getTickText( t.value );
         int tw = domainText.calculateSize( canvasSize ).width;
         Point p = new Point( t.offset - tw / 2, y );
         Dimension d = new Dimension( tw, h );
         domainText.repaint();
         domainText.draw( g2d, p, d );
+    }
+
+    /***************************************************************************
+     * @param value
+     * @return
+     **************************************************************************/
+    public static String getTickText( double value )
+    {
+        // double abs = Math.abs( value );
+        // boolean useScientific = abs != 0.0 && ( abs > 999999999 || abs <
+        // 0.001 );
+        // String fmt = useScientific ? "%.10E" : "%.3f";
+        //
+        // return String.format( fmt, value );
+
+        return String.format( "%.3f", value );
     }
 
     /***************************************************************************
@@ -525,7 +541,7 @@ public class AxesWidget implements IChartWidget
     private void drawRangeLabel( Graphics2D g2d, Tick t, int x, int w,
         boolean leftAlign, Dimension canvasSize )
     {
-        rangeLabel.text = String.format( "%.3f", t.value );
+        rangeLabel.text = getTickText( t.value );
         Dimension d = rangeText.calculateSize( canvasSize );
         int tw = d.width;
         int h = d.height;
