@@ -467,7 +467,7 @@ public class ChartView implements IView<JComponent>
      **************************************************************************/
     private void restoreAndRepaintChart()
     {
-        chartWidget.calculateBounds();
+        chartWidget.setAutoBounds();
         repaintChart();
     }
 
@@ -1100,7 +1100,8 @@ public class ChartView implements IView<JComponent>
         {
             if( event.getItem() )
             {
-                view.restoreAndRepaintChart();
+                view.chartWidget.calculateAutoBounds();
+                view.repaintChart();
             }
         }
     }
