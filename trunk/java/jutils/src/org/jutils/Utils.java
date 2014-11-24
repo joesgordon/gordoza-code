@@ -238,17 +238,39 @@ public final class Utils
      **************************************************************************/
     public static List<String> split( String str )
     {
+        return split( str, ' ', '\t' );
+    }
+
+    /***************************************************************************
+     * @param str
+     * @param delimeters
+     * @return
+     **************************************************************************/
+    public static List<String> split( String str, char... delimeters )
+    {
         List<String> fields = new ArrayList<>();
         int start = 0;
         int end;
         char c;
-        boolean found = true;
+        boolean found = false;
+        boolean isDelim = false;
 
         for( int i = 0; i < str.length(); i++ )
         {
             c = str.charAt( i );
 
-            if( c == ' ' || c == '\t' )
+            isDelim = false;
+
+            for( char delim : delimeters )
+            {
+                if( c == delim )
+                {
+                    isDelim = true;
+                    break;
+                }
+            }
+
+            if( isDelim )
             {
                 if( found )
                 {
@@ -267,6 +289,11 @@ public final class Utils
 
                 found = true;
             }
+        }
+
+        if( found )
+        {
+            fields.add( str.substring( start ) );
         }
 
         return fields;

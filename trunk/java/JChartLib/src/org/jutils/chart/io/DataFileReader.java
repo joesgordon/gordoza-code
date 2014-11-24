@@ -26,6 +26,8 @@ public class DataFileReader implements IReader<ISeriesData<?>, File>
         String line;
         XYPoint point;
 
+        // LogUtils.printDebug( "Reading " + f.getName() );
+
         try( BufferedReader reader = new BufferedReader( new FileReader( f ) ) )
         {
             while( ( line = reader.readLine() ) != null )
@@ -38,6 +40,8 @@ public class DataFileReader implements IReader<ISeriesData<?>, File>
                 }
             }
         }
+
+        // LogUtils.printDebug( "Done Reading " + f.getName() );
 
         // XYPoint [] array = points.toArray( new XYPoint[points.size()] );
         //
