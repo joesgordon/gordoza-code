@@ -95,7 +95,7 @@ public class ItemsTableModel<T> extends AbstractTableModel
     /***************************************************************************
      * @param data
      **************************************************************************/
-    public void setItems( List<T> data )
+    public void setItems( List<? extends T> data )
     {
         int lastRow;
 

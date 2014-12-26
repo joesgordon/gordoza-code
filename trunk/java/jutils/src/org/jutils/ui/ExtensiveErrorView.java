@@ -4,6 +4,8 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import org.jutils.ui.app.AppRunner;
+import org.jutils.ui.app.IApplication;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
@@ -81,5 +83,57 @@ public class ExtensiveErrorView implements IView<JPanel>
     {
         messageField.setText( message );
         errorsField.setText( errors );
+    }
+
+    /***************************************************************************
+     * @param message
+     * @param errors
+     **************************************************************************/
+    public static void invokeError( String title, String message, String errors )
+    {
+        IApplication app = new ExtErrorApp( title, message, errors );
+        AppRunner.invokeLater( app );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class ExtErrorApp implements IApplication
+    {
+        private final String title;
+        private final String message;
+        private final String errors;
+
+        public ExtErrorApp( String title, String message, String errors )
+        {
+            this.title = title;
+            this.message = message;
+            this.errors = errors;
+        }
+
+        @Override
+        public String getLookAndFeelName()
+        {
+            return null;
+        }
+
+        @Override
+        public void createAndShowUi()
+        {
+            ExtensiveErrorView view = new ExtensiveErrorView();
+            OkDialogView dialogView = new OkDialogView( null, view.getView() );
+
+            view.setErrors( message, errors );
+
+            JDialog dialog = dialogView.getView();
+
+            dialog.setTitle( title );
+            dialog.setSize( 600, 600 );
+            dialog.setDefaultCloseOperation( JDialog.DISPOSE_ON_CLOSE );
+            dialog.validate();
+            dialog.setLocationRelativeTo( null );
+            dialog.setVisible( true );
+            dialog.toFront();
+        }
     }
 }
