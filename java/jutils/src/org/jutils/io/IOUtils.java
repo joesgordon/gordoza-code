@@ -463,7 +463,7 @@ public final class IOUtils
             throw new ValidationException( "The specified " + name +
                 " directory does not exist: " + dir.getName() );
         }
-        else if( !dir.isFile() )
+        else if( !dir.isDirectory() )
         {
             throw new ValidationException( "The specified " + name +
                 " directory exists, but is not a directory: " + dir.getName() );
