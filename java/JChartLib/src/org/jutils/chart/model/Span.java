@@ -1,5 +1,7 @@
 package org.jutils.chart.model;
 
+import java.util.Objects;
+
 /*******************************************************************************
  *
  ******************************************************************************/
@@ -75,14 +77,7 @@ public class Span
     @Override
     public int hashCode()
     {
-        final int prime = 31;
-        int result = 1;
-        long temp;
-        temp = Double.doubleToLongBits( max );
-        result = prime * result + ( int )( temp ^ ( temp >>> 32 ) );
-        temp = Double.doubleToLongBits( min );
-        result = prime * result + ( int )( temp ^ ( temp >>> 32 ) );
-        return result;
+        return Objects.hash( max, min );
     }
 
     /***************************************************************************

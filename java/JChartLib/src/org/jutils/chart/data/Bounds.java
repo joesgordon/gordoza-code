@@ -1,5 +1,7 @@
 package org.jutils.chart.data;
 
+import java.util.Objects;
+
 import org.jutils.chart.model.Span;
 
 /*******************************************************************************
@@ -120,6 +122,7 @@ public class Bounds
     @Override
     public int hashCode()
     {
-        return super.hashCode();
+        return Objects.hash( primaryDomainSpan, primaryRangeSpan,
+            secondaryDomainSpan, secondaryRangeSpan );
     }
 }

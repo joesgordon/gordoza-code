@@ -97,8 +97,7 @@ public class ProgramData implements Comparable<Object>
     @Override
     public int hashCode()
     {
-        assert false : "hashCode not designed";
-        return 42; // any arbitrary constant will do
+        return name.hashCode();
     }
 
     /***************************************************************************
