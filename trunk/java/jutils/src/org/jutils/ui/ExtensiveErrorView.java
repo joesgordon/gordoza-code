@@ -96,6 +96,17 @@ public class ExtensiveErrorView implements IView<JPanel>
     }
 
     /***************************************************************************
+     * @param message
+     * @param errors
+     **************************************************************************/
+    public static void invokeErrorAndWait( String title, String message,
+        String errors )
+    {
+        IApplication app = new ExtErrorApp( title, message, errors );
+        AppRunner.invokeAndWait( app );
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     private static class ExtErrorApp implements IApplication
