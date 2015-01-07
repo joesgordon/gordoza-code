@@ -390,7 +390,6 @@ public class ChartView implements IView<JComponent>
      **************************************************************************/
     public void clear()
     {
-        chart.title.text = "Title";
         chart.series.clear();
         chartWidget.plot.serieses.clear();
 
