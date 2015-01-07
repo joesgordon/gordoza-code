@@ -5,6 +5,7 @@ import java.awt.*;
 import org.jutils.chart.data.Bounds;
 import org.jutils.chart.data.ChartContext;
 import org.jutils.chart.model.Chart;
+import org.jutils.chart.model.HorizontalAlignment;
 import org.jutils.chart.ui.IChartWidget;
 
 /*******************************************************************************
@@ -65,14 +66,16 @@ public class ChartWidget implements IChartWidget
     {
         // LogUtils.printDebug( "chart: w: " + width + ", h: " + height );
 
-        // ---------------------------------------------------------------------
-        // Clear
-        // ---------------------------------------------------------------------
-        graphics.setColor( Color.white );
-        graphics.fillRect( location.x, location.y, size.width, size.height );
-
         Point wLoc = new Point( location.x, location.y );
         Dimension wSize = new Dimension( size );
+
+        // ---------------------------------------------------------------------
+        // Draw top/bottom
+        // ---------------------------------------------------------------------
+        wLoc.x += 20;
+        wSize.width -= 40;
+        graphics.setColor( Color.white );
+        graphics.fillRect( location.x, location.y, size.width, size.height );
 
         drawTopBottom( graphics, wLoc, wSize );
 
@@ -83,9 +86,6 @@ public class ChartWidget implements IChartWidget
         // ---------------------------------------------------------------------
         //
         // ---------------------------------------------------------------------
-        wLoc.x += 20;
-        wSize.width -= 40;
-
         wLoc.y += 10;
         wSize.height -= 20;
 
@@ -147,9 +147,11 @@ public class ChartWidget implements IChartWidget
             size.width = wSize.width;
 
             loc.y += 4;
+            chart.topBottomLabel.alignment = HorizontalAlignment.LEFT;
             topBottom.draw( graphics, loc, size );
 
             loc.y = wSize.height - size.height - 4;
+            chart.topBottomLabel.alignment = HorizontalAlignment.RIGHT;
             topBottom.draw( graphics, loc, size );
 
             wLoc.y += size.height + 4;
