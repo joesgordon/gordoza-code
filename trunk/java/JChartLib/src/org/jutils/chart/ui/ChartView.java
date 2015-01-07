@@ -397,6 +397,19 @@ public class ChartView implements IView<JComponent>
         restoreAndRepaintChart();
     }
 
+    public void setPrimaryRangeBounds( double min, double max )
+    {
+        Bounds b = chartWidget.context.getBounds();
+
+        b.primaryRangeSpan = new Span( min, max );
+
+        chartWidget.context.setBounds( b );
+
+        chartWidget.plot.seriesLayer.repaint = true;
+        chartWidget.axes.axesLayer.repaint = true;
+        mainPanel.repaint();
+    }
+
     /***************************************************************************
      * 
      **************************************************************************/
