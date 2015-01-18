@@ -114,27 +114,33 @@ public class BitBuffer
     }
 
     /***************************************************************************
-     * @param bitCount
+     * Increments the current position by the provided number of bits.
+     * @param bitCount the number of bits to seek from the current position.
+     * @throws IllegalArgumentException if the resultant index is invalid.
      **************************************************************************/
     public void increment( int bitCount )
     {
-        position.increment( bitCount );
+        BitPosition pos = new BitPosition( position );
 
-        if( position.getByte() >= buffer.length )
+        pos.increment( bitCount );
+
+        if( pos.getByte() >= buffer.length )
         {
             throw new IllegalArgumentException( "The byte index (" +
                 position.getByte() + ") must be < the buffer length (" +
                 buffer.length + ")" );
         }
 
+        position.set( pos );
     }
 
     /***************************************************************************
-     * @param pos
+     * Sets the current position to the provided position.
+     * @param pos the bit position at which to set the current I/O pointer.
      **************************************************************************/
     public void setPosition( BitPosition pos )
     {
-        setPosition( pos.getByte(), pos.getBit() );
+        setPosition( pos );
     }
 
     /***************************************************************************
@@ -146,7 +152,7 @@ public class BitBuffer
     }
 
     /***************************************************************************
-     * @return
+     * Returns the byte index of the current position.
      **************************************************************************/
     public int getByte()
     {
@@ -154,7 +160,7 @@ public class BitBuffer
     }
 
     /***************************************************************************
-     * @return
+     * Returns the bit index of the current position.
      **************************************************************************/
     public int getBit()
     {
@@ -233,12 +239,26 @@ public class BitBuffer
      **************************************************************************/
     public BitPosition find( BitArray bits, int start )
     {
+        BitPosition startPos = new BitPosition( start, 0 );
+
+        return find( bits, startPos );
+    }
+
+    /**************************************************************************
+     * Finds the specified bits starting at the provided position.
+     * @param bits the bits to be found.
+     * @param start the beginning position to start looking.
+     * @return the bit position where the provided bits were found or null if
+     * not found.
+     *************************************************************************/
+    public BitPosition find( BitArray bits, BitPosition start )
+    {
         BitPosition curPos = new BitPosition( position );
         int idx = 0;
         boolean bit;
         BitPosition pos = null;
 
-        position.set( start, 0 );
+        position.set( start );
 
         while( remainingBits() > 0 )
         {

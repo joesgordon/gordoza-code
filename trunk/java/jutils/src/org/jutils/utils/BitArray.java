@@ -20,6 +20,9 @@ public class BitArray implements Iterable<Boolean>
         bits = new ArrayList<>( 64 );
     }
 
+    /***************************************************************************
+     * @param bits
+     **************************************************************************/
     public BitArray( BitArray bits )
     {
         this.bits = new ArrayList<>( bits.bits );
@@ -159,6 +162,7 @@ public class BitArray implements Iterable<Boolean>
     }
 
     /***************************************************************************
+     * Returns the bit at the provided index.
      * @param idx
      * @return
      **************************************************************************/
