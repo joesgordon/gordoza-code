@@ -8,13 +8,15 @@ import java.util.Arrays;
 import javax.swing.*;
 
 import org.jutils.*;
-import org.jutils.io.*;
+import org.jutils.io.BitBuffer;
+import org.jutils.io.BitPosition;
 import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.model.IView;
 import org.jutils.utils.BitArray;
 
 /*******************************************************************************
- * 
+ * Displays an array of bytes and allows the user to shift the bytes from an
+ * initial starting bit offset of 0 to 7 and back again.
  ******************************************************************************/
 public class ShiftHexView implements IView<JComponent>
 {
@@ -35,6 +37,10 @@ public class ShiftHexView implements IView<JComponent>
     private BitBuffer buffer;
 
     /**  */
+    private BitArray lastSearch;
+    /**  */
+    private BitPosition lastMatch;
+    /**  */
     private int bitOffset;
 
     /***************************************************************************
@@ -52,6 +58,21 @@ public class ShiftHexView implements IView<JComponent>
         this.bitOffset = 0;
 
         setData( new byte[] { 0 } );
+
+        // ---------------------------------------------------------------------
+        // Setup keystrokes.
+        // ---------------------------------------------------------------------
+        KeyStroke key;
+        InputMap inMap = view.getInputMap( JComponent.WHEN_IN_FOCUSED_WINDOW );
+        ActionMap acMap = view.getActionMap();
+        Action action;
+
+        action = new ActionAdapter( new FindNextListener( this ), "Find Next",
+            null );
+        key = KeyStroke.getKeyStroke( "F3" );
+        action.putValue( Action.ACCELERATOR_KEY, key );
+        inMap.put( key, "findNextAction" );
+        acMap.put( "findNextAction", action );
     }
 
     /***************************************************************************
@@ -192,17 +213,22 @@ public class ShiftHexView implements IView<JComponent>
 
     /***************************************************************************
      * @param parent
+     * @param lastSearch2
      * @return
      **************************************************************************/
-    public static BitArray promptForBinaryString( Component parent )
+    public static BitArray promptForBinaryString( Component parent,
+        BitArray lastSearch )
     {
         BitArray bits = new BitArray();
-        String binaryString = JOptionPane.showInputDialog( parent,
+        String search = lastSearch == null ? "0000" : lastSearch.toString();
+        Object ans = JOptionPane.showInputDialog( parent,
             "Enter binary string to be found:", "Enter Search String",
-            JOptionPane.QUESTION_MESSAGE );
+            JOptionPane.QUESTION_MESSAGE, null, null, search );
 
-        if( binaryString != null )
+        if( ans != null )
         {
+            String binaryString = ans.toString();
+
             try
             {
                 binaryString = binaryString.replace( " ", "" );
@@ -224,6 +250,44 @@ public class ShiftHexView implements IView<JComponent>
         }
 
         return bits;
+    }
+
+    /***************************************************************************
+     * @param bits
+     * @param start
+     **************************************************************************/
+    private void find( BitArray bits, BitPosition start )
+    {
+        // LogUtils.printDebug( "Starting from " + start );
+
+        BitPosition pos = orig.find( bits, start );
+
+        this.lastSearch = bits;
+
+        if( pos != null )
+        {
+            bitOffset = ( 8 - pos.getBit() ) % 8;
+
+            shitTo();
+
+            resetData();
+
+            int off = pos.getByte();
+
+            off += pos.getBit() == 0 ? 0 : 1;
+
+            // LogUtils.printDebug( "Found " + bits.toString() + " @ " + off );
+
+            hexPanel.setSelected( off, off );
+
+            this.lastMatch = pos;
+        }
+        else
+        {
+            JOptionPane.showMessageDialog( view,
+                "Pattern not found: " + bits.toString(), "Pattern Not Found",
+                JOptionPane.ERROR_MESSAGE );
+        }
     }
 
     /***************************************************************************
@@ -257,6 +321,54 @@ public class ShiftHexView implements IView<JComponent>
     /***************************************************************************
      * 
      **************************************************************************/
+    private static class FindNextListener implements ActionListener
+    {
+        private final ShiftHexView view;
+
+        public FindNextListener( ShiftHexView view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            if( view.lastSearch != null )
+            {
+                int start = view.hexPanel.getSelectedByte();
+
+                BitPosition pos = new BitPosition();
+
+                if( start < 0 )
+                {
+                    if( view.lastMatch != null )
+                    {
+                        pos.set( view.lastMatch );
+                        pos.increment();
+                    }
+                }
+                else
+                {
+                    if( view.lastMatch != null &&
+                        start == view.lastMatch.getByte() )
+                    {
+                        pos.set( start, view.lastMatch.getBit() );
+                        pos.increment();
+                    }
+                    else
+                    {
+                        pos.set( start, 0 );
+                    }
+                }
+
+                view.find( view.lastSearch, pos );
+            }
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class FindListener implements ActionListener
     {
         private final ShiftHexView view;
@@ -269,9 +381,9 @@ public class ShiftHexView implements IView<JComponent>
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            BitArray bits = promptForBinaryString( view.view );
+            BitArray bits = promptForBinaryString( view.view, view.lastSearch );
 
-            if( bits != null )
+            if( bits != null && bits.size() > 0 )
             {
                 try
                 {
@@ -279,33 +391,8 @@ public class ShiftHexView implements IView<JComponent>
 
                     start = start > -1 ? start : 0;
 
-                    LogUtils.printDebug( "Starting from " + start );
-
-                    BitPosition pos = view.orig.find( bits, start );
-
-                    if( pos != null )
-                    {
-                        view.bitOffset = ( 8 - pos.getBit() ) % 8;
-
-                        view.shitTo();
-
-                        view.resetData();
-
-                        int off = pos.getByte();
-
-                        off += pos.getBit() == 0 ? 0 : 1;
-
-                        LogUtils.printDebug( "Found " + bits.toString() +
-                            " @ " + off );
-
-                        view.hexPanel.setSelected( off, off );
-                    }
-                    else
-                    {
-                        JOptionPane.showMessageDialog( view.view,
-                            "Pattern not found: " + bits.toString(),
-                            "Pattern Not Found", JOptionPane.ERROR_MESSAGE );
-                    }
+                    BitPosition pos = new BitPosition( start, 0 );
+                    view.find( bits, pos );
                 }
                 catch( NumberFormatException ex )
                 {

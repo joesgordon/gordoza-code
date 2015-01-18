@@ -30,6 +30,18 @@ public class BitPosition
     }
 
     /***************************************************************************
+     * Creates a new position that points to the same bit as the provided
+     * indexes.
+     * @param byteIndex the zero-relative byte index of the position.
+     * @param bitIndex the zero-relative bit index of the position.
+     **************************************************************************/
+    public BitPosition( int byteIndex, int bitIndex )
+    {
+        this.byteIndex = byteIndex;
+        this.bitIndex = bitIndex;
+    }
+
+    /***************************************************************************
      * Increments the position to the next bit.
      **************************************************************************/
     public void increment()
@@ -72,6 +84,16 @@ public class BitPosition
     }
 
     /***************************************************************************
+     * Sets this position to the provided position.
+     * @param bitpos the bit and byte indexes to be copied.
+     **************************************************************************/
+    public void set( BitPosition bitpos )
+    {
+        this.byteIndex = bitpos.byteIndex;
+        this.bitIndex = bitpos.bitIndex;
+    }
+
+    /***************************************************************************
      * Sets the position to the provided byte and bit indexes.
      * @param byteIndex the byte index (must be > 0).
      * @param bitIndex the bit index (must be 0 - 7 inclusive).
@@ -102,5 +124,14 @@ public class BitPosition
     public void reset()
     {
         set( 0, 0 );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public String toString()
+    {
+        return "" + byteIndex + "[" + bitIndex + "]";
     }
 }
