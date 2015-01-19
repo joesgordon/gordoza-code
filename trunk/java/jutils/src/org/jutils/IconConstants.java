@@ -1,7 +1,11 @@
 package org.jutils;
 
 import java.awt.Image;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+
+import com.sun.media.sound.JavaSoundAudioClip;
 
 /*******************************************************************************
  * Defines the constants needed to access the icons in this library.
@@ -127,9 +131,31 @@ public final class IconConstants
     {
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public static List<Image> getPageMagImages()
     {
         return loader.getImages( PAGEMAG_16, PAGEMAG_24, PAGEMAG_32,
             PAGEMAG_64, PAGEMAG_128 );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public static void playNotify()
+    {
+        try( InputStream is = loader.loader.getInputStream( "done.wav" ) )
+        {
+            new JavaSoundAudioClip( is ).play();
+
+            // try( AudioStream audioStream = new AudioStream( is ) )
+            // {
+            // AudioPlayer.player.start( audioStream );
+            // }
+        }
+        catch( IOException ex )
+        {
+        }
     }
 }

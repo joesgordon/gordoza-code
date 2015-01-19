@@ -323,6 +323,7 @@ public class StatusBarPanel
         {
             refreshStatus( true );
             flashProgress();
+            IconConstants.playNotify();
         }
     }
 
