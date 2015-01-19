@@ -502,7 +502,7 @@ public final class IOUtils
         else if( !file.isFile() )
         {
             throw new ValidationException( "The specified " + name +
-                " file directory is not a directory: " + file.getName() );
+                " file is not a directory: " + file.getName() );
         }
         else if( !file.canWrite() )
         {
