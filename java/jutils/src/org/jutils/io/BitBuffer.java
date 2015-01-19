@@ -140,7 +140,7 @@ public class BitBuffer
      **************************************************************************/
     public void setPosition( BitPosition pos )
     {
-        setPosition( pos );
+        position.set( pos );
     }
 
     /***************************************************************************
