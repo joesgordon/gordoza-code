@@ -163,6 +163,7 @@ public class TextLabelField implements IDataFormField<TextLabel>
     @Override
     public void setUpdater( IUpdater<TextLabel> updater )
     {
+        ;
     }
 
     /***************************************************************************

@@ -134,6 +134,8 @@ public class AxesWidget implements IChartWidget
 
             domainTitle.draw( graphics, p, d );
 
+            // LogUtils.printDebug( "Label is: " + domainTitle.label.text );
+
             size.height -= d.height;
         }
 
@@ -178,6 +180,19 @@ public class AxesWidget implements IChartWidget
         }
 
         drawTicksAndAxes( graphics, location, size, textSpace );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public void repaint()
+    {
+        axesLayer.repaint = true;
+
+        domainTitle.repaint();
+        sdomainTitle.repaint();
+        rangeTitle.repaint();
+        srangeTitle.repaint();
     }
 
     /***************************************************************************

@@ -94,6 +94,7 @@ public class TextWidget implements IChartWidget
 
         // LogUtils.printDebug( "text2: x: " + x + ", textWidth: " + textWidth +
         // ", textHeight: " + textHeight );
+
         if( direction != TextDirection.DOWN )
         {
             int xp = x + textWidth / 2;
@@ -114,8 +115,7 @@ public class TextWidget implements IChartWidget
             layer.paint( graphics, x, y );
         }
 
-        // graphics.drawRect( location.x, location.y, size.width - 1,
-        // size.height - 1 );
+        // graphics.drawRect( x + 1, y + 1, textWidth - 2, textHeight - 2 );
     }
 
     /***************************************************************************
@@ -151,6 +151,7 @@ public class TextWidget implements IChartWidget
     {
         layer.repaint = true;
 
+        layer.getGraphics().setFont( label.font );
         metrics = layer.getGraphics().getFontMetrics();
     }
 }
