@@ -966,8 +966,12 @@ public class ChartView implements IView<JComponent>
 
             if( f == null )
             {
-                f = IOUtils.replaceExtension(
-                    view.userio.getOptions().recentFiles.first(), "png" );
+                f = view.userio.getOptions().recentFiles.first();
+
+                if( f != null )
+                {
+                    f = IOUtils.replaceExtension( f, "png" );
+                }
             }
 
             return f;
