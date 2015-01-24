@@ -111,15 +111,19 @@ public class LegendWidget implements IChartWidget
 
         for( SeriesWidget s : chart.plot.serieses )
         {
-            nameLabel.text = s.series.name;
+            if( s.series.visible )
+            {
+                nameLabel.text = s.series.name;
 
-            Dimension keySize = nameWidget.calculateSize( availSize );
-            keySize.height = Math.max( keySize.height, s.series.marker.weight ) + 4;
-            keySize.width += 8 + s.series.marker.weight * 2;
+                Dimension keySize = nameWidget.calculateSize( availSize );
+                keySize.height = Math.max( keySize.height,
+                    s.series.marker.weight ) + 4;
+                keySize.width += 8 + s.series.marker.weight * 2;
 
-            SeriesKey key = new SeriesKey( s, keySize );
+                SeriesKey key = new SeriesKey( s, keySize );
 
-            keys.add( key );
+                keys.add( key );
+            }
         }
 
         return new PlacementGrid( keys, availSize, isVertical, 6 );
