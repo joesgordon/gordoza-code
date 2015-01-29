@@ -1,32 +1,38 @@
 package org.jutils.utils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 
 import org.jutils.io.IStdSerializer;
 import org.jutils.io.IStream;
 
 /*******************************************************************************
- * 
+ * Provides random access to a group of constant-size items and serializes all
+ * but a certain number of items to the provided stream.
+ * @param <T> the type of item in the group.
  ******************************************************************************/
 public class CachedList<T> implements Iterable<T>
 {
-    /**  */
+    /** The serializer error reporter for this list. */
     private final ICacher<T> cacher;
-    /**  */
+    /** The stream to be serialized to/from for this list. */
     private final IStream stream;
-    /**  */
+    /** The number of item to store in each cache. */
     private final int cacheCount;
-    /**  */
+    /** The current item cache. */
     private final ArrayList<T> cache;
 
-    /**  */
+    /** The index of the current cache. */
     private int cachedIndex;
-    /**  */
+    /** The size of the entire list. */
     private int size;
-    /**  */
+    /**
+     * {@code true} if the loaded cache needs to be written to disk;
+     * {@code false} otherwise.
+     */
     private boolean unwritten;
+    /** {@code true} if the stream is open; {@code false} otherwise. */
+    private boolean open;
 
     /***************************************************************************
      * @param cacher
@@ -51,6 +57,7 @@ public class CachedList<T> implements Iterable<T>
 
         this.cachedIndex = 0;
         this.unwritten = true;
+        this.open = true;
     }
 
     /***************************************************************************
@@ -63,10 +70,43 @@ public class CachedList<T> implements Iterable<T>
     }
 
     /***************************************************************************
+     * 
+     **************************************************************************/
+    public void close()
+    {
+        cache.clear();
+
+        try
+        {
+            stream.close();
+        }
+        catch( IOException ex )
+        {
+            cacher.reportException( ex );
+        }
+
+        open = false;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public boolean isEmpty()
+    {
+        return size == 0;
+    }
+
+    /***************************************************************************
      * @param item
      **************************************************************************/
     public void add( T item )
     {
+        if( !open )
+        {
+            throw new IllegalStateException(
+                "Cannot add items when stream closed" );
+        }
+
         ensureCached( size++ );
 
         cache.add( item );
@@ -79,9 +119,36 @@ public class CachedList<T> implements Iterable<T>
      **************************************************************************/
     public T get( int index )
     {
+        if( !open )
+        {
+            throw new IllegalStateException(
+                "Cannot add items when stream closed" );
+        }
+
         ensureCached( index );
 
         return cache.get( index - cachedIndex );
+    }
+
+    /***************************************************************************
+     * Returns a view of the portion of this list between the specified
+     * {@code fromIndex}, inclusive, and {@code toIndex}, exclusive.
+     * @param fromIndex
+     * @param toIndex
+     * @return
+     * @see List#subList(int, int)
+     **************************************************************************/
+    public List<T> subList( int fromIndex, int toIndex )
+    {
+        int len = toIndex - fromIndex;
+        ArrayList<T> list = new ArrayList<>( len );
+
+        for( int i = fromIndex; i < toIndex; i++ )
+        {
+            list.add( get( i ) );
+        }
+
+        return list;
     }
 
     /***************************************************************************
@@ -185,7 +252,9 @@ public class CachedList<T> implements Iterable<T>
     }
 
     /***************************************************************************
-     * @param <T>
+     * Defines the methods of serializing and item to a stream and reporting
+     * exceptions.
+     * @param <T> the type of item to be serialized.
      **************************************************************************/
     public static interface ICacher<T> extends IStdSerializer<T, IStream>
     {
