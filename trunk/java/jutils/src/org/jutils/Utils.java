@@ -519,4 +519,18 @@ public final class Utils
                 srcPos + " to array of length " + dest.length + " @ " + destPos );
         }
     }
+
+    /***************************************************************************
+     * @param colNames
+     * @param string
+     * @return
+     **************************************************************************/
+    public static <T> T [] addFirst( T [] array, T first )
+    {
+        ArrayList<T> list = new ArrayList<T>( Arrays.asList( array ) );
+
+        list.add( 0, first );
+
+        return list.toArray( array );
+    }
 }
