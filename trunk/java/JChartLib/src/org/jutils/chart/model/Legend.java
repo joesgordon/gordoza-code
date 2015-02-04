@@ -15,7 +15,7 @@ public class Legend
 
     public Legend()
     {
-        this.visible = true;
+        this.visible = false;
         this.border = new WidgetBorder();
         this.side = QuadSide.BOTTOM;
         this.fill = Color.white;
