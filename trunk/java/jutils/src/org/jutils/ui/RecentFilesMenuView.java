@@ -10,8 +10,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.filechooser.FileSystemView;
 
-import org.jutils.ui.event.ItemActionList;
-import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
@@ -22,7 +20,7 @@ public class RecentFilesMenuView implements IDataView<List<File>>
     /**  */
     private final JMenu menu;
     /**  */
-    private final ItemActionList<File> selectedListeners;
+    private final List<IRecentSelected> selectedListeners;
     /**  */
     private final int maxFileCount;
 
@@ -44,15 +42,15 @@ public class RecentFilesMenuView implements IDataView<List<File>>
     {
         this.maxFileCount = maxFileCount;
         this.menu = new JMenu( "Recent Files" );
-        this.selectedListeners = new ItemActionList<>();
+        this.selectedListeners = new ArrayList<>();
     }
 
     /***************************************************************************
      * @param l
      **************************************************************************/
-    public void addSelectedListener( ItemActionListener<File> l )
+    public void addSelectedListener( IRecentSelected l )
     {
-        selectedListeners.addListener( l );
+        selectedListeners.add( l );
     }
 
     /***************************************************************************
@@ -106,6 +104,26 @@ public class RecentFilesMenuView implements IDataView<List<File>>
     }
 
     /***************************************************************************
+     * @param file
+     * @param ctrlPressed
+     **************************************************************************/
+    private void fireListeners( File file, boolean ctrlPressed )
+    {
+        for( IRecentSelected irs : selectedListeners )
+        {
+            irs.selected( file, ctrlPressed );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public static interface IRecentSelected
+    {
+        public void selected( File file, boolean ctrlPressed );
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     private static class ItemSelected implements ActionListener
@@ -122,7 +140,12 @@ public class RecentFilesMenuView implements IDataView<List<File>>
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            view.selectedListeners.fireListeners( view, file );
+            int modifiers = e.getModifiers();
+            boolean ctrlPressed = ( ActionEvent.CTRL_MASK & modifiers ) == ActionEvent.CTRL_MASK;
+
+            // LogUtils.printDebug( "Ctrl pressed: " + ctrlPressed );
+
+            view.fireListeners( file, ctrlPressed );
         }
     }
 }

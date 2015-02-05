@@ -13,8 +13,8 @@ import org.jutils.chart.model.ISeriesData;
 import org.jutils.chart.model.Series;
 import org.jutils.chart.ui.ChartView;
 import org.jutils.io.OptionsSerializer;
-import org.jutils.ui.RecentFilesMenuView;
-import org.jutils.ui.StandardFrameView;
+import org.jutils.ui.*;
+import org.jutils.ui.RecentFilesMenuView.IRecentSelected;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.model.IView;
@@ -211,7 +211,7 @@ public class JChartFrameView implements IView<JFrame>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class FileSelected implements ItemActionListener<File>
+    private static class FileSelected implements IRecentSelected
     {
         private final JChartFrameView view;
 
@@ -221,9 +221,9 @@ public class JChartFrameView implements IView<JFrame>
         }
 
         @Override
-        public void actionPerformed( ItemActionEvent<File> event )
+        public void selected( File file, boolean ctrlPressed )
         {
-            view.chartView.importData( event.getItem(), false );
+            view.chartView.importData( file, ctrlPressed );
         }
     }
 }
