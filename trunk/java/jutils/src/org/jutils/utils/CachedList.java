@@ -3,8 +3,8 @@ package org.jutils.utils;
 import java.io.IOException;
 import java.util.*;
 
+import org.jutils.io.IDataStream;
 import org.jutils.io.IStdSerializer;
-import org.jutils.io.IStream;
 
 /*******************************************************************************
  * Provides random access to a group of constant-size items and serializes all
@@ -16,7 +16,7 @@ public class CachedList<T> implements Iterable<T>
     /** The serializer error reporter for this list. */
     private final ICacher<T> cacher;
     /** The stream to be serialized to/from for this list. */
-    private final IStream stream;
+    private final IDataStream stream;
     /** The number of item to store in each cache. */
     private final int cacheCount;
     /** The current item cache. */
@@ -38,7 +38,7 @@ public class CachedList<T> implements Iterable<T>
      * @param cacher
      * @param stream
      **************************************************************************/
-    public CachedList( ICacher<T> cacher, IStream stream )
+    public CachedList( ICacher<T> cacher, IDataStream stream )
     {
         this( cacher, stream, 8 * 1024 * 1024 / cacher.getItemSize() );
     }
@@ -48,7 +48,7 @@ public class CachedList<T> implements Iterable<T>
      * @param stream
      * @param cacheCount
      **************************************************************************/
-    public CachedList( ICacher<T> cacher, IStream stream, int cacheCount )
+    public CachedList( ICacher<T> cacher, IDataStream stream, int cacheCount )
     {
         this.cacher = cacher;
         this.stream = stream;
@@ -82,7 +82,7 @@ public class CachedList<T> implements Iterable<T>
         }
         catch( IOException ex )
         {
-            cacher.reportException( ex );
+            throw new RuntimeException( "Error closing cache file", ex );
         }
 
         open = false;
@@ -204,7 +204,7 @@ public class CachedList<T> implements Iterable<T>
         }
         catch( IOException ex )
         {
-            cacher.reportException( ex );
+            throw new RuntimeException( "Error loading cache from file", ex );
         }
     }
 
@@ -256,11 +256,9 @@ public class CachedList<T> implements Iterable<T>
      * exceptions.
      * @param <T> the type of item to be serialized.
      **************************************************************************/
-    public static interface ICacher<T> extends IStdSerializer<T, IStream>
+    public static interface ICacher<T> extends IStdSerializer<T, IDataStream>
     {
         public int getItemSize();
-
-        public void reportException( IOException ex );
     }
 
     /***************************************************************************
