@@ -1,7 +1,6 @@
 package org.jutils.utils;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -94,7 +93,8 @@ public class CachedListTest
         final int count = 8;
         final int testCount = 9;
 
-        try( ByteArrayStream stream = new ByteArrayStream() )
+        try( ByteArrayStream bufStream = new ByteArrayStream();
+             DataStream stream = new DataStream( bufStream ) )
         {
             ICacher<Integer> cacher = createCacher();
             CachedList<Integer> list = new CachedList<>( cacher, stream, count );
@@ -129,7 +129,8 @@ public class CachedListTest
         final int count = 8;
         final int testCount = 33;
 
-        try( ByteArrayStream stream = new ByteArrayStream() )
+        try( ByteArrayStream bufStream = new ByteArrayStream();
+             DataStream stream = new DataStream( bufStream ) )
         {
             ICacher<Integer> cacher = createCacher();
             CachedList<Integer> list = new CachedList<>( cacher, stream, count );
@@ -156,7 +157,8 @@ public class CachedListTest
      **************************************************************************/
     private static void testNAdditions( int count, int testCount )
     {
-        try( ByteArrayStream stream = new ByteArrayStream() )
+        try( ByteArrayStream bufStream = new ByteArrayStream();
+             DataStream stream = new DataStream( bufStream ) )
         {
             ICacher<Integer> cacher = createCacher();
             CachedList<Integer> list = new CachedList<>( cacher, stream, count );
@@ -195,46 +197,24 @@ public class CachedListTest
      **************************************************************************/
     private static class IntegerCacher implements ICacher<Integer>
     {
-        private final byte [] bytes;
-        private final ByteBuffer buffer;
-
-        public IntegerCacher()
-        {
-            this.bytes = new byte[4];
-            this.buffer = ByteBuffer.wrap( bytes );
-        }
-
         @Override
-        public Integer read( IStream stream ) throws IOException,
+        public Integer read( IDataStream stream ) throws IOException,
             RuntimeFormatException
         {
-            buffer.rewind();
-
-            stream.read( bytes );
-
-            return buffer.getInt();
+            return stream.readInt();
         }
 
         @Override
-        public void write( Integer item, IStream stream ) throws IOException
+        public void write( Integer item, IDataStream stream )
+            throws IOException
         {
-            buffer.rewind();
-
-            buffer.putInt( item );
-
-            stream.write( bytes );
+            stream.writeInt( item );
         }
 
         @Override
         public int getItemSize()
         {
-            return bytes.length;
-        }
-
-        @Override
-        public void reportException( IOException ex )
-        {
-            Assert.fail( "I/O Exception: " + ex.getMessage() );
+            return 4;
         }
     }
 }
