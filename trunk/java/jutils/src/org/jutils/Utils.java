@@ -572,4 +572,22 @@ public final class Utils
 
         return result;
     }
+
+    /***************************************************************************
+     * @param text
+     **************************************************************************/
+    public static void setClipboardText( String text )
+    {
+        StringSelection selection = new StringSelection( text );
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents( selection, new ClipboardOwner()
+        {
+            @Override
+            public void lostOwnership( Clipboard clipboard,
+                Transferable contents )
+            {
+                // do nothing
+            }
+        } );
+    }
 }
