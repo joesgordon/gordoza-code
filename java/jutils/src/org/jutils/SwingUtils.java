@@ -2,10 +2,16 @@ package org.jutils;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 
 import javax.swing.*;
 
+import org.jutils.io.XStreamUtils;
 import org.jutils.ui.StatusBarPanel;
+import org.jutils.ui.event.ActionAdapter;
+import org.jutils.ui.model.IDataView;
+
+import com.thoughtworks.xstream.XStreamException;
 
 /*******************************************************************************
  * 
@@ -349,6 +355,91 @@ public final class SwingUtils
         else
         {
             frame.setVisible( true );
+        }
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public static <T> Action createCopyAction( IDataView<T> view )
+    {
+        ActionListener listener = new CopyListener<T>( view );
+        Icon icon = IconConstants.loader.getIcon( IconConstants.EDIT_COPY_16 );
+        Action action = new ActionAdapter( listener, "Copy", icon );
+
+        return action;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public static <T> Action createPasteAction( IDataView<T> view )
+    {
+        ActionListener listener = new PasteListener<T>( view );
+        Icon icon = IconConstants.loader.getIcon( IconConstants.EDIT_PASTE_16 );
+        Action action = new ActionAdapter( listener, "Paste", icon );
+
+        return action;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public static class CopyListener<T> implements ActionListener
+    {
+        private final IDataView<T> view;
+
+        public CopyListener( IDataView<T> view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            T data = view.getData();
+            try
+            {
+                String str = XStreamUtils.writeObjectXStream( data );
+                Utils.setClipboardText( str );
+            }
+            catch( XStreamException ex )
+            {
+                ex.printStackTrace();
+            }
+            catch( IOException ex )
+            {
+                ex.printStackTrace();
+            }
+
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public static class PasteListener<T> implements ActionListener
+    {
+        private final IDataView<T> view;
+
+        public PasteListener( IDataView<T> view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            try
+            {
+                String str = Utils.getClipboardText();
+                T data = XStreamUtils.readObjectXStream( str );
+
+                view.setData( data );
+            }
+            catch( XStreamException ex )
+            {
+            }
         }
     }
 

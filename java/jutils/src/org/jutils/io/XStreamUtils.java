@@ -38,6 +38,19 @@ public class XStreamUtils
     }
 
     /***************************************************************************
+     * @param obj
+     * @param outStream
+     * @throws IOException
+     **************************************************************************/
+    public static String writeObjectXStream( Object obj ) throws IOException,
+        XStreamException
+    {
+        XStream xstream = new XStream();
+
+        return xstream.toXML( obj );
+    }
+
+    /***************************************************************************
      * @param file File
      * @return Object
      * @throws IOException
@@ -67,6 +80,21 @@ public class XStreamUtils
         XStream xstream = new XStream();
 
         Object obj = xstream.fromXML( inputStream );
+        @SuppressWarnings( "unchecked")
+        T t = ( T )obj;
+
+        return t;
+    }
+
+    /***************************************************************************
+     * @param str
+     * @return
+     **************************************************************************/
+    public static <T> T readObjectXStream( String str )
+    {
+        XStream xstream = new XStream();
+
+        Object obj = xstream.fromXML( str );
         @SuppressWarnings( "unchecked")
         T t = ( T )obj;
 
