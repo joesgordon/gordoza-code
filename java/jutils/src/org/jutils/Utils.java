@@ -1,6 +1,7 @@
 package org.jutils;
 
 import java.awt.*;
+import java.awt.datatransfer.*;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -310,6 +311,11 @@ public final class Utils
         return arrayToString( items, ", " );
     }
 
+    /***************************************************************************
+     * @param items
+     * @param delimiter
+     * @return
+     **************************************************************************/
     public static String arrayToString( Object [] items, String delimiter )
     {
         StringBuffer buf = new StringBuffer();
@@ -347,6 +353,11 @@ public final class Utils
         return arrayToString( items.toArray() );
     }
 
+    /***************************************************************************
+     * @param items
+     * @param delimiter
+     * @return
+     **************************************************************************/
     public static String collectionToString( Collection<?> items,
         String delimiter )
     {
@@ -532,5 +543,33 @@ public final class Utils
         list.add( 0, first );
 
         return list.toArray( array );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public static String getClipboardText()
+    {
+        String result = "";
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        Transferable contents = clipboard.getContents( null );
+        boolean hasTransferableText = contents != null &&
+            contents.isDataFlavorSupported( DataFlavor.stringFlavor );
+
+        if( hasTransferableText )
+        {
+            try
+            {
+                result = ( String )contents.getTransferData( DataFlavor.stringFlavor );
+            }
+            catch( UnsupportedFlavorException ex )
+            {
+            }
+            catch( IOException ex )
+            {
+            }
+        }
+
+        return result;
     }
 }
