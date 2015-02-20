@@ -17,6 +17,8 @@ public class ValidationView implements IView<JPanel>
     private final JPanel view;
     /** The validation field to be displayed. */
     private final IValidationField field;
+    /**  */
+    private final Component fieldView;
     /** Any units to be shown; only visible when units are specified. */
     private final JLabel unitsField;
     /** The field that displays validation errors; only visible when invalid. */
@@ -41,7 +43,21 @@ public class ValidationView implements IView<JPanel>
      **************************************************************************/
     public ValidationView( IValidationField field, String units )
     {
+        this( field, units, field.getView() );
+    }
+
+    /***************************************************************************
+     * Creates a new view with the supplied field, units, and component.
+     * @param field the validation field.
+     * @param units the units to be displayed; units field is not visible if
+     * {@code null}.
+     * @param fieldView the component containing (or from) the provided field.
+     **************************************************************************/
+    public ValidationView( IValidationField field, String units,
+        Component fieldView )
+    {
         this.field = field;
+        this.fieldView = fieldView;
 
         this.errorField = new JTextField();
         this.unitsField = units == null ? null : new JLabel( units );
@@ -75,7 +91,7 @@ public class ValidationView implements IView<JPanel>
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
             GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
                 0, 0, 0, 0 ), 0, 0 );
-        panel.add( field.getView(), constraints );
+        panel.add( fieldView, constraints );
 
         if( unitsField != null )
         {

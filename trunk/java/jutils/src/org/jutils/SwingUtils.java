@@ -202,6 +202,16 @@ public final class SwingUtils
     }
 
     /***************************************************************************
+     * Sets the tool tip of the provided action.
+     * @param action the action for which the tool tip will be set.
+     * @param tooltip the tool tip to be set.
+     **************************************************************************/
+    public static void setActionToolTip( Action action, String tooltip )
+    {
+        action.putValue( Action.SHORT_DESCRIPTION, tooltip );
+    }
+
+    /***************************************************************************
      * Creates and displays a tray icon with the provided image, tool tip, and
      * popup menu which displays/hides the provided frame when double-clicked.
      * @param img The image (icon) to be displayed.
