@@ -170,4 +170,13 @@ public class BitArray implements Iterable<Boolean>
     {
         return bits.get( idx );
     }
+
+    /***************************************************************************
+     * @param bits2
+     **************************************************************************/
+    public void set( BitArray bits )
+    {
+        this.bits.clear();
+        this.bits.addAll( bits.bits );
+    }
 }
