@@ -60,8 +60,6 @@ public class MarkerStyleView implements IDataView<MarkerStyle>
     {
         StandardFormView form = new StandardFormView();
 
-        form.setHorizontalStretch( true );
-
         form.addField( "Visible", visibleField );
         form.addField( "Shape", shapeField );
         form.addField( weightField );

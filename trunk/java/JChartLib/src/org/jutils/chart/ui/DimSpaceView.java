@@ -37,8 +37,6 @@ public class DimSpaceView implements IDataView<DimSpace>
     {
         StandardFormView form = new StandardFormView();
 
-        form.setHorizontalStretch( true );
-
         form.addField( titleField );
         form.addField( subtitleField );
 

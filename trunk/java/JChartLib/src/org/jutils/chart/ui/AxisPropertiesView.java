@@ -66,8 +66,6 @@ public class AxisPropertiesView implements IDataView<Axis>
     {
         StandardFormView form = new StandardFormView();
 
-        form.setHorizontalStretch( true );
-
         form.addField( majorSectionField );
         form.addField( minorSectionField );
         form.addField( "Dock Zero", dockZeroField );

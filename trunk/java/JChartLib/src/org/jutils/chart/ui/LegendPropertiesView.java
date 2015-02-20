@@ -63,8 +63,6 @@ public class LegendPropertiesView implements IDataView<Legend>
         StandardFormView form = new StandardFormView();
         TitleView bordervView = new TitleView( "Border", borderField.getView() );
 
-        form.setHorizontalStretch( true );
-
         form.addField( "Visible", visibleField );
         form.addField( null, bordervView.getView() );
         form.addField( "Side", sideField );

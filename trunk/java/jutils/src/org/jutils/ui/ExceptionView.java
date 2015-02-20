@@ -36,7 +36,6 @@ public class ExceptionView implements IView<JComponent>
 
         StandardFormView form = new StandardFormView();
 
-        form.setHorizontalStretch( true );
         form.addField( "Message", messageField );
         form.addField( "Stack Trace", tracePane );
 

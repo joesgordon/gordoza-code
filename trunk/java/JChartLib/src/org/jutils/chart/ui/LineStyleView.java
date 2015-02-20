@@ -60,8 +60,6 @@ public class LineStyleView implements IDataView<LineStyle>
     {
         StandardFormView form = new StandardFormView();
 
-        form.setHorizontalStretch( true );
-
         form.addField( "Visible", visibleField );
         form.addField( "Shape", shapeField );
         form.addField( weightField );

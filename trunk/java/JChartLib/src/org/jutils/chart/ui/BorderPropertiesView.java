@@ -61,8 +61,6 @@ public class BorderPropertiesView implements IDataView<WidgetBorder>
     {
         StandardFormView form = new StandardFormView();
 
-        form.setHorizontalStretch( true );
-
         form.addField( "Visible", visibleField );
         form.addField( "Color", colorField.getView() );
         form.addField( thicknessField );

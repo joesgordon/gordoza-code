@@ -78,8 +78,6 @@ public class SeriesView implements IDataView<Series>
     {
         StandardFormView form = new StandardFormView();
 
-        form.setHorizontalStretch( true );
-
         form.addField( titleField );
         form.addField( "Visible", visibleField );
         form.addField( "Is Primary Domain", primaryDomainField );
