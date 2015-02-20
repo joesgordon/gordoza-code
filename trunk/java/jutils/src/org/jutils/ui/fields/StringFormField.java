@@ -9,7 +9,7 @@ import org.jutils.ui.validation.ValidationTextView;
 import org.jutils.ui.validators.*;
 
 /*******************************************************************************
- * Defines an {@link IFormField} that contains a double validater.
+ * Defines an {@link IFormField} that contains a double validator.
  ******************************************************************************/
 public class StringFormField implements IDataFormField<String>
 {
@@ -90,6 +90,24 @@ public class StringFormField implements IDataFormField<String>
     }
 
     /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void setUpdater( IUpdater<String> updater )
+    {
+        this.updater = updater;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public IUpdater<String> getUpdater()
+    {
+        return updater;
+    }
+
+    /***************************************************************************
      * @param editable
      **************************************************************************/
     public void setEditable( boolean editable )
@@ -112,24 +130,6 @@ public class StringFormField implements IDataFormField<String>
     public JTextField getTextField()
     {
         return textField.getField().getView();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setUpdater( IUpdater<String> updater )
-    {
-        this.updater = updater;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public IUpdater<String> getUpdater()
-    {
-        return updater;
     }
 
     /***************************************************************************
