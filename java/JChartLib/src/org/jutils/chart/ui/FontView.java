@@ -51,8 +51,6 @@ public class FontView implements IDataView<Font>
         JScrollPane namesPane = new JScrollPane( namesField );
         JScrollPane sizesPane = new JScrollPane( sizesField );
 
-        form.setHorizontalStretch( true );
-
         namesField.setCellRenderer( new FontNameRenderer() );
 
         form.addField( "Name", namesPane );

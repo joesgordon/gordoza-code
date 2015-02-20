@@ -28,7 +28,7 @@ public class StandardFormView implements IView<JPanel>
     private final List<FieldInfo> fields;
 
     /**  */
-    private int fieldFill;
+    private final boolean vertical;
 
     /***************************************************************************
      * 
@@ -36,6 +36,14 @@ public class StandardFormView implements IView<JPanel>
     public StandardFormView()
     {
         this( 4 );
+    }
+
+    /***************************************************************************
+     * @param vertical
+     **************************************************************************/
+    public StandardFormView( boolean vertical )
+    {
+        this( 4, 8, vertical );
     }
 
     /***************************************************************************
@@ -52,19 +60,28 @@ public class StandardFormView implements IView<JPanel>
      **************************************************************************/
     public StandardFormView( int fieldMargin, int formMargin )
     {
+        this( fieldMargin, formMargin, false );
+    }
+
+    /***************************************************************************
+     * @param fieldMargin
+     * @param formMargin
+     * @param horizontal
+     **************************************************************************/
+    public StandardFormView( int fieldMargin, int formMargin, boolean vertical )
+    {
         this.formMargin = formMargin;
         this.fieldMargin = fieldMargin;
+        this.vertical = vertical;
 
         this.fields = new ArrayList<FieldInfo>();
         this.layout = new GridBagLayout();
         this.view = new JPanel( layout );
 
-        this.fieldFill = GridBagConstraints.NONE;
-
         GridBagConstraints constraints;
         spacer = Box.createHorizontalStrut( 2 );
 
-        constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+        constraints = new GridBagConstraints( 0, 0, 2, 1, 1.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
                 formMargin, 0, 0, 0 ), 0, 0 );
 
@@ -105,25 +122,37 @@ public class StandardFormView implements IView<JPanel>
     {
         GridBagConstraints constraints;
         int top = formMargin;
+        int left = formMargin;
+        int right = vertical ? formMargin : fieldMargin;
 
         JLabel label = null;
+
+        int fieldx = 0;
+        int fieldy = vertical ? index * 2 + 1 : index * 2;
+        int labelAnchor = vertical ? GridBagConstraints.WEST
+            : GridBagConstraints.EAST;
+        int colSpan = 2;
 
         if( field.getFieldName() != null )
         {
             label = new JLabel( field.getFieldName() + ":" );
 
             constraints = new GridBagConstraints( 0, index * 2, 1, 1, 0.0, 0.0,
-                GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(
-                    formMargin, formMargin, 0, formMargin ), 0, 0 );
+                labelAnchor, GridBagConstraints.NONE, new Insets( formMargin,
+                    formMargin, 0, right ), 0, 0 );
             view.add( label, constraints );
-            top = fieldMargin;
+
+            fieldx = vertical ? 0 : 1;
+            top = vertical ? fieldMargin : formMargin;
+            left = vertical ? formMargin : fieldMargin;
+            colSpan = 1;
         }
 
         fields.add( new FieldInfo( label, field ) );
 
-        constraints = new GridBagConstraints( 0, index * 2 + 1, 1, 1, 1.0, 0.0,
-            GridBagConstraints.WEST, fieldFill, new Insets( top, formMargin, 0,
-                formMargin ), 0, 0 );
+        constraints = new GridBagConstraints( fieldx, fieldy, colSpan, 1, 1.0,
+            0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+            new Insets( top, left, 0, formMargin ), 0, 0 );
         view.add( field.getField(), constraints );
 
         refreshForm( index + 1 );
@@ -180,21 +209,6 @@ public class StandardFormView implements IView<JPanel>
         {
             info.label.setVisible( visible );
         }
-    }
-
-    /***************************************************************************
-     * @param stretch
-     **************************************************************************/
-    public void setHorizontalStretch( boolean stretch )
-    {
-        int newFill = GridBagConstraints.NONE;
-
-        if( stretch )
-        {
-            newFill = GridBagConstraints.HORIZONTAL;
-        }
-
-        fieldFill = newFill;
     }
 
     /***************************************************************************

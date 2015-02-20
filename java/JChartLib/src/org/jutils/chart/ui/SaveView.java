@@ -46,8 +46,6 @@ public class SaveView implements IDataView<SaveOptions>
     {
         StandardFormView form = new StandardFormView();
 
-        form.setHorizontalStretch( true );
-
         form.addField( "File", outputField.getView() );
         form.addField( widthField );
         form.addField( heightField );

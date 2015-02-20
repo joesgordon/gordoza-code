@@ -60,8 +60,6 @@ public class RegexPanel implements IView<JPanel>
             Utils.NEW_LINE + "the word blah in it" + Utils.NEW_LINE +
             "at some" + Utils.NEW_LINE + "point." );
 
-        form.setHorizontalStretch( true );
-
         form.addField( "Regex", createRegexPanel() );
         form.addField( "Test Text", testScrollPane );
         form.addField( "Results", resultScrollPane );

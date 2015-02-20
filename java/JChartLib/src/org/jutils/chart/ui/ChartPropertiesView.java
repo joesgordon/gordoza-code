@@ -66,8 +66,6 @@ public class ChartPropertiesView implements IDataView<Chart>
     {
         StandardFormView form = new StandardFormView();
 
-        form.setHorizontalStretch( true );
-
         form.addField( titleField );
         form.addField( subtitleField );
         form.addField( topBottomField );
