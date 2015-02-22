@@ -197,9 +197,24 @@ public class TaskView implements ITaskView
     /***************************************************************************
      * @param comp
      * @param task
+     * @param title
+     * @return
      **************************************************************************/
     public static TaskMetrics startAndShow( Component comp, ITask task,
         String title )
+    {
+        return startAndShow( comp, task, title, false );
+    }
+
+    /***************************************************************************
+     * @param comp
+     * @param task
+     * @param title
+     * @param playNotify
+     * @return
+     **************************************************************************/
+    public static TaskMetrics startAndShow( Component comp, ITask task,
+        String title, boolean playNotify )
     {
         Window parent = Utils.getComponentsWindow( comp );
         TaskView view = new TaskView();
@@ -220,6 +235,11 @@ public class TaskView implements ITaskView
         thread.start();
 
         dialog.setVisible( true );
+
+        if( playNotify )
+        {
+            IconConstants.playNotify();
+        }
 
         return runner.getMetrics();
     }
