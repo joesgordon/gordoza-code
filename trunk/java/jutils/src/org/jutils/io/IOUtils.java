@@ -119,6 +119,18 @@ public final class IOUtils
         return ans;
     }
 
+    public static String getStandardAbsPath( File file )
+    {
+        String path = file.getAbsolutePath().replace( '\\', '/' );
+
+        if( file.isDirectory() && !path.endsWith( "/" ) )
+        {
+            path += '/';
+        }
+
+        return path;
+    }
+
     /***************************************************************************
      * @param str1
      * @param str2
