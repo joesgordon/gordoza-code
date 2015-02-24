@@ -62,6 +62,18 @@ public class ChartContext
         autoBounds.primaryRangeSpan = chart.calculatePrimaryRangeSpan();
         autoBounds.secondaryDomainSpan = chart.calculateSecondaryDomainSpan();
         autoBounds.secondaryRangeSpan = chart.calculateSecondaryRangeSpan();
+
+        if( ( bounds.secondaryDomainSpan == null && autoBounds.secondaryDomainSpan != null ) ||
+            ( bounds.secondaryDomainSpan != null && autoBounds.secondaryDomainSpan == null ) )
+        {
+            bounds.secondaryDomainSpan = autoBounds.secondaryDomainSpan;
+        }
+
+        if( ( bounds.secondaryRangeSpan == null && autoBounds.secondaryRangeSpan != null ) ||
+            ( bounds.secondaryRangeSpan != null && autoBounds.secondaryRangeSpan == null ) )
+        {
+            bounds.secondaryRangeSpan = autoBounds.secondaryRangeSpan;
+        }
     }
 
     /***************************************************************************
