@@ -8,7 +8,7 @@ import javax.swing.*;
 
 import org.jutils.io.XStreamUtils;
 import org.jutils.ui.StatusBarPanel;
-import org.jutils.ui.event.ActionAdapter;
+import org.jutils.ui.event.*;
 import org.jutils.ui.model.IDataView;
 
 import com.thoughtworks.xstream.XStreamException;
@@ -383,9 +383,10 @@ public final class SwingUtils
     /***************************************************************************
      * @return
      **************************************************************************/
-    public static <T> Action createPasteAction( IDataView<T> view )
+    public static <T> Action createPasteAction(
+        ItemActionListener<T> itemListener )
     {
-        ActionListener listener = new PasteListener<T>( view );
+        ActionListener listener = new PasteListener<T>( itemListener );
         Icon icon = IconConstants.loader.getIcon( IconConstants.EDIT_PASTE_16 );
         Action action = new ActionAdapter( listener, "Paste", icon );
 
@@ -430,11 +431,11 @@ public final class SwingUtils
      **************************************************************************/
     public static class PasteListener<T> implements ActionListener
     {
-        private final IDataView<T> view;
+        private final ItemActionListener<T> listener;
 
-        public PasteListener( IDataView<T> view )
+        public PasteListener( ItemActionListener<T> listener )
         {
-            this.view = view;
+            this.listener = listener;
         }
 
         @Override
@@ -445,7 +446,7 @@ public final class SwingUtils
                 String str = Utils.getClipboardText();
                 T data = XStreamUtils.readObjectXStream( str );
 
-                view.setData( data );
+                listener.actionPerformed( new ItemActionEvent<T>( this, data ) );
             }
             catch( XStreamException ex )
             {
