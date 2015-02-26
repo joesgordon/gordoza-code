@@ -287,4 +287,12 @@ public class CachedList<T> implements Iterable<T>
             return list.get( index++ );
         }
     }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public T last()
+    {
+        return isEmpty() ? null : get( size() - 1 );
+    }
 }
