@@ -343,6 +343,25 @@ public final class Utils
     }
 
     /***************************************************************************
+     * @param items
+     * @return
+     **************************************************************************/
+    public static String itemsToString( Object... items )
+    {
+        return arrayToString( items );
+    }
+
+    /***************************************************************************
+     * @param delimiter
+     * @param items
+     * @return
+     **************************************************************************/
+    public static String itemsToString( String delimiter, Object... items )
+    {
+        return arrayToString( items, delimiter );
+    }
+
+    /***************************************************************************
      * Performs the same operations as {@link #arrayToString(Object[])} but with
      * a list rather than an array.
      * @param items the collection to convert to a string.
