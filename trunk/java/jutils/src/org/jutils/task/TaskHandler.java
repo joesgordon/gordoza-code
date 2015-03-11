@@ -101,6 +101,15 @@ public class TaskHandler implements ITaskHandler
      * 
      **************************************************************************/
     @Override
+    public void removeFinishedListener( ItemActionListener<Boolean> l )
+    {
+        stopManager.removeFinishedListener( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
     public Component getView()
     {
         return view.getView();

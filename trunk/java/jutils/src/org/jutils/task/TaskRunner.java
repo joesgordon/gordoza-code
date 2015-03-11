@@ -102,4 +102,12 @@ public class TaskRunner implements Runnable
     {
         handler.addFinishedListener( l );
     }
+
+    /***************************************************************************
+     * @param l
+     **************************************************************************/
+    public void removeFinishedListener( ItemActionListener<Boolean> l )
+    {
+        handler.removeFinishedListener( l );
+    }
 }

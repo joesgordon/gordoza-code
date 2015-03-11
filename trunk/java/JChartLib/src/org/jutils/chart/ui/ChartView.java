@@ -390,8 +390,10 @@ public class ChartView implements IView<JComponent>
      **************************************************************************/
     public void clear()
     {
+        propertiesView.clear();
+
         chart.series.clear();
-        chartWidget.plot.serieses.clear();
+        chartWidget.clear();
 
         restoreAndRepaintChart();
     }
