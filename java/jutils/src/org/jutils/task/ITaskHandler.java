@@ -50,6 +50,11 @@ public interface ITaskHandler
     public void addFinishedListener( ItemActionListener<Boolean> l );
 
     /***************************************************************************
+     * @param l
+     **************************************************************************/
+    public void removeFinishedListener( ItemActionListener<Boolean> l );
+
+    /***************************************************************************
      * @return
      **************************************************************************/
     public Component getView();

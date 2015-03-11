@@ -297,6 +297,12 @@ public class TaskPool
         }
 
         @Override
+        public void removeFinishedListener( ItemActionListener<Boolean> l )
+        {
+            handler.removeFinishedListener( l );
+        }
+
+        @Override
         public Component getView()
         {
             return handler.getView();

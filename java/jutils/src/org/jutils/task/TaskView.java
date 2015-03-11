@@ -168,6 +168,14 @@ public class TaskView implements ITaskView
     }
 
     /***************************************************************************
+     * @param l
+     **************************************************************************/
+    public void removeCancelListener( TaskCancelledListener l )
+    {
+        cancelListeners.removeListener( l );
+    }
+
+    /***************************************************************************
      * @param background
      **************************************************************************/
     public void setBackground( Color background )
@@ -220,8 +228,12 @@ public class TaskView implements ITaskView
         TaskView view = new TaskView();
         TaskRunner runner = new TaskRunner( task, TaskView.createEdtView( view ) );
         JDialog dialog = new JDialog( parent, ModalityType.DOCUMENT_MODAL );
-        runner.addFinishedListener( new TaskFinishedListener( dialog ) );
+        TaskFinishedListener finishedListener = new TaskFinishedListener(
+            dialog );
 
+        runner.addFinishedListener( finishedListener );
+
+        dialog.setDefaultCloseOperation( JDialog.DISPOSE_ON_CLOSE );
         dialog.setTitle( title );
         dialog.setContentPane( view.getView() );
         dialog.pack();
@@ -230,7 +242,10 @@ public class TaskView implements ITaskView
 
         Thread thread = new Thread( runner, task.getName() );
 
-        view.addCancelListener( new TaskCancelledListener( thread, runner ) );
+        TaskCancelledListener cancelListener = new TaskCancelledListener(
+            thread, runner );
+
+        view.addCancelListener( cancelListener );
 
         thread.start();
 
@@ -240,6 +255,10 @@ public class TaskView implements ITaskView
         {
             IconConstants.playNotify();
         }
+
+        runner.removeFinishedListener( finishedListener );
+        view.removeCancelListener( cancelListener );
+        dialog.removeAll();
 
         return runner.getMetrics();
     }
