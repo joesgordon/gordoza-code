@@ -110,6 +110,34 @@ public final class SwingUtils
     }
 
     /***************************************************************************
+     * @param parent
+     * @param message
+     * @param title
+     * @param list
+     * @param defaultChoice
+     * @return
+     **************************************************************************/
+    public static <T> T showConfirmMessage( Component parent, String message,
+        String title, T [] list, T defaultChoice )
+    {
+        JOptionPane jop = new JOptionPane( message,
+            JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null,
+            list, defaultChoice );
+
+        JDialog dialog = jop.createDialog( parent, title );
+
+        dialog.setVisible( true );
+
+        // ---------------------------------------------------------------------
+        // Prompt user.
+        // ---------------------------------------------------------------------
+        @SuppressWarnings( "unchecked")
+        T value = ( T )jop.getValue();
+
+        return value;
+    }
+
+    /***************************************************************************
      * @param toolbar
      * @param container
      * @return
