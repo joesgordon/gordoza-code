@@ -6,6 +6,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.*;
 
+import org.jutils.Utils;
 import org.jutils.ui.validation.ValidationException;
 
 /*******************************************************************************
@@ -96,18 +97,41 @@ public final class IOUtils
             }
             else
             {
-                int idx = findFirstDiff( ansPath, path );
+                List<String> ansParts = Utils.split( ansPath, '/' );
+                List<String> pathParts = Utils.split( path, '/' );
 
-                if( idx > 0 )
+                ansPath = "";
+
+                for( int i = 0; i < ansParts.size() && i < pathParts.size(); i++ )
                 {
-                    idx = ansPath.lastIndexOf( '/', idx );
-                    ansPath = ansPath.substring( 0, idx ) + '/';
+                    if( ansParts.get( i ).equals( pathParts.get( i ) ) )
+                    {
+                        ansPath += ansParts.get( i ) + "/";
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
-                else
+
+                if( ansPath.isEmpty() )
                 {
-                    ansPath = null;
+                    ansParts = null;
                     break;
                 }
+
+                // int idx = findFirstDiff( ansPath, path );
+                //
+                // if( idx > 0 )
+                // {
+                // idx = ansPath.lastIndexOf( '/', idx );
+                // ansPath = ansPath.substring( 0, idx ) + '/';
+                // }
+                // else
+                // {
+                // ansPath = null;
+                // break;
+                // }
             }
         }
 
@@ -136,7 +160,7 @@ public final class IOUtils
      * @param str2
      * @return
      **************************************************************************/
-    private static int findFirstDiff( String str1, String str2 )
+    public static int findFirstDiff( String str1, String str2 )
     {
         int idx = 0;
 

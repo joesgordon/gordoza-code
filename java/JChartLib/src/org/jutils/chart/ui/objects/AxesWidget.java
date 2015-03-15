@@ -1,12 +1,11 @@
 package org.jutils.chart.ui.objects;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.jutils.chart.data.*;
-import org.jutils.chart.data.ChartContext.IDimensionCoords;
-import org.jutils.chart.model.*;
+import org.jutils.chart.model.Chart;
+import org.jutils.chart.model.TextLabel;
 import org.jutils.chart.ui.IChartWidget;
 import org.jutils.chart.ui.Layer2d;
 
@@ -160,7 +159,7 @@ public class AxesWidget implements IChartWidget
         }
 
         // ---------------------------------------------------------------------
-        // Draw primary rangetitle
+        // Draw primary range title
         // ---------------------------------------------------------------------
         if( chart.rangeAxis.primary.title.visible )
         {
@@ -249,17 +248,15 @@ public class AxesWidget implements IChartWidget
             // -----------------------------------------------------------------
             // Calculate ticks.
             // -----------------------------------------------------------------
-            List<Tick> domainTicks = genTicks( textSpace.left, context.width,
-                chart.domainAxis.majorSectionCount, context.domain.primary,
-                false );
-            List<Tick> rangeTicks = genTicks( textSpace.top, context.height,
-                chart.rangeAxis.majorSectionCount, context.range.primary, true );
-            List<Tick> secDomainTicks = genTicks( textSpace.left,
-                context.width, chart.domainAxis.majorSectionCount,
-                context.domain.secondary, false );
-            List<Tick> secRangeTicks = genTicks( textSpace.top, context.height,
-                chart.rangeAxis.majorSectionCount, context.range.secondary,
-                true );
+            TickGen gen = new TickGen();
+            List<Tick> domainTicks = gen.genTicks( textSpace.left,
+                context.width, context.domain.primary, false );
+            List<Tick> rangeTicks = gen.genTicks( textSpace.top,
+                context.height, context.range.primary, true );
+            List<Tick> secDomainTicks = gen.genTicks( textSpace.left,
+                context.width, context.domain.secondary, false );
+            List<Tick> secRangeTicks = gen.genTicks( textSpace.top,
+                context.height, context.range.secondary, true );
             Tick t;
 
             // Collections.reverse( rangeTicks );
@@ -273,21 +270,20 @@ public class AxesWidget implements IChartWidget
                 g2d.setColor( Color.lightGray );
                 g2d.setStroke( gridStroke );
 
-                for( int i = 1; i < domainTicks.size() - 1; i++ )
+                for( int i = 0; i < domainTicks.size(); i++ )
                 {
                     t = domainTicks.get( i );
-                    g2d.drawLine( t.offset, textSpace.top + MAJOR_TICK_LEN,
-                        t.offset, textSpace.top + context.height -
-                            MAJOR_TICK_LEN );
+
+                    g2d.drawLine( t.offset, textSpace.top, t.offset,
+                        textSpace.top + context.height );
                 }
 
-                for( int i = 1; i < rangeTicks.size() - 1; i++ )
+                for( int i = 0; i < rangeTicks.size(); i++ )
                 {
                     t = rangeTicks.get( i );
 
-                    g2d.drawLine( textSpace.left + MAJOR_TICK_LEN, t.offset,
-                        textSpace.left + context.width - MAJOR_TICK_LEN,
-                        t.offset );
+                    g2d.drawLine( textSpace.left, t.offset, textSpace.left +
+                        context.width, t.offset );
                 }
             }
 
@@ -348,7 +344,7 @@ public class AxesWidget implements IChartWidget
     {
         Tick t;
 
-        for( int i = 1; i < ticks.size() - 1; i++ )
+        for( int i = 0; i < ticks.size(); i++ )
         {
             t = ticks.get( i );
 
@@ -384,7 +380,7 @@ public class AxesWidget implements IChartWidget
     {
         Tick t;
 
-        for( int i = 1; i < ticks.size() - 1; i++ )
+        for( int i = 0; i < ticks.size(); i++ )
         {
             t = ticks.get( i );
 
@@ -409,41 +405,6 @@ public class AxesWidget implements IChartWidget
         {
             drawRangeLabel( g2d, t, x, w, leftAlign, canvasSize );
         }
-    }
-
-    /***************************************************************************
-     * @param offset
-     * @param dist
-     * @param sectionCount
-     * @param min
-     * @param max
-     * @return
-     **************************************************************************/
-    private static List<Tick> genTicks( int offset, int dist, int sectionCount,
-        IDimensionCoords coords, boolean range )
-    {
-        List<Tick> ticks = new ArrayList<>();
-
-        if( coords == null )
-        {
-            return ticks;
-        }
-
-        Span span = coords.getSpan();
-
-        ticks.add( new Tick( offset, range ? span.max : span.min ) );
-
-        for( int i = 1; i < sectionCount; i++ )
-        {
-            double d = range ? span.max - i * span.range / sectionCount
-                : span.min + i * span.range / sectionCount;
-            int off = offset + coords.fromCoord( d );
-            ticks.add( new Tick( off, d ) );
-        }
-
-        ticks.add( new Tick( offset + dist, range ? span.min : span.max ) );
-
-        return ticks;
     }
 
     /***************************************************************************
@@ -521,7 +482,7 @@ public class AxesWidget implements IChartWidget
     private void drawDomainLabel( Graphics2D g2d, Tick t, int y, int h,
         Dimension canvasSize )
     {
-        domainLabel.text = getTickText( t.value );
+        domainLabel.text = t.label;
         int tw = domainText.calculateSize( canvasSize ).width;
         Point p = new Point( t.offset - tw / 2, y );
         Dimension d = new Dimension( tw, h );
@@ -556,7 +517,7 @@ public class AxesWidget implements IChartWidget
     private void drawRangeLabel( Graphics2D g2d, Tick t, int x, int w,
         boolean leftAlign, Dimension canvasSize )
     {
-        rangeLabel.text = getTickText( t.value );
+        rangeLabel.text = t.label;
         Dimension d = rangeText.calculateSize( canvasSize );
         int tw = d.width;
         int h = d.height;
@@ -565,20 +526,5 @@ public class AxesWidget implements IChartWidget
 
         rangeText.repaint();
         rangeText.draw( g2d, p, d );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class Tick
-    {
-        public final int offset;
-        public final double value;
-
-        public Tick( int off, double v )
-        {
-            this.offset = off;
-            this.value = v;
-        }
     }
 }
