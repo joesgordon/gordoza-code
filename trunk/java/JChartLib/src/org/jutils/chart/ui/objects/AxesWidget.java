@@ -251,12 +251,14 @@ public class AxesWidget implements IChartWidget
             TickGen gen = new TickGen();
             List<Tick> domainTicks = gen.genTicks( textSpace.left,
                 context.width, context.domain.primary, false );
-            List<Tick> rangeTicks = gen.genTicks( textSpace.top,
-                context.height, context.range.primary, true );
             List<Tick> secDomainTicks = gen.genTicks( textSpace.left,
                 context.width, context.domain.secondary, false );
+
+            List<Tick> rangeTicks = gen.genTicks( textSpace.top,
+                context.height, context.range.primary, true );
             List<Tick> secRangeTicks = gen.genTicks( textSpace.top,
                 context.height, context.range.secondary, true );
+
             Tick t;
 
             // Collections.reverse( rangeTicks );
@@ -297,10 +299,14 @@ public class AxesWidget implements IChartWidget
                 context.height );
 
             // -----------------------------------------------------------------
-            // Draw domain ticks and labels.
+            // Draw major ticks.
             // -----------------------------------------------------------------
-            drawDomainTicks( g2d, domainTicks, textSpace );
+            drawMajorTicks( g2d, domainTicks, rangeTicks, secDomainTicks,
+                secRangeTicks, textSpace );
 
+            // -----------------------------------------------------------------
+            // Draw domain labels.
+            // -----------------------------------------------------------------
             drawDomainLabels( g2d, domainTicks, textSpace.top + context.height +
                 2, textSpace.bottom, size );
 
@@ -315,8 +321,6 @@ public class AxesWidget implements IChartWidget
             // -----------------------------------------------------------------
             // Draw range ticks and labels.
             // -----------------------------------------------------------------
-            drawRangeTicks( g2d, rangeTicks, textSpace );
-
             drawRangeLabels( g2d, rangeTicks, -2, textSpace.left, false, size );
 
             // -----------------------------------------------------------------
@@ -336,22 +340,41 @@ public class AxesWidget implements IChartWidget
 
     /***************************************************************************
      * @param g2d
-     * @param ticks
+     * @param domainTicks
+     * @param secRangeTicks
+     * @param secDomainTicks
      * @param textSpace
      **************************************************************************/
-    private void drawDomainTicks( Graphics2D g2d, List<Tick> ticks,
-        Insets textSpace )
+    private void drawMajorTicks( Graphics2D g2d, List<Tick> domainTicks,
+        List<Tick> rangeTicks, List<Tick> secDomainTicks,
+        List<Tick> secRangeTicks, Insets textSpace )
     {
-        Tick t;
+        secDomainTicks = secDomainTicks.isEmpty() ? domainTicks
+            : secDomainTicks;
+        secRangeTicks = secRangeTicks.isEmpty() ? rangeTicks : secRangeTicks;
 
-        for( int i = 0; i < ticks.size(); i++ )
+        for( Tick t : domainTicks )
         {
-            t = ticks.get( i );
-
-            g2d.drawLine( t.offset, textSpace.top, t.offset, textSpace.top +
-                MAJOR_TICK_LEN );
             g2d.drawLine( t.offset, textSpace.top + context.height -
                 MAJOR_TICK_LEN, t.offset, textSpace.top + context.height );
+        }
+
+        for( Tick t : secDomainTicks )
+        {
+            g2d.drawLine( t.offset, textSpace.top, t.offset, textSpace.top +
+                MAJOR_TICK_LEN );
+        }
+
+        for( Tick t : rangeTicks )
+        {
+            g2d.drawLine( textSpace.left, t.offset, textSpace.left +
+                MAJOR_TICK_LEN, t.offset );
+        }
+
+        for( Tick t : secRangeTicks )
+        {
+            g2d.drawLine( textSpace.left + context.width, t.offset,
+                textSpace.left + context.width - MAJOR_TICK_LEN, t.offset );
         }
     }
 
@@ -367,27 +390,6 @@ public class AxesWidget implements IChartWidget
         for( Tick t : ticks )
         {
             drawDomainLabel( g2d, t, y, h, canvasSize );
-        }
-    }
-
-    /***************************************************************************
-     * @param g2d
-     * @param ticks
-     * @param textSpace
-     **************************************************************************/
-    private void drawRangeTicks( Graphics2D g2d, List<Tick> ticks,
-        Insets textSpace )
-    {
-        Tick t;
-
-        for( int i = 0; i < ticks.size(); i++ )
-        {
-            t = ticks.get( i );
-
-            g2d.drawLine( textSpace.left, t.offset, textSpace.left +
-                MAJOR_TICK_LEN, t.offset );
-            g2d.drawLine( textSpace.left + context.width, t.offset,
-                textSpace.left + context.width - MAJOR_TICK_LEN, t.offset );
         }
     }
 
