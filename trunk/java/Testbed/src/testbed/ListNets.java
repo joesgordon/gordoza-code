@@ -43,11 +43,11 @@ public class ListNets
     @SuppressWarnings( "unused")
     private static void testNic( NetworkInterface nic ) throws IOException
     {
-        MulticastSocket socket = new MulticastSocket( TEST_PORT );
-        socket.setNetworkInterface( nic );
-        // socket.setInterface( nic.getInterfaceAddresses().get( 0
-        // ).getAddress() );
-        socket.close();
+        try( MulticastSocket socket = new MulticastSocket( TEST_PORT ) )
+        {
+            socket.setNetworkInterface( nic );
+            socket.setInterface( nic.getInterfaceAddresses().get( 0 ).getAddress() );
+        }
     }
 
     @SuppressWarnings( "unused")
