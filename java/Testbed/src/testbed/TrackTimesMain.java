@@ -77,9 +77,9 @@ public class TrackTimesMain
     private static List<Person> readPeople( File inFile ) throws IOException
     {
         List<Person> people = new ArrayList<Person>();
-        BufferedReader br = new BufferedReader( new FileReader( inFile ) );
 
-        try
+        try( FileReader fr = new FileReader( inFile );
+             BufferedReader br = new BufferedReader( fr ) )
         {
             String line;
             while( ( line = br.readLine() ) != null )
@@ -91,10 +91,6 @@ public class TrackTimesMain
                 people.add( p );
             }
         }
-        finally
-        {
-            br.close();
-        }
 
         return people;
     }
@@ -102,9 +98,9 @@ public class TrackTimesMain
     private static List<RunTime> readTimes( File inFile ) throws IOException
     {
         List<RunTime> times = new ArrayList<RunTime>();
-        BufferedReader br = new BufferedReader( new FileReader( inFile ) );
 
-        try
+        try( FileReader fr = new FileReader( inFile );
+             BufferedReader br = new BufferedReader( fr ) )
         {
             String line;
             while( ( line = br.readLine() ) != null )
@@ -128,10 +124,6 @@ public class TrackTimesMain
 
                 times.add( rt );
             }
-        }
-        finally
-        {
-            br.close();
         }
 
         return times;

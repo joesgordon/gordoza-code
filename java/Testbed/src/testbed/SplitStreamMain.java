@@ -68,15 +68,14 @@ public class SplitStreamMain
     private static void writeFiles( File baseFile, int size )
         throws IOException
     {
-        DataOutputStream stream = new DataOutputStream(
-            new SplitFileOutputStream( baseFile, size ) );
-
-        for( int i = 0; i < CT_LIMIT; i++ )
+        try( SplitFileOutputStream sfos = new SplitFileOutputStream( baseFile,
+                 size ); DataOutputStream stream = new DataOutputStream( sfos ) )
         {
-            stream.writeInt( i );
+            for( int i = 0; i < CT_LIMIT; i++ )
+            {
+                stream.writeInt( i );
+            }
         }
-
-        stream.close();
     }
 
     /***************************************************************************
@@ -85,12 +84,11 @@ public class SplitStreamMain
      **************************************************************************/
     private static void readFiles( File baseFile ) throws IOException
     {
-        DataInputStream stream = new DataInputStream( new SplitFileInputStream(
-            baseFile ) );
-        int intRead = -1;
-
-        try
+        try( SplitFileInputStream sfis = new SplitFileInputStream( baseFile );
+             DataInputStream stream = new DataInputStream( sfis ) )
         {
+            int intRead = -1;
+
             for( int i = 0; i < CT_LIMIT; i++ )
             {
                 intRead = stream.readInt();
@@ -99,10 +97,6 @@ public class SplitStreamMain
                     throw new IOException( i + " != " + intRead );
                 }
             }
-        }
-        finally
-        {
-            stream.close();
         }
     }
 }
