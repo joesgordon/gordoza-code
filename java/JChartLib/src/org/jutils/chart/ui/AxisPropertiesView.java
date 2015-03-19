@@ -6,7 +6,6 @@ import javax.swing.JCheckBox;
 
 import org.jutils.chart.model.Axis;
 import org.jutils.ui.StandardFormView;
-import org.jutils.ui.TitleView;
 import org.jutils.ui.event.updater.CheckBoxUpdater;
 import org.jutils.ui.event.updater.ReflectiveUpdater;
 import org.jutils.ui.fields.IntegerFormField;
@@ -21,15 +20,15 @@ public class AxisPropertiesView implements IDataView<Axis>
     private final StandardFormView form;
 
     /**  */
+    private final TextLabelField titleField;
+    /**  */
+    private final TextLabelField subtitleField;
+    /**  */
     private final IntegerFormField majorSectionField;
     /**  */
     private final IntegerFormField minorSectionField;
     /**  */
     private final JCheckBox dockZeroField;
-    /**  */
-    private final DimSpaceView primaryView;
-    /**  */
-    private final DimSpaceView secondaryView;
 
     /**  */
     private Axis axis;
@@ -39,13 +38,13 @@ public class AxisPropertiesView implements IDataView<Axis>
      **************************************************************************/
     public AxisPropertiesView()
     {
+        this.titleField = new TextLabelField( "Title" );
+        this.subtitleField = new TextLabelField( "Subtitle" );
         this.majorSectionField = new IntegerFormField( "Major Section Count",
             1, 20 );
         this.minorSectionField = new IntegerFormField( "Minor Section Count",
             1, 4 );
         this.dockZeroField = new JCheckBox();
-        this.primaryView = new DimSpaceView();
-        this.secondaryView = new DimSpaceView();
 
         this.form = createView();
 
@@ -66,14 +65,11 @@ public class AxisPropertiesView implements IDataView<Axis>
     {
         StandardFormView form = new StandardFormView();
 
+        form.addField( titleField );
+        form.addField( subtitleField );
         form.addField( majorSectionField );
         form.addField( minorSectionField );
         form.addField( "Dock Zero", dockZeroField );
-        form.addField( null,
-            new TitleView( "Primary Labels", primaryView.getView() ).getView() );
-        form.addField(
-            null,
-            new TitleView( "Secondary Labels", secondaryView.getView() ).getView() );
 
         return form;
     }
@@ -104,10 +100,10 @@ public class AxisPropertiesView implements IDataView<Axis>
     {
         this.axis = data;
 
+        titleField.setValue( data.title );
+        subtitleField.setValue( data.subtitle );
         majorSectionField.setValue( data.majorSectionCount );
         minorSectionField.setValue( data.minorSectionCount );
         dockZeroField.setSelected( data.dockZero );
-        primaryView.setData( data.primary );
-        secondaryView.setData( data.secondary );
     }
 }

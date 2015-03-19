@@ -21,6 +21,10 @@ public class Chart
     /**  */
     public final Axis rangeAxis;
     /**  */
+    public final Axis secDomainAxis;
+    /**  */
+    public final Axis secRangeAxis;
+    /**  */
     public final Legend legend;
 
     /**  */
@@ -37,6 +41,8 @@ public class Chart
         this.topBottomLabel = new TextLabel();
         this.domainAxis = new Axis();
         this.rangeAxis = new Axis();
+        this.secDomainAxis = new Axis();
+        this.secRangeAxis = new Axis();
         this.legend = new Legend();
 
         this.series = new ArrayList<>();

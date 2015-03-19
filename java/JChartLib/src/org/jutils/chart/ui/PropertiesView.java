@@ -25,9 +25,9 @@ public class PropertiesView implements IView<JPanel>
     private final JPanel view;
 
     /**  */
-    private final DefaultListModel<ListNode<?>> navModel;
+    private final DefaultListModel<IListNode<?>> navModel;
     /**  */
-    private final JList<ListNode<?>> list;
+    private final JList<IListNode<?>> list;
 
     /**  */
     private final TitleView rightView;
@@ -37,7 +37,7 @@ public class PropertiesView implements IView<JPanel>
     /**  */
     private final LegendPropertiesView legendPropView;
     /**  */
-    private final AxisPropertiesView domainPropView;
+    private final AxisPropertiesView axisPropView;
 
     /**  */
     private final List<SeriesPropertiesView> seriesViews;
@@ -58,7 +58,7 @@ public class PropertiesView implements IView<JPanel>
 
         this.chartPropView = new ChartPropertiesView();
         this.legendPropView = new LegendPropertiesView();
-        this.domainPropView = new AxisPropertiesView();
+        this.axisPropView = new AxisPropertiesView();
 
         this.view = createView();
 
@@ -110,10 +110,18 @@ public class PropertiesView implements IView<JPanel>
         node = new ListNode<Legend>( "Legend", chart.legend, legendPropView );
         navModel.addElement( node );
 
-        node = new ListNode<Axis>( "Domain", chart.domainAxis, domainPropView );
+        node = new ListNode<Axis>( "Domain", chart.domainAxis, axisPropView );
         navModel.addElement( node );
 
-        node = new ListNode<Axis>( "Range", chart.rangeAxis, domainPropView );
+        node = new ListNode<Axis>( "Range", chart.rangeAxis, axisPropView );
+        navModel.addElement( node );
+
+        node = new ListNode<Axis>( "Secondary Domain", chart.secDomainAxis,
+            axisPropView );
+        navModel.addElement( node );
+
+        node = new ListNode<Axis>( "Secondary Range", chart.secRangeAxis,
+            axisPropView );
         navModel.addElement( node );
 
         node = new ListNode<String>( "Series", "", null );
@@ -169,8 +177,7 @@ public class PropertiesView implements IView<JPanel>
 
         view.setData( series );
 
-        ListNode<?> node = new ListNode<Series>( "        " + series.name,
-            series, view );
+        IListNode<?> node = new SeriesNode( series, view );
         navModel.addElement( node );
 
         seriesViews.add( view );
@@ -199,10 +206,17 @@ public class PropertiesView implements IView<JPanel>
         view.setSelected( pointIdx );
     }
 
+    private static interface IListNode<T>
+    {
+        public IView<?> getView();
+
+        public String toString();
+    }
+
     /***************************************************************************
      * @param T
      **************************************************************************/
-    private static class ListNode<T>
+    private static class ListNode<T> implements IListNode<T>
     {
         private final String name;
         private final T data;
@@ -232,6 +246,30 @@ public class PropertiesView implements IView<JPanel>
         }
     }
 
+    private static class SeriesNode implements IListNode<Series>
+    {
+        private final Series s;
+        private final IDataView<Series> view;
+
+        public SeriesNode( Series s, IDataView<Series> view )
+        {
+            this.s = s;
+            this.view = view;
+        }
+
+        @Override
+        public IView<?> getView()
+        {
+            return view;
+        }
+
+        @Override
+        public String toString()
+        {
+            return "        " + s.name;
+        }
+    }
+
     /***************************************************************************
      * 
      **************************************************************************/
@@ -254,11 +292,11 @@ public class PropertiesView implements IView<JPanel>
 
                 if( !view.list.getSelectionModel().isSelectionEmpty() )
                 {
-                    ListNode<?> node = view.list.getSelectedValue();
+                    IListNode<?> node = view.list.getSelectedValue();
 
                     IView<?> view = node.getView();
 
-                    title = node.name;
+                    title = node.toString();
 
                     if( view != null )
                     {

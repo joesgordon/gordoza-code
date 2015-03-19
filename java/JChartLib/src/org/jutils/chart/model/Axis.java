@@ -1,5 +1,7 @@
 package org.jutils.chart.model;
 
+import java.awt.Font;
+
 /*******************************************************************************
  * 
  ******************************************************************************/
@@ -12,9 +14,9 @@ public class Axis
     /**  */
     public boolean dockZero;
     /**  */
-    public final DimSpace primary;
+    public final TextLabel title;
     /**  */
-    public final DimSpace secondary;
+    public final TextLabel subtitle;
 
     /***************************************************************************
      * 
@@ -24,13 +26,16 @@ public class Axis
         this.majorSectionCount = 10;
         this.minorSectionCount = 4;
         this.dockZero = false;
-        this.primary = new DimSpace();
-        this.secondary = new DimSpace();
+        this.title = new TextLabel();
+        this.subtitle = new TextLabel();
 
-        primary.title.visible = false;
-        primary.title.text = "primary";
+        title.alignment = HorizontalAlignment.CENTER;
+        title.font = title.font.deriveFont( 14.0f ).deriveFont( Font.BOLD );
+        title.visible = false;
+        title.text = "primary";
 
-        secondary.title.visible = false;
-        secondary.title.text = "secondary";
+        subtitle.alignment = HorizontalAlignment.CENTER;
+        subtitle.font = subtitle.font.deriveFont( 10.0f );
+        subtitle.visible = false;
     }
 }

@@ -70,12 +70,12 @@ public class AxesWidget implements IChartWidget
         this.rangeLabel = new TextLabel( new Font( "Helvetica", Font.PLAIN, 12 ) );
         this.rangeText = new TextWidget( rangeLabel );
 
-        this.domainTitle = new TextWidget( chart.domainAxis.primary.title );
-        this.sdomainTitle = new TextWidget( chart.domainAxis.secondary.title );
+        this.domainTitle = new TextWidget( chart.domainAxis.title );
+        this.sdomainTitle = new TextWidget( chart.secDomainAxis.title );
 
-        this.rangeTitle = new TextWidget( chart.rangeAxis.primary.title,
+        this.rangeTitle = new TextWidget( chart.rangeAxis.title,
             TextDirection.RIGHT );
-        this.srangeTitle = new TextWidget( chart.rangeAxis.secondary.title,
+        this.srangeTitle = new TextWidget( chart.secRangeAxis.title,
             TextDirection.LEFT );
     }
 
@@ -103,7 +103,7 @@ public class AxesWidget implements IChartWidget
         // ---------------------------------------------------------------------
         // Draw secondary domain title
         // ---------------------------------------------------------------------
-        if( chart.domainAxis.secondary.title.visible &&
+        if( chart.secDomainAxis.title.visible &&
             context.domain.secondary != null )
         {
             d = sdomainTitle.calculateSize( size );
@@ -122,7 +122,7 @@ public class AxesWidget implements IChartWidget
         // ---------------------------------------------------------------------
         // Draw primary domain title
         // ---------------------------------------------------------------------
-        if( chart.domainAxis.primary.title.visible )
+        if( chart.domainAxis.title.visible )
         {
             d = domainTitle.calculateSize( size );
 
@@ -141,8 +141,7 @@ public class AxesWidget implements IChartWidget
         // ---------------------------------------------------------------------
         // Draw secondary range title
         // ---------------------------------------------------------------------
-        if( chart.rangeAxis.secondary.title.visible &&
-            context.range.secondary != null )
+        if( chart.secRangeAxis.title.visible && context.range.secondary != null )
         {
             d = srangeTitle.calculateSize( size );
 
@@ -161,7 +160,7 @@ public class AxesWidget implements IChartWidget
         // ---------------------------------------------------------------------
         // Draw primary range title
         // ---------------------------------------------------------------------
-        if( chart.rangeAxis.primary.title.visible )
+        if( chart.rangeAxis.title.visible )
         {
             d = rangeTitle.calculateSize( size );
 
