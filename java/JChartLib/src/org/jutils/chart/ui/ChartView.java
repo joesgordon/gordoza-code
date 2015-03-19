@@ -341,6 +341,11 @@ public class ChartView implements IView<JComponent>
      **************************************************************************/
     public void importData( File file, boolean addData )
     {
+        if( !addData )
+        {
+            palette.reset();
+        }
+
         try
         {
             DataFileReader reader = new DataFileReader();

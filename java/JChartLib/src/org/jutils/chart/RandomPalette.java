@@ -37,4 +37,10 @@ public class RandomPalette implements IPalette
     {
         return cycle.next();
     }
+
+    @Override
+    public void reset()
+    {
+        cycle.reset();
+    }
 }

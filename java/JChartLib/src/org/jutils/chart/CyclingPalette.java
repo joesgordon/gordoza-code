@@ -9,9 +9,14 @@ import java.util.List;
  ******************************************************************************/
 public class CyclingPalette implements IPalette
 {
+    /**  */
     private final List<Color> colors;
+    /**  */
     private int idx = 0;
 
+    /***************************************************************************
+     * @param colors
+     **************************************************************************/
     public CyclingPalette( List<Color> colors )
     {
         this.colors = new ArrayList<>( colors );
@@ -30,5 +35,14 @@ public class CyclingPalette implements IPalette
         }
 
         return colors.get( idx++ );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void reset()
+    {
+        idx = 0;
     }
 }

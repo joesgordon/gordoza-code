@@ -4,10 +4,17 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class PresetPalette implements IPalette
 {
+    /**  */
     private final CyclingPalette cycle;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public PresetPalette()
     {
         List<Color> colors = new ArrayList<>();
@@ -30,9 +37,21 @@ public class PresetPalette implements IPalette
         this.cycle = new CyclingPalette( colors );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public Color next()
     {
         return cycle.next();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void reset()
+    {
+        cycle.reset();
     }
 }
