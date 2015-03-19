@@ -58,8 +58,6 @@ public class ValidationTestApp implements IFrameApp
 
         ActionListener buttonListener = new ExitListener( frame );
 
-        form.setHorizontalStretch( true );
-
         form.addField( "Number, (0-25)", field1.getView() );
         form.addField( "Number, (0-25)", field2.getView() );
         form.addField( "Number, [0-25]", field3.getView() );
