@@ -247,14 +247,21 @@ public class AxesWidget implements IChartWidget
             // -----------------------------------------------------------------
             // Calculate ticks.
             // -----------------------------------------------------------------
-            TickGen gen = new TickGen();
+            TickGen gen;
+
+            gen = new TickGen( chart.domainAxis );
             List<Tick> domainTicks = gen.genTicks( textSpace.left,
                 context.width, context.domain.primary, false );
+
+            gen = new TickGen( chart.secDomainAxis );
             List<Tick> secDomainTicks = gen.genTicks( textSpace.left,
                 context.width, context.domain.secondary, false );
 
+            gen = new TickGen( chart.rangeAxis );
             List<Tick> rangeTicks = gen.genTicks( textSpace.top,
                 context.height, context.range.primary, true );
+
+            gen = new TickGen( chart.secRangeAxis );
             List<Tick> secRangeTicks = gen.genTicks( textSpace.top,
                 context.height, context.range.secondary, true );
 

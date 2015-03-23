@@ -3,6 +3,7 @@ package org.jutils.chart.data;
 import java.util.*;
 
 import org.jutils.chart.data.ChartContext.IDimensionCoords;
+import org.jutils.chart.model.Axis;
 import org.jutils.chart.model.Span;
 import org.jutils.io.LogUtils;
 
@@ -11,25 +12,19 @@ import org.jutils.io.LogUtils;
  ******************************************************************************/
 public class TickGen
 {
+    private final Axis axis;
+
     private int minTickSize;
     private int maxTickSize;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public TickGen()
+    public TickGen( Axis axis )
     {
-        setSizes( 46, 92 );
-    }
-
-    /***************************************************************************
-     * @param minSize
-     * @param maxSize
-     **************************************************************************/
-    public void setSizes( int minSize, int maxSize )
-    {
-        this.minTickSize = minSize;
-        this.maxTickSize = maxSize;
+        this.axis = axis;
+        this.minTickSize = 48;
+        this.maxTickSize = 96;
     }
 
     /***************************************************************************
@@ -49,6 +44,51 @@ public class TickGen
             return ticks;
         }
 
+        TickMetrics tickMets = new TickMetrics();
+
+        if( axis.autoTicks )
+        {
+            tickMets = generateTickMetrics( dist, coords );
+        }
+        else
+        {
+            tickMets = calculateMetrics();
+        }
+
+        String fmt = tickMets.tickOrder > -1 ? "%.0f" : "%." +
+            Math.abs( tickMets.tickOrder ) + "f";
+
+        for( int i = 0; i < tickMets.tickCount; i++ )
+        {
+            double d = tickMets.tickStart + tickMets.tickWidth * i;
+            int off = offset + coords.fromCoord( d );
+
+            ticks.add( new Tick( off, d, String.format( fmt, d ) ) );
+        }
+
+        if( range )
+        {
+            Collections.reverse( ticks );
+        }
+
+        return ticks;
+    }
+
+    private TickMetrics calculateMetrics()
+    {
+        TickMetrics metrics = new TickMetrics();
+
+        metrics.tickStart = axis.tickStart;
+        metrics.tickWidth = axis.tickWidth;
+        metrics.tickCount = ( int )( ( axis.tickEnd - axis.tickStart ) / axis.tickWidth ) + 1;
+        metrics.tickOrder = ( int )Math.floor( Math.log10( metrics.tickWidth ) );
+
+        return metrics;
+    }
+
+    public TickMetrics generateTickMetrics( int dist, IDimensionCoords coords )
+    {
+        TickMetrics metrics = new TickMetrics();
         Span span = coords.getSpan();
 
         double minTickPx = dist / ( double )maxTickSize;
@@ -112,26 +152,13 @@ public class TickGen
         tickStart = tickStart / 10 * Math.pow( 10, tickCsOrder );
         tickStop = tickStop / 10 * Math.pow( 10, tickCsOrder );
 
-        int tickCount = ( int )( Math.round( ( tickStop - tickStart ) /
+        metrics.tickCount = ( int )( Math.round( ( tickStop - tickStart ) /
             tickWidthCs ) ) + 1;
+        metrics.tickOrder = tickCsOrder;
+        metrics.tickStart = tickStart;
+        metrics.tickWidth = tickWidthCs;
 
-        String fmt = tickCsOrder > -1 ? "%.0f" : "%." +
-            Math.abs( tickCsOrder ) + "f";
-
-        for( int i = 0; i < tickCount; i++ )
-        {
-            double d = tickStart + tickWidthCs * i;
-            int off = offset + coords.fromCoord( d );
-
-            ticks.add( new Tick( off, d, String.format( fmt, d ) ) );
-        }
-
-        if( range )
-        {
-            Collections.reverse( ticks );
-        }
-
-        return ticks;
+        return metrics;
     }
 
     /***************************************************************************
@@ -139,7 +166,8 @@ public class TickGen
      **************************************************************************/
     public static void main( String [] args )
     {
-        TickGen gen = new TickGen();
+        Axis axis = new Axis();
+        TickGen gen = new TickGen( axis );
         ChartContext context;
         List<Tick> ticks;
 
@@ -209,5 +237,15 @@ public class TickGen
         ticks.add( new Tick( offset + dist, range ? span.min : span.max ) );
 
         return ticks;
+    }
+
+    private class TickMetrics
+    {
+        public double tickWidth;
+        public double tickStart;
+
+        public int tickCount;
+        public int tickOrder;
+
     }
 }

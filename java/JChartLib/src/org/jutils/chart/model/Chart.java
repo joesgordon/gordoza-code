@@ -56,8 +56,6 @@ public class Chart
         subtitle.alignment = HorizontalAlignment.CENTER;
         subtitle.font = subtitle.font.deriveFont( 12.0f );
         subtitle.visible = false;
-
-        rangeAxis.minorSectionCount = 2;
     }
 
     /***************************************************************************

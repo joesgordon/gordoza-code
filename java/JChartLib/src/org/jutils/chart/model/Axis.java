@@ -8,26 +8,35 @@ import java.awt.Font;
 public class Axis
 {
     /**  */
-    public int majorSectionCount;
-    /**  */
-    public int minorSectionCount;
-    /**  */
-    public boolean dockZero;
-    /**  */
     public final TextLabel title;
     /**  */
     public final TextLabel subtitle;
+    /**  */
+    public boolean autoTicks;
+    /**  */
+    public double tickStart;
+    /**  */
+    public double tickEnd;
+    /**  */
+    public double tickWidth;
+    /**  */
+    public double minorTickWidth;
+    /**  */
+    public boolean dockZero;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public Axis()
     {
-        this.majorSectionCount = 10;
-        this.minorSectionCount = 4;
-        this.dockZero = false;
         this.title = new TextLabel();
         this.subtitle = new TextLabel();
+        this.autoTicks = true;
+        this.tickStart = -5.0;
+        this.tickEnd = 5.0;
+        this.tickWidth = 1.0;
+        this.minorTickWidth = 0.25;
+        this.dockZero = false;
 
         title.alignment = HorizontalAlignment.CENTER;
         title.font = title.font.deriveFont( 14.0f ).deriveFont( Font.BOLD );

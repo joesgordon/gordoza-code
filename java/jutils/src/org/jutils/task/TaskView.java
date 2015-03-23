@@ -256,6 +256,14 @@ public class TaskView implements ITaskView
             IconConstants.playNotify();
         }
 
+        try
+        {
+            thread.join();
+        }
+        catch( InterruptedException ex )
+        {
+        }
+
         runner.removeFinishedListener( finishedListener );
         view.removeCancelListener( cancelListener );
         dialog.removeAll();

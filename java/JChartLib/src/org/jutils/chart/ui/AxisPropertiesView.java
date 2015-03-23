@@ -6,9 +6,8 @@ import javax.swing.JCheckBox;
 
 import org.jutils.chart.model.Axis;
 import org.jutils.ui.StandardFormView;
-import org.jutils.ui.event.updater.CheckBoxUpdater;
-import org.jutils.ui.event.updater.ReflectiveUpdater;
-import org.jutils.ui.fields.IntegerFormField;
+import org.jutils.ui.event.updater.*;
+import org.jutils.ui.fields.DoubleFormField;
 import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
@@ -24,9 +23,15 @@ public class AxisPropertiesView implements IDataView<Axis>
     /**  */
     private final TextLabelField subtitleField;
     /**  */
-    private final IntegerFormField majorSectionField;
+    private final JCheckBox autoTicksField;
     /**  */
-    private final IntegerFormField minorSectionField;
+    private final DoubleFormField tickStartField;
+    /**  */
+    private final DoubleFormField tickEndField;
+    /**  */
+    private final DoubleFormField tickWidthField;
+    /**  */
+    private final DoubleFormField minorTickWidthField;
     /**  */
     private final JCheckBox dockZeroField;
 
@@ -40,20 +45,27 @@ public class AxisPropertiesView implements IDataView<Axis>
     {
         this.titleField = new TextLabelField( "Title" );
         this.subtitleField = new TextLabelField( "Subtitle" );
-        this.majorSectionField = new IntegerFormField( "Major Section Count",
-            1, 20 );
-        this.minorSectionField = new IntegerFormField( "Minor Section Count",
-            1, 4 );
+        this.autoTicksField = new JCheckBox();
+        this.tickStartField = new DoubleFormField( "Tick Start" );
+        this.tickEndField = new DoubleFormField( "Tick End" );
+        this.tickWidthField = new DoubleFormField( "Tick Width" );
+        this.minorTickWidthField = new DoubleFormField( "Minor Tick Width" );
         this.dockZeroField = new JCheckBox();
 
         this.form = createView();
 
         setData( new Axis() );
 
-        majorSectionField.setUpdater( new ReflectiveUpdater<Integer>( this,
-            "axis.majorSectionCount" ) );
-        minorSectionField.setUpdater( new ReflectiveUpdater<Integer>( this,
-            "axis.minorSectionCount" ) );
+        autoTicksField.addActionListener( new CheckBoxUpdater(
+            new ReflectiveUpdater<Boolean>( this, "axis.autoTicks" ) ) );
+        tickStartField.setUpdater( new ReflectiveUpdater<Double>( this,
+            "axis.tickStart" ) );
+        tickEndField.setUpdater( new ReflectiveUpdater<Double>( this,
+            "axis.tickEnd" ) );
+        tickWidthField.setUpdater( new ReflectiveUpdater<Double>( this,
+            "axis.tickWidth" ) );
+        minorTickWidthField.setUpdater( new ReflectiveUpdater<Double>( this,
+            "axis.minorTickWidth" ) );
         dockZeroField.addActionListener( new CheckBoxUpdater(
             new ReflectiveUpdater<Boolean>( this, "axis.dockZero" ) ) );
     }
@@ -67,8 +79,11 @@ public class AxisPropertiesView implements IDataView<Axis>
 
         form.addField( titleField );
         form.addField( subtitleField );
-        form.addField( majorSectionField );
-        form.addField( minorSectionField );
+        form.addField( "Auto Ticks", autoTicksField );
+        form.addField( tickStartField );
+        form.addField( tickEndField );
+        form.addField( tickWidthField );
+        form.addField( minorTickWidthField );
         form.addField( "Dock Zero", dockZeroField );
 
         return form;
@@ -102,8 +117,49 @@ public class AxisPropertiesView implements IDataView<Axis>
 
         titleField.setValue( data.title );
         subtitleField.setValue( data.subtitle );
-        majorSectionField.setValue( data.majorSectionCount );
-        minorSectionField.setValue( data.minorSectionCount );
+        autoTicksField.setSelected( data.autoTicks );
+        tickStartField.setValue( data.tickStart );
+        tickEndField.setValue( data.tickEnd );
+        tickWidthField.setValue( data.tickWidth );
+        minorTickWidthField.setValue( data.minorTickWidth );
         dockZeroField.setSelected( data.dockZero );
+
+        setAutoTicksEnabled( data.autoTicks );
+    }
+
+    /***************************************************************************
+     * @param autoEnabled
+     **************************************************************************/
+    public void setAutoTicksEnabled( Boolean autoEnabled )
+    {
+        tickStartField.setEditable( !autoEnabled );
+        tickEndField.setEditable( !autoEnabled );
+        tickWidthField.setEditable( !autoEnabled );
+        minorTickWidthField.setEditable( !autoEnabled );
+        dockZeroField.setEnabled( !autoEnabled );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public class AutoTicksUpdater implements IUpdater<Boolean>
+    {
+        private final AxisPropertiesView view;
+        private final IUpdater<Boolean> updater;
+
+        public AutoTicksUpdater( AxisPropertiesView view,
+            IUpdater<Boolean> updater )
+        {
+            this.view = view;
+            this.updater = updater;
+        }
+
+        @Override
+        public void update( Boolean autoEnabled )
+        {
+            view.setAutoTicksEnabled( autoEnabled );
+
+            updater.update( autoEnabled );
+        }
     }
 }
