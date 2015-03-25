@@ -23,7 +23,7 @@ public class TickGen
     public TickGen( Axis axis )
     {
         this.axis = axis;
-        this.minTickSize = 48;
+        this.minTickSize = 24;
         this.maxTickSize = 96;
     }
 
@@ -74,6 +74,9 @@ public class TickGen
         return ticks;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private TickMetrics calculateMetrics()
     {
         TickMetrics metrics = new TickMetrics();
@@ -86,6 +89,11 @@ public class TickGen
         return metrics;
     }
 
+    /***************************************************************************
+     * @param dist
+     * @param coords
+     * @return
+     **************************************************************************/
     public TickMetrics generateTickMetrics( int dist, IDimensionCoords coords )
     {
         TickMetrics metrics = new TickMetrics();

@@ -1079,8 +1079,6 @@ public class ChartView implements IView<JComponent>
     {
         private final ChartView view;
 
-        private OkDialogView okView;
-
         public PropertiesDialogListener( ChartView view )
         {
             this.view = view;
@@ -1089,12 +1087,7 @@ public class ChartView implements IView<JComponent>
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            if( okView == null )
-            {
-                createDialog();
-            }
-
-            JDialog dialog = okView.getView();
+            JDialog dialog = createDialog();
 
             if( !dialog.isVisible() )
             {
@@ -1102,9 +1095,9 @@ public class ChartView implements IView<JComponent>
             }
         }
 
-        private void createDialog()
+        private JDialog createDialog()
         {
-            this.okView = new OkDialogView( view.getView(),
+            OkDialogView okView = new OkDialogView( view.getView(),
                 view.propertiesView.getView(), ModalityType.MODELESS,
                 OkDialogButtons.OK_APPLY );
 
@@ -1112,10 +1105,12 @@ public class ChartView implements IView<JComponent>
 
             okView.addOkListener( this );
 
-            d.setTitle( "Series Properties" );
+            d.setTitle( "Chart Properties" );
             d.setSize( 650, 400 );
             d.validate();
             d.setLocationRelativeTo( view.getView() );
+
+            return d;
         }
 
         @Override

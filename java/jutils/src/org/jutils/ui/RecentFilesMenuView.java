@@ -32,7 +32,7 @@ public class RecentFilesMenuView implements IDataView<List<File>>
      **************************************************************************/
     public RecentFilesMenuView()
     {
-        this( 5 );
+        this( 10 );
     }
 
     /***************************************************************************
@@ -82,23 +82,28 @@ public class RecentFilesMenuView implements IDataView<List<File>>
         this.files = new ArrayList<>();
 
         menu.removeAll();
-        int count = Math.min( maxFileCount, files.size() );
 
         FileSystemView view = FileSystemView.getFileSystemView();
 
-        for( int i = 0; i < count; i++ )
+        for( int i = 0; i < files.size(); i++ )
         {
             File file = files.get( i );
 
             if( file.exists() )
             {
-                item = new JMenuItem( ( i + 1 ) + " " + file.getName() );
+                item = new JMenuItem( ( this.files.size() + 1 ) + " " +
+                    file.getName() );
                 item.setIcon( view.getSystemIcon( file ) );
                 item.addActionListener( new ItemSelected( this, file ) );
                 item.setToolTipText( file.getAbsolutePath() );
                 item.setMnemonic( item.getText().charAt( 0 ) );
                 menu.add( item );
                 this.files.add( file );
+
+                if( this.files.size() > maxFileCount )
+                {
+                    break;
+                }
             }
         }
     }
