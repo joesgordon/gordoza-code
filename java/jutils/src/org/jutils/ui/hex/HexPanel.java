@@ -83,21 +83,33 @@ public class HexPanel implements IView<JComponent>
         table.addRangeSelectedListener( l );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public int getSelectedColumn()
     {
         return table.getSelectedColumn();
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public int getSelectedRow()
     {
         return table.getSelectedRow();
     }
 
+    /***************************************************************************
+     * @param c
+     **************************************************************************/
     public void setHightlightColor( Color c )
     {
         table.setHightlightColor( c );
     }
 
+    /***************************************************************************
+     * @param length
+     **************************************************************************/
     public void setHighlightLength( int length )
     {
         table.setHighlightLength( length );
@@ -171,6 +183,21 @@ public class HexPanel implements IView<JComponent>
     }
 
     /***************************************************************************
+     * @return
+     **************************************************************************/
+    public int getSelectedByte()
+    {
+        int selected = getSelectedRow();
+
+        if( selected > -1 )
+        {
+            selected = 16 * selected + getSelectedColumn();
+        }
+
+        return selected;
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     private static class HexRowListModel extends AbstractListModel<String>
@@ -230,17 +257,5 @@ public class HexPanel implements IView<JComponent>
         {
             return String.format( formatString, startingAddress + index * 16 );
         }
-    }
-
-    public int getSelectedByte()
-    {
-        int selected = getSelectedRow();
-
-        if( selected > -1 )
-        {
-            selected = 16 * selected + getSelectedColumn();
-        }
-
-        return selected;
     }
 }

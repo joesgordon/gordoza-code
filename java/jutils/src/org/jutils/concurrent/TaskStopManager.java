@@ -122,5 +122,7 @@ public final class TaskStopManager implements ITaskStopManager
         stopLock.unlock();
 
         finishedListeners.fireListeners( this, continueRunning );
+
+        finishedListeners.removeAll();
     }
 }

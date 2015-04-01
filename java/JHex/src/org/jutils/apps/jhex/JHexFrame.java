@@ -26,14 +26,6 @@ import org.jutils.ui.model.IView;
  ******************************************************************************/
 public class JHexFrame implements IView<JFrame>
 {
-    // TODO create enum of sizes.
-    /** The text description of the sizes. */
-    private static final String [] choices = new String[] { "Xtra-Small (1kb)",
-        "Small (64kb)", "Medium (512 kb)", "Large (1 Mb)" };
-    /** The size of the buffer in bytes. */
-    private static final int [] sizes = new int[] { 0x400, 0x10000, 0x80000,
-        0x100000 };
-
     // -------------------------------------------------------------------------
     // Main panel widgets
     // -------------------------------------------------------------------------
@@ -59,7 +51,7 @@ public class JHexFrame implements IView<JFrame>
     private final JMenu fileMenu;
 
     /** Index of the currently selected buffer size. */
-    private int bufferSizeIndex;
+    private HexBufferSize bufferSize;
 
     /***************************************************************************
      * Creates a JHex frame.
@@ -82,7 +74,7 @@ public class JHexFrame implements IView<JFrame>
         this.dataDialog = createDataDialog();
         this.fileMenu = new JMenu( "File" );
 
-        this.bufferSizeIndex = choices.length - 1;
+        this.bufferSize = HexBufferSize.LARGE;
 
         editor.getView().setDropTarget(
             new FileDropTarget( new FileDroppedListener( this ) ) );
@@ -358,19 +350,13 @@ public class JHexFrame implements IView<JFrame>
     private void showBufferSizeDialog()
     {
         Object ans = JOptionPane.showInputDialog( frame, "Choose buffer size:",
-            "Buffer Size", JOptionPane.QUESTION_MESSAGE, null, choices,
-            choices[bufferSizeIndex] );
+            "Buffer Size", JOptionPane.QUESTION_MESSAGE, null,
+            HexBufferSize.values(), bufferSize );
 
         if( ans != null )
         {
-            for( int i = 0; i < choices.length; i++ )
-            {
-                if( choices[i].equals( ans ) )
-                {
-                    editor.setBufferSize( sizes[i] );
-                    bufferSizeIndex = i;
-                }
-            }
+            bufferSize = ( HexBufferSize )ans;
+            editor.setBufferSize( bufferSize.size );
         }
     }
 

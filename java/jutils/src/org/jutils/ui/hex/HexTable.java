@@ -48,7 +48,6 @@ public class HexTable extends JTable
         getTableHeader().setReorderingAllowed( false );
         setShowGrid( false );
         setAutoResizeMode( JTable.AUTO_RESIZE_ALL_COLUMNS );
-        // addKeyListener( new TableKeyListener() );
 
         ColHeaderRenderer colRenderer = new ColHeaderRenderer(
             getTableHeader().getDefaultRenderer() );
@@ -127,13 +126,31 @@ public class HexTable extends JTable
     public void changeSelection( int row, int col, boolean toggle,
         boolean extend )
     {
-        super.changeSelection( row, col, toggle, extend );
+        int selRow = row;
+        int selCol = col;
+
+        if( selCol > 15 )
+        {
+            selCol = 0;
+            selRow++;
+        }
+
+        // Check for empty spaces if on the last row.
+        if( selRow == getRowCount() - 1 )
+        {
+            int lastCol = ( model.getBufferSize() + 15 ) % 16;
+            selCol = Math.min( lastCol, selCol );
+        }
+        selCol = Math.min( selCol, getColumnCount() - 2 );
+
+        // LogUtils.printDebug( "At [" + row + ", " + col + "] going to [" +
+        // selRow + ", " + selCol + "]" );
+
+        super.changeSelection( selRow, selCol, toggle, extend );
 
         if( isFocusable() )
         {
-            col = calculateClosestValidColumn( row, col );
-
-            selectEnd = calculateByteOffset( row, col );
+            selectEnd = calculateDataOffset( selRow, selCol );
             if( !extend )
             {
                 selectStart = selectEnd;
@@ -161,11 +178,17 @@ public class HexTable extends JTable
         }
     }
 
+    /***************************************************************************
+     * @param c
+     **************************************************************************/
     public void setHightlightColor( Color c )
     {
         renderer.setHightlightColor( c );
     }
 
+    /***************************************************************************
+     * @param length
+     **************************************************************************/
     public void setHighlightLength( int length )
     {
         renderer.setHighlightLength( length );
@@ -211,35 +234,16 @@ public class HexTable extends JTable
      * @param col
      * @return
      **************************************************************************/
-    private int calculateByteOffset( int row, int col )
+    private int calculateDataOffset( int row, int col )
     {
         if( row < 0 || row > getRowCount() || col < 0 || col > 16 )
         {
             return -1;
         }
+
         int offset = row * 16 + col;
-        return ( offset >= 0 ) ? offset : -1;
-    }
 
-    /***************************************************************************
-     * Calculates the closest valid column to the one specified by row and
-     * column. This allows the user to obtain a valid selection when dragging
-     * onto the non-data columns (byte location and string representation), as
-     * well as any empty cells that may exist at the end of a stream.
-     * @param row
-     * @param col
-     * @return
-     **************************************************************************/
-    private int calculateClosestValidColumn( int row, int col )
-    {
-        if( row == getRowCount() - 1 )
-        {
-            // last row
-            int i = model.getBufferSize() % 16;
-            return Math.min( i, col );
-        }
-
-        return Math.min( col, getColumnCount() - 1 );
+        return offset < 0 ? -1 : offset;
     }
 
     /***************************************************************************
