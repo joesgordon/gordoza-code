@@ -93,7 +93,10 @@ public class UsableFormField<T> implements IDataFormField<Usable<T>>
 
         usedField.setSelected( value.isUsed );
 
-        field.setValue( value.data );
+        if( value.data != null )
+        {
+            field.setValue( value.data );
+        }
 
         field.setEditable( value.isUsed );
     }
