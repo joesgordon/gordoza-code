@@ -10,15 +10,16 @@ import java.util.List;
 import javax.swing.*;
 
 import org.jutils.IconConstants;
-import org.jutils.NumberParsingUtils;
 import org.jutils.io.LogUtils;
 import org.jutils.io.OptionsSerializer;
 import org.jutils.ui.*;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
+import org.jutils.ui.fields.HexBytesFormField;
 import org.jutils.ui.hex.*;
 import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
 import org.jutils.ui.model.IView;
+import org.jutils.ui.validation.ValidationView;
 
 /*******************************************************************************
  * Represents the view that builds and contains the main frame for the
@@ -454,46 +455,37 @@ public class JHexFrame implements IView<JFrame>
      **************************************************************************/
     private void showFindDialog()
     {
-        Object ans = JOptionPane.showInputDialog( frame, "Enter hex string:",
-            new Integer( 0 ) );
-        if( ans != null )
-        {
-            String strBytes = ans.toString();
+        HexBytesFormField hexField = new HexBytesFormField( "Hex Bytes" );
+        ValidationView view = new ValidationView( hexField.getValidationField() );
+        StandardFormView form = new StandardFormView( true );
 
-            if( ( strBytes.length() & 0x01 ) != 0 )
+        form.addField( hexField.getFieldName(), view.getView() );
+
+        int ans = JOptionPane.showOptionDialog( frame, form.getView(),
+            "Enter Hexadecimal String", JOptionPane.OK_CANCEL_OPTION,
+            JOptionPane.QUESTION_MESSAGE, null, null, null );
+
+        if( ans == JOptionPane.OK_OPTION )
+        {
+            if( !hexField.getValidationField().isValid() )
             {
                 JOptionPane.showMessageDialog( frame,
-                    "Cannot search for nibbles.", "ERROR",
-                    JOptionPane.ERROR_MESSAGE );
+                    hexField.getValidationField().getInvalidationReason(),
+                    "Invalid Hexadecimal Entry", JOptionPane.ERROR_MESSAGE );
                 return;
             }
 
-            byte [] bytes = new byte[strBytes.length() / 2];
+            byte [] bytes = hexField.getValue();
 
-            try
-            {
-                for( int i = 0; i < bytes.length; i++ )
-                {
-                    int b;
+            LogUtils.printDebug( "Searching for: " +
+                HexUtils.toHexString( bytes ) );
 
-                    b = NumberParsingUtils.digitFromHex( strBytes.charAt( i * 2 ) ) & 0x0F;
-                    bytes[i] = ( byte )( b << 4 );
-
-                    b = NumberParsingUtils.digitFromHex( strBytes.charAt( i * 2 + 1 ) ) & 0x0F;
-                    bytes[i] |= ( byte )b;
-                }
-                LogUtils.printDebug( HexUtils.toHexString( bytes ) );
-
-                // TODO actually find the bytes.
-            }
-            catch( NumberFormatException ex )
-            {
-                JOptionPane.showMessageDialog( frame, "'" + ans.toString() +
-                    "' is not a hexadecimal string.", "ERROR",
-                    JOptionPane.ERROR_MESSAGE );
-                return;
-            }
+            // TODO actually find the bytes.
         }
+        // else
+        // {
+        // LogUtils.printDebug( "cancelled" );
+        // }
     }
 
     /***************************************************************************
