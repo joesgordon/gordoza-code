@@ -324,6 +324,13 @@ public class StatusBarPanel
             refreshStatus( true );
             flashProgress();
             IconConstants.playNotify();
+            // try
+            // {
+            // byte [] b = new byte[Integer.MAX_VALUE];
+            // }
+            // catch( OutOfMemoryError err )
+            // {
+            // }
         }
     }
 

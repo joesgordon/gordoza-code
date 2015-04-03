@@ -205,12 +205,17 @@ public class BufferedStream implements IStream
     @Override
     public void seek( long pos ) throws IOException
     {
-        this.position = pos;
-
-        if( position < 0 )
+        if( pos < 0 )
         {
-            throw new IOException( "Negative seek offset" );
+            pos = position - pos;
         }
+
+        if( pos < 0 )
+        {
+            throw new IOException( "Negative seek offset: " + pos );
+        }
+
+        this.position = pos;
     }
 
     /***************************************************************************

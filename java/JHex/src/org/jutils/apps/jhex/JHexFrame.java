@@ -10,8 +10,8 @@ import java.util.List;
 import javax.swing.*;
 
 import org.jutils.IconConstants;
-import org.jutils.io.LogUtils;
 import org.jutils.io.OptionsSerializer;
+import org.jutils.task.TaskView;
 import org.jutils.ui.*;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
@@ -53,6 +53,8 @@ public class JHexFrame implements IView<JFrame>
 
     /** Index of the currently selected buffer size. */
     private HexBufferSize bufferSize;
+    /**  */
+    private byte [] lastSearch;
 
     /***************************************************************************
      * Creates a JHex frame.
@@ -63,6 +65,10 @@ public class JHexFrame implements IView<JFrame>
         this( userio, true );
     }
 
+    /***************************************************************************
+     * @param userio
+     * @param closeFileWithFrame
+     **************************************************************************/
     public JHexFrame( OptionsSerializer<JHexOptions> userio,
         boolean closeFileWithFrame )
     {
@@ -76,10 +82,31 @@ public class JHexFrame implements IView<JFrame>
         this.fileMenu = new JMenu( "File" );
 
         this.bufferSize = HexBufferSize.LARGE;
+        this.lastSearch = null;
 
-        editor.getView().setDropTarget(
-            new FileDropTarget( new FileDroppedListener( this ) ) );
+        JPanel editorView = editor.getView();
+        KeyStroke key;
+        Action action;
+        InputMap inMap = editorView.getInputMap( JComponent.WHEN_IN_FOCUSED_WINDOW );
+        ActionMap acMap = editorView.getActionMap();
+
+        editorView.setDropTarget( new FileDropTarget( new FileDroppedListener(
+            this ) ) );
         editor.addRangeSelectedListener( new SelectionListener( this ) );
+
+        action = new ActionAdapter( new FindAgainListener( this ), "Find Next",
+            null );
+        key = KeyStroke.getKeyStroke( "F3" );
+        action.putValue( Action.ACCELERATOR_KEY, key );
+        inMap.put( key, "findNextAction" );
+        acMap.put( "findNextAction", action );
+
+        action = new ActionAdapter( new FindAgainListener( this, false ),
+            "Find Previous", null );
+        key = KeyStroke.getKeyStroke( "shift F3" );
+        action.putValue( Action.ACCELERATOR_KEY, key );
+        inMap.put( key, "findPrevAction" );
+        acMap.put( "findPrevAction", action );
 
         // ---------------------------------------------------------------------
         // Setup frame
@@ -212,7 +239,7 @@ public class JHexFrame implements IView<JFrame>
             IconConstants.loader.getIcon( IconConstants.FIND_16 ) );
         button.setToolTipText( "Find Bytes" );
         button.setFocusable( false );
-        button.addActionListener( new FindListener( this ) );
+        button.addActionListener( new SearchListener( this ) );
         toolbar.add( button );
 
         button = new JButton(
@@ -313,7 +340,7 @@ public class JHexFrame implements IView<JFrame>
 
         item = new JMenuItem( "Find" );
         item.setIcon( IconConstants.loader.getIcon( IconConstants.FIND_16 ) );
-        item.addActionListener( new FindListener( this ) );
+        item.addActionListener( new SearchListener( this ) );
         menu.add( item );
 
         return menu;
@@ -453,13 +480,15 @@ public class JHexFrame implements IView<JFrame>
     /***************************************************************************
      * Displays the dialog that allows the user to enter bytes to be found.
      **************************************************************************/
-    private void showFindDialog()
+    private void showSearchDialog()
     {
         HexBytesFormField hexField = new HexBytesFormField( "Hex Bytes" );
         ValidationView view = new ValidationView( hexField.getValidationField() );
         StandardFormView form = new StandardFormView( true );
 
         form.addField( hexField.getFieldName(), view.getView() );
+
+        hexField.getTextField().addAncestorListener( new RequestFocusListener() );
 
         int ans = JOptionPane.showOptionDialog( frame, form.getView(),
             "Enter Hexadecimal String", JOptionPane.OK_CANCEL_OPTION,
@@ -476,16 +505,40 @@ public class JHexFrame implements IView<JFrame>
             }
 
             byte [] bytes = hexField.getValue();
+            long fromOffset = editor.getSelectedOffset();
 
-            LogUtils.printDebug( "Searching for: " +
-                HexUtils.toHexString( bytes ) );
+            fromOffset = fromOffset > -1 ? fromOffset : 0;
 
-            // TODO actually find the bytes.
+            search( bytes, fromOffset );
         }
         // else
         // {
         // LogUtils.printDebug( "cancelled" );
         // }
+    }
+
+    /***************************************************************************
+     * @param bytes
+     * @param fromOffset
+     **************************************************************************/
+    private void search( byte [] bytes, long fromOffset )
+    {
+        this.lastSearch = bytes;
+
+        // LogUtils.printDebug( "Searching for: " + HexUtils.toHexString( bytes
+        // ) +
+        // " @ " + fromOffset );
+
+        SearchTask task = new SearchTask( bytes, editor.getStream(), fromOffset );
+
+        TaskView.startAndShow( frame, task, "Byte Search" );
+
+        long foundOffset = task.foundOffset;
+
+        if( foundOffset > -1 )
+        {
+            editor.highlightOffset( foundOffset, bytes.length );
+        }
     }
 
     /***************************************************************************
@@ -512,15 +565,7 @@ public class JHexFrame implements IView<JFrame>
                 return;
             }
 
-            try
-            {
-                editor.setStartOffset( offset );
-            }
-            catch( IOException ex )
-            {
-                JOptionPane.showMessageDialog( frame, ex.getMessage(), "ERROR",
-                    JOptionPane.ERROR_MESSAGE );
-            }
+            editor.highlightOffset( offset, 1 );
         }
     }
 
@@ -621,11 +666,11 @@ public class JHexFrame implements IView<JFrame>
     /***************************************************************************
      * Action listener for displaying the find dialog.
      **************************************************************************/
-    private static class FindListener implements ActionListener
+    private static class SearchListener implements ActionListener
     {
         private final JHexFrame frame;
 
-        public FindListener( JHexFrame frame )
+        public SearchListener( JHexFrame frame )
         {
             this.frame = frame;
         }
@@ -633,7 +678,10 @@ public class JHexFrame implements IView<JFrame>
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            frame.showFindDialog();
+            if( frame.editor.getStream() != null )
+            {
+                frame.showSearchDialog();
+            }
         }
     }
 
@@ -837,6 +885,33 @@ public class JHexFrame implements IView<JFrame>
             int len = event.getItem() == null ? -1 : event.getItem();
 
             frame.editor.setHighlightLength( len );
+        }
+    }
+
+    private static class FindAgainListener implements ActionListener
+    {
+        private final JHexFrame view;
+        private final boolean isForward;
+
+        public FindAgainListener( JHexFrame view )
+        {
+            this( view, true );
+        }
+
+        public FindAgainListener( JHexFrame view, boolean forward )
+        {
+            this.view = view;
+            this.isForward = forward;
+        }
+
+        @Override
+        public synchronized void actionPerformed( ActionEvent e )
+        {
+            if( view.lastSearch != null )
+            {
+                view.search( view.lastSearch,
+                    view.editor.getSelectedOffset() + 1 );
+            }
         }
     }
 }

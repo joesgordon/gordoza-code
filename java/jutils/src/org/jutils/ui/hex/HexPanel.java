@@ -4,6 +4,7 @@ import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.TableCellEditor;
 
 import org.jutils.PropConstants;
 import org.jutils.Utils;
@@ -155,6 +156,12 @@ public class HexPanel implements IView<JComponent>
         int row1 = end / 16;
         int col1 = end % 16;
 
+        TableCellEditor editor = table.getCellEditor();
+
+        if( editor != null )
+        {
+            editor.stopCellEditing();
+        }
         table.changeSelection( row0, col0, false, false );
         table.changeSelection( row1, col1, false, true );
 

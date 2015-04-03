@@ -6,6 +6,8 @@ import java.io.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import org.jutils.io.FileStream;
+import org.jutils.io.IStream;
 import org.jutils.ui.*;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
@@ -40,7 +42,7 @@ public class HexEditorFilePanel implements IView<JPanel>
     /**  */
     private File currentFile = null;
     /**  */
-    private RandomAccessFile raFile = null;
+    private IStream byteStream = null;
 
     /***************************************************************************
      * 
@@ -131,15 +133,14 @@ public class HexEditorFilePanel implements IView<JPanel>
         // LogUtils.printDebug( "Loading buffer @ " + startOffset + " , " +
         // percent + "%" );
 
-        raFile.seek( startOffset );
-        // TODO Check the results of read or use a different class to paginate.
-        raFile.read( buffer );
+        byteStream.seek( startOffset );
+        byteStream.readFully( buffer );
         hexView.setStartingAddress( startOffset );
         hexView.setBuffer( new ByteBuffer( buffer ) );
 
         offsetLabel.setText( String.format(
-            "Showing 0x%016X - 0x%016X of 0x%016X", startOffset, nextOffset,
-            fileLength ) );
+            "Showing 0x%016X - 0x%016X of 0x%016X", startOffset,
+            nextOffset - 1, fileLength ) );
 
         // TODO create listener list to notify when buttons should be
         // dis/en-abled
@@ -149,11 +150,17 @@ public class HexEditorFilePanel implements IView<JPanel>
         progressBar.setUnitLength( bufLen );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public int getSelectedColumn()
     {
         return hexView.getSelectedColumn();
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public int getSelectedRow()
     {
         return hexView.getSelectedRow();
@@ -180,16 +187,19 @@ public class HexEditorFilePanel implements IView<JPanel>
      **************************************************************************/
     public void closeFile() throws IOException
     {
-        if( raFile != null )
+        if( byteStream != null )
         {
-            raFile.close();
+            byteStream.close();
+            byteStream = null;
             hexView.setBuffer( null );
-            raFile = null;
             startOffset = 0;
             fileLength = 0;
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public void jumpPrevious()
     {
         long lastOffset = startOffset - ( startOffset % maxBufferSize ) -
@@ -198,7 +208,7 @@ public class HexEditorFilePanel implements IView<JPanel>
 
         try
         {
-            setStartOffset( lastOffset );
+            setOffset( lastOffset );
         }
         catch( IOException ex )
         {
@@ -207,6 +217,9 @@ public class HexEditorFilePanel implements IView<JPanel>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public void jumpForward()
     {
         long nextOffset = startOffset - ( startOffset % maxBufferSize ) +
@@ -214,7 +227,7 @@ public class HexEditorFilePanel implements IView<JPanel>
 
         try
         {
-            setStartOffset( nextOffset );
+            setOffset( nextOffset );
         }
         catch( IOException ex )
         {
@@ -223,11 +236,17 @@ public class HexEditorFilePanel implements IView<JPanel>
         }
     }
 
+    /***************************************************************************
+     * @param c
+     **************************************************************************/
     public void setHightlightColor( Color c )
     {
         hexView.setHightlightColor( c );
     }
 
+    /***************************************************************************
+     * @param length
+     **************************************************************************/
     public void setHighlightLength( int length )
     {
         hexView.setHighlightLength( length );
@@ -245,7 +264,7 @@ public class HexEditorFilePanel implements IView<JPanel>
         {
             try
             {
-                setStartOffset( startOffset );
+                setOffset( startOffset );
             }
             catch( IOException ex )
             {
@@ -256,42 +275,41 @@ public class HexEditorFilePanel implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @param offset
-     * @throws IOException
-     **************************************************************************/
-    public void setStartOffset( long offset ) throws IOException
-    {
-        if( offset > -1 && offset < fileLength )
-        {
-            startOffset = offset;
-            loadBuffer();
-        }
-    }
-
-    /***************************************************************************
      * @param file
      * @throws IOException
      **************************************************************************/
     public void setFile( File file ) throws IOException
     {
         currentFile = file;
-        if( raFile != null )
+        if( byteStream != null )
         {
             closeFile();
         }
         titlePanel.setTitle( file.getName() );
-        raFile = new RandomAccessFile( file, "r" );
-        fileLength = raFile.length();
-        setStartOffset( 0 );
+        byteStream = new FileStream( file, true );
+        fileLength = byteStream.getLength();
+        setOffset( 0 );
         progressBar.setLength( fileLength );
         progressBar.setUnitLength( maxBufferSize );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public IStream getStream()
+    {
+        return byteStream;
+    }
+
+    /***************************************************************************
+     * @param file
+     * @throws IOException
+     **************************************************************************/
     public void saveFile( File file ) throws IOException
     {
         if( file.compareTo( currentFile ) == 0 )
         {
-            raFile.close();
+            byteStream.close();
         }
 
         try( FileOutputStream fileStream = new FileOutputStream( file ) )
@@ -307,17 +325,88 @@ public class HexEditorFilePanel implements IView<JPanel>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public JPanel getView()
     {
         return view;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public JPanel getNonTitleView()
     {
         return titleContent;
     }
 
+    /***************************************************************************
+     * @param foundOffset
+     **************************************************************************/
+    public void highlightOffset( long offset, int length )
+    {
+        try
+        {
+            long blockOffset = getBlockStart( offset );
+            setOffset( blockOffset );
+
+            int startIndex = ( int )( offset - blockOffset );
+            int endIndex = startIndex + length - 1;
+
+            hexView.setSelected( startIndex, endIndex );
+        }
+        catch( IOException ex )
+        {
+            JOptionPane.showMessageDialog( getView(), ex.getMessage(), "ERROR",
+                JOptionPane.ERROR_MESSAGE );
+        }
+    }
+
+    /***************************************************************************
+     * @param offset
+     * @return
+     **************************************************************************/
+    private long getBlockStart( long offset )
+    {
+        long blockCount = offset / maxBufferSize;
+
+        return blockCount * maxBufferSize;
+    }
+
+    /***************************************************************************
+     * @param offset
+     * @throws IOException
+     **************************************************************************/
+    private void setOffset( long offset ) throws IOException
+    {
+        if( offset > -1 && offset < fileLength )
+        {
+            startOffset = offset;
+            loadBuffer();
+        }
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public long getSelectedOffset()
+    {
+        int index = hexView.getSelectedByte();
+        long offset = -1;
+
+        if( index > -1 )
+        {
+            offset = startOffset + index;
+        }
+
+        return offset;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class PositionChanged implements ItemActionListener<Long>
     {
         private final HexEditorFilePanel view;
@@ -334,7 +423,7 @@ public class HexEditorFilePanel implements IView<JPanel>
                 view.maxBufferSize;
             try
             {
-                view.setStartOffset( pos );
+                view.setOffset( pos );
             }
             catch( IOException ex )
             {
