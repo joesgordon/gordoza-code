@@ -2,9 +2,8 @@ package org.jutils.apps.jhex;
 
 import java.io.IOException;
 
-import org.jutils.io.*;
+import org.jutils.io.IStream;
 import org.jutils.task.*;
-import org.jutils.ui.hex.HexUtils;
 
 /*******************************************************************************
  * 
@@ -67,11 +66,14 @@ public class SearchTask implements ITask
      **************************************************************************/
     private void search( ITaskHandler handler ) throws IOException
     {
-        @SuppressWarnings( "resource")
-        BufferedStream stream = new BufferedStream( this.stream );
+        // @SuppressWarnings( "resource")
+        // BufferedStream stream = new BufferedStream( this.stream,
+        // 8 * 1024 * 1024 );
 
-        LogUtils.printDebug( "Searching for: " + HexUtils.toHexString( bytes ) +
-            " @ " + offset + " " + ( forward ? "Forward" : "Backward" ) );
+        // LogUtils.printDebug( "Searching for: " + HexUtils.toHexString( bytes
+        // ) +
+        // " @ " + String.format( "%016X", offset ) + " " +
+        // ( forward ? "Forward" : "Backward" ) );
 
         stream.seek( offset );
 
@@ -102,7 +104,7 @@ public class SearchTask implements ITask
                     long seek = -( i + seekInc );
                     if( seekInc != 0 )
                     {
-                        LogUtils.printDebug( "seeking: " + seek );
+                        // LogUtils.printDebug( "skipping: " + seek );
                         stream.skip( seek );
                     }
                     break;

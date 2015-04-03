@@ -151,22 +151,6 @@ public class HexEditorFilePanel implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @return
-     **************************************************************************/
-    public int getSelectedColumn()
-    {
-        return hexView.getSelectedColumn();
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public int getSelectedRow()
-    {
-        return hexView.getSelectedRow();
-    }
-
-    /***************************************************************************
      * @param l
      **************************************************************************/
     public void addRangeSelectedListener( IRangeSelectedListener l )

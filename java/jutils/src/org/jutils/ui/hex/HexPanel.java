@@ -85,22 +85,6 @@ public class HexPanel implements IView<JComponent>
     }
 
     /***************************************************************************
-     * @return
-     **************************************************************************/
-    public int getSelectedColumn()
-    {
-        return table.getSelectedColumn();
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public int getSelectedRow()
-    {
-        return table.getSelectedRow();
-    }
-
-    /***************************************************************************
      * @param c
      **************************************************************************/
     public void setHightlightColor( Color c )
@@ -194,14 +178,7 @@ public class HexPanel implements IView<JComponent>
      **************************************************************************/
     public int getSelectedByte()
     {
-        int selected = getSelectedRow();
-
-        if( selected > -1 )
-        {
-            selected = 16 * selected + getSelectedColumn();
-        }
-
-        return selected;
+        return table.selection.start;
     }
 
     /***************************************************************************

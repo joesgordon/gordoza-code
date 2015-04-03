@@ -922,6 +922,12 @@ public class JHexFrame implements IView<JFrame>
             {
                 long off = view.editor.getSelectedOffset();
                 off = off + ( isForward ? 1 : -1 );
+
+                // LogUtils.printDebug( "Searching for: " +
+                // HexUtils.toHexString( view.lastSearch ) + " @ " +
+                // String.format( "%016X", off ) + " " +
+                // ( isForward ? "Forward" : "Backward" ) );
+
                 view.search( view.lastSearch, off, isForward );
             }
         }

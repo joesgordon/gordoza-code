@@ -28,19 +28,20 @@ public class HexTable extends JTable
     private final List<IRangeSelectedListener> rangeListeners;
 
     /**  */
-    private int selectEnd;
-    /**  */
-    private int selectStart;
+    public final SelectionRange selection;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public HexTable()
     {
-        editor = new ByteCellEditor();
-        renderer = new ByteCellRenderer();
-        model = new HexTableModel();
+        super();
+
+        this.editor = new ByteCellEditor();
+        this.renderer = new ByteCellRenderer();
+        this.model = new HexTableModel();
         this.rangeListeners = new ArrayList<IRangeSelectedListener>();
+        this.selection = new SelectionRange();
 
         setFont( new Font( "Monospaced", Font.PLAIN, 12 ) );
         setCellSelectionEnabled( true );
@@ -94,29 +95,32 @@ public class HexTable extends JTable
     }
 
     /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public boolean isCellEditable( int row, int col )
-    {
-        if( getCellSelectionEnabled() )
-        {
-            if( col == 16 )
-            {
-                return false;
-            }
-
-            return true;
-        }
-        return false;
-    }
-
-    /***************************************************************************
      * @param buf
      **************************************************************************/
     public void setBuffer( IByteBuffer buf )
     {
         model.setBuffer( buf );
+    }
+
+    /***************************************************************************
+     * @param c
+     **************************************************************************/
+    public void setHightlightColor( Color c )
+    {
+        renderer.setHightlightColor( c );
+    }
+
+    /***************************************************************************
+     * @param length
+     **************************************************************************/
+    public void setHighlightLength( int length )
+    {
+        renderer.setHighlightLength( length );
+
+        int row1 = selection.end / 16;
+        int row2 = ( selection.end + length ) / 16;
+
+        model.fireTableRowsUpdated( row1, row2 );
     }
 
     /***************************************************************************
@@ -150,19 +154,21 @@ public class HexTable extends JTable
 
         if( isFocusable() )
         {
-            selectEnd = calculateDataOffset( selRow, selCol );
+            selection.end = calculateDataOffset( selRow, selCol );
             if( !extend )
             {
-                selectStart = selectEnd;
+                selection.start = selection.end;
             }
 
             repaint();
 
-            renderer.setHighlightOffset( selectEnd );
-            // renderer.setHighlightOffset( Math.min( selectStart, selectEnd )
+            renderer.setHighlightOffset( selection.end );
+            // renderer.setHighlightOffset( Math.min( selection.start,
+            // selection.end
+            // )
             // );
 
-            fireSelectionChanged( selectStart, selectEnd );
+            fireSelectionChanged( selection.start, selection.end );
         }
     }
 
@@ -179,34 +185,15 @@ public class HexTable extends JTable
     }
 
     /***************************************************************************
-     * @param c
-     **************************************************************************/
-    public void setHightlightColor( Color c )
-    {
-        renderer.setHightlightColor( c );
-    }
-
-    /***************************************************************************
-     * @param length
-     **************************************************************************/
-    public void setHighlightLength( int length )
-    {
-        renderer.setHighlightLength( length );
-
-        int row1 = selectEnd / 16;
-        int row2 = ( selectEnd + length ) / 16;
-
-        model.fireTableRowsUpdated( row1, row2 );
-    }
-
-    /***************************************************************************
      * 
      **************************************************************************/
     @Override
     public void clearSelection()
     {
-        selectStart = -1;
-        selectEnd = -1;
+        if( selection != null )
+        {
+            selection.clear();
+        }
     }
 
     /***************************************************************************
@@ -221,8 +208,8 @@ public class HexTable extends JTable
         }
 
         int offset = row * 16 + col;
-        int min = Math.min( selectStart, selectEnd );
-        int max = Math.max( selectStart, selectEnd );
+        int min = Math.min( selection.start, selection.end );
+        int max = Math.max( selection.start, selection.end );
 
         return offset >= min && offset <= max;
     }
@@ -407,8 +394,8 @@ public class HexTable extends JTable
         public Component getTableCellRendererComponent( JTable table,
             Object value, boolean isSelected, boolean hasFocus, int row, int col )
         {
-            int selectStart = ht.selectStart;
-            int selectEnd = ht.selectEnd;
+            int selectStart = ht.selection.start;
+            int selectEnd = ht.selection.end;
 
             label.setText( ( String )value );
             // label.setHorizontalAlignment( SwingConstants.LEFT );
@@ -451,5 +438,31 @@ public class HexTable extends JTable
     public static interface IRangeSelectedListener
     {
         public void rangeSelected( int start, int end );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public static class SelectionRange
+    {
+        public int start;
+        public int end;
+
+        public SelectionRange()
+        {
+            clear();
+        }
+
+        public void clear()
+        {
+            start = -1;
+            end = -1;
+        }
+
+        public void set( int start, int end )
+        {
+            this.start = start;
+            this.end = end;
+        }
     }
 }

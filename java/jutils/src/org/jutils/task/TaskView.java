@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.Thread.State;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.*;
@@ -428,11 +427,9 @@ public class TaskView implements ITaskView
             }
             catch( InvocationTargetException ex )
             {
-                ex.printStackTrace();
             }
             catch( InterruptedException ex )
             {
-                ex.printStackTrace();
             }
         }
 
