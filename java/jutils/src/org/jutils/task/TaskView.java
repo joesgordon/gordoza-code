@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.Thread.State;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -266,12 +268,24 @@ public class TaskView implements ITaskView
         // {
         // }
         // }
-        //
-        // runner.removeFinishedListener( finishedListener );
-        view.removeCancelListener( cancelListener );
+
+        view.removeAll();
         dialog.removeAll();
 
         return runner.getMetrics();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private void removeAll()
+    {
+        view.removeAll();
+        cancelListeners.removeAll();
+        for( ActionListener al : cancelButton.getActionListeners() )
+        {
+            cancelButton.removeActionListener( al );
+        }
     }
 
     /***************************************************************************
@@ -396,7 +410,7 @@ public class TaskView implements ITaskView
      * 
      **************************************************************************/
     private static class TaskFinishedListener implements
-        ItemActionListener<Boolean>
+        ItemActionListener<Boolean>, Runnable
     {
         private final JDialog dialog;
 
@@ -407,6 +421,23 @@ public class TaskView implements ITaskView
 
         @Override
         public void actionPerformed( ItemActionEvent<Boolean> event )
+        {
+            try
+            {
+                SwingUtilities.invokeAndWait( this );
+            }
+            catch( InvocationTargetException ex )
+            {
+                ex.printStackTrace();
+            }
+            catch( InterruptedException ex )
+            {
+                ex.printStackTrace();
+            }
+        }
+
+        @Override
+        public void run()
         {
             dialog.setVisible( false );
         }
