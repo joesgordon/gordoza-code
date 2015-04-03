@@ -2,9 +2,9 @@ package org.jutils.apps.jhex;
 
 import java.io.IOException;
 
-import org.jutils.io.BufferedStream;
-import org.jutils.io.IStream;
+import org.jutils.io.*;
 import org.jutils.task.*;
+import org.jutils.ui.hex.HexUtils;
 
 /*******************************************************************************
  * 
@@ -17,6 +17,8 @@ public class SearchTask implements ITask
     private final IStream stream;
     /**  */
     private final long offset;
+    /**  */
+    private final boolean forward;
 
     public long foundOffset;
 
@@ -24,12 +26,15 @@ public class SearchTask implements ITask
      * @param bytes
      * @param stream
      * @param offset
+     * @param isForward
      **************************************************************************/
-    public SearchTask( byte [] bytes, IStream stream, long offset )
+    public SearchTask( byte [] bytes, IStream stream, long offset,
+        boolean isForward )
     {
         this.bytes = bytes;
         this.stream = stream;
         this.offset = offset;
+        this.forward = isForward;
     }
 
     /***************************************************************************
@@ -65,48 +70,53 @@ public class SearchTask implements ITask
         @SuppressWarnings( "resource")
         BufferedStream stream = new BufferedStream( this.stream );
 
+        LogUtils.printDebug( "Searching for: " + HexUtils.toHexString( bytes ) +
+            " @ " + offset + " " + ( forward ? "Forward" : "Backward" ) );
+
         stream.seek( offset );
 
-        long remaining = stream.getAvailable();
+        long count = ( forward ? stream.getAvailable() : offset ) -
+            bytes.length + 1;
         byte b;
         boolean found = false;
+        int seekInc = forward ? 0 : 2;
 
-        TaskUpdater updater = new TaskUpdater( handler, remaining );
+        TaskUpdater updater = new TaskUpdater( handler, count );
 
-        while( remaining > 0 && !found )
+        for( long idx = 0; idx < count && !found && handler.canContinue(); idx++ )
         {
-            b = stream.read();
-            remaining--;
+            if( bytes.length > stream.getAvailable() )
+            {
+                break;
+            }
 
             found = true;
 
             for( int i = 0; i < bytes.length; i++ )
             {
-                if( b == bytes[i] )
-                {
-                    b = stream.read();
-                    remaining--;
-                }
-                else
+                b = stream.read();
+
+                if( b != bytes[i] )
                 {
                     found = false;
-                    if( i > 0 )
+                    long seek = -( i + seekInc );
+                    if( seekInc != 0 )
                     {
-                        stream.seek( -i );
-                        remaining += i;
+                        LogUtils.printDebug( "seeking: " + seek );
+                        stream.skip( seek );
                     }
                     break;
                 }
             }
 
-            updater.update( updater.length.longValue() - remaining );
+            updater.update( idx );
         }
 
         foundOffset = -1;
 
         if( found )
         {
-            foundOffset = stream.getPosition() - bytes.length - 1;
+            foundOffset = stream.getPosition() - bytes.length;
         }
     }
 

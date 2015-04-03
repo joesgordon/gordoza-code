@@ -523,13 +523,24 @@ public class JHexFrame implements IView<JFrame>
      **************************************************************************/
     private void search( byte [] bytes, long fromOffset )
     {
+        search( bytes, fromOffset, true );
+    }
+
+    /***************************************************************************
+     * @param bytes
+     * @param fromOffset
+     * @param isForward
+     **************************************************************************/
+    private void search( byte [] bytes, long fromOffset, boolean isForward )
+    {
         this.lastSearch = bytes;
 
         // LogUtils.printDebug( "Searching for: " + HexUtils.toHexString( bytes
         // ) +
-        // " @ " + fromOffset );
+        // " @ " + fromOffset + " " + ( isForward ? "Forward" : "Backward" ) );
 
-        SearchTask task = new SearchTask( bytes, editor.getStream(), fromOffset );
+        SearchTask task = new SearchTask( bytes, editor.getStream(),
+            fromOffset, isForward );
 
         TaskView.startAndShow( frame, task, "Byte Search" );
 
@@ -909,8 +920,9 @@ public class JHexFrame implements IView<JFrame>
         {
             if( view.lastSearch != null )
             {
-                view.search( view.lastSearch,
-                    view.editor.getSelectedOffset() + 1 );
+                long off = view.editor.getSelectedOffset();
+                off = off + ( isForward ? 1 : -1 );
+                view.search( view.lastSearch, off, isForward );
             }
         }
     }
