@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.*;
 
 import org.jutils.IconConstants;
+import org.jutils.SwingUtils;
 import org.jutils.io.OptionsSerializer;
 import org.jutils.task.TaskView;
 import org.jutils.ui.*;
@@ -53,6 +54,9 @@ public class JHexFrame implements IView<JFrame>
     /** The recent files menu. */
     private final RecentFilesMenuView recentFiles;
 
+    /**  */
+    private final ActionAdapter searchAction;
+
     /** Index of the currently selected buffer size. */
     private HexBufferSize bufferSize;
     /**  */
@@ -87,6 +91,9 @@ public class JHexFrame implements IView<JFrame>
         this.bufferSize = HexBufferSize.LARGE;
         this.lastSearch = null;
 
+        this.searchAction = new ActionAdapter( new SearchListener( this ),
+            "Search", IconConstants.loader.getIcon( IconConstants.FIND_16 ) );
+
         JPanel editorView = editor.getView();
         KeyStroke key;
         Action action;
@@ -96,6 +103,12 @@ public class JHexFrame implements IView<JFrame>
         editorView.setDropTarget( new FileDropTarget( new FileDroppedListener(
             this ) ) );
         editor.addRangeSelectedListener( new SelectionListener( this ) );
+
+        key = KeyStroke.getKeyStroke( "control F" );
+        searchAction.putValue( Action.ACCELERATOR_KEY, key );
+        // inMap.put( key, "findAction" );
+        // acMap.put( "findAction", findAction );
+        searchAction.putValue( Action.MNEMONIC_KEY, ( int )'F' );
 
         action = new ActionAdapter( new FindAgainListener( this ), "Find Next",
             null );
@@ -225,12 +238,7 @@ public class JHexFrame implements IView<JFrame>
 
         toolbar.addSeparator();
 
-        button = new JButton(
-            IconConstants.loader.getIcon( IconConstants.FIND_16 ) );
-        button.setToolTipText( "Find Bytes" );
-        button.setFocusable( false );
-        button.addActionListener( new SearchListener( this ) );
-        toolbar.add( button );
+        SwingUtils.addActionToToolbar( toolbar, searchAction );
 
         button = new JButton(
             JHexIconConstants.loader.getIcon( JHexIconConstants.GOTO ) );
@@ -314,7 +322,7 @@ public class JHexFrame implements IView<JFrame>
      **************************************************************************/
     private JMenu createSearchMenu()
     {
-        JMenu menu = new JMenu( "Search" );
+        JMenu menu = new JMenu( "Navigate" );
         JMenuItem item;
 
         item = new JMenuItem( "Go To Offset" );
@@ -322,9 +330,7 @@ public class JHexFrame implements IView<JFrame>
         item.addActionListener( new GoToListener( this ) );
         menu.add( item );
 
-        item = new JMenuItem( "Find" );
-        item.setIcon( IconConstants.loader.getIcon( IconConstants.FIND_16 ) );
-        item.addActionListener( new SearchListener( this ) );
+        item = new JMenuItem( searchAction );
         menu.add( item );
 
         return menu;
