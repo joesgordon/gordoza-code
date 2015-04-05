@@ -1,7 +1,7 @@
 package org.jutils.apps.jhex;
 
-import java.awt.*;
 import java.awt.Dialog.ModalityType;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import org.jutils.IconConstants;
 import org.jutils.io.OptionsSerializer;
 import org.jutils.task.TaskView;
 import org.jutils.ui.*;
+import org.jutils.ui.RecentFilesMenuView.IRecentSelected;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
 import org.jutils.ui.fields.HexBytesFormField;
@@ -30,6 +31,7 @@ public class JHexFrame implements IView<JFrame>
     // -------------------------------------------------------------------------
     // Main panel widgets
     // -------------------------------------------------------------------------
+    private final StandardFrameView frameView;
     /** The actual window. */
     private final JFrame frame;
     /** The file tree displaying the directories in the given file system. */
@@ -48,8 +50,8 @@ public class JHexFrame implements IView<JFrame>
     private final ValueView valuePanel;
     /** The button to toggle the data view between visible and invisible. */
     private final JToggleButton dataViewButton;
-    /** The file menu. */
-    private final JMenu fileMenu;
+    /** The recent files menu. */
+    private final RecentFilesMenuView recentFiles;
 
     /** Index of the currently selected buffer size. */
     private HexBufferSize bufferSize;
@@ -74,12 +76,13 @@ public class JHexFrame implements IView<JFrame>
     {
         this.userio = userio;
 
-        this.frame = new JFrame();
+        this.frameView = new StandardFrameView();
+        this.frame = frameView.getView();
         this.editor = new HexEditorFilePanel();
         this.dataViewButton = new JToggleButton();
         this.valuePanel = new ValueView();
         this.dataDialog = createDataDialog();
-        this.fileMenu = new JMenu( "File" );
+        this.recentFiles = new RecentFilesMenuView();
 
         this.bufferSize = HexBufferSize.LARGE;
         this.lastSearch = null;
@@ -111,9 +114,10 @@ public class JHexFrame implements IView<JFrame>
         // ---------------------------------------------------------------------
         // Setup frame
         // ---------------------------------------------------------------------
-        frame.setJMenuBar( createMenuBar() );
+        createMenuBar( frameView.getMenuBar(), frameView.getFileMenu() );
 
-        frame.setContentPane( createContentPane() );
+        frameView.setToolbar( createToolbar() );
+        frameView.setContent( editor.getView() );
 
         if( closeFileWithFrame )
         {
@@ -123,6 +127,8 @@ public class JHexFrame implements IView<JFrame>
         frame.setTitle( "JHex" );
 
         frame.setIconImages( JHexIconConstants.getAppImages() );
+
+        recentFiles.addSelectedListener( new OpenFileListener( this ) );
     }
 
     /***************************************************************************
@@ -166,27 +172,11 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * Creates the content pane for the frame. This frame contains the toolbar,
-     * main panel, and status bar.
-     **************************************************************************/
-    private Container createContentPane()
-    {
-        JPanel panel = new JPanel( new BorderLayout() );
-        StatusBarPanel statusView = new StatusBarPanel();
-
-        panel.add( createToolbar(), BorderLayout.NORTH );
-        panel.add( editor.getView(), BorderLayout.CENTER );
-        panel.add( statusView.getView(), BorderLayout.SOUTH );
-
-        return panel;
-    }
-
-    /***************************************************************************
      * Creates the toolbar.
      **************************************************************************/
-    private Component createToolbar()
+    private JToolBar createToolbar()
     {
-        JGoodiesToolBar toolbar = new JGoodiesToolBar();
+        JToolBar toolbar = new JGoodiesToolBar();
         JButton button = new JButton();
 
         button = new JButton(
@@ -268,18 +258,42 @@ public class JHexFrame implements IView<JFrame>
 
     /***************************************************************************
      * Creates the menu bar.
+     * @param menubar
+     * @param fileMenu
      **************************************************************************/
-    private JMenuBar createMenuBar()
+    private JMenuBar createMenuBar( JMenuBar menubar, JMenu fileMenu )
     {
-        JMenuBar menubar = new JGoodiesMenuBar();
-
-        updateFileMenu();
-
+        createFileMenu( fileMenu );
         menubar.add( fileMenu );
         menubar.add( createSearchMenu() );
         menubar.add( createToolsMenu() );
 
+        updateFileMenu();
+
         return menubar;
+    }
+
+    /**
+     * @param fileMenu
+     */
+    private void createFileMenu( JMenu fileMenu )
+    {
+        JMenuItem item;
+        int idx = 0;
+
+        item = new JMenuItem( "Open" );
+        item.addActionListener( new OpenListener( this ) );
+        item.setIcon( IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+        fileMenu.add( item, idx++ );
+
+        item = new JMenuItem( "Save" );
+        item.addActionListener( new SaveListener( this ) );
+        item.setIcon( IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
+        // fileMenu.add( item, idx++ );
+
+        fileMenu.add( recentFiles.getView(), idx++ );
+
+        fileMenu.add( new JSeparator(), idx++ );
     }
 
     /***************************************************************************
@@ -290,39 +304,9 @@ public class JHexFrame implements IView<JFrame>
      **************************************************************************/
     private void updateFileMenu()
     {
-        JMenuItem item;
         JHexOptions options = userio.getOptions();
 
-        fileMenu.removeAll();
-
-        item = new JMenuItem( "Open" );
-        item.addActionListener( new OpenListener( this ) );
-        item.setIcon( IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
-        fileMenu.add( item );
-
-        item = new JMenuItem( "Save" );
-        item.addActionListener( new SaveListener( this ) );
-        item.setIcon( IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
-        // fileMenu.add( item );
-
-        if( !options.lastAccessedFiles.isEmpty() )
-        {
-            fileMenu.addSeparator();
-
-            for( File f : options.lastAccessedFiles )
-            {
-                item = new JMenuItem( f.getName() );
-                item.addActionListener( new OpenFileListener( this, f ) );
-                fileMenu.add( item );
-            }
-        }
-
-        fileMenu.addSeparator();
-
-        item = new JMenuItem( "Exit" );
-        item.addActionListener( new ExitListener( frame ) );
-        item.setIcon( IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
-        fileMenu.add( item );
+        recentFiles.setData( options.lastAccessedFiles.toList() );
     }
 
     /***************************************************************************
@@ -618,19 +602,17 @@ public class JHexFrame implements IView<JFrame>
     /***************************************************************************
      * Action listener for opening a particular file.
      **************************************************************************/
-    private class OpenFileListener implements ActionListener
+    private class OpenFileListener implements IRecentSelected
     {
         private final JHexFrame frame;
-        private final File file;
 
-        public OpenFileListener( JHexFrame frame, File f )
+        public OpenFileListener( JHexFrame frame )
         {
             this.frame = frame;
-            this.file = f;
         }
 
         @Override
-        public void actionPerformed( ActionEvent e )
+        public void selected( File file, boolean ctrlPressed )
         {
             frame.openFile( file );
         }

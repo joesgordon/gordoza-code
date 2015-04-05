@@ -2,7 +2,7 @@ package org.jutils.apps.jhex;
 
 import java.io.File;
 
-import org.jutils.utils.UniqueMaxStack;
+import org.jutils.utils.MaxQueue;
 
 /*******************************************************************************
  * 
@@ -10,14 +10,14 @@ import org.jutils.utils.UniqueMaxStack;
 public class JHexOptions
 {
     /**  */
-    public final UniqueMaxStack<File> lastAccessedFiles;
+    public final MaxQueue<File> lastAccessedFiles;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public JHexOptions()
     {
-        lastAccessedFiles = new UniqueMaxStack<File>( 10 );
+        lastAccessedFiles = new MaxQueue<File>( 10 );
     }
 
     /***************************************************************************
