@@ -367,7 +367,7 @@ public class TaskView implements ITaskView
                     view.signalError( error );
                 }
             };
-            SwingUtilities.invokeLater( r );
+            invokeWaitIgnore( r );
         }
 
         @Override
@@ -380,6 +380,20 @@ public class TaskView implements ITaskView
         public void addCancelListener( ActionListener listener )
         {
             view.addCancelListener( listener );
+        }
+
+        private static void invokeWaitIgnore( Runnable r )
+        {
+            try
+            {
+                SwingUtilities.invokeAndWait( r );
+            }
+            catch( InvocationTargetException ex )
+            {
+            }
+            catch( InterruptedException ex )
+            {
+            }
         }
     }
 
