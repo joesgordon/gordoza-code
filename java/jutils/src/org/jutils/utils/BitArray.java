@@ -3,6 +3,7 @@ package org.jutils.utils;
 import java.util.*;
 
 import org.jutils.io.BitBuffer;
+import org.jutils.ui.hex.HexUtils;
 
 /*******************************************************************************
  * 
@@ -26,6 +27,16 @@ public class BitArray implements Iterable<Boolean>
     public BitArray( BitArray bits )
     {
         this.bits = new ArrayList<>( bits.bits );
+    }
+
+    /***************************************************************************
+     * @param hexString
+     **************************************************************************/
+    public BitArray( String hexString ) throws NumberFormatException
+    {
+        this();
+
+        set( HexUtils.fromHexStringToArray( hexString ) );
     }
 
     /***************************************************************************

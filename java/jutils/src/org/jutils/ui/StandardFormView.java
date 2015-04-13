@@ -207,6 +207,15 @@ public class StandardFormView implements IView<JPanel>
     }
 
     /***************************************************************************
+     * @param f
+     * @param visible
+     **************************************************************************/
+    public void setVisible( IFormField f, boolean visible )
+    {
+        setVisible( f.getField(), visible );
+    }
+
+    /***************************************************************************
      * @param c
      * @param visible
      **************************************************************************/

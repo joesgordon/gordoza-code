@@ -281,9 +281,9 @@ public class JHexFrame implements IView<JFrame>
         return menubar;
     }
 
-    /**
+    /***************************************************************************
      * @param fileMenu
-     */
+     **************************************************************************/
     private void createFileMenu( JMenu fileMenu )
     {
         JMenuItem item;
@@ -887,6 +887,9 @@ public class JHexFrame implements IView<JFrame>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class FindAgainListener implements ActionListener
     {
         private final JHexFrame view;
