@@ -32,12 +32,12 @@ public class BitBuffer
     private final int bits;
 
     /***************************************************************************
-     * Creates a new buffer with the provided number of bytes.
-     * @param byteCount the length of the buffer to be created.
+     * Creates a new buffer with the provided number of bits.
+     * @param bitCount the length of the buffer to be created.
      **************************************************************************/
-    public BitBuffer( int byteCount )
+    public BitBuffer( int bitCount )
     {
-        this( new byte[byteCount] );
+        this( new byte[( bitCount + 7 ) / 8] );
     }
 
     /***************************************************************************
