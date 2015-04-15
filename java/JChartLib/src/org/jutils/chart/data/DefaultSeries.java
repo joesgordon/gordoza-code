@@ -92,4 +92,12 @@ public class DefaultSeries implements ISeriesData<XYPoint>
 
         get( index ).hidden = hidden;
     }
+
+    /***************************************************************************
+     * @param i
+     **************************************************************************/
+    public void remove( int i )
+    {
+        points.remove( i );
+    }
 }
