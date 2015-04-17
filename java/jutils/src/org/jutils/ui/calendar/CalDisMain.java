@@ -42,8 +42,6 @@ public class CalDisMain
             frame.setTitle( "CalDis" );
             frame.setContentPane( panel );
 
-            // TODO Auto-generated method stub
-
             // frame.setSize( 500, 500 );
 
             SwingUtils.createTrayIcon(

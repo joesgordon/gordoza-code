@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import javax.swing.Icon;
+
 import com.sun.media.sound.JavaSoundAudioClip;
 
 /*******************************************************************************
@@ -161,5 +163,14 @@ public final class IconConstants
         catch( IOException ex )
         {
         }
+    }
+
+    /***************************************************************************
+     * @param str
+     * @return
+     **************************************************************************/
+    public static Icon getIcon( String str )
+    {
+        return loader.getIcon( str );
     }
 }
