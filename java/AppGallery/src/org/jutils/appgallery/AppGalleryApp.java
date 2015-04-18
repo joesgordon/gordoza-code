@@ -54,6 +54,7 @@ public class AppGalleryApp implements IFrameApp
 
         frameView.setContent( appFrame.getView() );
 
+        frame.setIconImages( AppGalleryIcons.getAppImages() );
         frame.setTitle( "JUtils Application Gallery" );
         frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         frame.setSize( 500, 500 );

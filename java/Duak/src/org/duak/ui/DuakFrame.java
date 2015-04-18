@@ -6,6 +6,8 @@ import java.io.File;
 
 import javax.swing.*;
 
+import org.duak.DuakConstants;
+import org.duak.DuakIcons;
 import org.duak.data.FileInfo;
 import org.duak.model.Analyzer;
 import org.duak.utils.HistoryList;
@@ -21,11 +23,16 @@ import org.jutils.ui.model.IView;
  ******************************************************************************/
 public class DuakFrame implements IView<JFrame>
 {
+    /**  */
     private StandardFrameView frameView;
+    /**  */
     private JButton previousButton;
+    /**  */
     private JButton nextButton;
 
+    /**  */
     private final DuakPanel duakPanel;
+    /**  */
     private final HistoryList<FileInfo> history;
 
     /***************************************************************************
@@ -41,6 +48,7 @@ public class DuakFrame implements IView<JFrame>
 
         JFrame frame = frameView.getView();
 
+        frame.setIconImages( DuakIcons.getAppImages() );
         frame.setTitle( "Disk Usage Analysis Kit" );
 
         frameView.setToolbar( createToolbar() );
@@ -58,8 +66,16 @@ public class DuakFrame implements IView<JFrame>
         return frameView.getView();
     }
 
+    /***************************************************************************
+     * @param file
+     **************************************************************************/
     private void open( File file )
     {
+        DuakConstants.getOptions().getOptions().lastAnalyzed = file;
+        DuakConstants.getOptions().write();
+
+        // TODO fix cancel
+
         ProgressDialog dialog = new ProgressDialog( getView(),
             "Analysis Progress" );
         AnalysisThread analysisThread = new AnalysisThread( this, file, dialog );
@@ -129,6 +145,9 @@ public class DuakFrame implements IView<JFrame>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private void refreshButtons()
     {
         previousButton.setEnabled( history.hasPrevious() );
@@ -182,9 +201,12 @@ public class DuakFrame implements IView<JFrame>
         @Override
         public void actionPerformed( ActionEvent e )
         {
+            File file = DuakConstants.getOptions().getOptions().lastAnalyzed;
             JFrame frame = view.getView();
             DirectoryChooser fd = new DirectoryChooser( frame );
-            fd.setSelected( new File[] { new File( "/Files/JosephsFiles/" ) } );
+
+            file = file == null ? new File( "/" ) : file;
+            fd.setSelected( new File[] { file } );
             fd.setVisible( true );
 
             File [] selectedFiles = fd.getSelected();

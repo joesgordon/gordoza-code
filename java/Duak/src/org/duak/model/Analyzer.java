@@ -23,7 +23,7 @@ public class Analyzer
         reporter.setProgressIndeterminate();
         reporter.setStatus( "Building file list..." );
 
-        results.refresh();
+        results.refresh( stopper );
 
         getSize( results, reporter, stopper, 0, results.getNumFiles() );
 
