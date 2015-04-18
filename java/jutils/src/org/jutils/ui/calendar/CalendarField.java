@@ -67,6 +67,8 @@ public class CalendarField implements IView<JPanel>
         view.add( calendarButton, new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.VERTICAL, new Insets(
                 0, 2, 0, 0 ), 0, 0 ) );
+
+        setDate( new GregorianCalendar() );
     }
 
     /***************************************************************************
