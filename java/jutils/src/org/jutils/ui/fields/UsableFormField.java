@@ -38,7 +38,8 @@ public class UsableFormField<T> implements IDataFormField<Usable<T>>
         this.usedField = new JCheckBox();
         this.panel = createView();
 
-        field.setUpdater( new ReflectiveUpdater<T>( this, "usable.data" ) );
+        field.setUpdater( new DataUpdater<T>( this, new ReflectiveUpdater<T>(
+            this, "usable.data" ) ) );
     }
 
     /***************************************************************************
@@ -48,7 +49,7 @@ public class UsableFormField<T> implements IDataFormField<Usable<T>>
     {
         JPanel panel = new JPanel( new BorderLayout() );
 
-        usedField.addActionListener( new UsedListener<T>( this ) );
+        usedField.addActionListener( new UsedListener( this ) );
 
         panel.add( usedField, BorderLayout.WEST );
         panel.add( field.getField(), BorderLayout.CENTER );
@@ -140,11 +141,22 @@ public class UsableFormField<T> implements IDataFormField<Usable<T>>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class UsedListener<T> implements ActionListener
+    private void callUpdater()
     {
-        private final UsableFormField<T> field;
+        if( updater != null )
+        {
+            updater.update( usable );
+        }
+    }
 
-        public UsedListener( UsableFormField<T> field )
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class UsedListener implements ActionListener
+    {
+        private final UsableFormField<?> field;
+
+        public UsedListener( UsableFormField<?> field )
         {
             this.field = field;
         }
@@ -153,8 +165,35 @@ public class UsableFormField<T> implements IDataFormField<Usable<T>>
         public void actionPerformed( ActionEvent e )
         {
             field.usable.isUsed = field.usedField.isSelected();
-            field.updater.update( field.usable );
             field.field.setEditable( field.usable.isUsed );
+
+            if( field.updater != null )
+            {
+                field.callUpdater();
+            }
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class DataUpdater<T> implements IUpdater<T>
+    {
+        private final UsableFormField<T> field;
+        private final IUpdater<T> updater;
+
+        public DataUpdater( UsableFormField<T> field, IUpdater<T> updater )
+        {
+            this.field = field;
+            this.updater = updater;
+        }
+
+        @Override
+        public void update( T data )
+        {
+            updater.update( data );
+
+            field.callUpdater();
         }
     }
 }
