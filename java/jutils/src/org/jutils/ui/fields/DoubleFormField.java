@@ -32,6 +32,14 @@ public class DoubleFormField implements IDataFormField<Double>
 
     /***************************************************************************
      * @param name
+     **************************************************************************/
+    public DoubleFormField( String name, Double min, Double max )
+    {
+        this( name, null, 20, null, min, max );
+    }
+
+    /***************************************************************************
+     * @param name
      * @param units
      **************************************************************************/
     public DoubleFormField( String name, String units )
@@ -58,14 +66,28 @@ public class DoubleFormField implements IDataFormField<Double>
     public DoubleFormField( String name, String units, int columns,
         IUpdater<Double> updater )
     {
+        this( name, units, columns, updater, null, null );
+    }
+
+    /***************************************************************************
+     * @param name
+     * @param units
+     * @param columns
+     * @param updater
+     * @param min
+     * @param max
+     **************************************************************************/
+    public DoubleFormField( String name, String units, int columns,
+        IUpdater<Double> updater, Double min, Double max )
+    {
         this.name = name;
         this.textField = new ValidationTextView( units, columns );
         this.updater = updater;
 
         ITextValidator textValidator;
 
-        textValidator = new DataTextValidator<>( new DoubleValidator(),
-            new ValueUpdater( this ) );
+        textValidator = new DataTextValidator<>(
+            new DoubleValidator( min, max ), new ValueUpdater( this ) );
         textField.getField().setValidator( textValidator );
     }
 
