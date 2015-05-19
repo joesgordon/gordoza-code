@@ -5,6 +5,39 @@ package org.jutils.io;
  ******************************************************************************/
 public class BitPosition
 {
+    /** Bit indexes for each throughput index. */
+    public static final int [] BIT_INDEXES;
+    /** Bit indexes for each throughput index. */
+    public static final int [] NEXT_BIT_INDEXES;
+    /** Bit indexes for each throughput index. */
+    public static final int [] PREV_BIT_INDEXES;
+    /** Bit indexes for each throughput index. */
+    public static final int [] NEXT_BYTE_INC;
+    /** Bit indexes for each throughput index. */
+    public static final int [] PREV_BYTE_INC;
+
+    static
+    {
+        BIT_INDEXES = new int[8];
+        NEXT_BIT_INDEXES = new int[8];
+        PREV_BIT_INDEXES = new int[8];
+        NEXT_BYTE_INC = new int[8];
+        PREV_BYTE_INC = new int[8];
+
+        NEXT_BYTE_INC[7] = 1;
+        PREV_BYTE_INC[0] = -1;
+
+        for( int i = 0; i < BIT_INDEXES.length; i++ )
+        {
+            BIT_INDEXES[i] = 7 - i;
+            NEXT_BIT_INDEXES[i] = i + 1;
+            PREV_BIT_INDEXES[i] = i - 1;
+        }
+
+        NEXT_BIT_INDEXES[7] = 0;
+        PREV_BIT_INDEXES[0] = 7;
+    }
+
     /** The zero-relative index of the byte. Must be a positive value. */
     private int byteIndex;
     /** The zero-relative index of the bit. Must be between 0-7 inclusive. */
@@ -46,13 +79,8 @@ public class BitPosition
      **************************************************************************/
     public void increment()
     {
-        bitIndex += 1;
-
-        if( bitIndex > 7 )
-        {
-            byteIndex += 1;
-            bitIndex = 0;
-        }
+        byteIndex += NEXT_BYTE_INC[bitIndex];
+        bitIndex = NEXT_BIT_INDEXES[bitIndex];
     }
 
     /***************************************************************************

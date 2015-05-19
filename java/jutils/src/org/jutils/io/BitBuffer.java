@@ -144,6 +144,14 @@ public class BitBuffer
     }
 
     /***************************************************************************
+     * Sets the read/write position to the end of the buffer.
+     **************************************************************************/
+    public void seekToEnd()
+    {
+        position.set( buffer.length, 0 );
+    }
+
+    /***************************************************************************
      * Returns the position of the next read/write operation.
      **************************************************************************/
     public BitPosition getPosition()
@@ -174,7 +182,7 @@ public class BitBuffer
      **************************************************************************/
     public boolean readBit()
     {
-        byte mask = SET_MASKS[7 - position.getBit()];
+        byte mask = SET_MASKS[BitPosition.BIT_INDEXES[position.getBit()]];
         boolean bit = ( buffer[position.getByte()] & mask ) == mask;
 
         position.increment();
@@ -193,12 +201,12 @@ public class BitBuffer
 
         if( bit )
         {
-            mask = SET_MASKS[7 - position.getBit()];
+            mask = SET_MASKS[BitPosition.BIT_INDEXES[position.getBit()]];
             buffer[position.getByte()] |= mask;
         }
         else
         {
-            mask = CLEAR_MASKS[7 - position.getBit()];
+            mask = CLEAR_MASKS[BitPosition.BIT_INDEXES[position.getBit()]];
             buffer[position.getByte()] &= mask;
         }
 
