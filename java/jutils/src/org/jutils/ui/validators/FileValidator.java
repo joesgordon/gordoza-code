@@ -4,21 +4,36 @@ import java.io.File;
 
 import org.jutils.ui.validation.ValidationException;
 
+/***************************************************************************
+ * 
+ **************************************************************************/
 public class FileValidator implements IDataValidator<File>
 {
+    /**  */
     private final ExistenceType type;
+    /**  */
     private final boolean required;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public FileValidator()
     {
         this( ExistenceType.FILE_ONLY );
     }
 
+    /***************************************************************************
+     * @param type
+     **************************************************************************/
     public FileValidator( ExistenceType type )
     {
         this( type, true );
     }
 
+    /***************************************************************************
+     * @param type
+     * @param required
+     **************************************************************************/
     public FileValidator( ExistenceType type, boolean required )
     {
         this.type = type;

@@ -1,7 +1,6 @@
 package org.jutils.ui.fields;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -10,12 +9,14 @@ import javax.swing.JPanel;
 
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.event.updater.ReflectiveUpdater;
+import org.jutils.ui.validation.IValidityChangedListener;
 import org.jutils.utils.Usable;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class UsableFormField<T> implements IDataFormField<Usable<T>>
+public class UsableFormField<T> implements IDataFormField<Usable<T>>,
+    IValidationField
 {
     /**  */
     private final JPanel panel;
@@ -126,7 +127,7 @@ public class UsableFormField<T> implements IDataFormField<Usable<T>>
     @Override
     public IValidationField getValidationField()
     {
-        return field.getValidationField();
+        return this;
     }
 
     /***************************************************************************
@@ -147,6 +148,70 @@ public class UsableFormField<T> implements IDataFormField<Usable<T>>
         {
             updater.update( usable );
         }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Component getView()
+    {
+        return getField();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void addValidityChanged( IValidityChangedListener l )
+    {
+        field.getValidationField().addValidityChanged( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void removeValidityChanged( IValidityChangedListener l )
+    {
+        field.getValidationField().removeValidityChanged( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public boolean isValid()
+    {
+        return usedField.isSelected() ? field.getValidationField().isValid()
+            : true;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public String getInvalidationReason()
+    {
+        return field.getValidationField().getInvalidationReason();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void setValidBackground( Color bg )
+    {
+        field.getValidationField().setValidBackground( bg );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void setInvalidBackground( Color bg )
+    {
+        field.getValidationField().setInvalidBackground( bg );
     }
 
     /***************************************************************************

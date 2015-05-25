@@ -54,10 +54,10 @@ public class BitBuffer
 
     /***************************************************************************
      * Reads bits from this buffer and places them in the provided buffer.
-     * @param buf the buffer to which bits will be written.
+     * @param dest the buffer to which bits will be written.
      * @param bitCount the number of bits to read/write.
      **************************************************************************/
-    public void writeTo( BitBuffer buf, int bitCount )
+    public void writeTo( BitBuffer dest, int bitCount )
     {
         // int remaining = remainingBits();
         //
@@ -70,7 +70,7 @@ public class BitBuffer
 
         for( int i = 0; i < bitCount; i++ )
         {
-            buf.writeBit( this.readBit() );
+            dest.writeBit( this.readBit() );
         }
     }
 
@@ -124,11 +124,13 @@ public class BitBuffer
 
         pos.increment( bitCount );
 
-        if( pos.getByte() >= buffer.length )
+        if( pos.getByte() > buffer.length ||
+            ( pos.getByte() == buffer.length && pos.getBit() > 0 ) )
         {
-            throw new IllegalArgumentException( "The byte index (" +
-                position.getByte() + ") must be < the buffer length (" +
-                buffer.length + ")" );
+            String msg = String.format(
+                "The bit position (%d,%d) must be <= (%d,0)",
+                position.getByte(), position.getBit(), buffer.length );
+            throw new IllegalArgumentException( msg );
         }
 
         position.set( pos );
