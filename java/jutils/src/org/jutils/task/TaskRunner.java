@@ -65,7 +65,7 @@ public class TaskRunner implements Runnable
         {
             long stop = watch.stop();
 
-            metrics = new TaskMetrics( start, stop );
+            metrics = new TaskMetrics( start, stop, !handler.canContinue() );
 
             handler.signalFinished();
         }
