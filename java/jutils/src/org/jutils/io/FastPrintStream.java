@@ -4,33 +4,86 @@ import java.io.*;
 
 import org.jutils.Utils;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class FastPrintStream implements Closeable
 {
+    /**  */
     private final BufferedWriter writer;
 
+    /***************************************************************************
+     * @param file
+     * @throws IOException
+     **************************************************************************/
     public FastPrintStream( File file ) throws IOException
     {
         writer = new BufferedWriter( new FileWriter( file ), 64 * 1024 );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void close() throws IOException
     {
         writer.close();
     }
 
+    /***************************************************************************
+     * @param str
+     **************************************************************************/
+    public void print( String str )
+    {
+        write( str );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public void println()
     {
-        newLine();
+        writeNewLine();
     }
 
+    /***************************************************************************
+     * @param line
+     **************************************************************************/
     public void println( String line )
     {
-        print( line );
-        newLine();
+        write( line );
+        writeNewLine();
     }
 
-    private void print( String str )
+    /***************************************************************************
+     * @param format
+     * @param args
+     **************************************************************************/
+    public void println( String format, Object... args )
+    {
+        println( String.format( format, args ) );
+    }
+
+    /***************************************************************************
+     * @param chars
+     **************************************************************************/
+    public void println( char [] chars )
+    {
+        write( chars );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private void writeNewLine()
+    {
+        write( Utils.NEW_LINE );
+    }
+
+    /***************************************************************************
+     * @param str
+     **************************************************************************/
+    private void write( String str )
     {
         try
         {
@@ -42,13 +95,18 @@ public class FastPrintStream implements Closeable
         }
     }
 
-    public void println( String format, Object... args )
+    /***************************************************************************
+     * @param chars
+     **************************************************************************/
+    private void write( char [] chars )
     {
-        println( String.format( format, args ) );
-    }
-
-    private void newLine()
-    {
-        print( Utils.NEW_LINE );
+        try
+        {
+            writer.write( chars );
+        }
+        catch( IOException ex )
+        {
+            ex.printStackTrace();
+        }
     }
 }
