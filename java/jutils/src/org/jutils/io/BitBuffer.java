@@ -84,7 +84,7 @@ public class BitBuffer
     public void setPosition( int byteIndex, int bitIndex )
         throws IllegalArgumentException
     {
-        if( byteIndex >= buffer.length )
+        if( byteIndex > buffer.length )
         {
             throw new IllegalArgumentException( "The byte index (" + byteIndex +
                 ") must be < the buffer length (" + buffer.length + ")" );
