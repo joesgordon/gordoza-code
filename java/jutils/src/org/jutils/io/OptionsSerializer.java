@@ -193,7 +193,7 @@ public class OptionsSerializer<T>
         public T createDefaultOptions();
 
         /** Called to initialize fields that may have been read as null. */
-        public T initialize( T item_read );
+        public T initialize( T itemRead );
 
         /** Called if there is any issue in reading or writing the file. */
         public void warn( String message );
@@ -202,8 +202,7 @@ public class OptionsSerializer<T>
     /***************************************************************************
      * @param <T>
      **************************************************************************/
-    public static class DefaultOptionsCreator<T> implements
-        IOptionsCreator<T>
+    public static class DefaultOptionsCreator<T> implements IOptionsCreator<T>
     {
         private final Constructor<T> dataConstructor;
 
@@ -285,8 +284,7 @@ public class OptionsSerializer<T>
     /***************************************************************************
      * @param <T>
      **************************************************************************/
-    public static <T> OptionsSerializer<T> getUserIO( Class<T> cls,
-        File file )
+    public static <T> OptionsSerializer<T> getUserIO( Class<T> cls, File file )
     {
         return getUserIO( new DefaultOptionsCreator<T>( cls ), file );
     }
