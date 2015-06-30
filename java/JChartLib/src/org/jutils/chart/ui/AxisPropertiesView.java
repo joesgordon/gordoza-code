@@ -31,8 +31,6 @@ public class AxisPropertiesView implements IDataView<Axis>
     /**  */
     private final DoubleFormField tickWidthField;
     /**  */
-    private final DoubleFormField minorTickWidthField;
-    /**  */
     private final JCheckBox dockZeroField;
 
     /**  */
@@ -49,7 +47,6 @@ public class AxisPropertiesView implements IDataView<Axis>
         this.tickStartField = new DoubleFormField( "Tick Start" );
         this.tickEndField = new DoubleFormField( "Tick End" );
         this.tickWidthField = new DoubleFormField( "Tick Width" );
-        this.minorTickWidthField = new DoubleFormField( "Minor Tick Width" );
         this.dockZeroField = new JCheckBox();
 
         this.form = createView();
@@ -64,8 +61,6 @@ public class AxisPropertiesView implements IDataView<Axis>
             "axis.tickEnd" ) );
         tickWidthField.setUpdater( new ReflectiveUpdater<Double>( this,
             "axis.tickWidth" ) );
-        minorTickWidthField.setUpdater( new ReflectiveUpdater<Double>( this,
-            "axis.minorTickWidth" ) );
         dockZeroField.addActionListener( new CheckBoxUpdater(
             new ReflectiveUpdater<Boolean>( this, "axis.dockZero" ) ) );
     }
@@ -83,7 +78,6 @@ public class AxisPropertiesView implements IDataView<Axis>
         form.addField( tickStartField );
         form.addField( tickEndField );
         form.addField( tickWidthField );
-        form.addField( minorTickWidthField );
         form.addField( "Dock Zero", dockZeroField );
 
         return form;
@@ -121,7 +115,6 @@ public class AxisPropertiesView implements IDataView<Axis>
         tickStartField.setValue( data.tickStart );
         tickEndField.setValue( data.tickEnd );
         tickWidthField.setValue( data.tickWidth );
-        minorTickWidthField.setValue( data.minorTickWidth );
         dockZeroField.setSelected( data.dockZero );
 
         setAutoTicksEnabled( data.autoTicks );
@@ -135,7 +128,6 @@ public class AxisPropertiesView implements IDataView<Axis>
         tickStartField.setEditable( !autoEnabled );
         tickEndField.setEditable( !autoEnabled );
         tickWidthField.setEditable( !autoEnabled );
-        minorTickWidthField.setEditable( !autoEnabled );
         dockZeroField.setEnabled( !autoEnabled );
     }
 

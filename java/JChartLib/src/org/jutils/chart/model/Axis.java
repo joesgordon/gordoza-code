@@ -14,15 +14,13 @@ public class Axis
     /**  */
     public boolean autoTicks;
     /**  */
+    public boolean dockZero;
+    /**  */
     public double tickStart;
     /**  */
     public double tickEnd;
     /**  */
     public double tickWidth;
-    /**  */
-    public double minorTickWidth;
-    /**  */
-    public boolean dockZero;
 
     /***************************************************************************
      * 
@@ -35,7 +33,6 @@ public class Axis
         this.tickStart = -5.0;
         this.tickEnd = 5.0;
         this.tickWidth = 1.0;
-        this.minorTickWidth = 0.25;
         this.dockZero = false;
 
         title.alignment = HorizontalAlignment.CENTER;

@@ -1,5 +1,7 @@
 package org.jutils.utils;
 
+import org.jutils.ui.validation.ValidationException;
+
 /*******************************************************************************
  * 
  ******************************************************************************/
@@ -55,6 +57,20 @@ public class Usable<T>
         {
             this.isUsed = usable.isUsed;
             this.data = usable.data;
+        }
+    }
+
+    /***************************************************************************
+     * @param name
+     * @param usable
+     * @throws ValidationException
+     **************************************************************************/
+    public static void validate( String name, Usable<?> usable )
+        throws ValidationException
+    {
+        if( usable.isUsed && usable.data == null )
+        {
+            throw new ValidationException( name + " is used but not defined." );
         }
     }
 }
