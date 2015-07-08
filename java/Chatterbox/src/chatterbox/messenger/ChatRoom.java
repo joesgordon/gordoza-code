@@ -1,14 +1,13 @@
 package chatterbox.messenger;
 
 import java.io.IOException;
-import java.net.*;
 import java.util.*;
 
-import org.jutils.concurrent.Stoppable;
 import org.jutils.io.*;
+import org.jutils.ui.event.ItemActionEvent;
+import org.jutils.ui.event.ItemActionListener;
 
-import chatterbox.data.ChatHeader;
-import chatterbox.data.ChatMessageType;
+import chatterbox.data.*;
 import chatterbox.data.messages.UserAvailableMessage;
 import chatterbox.data.messages.UserLeftMessage;
 import chatterbox.io.*;
@@ -20,33 +19,16 @@ import chatterbox.model.*;
 public class ChatRoom extends AbstractChatRoom
 {
     /**  */
-    private MulticastSocket socket;
+    private final IConversation defaultConversation;
     /**  */
-    private IConversation defaultConversation;
+    private final Map<String, UserCheckTask> userTasks;
     /**  */
-    private ChatHeaderSerializer headerSerializer;
-    /**  */
-    private ChatMessageSerializer chatMessageSerializer;
-    /**  */
-    private UserAvailableMessageSerializer userAvailableMessageSerializer;
-    /**  */
-    private UserLeftMessageSerializer userLeftMessageSerializer;
-    /**  */
-    private InetAddress address;
-    /**  */
-    private int port;
-    /**  */
-    private byte[] rxBuffer;
-    /**  */
-    private DatagramPacket rxPacket;
-    /**  */
-    private Stoppable receiveThread;
-    /**  */
-    private ChatReceiveTask receiver;
-    /**  */
-    private Map<String, UserCheckTask> userTasks;
+    private final MessageSerializer msgSerializer;
+
     /**  */
     private Timer userAvailableTimer;
+    /**  */
+    private final ChatWire wire;
 
     /***************************************************************************
      * @param options
@@ -55,36 +37,21 @@ public class ChatRoom extends AbstractChatRoom
     {
         super();
 
-        userTasks = new HashMap<String, UserCheckTask>();
-        headerSerializer = new ChatHeaderSerializer();
-        chatMessageSerializer = new ChatMessageSerializer( getLocalUser() );
-        userAvailableMessageSerializer = new UserAvailableMessageSerializer();
-        userLeftMessageSerializer = new UserLeftMessageSerializer();
-        rxBuffer = new byte[Short.MAX_VALUE];
-        rxPacket = new DatagramPacket( rxBuffer, rxBuffer.length, address, port );
+        this.userTasks = new HashMap<String, UserCheckTask>();
+        this.defaultConversation = new Conversation( this, "", null );
+        this.msgSerializer = new MessageSerializer( getLocalUser() );
 
-        defaultConversation = new Conversation( this, "", null );
+        this.userAvailableTimer = null;
+        this.wire = new ChatWire( new RawReceiver( this ) );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void connect( String group, int port ) throws IOException
+    public void connect( String address, int port ) throws IOException
     {
-        address = InetAddress.getByName( group );
-        this.port = port;
-        socket = new MulticastSocket( port );
-
-        socket.setTimeToLive( 10 );
-        socket.joinGroup( address );
-        socket.setSoTimeout( 1000 );
-
-        receiver = new ChatReceiveTask( this, socket, rxPacket );
-        receiveThread = new Stoppable( receiver );
-        Thread thread = new Thread( receiveThread );
-        thread.setName( "Message Receive Thread" );
-        thread.start();
+        wire.connect( address, port );
 
         userAvailableTimer = new Timer( "User Available Timer" );
         userAvailableTimer.schedule( new UserAvailableTask( this ), 0, 5000 );
@@ -96,29 +63,12 @@ public class ChatRoom extends AbstractChatRoom
     @Override
     public void disconnect()
     {
-        try
-        {
-            sendMessage( new UserLeftMessage( "", getLocalUser() ) );
-            socket.leaveGroup( address );
-        }
-        catch( IOException ex )
-        {
-            throw new RuntimeException( ex );
-        }
-
         for( UserCheckTask task : userTasks.values() )
         {
             task.cancel();
         }
 
         userAvailableTimer.cancel();
-        try
-        {
-            receiveThread.stopAndWaitFor();
-        }
-        catch( InterruptedException ex )
-        {
-        }
     }
 
     /***************************************************************************
@@ -181,6 +131,9 @@ public class ChatRoom extends AbstractChatRoom
         }
     }
 
+    /***************************************************************************
+     * @param user
+     **************************************************************************/
     public void removeUser( IUser user )
     {
         List<IConversation> conversations = getConversations();
@@ -206,7 +159,7 @@ public class ChatRoom extends AbstractChatRoom
     /***************************************************************************
      * @param message
      **************************************************************************/
-    public void receiveMessage( IChatMessage message )
+    private void receiveMessage( IChatMessage message )
     {
         // if( !message.isLocalUser() )
         // {
@@ -234,7 +187,7 @@ public class ChatRoom extends AbstractChatRoom
             // -----------------------------------------------------------------
             // Get the message bytes.
             // -----------------------------------------------------------------
-            userAvailableMessageSerializer.write( message, out );
+            msgSerializer.userAvailableMessageSerializer.write( message, out );
 
             byte[] array = stream.toByteArray();
 
@@ -254,7 +207,7 @@ public class ChatRoom extends AbstractChatRoom
             // -----------------------------------------------------------------
             // Get the message bytes.
             // -----------------------------------------------------------------
-            userLeftMessageSerializer.write( message, out );
+            msgSerializer.userLeftMessageSerializer.write( message, out );
 
             sendBytes( ChatMessageType.UserLeft, stream.toByteArray() );
         }
@@ -272,7 +225,7 @@ public class ChatRoom extends AbstractChatRoom
             // -----------------------------------------------------------------
             // Get the message bytes.
             // -----------------------------------------------------------------
-            chatMessageSerializer.write( message, out );
+            msgSerializer.messageSerializer.write( message, out );
 
             sendBytes( ChatMessageType.Chat, stream.toByteArray() );
         }
@@ -286,7 +239,6 @@ public class ChatRoom extends AbstractChatRoom
         throws IOException, RuntimeFormatException
     {
         ChatHeader header;
-        DatagramPacket packet;
 
         // Put the header bytes before the message.
         header = new ChatHeader( messageType, msgBytes.length );
@@ -294,7 +246,7 @@ public class ChatRoom extends AbstractChatRoom
         try( ByteArrayStream stream = new ByteArrayStream( msgBytes.length + 64 );
              DataStream out = new DataStream( stream ) )
         {
-            headerSerializer.write( header, out );
+            msgSerializer.headerSerializer.write( header, out );
             stream.write( msgBytes );
             msgBytes = stream.toByteArray();
 
@@ -304,21 +256,109 @@ public class ChatRoom extends AbstractChatRoom
                     msgBytes.length );
             }
 
-            packet = new DatagramPacket( msgBytes, msgBytes.length, address,
-                port );
-            socket.send( packet );
+            wire.send( msgBytes );
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public String getAddress()
     {
-        return address.getHostAddress();
+        return wire.getAddress();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public int getPort()
     {
-        return port;
+        return wire.getPort();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class RawReceiver implements ItemActionListener<RawMessage>
+    {
+        private final ChatRoom chatRoom;
+        private final MessageSerializer msgSerializer;
+
+        public RawReceiver( ChatRoom chatRoom )
+        {
+            this.chatRoom = chatRoom;
+            this.msgSerializer = new MessageSerializer( chatRoom.getLocalUser() );
+        }
+
+        @Override
+        public void actionPerformed( ItemActionEvent<RawMessage> event )
+        {
+            RawMessage msg = event.getItem();
+            byte[] messageBytes = msg.bytes;
+
+            try( ByteArrayStream byteStream = new ByteArrayStream( messageBytes );
+                 IDataStream stream = new DataStream( byteStream ); )
+            {
+                parseMessage( stream );
+            }
+            catch( IOException ex )
+            {
+                LogUtils.printError( "I/O error: " + ex.getMessage() );
+            }
+            catch( RuntimeFormatException ex )
+            {
+                LogUtils.printWarning( ex.getMessage() );
+            }
+        }
+
+        private void parseMessage( IDataStream stream ) throws IOException,
+            RuntimeFormatException
+        {
+            ChatHeader header = msgSerializer.headerSerializer.read( stream );
+
+            switch( header.getMessageType() )
+            {
+                case Chat:
+                {
+                    IChatMessage message = msgSerializer.messageSerializer.read( stream );
+                    chatRoom.receiveMessage( message );
+                    break;
+                }
+                case UserAvailable:
+                {
+                    UserAvailableMessage message = msgSerializer.userAvailableMessageSerializer.read( stream );
+                    chatRoom.setUserAvailable( message.getUser(), true );
+                    break;
+                }
+                case UserLeft:
+                {
+                    UserLeftMessage message = msgSerializer.userLeftMessageSerializer.read( stream );
+                    chatRoom.removeUser( message.getConversationId(),
+                        message.getUser() );
+                    break;
+                }
+            }
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class MessageSerializer
+    {
+        public final ChatHeaderSerializer headerSerializer;
+        public final ChatMessageSerializer messageSerializer;
+        public final UserAvailableMessageSerializer userAvailableMessageSerializer;
+        public final UserLeftMessageSerializer userLeftMessageSerializer;
+
+        public MessageSerializer( IUser user )
+        {
+            this.headerSerializer = new ChatHeaderSerializer();
+            this.messageSerializer = new ChatMessageSerializer( user );
+            this.userAvailableMessageSerializer = new UserAvailableMessageSerializer();
+            this.userLeftMessageSerializer = new UserLeftMessageSerializer();
+        }
     }
 }

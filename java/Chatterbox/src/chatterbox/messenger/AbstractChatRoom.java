@@ -15,13 +15,13 @@ import chatterbox.model.*;
 public abstract class AbstractChatRoom implements IChatRoom
 {
     /**  */
-    private IUser localUser;
+    private final IUser localUser;
     /**  */
-    private Map<String, IConversation> conversations;
+    private final Map<String, IConversation> conversations;
     /**  */
-    private ItemActionList<IConversation> conversationCreatedListeners;
+    private final ItemActionList<IConversation> conversationCreatedListeners;
     /**  */
-    private String jvmName;
+    private final String jvmName;
 
     /***************************************************************************
      * 
