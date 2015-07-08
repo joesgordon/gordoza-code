@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project default="exe_build" name="Create Executable">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+
+    <property name="src_dir" location="../src" />
+    <property name="bin_dir" location="../bin" />
+    <!--<property name="version_file" value="com/dezik/tmfox/VersionInfo.txt" />
+	
+	<!-<input message="Enter version:"
+      addproperty="version_string" />
+    <delete file="../src/com/dezik/tmfox/VersionInfo.txt" />->
+	<propertyfile file="${src_dir}/${version_file}">
+        <!-<entry  key="version" value="${version_string}"/>->
+        <entry key="buildtime"
+          type="date" default="now" pattern="MM/dd/YY HHmm"
+          operation="=" value="0"/>
+        <entry key="subversion" type="int" default="0" operation="+"/>
+	</propertyfile>
+    
+    <property file="${src_dir}/${version_file}" />
+    <echo>Version: ${version}.${subversion} ${buildtime}</echo>
+	
+	<copy file="${src_dir}/${version_file}" tofile="${bin_dir}/${version_file}" />-->
+	
+	<import file="./ant_build.xml" />
+	
+	<target name="exe_build" depends="create_run_jar">
+		<taskdef name="launch4j"
+		    classname="net.sf.launch4j.ant.Launch4jTask"
+		    classpath="C:/Programs/launch4j/launch4j.jar" />
+		<launch4j configFile="./launch4j.xml" jarPath="./AppGallery.jar" outfile="AppGallery.exe" />
+    </target>
+    
+</project>

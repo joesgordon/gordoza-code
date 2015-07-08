@@ -1,0 +1,13 @@
+<launch4jConfig>
+  <headerType>gui</headerType>
+  <outfile>file.exe</outfile>
+  <icon>rocket.ico</icon>
+  <classPath>
+    <mainClass>org.jutils.appgallery.AppGalleryMain</mainClass>
+    <cp>./AppGallery.jar</cp>
+  </classPath>
+  <jre>
+    <minVersion>1.7.0</minVersion>
+    <maxHeapSize>768</maxHeapSize>
+  </jre>
+</launch4jConfig>
