@@ -10,6 +10,7 @@ import chatterbox.controller.ChatController;
 import chatterbox.data.ChatConfig;
 import chatterbox.messenger.Chat;
 import chatterbox.ui.ChatFrameView;
+import chatterbox.view.IChatView;
 
 /*******************************************************************************
  * 
@@ -32,14 +33,17 @@ public class ChatterboxApp implements IFrameApp
     @Override
     public JFrame createFrame()
     {
-        ChatFrameView frame = new ChatFrameView( chat );
-        new ChatController( chat, frame );
+        ChatFrameView frameView = new ChatFrameView();
+        IChatView chatView = frameView.getChatView();
+
+        chatView.setChat( chat );
+
+        new ChatController( chat, chatView );
+
+        JFrame frame = frameView.getView();
 
         frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         frame.setSize( 550, 450 );
-        frame.validate();
-        frame.setLocationRelativeTo( null );
-        frame.setVisible( true );
 
         return frame;
     }

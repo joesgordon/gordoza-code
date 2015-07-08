@@ -1,174 +1,153 @@
 package chatterbox.ui;
 
-import java.awt.*;
 import java.awt.event.*;
-import java.util.List;
 
 import javax.swing.*;
 
 import org.jutils.IconConstants;
-import org.jutils.ui.StatusBarPanel;
-import org.jutils.ui.event.ItemActionList;
-import org.jutils.ui.event.ItemActionListener;
+import org.jutils.SwingUtils;
+import org.jutils.ui.JGoodiesToolBar;
+import org.jutils.ui.StandardFrameView;
+import org.jutils.ui.event.ActionAdapter;
+import org.jutils.ui.model.IView;
 
-import chatterbox.model.*;
+import chatterbox.messenger.Chat;
 import chatterbox.view.IChatView;
-import chatterbox.view.IConversationView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ChatFrameView extends JFrame implements IChatView
+public class ChatFrameView implements IView<JFrame>
 {
-    /**  */
-    private ConversationPanel conversationPanel;
-
-    /**  */
-    private ItemActionList<List<IUser>> conversationStartedListeners;
-
-    /**  */
-    private ItemActionList<String> displayNameChangedListeners;
+    private final ChatView chatView;
+    private final StandardFrameView frameView;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public ChatFrameView( final IChat chat )
+    public ChatFrameView()
     {
-        conversationStartedListeners = new ItemActionList<List<IUser>>();
-        displayNameChangedListeners = new ItemActionList<String>();
+        this.frameView = new StandardFrameView();
+        this.chatView = new ChatView();
 
-        // ---------------------------------------------------------------------
-        // Setup components.
-        // ---------------------------------------------------------------------
-        conversationPanel = new ConversationPanel( this );
+        frameView.setContent( chatView.getView() );
+        frameView.setToolbar( createToolbar() );
 
-        JPanel mainPanel = new JPanel( new GridBagLayout() );
+        JFrame frame = getView();
 
-        mainPanel.add( conversationPanel, new GridBagConstraints( 0, 0, 1, 1,
-            1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        frame.addWindowListener( new FrameListener( this ) );
 
-        // ---------------------------------------------------------------------
-        // Setup menu bar
-        // ---------------------------------------------------------------------
+        frame.setIconImages( IconConstants.loader.getImages(
+            IconConstants.CHAT_16, IconConstants.CHAT_32,
+            IconConstants.CHAT_48, IconConstants.CHAT_64 ) );
 
-        JToolBar toolbar = new JToolBar();
+        frame.setTitle( "Chatterbox" );
+    }
 
-        JButton historyButton = new JButton(
-            IconConstants.loader.getIcon( IconConstants.CLOCK_24 ) );
-        JButton configButton = new JButton(
-            IconConstants.loader.getIcon( IconConstants.CONFIG_24 ) );
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public JFrame getView()
+    {
+        return frameView.getView();
+    }
 
-        historyButton.setToolTipText( "View Chat History" );
-        historyButton.setFocusable( false );
-        historyButton.addActionListener( new ActionListener()
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private JToolBar createToolbar()
+    {
+        JToolBar toolbar = new JGoodiesToolBar();
+
+        Action action;
+        Icon icon;
+
+        icon = IconConstants.loader.getIcon( IconConstants.CLOCK_24 );
+        action = new ActionAdapter( new HistoryListener( this ),
+            "View Chat History", icon );
+        SwingUtils.addActionToToolbar( toolbar, action );
+
+        icon = IconConstants.loader.getIcon( IconConstants.CONFIG_24 );
+        action = new ActionAdapter( new ConfigListener( this ),
+            "Edit Configuration", icon );
+        SwingUtils.addActionToToolbar( toolbar, action );
+
+        return toolbar;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public IChatView getChatView()
+    {
+        return chatView;
+    }
+
+    /***************************************************************************
+     * @param chat
+     **************************************************************************/
+    public void setChat( Chat chat )
+    {
+        chatView.setChat( chat );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class FrameListener extends WindowAdapter
+    {
+        private final ChatFrameView view;
+
+        public FrameListener( ChatFrameView view )
         {
-            @Override
-            public void actionPerformed( ActionEvent e )
-            {
-                JOptionPane.showMessageDialog(
-                    ChatFrameView.this,
-                    "This functionality is not yet supported. Good try, though.",
-                    "Not Supported", JOptionPane.ERROR_MESSAGE );
-            }
-        } );
+            this.view = view;
+        }
 
-        configButton.setToolTipText( "Edit Configuration" );
-        configButton.setFocusable( false );
-        configButton.addActionListener( new ActionListener()
+        @Override
+        public void windowClosing( WindowEvent e )
         {
-            @Override
-            public void actionPerformed( ActionEvent e )
-            {
-                new ConfigDialog( ChatFrameView.this, chat );
-                // String username = JOptionPane.showInputDialog(
-                // "New Username",
-                // chat.getLocalUser() );
-                // if( username != null )
-                // {
-                // chat.getLocalUser().setDisplayName( username );
-                // }
-            }
-        } );
+            view.chatView.getChat().disconnect();
+        }
+    }
 
-        toolbar.add( historyButton );
-        toolbar.add( configButton );
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class HistoryListener implements ActionListener
+    {
+        private final ChatFrameView view;
 
-        toolbar.setFloatable( false );
-        toolbar.setRollover( true );
-        toolbar.setBorderPainted( false );
-
-        // ---------------------------------------------------------------------
-        // Setup the content panel.
-        // ---------------------------------------------------------------------
-        JPanel contentPanel = new JPanel( new BorderLayout() );
-
-        contentPanel.add( toolbar, BorderLayout.NORTH );
-        contentPanel.add( mainPanel, BorderLayout.CENTER );
-        contentPanel.add( new StatusBarPanel().getView(), BorderLayout.SOUTH );
-
-        // ---------------------------------------------------------------------
-        // Setup this frame.
-        // ---------------------------------------------------------------------
-        addWindowListener( new WindowAdapter()
+        public HistoryListener( ChatFrameView view )
         {
-            public void windowClosing( WindowEvent e )
-            {
-                conversationPanel.leaveConversation();
-            }
-        } );
+            this.view = view;
+        }
 
-        setIconImages( IconConstants.loader.getImages( IconConstants.CHAT_16,
-            IconConstants.CHAT_32, IconConstants.CHAT_48, IconConstants.CHAT_64 ) );
-
-        setContentPane( contentPanel );
-        setChat( chat );
-        conversationPanel.setConversation( chat.getDefaultConversation() );
-        setTitle( "Chatterbox" );
-    }
-
-    /***************************************************************************
-     * @param chatModel
-     **************************************************************************/
-    public void setChat( IChat chatModel )
-    {
-        ;
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            JOptionPane.showMessageDialog( view.getView(),
+                "This functionality is not yet supported. Good try, though.",
+                "Not Supported", JOptionPane.ERROR_MESSAGE );
+        }
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
-    public IConversationView createConversationView( IConversation conversation )
+    private static class ConfigListener implements ActionListener
     {
-        return new ConversationFrame( this, conversation );
-    }
+        private final ChatFrameView view;
 
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public IConversationView getDefaultConversationView()
-    {
-        return conversationPanel;
-    }
+        public ConfigListener( ChatFrameView view )
+        {
+            this.view = view;
+        }
 
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void addConversationStartedListener(
-        ItemActionListener<List<IUser>> l )
-    {
-        conversationStartedListeners.addListener( l );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void addDisplayNameChangedListener( ItemActionListener<String> l )
-    {
-        displayNameChangedListeners.addListener( l );
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            new ConfigDialog( view.getView(), view.chatView.getChat() );
+        }
     }
 }

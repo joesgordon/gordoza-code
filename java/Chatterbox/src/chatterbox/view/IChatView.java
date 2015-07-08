@@ -8,6 +8,8 @@ import chatterbox.model.*;
 
 public interface IChatView
 {
+    public IChat getChat();
+
     public void setChat( IChat chat );
 
     public void addDisplayNameChangedListener( ItemActionListener<String> l );

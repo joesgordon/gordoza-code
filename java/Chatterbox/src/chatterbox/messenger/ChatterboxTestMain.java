@@ -7,17 +7,18 @@ import org.jutils.ui.app.IFrameApp;
 
 import chatterbox.controller.ChatController;
 import chatterbox.ui.ChatFrameView;
+import chatterbox.view.IChatView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
 public class ChatterboxTestMain implements IFrameApp
 {
-    private TestChat messager;
+    private TestChat chat;
 
     public ChatterboxTestMain()
     {
-        messager = new TestChat();
+        chat = new TestChat();
     }
 
     /***************************************************************************
@@ -31,17 +32,20 @@ public class ChatterboxTestMain implements IFrameApp
     @Override
     public JFrame createFrame()
     {
-        ChatFrameView frame = new ChatFrameView( messager );
-        new ChatController( messager, frame );
+        ChatFrameView frameView = new ChatFrameView();
+        IChatView chatView = frameView.getChatView();
 
-        messager.connect( "238.192.69.69", 6969 );
+        chatView.setChat( chat );
+
+        new ChatController( chat, chatView );
+
+        chat.connect( "238.192.69.69", 6969 );
+
+        JFrame frame = frameView.getView();
 
         frame.setTitle( "Chatterbox - Test" );
         frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         frame.setSize( 550, 450 );
-        frame.validate();
-        frame.setLocationRelativeTo( null );
-        frame.setVisible( true );
 
         return frame;
     }
