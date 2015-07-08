@@ -18,7 +18,7 @@ import chatterbox.view.IConversationView;
 public class ChatView implements IChatView, IView<JComponent>
 {
     /**  */
-    private final ConversationPanel conversationPanel;
+    private final ConversationView conversationPanel;
 
     /**  */
     private final ItemActionList<List<IUser>> conversationStartedListeners;
@@ -33,7 +33,7 @@ public class ChatView implements IChatView, IView<JComponent>
      **************************************************************************/
     public ChatView()
     {
-        this.conversationPanel = new ConversationPanel( this );
+        this.conversationPanel = new ConversationView( this );
 
         this.conversationStartedListeners = new ItemActionList<List<IUser>>();
         this.displayNameChangedListeners = new ItemActionList<String>();

@@ -19,7 +19,9 @@ import chatterbox.view.IChatView;
  ******************************************************************************/
 public class ChatFrameView implements IView<JFrame>
 {
+    /**  */
     private final ChatView chatView;
+    /**  */
     private final StandardFrameView frameView;
 
     /***************************************************************************
@@ -63,12 +65,12 @@ public class ChatFrameView implements IView<JFrame>
         Action action;
         Icon icon;
 
-        icon = IconConstants.loader.getIcon( IconConstants.CLOCK_24 );
-        action = new ActionAdapter( new HistoryListener( this ),
-            "View Chat History", icon );
-        SwingUtils.addActionToToolbar( toolbar, action );
+        // icon = IconConstants.loader.getIcon( IconConstants.CLOCK_16 );
+        // action = new ActionAdapter( new HistoryListener( this ),
+        // "View Chat History", icon );
+        // SwingUtils.addActionToToolbar( toolbar, action );
 
-        icon = IconConstants.loader.getIcon( IconConstants.CONFIG_24 );
+        icon = IconConstants.loader.getIcon( IconConstants.CONFIG_16 );
         action = new ActionAdapter( new ConfigListener( this ),
             "Edit Configuration", icon );
         SwingUtils.addActionToToolbar( toolbar, action );
@@ -114,23 +116,23 @@ public class ChatFrameView implements IView<JFrame>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class HistoryListener implements ActionListener
-    {
-        private final ChatFrameView view;
-
-        public HistoryListener( ChatFrameView view )
-        {
-            this.view = view;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            JOptionPane.showMessageDialog( view.getView(),
-                "This functionality is not yet supported. Good try, though.",
-                "Not Supported", JOptionPane.ERROR_MESSAGE );
-        }
-    }
+    // private static class HistoryListener implements ActionListener
+    // {
+    // private final ChatFrameView view;
+    //
+    // public HistoryListener( ChatFrameView view )
+    // {
+    // this.view = view;
+    // }
+    //
+    // @Override
+    // public void actionPerformed( ActionEvent e )
+    // {
+    // JOptionPane.showMessageDialog( view.getView(),
+    // "This functionality is not yet supported. Good try, though.",
+    // "Not Supported", JOptionPane.ERROR_MESSAGE );
+    // }
+    // }
 
     /***************************************************************************
      * 

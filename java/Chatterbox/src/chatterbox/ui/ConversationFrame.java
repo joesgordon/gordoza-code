@@ -19,7 +19,7 @@ import chatterbox.view.IConversationView;
 public class ConversationFrame extends JFrame implements IConversationView
 {
     /**  */
-    private ConversationPanel conversationPanel;
+    private ConversationView conversationPanel;
 
     /**  */
     private IConversation conversation;
@@ -33,7 +33,7 @@ public class ConversationFrame extends JFrame implements IConversationView
     public ConversationFrame( IChatView chatView, IConversation conversation )
     {
         this.chatView = chatView;
-        conversationPanel = new ConversationPanel( chatView );
+        conversationPanel = new ConversationView( chatView );
 
         // ---------------------------------------------------------------------
         // Setup the toolbar.

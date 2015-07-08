@@ -20,71 +20,80 @@ import chatterbox.model.*;
 import chatterbox.view.IChatView;
 import chatterbox.view.IConversationView;
 
-public class ConversationPanel extends JPanel implements IConversationView
+/*******************************************************************************
+ * 
+ ******************************************************************************/
+public class ConversationView extends JPanel implements IConversationView
 {
     // -------------------------------------------------------------------------
     // GUI Components.
     // -------------------------------------------------------------------------
-    private AppendableTextPane chatEditorPane;
 
-    private JTextPane msgEditorPane;
-
-    private JList<IUser> userList;
-
-    private DefaultListModel<IUser> userModel;
+    /**  */
+    private final AppendableTextPane chatEditorPane;
+    /**  */
+    private final JTextPane msgEditorPane;
+    /**  */
+    private final JList<IUser> userList;
+    /**  */
+    private final DefaultListModel<IUser> userModel;
 
     // -------------------------------------------------------------------------
     // Helper members
     // -------------------------------------------------------------------------
 
-    private SimpleDateFormat dateFormatter;
-
+    /**  */
+    private final SimpleDateFormat dateFormatter;
+    /**  */
     private IConversation conversation;
 
     // -------------------------------------------------------------------------
     // Listener Lists
     // -------------------------------------------------------------------------
 
-    private ItemActionList<IChatMessage> msgSentListeners;
-
-    private ItemActionList<String> userChangedListeners;
-
-    private ItemActionList<List<IUser>> conversationStartedListeners;
-
-    private ItemActionList<Object> conversationLeftListeners;
+    /**  */
+    private final ItemActionList<IChatMessage> msgSentListeners;
+    /**  */
+    private final ItemActionList<String> userChangedListeners;
+    /**  */
+    private final ItemActionList<List<IUser>> conversationStartedListeners;
+    /**  */
+    private final ItemActionList<Object> conversationLeftListeners;
 
     // -------------------------------------------------------------------------
     // Listeners to be added to the model.
     // -------------------------------------------------------------------------
 
-    private ItemActionListener<IUser> userAddedListener;
-
-    private ItemActionListener<IUser> userAvailableListener;
-
-    private ItemActionListener<IUser> userUnavailableListener;
-
-    private ItemActionListener<IChatMessage> messageReceivedListener;
-
-    private ItemActionListener<IUser> userRemovedListener;
-
-    private IChatView chatView;
+    /**  */
+    private final ItemActionListener<IUser> userAddedListener;
+    /**  */
+    private final ItemActionListener<IUser> userAvailableListener;
+    /**  */
+    private final ItemActionListener<IUser> userUnavailableListener;
+    /**  */
+    private final ItemActionListener<IChatMessage> messageReceivedListener;
+    /**  */
+    private final ItemActionListener<IUser> userRemovedListener;
+    /**  */
+    private final IChatView chatView;
 
     /***************************************************************************
      * @param showUserPanel
      **************************************************************************/
-    public ConversationPanel( IChatView chatView )
+    public ConversationView( IChatView chatView )
     {
         this.chatView = chatView;
-        msgSentListeners = new ItemActionList<IChatMessage>();
-        conversationStartedListeners = new ItemActionList<List<IUser>>();
-        userChangedListeners = new ItemActionList<String>();
-        conversationLeftListeners = new ItemActionList<Object>();
-        dateFormatter = new SimpleDateFormat( "(MM-dd-yy HH:mm:ss)" );
+
+        this.msgSentListeners = new ItemActionList<IChatMessage>();
+        this.conversationStartedListeners = new ItemActionList<List<IUser>>();
+        this.userChangedListeners = new ItemActionList<String>();
+        this.conversationLeftListeners = new ItemActionList<Object>();
+        this.dateFormatter = new SimpleDateFormat( "(MM-dd-yy HH:mm:ss)" );
 
         // ---------------------------------------------------------------------
         // Setup listeners.
         // ---------------------------------------------------------------------
-        userAddedListener = new ItemActionListener<IUser>()
+        this.userAddedListener = new ItemActionListener<IUser>()
         {
             @Override
             public void actionPerformed( ItemActionEvent<IUser> event )
@@ -93,7 +102,7 @@ public class ConversationPanel extends JPanel implements IConversationView
             }
         };
 
-        userAvailableListener = new ItemActionListener<IUser>()
+        this.userAvailableListener = new ItemActionListener<IUser>()
         {
             @Override
             public void actionPerformed( ItemActionEvent<IUser> event )
@@ -106,7 +115,7 @@ public class ConversationPanel extends JPanel implements IConversationView
             }
         };
 
-        userUnavailableListener = new ItemActionListener<IUser>()
+        this.userUnavailableListener = new ItemActionListener<IUser>()
         {
             @Override
             public void actionPerformed( ItemActionEvent<IUser> event )
@@ -115,7 +124,7 @@ public class ConversationPanel extends JPanel implements IConversationView
             }
         };
 
-        userRemovedListener = new ItemActionListener<IUser>()
+        this.userRemovedListener = new ItemActionListener<IUser>()
         {
             @Override
             public void actionPerformed( ItemActionEvent<IUser> event )
@@ -124,7 +133,7 @@ public class ConversationPanel extends JPanel implements IConversationView
             }
         };
 
-        messageReceivedListener = new ItemActionListener<IChatMessage>()
+        this.messageReceivedListener = new ItemActionListener<IChatMessage>()
         {
             @Override
             public void actionPerformed( ItemActionEvent<IChatMessage> event )
@@ -142,11 +151,11 @@ public class ConversationPanel extends JPanel implements IConversationView
             public void actionPerformed( ActionEvent e )
             {
                 FontChooserDialog fontChooser = new FontChooserDialog(
-                    ( JFrame )SwingUtilities.getWindowAncestor( ConversationPanel.this ) );
+                    ( JFrame )SwingUtilities.getWindowAncestor( ConversationView.this ) );
 
                 fontChooser.setAttributes( msgEditorPane.getCharacterAttributes() );
                 fontChooser.pack();
-                fontChooser.setLocationRelativeTo( ConversationPanel.this );
+                fontChooser.setLocationRelativeTo( ConversationView.this );
                 fontChooser.setVisible( true );
 
                 if( fontChooser.getOption() == JOptionPane.OK_OPTION )
@@ -188,7 +197,7 @@ public class ConversationPanel extends JPanel implements IConversationView
         JPanel contentPanel = new JPanel( new GridBagLayout() );
         contentPanel.setBorder( BorderFactory.createEtchedBorder() );
 
-        msgEditorPane = new GrowingTextPane();
+        this.msgEditorPane = new GrowingTextPane();
         JScrollPane msgScrollPane = new GrowingScrollPane( msgEditorPane );
 
         JToolBar toolbar = new JToolBar();
@@ -198,8 +207,8 @@ public class ConversationPanel extends JPanel implements IConversationView
         fontButton.setIcon( IconConstants.loader.getIcon( IconConstants.FONT_24 ) );
         fontButton.addActionListener( fontButtonListener );
 
-        msgEditorPane.addComponentListener( bottomScroller );
-        msgEditorPane.addKeyListener( msgPaneKeyListener );
+        this.msgEditorPane.addComponentListener( bottomScroller );
+        this.msgEditorPane.addKeyListener( msgPaneKeyListener );
 
         msgScrollPane.setMinimumSize( new Dimension( 100, 48 ) );
         msgScrollPane.setMaximumSize( new Dimension( 100, 150 ) );
@@ -224,11 +233,11 @@ public class ConversationPanel extends JPanel implements IConversationView
         // ---------------------------------------------------------------------
         setLayout( new GridBagLayout() );
 
-        userModel = new DefaultListModel<IUser>();
-        userList = new JList<IUser>( userModel );
+        this.userModel = new DefaultListModel<IUser>();
+        this.userList = new JList<IUser>( userModel );
         JScrollPane userScrollPane = new JScrollPane( userList );
 
-        chatEditorPane = new AppendableTextPane();
+        this.chatEditorPane = new AppendableTextPane();
         JScrollPane chatScrollPane = new JScrollPane( chatEditorPane );
         BottomScroller chatScroller = new BottomScroller( chatEditorPane );
 
@@ -239,7 +248,7 @@ public class ConversationPanel extends JPanel implements IConversationView
             public void mouseClicked( MouseEvent e )
             {
                 JOptionPane.showMessageDialog(
-                    ConversationPanel.this,
+                    ConversationView.this,
                     "This functionality is not yet supported. Good try, though.",
                     "Not Supported", JOptionPane.ERROR_MESSAGE );
 
@@ -254,7 +263,7 @@ public class ConversationPanel extends JPanel implements IConversationView
 
                         users.add( ( IUser )item );
                         conversationStartedListeners.fireListeners(
-                            ConversationPanel.this, users );
+                            ConversationView.this, users );
                         userList.ensureIndexIsVisible( index );
                     }
                 }
@@ -452,65 +461,58 @@ public class ConversationPanel extends JPanel implements IConversationView
     {
         conversationLeftListeners.addListener( l );
     }
-}
 
-/*******************************************************************************
- * 
- ******************************************************************************/
-class AppendableTextPane extends JTextPane
-{
     /***************************************************************************
      * 
      **************************************************************************/
-    public AppendableTextPane()
+    private static class BottomScroller extends ComponentAdapter
     {
-        super();
+        private JTextPane textPane;
+
+        public BottomScroller( JTextPane textPane )
+        {
+            this.textPane = textPane;
+        }
+
+        private void scrollToBottom()
+        {
+            textPane.scrollRectToVisible( new Rectangle( 0,
+                textPane.getHeight(), 1, 1 ) );
+        }
+
+        @Override
+        public void componentResized( ComponentEvent e )
+        {
+            scrollToBottom();
+        }
     }
 
     /***************************************************************************
-     * @param text
+     * 
      **************************************************************************/
-    public void appendText( String text )
+    private class AppendableTextPane extends JTextPane
     {
-        appendText( text, null );
-    }
-
-    /***************************************************************************
-     * @param text
-     * @param a
-     **************************************************************************/
-    public void appendText( String text, AttributeSet a )
-    {
-        Document doc = getDocument();
-        try
+        public AppendableTextPane()
         {
-            doc.insertString( doc.getLength(), text, a );
+            super();
         }
-        catch( BadLocationException ex )
+
+        public void appendText( String text )
         {
-            ex.printStackTrace();
+            appendText( text, null );
         }
-    }
-}
 
-class BottomScroller extends ComponentAdapter
-{
-    private JTextPane textPane;
-
-    public BottomScroller( JTextPane textPane )
-    {
-        this.textPane = textPane;
-    }
-
-    private void scrollToBottom()
-    {
-        textPane.scrollRectToVisible( new Rectangle( 0, textPane.getHeight(),
-            1, 1 ) );
-    }
-
-    @Override
-    public void componentResized( ComponentEvent e )
-    {
-        scrollToBottom();
+        public void appendText( String text, AttributeSet a )
+        {
+            Document doc = getDocument();
+            try
+            {
+                doc.insertString( doc.getLength(), text, a );
+            }
+            catch( BadLocationException ex )
+            {
+                ex.printStackTrace();
+            }
+        }
     }
 }
