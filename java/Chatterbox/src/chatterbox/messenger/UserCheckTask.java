@@ -11,7 +11,7 @@ import chatterbox.model.IUser;
 public class UserCheckTask
 {
     /**  */
-    private ChatRoom chat;
+    private Chat chat;
     /**  */
     private Timer timer;
     /**  */
@@ -25,7 +25,7 @@ public class UserCheckTask
      * @param chat
      * @param user
      **************************************************************************/
-    public UserCheckTask( ChatRoom chat, IUser user )
+    public UserCheckTask( Chat chat, IUser user )
     {
         this.chat = chat;
         this.user = user;

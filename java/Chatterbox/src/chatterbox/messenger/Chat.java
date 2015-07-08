@@ -16,7 +16,7 @@ import chatterbox.model.*;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ChatRoom extends AbstractChatRoom
+public class Chat extends AbstractChat
 {
     /**  */
     private final IConversation defaultConversation;
@@ -33,7 +33,7 @@ public class ChatRoom extends AbstractChatRoom
     /***************************************************************************
      * @param options
      **************************************************************************/
-    public ChatRoom()
+    public Chat()
     {
         super();
 
@@ -283,13 +283,13 @@ public class ChatRoom extends AbstractChatRoom
      **************************************************************************/
     private static class RawReceiver implements ItemActionListener<RawMessage>
     {
-        private final ChatRoom chatRoom;
+        private final Chat chat;
         private final MessageSerializer msgSerializer;
 
-        public RawReceiver( ChatRoom chatRoom )
+        public RawReceiver( Chat chat )
         {
-            this.chatRoom = chatRoom;
-            this.msgSerializer = new MessageSerializer( chatRoom.getLocalUser() );
+            this.chat = chat;
+            this.msgSerializer = new MessageSerializer( chat.getLocalUser() );
         }
 
         @Override
@@ -323,19 +323,19 @@ public class ChatRoom extends AbstractChatRoom
                 case Chat:
                 {
                     IChatMessage message = msgSerializer.messageSerializer.read( stream );
-                    chatRoom.receiveMessage( message );
+                    chat.receiveMessage( message );
                     break;
                 }
                 case UserAvailable:
                 {
                     UserAvailableMessage message = msgSerializer.userAvailableMessageSerializer.read( stream );
-                    chatRoom.setUserAvailable( message.getUser(), true );
+                    chat.setUserAvailable( message.getUser(), true );
                     break;
                 }
                 case UserLeft:
                 {
                     UserLeftMessage message = msgSerializer.userLeftMessageSerializer.read( stream );
-                    chatRoom.removeUser( message.getConversationId(),
+                    chat.removeUser( message.getConversationId(),
                         message.getUser() );
                     break;
                 }

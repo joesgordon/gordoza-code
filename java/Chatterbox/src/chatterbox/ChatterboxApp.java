@@ -8,22 +8,22 @@ import org.jutils.ui.app.IFrameApp;
 
 import chatterbox.controller.ChatController;
 import chatterbox.data.ChatConfig;
-import chatterbox.messenger.ChatRoom;
-import chatterbox.ui.ChatView;
+import chatterbox.messenger.Chat;
+import chatterbox.ui.ChatFrameView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
 public class ChatterboxApp implements IFrameApp
 {
-    private ChatRoom chat;
+    private Chat chat;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public ChatterboxApp()
     {
-        this.chat = new ChatRoom();
+        this.chat = new Chat();
     }
 
     /***************************************************************************
@@ -32,7 +32,7 @@ public class ChatterboxApp implements IFrameApp
     @Override
     public JFrame createFrame()
     {
-        ChatView frame = new ChatView( chat );
+        ChatFrameView frame = new ChatFrameView( chat );
         new ChatController( chat, frame );
 
         frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );

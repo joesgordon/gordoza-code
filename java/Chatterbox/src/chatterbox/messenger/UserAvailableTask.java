@@ -11,14 +11,14 @@ import chatterbox.data.messages.UserAvailableMessage;
 public class UserAvailableTask extends TimerTask
 {
     /**  */
-    private ChatRoom chat;
+    private Chat chat;
     /**  */
     private UserAvailableMessage message;
 
     /***************************************************************************
      * @param chat
      **************************************************************************/
-    public UserAvailableTask( ChatRoom chat )
+    public UserAvailableTask( Chat chat )
     {
         this.chat = chat;
         message = new UserAvailableMessage( chat.getLocalUser() );

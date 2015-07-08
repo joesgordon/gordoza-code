@@ -16,7 +16,7 @@ public class TestConversation extends AbstractConversation
      * @param chat
      * @param user
      **************************************************************************/
-    public TestConversation( IChatRoom chat, String id, List<IUser> users )
+    public TestConversation( IChat chat, String id, List<IUser> users )
     {
         super( chat, id, users );
     }

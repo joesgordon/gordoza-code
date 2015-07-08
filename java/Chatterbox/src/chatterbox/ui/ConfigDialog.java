@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import javax.swing.*;
 
-import chatterbox.model.IChatRoom;
+import chatterbox.model.IChat;
 
 /*******************************************************************************
  * 
@@ -23,7 +23,7 @@ public class ConfigDialog extends JDialog
     /**
      * @param frame
      */
-    public ConfigDialog( final JFrame frame, final IChatRoom chat )
+    public ConfigDialog( final JFrame frame, final IChat chat )
     {
         super( frame, "Chat Configuration", true );
 

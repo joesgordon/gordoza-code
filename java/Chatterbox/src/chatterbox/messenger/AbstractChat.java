@@ -12,7 +12,7 @@ import chatterbox.model.*;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public abstract class AbstractChatRoom implements IChatRoom
+public abstract class AbstractChat implements IChat
 {
     /**  */
     private final IUser localUser;
@@ -26,7 +26,7 @@ public abstract class AbstractChatRoom implements IChatRoom
     /***************************************************************************
      * 
      **************************************************************************/
-    public AbstractChatRoom()
+    public AbstractChat()
     {
         conversations = new HashMap<String, IConversation>( 100 );
         conversationCreatedListeners = new ItemActionList<IConversation>();

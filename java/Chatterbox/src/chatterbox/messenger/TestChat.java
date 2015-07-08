@@ -11,7 +11,7 @@ import chatterbox.model.IUser;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class TestChat extends AbstractChatRoom
+public class TestChat extends AbstractChat
 {
     /**  */
     private IConversation defaultConversation;
