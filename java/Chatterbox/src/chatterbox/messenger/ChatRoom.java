@@ -1,4 +1,4 @@
-package chatterbox.messager;
+package chatterbox.messenger;
 
 import java.io.IOException;
 import java.net.*;
@@ -17,7 +17,7 @@ import chatterbox.model.*;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class Chat extends AbstractChat
+public class ChatRoom extends AbstractChatRoom
 {
     /**  */
     private MulticastSocket socket;
@@ -49,9 +49,9 @@ public class Chat extends AbstractChat
     private Timer userAvailableTimer;
 
     /***************************************************************************
-     * 
+     * @param options
      **************************************************************************/
-    public Chat()
+    public ChatRoom()
     {
         super();
 
@@ -320,103 +320,5 @@ public class Chat extends AbstractChat
     public int getPort()
     {
         return port;
-    }
-}
-
-class UserAvailableTask extends TimerTask
-{
-    private Chat chat;
-    private UserAvailableMessage message;
-
-    public UserAvailableTask( Chat chat )
-    {
-        this.chat = chat;
-        message = new UserAvailableMessage( chat.getLocalUser() );
-    }
-
-    @Override
-    public void run()
-    {
-        try
-        {
-            chat.sendMessage( message );
-        }
-        catch( IOException ex )
-        {
-            // TODO Maybe do something else here
-            ex.printStackTrace();
-        }
-    }
-}
-
-/*******************************************************************************
- * 
- ******************************************************************************/
-class UserCheckTask
-{
-    private Chat chat;
-    private Timer timer;
-    private IUser user;
-    private TimerTask unAvailableTask;
-    private TimerTask leftTask;
-
-    public UserCheckTask( Chat chat, IUser user )
-    {
-        this.chat = chat;
-        this.user = user;
-
-        reset();
-    }
-
-    public void cancel()
-    {
-        timer.cancel();
-    }
-
-    public void advance()
-    {
-        unAvailableTask.cancel();
-        timer.schedule( leftTask, 20000 );
-    }
-
-    private void initTasks()
-    {
-        unAvailableTask = new TimerTask()
-        {
-            @Override
-            public void run()
-            {
-                chat.setUserAvailable( user, false );
-            }
-        };
-
-        leftTask = new TimerTask()
-        {
-            @Override
-            public void run()
-            {
-                chat.removeUser( user );
-                chat = null;
-                user = null;
-                timer = null;
-                unAvailableTask = null;
-                leftTask = null;
-            }
-        };
-    }
-
-    public void reset()
-    {
-        if( unAvailableTask != null )
-        {
-            unAvailableTask.cancel();
-            leftTask.cancel();
-            timer.purge();
-        }
-
-        initTasks();
-
-        timer = new Timer( user.getUserId() + "'s Timer" );
-        timer.schedule( unAvailableTask, 8000 );
     }
 }

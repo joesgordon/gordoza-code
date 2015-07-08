@@ -1,28 +1,20 @@
 package chatterbox.model;
 
-import java.io.IOException;
-import java.util.List;
+import chatterbox.data.MessageBody;
+import chatterbox.data.UserAvailability;
 
-import org.jutils.ui.event.ItemActionListener;
-
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public interface IChat
 {
-    public void connect( String group, int port ) throws IOException;
+    /***************************************************************************
+     * @param msg
+     **************************************************************************/
+    public void sendMessage( MessageBody msg );
 
-    public void disconnect();
-
-    public String getAddress();
-
-    public int getPort();
-
-    public void removeConversation( IConversation conversation );
-
-    public void addConversationCreatedListener(
-        ItemActionListener<IConversation> l );
-
-    public IConversation getDefaultConversation();
-
-    public IConversation createConversation( List<IUser> users );
-
-    public IUser getLocalUser();
+    /***************************************************************************
+     * @param availability
+     **************************************************************************/
+    public void setAvailability( UserAvailability availability );
 }

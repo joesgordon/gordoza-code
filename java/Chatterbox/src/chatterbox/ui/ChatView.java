@@ -18,18 +18,21 @@ import chatterbox.view.IConversationView;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ChatFrame extends JFrame implements IChatView
+public class ChatView extends JFrame implements IChatView
 {
+    /**  */
     private ConversationPanel conversationPanel;
 
+    /**  */
     private ItemActionList<List<IUser>> conversationStartedListeners;
 
+    /**  */
     private ItemActionList<String> displayNameChangedListeners;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public ChatFrame( final IChat chat )
+    public ChatView( final IChatRoom chat )
     {
         conversationStartedListeners = new ItemActionList<List<IUser>>();
         displayNameChangedListeners = new ItemActionList<String>();
@@ -64,7 +67,7 @@ public class ChatFrame extends JFrame implements IChatView
             public void actionPerformed( ActionEvent e )
             {
                 JOptionPane.showMessageDialog(
-                    ChatFrame.this,
+                    ChatView.this,
                     "This functionality is not yet supported. Good try, though.",
                     "Not Supported", JOptionPane.ERROR_MESSAGE );
             }
@@ -77,7 +80,7 @@ public class ChatFrame extends JFrame implements IChatView
             @Override
             public void actionPerformed( ActionEvent e )
             {
-                new ConfigDialog( ChatFrame.this, chat );
+                new ConfigDialog( ChatView.this, chat );
                 // String username = JOptionPane.showInputDialog(
                 // "New Username",
                 // chat.getLocalUser() );
@@ -127,7 +130,7 @@ public class ChatFrame extends JFrame implements IChatView
     /***************************************************************************
      * @param chatModel
      **************************************************************************/
-    public void setChat( IChat chatModel )
+    public void setChat( IChatRoom chatModel )
     {
         ;
     }

@@ -16,7 +16,7 @@ public interface IConversation
 
     public List<IUser> getRecipients();
 
-    public IChat getChat();
+    public IChatRoom getChat();
 
     public List<IUser> getUsers();
 

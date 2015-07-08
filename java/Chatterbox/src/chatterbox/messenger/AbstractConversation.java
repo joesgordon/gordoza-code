@@ -1,4 +1,4 @@
-package chatterbox.messager;
+package chatterbox.messenger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ public abstract class AbstractConversation implements IConversation
     /**  */
     private String localId;
     /**  */
-    private IChat chat;
+    private IChatRoom chat;
     /**  */
     private List<IUser> remoteUsers;
 
@@ -41,7 +41,7 @@ public abstract class AbstractConversation implements IConversation
      * @param chat
      * @param user
      **************************************************************************/
-    public AbstractConversation( IChat chat, String id, List<IUser> users )
+    public AbstractConversation( IChatRoom chat, String id, List<IUser> users )
     {
         this.localId = id;
         this.chat = chat;
@@ -108,7 +108,7 @@ public abstract class AbstractConversation implements IConversation
      * 
      **************************************************************************/
     @Override
-    public final IChat getChat()
+    public final IChatRoom getChat()
     {
         return chat;
     }

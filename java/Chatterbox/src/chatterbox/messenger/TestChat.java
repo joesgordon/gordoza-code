@@ -1,4 +1,4 @@
-package chatterbox.messager;
+package chatterbox.messenger;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import chatterbox.model.IUser;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class TestChat extends AbstractChat
+public class TestChat extends AbstractChatRoom
 {
     /**  */
     private IConversation defaultConversation;

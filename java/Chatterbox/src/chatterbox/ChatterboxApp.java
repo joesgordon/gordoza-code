@@ -7,37 +7,54 @@ import javax.swing.JFrame;
 import org.jutils.ui.app.IFrameApp;
 
 import chatterbox.controller.ChatController;
-import chatterbox.messager.Chat;
-import chatterbox.ui.ChatFrame;
+import chatterbox.data.ChatConfig;
+import chatterbox.messenger.ChatRoom;
+import chatterbox.ui.ChatView;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class ChatterboxApp implements IFrameApp
 {
-    private Chat messager;
-    private String address;
-    private int port;
+    private ChatRoom chat;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public ChatterboxApp()
     {
-        messager = new Chat();
-        address = "238.192.69.69";
-        port = 6969;
+        this.chat = new ChatRoom();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public JFrame createFrame()
     {
-        ChatFrame frame = new ChatFrame( messager );
-        new ChatController( messager, frame );
+        ChatView frame = new ChatView( chat );
+        new ChatController( chat, frame );
+
+        frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        frame.setSize( 550, 450 );
+        frame.validate();
+        frame.setLocationRelativeTo( null );
+        frame.setVisible( true );
+
+        return frame;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void finalizeGui()
+    {
+        ChatConfig config = ChatterboxConstants.getUserIO().getOptions();
 
         try
         {
-            messager.connect( address, port );
-
-            frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-            frame.setSize( 550, 450 );
-            frame.validate();
-            frame.setLocationRelativeTo( null );
-            frame.setVisible( true );
+            chat.connect( config.address, config.port );
         }
         catch( IOException ex )
         {
@@ -46,12 +63,5 @@ public class ChatterboxApp implements IFrameApp
             ex.printStackTrace();
             throw new RuntimeException( "Could not connect", ex );
         }
-
-        return frame;
-    }
-
-    @Override
-    public void finalizeGui()
-    {
     }
 }

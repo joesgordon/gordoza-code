@@ -1,4 +1,4 @@
-package chatterbox.messager;
+package chatterbox.messenger;
 
 import java.io.IOException;
 import java.net.*;
@@ -20,7 +20,7 @@ import chatterbox.model.IChatMessage;
 public class ChatReceiveTask implements IStoppableTask
 {
     /**  */
-    private Chat chat;
+    private ChatRoom chat;
     /**  */
     private ChatHeaderSerializer headerSerializer;
     /**  */
@@ -39,7 +39,7 @@ public class ChatReceiveTask implements IStoppableTask
      * @param socket
      * @param rxPacket
      **************************************************************************/
-    public ChatReceiveTask( Chat chat, MulticastSocket socket,
+    public ChatReceiveTask( ChatRoom chat, MulticastSocket socket,
         DatagramPacket rxPacket )
     {
         this.chat = chat;

@@ -1,4 +1,4 @@
-package chatterbox.messager;
+package chatterbox.messenger;
 
 import java.util.*;
 
@@ -16,7 +16,7 @@ public class TestConversation extends AbstractConversation
      * @param chat
      * @param user
      **************************************************************************/
-    public TestConversation( IChat chat, String id, List<IUser> users )
+    public TestConversation( IChatRoom chat, String id, List<IUser> users )
     {
         super( chat, id, users );
     }

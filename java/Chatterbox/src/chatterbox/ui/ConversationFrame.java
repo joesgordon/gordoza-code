@@ -18,10 +18,13 @@ import chatterbox.view.IConversationView;
  ******************************************************************************/
 public class ConversationFrame extends JFrame implements IConversationView
 {
+    /**  */
     private ConversationPanel conversationPanel;
 
+    /**  */
     private IConversation conversation;
 
+    /**  */
     private IChatView chatView;
 
     /***************************************************************************

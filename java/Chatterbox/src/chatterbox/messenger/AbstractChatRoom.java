@@ -1,4 +1,4 @@
-package chatterbox.messager;
+package chatterbox.messenger;
 
 import java.lang.management.ManagementFactory;
 import java.util.*;
@@ -12,7 +12,7 @@ import chatterbox.model.*;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public abstract class AbstractChat implements IChat
+public abstract class AbstractChatRoom implements IChatRoom
 {
     /**  */
     private IUser localUser;
@@ -26,7 +26,7 @@ public abstract class AbstractChat implements IChat
     /***************************************************************************
      * 
      **************************************************************************/
-    public AbstractChat()
+    public AbstractChatRoom()
     {
         conversations = new HashMap<String, IConversation>( 100 );
         conversationCreatedListeners = new ItemActionList<IConversation>();

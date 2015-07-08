@@ -1,4 +1,4 @@
-package chatterbox.messager;
+package chatterbox.messenger;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,7 +12,7 @@ import chatterbox.model.IUser;
 public class Conversation extends AbstractConversation
 {
     /**  */
-    private Chat chat;
+    private ChatRoom chat;
 
     /***************************************************************************
      * @param id
@@ -20,7 +20,7 @@ public class Conversation extends AbstractConversation
      * @param chat
      * @param users
      **************************************************************************/
-    public Conversation( Chat chat, String id, List<IUser> users )
+    public Conversation( ChatRoom chat, String id, List<IUser> users )
     {
         super( chat, id, users );
         this.chat = chat;

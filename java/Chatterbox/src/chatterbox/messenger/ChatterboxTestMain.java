@@ -1,4 +1,4 @@
-package chatterbox.messager;
+package chatterbox.messenger;
 
 import javax.swing.JFrame;
 
@@ -6,7 +6,7 @@ import org.jutils.ui.app.FrameApplication;
 import org.jutils.ui.app.IFrameApp;
 
 import chatterbox.controller.ChatController;
-import chatterbox.ui.ChatFrame;
+import chatterbox.ui.ChatView;
 
 /*******************************************************************************
  * 
@@ -31,7 +31,7 @@ public class ChatterboxTestMain implements IFrameApp
     @Override
     public JFrame createFrame()
     {
-        ChatFrame frame = new ChatFrame( messager );
+        ChatView frame = new ChatView( messager );
         new ChatController( messager, frame );
 
         messager.connect( "238.192.69.69", 6969 );

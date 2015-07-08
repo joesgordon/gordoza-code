@@ -7,8 +7,11 @@ import java.io.IOException;
 
 import javax.swing.*;
 
-import chatterbox.model.IChat;
+import chatterbox.model.IChatRoom;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class ConfigDialog extends JDialog
 {
     private JTextField nameField;
@@ -20,7 +23,7 @@ public class ConfigDialog extends JDialog
     /**
      * @param frame
      */
-    public ConfigDialog( final JFrame frame, final IChat chat )
+    public ConfigDialog( final JFrame frame, final IChatRoom chat )
     {
         super( frame, "Chat Configuration", true );
 

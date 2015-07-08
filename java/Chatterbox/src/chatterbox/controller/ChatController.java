@@ -18,18 +18,18 @@ public class ChatController
     /**  */
     private IChatView chatView;
     /**  */
-    private IChat chatModel;
+    private IChatRoom chatModel;
 
     private List<IConversationView> conversationViews;
 
     /***************************************************************************
      * @param view
-     * @param model
+     * @param room
      **************************************************************************/
-    public ChatController( IChat model, IChatView view )
+    public ChatController( IChatRoom room, IChatView view )
     {
         chatView = view;
-        chatModel = model;
+        chatModel = room;
         conversationViews = new ArrayList<IConversationView>();
 
         ItemActionListener<IConversation> convCreatedListener;
