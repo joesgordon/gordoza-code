@@ -12,8 +12,10 @@ import org.duak.data.FileInfo;
 import org.duak.model.Analyzer;
 import org.duak.utils.HistoryList;
 import org.jutils.IconConstants;
+import org.jutils.SwingUtils;
 import org.jutils.concurrent.*;
-import org.jutils.ui.*;
+import org.jutils.ui.JGoodiesToolBar;
+import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
 import org.jutils.ui.model.IView;
@@ -102,14 +104,17 @@ public class DuakFrame implements IView<JFrame>
     private JToolBar createToolbar()
     {
         JToolBar toolbar = new JGoodiesToolBar();
+        Action action;
+        Icon icon;
 
         JButton button;
+        DirectoryChooserListener openListener;
 
-        button = new JButton(
-            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
-        button.setFocusable( false );
-        button.addActionListener( new OpenListener( this ) );
-        toolbar.add( button );
+        openListener = new DirectoryChooserListener( getView(),
+            "Choose Directory", new OpenListener( this ) );
+        icon = IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 );
+        action = new ActionAdapter( openListener, "Open", icon );
+        SwingUtils.addActionToToolbar( toolbar, action );
 
         button = new JButton(
             IconConstants.loader.getIcon( IconConstants.BACK_16 ) );
@@ -189,7 +194,7 @@ public class DuakFrame implements IView<JFrame>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class OpenListener implements ActionListener
+    private static class OpenListener implements IFileSelectionListener
     {
         private final DuakFrame view;
 
@@ -199,21 +204,15 @@ public class DuakFrame implements IView<JFrame>
         }
 
         @Override
-        public void actionPerformed( ActionEvent e )
+        public File getDefaultFile()
         {
-            File file = DuakConstants.getOptions().getOptions().lastAnalyzed;
-            JFrame frame = view.getView();
-            DirectoryChooser fd = new DirectoryChooser( frame );
+            return DuakConstants.getOptions().getOptions().lastAnalyzed;
+        }
 
-            file = file == null ? new File( "/" ) : file;
-            fd.setSelected( new File[] { file } );
-            fd.setVisible( true );
-
-            File [] selectedFiles = fd.getSelected();
-            if( selectedFiles != null )
-            {
-                view.open( selectedFiles[0] );
-            }
+        @Override
+        public void filesChosen( File [] files )
+        {
+            view.open( files[0] );
         }
     }
 

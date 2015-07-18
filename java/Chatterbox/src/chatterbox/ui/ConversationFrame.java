@@ -67,7 +67,7 @@ public class ConversationFrame extends JFrame implements IConversationView
         JPanel contentPanel = new JPanel( new BorderLayout() );
 
         contentPanel.add( toolbar, BorderLayout.NORTH );
-        contentPanel.add( conversationPanel, BorderLayout.CENTER );
+        contentPanel.add( conversationPanel.getView(), BorderLayout.CENTER );
 
         // ---------------------------------------------------------------------
         // Setup this frame.

@@ -102,6 +102,6 @@ public class ChatView implements IChatView, IView<JComponent>
     @Override
     public JComponent getView()
     {
-        return conversationPanel;
+        return conversationPanel.getView();
     }
 }

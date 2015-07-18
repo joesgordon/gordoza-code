@@ -11,8 +11,8 @@ import javax.swing.event.TreeWillExpandListener;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.tree.*;
 
+import org.jutils.io.IOUtils;
 import org.jutils.io.LogUtils;
-import org.jutils.io.UFile;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.DropActionType;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
@@ -285,7 +285,14 @@ public class DirectoryTree implements IView<JTree>
      **************************************************************************/
     public void setSelectedPaths( String paths )
     {
-        setSelected( UFile.getFilesFromString( paths ) );
+        if( paths == null )
+        {
+            clearSelection();
+        }
+        else
+        {
+            setSelected( IOUtils.getFilesFromString( paths ) );
+        }
     }
 
     /***************************************************************************
@@ -295,7 +302,7 @@ public class DirectoryTree implements IView<JTree>
     {
         File [] selected = getSelected();
 
-        return UFile.getStringFromFiles( selected );
+        return IOUtils.getStringFromFiles( selected );
     }
 
     /***************************************************************************

@@ -26,6 +26,9 @@ public class DirectoryChooser
     /**  */
     private final JLabel messageLabel;
 
+    /**  */
+    private File [] selected;
+
     /***************************************************************************
      * @param owner
      **************************************************************************/
@@ -50,14 +53,22 @@ public class DirectoryChooser
      **************************************************************************/
     public DirectoryChooser( Window owner, String title, String message )
     {
+        this( owner, title, message, null );
+    }
+
+    public DirectoryChooser( Window owner, String title, String message,
+        String paths )
+    {
         this.dialog = new JDialog( owner, title, ModalityType.APPLICATION_MODAL );
         this.tree = new DirectoryTree();
         this.messageLabel = new JLabel();
 
+        this.selected = null;
+
+        tree.setSelectedPaths( paths );
+
         dialog.setDefaultCloseOperation( JDialog.DISPOSE_ON_CLOSE );
-
         dialog.setContentPane( createContentPanel( message ) );
-
         dialog.setSize( 350, 550 );
         dialog.validate();
         dialog.setLocationRelativeTo( owner );
@@ -207,15 +218,7 @@ public class DirectoryChooser
      **************************************************************************/
     public File [] getSelected()
     {
-        return tree.getSelected();
-    }
-
-    /***************************************************************************
-     * @param files File[]
-     **************************************************************************/
-    public void setSelected( File [] files )
-    {
-        tree.setSelected( files );
+        return selected;
     }
 
     /***************************************************************************
@@ -234,16 +237,26 @@ public class DirectoryChooser
         return tree.getSelectedPaths();
     }
 
+    /***************************************************************************
+     * @param width
+     * @param height
+     **************************************************************************/
     public void setSize( int width, int height )
     {
         dialog.setSize( width, height );
     }
 
+    /***************************************************************************
+     * @param title
+     **************************************************************************/
     public void setTitle( String title )
     {
         dialog.setTitle( title );
     }
 
+    /***************************************************************************
+     * @param message
+     **************************************************************************/
     public void setMessage( String message )
     {
         messageLabel.setText( message );
@@ -263,7 +276,6 @@ public class DirectoryChooser
 
         public void actionPerformed( ActionEvent e )
         {
-            chooser.tree.clearSelection();
             chooser.dialog.dispose();
         }
     }
@@ -282,6 +294,7 @@ public class DirectoryChooser
 
         public void actionPerformed( ActionEvent e )
         {
+            chooser.selected = chooser.tree.getSelected();
             chooser.dialog.dispose();
         }
     }

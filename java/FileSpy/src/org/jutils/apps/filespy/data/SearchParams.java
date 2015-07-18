@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.regex.Pattern;
 
 import org.jutils.Utils;
-import org.jutils.io.UFile;
+import org.jutils.io.IOUtils;
 import org.jutils.io.XObject;
 
 /*******************************************************************************
@@ -75,7 +75,7 @@ public class SearchParams extends XObject
      **************************************************************************/
     public void setSearchFolders( File [] paths )
     {
-        searchIn = UFile.getStringFromFiles( paths );
+        searchIn = IOUtils.getStringFromFiles( paths );
     }
 
     /***************************************************************************
@@ -84,7 +84,7 @@ public class SearchParams extends XObject
      **************************************************************************/
     public File [] getSearchFolders()
     {
-        return UFile.getFilesFromString( searchIn );
+        return IOUtils.getFilesFromString( searchIn );
     }
 
     /***************************************************************************

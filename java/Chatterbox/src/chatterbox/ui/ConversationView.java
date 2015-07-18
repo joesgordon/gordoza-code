@@ -14,6 +14,7 @@ import org.jutils.Utils;
 import org.jutils.io.LogUtils;
 import org.jutils.ui.FontChooserDialog;
 import org.jutils.ui.event.*;
+import org.jutils.ui.model.IView;
 
 import chatterbox.data.UiChatMessage;
 import chatterbox.model.*;
@@ -23,12 +24,14 @@ import chatterbox.view.IConversationView;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ConversationView extends JPanel implements IConversationView
+public class ConversationView implements IConversationView, IView<JComponent>
 {
     // -------------------------------------------------------------------------
     // GUI Components.
     // -------------------------------------------------------------------------
 
+    /**  */
+    private final JPanel view;
     /**  */
     private final AppendableTextPane chatEditorPane;
     /**  */
@@ -83,6 +86,12 @@ public class ConversationView extends JPanel implements IConversationView
     public ConversationView( IChatView chatView )
     {
         this.chatView = chatView;
+
+        this.chatEditorPane = new AppendableTextPane();
+        this.userModel = new DefaultListModel<IUser>();
+        this.userList = new JList<IUser>( userModel );
+        this.msgEditorPane = new GrowingTextPane();
+        this.view = createView();
 
         this.msgSentListeners = new ItemActionList<IChatMessage>();
         this.conversationStartedListeners = new ItemActionList<List<IUser>>();
@@ -141,21 +150,70 @@ public class ConversationView extends JPanel implements IConversationView
                 addMessage( event.getItem() );
             }
         };
+    }
 
-        // ---------------------------------------------------------------------
-        // Setup GUI listeners.
-        // ---------------------------------------------------------------------
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private JPanel createView()
+    {
+        JPanel panel = new JPanel( new GridBagLayout() );
+
+        JScrollPane userScrollPane = new JScrollPane( userList );
+
+        JScrollPane chatScrollPane = new JScrollPane( chatEditorPane );
+        BottomScroller chatScroller = new BottomScroller( chatEditorPane );
+
+        userList.setCellRenderer( new UserListCellRenderer() );
+        userList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+        userList.addMouseListener( new UsersMouseListener( this ) );
+
+        chatEditorPane.setEditable( false );
+
+        chatEditorPane.addComponentListener( chatScroller );
+        chatScrollPane.setPreferredSize( new Dimension( 100, 100 ) );
+        chatScrollPane.setMinimumSize( new Dimension( 100, 100 ) );
+
+        userScrollPane.setPreferredSize( new Dimension( 175, 100 ) );
+        userScrollPane.setMinimumSize( new Dimension( 100, 100 ) );
+
+        JLabel userLabel = new JLabel( "Users:" );
+        userLabel.setFocusable( false );
+
+        panel.add( chatScrollPane, new GridBagConstraints( 0, 0, 1, 2, 1.0,
+            1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+        panel.add( createContentPanel(), new GridBagConstraints( 0, 2, 1, 1,
+            1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+
+        panel.add( userLabel, new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
+            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 4, 4,
+                4, 4 ), 0, 0 ) );
+        panel.add( userScrollPane, new GridBagConstraints( 1, 1, 1, 2, 0.0,
+            1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(
+                4, 4, 4, 4 ), 0, 0 ) );
+
+        return panel;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Component createContentPanel()
+    {
+        JPanel contentPanel = new JPanel( new GridBagLayout() );
         ActionListener fontButtonListener = new ActionListener()
         {
             @Override
             public void actionPerformed( ActionEvent e )
             {
                 FontChooserDialog fontChooser = new FontChooserDialog(
-                    ( JFrame )SwingUtilities.getWindowAncestor( ConversationView.this ) );
+                    ( JFrame )SwingUtilities.getWindowAncestor( view ) );
 
                 fontChooser.setAttributes( msgEditorPane.getCharacterAttributes() );
                 fontChooser.pack();
-                fontChooser.setLocationRelativeTo( ConversationView.this );
+                fontChooser.setLocationRelativeTo( view );
                 fontChooser.setVisible( true );
 
                 if( fontChooser.getOption() == JOptionPane.OK_OPTION )
@@ -191,13 +249,8 @@ public class ConversationView extends JPanel implements IConversationView
             }
         };
 
-        // ---------------------------------------------------------------------
-        // Setup message panel.
-        // ---------------------------------------------------------------------
-        JPanel contentPanel = new JPanel( new GridBagLayout() );
         contentPanel.setBorder( BorderFactory.createEtchedBorder() );
 
-        this.msgEditorPane = new GrowingTextPane();
         JScrollPane msgScrollPane = new GrowingScrollPane( msgEditorPane );
 
         JToolBar toolbar = new JToolBar();
@@ -228,73 +281,7 @@ public class ConversationView extends JPanel implements IConversationView
             1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH,
             new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
-        // ---------------------------------------------------------------------
-        // Setup main panel.
-        // ---------------------------------------------------------------------
-        setLayout( new GridBagLayout() );
-
-        this.userModel = new DefaultListModel<IUser>();
-        this.userList = new JList<IUser>( userModel );
-        JScrollPane userScrollPane = new JScrollPane( userList );
-
-        this.chatEditorPane = new AppendableTextPane();
-        JScrollPane chatScrollPane = new JScrollPane( chatEditorPane );
-        BottomScroller chatScroller = new BottomScroller( chatEditorPane );
-
-        userList.setCellRenderer( new UserListCellRenderer() );
-        userList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-        userList.addMouseListener( new MouseAdapter()
-        {
-            public void mouseClicked( MouseEvent e )
-            {
-                JOptionPane.showMessageDialog(
-                    ConversationView.this,
-                    "This functionality is not yet supported. Good try, though.",
-                    "Not Supported", JOptionPane.ERROR_MESSAGE );
-
-                if( "".length() > 0 && e.getClickCount() == 2 )
-                {
-                    int index = userList.locationToIndex( e.getPoint() );
-                    if( index > -1 )
-                    {
-                        ArrayList<IUser> users = new ArrayList<IUser>();
-                        ListModel<IUser> dlm = userList.getModel();
-                        Object item = dlm.getElementAt( index );
-
-                        users.add( ( IUser )item );
-                        conversationStartedListeners.fireListeners(
-                            ConversationView.this, users );
-                        userList.ensureIndexIsVisible( index );
-                    }
-                }
-            }
-        } );
-
-        chatEditorPane.setEditable( false );
-
-        chatEditorPane.addComponentListener( chatScroller );
-        chatScrollPane.setPreferredSize( new Dimension( 100, 100 ) );
-        chatScrollPane.setMinimumSize( new Dimension( 100, 100 ) );
-
-        userScrollPane.setPreferredSize( new Dimension( 175, 100 ) );
-        userScrollPane.setMinimumSize( new Dimension( 100, 100 ) );
-
-        JLabel userLabel = new JLabel( "Users:" );
-        userLabel.setFocusable( false );
-
-        add( chatScrollPane, new GridBagConstraints( 0, 0, 1, 2, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 4,
-                4, 4, 4 ), 0, 0 ) );
-        add( contentPanel, new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 4,
-                4, 4, 4 ), 0, 0 ) );
-
-        add( userLabel, new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 4, 4,
-                4, 4 ), 0, 0 ) );
-        add( userScrollPane, new GridBagConstraints( 1, 1, 1, 2, 0.0, 1.0,
-            GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets( 4, 4,
-                4, 4 ), 0, 0 ) );
+        return contentPanel;
     }
 
     /***************************************************************************
@@ -331,19 +318,6 @@ public class ConversationView extends JPanel implements IConversationView
     public void leaveConversation()
     {
         conversationLeftListeners.fireListeners( this, null );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public void setVisible( boolean visible )
-    {
-        super.setVisible( visible );
-
-        if( visible )
-        {
-            msgEditorPane.requestFocus();
-        }
     }
 
     /***************************************************************************
@@ -465,6 +439,15 @@ public class ConversationView extends JPanel implements IConversationView
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
+    public JComponent getView()
+    {
+        return view;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class BottomScroller extends ComponentAdapter
     {
         private JTextPane textPane;
@@ -490,7 +473,7 @@ public class ConversationView extends JPanel implements IConversationView
     /***************************************************************************
      * 
      **************************************************************************/
-    private class AppendableTextPane extends JTextPane
+    private static class AppendableTextPane extends JTextPane
     {
         public AppendableTextPane()
         {
@@ -512,6 +495,42 @@ public class ConversationView extends JPanel implements IConversationView
             catch( BadLocationException ex )
             {
                 ex.printStackTrace();
+            }
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class UsersMouseListener extends MouseAdapter
+    {
+        private final ConversationView view;
+
+        public UsersMouseListener( ConversationView view )
+        {
+            this.view = view;
+        }
+
+        public void mouseClicked( MouseEvent e )
+        {
+            JOptionPane.showMessageDialog( view.getView(),
+                "This functionality is not yet supported. Good try, though.",
+                "Not Supported", JOptionPane.ERROR_MESSAGE );
+
+            if( "".length() > 0 && e.getClickCount() == 2 )
+            {
+                int index = view.userList.locationToIndex( e.getPoint() );
+                if( index > -1 )
+                {
+                    ArrayList<IUser> users = new ArrayList<IUser>();
+                    ListModel<IUser> dlm = view.userList.getModel();
+                    Object item = dlm.getElementAt( index );
+
+                    users.add( ( IUser )item );
+                    view.conversationStartedListeners.fireListeners( view,
+                        users );
+                    view.userList.ensureIndexIsVisible( index );
+                }
             }
         }
     }

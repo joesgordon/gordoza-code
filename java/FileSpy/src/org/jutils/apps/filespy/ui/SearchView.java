@@ -570,7 +570,7 @@ public class SearchView implements IDataView<SearchParams>
 
         params.searchSubfolders = subfoldersCheckBox.isSelected();
 
-        params.setSearchFolders( UFile.getFilesFromString( searchInComboBox.getSelectedItem().toString() ) );
+        params.setSearchFolders( IOUtils.getFilesFromString( searchInComboBox.getSelectedItem().toString() ) );
 
         if( moreThanCheckBox.isSelected() )
         {
@@ -706,7 +706,7 @@ public class SearchView implements IDataView<SearchParams>
 
         subfoldersCheckBox.setSelected( params.searchSubfolders );
 
-        String path = UFile.getStringFromFiles( params.getSearchFolders() );
+        String path = IOUtils.getStringFromFiles( params.getSearchFolders() );
 
         if( path != null && path.length() > 0 )
         {
