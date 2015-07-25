@@ -72,8 +72,8 @@ public class ChartWidget implements IChartWidget
         // ---------------------------------------------------------------------
         // Draw top/bottom
         // ---------------------------------------------------------------------
-        wLoc.x += 20;
-        wSize.width -= 40;
+        wLoc.x += 10;
+        wSize.width -= 20;
         graphics.setColor( Color.white );
         graphics.fillRect( location.x, location.y, size.width, size.height );
 
@@ -176,17 +176,17 @@ public class ChartWidget implements IChartWidget
     {
         if( chart.title.visible )
         {
-            int titleHeight = title.calculateSize( wSize ).height;
+            Dimension ts = title.calculateSize( wSize );
+
+            ts.width = wSize.width;
 
             wLoc.y += 10;
 
-            title.draw( graphics, wLoc, wSize );
+            title.draw( graphics, wLoc, ts );
 
-            wLoc.y += titleHeight;
+            wLoc.y += ts.height;
 
-            titleHeight += 10;
-
-            wSize.height -= titleHeight;
+            wSize.height -= ( ts.height + 10 );
         }
     }
 

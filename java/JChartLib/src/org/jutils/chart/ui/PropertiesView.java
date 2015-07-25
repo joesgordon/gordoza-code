@@ -20,6 +20,8 @@ public class PropertiesView implements IView<JPanel>
 {
     /**  */
     private static final String DEFAULT_TITLE = "<- Select a category to the left";
+    /**  */
+    private static final int FIRST_SERIES_INDEX = 7;
 
     /**  */
     private final JPanel view;
@@ -143,9 +145,9 @@ public class PropertiesView implements IView<JPanel>
     {
         seriesViews.clear();
 
-        while( navModel.size() > 5 )
+        while( navModel.size() > FIRST_SERIES_INDEX )
         {
-            navModel.remove( 5 );
+            navModel.remove( FIRST_SERIES_INDEX );
         }
     }
 
@@ -192,7 +194,7 @@ public class PropertiesView implements IView<JPanel>
 
         view.setData( null );
 
-        navModel.remove( index + 5 );
+        navModel.remove( index + FIRST_SERIES_INDEX );
     }
 
     /***************************************************************************
@@ -206,6 +208,9 @@ public class PropertiesView implements IView<JPanel>
         view.setSelected( pointIdx );
     }
 
+    /***************************************************************************
+     * @param T
+     **************************************************************************/
     private static interface IListNode<T>
     {
         public IView<?> getView();

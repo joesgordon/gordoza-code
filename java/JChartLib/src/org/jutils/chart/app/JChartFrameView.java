@@ -59,6 +59,12 @@ public class JChartFrameView implements IView<JFrame>
         recentFiles.setData( userio.getOptions().recentFiles.toList() );
         recentFiles.addSelectedListener( new FileSelected( this ) );
 
+        chartView.chart.rangeAxis.title.visible = true;
+        chartView.chart.rangeAxis.title.text = "Y Values";
+
+        chartView.chart.secRangeAxis.title.visible = true;
+        chartView.chart.secRangeAxis.title.text = "Sec Y Values";
+
         Series s;
         ISeriesData<?> data;
 

@@ -13,6 +13,8 @@ public class WidgetPanel extends JComponent
     private IChartWidget object;
     /**  */
     private final Object lock;
+    /**  */
+    private final Layer2d layer;
 
     /***************************************************************************
      * 
@@ -29,6 +31,7 @@ public class WidgetPanel extends JComponent
     {
         this.lock = new Object();
         this.object = object;
+        this.layer = new Layer2d();
     }
 
     /***************************************************************************
@@ -59,14 +62,16 @@ public class WidgetPanel extends JComponent
             return;
         }
 
-        Graphics2D g2d = ( Graphics2D )g;
-
         Dimension size = new Dimension( getWidth(), getHeight() );
         Dimension min = getMinimumSize();
 
         size.width = Math.max( size.width, min.width );
         size.height = Math.max( size.height, min.height );
 
-        obj.draw( g2d, new Point(), size );
+        layer.setSize( size );
+
+        obj.draw( layer.getGraphics(), new Point(), size );
+
+        layer.paint( ( Graphics2D )g );
     }
 }

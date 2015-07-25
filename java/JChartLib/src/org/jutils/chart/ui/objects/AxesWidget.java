@@ -4,8 +4,7 @@ import java.awt.*;
 import java.util.List;
 
 import org.jutils.chart.data.*;
-import org.jutils.chart.model.Chart;
-import org.jutils.chart.model.TextLabel;
+import org.jutils.chart.model.*;
 import org.jutils.chart.ui.IChartWidget;
 import org.jutils.chart.ui.Layer2d;
 
@@ -77,6 +76,8 @@ public class AxesWidget implements IChartWidget
             TextDirection.RIGHT );
         this.srangeTitle = new TextWidget( chart.secRangeAxis.title,
             TextDirection.LEFT );
+
+        rangeLabel.alignment = HorizontalAlignment.CENTER;
     }
 
     /***************************************************************************
@@ -148,7 +149,7 @@ public class AxesWidget implements IChartWidget
             int h = size.height - ( textSpace.top + textSpace.bottom );
 
             p.x = location.x + size.width - d.width;
-            p.y = location.y + textSpace.top + ( h - d.width ) / 2;
+            p.y = location.y + textSpace.top;
 
             d.height = h;
 
@@ -167,7 +168,7 @@ public class AxesWidget implements IChartWidget
             int h = size.height - ( textSpace.top + textSpace.bottom );
 
             p.x = location.x;
-            p.y = location.y + textSpace.top + ( h - d.width ) / 2;
+            p.y = location.y + textSpace.top;
 
             d.height = h;
 
