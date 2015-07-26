@@ -54,7 +54,8 @@ public class AxisPropertiesView implements IDataView<Axis>
         setData( new Axis() );
 
         autoTicksField.addActionListener( new CheckBoxUpdater(
-            new ReflectiveUpdater<Boolean>( this, "axis.autoTicks" ) ) );
+            new AutoTicksUpdater( this, new ReflectiveUpdater<Boolean>( this,
+                "axis.autoTicks" ) ) ) );
         tickStartField.setUpdater( new ReflectiveUpdater<Double>( this,
             "axis.tickStart" ) );
         tickEndField.setUpdater( new ReflectiveUpdater<Double>( this,
@@ -128,13 +129,14 @@ public class AxisPropertiesView implements IDataView<Axis>
         tickStartField.setEditable( !autoEnabled );
         tickEndField.setEditable( !autoEnabled );
         tickWidthField.setEditable( !autoEnabled );
-        dockZeroField.setEnabled( !autoEnabled );
+        dockZeroField.setEnabled( autoEnabled );
+        dockZeroField.setSelected( autoEnabled && dockZeroField.isSelected() );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public class AutoTicksUpdater implements IUpdater<Boolean>
+    private class AutoTicksUpdater implements IUpdater<Boolean>
     {
         private final AxisPropertiesView view;
         private final IUpdater<Boolean> updater;

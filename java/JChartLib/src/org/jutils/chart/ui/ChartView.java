@@ -1078,10 +1078,24 @@ public class ChartView implements IView<JComponent>
         ItemActionListener<Boolean>
     {
         private final ChartView view;
+        private final JDialog d;
 
         public PropertiesDialogListener( ChartView view )
         {
             this.view = view;
+            OkDialogView okView = new OkDialogView( view.getView(),
+                view.propertiesView.getView(), ModalityType.MODELESS,
+                OkDialogButtons.OK_APPLY );
+
+            this.d = okView.getView();
+
+            okView.addOkListener( this );
+
+            d.setIconImages( ChartIcons.getChartImages() );
+            d.setTitle( "Chart Properties" );
+            d.setSize( 650, 400 );
+            d.validate();
+            d.setLocationRelativeTo( view.getView() );
         }
 
         @Override
@@ -1093,23 +1107,14 @@ public class ChartView implements IView<JComponent>
             {
                 dialog.setVisible( true );
             }
+            else
+            {
+                dialog.toFront();
+            }
         }
 
         private JDialog createDialog()
         {
-            OkDialogView okView = new OkDialogView( view.getView(),
-                view.propertiesView.getView(), ModalityType.MODELESS,
-                OkDialogButtons.OK_APPLY );
-
-            JDialog d = okView.getView();
-
-            okView.addOkListener( this );
-
-            d.setTitle( "Chart Properties" );
-            d.setSize( 650, 400 );
-            d.validate();
-            d.setLocationRelativeTo( view.getView() );
-
             return d;
         }
 

@@ -73,7 +73,7 @@ public class TextWidget implements IChartWidget
         }
 
         int tx = location.x;
-        int ty = location.y + size.height - size.height / 2 - ts.height / 2;
+        int ty = location.y + ( size.height - ts.height - 1 ) / 2;
 
         switch( label.alignment )
         {
