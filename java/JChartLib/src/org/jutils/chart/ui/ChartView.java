@@ -767,6 +767,10 @@ public class ChartView implements IView<JComponent>
 
                 view.chartWidget.setBounds( b );
             }
+            else if( SwingUtilities.isMiddleMouseButton( evt ) )
+            {
+                ;
+            }
             else
             {
                 Span ds;
