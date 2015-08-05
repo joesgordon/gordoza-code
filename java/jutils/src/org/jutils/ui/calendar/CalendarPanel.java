@@ -123,7 +123,7 @@ public class CalendarPanel implements IDataView<Long>
      * 
      **************************************************************************/
     @Override
-    public Container getView()
+    public JComponent getView()
     {
         return view;
     }
@@ -231,6 +231,9 @@ public class CalendarPanel implements IDataView<Long>
         return panel;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private Component createMonthPanel()
     {
         JPanel monthPanel = new JPanel( new GridBagLayout() );

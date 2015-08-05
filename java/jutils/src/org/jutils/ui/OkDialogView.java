@@ -174,7 +174,8 @@ public class OkDialogView implements IView<JDialog>
     /***************************************************************************
      * Adds the provided listener to the list of listeners to be called when the
      * dialog is closed. The boolean will be {@code true} if the ok button was
-     * pressed and {@code false} if the dialog is closed via the close button.
+     * pressed and {@code false} if the cancel button was pressed or the dialog
+     * is closed via the close button.
      * @param l the listener to be added.
      **************************************************************************/
     public void addOkListener( ItemActionListener<Boolean> l )
