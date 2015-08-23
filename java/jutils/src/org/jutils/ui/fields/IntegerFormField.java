@@ -56,7 +56,8 @@ public class IntegerFormField implements IDataFormField<Integer>
      * @param min
      * @param max
      **************************************************************************/
-    public IntegerFormField( String name, String units, Integer min, Integer max )
+    public IntegerFormField( String name, String units, Integer min,
+        Integer max )
     {
         this( name, units, 20, min, max );
     }
@@ -126,7 +127,10 @@ public class IntegerFormField implements IDataFormField<Integer>
     public void setValue( Integer value )
     {
         this.value = value;
+        IUpdater<Integer> updater = this.updater;
+        this.updater = null;
         textField.setText( "" + value );
+        this.updater = updater;
     }
 
     /***************************************************************************
