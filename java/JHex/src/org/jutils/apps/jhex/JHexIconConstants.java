@@ -3,6 +3,8 @@ package org.jutils.apps.jhex;
 import java.awt.Image;
 import java.util.List;
 
+import javax.swing.Icon;
+
 import org.jutils.IconLoader;
 
 /*******************************************************************************
@@ -42,5 +44,14 @@ public class JHexIconConstants
     public static List<Image> getAppImages()
     {
         return loader.getImages( IconLoader.buildImageList( "app_" ) );
+    }
+
+    /***************************************************************************
+     * @param str
+     * @return
+     **************************************************************************/
+    public static Icon getIcon( String str )
+    {
+        return loader.getIcon( str );
     }
 }

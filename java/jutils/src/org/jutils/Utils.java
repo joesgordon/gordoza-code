@@ -26,8 +26,8 @@ public final class Utils
 
     static
     {
-        REGEX_METAC = new char[] { '\\', '^', '|', '[', ']', '(', ')', '$',
-            '.', '+', '*', '?', '{', '}' };
+        REGEX_METAC = new char[] { '\\', '^', '|', '[', ']', '(', ')', '$', '.',
+            '+', '*', '?', '{', '}' };
         NEW_LINE = System.getProperty( PropConstants.SYS_LINE_SEP );
         USER_HOME = System.getProperty( PropConstants.SYS_USER_DIR );
     }
@@ -522,9 +522,10 @@ public final class Utils
         }
         catch( ArrayIndexOutOfBoundsException ex )
         {
-            throw new ArrayIndexOutOfBoundsException( "Unable to copy " +
-                length + " items from array of length " + src.length + " @ " +
-                srcPos + " to array of length " + dest.length + " @ " + destPos );
+            throw new ArrayIndexOutOfBoundsException(
+                "Unable to copy " + length + " items from array of length " +
+                    src.length + " @ " + srcPos + " to array of length " +
+                    dest.length + " @ " + destPos );
         }
     }
 
@@ -535,8 +536,8 @@ public final class Utils
      * @param destPos
      * @param length
      **************************************************************************/
-    public static <T> void byteArrayCopy( byte [] src, int srcPos,
-        byte [] dest, int destPos, int length )
+    public static <T> void byteArrayCopy( byte [] src, int srcPos, byte [] dest,
+        int destPos, int length )
     {
         try
         {
@@ -544,9 +545,10 @@ public final class Utils
         }
         catch( ArrayIndexOutOfBoundsException ex )
         {
-            throw new ArrayIndexOutOfBoundsException( "Unable to copy " +
-                length + " bytes from array of length " + src.length + " @ " +
-                srcPos + " to array of length " + dest.length + " @ " + destPos );
+            throw new ArrayIndexOutOfBoundsException(
+                "Unable to copy " + length + " bytes from array of length " +
+                    src.length + " @ " + srcPos + " to array of length " +
+                    dest.length + " @ " + destPos );
         }
     }
 
@@ -579,7 +581,8 @@ public final class Utils
         {
             try
             {
-                result = ( String )contents.getTransferData( DataFlavor.stringFlavor );
+                result = ( String )contents.getTransferData(
+                    DataFlavor.stringFlavor );
             }
             catch( UnsupportedFlavorException ex )
             {
@@ -608,5 +611,70 @@ public final class Utils
                 // do nothing
             }
         } );
+    }
+
+    /***************************************************************************
+     * Searches the specified list for the specified object using the binary
+     * search algorithm. The list must be sorted into ascending order according
+     * to the natural ordering of its elements (as by the sort(List) method)
+     * prior to making this call. If it is not sorted, the results are
+     * undefined. If the list contains multiple elements equal to the specified
+     * object, there is no guarantee which one will be found.</p>
+     * @param items
+     * @param key
+     * @param c
+     * @return the index of the search key, if it is contained in the list;
+     * otherwise, <tt>(-(<i>insertion point</i>) - 1)</tt>. The <i>insertion
+     * point</i> is defined as the point at which the key would be inserted into
+     * the list: the index of the first element greater than the key, or
+     * <tt>list.size()</tt> if all elements in the list are less than the
+     * specified key. Note that this guarantees that the return value will be
+     * &gt;= 0 if and only if the key is found.
+     **************************************************************************/
+    public static <T, K> int binarySearch( List<T> items, K key,
+        IComparator<T, K> c )
+    {
+        int low = 0;
+        int high = items.size() - 1;
+
+        while( low <= high )
+        {
+            int mid = ( low + high ) >>> 1;
+            T midVal = items.get( mid );
+            int cmp = c.compare( key, midVal );
+
+            if( cmp > 0 )
+            {
+                low = mid + 1;
+            }
+            else if( cmp < 0 )
+            {
+                high = mid - 1;
+            }
+            else
+            {
+                return mid; // key found
+            }
+        }
+        return -( low + 1 ); // key not found
+    }
+
+    /***************************************************************************
+     * Object that can compare an item object to a key object. Used for sorting
+     * or searching a list of the items type by a field of the item.
+     * @see Comparator#compare(Object, Object)
+     **************************************************************************/
+    public static interface IComparator<T, K>
+    {
+        /***********************************************************************
+         * Compares its two arguments for order. Returns <ul> <li>a negative
+         * integer if {@code thisKey < thatItem}</li> <li>zero if
+         * {@code thisKey == thatItem}, or </li> <li>a positive integer if
+         * {@code thisKey > thatItem},</li> </ul>
+         * @param item
+         * @param key
+         * @return
+         **********************************************************************/
+        public int compare( K thisKey, T thatItem );
     }
 }

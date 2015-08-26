@@ -11,7 +11,7 @@ import org.jutils.io.IStdSerializer;
  * but a certain number of items to the provided stream.
  * @param <T> the type of item in the group.
  ******************************************************************************/
-public class CachedList<T> implements Iterable<T>
+public class CachedList<T> implements List<T>
 {
     /** The serializer error reporter for this list. */
     private final ICacher<T> cacher;
@@ -97,26 +97,9 @@ public class CachedList<T> implements Iterable<T>
     }
 
     /***************************************************************************
-     * @param item
-     **************************************************************************/
-    public void add( T item )
-    {
-        if( !open )
-        {
-            throw new IllegalStateException(
-                "Cannot add items when stream closed" );
-        }
-
-        ensureCached( size++ );
-
-        cache.add( item );
-
-        unwritten = true;
-    }
-
-    /***************************************************************************
      * @param index
      **************************************************************************/
+    @Override
     public T get( int index )
     {
         if( !open )
@@ -138,6 +121,7 @@ public class CachedList<T> implements Iterable<T>
      * @return
      * @see List#subList(int, int)
      **************************************************************************/
+    @Override
     public List<T> subList( int fromIndex, int toIndex )
     {
         int len = toIndex - fromIndex;
@@ -154,6 +138,7 @@ public class CachedList<T> implements Iterable<T>
     /***************************************************************************
      * @return
      **************************************************************************/
+    @Override
     public int size()
     {
         return size;
@@ -161,27 +146,28 @@ public class CachedList<T> implements Iterable<T>
 
     /***************************************************************************
      * @param index
+     * @return true if the item can be cached.
+     * @throws ArrayIndexOutOfBoundsException if the index < 0.
      **************************************************************************/
-    private void ensureCached( int index )
+    private boolean ensureCached( int index )
     {
         if( index < 0 || index > size )
         {
-            throw new ArrayIndexOutOfBoundsException(
-                "Invalid index into list of size " + size + ": " + index );
+            return false;
         }
 
         if( index >= cachedIndex && index < cachedIndex + cacheCount )
         {
-            return;
+            return true;
         }
 
-        loadCacheSafe( index );
+        return loadCacheSafe( index );
     }
 
     /***************************************************************************
      * @param index
      **************************************************************************/
-    private void loadCacheSafe( int index )
+    private boolean loadCacheSafe( int index )
     {
         try
         {
@@ -204,8 +190,10 @@ public class CachedList<T> implements Iterable<T>
         }
         catch( IOException ex )
         {
-            throw new RuntimeException( "Error loading cache from file", ex );
+            return false;
         }
+
+        return true;
     }
 
     /***************************************************************************
@@ -234,7 +222,7 @@ public class CachedList<T> implements Iterable<T>
             cache.add( cacher.read( stream ) );
         }
 
-        // LogUtils.printDebug( "   read: " + cache.size() );
+        // LogUtils.printDebug( " read: " + cache.size() );
     }
 
     /***************************************************************************
@@ -242,7 +230,7 @@ public class CachedList<T> implements Iterable<T>
      **************************************************************************/
     private void writeCache() throws IOException
     {
-        // LogUtils.printDebug( "    wrote " +
+        // LogUtils.printDebug( " wrote " +
         // ( cache.size() * cacher.getItemSize() ) + " bytes" );
 
         for( int i = 0; i < cache.size(); i++ )
@@ -294,5 +282,165 @@ public class CachedList<T> implements Iterable<T>
     public T last()
     {
         return isEmpty() ? null : get( size() - 1 );
+    }
+
+    @Override
+    public boolean contains( Object o )
+    {
+        for( T t : this )
+        {
+            if( t.equals( o ) )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public Object [] toArray()
+    {
+        Object [] items = new Object[size()];
+
+        for( int i = 0; i < size(); i++ )
+        {
+            items[i] = get( i );
+        }
+
+        return items;
+    }
+
+    @SuppressWarnings( "unchecked")
+    @Override
+    public <K> K [] toArray( K [] a )
+    {
+        if( a.length < size )
+        {
+            for( int i = 0; i < size(); i++ )
+            {
+                a[i] = ( K )get( i );
+            }
+        }
+        else
+        {
+            return ( K [] )toArray();
+        }
+        return a;
+    }
+
+    @Override
+    public boolean add( T item )
+    {
+        if( !open )
+        {
+            return false;
+        }
+
+        ensureCached( size++ );
+
+        cache.add( item );
+
+        unwritten = true;
+
+        return true;
+    }
+
+    @Override
+    public boolean remove( Object o )
+    {
+        throw new UnsupportedOperationException(
+            "Functionality is not yet supported" );
+    }
+
+    @Override
+    public boolean containsAll( Collection<?> c )
+    {
+        throw new UnsupportedOperationException(
+            "Functionality is not yet supported" );
+    }
+
+    @Override
+    public boolean addAll( Collection<? extends T> c )
+    {
+        throw new UnsupportedOperationException(
+            "Functionality is not yet supported" );
+    }
+
+    @Override
+    public boolean addAll( int index, Collection<? extends T> c )
+    {
+        throw new UnsupportedOperationException(
+            "Functionality is not yet supported" );
+    }
+
+    @Override
+    public boolean removeAll( Collection<?> c )
+    {
+        throw new UnsupportedOperationException(
+            "Functionality is not yet supported" );
+    }
+
+    @Override
+    public boolean retainAll( Collection<?> c )
+    {
+        throw new UnsupportedOperationException(
+            "Functionality is not yet supported" );
+    }
+
+    @Override
+    public void clear()
+    {
+        throw new UnsupportedOperationException(
+            "Functionality is not yet supported" );
+    }
+
+    @Override
+    public T set( int index, T element )
+    {
+        throw new UnsupportedOperationException(
+            "Functionality is not yet supported" );
+    }
+
+    @Override
+    public void add( int index, T element )
+    {
+        throw new UnsupportedOperationException(
+            "Functionality is not yet supported" );
+    }
+
+    @Override
+    public T remove( int index )
+    {
+        throw new UnsupportedOperationException(
+            "Functionality is not yet supported" );
+    }
+
+    @Override
+    public int indexOf( Object o )
+    {
+        throw new UnsupportedOperationException(
+            "Functionality is not yet supported" );
+    }
+
+    @Override
+    public int lastIndexOf( Object o )
+    {
+        throw new UnsupportedOperationException(
+            "Functionality is not yet supported" );
+    }
+
+    @Override
+    public ListIterator<T> listIterator()
+    {
+        throw new UnsupportedOperationException(
+            "Functionality is not yet supported" );
+    }
+
+    @Override
+    public ListIterator<T> listIterator( int index )
+    {
+        throw new UnsupportedOperationException(
+            "Functionality is not yet supported" );
     }
 }
