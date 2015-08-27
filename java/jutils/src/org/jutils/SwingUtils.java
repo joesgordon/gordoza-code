@@ -50,7 +50,8 @@ public final class SwingUtils
     {
         CloseAction dispatchClosing = new CloseAction( win );
         String mapKey = "com.spodding.tackline.dispatch:WINDOW_CLOSING";
-        KeyStroke escapeStroke = KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 );
+        KeyStroke escapeStroke = KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE,
+            0 );
 
         rootPane.getInputMap( JComponent.WHEN_IN_FOCUSED_WINDOW ).put(
             escapeStroke, mapKey );
@@ -80,8 +81,8 @@ public final class SwingUtils
         // Build message UI.
         // ---------------------------------------------------------------------
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 8, 8,
-                0, 8 ), 0, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.NONE,
+            new Insets( 8, 8, 0, 8 ), 0, 0 );
         panel.add( msgLabel, constraints );
 
         nameField.setEditable( true );
@@ -117,7 +118,7 @@ public final class SwingUtils
      * @param defaultChoice
      * @return
      **************************************************************************/
-    public static <T> T showConfirmMessage( Component parent, String message,
+    public static <T> T showConfirmMessage( Component parent, Object message,
         String title, T [] list, T defaultChoice )
     {
         JOptionPane jop = new JOptionPane( message,
@@ -172,8 +173,8 @@ public final class SwingUtils
         }
 
         constraints = new GridBagConstraints( 0, row++, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
         panel.add( container, constraints );
 
         constraints = new GridBagConstraints( 0, row++, 1, 1, 1.0, 0.0,
@@ -311,12 +312,12 @@ public final class SwingUtils
 
         JOptionPane pane = new JOptionPane( msg, JOptionPane.QUESTION_MESSAGE,
             JOptionPane.OK_CANCEL_OPTION, null,
-            new String[] { okText, "Cancel" }, okText )
+            new String[] { okText, "Cancel" }, okText)
         {
             @Override
             public void selectInitialValue()
             {
-                initialFocusSelector.run();
+                initialFocusSelector.run( );
             }
         };
 
@@ -371,15 +372,18 @@ public final class SwingUtils
 
             if( ( extState & JFrame.ICONIFIED ) == JFrame.ICONIFIED )
             {
-                if( ( extState & JFrame.MAXIMIZED_BOTH ) == JFrame.MAXIMIZED_BOTH )
+                if( ( extState &
+                    JFrame.MAXIMIZED_BOTH ) == JFrame.MAXIMIZED_BOTH )
                 {
                     frame.setExtendedState( JFrame.MAXIMIZED_BOTH );
                 }
-                else if( ( extState & JFrame.MAXIMIZED_HORIZ ) == JFrame.MAXIMIZED_HORIZ )
+                else if( ( extState &
+                    JFrame.MAXIMIZED_HORIZ ) == JFrame.MAXIMIZED_HORIZ )
                 {
                     frame.setExtendedState( JFrame.MAXIMIZED_HORIZ );
                 }
-                else if( ( extState & JFrame.MAXIMIZED_VERT ) == JFrame.MAXIMIZED_VERT )
+                else if( ( extState &
+                    JFrame.MAXIMIZED_VERT ) == JFrame.MAXIMIZED_VERT )
                 {
                 }
                 else
@@ -474,7 +478,8 @@ public final class SwingUtils
                 String str = Utils.getClipboardText();
                 T data = XStreamUtils.readObjectXStream( str );
 
-                listener.actionPerformed( new ItemActionEvent<T>( this, data ) );
+                listener.actionPerformed(
+                    new ItemActionEvent<T>( this, data ) );
             }
             catch( XStreamException ex )
             {
@@ -562,7 +567,8 @@ public final class SwingUtils
         @Override
         public void actionPerformed( ActionEvent event )
         {
-            win.dispatchEvent( new WindowEvent( win, WindowEvent.WINDOW_CLOSING ) );
+            win.dispatchEvent(
+                new WindowEvent( win, WindowEvent.WINDOW_CLOSING ) );
         }
     }
 
