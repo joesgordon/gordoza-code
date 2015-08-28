@@ -1,8 +1,8 @@
 package chatterbox.messenger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import chatterbox.data.DefaultMessage;
 import chatterbox.model.*;
 
 /***************************************************************************
@@ -25,14 +25,15 @@ public class TestConversation extends AbstractConversation
      * 
      **************************************************************************/
     @Override
-    public void sendMessage( IChatMessage message )
+    public void sendMessage( ChatMessage message )
     {
         messageReceivedListeners.fireListeners( this, message );
 
+        String text = "Polo: " + message.text;
+
         // Pretend that the remote user responded.
-        IChatMessage retort = new DefaultMessage( getRandomUser(), "Polo: " +
-            message.getText(), new ArrayList<IMessageAttributeSet>(),
-            new Date(), message.getConversationId(), false );
+        ChatMessage retort = new ChatMessage( "", getRandomUser(), 0L, 0L, text,
+            new ArrayList<>() );
         messageReceivedListeners.fireListeners( this, retort );
     }
 

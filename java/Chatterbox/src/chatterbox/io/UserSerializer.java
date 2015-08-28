@@ -8,15 +8,25 @@ import org.jutils.io.IDataStream;
 import chatterbox.data.ChatUser;
 import chatterbox.model.IUser;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class UserSerializer implements IDataSerializer<IUser>
 {
-    private StringSerializer stringSerializer;
+    /**  */
+    private final StringSerializer stringSerializer;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public UserSerializer()
     {
         stringSerializer = new StringSerializer();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public IUser read( IDataStream stream ) throws IOException
     {
@@ -29,6 +39,9 @@ public class UserSerializer implements IDataSerializer<IUser>
         return new ChatUser( userId, displayName );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void write( IUser user, IDataStream stream ) throws IOException
     {

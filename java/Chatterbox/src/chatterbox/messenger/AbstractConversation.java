@@ -21,19 +21,10 @@ public abstract class AbstractConversation implements IConversation
     private List<IUser> remoteUsers;
 
     /**  */
-    protected ItemActionList<IChatMessage> messageReceivedListeners;
+    protected ItemActionList<ChatMessage> messageReceivedListeners;
 
     /**  */
-    protected ItemActionList<IUser> userAddedListeners;
-
-    /**  */
-    protected ItemActionList<IUser> userAvailableListeners;
-
-    /**  */
-    protected ItemActionList<IUser> userRemovedListeners;
-
-    /**  */
-    protected ItemActionList<IUser> userUnavailableListeners;
+    protected List<IUserListener> userListeners;
 
     /***************************************************************************
      * @param id
@@ -51,11 +42,8 @@ public abstract class AbstractConversation implements IConversation
             this.remoteUsers.addAll( users );
         }
 
-        userAddedListeners = new ItemActionList<IUser>();
-        userAvailableListeners = new ItemActionList<IUser>();
-        userRemovedListeners = new ItemActionList<IUser>();
-        userUnavailableListeners = new ItemActionList<IUser>();
-        messageReceivedListeners = new ItemActionList<IChatMessage>();
+        userListeners = new ArrayList<>();
+        messageReceivedListeners = new ItemActionList<ChatMessage>();
     }
 
     /***************************************************************************
@@ -63,7 +51,7 @@ public abstract class AbstractConversation implements IConversation
      **************************************************************************/
     @Override
     public final void addMessageReceivedListener(
-        ItemActionListener<IChatMessage> l )
+        ItemActionListener<ChatMessage> l )
     {
         messageReceivedListeners.addListener( l );
     }
@@ -72,36 +60,10 @@ public abstract class AbstractConversation implements IConversation
      * 
      **************************************************************************/
     @Override
-    public final void addUserAddedListener( ItemActionListener<IUser> l )
-    {
-        userAddedListeners.addListener( l );
-    }
+    public void addUserListener( IUserListener l )
 
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public final void addUserAvailableListener( ItemActionListener<IUser> l )
     {
-        userAvailableListeners.addListener( l );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public final void addUserRemovedListener( ItemActionListener<IUser> l )
-    {
-        userRemovedListeners.addListener( l );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public final void addUserUnavailableListener( ItemActionListener<IUser> l )
-    {
-        userUnavailableListeners.addListener( l );
+        userListeners.add( l );
     }
 
     /***************************************************************************
@@ -126,18 +88,17 @@ public abstract class AbstractConversation implements IConversation
      * 
      **************************************************************************/
     @Override
-    public final List<IUser> getRecipients()
+    public final List<IUser> getUsers()
     {
         return remoteUsers;
     }
 
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public final List<IUser> getUsers()
+    private void fireUserListeners( IUser user, ChangeType change )
     {
-        return remoteUsers;
+        for( IUserListener l : userListeners )
+        {
+            l.userChanged( user, change );
+        }
     }
 
     /***************************************************************************
@@ -147,7 +108,7 @@ public abstract class AbstractConversation implements IConversation
     public final void addUser( IUser user )
     {
         remoteUsers.add( user );
-        userAddedListeners.fireListeners( this, user );
+        fireUserListeners( user, ChangeType.ADDED );
     }
 
     /***************************************************************************
@@ -157,7 +118,7 @@ public abstract class AbstractConversation implements IConversation
     public void removeUser( IUser user )
     {
         remoteUsers.remove( user );
-        userRemovedListeners.fireListeners( this, user );
+        fireUserListeners( user, ChangeType.REMOVED );
     }
 
     /***************************************************************************
@@ -168,14 +129,7 @@ public abstract class AbstractConversation implements IConversation
     {
         if( remoteUsers.contains( user ) )
         {
-            if( available )
-            {
-                userAvailableListeners.fireListeners( this, user );
-            }
-            else
-            {
-                userUnavailableListeners.fireListeners( this, user );
-            }
+            fireUserListeners( user, ChangeType.UPDATED );
         }
     }
 
@@ -202,7 +156,7 @@ public abstract class AbstractConversation implements IConversation
      * 
      **************************************************************************/
     @Override
-    public final void receiveMessage( IChatMessage message )
+    public void receiveMessage( ChatMessage message )
     {
         messageReceivedListeners.fireListeners( this, message );
     }

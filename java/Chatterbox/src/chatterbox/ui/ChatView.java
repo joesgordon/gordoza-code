@@ -1,29 +1,19 @@
 package chatterbox.ui;
 
-import java.util.List;
-
 import javax.swing.JComponent;
 
-import org.jutils.ui.event.ItemActionList;
-import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.model.IView;
 
-import chatterbox.model.*;
-import chatterbox.view.IChatView;
-import chatterbox.view.IConversationView;
+import chatterbox.model.IChat;
+import chatterbox.model.IConversation;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ChatView implements IChatView, IView<JComponent>
+public class ChatView implements IView<JComponent>
 {
     /**  */
     private final ConversationView conversationPanel;
-
-    /**  */
-    private final ItemActionList<List<IUser>> conversationStartedListeners;
-    /**  */
-    private final ItemActionList<String> displayNameChangedListeners;
 
     /**  */
     private IChat chat;
@@ -31,18 +21,18 @@ public class ChatView implements IChatView, IView<JComponent>
     /***************************************************************************
      * 
      **************************************************************************/
-    public ChatView()
+    public ChatView( IChat chat )
     {
-        this.conversationPanel = new ConversationView( this );
+        this.chat = chat;
 
-        this.conversationStartedListeners = new ItemActionList<List<IUser>>();
-        this.displayNameChangedListeners = new ItemActionList<String>();
+        this.conversationPanel = new ConversationView( chat );
+
+        conversationPanel.setData( chat.getDefaultConversation() );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
     public IChat getChat()
     {
         return chat;
@@ -51,49 +41,21 @@ public class ChatView implements IChatView, IView<JComponent>
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
-    public void setChat( IChat chat )
+    public ConversationView createConversationView( IConversation conversation )
     {
-        this.chat = chat;
+        ConversationView cv = new ConversationView( chat );
 
-        conversationPanel.setConversation( chat.getDefaultConversation() );
+        cv.setData( conversation );
+
+        return cv;
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
-    public IConversationView createConversationView( IConversation conversation )
-    {
-        return new ConversationFrame( this, conversation );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public IConversationView getDefaultConversationView()
+    public ConversationView getDefaultConversationView()
     {
         return conversationPanel;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void addConversationStartedListener(
-        ItemActionListener<List<IUser>> l )
-    {
-        conversationStartedListeners.addListener( l );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void addDisplayNameChangedListener( ItemActionListener<String> l )
-    {
-        displayNameChangedListeners.addListener( l );
     }
 
     /***************************************************************************

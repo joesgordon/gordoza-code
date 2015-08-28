@@ -4,37 +4,71 @@ import java.util.List;
 
 import org.jutils.ui.event.ItemActionListener;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public interface IConversation
 {
+    /***************************************************************************
+     * Returns the name of this conversation.
+     **************************************************************************/
     public String getConversationId();
 
-    public void sendMessage( IChatMessage message );
+    /***************************************************************************
+     * Sends the provided message.
+     * @param message
+     **************************************************************************/
+    public void sendMessage( ChatMessage message );
 
-    public void receiveMessage( IChatMessage message );
+    /***************************************************************************
+     * @param message
+     **************************************************************************/
+    public void receiveMessage( ChatMessage message );
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public void leaveConversation();
 
-    public List<IUser> getRecipients();
-
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public IChat getChat();
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public List<IUser> getUsers();
 
+    /***************************************************************************
+     * @param user
+     **************************************************************************/
     public void addUser( IUser user );
 
+    /***************************************************************************
+     * @param user
+     **************************************************************************/
     public void removeUser( IUser user );
 
+    /***************************************************************************
+     * @param user
+     * @param available
+     **************************************************************************/
     public void setUserAvailable( IUser user, boolean available );
 
+    /***************************************************************************
+     * @param user
+     * @return
+     **************************************************************************/
     public boolean isUserParticipating( IUser user );
 
-    public void addMessageReceivedListener( ItemActionListener<IChatMessage> l );
+    /***************************************************************************
+     * @param l
+     **************************************************************************/
+    public void addMessageReceivedListener( ItemActionListener<ChatMessage> l );
 
-    public void addUserAddedListener( ItemActionListener<IUser> l );
-
-    public void addUserAvailableListener( ItemActionListener<IUser> l );
-
-    public void addUserUnavailableListener( ItemActionListener<IUser> l );
-
-    public void addUserRemovedListener( ItemActionListener<IUser> l );
+    /***************************************************************************
+     * @param l
+     **************************************************************************/
+    public void addUserListener( IUserListener l );
 }

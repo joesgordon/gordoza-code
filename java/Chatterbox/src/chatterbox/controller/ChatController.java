@@ -7,30 +7,30 @@ import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
 
 import chatterbox.model.*;
-import chatterbox.view.IChatView;
-import chatterbox.view.IConversationView;
+import chatterbox.ui.ChatView;
+import chatterbox.ui.ConversationView;
 
 /*******************************************************************************
- * 
+ *  
  ******************************************************************************/
 public class ChatController
 {
     /**  */
-    private IChatView chatView;
+    private ChatView chatView;
     /**  */
     private IChat chatModel;
 
-    private List<IConversationView> conversationViews;
+    private List<ConversationView> conversationViews;
 
     /***************************************************************************
      * @param view
      * @param chat
      **************************************************************************/
-    public ChatController( IChat chat, IChatView view )
+    public ChatController( IChat chat, ChatView view )
     {
         chatView = view;
         chatModel = chat;
-        conversationViews = new ArrayList<IConversationView>();
+        conversationViews = new ArrayList<>();
 
         ItemActionListener<IConversation> convCreatedListener;
         ItemActionListener<String> userChangedListener;
@@ -60,7 +60,7 @@ public class ChatController
             public void actionPerformed( ItemActionEvent<List<IUser>> event )
             {
                 List<IUser> users = event.getItem();
-                IConversationView view = null;
+                ConversationView view = null;
                 IConversation conv;
 
                 if( users.size() == 1 )
@@ -82,15 +82,10 @@ public class ChatController
                         return;
                     }
                 }
-
-                view.showView();
             }
         };
 
         chatModel.addConversationCreatedListener( convCreatedListener );
-
-        chatView.addDisplayNameChangedListener( userChangedListener );
-        chatView.addConversationStartedListener( conversationStartedListener );
 
         new ConversationController( chatModel.getDefaultConversation(),
             chatView.getDefaultConversationView() );
@@ -100,16 +95,17 @@ public class ChatController
      * @param user
      * @return
      **************************************************************************/
-    protected IConversationView containsConversation( IUser user )
+    protected ConversationView containsConversation( IUser user )
     {
-        for( IConversationView view : conversationViews )
+        for( ConversationView view : conversationViews )
         {
-            List<IUser> users = view.getConversation().getUsers();
+            List<IUser> users = view.getData().getUsers();
             if( users.size() == 1 && users.get( 0 ).equals( user ) )
             {
                 return view;
             }
         }
+
         return null;
     }
 }

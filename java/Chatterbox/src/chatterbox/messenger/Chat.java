@@ -30,6 +30,9 @@ public class Chat extends AbstractChat
     /**  */
     private final ChatWire wire;
 
+    /**  */
+    private ChatConfig config;
+
     /***************************************************************************
      * @param options
      **************************************************************************/
@@ -49,9 +52,11 @@ public class Chat extends AbstractChat
      * 
      **************************************************************************/
     @Override
-    public void connect( String address, int port ) throws IOException
+    public void connect( ChatConfig config ) throws IOException
     {
-        wire.connect( address, port );
+        this.config = config;
+
+        wire.connect( config.address, config.port );
 
         userAvailableTimer = new Timer( "User Available Timer" );
         userAvailableTimer.schedule( new UserAvailableTask( this ), 0, 5000 );
@@ -159,17 +164,16 @@ public class Chat extends AbstractChat
     /***************************************************************************
      * @param message
      **************************************************************************/
-    private void receiveMessage( IChatMessage message )
+    private void receiveMessage( ChatMessage message )
     {
         // if( !message.isLocalUser() )
         // {
-        String conversationId = message.getConversationId();
+        String conversationId = message.conversation;
         IConversation conversation = getConversation( conversationId );
         if( conversation == null )
         {
-            List<IUser> users = Arrays.asList( new IUser[] { message.getSender() } );
-            conversation = new Conversation( this, message.getConversationId(),
-                users );
+            List<IUser> users = Arrays.asList( new IUser[] { message.sender } );
+            conversation = new Conversation( this, conversationId, users );
         }
         conversation.receiveMessage( message );
         // }
@@ -217,7 +221,7 @@ public class Chat extends AbstractChat
      * @param message
      * @throws IOException
      **************************************************************************/
-    public void sendMessage( IChatMessage message ) throws IOException
+    public void sendMessage( ChatMessage message ) throws IOException
     {
         try( ByteArrayStream stream = new ByteArrayStream( 1024 );
              DataStream out = new DataStream( stream ) )
@@ -243,8 +247,8 @@ public class Chat extends AbstractChat
         // Put the header bytes before the message.
         header = new ChatHeader( messageType, msgBytes.length );
 
-        try( ByteArrayStream stream = new ByteArrayStream( msgBytes.length + 64 );
-             DataStream out = new DataStream( stream ) )
+        try( ByteArrayStream stream = new ByteArrayStream(
+            msgBytes.length + 64 ); DataStream out = new DataStream( stream ) )
         {
             msgSerializer.headerSerializer.write( header, out );
             stream.write( msgBytes );
@@ -252,8 +256,8 @@ public class Chat extends AbstractChat
 
             if( msgBytes.length > 65535 )
             {
-                throw new RuntimeFormatException( "Message is too long: " +
-                    msgBytes.length );
+                throw new RuntimeFormatException(
+                    "Message is too long: " + msgBytes.length );
             }
 
             wire.send( msgBytes );
@@ -264,18 +268,9 @@ public class Chat extends AbstractChat
      * 
      **************************************************************************/
     @Override
-    public String getAddress()
+    public ChatConfig getConfig()
     {
-        return wire.getAddress();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public int getPort()
-    {
-        return wire.getPort();
+        return config;
     }
 
     /***************************************************************************
@@ -298,7 +293,8 @@ public class Chat extends AbstractChat
             RawMessage msg = event.getItem();
             byte[] messageBytes = msg.bytes;
 
-            try( ByteArrayStream byteStream = new ByteArrayStream( messageBytes );
+            try( ByteArrayStream byteStream = new ByteArrayStream(
+                messageBytes );
                  IDataStream stream = new DataStream( byteStream ); )
             {
                 parseMessage( stream );
@@ -313,8 +309,8 @@ public class Chat extends AbstractChat
             }
         }
 
-        private void parseMessage( IDataStream stream ) throws IOException,
-            RuntimeFormatException
+        private void parseMessage( IDataStream stream )
+            throws IOException, RuntimeFormatException
         {
             ChatHeader header = msgSerializer.headerSerializer.read( stream );
 
@@ -322,19 +318,22 @@ public class Chat extends AbstractChat
             {
                 case Chat:
                 {
-                    IChatMessage message = msgSerializer.messageSerializer.read( stream );
+                    ChatMessage message = msgSerializer.messageSerializer.read(
+                        stream );
                     chat.receiveMessage( message );
                     break;
                 }
                 case UserAvailable:
                 {
-                    UserAvailableMessage message = msgSerializer.userAvailableMessageSerializer.read( stream );
+                    UserAvailableMessage message = msgSerializer.userAvailableMessageSerializer.read(
+                        stream );
                     chat.setUserAvailable( message.getUser(), true );
                     break;
                 }
                 case UserLeft:
                 {
-                    UserLeftMessage message = msgSerializer.userLeftMessageSerializer.read( stream );
+                    UserLeftMessage message = msgSerializer.userLeftMessageSerializer.read(
+                        stream );
                     chat.removeUser( message.getConversationId(),
                         message.getUser() );
                     break;
@@ -356,7 +355,7 @@ public class Chat extends AbstractChat
         public MessageSerializer( IUser user )
         {
             this.headerSerializer = new ChatHeaderSerializer();
-            this.messageSerializer = new ChatMessageSerializer( user );
+            this.messageSerializer = new ChatMessageSerializer();
             this.userAvailableMessageSerializer = new UserAvailableMessageSerializer();
             this.userLeftMessageSerializer = new UserLeftMessageSerializer();
         }

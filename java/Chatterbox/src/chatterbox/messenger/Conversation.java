@@ -3,7 +3,7 @@ package chatterbox.messenger;
 import java.io.IOException;
 import java.util.List;
 
-import chatterbox.model.IChatMessage;
+import chatterbox.model.ChatMessage;
 import chatterbox.model.IUser;
 
 /*******************************************************************************
@@ -30,7 +30,7 @@ public class Conversation extends AbstractConversation
      * 
      **************************************************************************/
     @Override
-    public void sendMessage( IChatMessage message )
+    public void sendMessage( ChatMessage message )
     {
         try
         {

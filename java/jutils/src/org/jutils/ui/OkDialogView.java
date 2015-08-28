@@ -3,13 +3,13 @@ package org.jutils.ui;
 import java.awt.*;
 import java.awt.Dialog.ModalityType;
 import java.awt.event.*;
+import java.util.List;
 
 import javax.swing.*;
 
 import org.jutils.SwingUtils;
 import org.jutils.Utils;
-import org.jutils.ui.event.ItemActionList;
-import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.event.*;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
@@ -193,6 +193,67 @@ public class OkDialogView implements IView<JDialog>
     }
 
     /***************************************************************************
+     * @return
+     **************************************************************************/
+    public boolean show()
+    {
+        StateListener listener = new StateListener();
+
+        addOkListener( listener );
+
+        dialog.setLocationRelativeTo( null );
+        dialog.setVisible( true );
+
+        okListeners.removeListener( listener );
+
+        return listener.getSelection();
+    }
+
+    /***************************************************************************
+     * @param size
+     * @return
+     **************************************************************************/
+    public boolean show( Dimension size )
+    {
+        if( size == null )
+        {
+            dialog.pack();
+        }
+        else
+        {
+            dialog.setSize( size );
+            dialog.validate();
+        }
+
+        return show();
+    }
+
+    /***************************************************************************
+     * @param title
+     * @param size
+     * @return
+     **************************************************************************/
+    public boolean show( String title, Dimension size )
+    {
+        dialog.setTitle( title );
+
+        return show( size );
+    }
+
+    /***************************************************************************
+     * @param title
+     * @param iconImages
+     * @param size
+     * @return
+     **************************************************************************/
+    public boolean show( String title, List<Image> iconImages, Dimension size )
+    {
+        dialog.setIconImages( iconImages );
+
+        return show( title, size );
+    }
+
+    /***************************************************************************
      * Creates the content pane for this dialog.
      * @param content the user content to be displayed.
      **************************************************************************/
@@ -202,8 +263,8 @@ public class OkDialogView implements IView<JDialog>
         GridBagConstraints constraints;
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
         panel.add( content, constraints );
 
         constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
@@ -245,31 +306,31 @@ public class OkDialogView implements IView<JDialog>
         Utils.setMaxComponentSize( okButton, cancelButton, applyButton );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets( 0,
-                0, 0, 0 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.NONE,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
         panel.add( Box.createHorizontalStrut( 0 ), constraints );
 
         if( buttons.hasOk )
         {
             constraints = new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
-                    8, 8, 8, 8 ), 50, 5 );
+                GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets( 8, 8, 8, 8 ), 50, 5 );
             panel.add( okButton, constraints );
         }
 
         if( buttons.hasCancel )
         {
             constraints = new GridBagConstraints( 2, 0, 1, 1, 0.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
-                    8, 0, 8, 8 ), 50, 5 );
+                GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets( 8, 0, 8, 8 ), 50, 5 );
             panel.add( cancelButton, constraints );
         }
 
         if( buttons.hasApply )
         {
             constraints = new GridBagConstraints( 3, 0, 1, 1, 0.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
-                    8, 0, 8, 8 ), 50, 5 );
+                GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets( 8, 0, 8, 8 ), 50, 5 );
             panel.add( applyButton, constraints );
         }
 
@@ -297,6 +358,9 @@ public class OkDialogView implements IView<JDialog>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class CancelListener implements ActionListener
     {
         private final OkDialogView view;
@@ -314,6 +378,9 @@ public class OkDialogView implements IView<JDialog>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class ApplyListener implements ActionListener
     {
         private final OkDialogView view;
@@ -342,6 +409,9 @@ public class OkDialogView implements IView<JDialog>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public static enum OkDialogButtons
     {
         OK_ONLY( true, false, false ),
@@ -365,6 +435,30 @@ public class OkDialogView implements IView<JDialog>
         {
             return hasApply ? ModalityType.MODELESS
                 : ModalityType.APPLICATION_MODAL;
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class StateListener implements ItemActionListener<Boolean>
+    {
+        private boolean selection;
+
+        public StateListener()
+        {
+            this.selection = false;
+        }
+
+        @Override
+        public void actionPerformed( ItemActionEvent<Boolean> event )
+        {
+            this.selection = event.getItem();
+        }
+
+        public boolean getSelection()
+        {
+            return this.selection;
         }
     }
 }

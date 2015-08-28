@@ -6,13 +6,12 @@ import java.util.*;
 import org.jutils.io.IDataSerializer;
 import org.jutils.io.IDataStream;
 
-import chatterbox.data.DefaultMessage;
 import chatterbox.model.*;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ChatMessageSerializer implements IDataSerializer<IChatMessage>
+public class ChatMessageSerializer implements IDataSerializer<ChatMessage>
 {
     /**  */
     private StringSerializer stringSerializer;
@@ -20,34 +19,33 @@ public class ChatMessageSerializer implements IDataSerializer<IChatMessage>
     private UserSerializer userSerializer;
     /**  */
     private MessageAttributeSetSerializer attributeSerializer;
-    /**  */
-    private IUser localUser;
 
     /***************************************************************************
      * @param localUser
      **************************************************************************/
-    public ChatMessageSerializer( IUser localUser )
+    public ChatMessageSerializer()
     {
         stringSerializer = new StringSerializer();
         userSerializer = new UserSerializer();
-        this.localUser = localUser;
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public IChatMessage read( IDataStream stream ) throws IOException
+    public ChatMessage read( IDataStream stream ) throws IOException
     {
         String conversationId;
-        long sendTime;
+        long txTime;
+        long rxTime = new GregorianCalendar(
+            TimeZone.getTimeZone( "UTC" ) ).getTimeInMillis();
         IUser sender;
         String text;
         int numAttributes;
-        List<IMessageAttributeSet> attributeSets = new ArrayList<IMessageAttributeSet>();
+        List<MessageAttributeSet> attributeSets = new ArrayList<MessageAttributeSet>();
 
         conversationId = stringSerializer.read( stream );
-        sendTime = stream.readLong();
+        txTime = stream.readLong();
         sender = userSerializer.read( stream );
         text = stringSerializer.read( stream );
         numAttributes = stream.readInt();
@@ -56,25 +54,26 @@ public class ChatMessageSerializer implements IDataSerializer<IChatMessage>
             attributeSets.add( attributeSerializer.read( stream ) );
         }
 
-        return new DefaultMessage( sender, text, attributeSets, new Date(
-            sendTime ), conversationId, localUser.equals( sender ) );
+        ChatMessage msg = new ChatMessage( conversationId, sender, txTime,
+            rxTime, text, attributeSets );
+
+        return msg;
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void write( IChatMessage message, IDataStream stream )
+    public void write( ChatMessage message, IDataStream stream )
         throws IOException
     {
-        List<IMessageAttributeSet> attributes = message.getAttributeSets();
+        stringSerializer.write( message.conversation, stream );
+        stream.writeLong( message.txTime );
+        userSerializer.write( message.sender, stream );
+        stringSerializer.write( message.text, stream );
+        stream.writeInt( message.attributes.size() );
 
-        stringSerializer.write( message.getConversationId(), stream );
-        stream.writeLong( message.getTime().getTime() );
-        userSerializer.write( message.getSender(), stream );
-        stringSerializer.write( message.getText(), stream );
-        stream.writeInt( message.getAttributeSets().size() );
-        for( IMessageAttributeSet attribute : attributes )
+        for( MessageAttributeSet attribute : message.attributes )
         {
             attributeSerializer.write( attribute, stream );
         }

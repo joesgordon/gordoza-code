@@ -1,6 +1,5 @@
 package org.tuvok.ui;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -9,7 +8,8 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 
 import org.jutils.IconConstants;
-import org.jutils.ui.*;
+import org.jutils.ui.JGoodiesToolBar;
+import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
@@ -28,24 +28,16 @@ public class TuvokFrameView implements IView<JFrame>
     public TuvokFrameView()
     {
         this.frameView = new StandardFrameView();
-        this.frame = new JFrame();
+        this.frame = frameView.getView();
 
-        JPanel contentPanel = new JPanel( new BorderLayout() );
         TuvokPanel mainPanel = new TuvokPanel();
-
-        contentPanel.add( createToolBar(), java.awt.BorderLayout.NORTH );
-        contentPanel.add( mainPanel, java.awt.BorderLayout.CENTER );
-        contentPanel.add( new StatusBarPanel().getView(),
-            java.awt.BorderLayout.SOUTH );
-
-        // ---------------------------------------------------------------------
-        // Add content
-        // ---------------------------------------------------------------------
-        frame.setTitle( "Tuvok" );
 
         createMenuBar( frameView.getMenuBar() );
 
-        frameView.setContent( contentPanel );
+        frameView.setToolbar( createToolBar() );
+        frameView.setContent( mainPanel );
+
+        frame.setTitle( "Tuvok" );
 
         frame.setIconImages( IconConstants.loader.getImages(
             IconConstants.CALENDAR_16, IconConstants.CALENDAR_32 ) );
@@ -116,15 +108,18 @@ public class TuvokFrameView implements IView<JFrame>
     private void createFileMenu( JMenu fileMenu )
     {
         JMenuItem newMenuItem = new JMenuItem( "New" );
-        newMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
+        newMenuItem.setIcon(
+            IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
         newMenuItem.addActionListener( new NewListener() );
 
         JMenuItem openMenuItem = new JMenuItem( "Open" );
-        openMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+        openMenuItem.setIcon(
+            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
         openMenuItem.addActionListener( new OpenListener( this ) );
 
         JMenuItem saveMenuItem = new JMenuItem( "Save" );
-        saveMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
+        saveMenuItem.setIcon(
+            IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
         saveMenuItem.addActionListener( new SaveListener( this ) );
 
         fileMenu.add( newMenuItem, 0 );

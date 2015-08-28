@@ -5,20 +5,20 @@ import java.io.IOException;
 import org.jutils.io.IDataSerializer;
 import org.jutils.io.IDataStream;
 
-import chatterbox.model.IMessageAttributeSet;
+import chatterbox.model.MessageAttributeSet;
 
 public class MessageAttributeSetSerializer implements
-    IDataSerializer<IMessageAttributeSet>
+    IDataSerializer<MessageAttributeSet>
 {
     @Override
-    public IMessageAttributeSet read( IDataStream stream ) throws IOException
+    public MessageAttributeSet read( IDataStream stream ) throws IOException
     {
         // TODO Serialize attribute set
         return null;
     }
 
     @Override
-    public void write( IMessageAttributeSet t, IDataStream stream )
+    public void write( MessageAttributeSet t, IDataStream stream )
         throws IOException
     {
         // TODO Serialize attribute set

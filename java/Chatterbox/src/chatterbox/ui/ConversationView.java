@@ -11,20 +11,17 @@ import javax.swing.text.*;
 
 import org.jutils.IconConstants;
 import org.jutils.Utils;
-import org.jutils.io.LogUtils;
 import org.jutils.ui.FontChooserDialog;
-import org.jutils.ui.event.*;
-import org.jutils.ui.model.IView;
+import org.jutils.ui.event.ItemActionEvent;
+import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.model.IDataView;
 
-import chatterbox.data.UiChatMessage;
 import chatterbox.model.*;
-import chatterbox.view.IChatView;
-import chatterbox.view.IConversationView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ConversationView implements IConversationView, IView<JComponent>
+public class ConversationView implements IDataView<IConversation>
 {
     // -------------------------------------------------------------------------
     // GUI Components.
@@ -37,9 +34,7 @@ public class ConversationView implements IConversationView, IView<JComponent>
     /**  */
     private final JTextPane msgEditorPane;
     /**  */
-    private final JList<IUser> userList;
-    /**  */
-    private final DefaultListModel<IUser> userModel;
+    private final UserView usersView;
 
     // -------------------------------------------------------------------------
     // Helper members
@@ -51,105 +46,37 @@ public class ConversationView implements IConversationView, IView<JComponent>
     private IConversation conversation;
 
     // -------------------------------------------------------------------------
-    // Listener Lists
-    // -------------------------------------------------------------------------
-
-    /**  */
-    private final ItemActionList<IChatMessage> msgSentListeners;
-    /**  */
-    private final ItemActionList<String> userChangedListeners;
-    /**  */
-    private final ItemActionList<List<IUser>> conversationStartedListeners;
-    /**  */
-    private final ItemActionList<Object> conversationLeftListeners;
-
-    // -------------------------------------------------------------------------
     // Listeners to be added to the model.
     // -------------------------------------------------------------------------
 
     /**  */
-    private final ItemActionListener<IUser> userAddedListener;
+    private final IUserListener userListener;
     /**  */
-    private final ItemActionListener<IUser> userAvailableListener;
+    private final ItemActionListener<ChatMessage> messageReceivedListener;
+
     /**  */
-    private final ItemActionListener<IUser> userUnavailableListener;
-    /**  */
-    private final ItemActionListener<IChatMessage> messageReceivedListener;
-    /**  */
-    private final ItemActionListener<IUser> userRemovedListener;
-    /**  */
-    private final IChatView chatView;
+    private final IChat chat;
 
     /***************************************************************************
      * @param showUserPanel
      **************************************************************************/
-    public ConversationView( IChatView chatView )
+    public ConversationView( IChat chat )
     {
-        this.chatView = chatView;
+        this.chat = chat;
 
         this.chatEditorPane = new AppendableTextPane();
-        this.userModel = new DefaultListModel<IUser>();
-        this.userList = new JList<IUser>( userModel );
+        this.usersView = new UserView();
         this.msgEditorPane = new GrowingTextPane();
         this.view = createView();
 
-        this.msgSentListeners = new ItemActionList<IChatMessage>();
-        this.conversationStartedListeners = new ItemActionList<List<IUser>>();
-        this.userChangedListeners = new ItemActionList<String>();
-        this.conversationLeftListeners = new ItemActionList<Object>();
         this.dateFormatter = new SimpleDateFormat( "(MM-dd-yy HH:mm:ss)" );
 
         // ---------------------------------------------------------------------
         // Setup listeners.
         // ---------------------------------------------------------------------
-        this.userAddedListener = new ItemActionListener<IUser>()
-        {
-            @Override
-            public void actionPerformed( ItemActionEvent<IUser> event )
-            {
-                userModel.addElement( event.getItem() );
-            }
-        };
+        this.userListener = new UserListener( this );
 
-        this.userAvailableListener = new ItemActionListener<IUser>()
-        {
-            @Override
-            public void actionPerformed( ItemActionEvent<IUser> event )
-            {
-                LogUtils.printDebug( event.getItem().getDisplayName() +
-                    " is now available" );
-                int index = userModel.indexOf( event.getItem() );
-                userModel.set( index, event.getItem() );
-                userList.repaint();
-            }
-        };
-
-        this.userUnavailableListener = new ItemActionListener<IUser>()
-        {
-            @Override
-            public void actionPerformed( ItemActionEvent<IUser> event )
-            {
-                userList.repaint();
-            }
-        };
-
-        this.userRemovedListener = new ItemActionListener<IUser>()
-        {
-            @Override
-            public void actionPerformed( ItemActionEvent<IUser> event )
-            {
-                userModel.removeElement( event.getItem() );
-            }
-        };
-
-        this.messageReceivedListener = new ItemActionListener<IChatMessage>()
-        {
-            @Override
-            public void actionPerformed( ItemActionEvent<IChatMessage> event )
-            {
-                addMessage( event.getItem() );
-            }
-        };
+        this.messageReceivedListener = new MessageReceivedListener( this );
     }
 
     /***************************************************************************
@@ -159,14 +86,8 @@ public class ConversationView implements IConversationView, IView<JComponent>
     {
         JPanel panel = new JPanel( new GridBagLayout() );
 
-        JScrollPane userScrollPane = new JScrollPane( userList );
-
         JScrollPane chatScrollPane = new JScrollPane( chatEditorPane );
         BottomScroller chatScroller = new BottomScroller( chatEditorPane );
-
-        userList.setCellRenderer( new UserListCellRenderer() );
-        userList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-        userList.addMouseListener( new UsersMouseListener( this ) );
 
         chatEditorPane.setEditable( false );
 
@@ -174,25 +95,19 @@ public class ConversationView implements IConversationView, IView<JComponent>
         chatScrollPane.setPreferredSize( new Dimension( 100, 100 ) );
         chatScrollPane.setMinimumSize( new Dimension( 100, 100 ) );
 
-        userScrollPane.setPreferredSize( new Dimension( 175, 100 ) );
-        userScrollPane.setMinimumSize( new Dimension( 100, 100 ) );
+        panel.add( chatScrollPane,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+        panel.add( createContentPanel(),
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
 
-        JLabel userLabel = new JLabel( "Users:" );
-        userLabel.setFocusable( false );
-
-        panel.add( chatScrollPane, new GridBagConstraints( 0, 0, 1, 2, 1.0,
-            1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 4, 4, 4, 4 ), 0, 0 ) );
-        panel.add( createContentPanel(), new GridBagConstraints( 0, 2, 1, 1,
-            1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 4, 4, 4, 4 ), 0, 0 ) );
-
-        panel.add( userLabel, new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 4, 4,
-                4, 4 ), 0, 0 ) );
-        panel.add( userScrollPane, new GridBagConstraints( 1, 1, 1, 2, 0.0,
-            1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(
-                4, 4, 4, 4 ), 0, 0 ) );
+        panel.add( usersView.getView(),
+            new GridBagConstraints( 1, 0, 1, 2, 0.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
 
         return panel;
     }
@@ -203,51 +118,7 @@ public class ConversationView implements IConversationView, IView<JComponent>
     private Component createContentPanel()
     {
         JPanel contentPanel = new JPanel( new GridBagLayout() );
-        ActionListener fontButtonListener = new ActionListener()
-        {
-            @Override
-            public void actionPerformed( ActionEvent e )
-            {
-                FontChooserDialog fontChooser = new FontChooserDialog(
-                    ( JFrame )SwingUtilities.getWindowAncestor( view ) );
-
-                fontChooser.setAttributes( msgEditorPane.getCharacterAttributes() );
-                fontChooser.pack();
-                fontChooser.setLocationRelativeTo( view );
-                fontChooser.setVisible( true );
-
-                if( fontChooser.getOption() == JOptionPane.OK_OPTION )
-                {
-                    AttributeSet s = fontChooser.getAttributes();
-
-                    msgEditorPane.setCharacterAttributes( s, true );
-                }
-            }
-        };
-
-        KeyAdapter msgPaneKeyListener = new KeyAdapter()
-        {
-
-            @SuppressWarnings( "deprecation")
-            @Override
-            public void keyPressed( KeyEvent evt )
-            {
-                if( evt.getKeyCode() == KeyEvent.VK_ENTER &&
-                    evt.isControlDown() )
-                {
-                    evt.setKeyCode( KeyEvent.VK_ENTER );
-                    // The following uses a deperecated API,
-                    // it seems that there is not workaround
-                    evt.setModifiers( 0 );
-                    return;
-                }
-                else if( evt.getKeyCode() == KeyEvent.VK_ENTER )
-                {
-                    evt.consume();
-                    sendMessage();
-                }
-            }
-        };
+        ActionListener fontButtonListener = new FontListener( this );
 
         contentPanel.setBorder( BorderFactory.createEtchedBorder() );
 
@@ -257,29 +128,31 @@ public class ConversationView implements IConversationView, IView<JComponent>
         BottomScroller bottomScroller = new BottomScroller( msgEditorPane );
         JButton fontButton = new JButton( "Font" );
 
-        fontButton.setIcon( IconConstants.loader.getIcon( IconConstants.FONT_24 ) );
+        fontButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.FONT_24 ) );
         fontButton.addActionListener( fontButtonListener );
 
         this.msgEditorPane.addComponentListener( bottomScroller );
-        this.msgEditorPane.addKeyListener( msgPaneKeyListener );
 
         msgScrollPane.setMinimumSize( new Dimension( 100, 48 ) );
         msgScrollPane.setMaximumSize( new Dimension( 100, 150 ) );
         msgScrollPane.setBorder( null );
-        msgScrollPane.setBorder( BorderFactory.createMatteBorder( 1, 0, 0, 0,
-            Color.gray ) );
+        msgScrollPane.setBorder(
+            BorderFactory.createMatteBorder( 1, 0, 0, 0, Color.gray ) );
 
         toolbar.add( fontButton );
         toolbar.setFloatable( false );
         toolbar.setRollover( true );
         toolbar.setBorderPainted( false );
 
-        contentPanel.add( toolbar, new GridBagConstraints( 0, 0, 1, 1, 1.0,
-            0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(
-                0, 0, 0, 0 ), 0, 0 ) );
-        contentPanel.add( msgScrollPane, new GridBagConstraints( 0, 1, 1, 1,
-            1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        contentPanel.add( toolbar,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        contentPanel.add( msgScrollPane,
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
         return contentPanel;
     }
@@ -302,13 +175,18 @@ public class ConversationView implements IConversationView, IView<JComponent>
 
         if( canSend )
         {
-            UiChatMessage msg = new UiChatMessage(
-                conversation.getChat().getLocalUser(),
-                msgEditorPane.getStyledDocument(),
-                conversation.getConversationId() );
+            AttributeSet as = msgEditorPane.getStyledDocument().getDefaultRootElement().getAttributes();
+            List<MessageAttributeSet> attributes = new ArrayList<>();
+            String text = msgEditorPane.getText();
+
+            attributes.add( new MessageAttributeSet( as, 0, text.length() ) );
+
+            ChatMessage msg = new ChatMessage( conversation.getConversationId(),
+                conversation.getChat().getLocalUser(), 0L, 0L, text,
+                attributes );
             msgEditorPane.setText( "" );
 
-            msgSentListeners.fireListeners( this, msg );
+            conversation.sendMessage( msg );
         }
     }
 
@@ -317,50 +195,32 @@ public class ConversationView implements IConversationView, IView<JComponent>
      **************************************************************************/
     public void leaveConversation()
     {
-        conversationLeftListeners.fireListeners( this, null );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setConversation( IConversation model )
-    {
-        conversation = model;
-
-        List<IUser> users = model.getUsers();
-        for( IUser user : users )
-        {
-            userModel.addElement( user );
-        }
-
-        model.addUserAddedListener( userAddedListener );
-        model.addUserAvailableListener( userAvailableListener );
-        model.addUserUnavailableListener( userUnavailableListener );
-        model.addUserRemovedListener( userRemovedListener );
-        model.addMessageReceivedListener( messageReceivedListener );
+        conversation.leaveConversation();
     }
 
     /***************************************************************************
      * @param message
      **************************************************************************/
-    private void addMessage( IChatMessage message )
+    private void addMessage( ChatMessage message )
     {
         StyledDocument doc = chatEditorPane.getStyledDocument();
         SimpleAttributeSet a = new SimpleAttributeSet();
-        Color fg = message.isLocalUser() ? Color.blue : Color.red;
-        String username = message.isLocalUser() ? conversation.getChat().getLocalUser().getDisplayName()
-            : message.getSender().getDisplayName();
+        IUser localUser = chat.getLocalUser();
+        boolean isLocal = localUser.equals( message.sender );
+        Color fg = isLocal ? Color.blue : Color.red;
+        String username = isLocal
+            ? conversation.getChat().getLocalUser().getDisplayName()
+            : message.sender.getDisplayName();
 
         StyleConstants.setFontFamily( a, "Dialog" );
         StyleConstants.setFontSize( a, 12 );
         StyleConstants.setForeground( a, fg );
-        chatEditorPane.appendText( dateFormatter.format( message.getTime() ), a );
+        chatEditorPane.appendText( dateFormatter.format( message.txTime ), a );
 
         StyleConstants.setBold( a, true );
         chatEditorPane.appendText( " " + username, a );
 
-        chatEditorPane.appendText( ": " + message.getText() + Utils.NEW_LINE );
+        chatEditorPane.appendText( ": " + message.text + Utils.NEW_LINE );
 
         a = new SimpleAttributeSet();
         StyleConstants.setLineSpacing( a, 0.3f );
@@ -369,71 +229,8 @@ public class ConversationView implements IConversationView, IView<JComponent>
 
         a = new SimpleAttributeSet();
         StyleConstants.setLineSpacing( a, 0.0f );
-        doc.setParagraphAttributes( doc.getLength(), doc.getLength(), a, false );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void addMessageSentListener( ItemActionListener<IChatMessage> l )
-    {
-        msgSentListeners.addListener( l );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void addUserChangedListener( ItemActionListener<String> l )
-    {
-        userChangedListeners.addListener( l );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void showView()
-    {
-        ;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public IConversation getConversation()
-    {
-        return conversation;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void addConversationStartedListener(
-        ItemActionListener<List<IUser>> l )
-    {
-        conversationStartedListeners.addListener( l );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public IChatView getChatView()
-    {
-        return chatView;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void addConversationLeftListener( ItemActionListener<Object> l )
-    {
-        conversationLeftListeners.addListener( l );
+        doc.setParagraphAttributes( doc.getLength(), doc.getLength(), a,
+            false );
     }
 
     /***************************************************************************
@@ -443,6 +240,29 @@ public class ConversationView implements IConversationView, IView<JComponent>
     public JComponent getView()
     {
         return view;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public IConversation getData()
+    {
+        return conversation;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void setData( IConversation conversation )
+    {
+        this.conversation = conversation;
+
+        usersView.setData( conversation.getUsers() );
+
+        conversation.addUserListener( userListener );
+        conversation.addMessageReceivedListener( messageReceivedListener );
     }
 
     /***************************************************************************
@@ -459,8 +279,8 @@ public class ConversationView implements IConversationView, IView<JComponent>
 
         private void scrollToBottom()
         {
-            textPane.scrollRectToVisible( new Rectangle( 0,
-                textPane.getHeight(), 1, 1 ) );
+            textPane.scrollRectToVisible(
+                new Rectangle( 0, textPane.getHeight(), 1, 1 ) );
         }
 
         @Override
@@ -502,34 +322,70 @@ public class ConversationView implements IConversationView, IView<JComponent>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class UsersMouseListener extends MouseAdapter
+    private static class UserListener implements IUserListener
     {
         private final ConversationView view;
 
-        public UsersMouseListener( ConversationView view )
+        public UserListener( ConversationView view )
         {
             this.view = view;
         }
 
-        public void mouseClicked( MouseEvent e )
+        @Override
+        public void userChanged( IUser user, ChangeType change )
         {
-            JOptionPane.showMessageDialog( view.getView(),
-                "This functionality is not yet supported. Good try, though.",
-                "Not Supported", JOptionPane.ERROR_MESSAGE );
+            view.usersView.setData( view.getData().getUsers() );
+        }
+    }
 
-            if( "".length() > 0 && e.getClickCount() == 2 )
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class MessageReceivedListener
+        implements ItemActionListener<ChatMessage>
+    {
+        private final ConversationView view;
+
+        public MessageReceivedListener( ConversationView view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ItemActionEvent<ChatMessage> event )
+        {
+            view.addMessage( event.getItem() );
+        }
+    }
+
+    private static class FontListener implements ActionListener
+    {
+        private final ConversationView view;
+
+        public FontListener( ConversationView view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            FontChooserDialog fontChooser = new FontChooserDialog(
+                ( JFrame )SwingUtilities.getWindowAncestor( view.getView() ) );
+
+            fontChooser.setAttributes(
+                view.msgEditorPane.getCharacterAttributes() );
+            fontChooser.pack();
+            fontChooser.setLocationRelativeTo( view.getView() );
+            fontChooser.setVisible( true );
+
+            if( fontChooser.getOption() == JOptionPane.OK_OPTION )
             {
-                int index = view.userList.locationToIndex( e.getPoint() );
-                if( index > -1 )
-                {
-                    ArrayList<IUser> users = new ArrayList<IUser>();
-                    ListModel<IUser> dlm = view.userList.getModel();
-                    Object item = dlm.getElementAt( index );
+                AttributeSet s = fontChooser.getAttributes();
 
-                    users.add( ( IUser )item );
-                    view.conversationStartedListeners.fireListeners( view,
-                        users );
-                    view.userList.ensureIndexIsVisible( index );
+                if( s != null )
+                {
+                    view.msgEditorPane.setCharacterAttributes( s, true );
                 }
             }
         }

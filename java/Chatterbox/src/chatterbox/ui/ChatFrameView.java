@@ -1,18 +1,21 @@
 package chatterbox.ui;
 
 import java.awt.event.*;
+import java.io.IOException;
 
 import javax.swing.*;
 
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
-import org.jutils.ui.JGoodiesToolBar;
-import org.jutils.ui.StandardFrameView;
+import org.jutils.ui.*;
+import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.model.IView;
 
-import chatterbox.messenger.Chat;
-import chatterbox.view.IChatView;
+import chatterbox.ChatterboxConstants;
+import chatterbox.data.ChatConfig;
+import chatterbox.data.ChatterConfig;
+import chatterbox.model.IChat;
 
 /*******************************************************************************
  * 
@@ -27,10 +30,10 @@ public class ChatFrameView implements IView<JFrame>
     /***************************************************************************
      * 
      **************************************************************************/
-    public ChatFrameView()
+    public ChatFrameView( IChat chat )
     {
         this.frameView = new StandardFrameView();
-        this.chatView = new ChatView();
+        this.chatView = new ChatView( chat );
 
         frameView.setContent( chatView.getView() );
         frameView.setToolbar( createToolbar() );
@@ -40,8 +43,8 @@ public class ChatFrameView implements IView<JFrame>
         frame.addWindowListener( new FrameListener( this ) );
 
         frame.setIconImages( IconConstants.loader.getImages(
-            IconConstants.CHAT_16, IconConstants.CHAT_32,
-            IconConstants.CHAT_48, IconConstants.CHAT_64 ) );
+            IconConstants.CHAT_16, IconConstants.CHAT_32, IconConstants.CHAT_48,
+            IconConstants.CHAT_64 ) );
 
         frame.setTitle( "Chatterbox" );
     }
@@ -81,17 +84,9 @@ public class ChatFrameView implements IView<JFrame>
     /***************************************************************************
      * @return
      **************************************************************************/
-    public IChatView getChatView()
+    public ChatView getChatView()
     {
         return chatView;
-    }
-
-    /***************************************************************************
-     * @param chat
-     **************************************************************************/
-    public void setChat( Chat chat )
-    {
-        chatView.setChat( chat );
     }
 
     /***************************************************************************
@@ -149,7 +144,60 @@ public class ChatFrameView implements IView<JFrame>
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            new ConfigDialog( view.getView(), view.chatView.getChat() );
+            ChatterConfig newCfg = view.showConfig();
+
+            if( newCfg != null )
+            {
+                IChat chat = view.chatView.getChat();
+                ChatConfig config = chat.getConfig();
+
+                ChatterboxConstants.getUserIO().write( newCfg );
+
+                if( newCfg.chatCfg.address.equals( config.address ) ||
+                    newCfg.chatCfg.port != config.port )
+                {
+                    chat.disconnect();
+
+                    try
+                    {
+                        chat.connect( newCfg.chatCfg );
+                    }
+                    catch( IOException ex )
+                    {
+                        JOptionPane.showMessageDialog( view.getView(),
+                            "Cannot connect to chat: " + ex.getMessage(),
+                            "Connection Error", JOptionPane.ERROR_MESSAGE );
+                        return;
+                    }
+                }
+
+                if( newCfg.chatCfg.username.equals( config.username ) )
+                {
+                    chat.getLocalUser().setDisplayName(
+                        newCfg.chatCfg.username );
+                }
+            }
         }
+    }
+
+    /***************************************************************************
+     * @return {@code true} if the user clicks "OK", {@code false} otherwise.
+     **************************************************************************/
+    public ChatterConfig showConfig()
+    {
+        ChatterConfigView configView = new ChatterConfigView();
+        OkDialogView dialogView = new OkDialogView( getView(),
+            configView.getView(), OkDialogButtons.OK_CANCEL );
+
+        ChatterConfig config = ChatterboxConstants.getUserIO().getOptions();
+
+        config.chatCfg.set( chatView.getChat().getConfig() );
+
+        configView.setData( config );
+
+        boolean accept = dialogView.show( "Chat Configuration",
+            getView().getIconImages(), null );
+
+        return accept ? configView.getData() : null;
     }
 }

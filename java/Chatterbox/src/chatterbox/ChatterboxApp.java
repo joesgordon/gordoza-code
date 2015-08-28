@@ -3,21 +3,24 @@ package chatterbox;
 import java.io.IOException;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
+import org.jutils.io.OptionsSerializer;
 import org.jutils.ui.app.IFrameApp;
 
 import chatterbox.controller.ChatController;
-import chatterbox.data.ChatConfig;
+import chatterbox.data.ChatterConfig;
 import chatterbox.messenger.Chat;
 import chatterbox.ui.ChatFrameView;
-import chatterbox.view.IChatView;
+import chatterbox.ui.ChatView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
 public class ChatterboxApp implements IFrameApp
 {
-    private Chat chat;
+    private final Chat chat;
+    private ChatFrameView frameView;
 
     /***************************************************************************
      * 
@@ -33,10 +36,9 @@ public class ChatterboxApp implements IFrameApp
     @Override
     public JFrame createFrame()
     {
-        ChatFrameView frameView = new ChatFrameView();
-        IChatView chatView = frameView.getChatView();
+        this.frameView = new ChatFrameView( chat );
 
-        chatView.setChat( chat );
+        ChatView chatView = frameView.getChatView();
 
         new ChatController( chat, chatView );
 
@@ -54,18 +56,25 @@ public class ChatterboxApp implements IFrameApp
     @Override
     public void finalizeGui()
     {
-        ChatConfig config = ChatterboxConstants.getUserIO().getOptions();
+        OptionsSerializer<ChatterConfig> userio = ChatterboxConstants.getUserIO();
+        ChatterConfig config = userio.getOptions();
 
-        try
+        while( config != null )
         {
-            chat.connect( config.address, config.port );
-        }
-        catch( IOException ex )
-        {
-            // TODO Need to ask the user for a different ip/port and try
-            // again
-            ex.printStackTrace();
-            throw new RuntimeException( "Could not connect", ex );
+            try
+            {
+                chat.connect( config.chatCfg );
+                userio.write();
+                break;
+            }
+            catch( IOException ex )
+            {
+                JOptionPane.showMessageDialog( frameView.getView(),
+                    "Unable to connect: " + ex.getMessage(),
+                    "Unable to connect", JOptionPane.ERROR_MESSAGE );
+
+                config = frameView.showConfig();
+            }
         }
     }
 }

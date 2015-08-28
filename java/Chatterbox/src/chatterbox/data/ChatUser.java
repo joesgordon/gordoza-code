@@ -11,11 +11,12 @@ import chatterbox.model.IUser;
 public class ChatUser implements IUser
 {
     /**  */
-    private boolean available;
-    /**  */
-    private String userId;
+    private final String userId;
     /**  */
     private String displayName;
+    /**  */
+    private boolean available;
+
     /**  */
     private ItemActionList<IUser> userChangedListners;
 
@@ -34,9 +35,9 @@ public class ChatUser implements IUser
     public ChatUser( String userId, String displayName )
     {
         this.userId = userId;
-        userChangedListners = new ItemActionList<IUser>();
+        this.userChangedListners = new ItemActionList<IUser>();
+        this.available = true;
         setDisplayName( displayName );
-        available = true;
     }
 
     /***************************************************************************
@@ -101,12 +102,18 @@ public class ChatUser implements IUser
         return getDisplayName();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public int hashCode()
     {
         return displayName.hashCode();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public boolean equals( Object userObject )
     {

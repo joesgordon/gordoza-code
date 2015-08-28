@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.jutils.io.LogUtils;
 
+import chatterbox.data.ChatConfig;
 import chatterbox.data.ChatUser;
 import chatterbox.model.IConversation;
 import chatterbox.model.IUser;
@@ -15,6 +16,8 @@ public class TestChat extends AbstractChat
 {
     /**  */
     private IConversation defaultConversation;
+    /**  */
+    private ChatConfig config;
 
     /***************************************************************************
      * 
@@ -28,8 +31,10 @@ public class TestChat extends AbstractChat
      * 
      **************************************************************************/
     @Override
-    public void connect( String group, int port )
+    public void connect( ChatConfig config )
     {
+        this.config = config;
+
         IUser user;
 
         user = new ChatUser( "fflinstone", "Fred Flinstone" );
@@ -74,15 +79,12 @@ public class TestChat extends AbstractChat
         ;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
-    public String getAddress()
+    public ChatConfig getConfig()
     {
-        return "?";
-    }
-
-    @Override
-    public int getPort()
-    {
-        return -1;
+        return config;
     }
 }
