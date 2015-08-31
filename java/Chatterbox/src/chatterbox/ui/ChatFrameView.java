@@ -90,6 +90,27 @@ public class ChatFrameView implements IView<JFrame>
     }
 
     /***************************************************************************
+     * @return {@code true} if the user clicks "OK", {@code false} otherwise.
+     **************************************************************************/
+    public ChatterConfig showConfig()
+    {
+        ChatterConfigView configView = new ChatterConfigView();
+        OkDialogView dialogView = new OkDialogView( getView(),
+            configView.getView(), OkDialogButtons.OK_CANCEL );
+
+        ChatterConfig config = ChatterboxConstants.getUserIO().getOptions();
+
+        config.chatCfg.set( chatView.getChat().getConfig() );
+
+        configView.setData( config );
+
+        boolean accept = dialogView.show( "Chat Configuration",
+            getView().getIconImages(), null );
+
+        return accept ? configView.getData() : null;
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     private static class FrameListener extends WindowAdapter
@@ -171,33 +192,12 @@ public class ChatFrameView implements IView<JFrame>
                     }
                 }
 
-                if( newCfg.chatCfg.username.equals( config.username ) )
+                if( newCfg.chatCfg.displayName.equals( config.displayName ) )
                 {
                     chat.getLocalUser().setDisplayName(
-                        newCfg.chatCfg.username );
+                        newCfg.chatCfg.displayName );
                 }
             }
         }
-    }
-
-    /***************************************************************************
-     * @return {@code true} if the user clicks "OK", {@code false} otherwise.
-     **************************************************************************/
-    public ChatterConfig showConfig()
-    {
-        ChatterConfigView configView = new ChatterConfigView();
-        OkDialogView dialogView = new OkDialogView( getView(),
-            configView.getView(), OkDialogButtons.OK_CANCEL );
-
-        ChatterConfig config = ChatterboxConstants.getUserIO().getOptions();
-
-        config.chatCfg.set( chatView.getChat().getConfig() );
-
-        configView.setData( config );
-
-        boolean accept = dialogView.show( "Chat Configuration",
-            getView().getIconImages(), null );
-
-        return accept ? configView.getData() : null;
     }
 }

@@ -1,11 +1,13 @@
 package chatterbox.io;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jutils.io.IDataSerializer;
 import org.jutils.io.IDataStream;
 
+import chatterbox.ChatterboxConstants;
 import chatterbox.model.*;
 
 /*******************************************************************************
@@ -14,19 +16,20 @@ import chatterbox.model.*;
 public class ChatMessageSerializer implements IDataSerializer<ChatMessage>
 {
     /**  */
-    private StringSerializer stringSerializer;
+    private final StringSerializer stringSerializer;
     /**  */
-    private UserSerializer userSerializer;
+    private final UserSerializer userSerializer;
     /**  */
-    private MessageAttributeSetSerializer attributeSerializer;
+    private final MessageAttributeSetSerializer attributeSerializer;
 
     /***************************************************************************
      * @param localUser
      **************************************************************************/
     public ChatMessageSerializer()
     {
-        stringSerializer = new StringSerializer();
-        userSerializer = new UserSerializer();
+        this.stringSerializer = new StringSerializer();
+        this.userSerializer = new UserSerializer();
+        this.attributeSerializer = new MessageAttributeSetSerializer();
     }
 
     /***************************************************************************
@@ -37,8 +40,7 @@ public class ChatMessageSerializer implements IDataSerializer<ChatMessage>
     {
         String conversationId;
         long txTime;
-        long rxTime = new GregorianCalendar(
-            TimeZone.getTimeZone( "UTC" ) ).getTimeInMillis();
+        long rxTime = ChatterboxConstants.now();
         IUser sender;
         String text;
         int numAttributes;
@@ -68,7 +70,7 @@ public class ChatMessageSerializer implements IDataSerializer<ChatMessage>
         throws IOException
     {
         stringSerializer.write( message.conversation, stream );
-        stream.writeLong( message.txTime );
+        stream.writeLong( ChatterboxConstants.now() );
         userSerializer.write( message.sender, stream );
         stringSerializer.write( message.text, stream );
         stream.writeInt( message.attributes.size() );

@@ -18,7 +18,7 @@ public abstract class AbstractConversation implements IConversation
     /**  */
     private IChat chat;
     /**  */
-    private List<IUser> remoteUsers;
+    private List<IUser> users;
 
     /**  */
     protected ItemActionList<ChatMessage> messageReceivedListeners;
@@ -36,10 +36,11 @@ public abstract class AbstractConversation implements IConversation
     {
         this.localId = id;
         this.chat = chat;
-        this.remoteUsers = new ArrayList<IUser>();
+        this.users = new ArrayList<IUser>();
+
         if( users != null )
         {
-            this.remoteUsers.addAll( users );
+            this.users.addAll( users );
         }
 
         userListeners = new ArrayList<>();
@@ -90,7 +91,7 @@ public abstract class AbstractConversation implements IConversation
     @Override
     public final List<IUser> getUsers()
     {
-        return remoteUsers;
+        return users;
     }
 
     private void fireUserListeners( IUser user, ChangeType change )
@@ -107,7 +108,7 @@ public abstract class AbstractConversation implements IConversation
     @Override
     public final void addUser( IUser user )
     {
-        remoteUsers.add( user );
+        users.add( user );
         fireUserListeners( user, ChangeType.ADDED );
     }
 
@@ -117,7 +118,7 @@ public abstract class AbstractConversation implements IConversation
     @Override
     public void removeUser( IUser user )
     {
-        remoteUsers.remove( user );
+        users.remove( user );
         fireUserListeners( user, ChangeType.REMOVED );
     }
 
@@ -127,8 +128,11 @@ public abstract class AbstractConversation implements IConversation
     @Override
     public void setUserAvailable( IUser user, boolean available )
     {
-        if( remoteUsers.contains( user ) )
+        int index = users.indexOf( user );
+        if( index > -1 )
         {
+            users.remove( index );
+            users.add( index, user );
             fireUserListeners( user, ChangeType.UPDATED );
         }
     }
@@ -139,7 +143,7 @@ public abstract class AbstractConversation implements IConversation
     @Override
     public final boolean isUserParticipating( IUser user )
     {
-        return remoteUsers.contains( user );
+        return users.contains( user );
     }
 
     /***************************************************************************

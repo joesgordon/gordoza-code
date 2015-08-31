@@ -1,8 +1,5 @@
 package chatterbox.data;
 
-import org.jutils.ui.event.ItemActionList;
-import org.jutils.ui.event.ItemActionListener;
-
 import chatterbox.model.IUser;
 
 /*******************************************************************************
@@ -16,9 +13,6 @@ public class ChatUser implements IUser
     private String displayName;
     /**  */
     private boolean available;
-
-    /**  */
-    private ItemActionList<IUser> userChangedListners;
 
     /***************************************************************************
      * @param userId
@@ -35,18 +29,8 @@ public class ChatUser implements IUser
     public ChatUser( String userId, String displayName )
     {
         this.userId = userId;
-        this.userChangedListners = new ItemActionList<IUser>();
         this.available = true;
-        setDisplayName( displayName );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void addChangedListener( ItemActionListener<IUser> l )
-    {
-        userChangedListners.addListener( l );
+        this.displayName = displayName;
     }
 
     /***************************************************************************
@@ -74,7 +58,6 @@ public class ChatUser implements IUser
     public void setDisplayName( String name )
     {
         displayName = name;
-        userChangedListners.fireListeners( this, this );
     }
 
     /***************************************************************************
@@ -83,7 +66,6 @@ public class ChatUser implements IUser
     public void setAvailable( boolean available )
     {
         this.available = available;
-        userChangedListners.fireListeners( this, this );
     }
 
     /***************************************************************************
@@ -115,8 +97,20 @@ public class ChatUser implements IUser
      * 
      **************************************************************************/
     @Override
-    public boolean equals( Object userObject )
+    public boolean equals( Object obj )
     {
-        return userId.equals( ( ( IUser )userObject ).getUserId() );
+        if( obj == null )
+        {
+            return false;
+        }
+        else if( obj instanceof IUser )
+        {
+            IUser u = ( IUser )obj;
+
+            return userId.equals( u.getUserId() );// &&
+            // displayName.equals( u.getDisplayName() );
+        }
+
+        return false;
     }
 }

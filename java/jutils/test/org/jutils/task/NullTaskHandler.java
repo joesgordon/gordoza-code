@@ -1,7 +1,5 @@
 package org.jutils.task;
 
-import java.awt.Component;
-
 import org.jutils.ui.event.ItemActionListener;
 
 /*******************************************************************************
@@ -81,14 +79,5 @@ public class NullTaskHandler implements ITaskHandler
     @Override
     public void removeFinishedListener( ItemActionListener<Boolean> l )
     {
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public Component getView()
-    {
-        return null;
     }
 }

@@ -43,7 +43,7 @@ public class UserView implements IDataView<List<IUser>>
     {
         this.view = new TitleView();
         this.userModel = new CollectionListModel<>();
-        this.userList = new JList<>();
+        this.userList = new JList<>( userModel );
 
         this.conversationStartedListeners = new ItemActionList<>();
 
@@ -87,6 +87,12 @@ public class UserView implements IDataView<List<IUser>>
     {
         this.users = users;
 
+        // for( IUser u : users )
+        // {
+        // LogUtils.printDebug(
+        // String.format( "%s: %s", u.getUserId(), u.getDisplayName() ) );
+        // }
+
         userModel.setData( users );
     }
 
@@ -113,13 +119,13 @@ public class UserView implements IDataView<List<IUser>>
 
         public void mouseClicked( MouseEvent e )
         {
-            JOptionPane.showMessageDialog( view.getView(),
-                "This functionality is not yet supported. Good try, though.",
-                "Not Supported", JOptionPane.ERROR_MESSAGE );
-
             if( !"".isEmpty() && e.getClickCount() == 2 )
             {
                 int index = view.userList.locationToIndex( e.getPoint() );
+
+                JOptionPane.showMessageDialog( view.getView(),
+                    "This functionality is not yet supported. Good try, though.",
+                    "Not Supported", JOptionPane.ERROR_MESSAGE );
 
                 if( index > -1 )
                 {

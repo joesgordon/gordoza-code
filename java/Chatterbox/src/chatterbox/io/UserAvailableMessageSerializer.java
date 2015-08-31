@@ -7,8 +7,8 @@ import org.jutils.io.IDataStream;
 
 import chatterbox.data.messages.UserAvailableMessage;
 
-public class UserAvailableMessageSerializer implements
-    IDataSerializer<UserAvailableMessage>
+public class UserAvailableMessageSerializer
+    implements IDataSerializer<UserAvailableMessage>
 {
     private UserSerializer userSerializer;
 
@@ -27,7 +27,7 @@ public class UserAvailableMessageSerializer implements
     public void write( UserAvailableMessage message, IDataStream stream )
         throws IOException
     {
-        userSerializer.write( message.getUser(), stream );
+        userSerializer.write( message.user, stream );
     }
 
 }

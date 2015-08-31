@@ -8,26 +8,26 @@ import javax.swing.JOptionPane;
 import org.jutils.io.OptionsSerializer;
 import org.jutils.ui.app.IFrameApp;
 
-import chatterbox.controller.ChatController;
 import chatterbox.data.ChatterConfig;
 import chatterbox.messenger.Chat;
 import chatterbox.ui.ChatFrameView;
-import chatterbox.ui.ChatView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
 public class ChatterboxApp implements IFrameApp
 {
+    /**  */
     private final Chat chat;
+    /**  */
     private ChatFrameView frameView;
 
-    /***************************************************************************
-     * 
+    /**************************************************************************
+     * @param chat
      **************************************************************************/
-    public ChatterboxApp()
+    public ChatterboxApp( Chat chat )
     {
-        this.chat = new Chat();
+        this.chat = chat;
     }
 
     /***************************************************************************
@@ -37,10 +37,6 @@ public class ChatterboxApp implements IFrameApp
     public JFrame createFrame()
     {
         this.frameView = new ChatFrameView( chat );
-
-        ChatView chatView = frameView.getChatView();
-
-        new ChatController( chat, chatView );
 
         JFrame frame = frameView.getView();
 

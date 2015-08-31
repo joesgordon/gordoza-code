@@ -60,21 +60,32 @@ public class ChatWire
      **************************************************************************/
     public void disconnect()
     {
-        try
+        if( socket != null )
         {
-            socket.leaveGroup( address );
-        }
-        catch( IOException ex )
-        {
-            throw new RuntimeException( ex );
-        }
+            try
+            {
+                socket.leaveGroup( address );
+            }
+            catch( IOException ex )
+            {
+                throw new RuntimeException( ex );
+            }
+            finally
+            {
+                socket = null;
+            }
 
-        try
-        {
-            receiveThread.stopAndWaitFor();
-        }
-        catch( InterruptedException ex )
-        {
+            try
+            {
+                receiveThread.stopAndWaitFor();
+            }
+            catch( InterruptedException ex )
+            {
+            }
+            finally
+            {
+                receiveThread = null;
+            }
         }
     }
 
@@ -86,8 +97,8 @@ public class ChatWire
     {
         if( msgBytes.length > 65535 )
         {
-            throw new RuntimeFormatException( "Message is too long: " +
-                msgBytes.length );
+            throw new RuntimeFormatException(
+                "Message is too long: " + msgBytes.length );
         }
 
         DatagramPacket packet = new DatagramPacket( msgBytes, msgBytes.length,

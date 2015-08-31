@@ -6,7 +6,6 @@ import java.util.*;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
 
-import chatterbox.data.ChatUser;
 import chatterbox.model.*;
 
 /*******************************************************************************
@@ -23,15 +22,16 @@ public abstract class AbstractChat implements IChat
     /**  */
     private final String jvmName;
 
-    /***************************************************************************
-     * 
+    /**
+     * @param user
+     * *************************************************************************
      **************************************************************************/
-    public AbstractChat()
+    public AbstractChat( IUser user )
     {
-        conversations = new HashMap<String, IConversation>( 100 );
-        conversationCreatedListeners = new ItemActionList<IConversation>();
-        localUser = new ChatUser( System.getProperty( "user.name" ) );
-        jvmName = ManagementFactory.getRuntimeMXBean().getName();
+        this.conversations = new HashMap<String, IConversation>( 100 );
+        this.conversationCreatedListeners = new ItemActionList<IConversation>();
+        this.localUser = user;
+        this.jvmName = ManagementFactory.getRuntimeMXBean().getName();
     }
 
     /***************************************************************************
@@ -75,7 +75,8 @@ public abstract class AbstractChat implements IChat
      **************************************************************************/
     protected final IConversation getConversation( String conversationId )
     {
-        if( conversationId.equals( getDefaultConversation().getConversationId() ) )
+        if( conversationId.equals(
+            getDefaultConversation().getConversationId() ) )
         {
             return getDefaultConversation();
         }

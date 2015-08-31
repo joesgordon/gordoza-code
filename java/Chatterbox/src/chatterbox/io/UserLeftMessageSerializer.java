@@ -11,8 +11,8 @@ import chatterbox.model.IUser;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class UserLeftMessageSerializer implements
-    IDataSerializer<UserLeftMessage>
+public class UserLeftMessageSerializer
+    implements IDataSerializer<UserLeftMessage>
 {
     /**  */
     private StringSerializer stringSerializer;
@@ -50,7 +50,7 @@ public class UserLeftMessageSerializer implements
     public void write( UserLeftMessage message, IDataStream stream )
         throws IOException
     {
-        stringSerializer.write( message.getConversationId(), stream );
-        userSerializer.write( message.getUser(), stream );
+        stringSerializer.write( message.conversationId, stream );
+        userSerializer.write( message.user, stream );
     }
 }

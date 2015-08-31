@@ -50,9 +50,9 @@ public class ChatterConfigView implements IDataView<ChatterConfig>
         setData( new ChatterConfig() );
 
         nameField.setUpdater(
-            new ReflectiveUpdater<>( this, "config.chatCfg.username" ) );
+            new ReflectiveUpdater<>( this, "config.chatCfg.displayName" ) );
         addressField.setUpdater(
-            new ReflectiveUpdater<>( this, "config.chatCfg.username" ) );
+            new ReflectiveUpdater<>( this, "config.chatCfg.address" ) );
         portField.setUpdater(
             new ReflectiveUpdater<>( this, "config.chatCfg.port" ) );
         popupField.addActionListener( new CheckBoxUpdater(
@@ -85,7 +85,7 @@ public class ChatterConfigView implements IDataView<ChatterConfig>
     {
         this.config = config;
 
-        nameField.setValue( config.chatCfg.username );
+        nameField.setValue( config.chatCfg.displayName );
         addressField.setValue( config.chatCfg.address );
         portField.setValue( config.chatCfg.port );
     }

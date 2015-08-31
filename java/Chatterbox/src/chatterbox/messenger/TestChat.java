@@ -24,6 +24,7 @@ public class TestChat extends AbstractChat
      **************************************************************************/
     public TestChat()
     {
+        super( new ChatUser( System.getProperty( "user.name" ) ) );
         defaultConversation = new TestConversation( this, "", null );
     }
 

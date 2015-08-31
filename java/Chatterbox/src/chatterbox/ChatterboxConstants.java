@@ -1,6 +1,8 @@
 package chatterbox;
 
 import java.io.File;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import org.jutils.io.IOUtils;
 import org.jutils.io.OptionsSerializer;
@@ -18,6 +20,8 @@ public class ChatterboxConstants
     /**  */
     public static final String DEFAULT_USERNAME = System.getProperty(
         "user.name" );
+    /**  */
+    public static final TimeZone UTC = TimeZone.getTimeZone( "UTC" );
 
     /**  */
     private static OptionsSerializer<ChatterConfig> userio;
@@ -34,5 +38,13 @@ public class ChatterboxConstants
         }
 
         return userio;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public static long now()
+    {
+        return new GregorianCalendar().getTimeInMillis();
     }
 }

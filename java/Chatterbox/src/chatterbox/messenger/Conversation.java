@@ -23,6 +23,7 @@ public class Conversation extends AbstractConversation
     public Conversation( Chat chat, String id, List<IUser> users )
     {
         super( chat, id, users );
+
         this.chat = chat;
     }
 

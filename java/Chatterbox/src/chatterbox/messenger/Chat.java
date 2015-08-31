@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.util.*;
 
 import org.jutils.io.*;
+import org.jutils.task.TaskError;
+import org.jutils.task.TaskRunner;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
 
+import chatterbox.ChatterboxConstants;
 import chatterbox.data.*;
 import chatterbox.data.messages.UserAvailableMessage;
 import chatterbox.data.messages.UserLeftMessage;
@@ -21,31 +24,30 @@ public class Chat extends AbstractChat
     /**  */
     private final IConversation defaultConversation;
     /**  */
-    private final Map<String, UserCheckTask> userTasks;
-    /**  */
     private final MessageSerializer msgSerializer;
-
-    /**  */
-    private Timer userAvailableTimer;
     /**  */
     private final ChatWire wire;
 
     /**  */
+    private TaskRunner userThread;
+    /**  */
+    private UserCheckTask userTask;
+    /**  */
     private ChatConfig config;
 
     /***************************************************************************
+     * @param user
      * @param options
      **************************************************************************/
-    public Chat()
+    public Chat( IUser user )
     {
-        super();
+        super( user );
 
-        this.userTasks = new HashMap<String, UserCheckTask>();
         this.defaultConversation = new Conversation( this, "", null );
-        this.msgSerializer = new MessageSerializer( getLocalUser() );
-
-        this.userAvailableTimer = null;
+        this.msgSerializer = new MessageSerializer();
         this.wire = new ChatWire( new RawReceiver( this ) );
+        this.userTask = null;
+        this.config = null;
     }
 
     /***************************************************************************
@@ -55,11 +57,16 @@ public class Chat extends AbstractChat
     public void connect( ChatConfig config ) throws IOException
     {
         this.config = config;
+        this.userTask = new UserCheckTask( this );
+        this.userThread = new TaskRunner( userTask,
+            new SignalerTaskHander( new Signaler() ) );
 
         wire.connect( config.address, config.port );
 
-        userAvailableTimer = new Timer( "User Available Timer" );
-        userAvailableTimer.schedule( new UserAvailableTask( this ), 0, 5000 );
+        Thread t = new Thread( userThread, "User Checking Thread" );
+        t.start();
+
+        getLocalUser().setDisplayName( config.displayName );
     }
 
     /***************************************************************************
@@ -68,12 +75,33 @@ public class Chat extends AbstractChat
     @Override
     public void disconnect()
     {
-        for( UserCheckTask task : userTasks.values() )
+        if( userThread != null )
         {
-            task.cancel();
-        }
+            try
+            {
+                userThread.stopAndWait();
+            }
+            catch( InterruptedException e )
+            {
+            }
+            wire.disconnect();
 
-        userAvailableTimer.cancel();
+            for( IUser u : new ArrayList<>( defaultConversation.getUsers() ) )
+            {
+                defaultConversation.removeUser( u );
+            }
+
+            for( IConversation c : new ArrayList<>( getConversations() ) )
+            {
+                if( c != getDefaultConversation() )
+                {
+                    removeConversation( c );
+                }
+            }
+
+            userTask = null;
+            userThread = null;
+        }
     }
 
     /***************************************************************************
@@ -102,9 +130,27 @@ public class Chat extends AbstractChat
      **************************************************************************/
     public void setUserAvailable( IUser user, boolean available )
     {
-        if( user.equals( getLocalUser() ) )
+        IUser localMe = getLocalUser();
+
+        if( user.equals( localMe ) )
         {
-            return;
+            // LogUtils.printDebug( "Got me " + String.format( "%s: %s vs %s:
+            // %s",
+            // user.getUserId(), user.getDisplayName(), localMe.getUserId(),
+            // localMe.getDisplayName() ) );
+
+            if( !user.getDisplayName().equals( localMe.getDisplayName() ) )
+            {
+                localMe.setDisplayName( user.getDisplayName() );
+
+                OptionsSerializer<ChatterConfig> userio;
+
+                userio = ChatterboxConstants.getUserIO();
+                userio.getOptions().chatCfg.displayName = user.getDisplayName();
+                userio.write();
+            }
+
+            // return;
         }
 
         List<IConversation> conversations = getConversations();
@@ -118,22 +164,10 @@ public class Chat extends AbstractChat
         {
             defaultConversation.addUser( user );
         }
+
         defaultConversation.setUserAvailable( user, available );
 
-        UserCheckTask task = userTasks.get( user.getUserId() );
-        if( task == null )
-        {
-            task = new UserCheckTask( this, user );
-            userTasks.put( user.getUserId(), task );
-        }
-        else if( available )
-        {
-            task.reset();
-        }
-        else
-        {
-            task.advance();
-        }
+        userTask.markSeen( user );
     }
 
     /***************************************************************************
@@ -284,17 +318,15 @@ public class Chat extends AbstractChat
         public RawReceiver( Chat chat )
         {
             this.chat = chat;
-            this.msgSerializer = new MessageSerializer( chat.getLocalUser() );
+            this.msgSerializer = new MessageSerializer();
         }
 
         @Override
         public void actionPerformed( ItemActionEvent<RawMessage> event )
         {
             RawMessage msg = event.getItem();
-            byte[] messageBytes = msg.bytes;
 
-            try( ByteArrayStream byteStream = new ByteArrayStream(
-                messageBytes );
+            try( ByteArrayStream byteStream = new ByteArrayStream( msg.bytes );
                  IDataStream stream = new DataStream( byteStream ); )
             {
                 parseMessage( stream );
@@ -327,15 +359,14 @@ public class Chat extends AbstractChat
                 {
                     UserAvailableMessage message = msgSerializer.userAvailableMessageSerializer.read(
                         stream );
-                    chat.setUserAvailable( message.getUser(), true );
+                    chat.setUserAvailable( message.user, true );
                     break;
                 }
                 case UserLeft:
                 {
                     UserLeftMessage message = msgSerializer.userLeftMessageSerializer.read(
                         stream );
-                    chat.removeUser( message.getConversationId(),
-                        message.getUser() );
+                    chat.removeUser( message.conversationId, message.user );
                     break;
                 }
             }
@@ -352,12 +383,42 @@ public class Chat extends AbstractChat
         public final UserAvailableMessageSerializer userAvailableMessageSerializer;
         public final UserLeftMessageSerializer userLeftMessageSerializer;
 
-        public MessageSerializer( IUser user )
+        public MessageSerializer()
         {
             this.headerSerializer = new ChatHeaderSerializer();
             this.messageSerializer = new ChatMessageSerializer();
             this.userAvailableMessageSerializer = new UserAvailableMessageSerializer();
             this.userLeftMessageSerializer = new UserLeftMessageSerializer();
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class Signaler implements ISignaler
+    {
+        @Override
+        public void signalMessage( String message )
+        {
+            // TODO Auto-generated method stub
+        }
+
+        @Override
+        public void signalPercent( int percent )
+        {
+            // TODO Auto-generated method stub
+        }
+
+        @Override
+        public void signalError( TaskError error )
+        {
+            // TODO Auto-generated method stub
+        }
+
+        @Override
+        public void signalFinished()
+        {
+            // TODO Auto-generated method stub
         }
     }
 }

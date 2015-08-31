@@ -11,9 +11,9 @@ import javax.swing.text.*;
 
 import org.jutils.IconConstants;
 import org.jutils.Utils;
+import org.jutils.io.LogUtils;
 import org.jutils.ui.FontChooserDialog;
-import org.jutils.ui.event.ItemActionEvent;
-import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.event.*;
 import org.jutils.ui.model.IDataView;
 
 import chatterbox.model.*;
@@ -90,8 +90,8 @@ public class ConversationView implements IDataView<IConversation>
         BottomScroller chatScroller = new BottomScroller( chatEditorPane );
 
         chatEditorPane.setEditable( false );
-
         chatEditorPane.addComponentListener( chatScroller );
+
         chatScrollPane.setPreferredSize( new Dimension( 100, 100 ) );
         chatScrollPane.setMinimumSize( new Dimension( 100, 100 ) );
 
@@ -110,6 +110,26 @@ public class ConversationView implements IDataView<IConversation>
                 new Insets( 4, 4, 4, 4 ), 0, 0 ) );
 
         return panel;
+    }
+
+    /**
+     * @param textPane
+     */
+    private void addEnterHook( JTextPane textPane )
+    {
+        KeyStroke ks;
+        String aname;
+        Action action;
+        ActionMap amap;
+        InputMap imap;
+
+        ks = KeyStroke.getKeyStroke( KeyEvent.VK_ENTER, 0 );
+        aname = "SEND_MESSAGE";
+        action = new ActionAdapter( new EnterListener( this ), aname, null );
+        amap = textPane.getActionMap();
+        imap = textPane.getInputMap();
+        imap.put( ks, aname );
+        amap.put( aname, action );
     }
 
     /***************************************************************************
@@ -133,6 +153,7 @@ public class ConversationView implements IDataView<IConversation>
         fontButton.addActionListener( fontButtonListener );
 
         this.msgEditorPane.addComponentListener( bottomScroller );
+        addEnterHook( msgEditorPane );
 
         msgScrollPane.setMinimumSize( new Dimension( 100, 48 ) );
         msgScrollPane.setMaximumSize( new Dimension( 100, 150 ) );
@@ -163,6 +184,7 @@ public class ConversationView implements IDataView<IConversation>
     private void sendMessage()
     {
         boolean canSend = false;
+
         List<IUser> users = conversation.getUsers();
 
         for( IUser user : users )
@@ -187,6 +209,12 @@ public class ConversationView implements IDataView<IConversation>
             msgEditorPane.setText( "" );
 
             conversation.sendMessage( msg );
+        }
+        else
+        {
+            JOptionPane.showMessageDialog( getView(),
+                "Um... No one's listening", "Forever Alone",
+                JOptionPane.ERROR_MESSAGE );
         }
     }
 
@@ -358,6 +386,9 @@ public class ConversationView implements IDataView<IConversation>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class FontListener implements ActionListener
     {
         private final ConversationView view;
@@ -388,6 +419,23 @@ public class ConversationView implements IDataView<IConversation>
                     view.msgEditorPane.setCharacterAttributes( s, true );
                 }
             }
+        }
+    }
+
+    private static class EnterListener implements ActionListener
+    {
+        private final ConversationView view;
+
+        public EnterListener( ConversationView view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            view.sendMessage();
+            LogUtils.printDebug( "Sending" );
         }
     }
 }

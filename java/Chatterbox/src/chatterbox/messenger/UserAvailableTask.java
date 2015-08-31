@@ -32,6 +32,8 @@ public class UserAvailableTask extends TimerTask
     {
         try
         {
+            // LogUtils.printDebug(
+            // "Sending available: " + chat.getLocalUser().getUserId() );
             chat.sendMessage( message );
         }
         catch( IOException ex )

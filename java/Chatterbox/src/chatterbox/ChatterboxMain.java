@@ -2,6 +2,10 @@ package chatterbox;
 
 import org.jutils.ui.app.FrameApplication;
 
+import chatterbox.data.ChatUser;
+import chatterbox.messenger.Chat;
+import chatterbox.model.IUser;
+
 /*******************************************************************************
  * 
  ******************************************************************************/
@@ -12,6 +16,17 @@ public class ChatterboxMain
      **************************************************************************/
     public static void main( String[] args )
     {
-        FrameApplication.invokeLater( new ChatterboxApp() );
+        IUser user;
+
+        if( args.length == 1 )
+        {
+            user = new ChatUser( args[0] );
+        }
+        else
+        {
+            user = new ChatUser( System.getProperty( "user.name" ) );
+        }
+
+        FrameApplication.invokeLater( new ChatterboxApp( new Chat( user ) ) );
     }
 }

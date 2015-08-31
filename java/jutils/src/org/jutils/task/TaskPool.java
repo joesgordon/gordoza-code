@@ -1,6 +1,5 @@
 package org.jutils.task;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -117,8 +116,8 @@ public class TaskPool
                 }
 
                 view.addCancelListener( new CancelListener( stopManager ) );
-                stopManager.addFinishedListener( new TaskFinishedListener(
-                    this, runner, tasker, view ) );
+                stopManager.addFinishedListener(
+                    new TaskFinishedListener( this, runner, tasker, view ) );
 
                 pool.submit( runner );
             }
@@ -177,8 +176,8 @@ public class TaskPool
         @Override
         public void handleError( Throwable t )
         {
-            pool.tasker.signalError( new TaskError(
-                "An unrecoverable error occured", t ) );
+            pool.tasker.signalError(
+                new TaskError( "An unrecoverable error occured", t ) );
             pool.shutdown();
         }
     }
@@ -205,8 +204,8 @@ public class TaskPool
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class TaskFinishedListener implements
-        ItemActionListener<Boolean>
+    private static class TaskFinishedListener
+        implements ItemActionListener<Boolean>
     {
         private final IMultiTaskHandler tasker;
         private final TaskRunner runner;
@@ -300,12 +299,6 @@ public class TaskPool
         public void removeFinishedListener( ItemActionListener<Boolean> l )
         {
             handler.removeFinishedListener( l );
-        }
-
-        @Override
-        public Component getView()
-        {
-            return handler.getView();
         }
     }
 }
