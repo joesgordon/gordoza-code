@@ -19,15 +19,18 @@ import org.jutils.chart.data.*;
 import org.jutils.chart.data.ChartContext.IDimensionCoords;
 import org.jutils.chart.io.DataFileReader;
 import org.jutils.chart.model.*;
+import org.jutils.chart.ui.event.SaveSeriesDataListener;
 import org.jutils.chart.ui.objects.ChartWidget;
 import org.jutils.chart.ui.objects.SeriesWidget;
 import org.jutils.io.IOUtils;
 import org.jutils.io.OptionsSerializer;
-import org.jutils.ui.*;
+import org.jutils.ui.JGoodiesToolBar;
+import org.jutils.ui.OkDialogView;
 import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.DropActionType;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
+import org.jutils.ui.model.IDataView;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
@@ -50,6 +53,8 @@ public class ChartView implements IView<JComponent>
     public final Action openAction;
     /**  */
     public final Action saveAction;
+    /**  */
+    public final Action saveDataAction;
     /**  */
     public final Action propertiesAction;
 
@@ -85,6 +90,7 @@ public class ChartView implements IView<JComponent>
 
         this.openAction = createOpenAction();
         this.saveAction = createSaveAction();
+        this.saveDataAction = createSaveDataAction();
         this.propertiesAction = createPropertiesAction();
 
         this.view = createView( allowOpen, gradientToolbar );
@@ -102,8 +108,8 @@ public class ChartView implements IView<JComponent>
 
         if( allowOpen )
         {
-            mainPanel.setDropTarget( new FileDropTarget( new ChartDropTarget(
-                this ) ) );
+            mainPanel.setDropTarget(
+                new FileDropTarget( new ChartDropTarget( this ) ) );
         }
 
         mainPanel.setFocusable( true );
@@ -114,8 +120,8 @@ public class ChartView implements IView<JComponent>
         InputMap imap = mainPanel.getInputMap( JTable.WHEN_FOCUSED );
 
         imap.put( deleteKey, actionMapKey );
-        amap.put( actionMapKey, new ActionAdapter( new DeletePointListener(
-            this ), actionMapKey, null ) );
+        amap.put( actionMapKey, new ActionAdapter(
+            new DeletePointListener( this ), actionMapKey, null ) );
 
         mainPanel.setMinimumSize( new Dimension( 150, 150 ) );
     }
@@ -141,8 +147,8 @@ public class ChartView implements IView<JComponent>
         panel.add( new JSeparator(), constraints );
 
         constraints = new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
         panel.add( mainPanel, constraints );
 
         return panel;
@@ -153,7 +159,8 @@ public class ChartView implements IView<JComponent>
      * @param gradientToolbar
      * @return
      **************************************************************************/
-    private Component createToolbar( boolean allowOpen, boolean gradientToolbar )
+    private Component createToolbar( boolean allowOpen,
+        boolean gradientToolbar )
     {
         JToolBar toolbar;
 
@@ -173,6 +180,8 @@ public class ChartView implements IView<JComponent>
         }
 
         SwingUtils.addActionToToolbar( toolbar, saveAction );
+
+        SwingUtils.addActionToToolbar( toolbar, saveDataAction );
 
         toolbar.addSeparator();
 
@@ -219,6 +228,24 @@ public class ChartView implements IView<JComponent>
         name = "Save";
         icon = IconConstants.loader.getIcon( IconConstants.SAVE_16 );
         listener = new SaveListener( this );
+        action = new ActionAdapter( listener, name, icon );
+
+        return action;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createSaveDataAction()
+    {
+        Action action;
+        ActionListener listener;
+        Icon icon;
+        String name;
+
+        name = "Save Data";
+        icon = IconConstants.loader.getIcon( IconConstants.SAVE_AS_16 );
+        listener = new SaveDataListener( this );
         action = new ActionAdapter( listener, name, icon );
 
         return action;
@@ -312,8 +339,8 @@ public class ChartView implements IView<JComponent>
         }
 
         chart.series.add( s );
-        chartWidget.plot.serieses.add( new SeriesWidget( chart, s,
-            chartWidget.context ) );
+        chartWidget.plot.serieses.add(
+            new SeriesWidget( chart, s, chartWidget.context ) );
         restoreAndRepaintChart();
 
         propertiesView.addSeries( s, chart.series.size() );
@@ -580,8 +607,8 @@ public class ChartView implements IView<JComponent>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class ChartDropTarget implements
-        ItemActionListener<IFileDropEvent>
+    private static class ChartDropTarget
+        implements ItemActionListener<IFileDropEvent>
     {
         private final ChartView view;
 
@@ -647,7 +674,8 @@ public class ChartView implements IView<JComponent>
 
         public void mouseClicked( MouseEvent e )
         {
-            if( SwingUtilities.isLeftMouseButton( e ) && e.getClickCount() == 2 )
+            if( SwingUtilities.isLeftMouseButton( e ) &&
+                e.getClickCount() == 2 )
             {
                 view.zoomRestore();
             }
@@ -920,8 +948,8 @@ public class ChartView implements IView<JComponent>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class SaveListener implements ActionListener,
-        ItemActionListener<Boolean>
+    private static class SaveListener
+        implements ActionListener, ItemActionListener<Boolean>
     {
         private final ChartView view;
 
@@ -986,6 +1014,68 @@ public class ChartView implements IView<JComponent>
             }
 
             return f;
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class SaveDataListener implements ActionListener
+    {
+        private final ChartView view;
+
+        public SaveDataListener( ChartView view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            IFileSelectionListener ifsl;
+            FileChooserListener listener;
+
+            for( Series s : view.chart.series )
+            {
+                IDataView<Series> sv = new SeriesViewAdapter( s, view );
+                ifsl = new SaveSeriesDataListener( sv );
+                listener = new FileChooserListener( view.getView(),
+                    "Choose File to Save", ifsl, true );
+
+                listener.actionPerformed( new ActionEvent( this, 0, null ) );
+            }
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class SeriesViewAdapter implements IDataView<Series>
+    {
+        private final Series s;
+        private final ChartView view;
+
+        public SeriesViewAdapter( Series s, ChartView view )
+        {
+            this.s = s;
+            this.view = view;
+        }
+
+        @Override
+        public Component getView()
+        {
+            return view.getView();
+        }
+
+        @Override
+        public Series getData()
+        {
+            return s;
+        }
+
+        @Override
+        public void setData( Series data )
+        {
         }
     }
 
@@ -1078,8 +1168,8 @@ public class ChartView implements IView<JComponent>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class PropertiesDialogListener implements ActionListener,
-        ItemActionListener<Boolean>
+    private static class PropertiesDialogListener
+        implements ActionListener, ItemActionListener<Boolean>
     {
         private final ChartView view;
         private final JDialog d;
