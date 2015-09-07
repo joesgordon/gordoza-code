@@ -156,23 +156,6 @@ public class BitArray implements Iterable<Boolean>
     }
 
     /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public String toString()
-    {
-        char [] str = new char[bits.size()];
-
-        for( int i = 0; i < str.length; i++ )
-        {
-            Boolean b = bits.get( i );
-            str[i] = b ? '1' : '0';
-        }
-
-        return new String( str );
-    }
-
-    /***************************************************************************
      * Returns the bit at the provided index.
      * @param idx
      * @return
@@ -189,5 +172,32 @@ public class BitArray implements Iterable<Boolean>
     {
         this.bits.clear();
         this.bits.addAll( bits.bits );
+    }
+
+    /***************************************************************************
+     * Returns a binary representation of this collection of bits.
+     **************************************************************************/
+    @Override
+    public String toString()
+    {
+        char [] str = new char[bits.size()];
+
+        for( int i = 0; i < str.length; i++ )
+        {
+            Boolean b = bits.get( i );
+            str[i] = b ? '1' : '0';
+        }
+
+        return new String( str );
+    }
+
+    public String toHexLeft()
+    {
+        return HexUtils.toHexString( getLeftAligned() );
+    }
+
+    public String toHexRight()
+    {
+        return HexUtils.toHexString( getRightAligned() );
     }
 }
