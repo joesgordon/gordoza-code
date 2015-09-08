@@ -41,16 +41,19 @@ public class BusyBar2App implements IFrameApp
         bar.setBorder( BorderFactory.createRaisedBevelBorder() );
         bar.setBusy( true );
 
-        panel.add( new JLabel( "Color :" ), new GridBagConstraints( 0, 0, 1, 1,
-            0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 4, 4, 4, 4 ), 0, 0 ) );
-        panel.add( combo, new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+        panel.add( new JLabel( "Color :" ),
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+        panel.add( combo,
+            new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
 
-        panel.add( bar, new GridBagConstraints( 0, 1, 2, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 4, 4, 4, 4 ), 0, 10 ) );
+        panel.add( bar,
+            new GridBagConstraints( 0, 1, 2, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 4, 4, 4, 4 ), 0, 10 ) );
 
         frame.setContentPane( panel );
         frame.setSize( 400, 200 );

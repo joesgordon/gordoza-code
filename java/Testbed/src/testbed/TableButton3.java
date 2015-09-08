@@ -21,16 +21,17 @@ public class TableButton3 extends JFrame
             { new Date(), "A", new Integer( 1 ), new Double( 5.1 ), "Delete0" },
             { new Date(), "B", new Integer( 2 ), new Double( 6.2 ), "Delete1" },
             { new Date(), "C", new Integer( 3 ), new Double( 7.3 ), "Delete2" },
-            { new Date(), "D", new Integer( 4 ), new Double( 8.4 ), "Delete3" } };
+            { new Date(), "D", new Integer( 4 ), new Double( 8.4 ),
+                "Delete3" } };
 
         DefaultTableModel model = new DefaultTableModel( data, columnNames );
-        JTable table = new JTable( model )
+        JTable table = new JTable( model)
         {
             // Returning the Class of each column will allow different
             // renderers to be used based on Class
             public Class<?> getColumnClass( int column )
             {
-                return getValueAt( 0, column ).getClass();
+                return getValueAt( 0, column ).getClass( );
             }
         };
         table.setRowHeight( 30 );
@@ -50,7 +51,8 @@ public class TableButton3 extends JFrame
             {
                 try
                 {
-                    UIManager.setLookAndFeel( "com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel" );
+                    UIManager.setLookAndFeel(
+                        "com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel" );
                     Options.setSelectOnFocusGainEnabled( true );
                 }
                 catch( Exception ex )
@@ -65,8 +67,8 @@ public class TableButton3 extends JFrame
         } );
     }
 
-    private static class ButtonColumn extends AbstractCellEditor implements
-        TableCellRenderer, TableCellEditor, ActionListener
+    private static class ButtonColumn extends AbstractCellEditor
+        implements TableCellRenderer, TableCellEditor, ActionListener
     {
         JTable table;
 
@@ -98,7 +100,8 @@ public class TableButton3 extends JFrame
             if( hasFocus )
             {
                 renderButton.setForeground( table.getForeground() );
-                renderButton.setBackground( UIManager.getColor( "Button.background" ) );
+                renderButton.setBackground(
+                    UIManager.getColor( "Button.background" ) );
             }
             else if( isSelected )
             {
@@ -108,7 +111,8 @@ public class TableButton3 extends JFrame
             else
             {
                 renderButton.setForeground( table.getForeground() );
-                renderButton.setBackground( UIManager.getColor( "Button.background" ) );
+                renderButton.setBackground(
+                    UIManager.getColor( "Button.background" ) );
             }
 
             renderButton.setText( ( value == null ) ? "" : value.toString() );
@@ -131,8 +135,8 @@ public class TableButton3 extends JFrame
         public void actionPerformed( ActionEvent e )
         {
             fireEditingStopped();
-            LogUtils.printDebug( e.getActionCommand() + " : " +
-                table.getSelectedRow() );
+            LogUtils.printDebug(
+                e.getActionCommand() + " : " + table.getSelectedRow() );
         }
     }
 }

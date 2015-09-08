@@ -31,14 +31,15 @@ public class LinterpMain
         CartPoint exp1 = new CartPoint( p1.x, Math.pow( 10, p1.y ) );
 
         y = linterp( x, exp0, exp1 );
-        LogUtils.printDebug( "exp:      " + Math.log10( y ) + " = log10(" + y +
-            ")" );
+        LogUtils.printDebug(
+            "exp:      " + Math.log10( y ) + " = log10(" + y + ")" );
 
         CartPoint expn0 = new CartPoint( p0.x, Math.pow( Math.E, p0.y ) );
         CartPoint expn1 = new CartPoint( p1.x, Math.pow( Math.E, p1.y ) );
 
         y = linterp( x, expn0, expn1 );
-        LogUtils.printDebug( "exp:      " + Math.log( y ) + " = ln(" + y + ")" );
+        LogUtils.printDebug(
+            "exp:      " + Math.log( y ) + " = ln(" + y + ")" );
     }
 
     private static double linterp( double x, CartPoint p0, CartPoint p1 )

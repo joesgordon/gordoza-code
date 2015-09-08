@@ -39,13 +39,15 @@ public class FileConfigurationDialog extends JDialog
 
         useCustomCheckBox.setText( "Use Custom File Manager" );
 
-        contentPanel.add( useCustomCheckBox, new GridBagConstraints( 0, 0, 1,
-            1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.BOTH,
-            new Insets( 10, 20, 10, 10 ), 0, 0 ) );
+        contentPanel.add( useCustomCheckBox,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 10, 20, 10, 10 ), 0, 0 ) );
 
-        contentPanel.add( extPanel, new GridBagConstraints( 0, 1, 1, 1, 1.0,
-            1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(
-                0, 0, 0, 0 ), 0, 0 ) );
+        contentPanel.add( extPanel,
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
     }
 
     /***************************************************************************
@@ -116,7 +118,8 @@ public class FileConfigurationDialog extends JDialog
         @Override
         public void createAndShowUi()
         {
-            FileConfigurationDialog dialog = new FileConfigurationDialog( null );
+            FileConfigurationDialog dialog = new FileConfigurationDialog(
+                null );
             dialog.setData( getUnitTestData() );
             dialog.setTitle( "File Config Test" );
             dialog.setSize( new Dimension( 600, 400 ) );
@@ -149,31 +152,37 @@ class ProgramPanel extends JPanel
     {
         this.setLayout( new GridBagLayout() );
 
-        this.add( new JLabel( "Name :" ), new GridBagConstraints( 0, 0, 1, 1,
-            0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.BOTH,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        this.add( nameLabel, new GridBagConstraints( 1, 0, 2, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 2,
-                2, 2, 2 ), 0, 0 ) );
+        this.add( new JLabel( "Name :" ),
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.BOTH,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        this.add( nameLabel,
+            new GridBagConstraints( 1, 0, 2, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-        this.add( new JLabel( "Path :" ), new GridBagConstraints( 0, 1, 1, 1,
-            0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.BOTH,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        this.add( pathField, new GridBagConstraints( 1, 1, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 2,
-                2, 2, 2 ), 0, 0 ) );
-        this.add( browseButton, new GridBagConstraints( 2, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 2,
-                2, 2, 2 ), 0, 0 ) );
+        this.add( new JLabel( "Path :" ),
+            new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.BOTH,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        this.add( pathField,
+            new GridBagConstraints( 1, 1, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        this.add( browseButton,
+            new GridBagConstraints( 2, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
         this.add( new JLabel( "Extension Specific Arguments" ),
             new GridBagConstraints( 0, 2, 3, 1, 0.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
-                    2, 2, 2, 2 ), 0, 0 ) );
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-        this.add( argScrollPane, new GridBagConstraints( 0, 3, 3, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 2,
-                2, 2, 2 ), 0, 0 ) );
+        this.add( argScrollPane,
+            new GridBagConstraints( 0, 3, 3, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
     }
 }
 
@@ -232,39 +241,48 @@ class ExtPanel extends JPanel
 
         extLabel.setForeground( Color.white );
 
-        extPanel.add( extLabel, new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 4, 4,
-                4, 4 ), 0, 0 ) );
+        extPanel.add( extLabel,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
 
         // ---------------------------------------------------------------------
         //
         // ---------------------------------------------------------------------
         buttonPanel.setLayout( new GridBagLayout() );
 
-        addButton.setIcon( IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 ) );
+        addButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 ) );
         addButton.setToolTipText( "Add a new program" );
 
-        removeButton.setIcon( IconConstants.loader.getIcon( IconConstants.EDIT_DELETE_16 ) );
+        removeButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.EDIT_DELETE_16 ) );
         removeButton.setToolTipText( "Remove an existing program" );
 
-        editButton.setIcon( IconConstants.loader.getIcon( IconConstants.EDIT_16 ) );
+        editButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.EDIT_16 ) );
         editButton.setToolTipText( "Edit an existing program" );
 
-        defaultButton.setIcon( IconConstants.loader.getIcon( IconConstants.CHECK_16 ) );
+        defaultButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.CHECK_16 ) );
         defaultButton.setToolTipText( "Make program extension default" );
 
-        buttonPanel.add( addButton, new GridBagConstraints( 0, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(
-                2, 2, 2, 2 ), 0, 0 ) );
-        buttonPanel.add( removeButton, new GridBagConstraints( 1, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(
-                2, 2, 2, 2 ), 0, 0 ) );
-        buttonPanel.add( editButton, new GridBagConstraints( 2, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(
-                2, 2, 2, 2 ), 0, 0 ) );
-        buttonPanel.add( defaultButton, new GridBagConstraints( 3, 0, 1, 1,
-            0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-            new Insets( 2, 8, 2, 2 ), 0, 0 ) );
+        buttonPanel.add( addButton,
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        buttonPanel.add( removeButton,
+            new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        buttonPanel.add( editButton,
+            new GridBagConstraints( 2, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        buttonPanel.add( defaultButton,
+            new GridBagConstraints( 3, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 2, 8, 2, 2 ), 0, 0 ) );
 
         // ---------------------------------------------------------------------
         //
@@ -275,17 +293,20 @@ class ExtPanel extends JPanel
         pgmScrollPane.setMinimumSize( new Dimension( 100, 100 ) );
         pgmScrollPane.setPreferredSize( new Dimension( 200, 100 ) );
 
-        this.add( extPanel, new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 ) );
+        this.add( extPanel,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
-        this.add( buttonPanel, new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 2, 2,
-                2, 2 ), 0, 0 ) );
+        this.add( buttonPanel,
+            new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-        this.add( pgmScrollPane, new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
-            GridBagConstraints.EAST, GridBagConstraints.BOTH, new Insets( 2, 0,
-                0, 0 ), 0, 0 ) );
+        this.add( pgmScrollPane,
+            new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
+                GridBagConstraints.EAST, GridBagConstraints.BOTH,
+                new Insets( 2, 0, 0, 0 ), 0, 0 ) );
     }
 
     public void setExtension( ExtensionData ext )
@@ -343,9 +364,10 @@ class ExtensionsPanel extends JPanel
         titleLabel.setText( "Extensions" );
         titleLabel.setForeground( Color.white );
 
-        titlePanel.add( titleLabel, new GridBagConstraints( 0, 0, 1, 1, 1.0,
-            1.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(
-                4, 4, 4, 4 ), 0, 0 ) );
+        titlePanel.add( titleLabel,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
 
         // ---------------------------------------------------------------------
         // Setup the left panel.
@@ -353,10 +375,12 @@ class ExtensionsPanel extends JPanel
         leftPanel.setLayout( new GridBagLayout() );
         leftPanel.setBorder( new ShadowBorder() );
 
-        addButton.setIcon( IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 ) );
+        addButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 ) );
         addButton.setToolTipText( "Add a new extension" );
 
-        removeButton.setIcon( IconConstants.loader.getIcon( IconConstants.EDIT_DELETE_16 ) );
+        removeButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.EDIT_DELETE_16 ) );
         removeButton.setToolTipText( "Remove an existing extension" );
 
         extList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
@@ -388,21 +412,25 @@ class ExtensionsPanel extends JPanel
         extScrollPane.setPreferredSize( new Dimension( 200, 100 ) );
         // extScrollPane.setBorder( BorderFactory.createEmptyBorder() );
 
-        leftPanel.add( titlePanel, new GridBagConstraints( 0, 0, 3, 1, 1.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        leftPanel.add( titlePanel,
+            new GridBagConstraints( 0, 0, 3, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
-        leftPanel.add( addButton, new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 4,
-                4, 4, 2 ), 0, 0 ) );
+        leftPanel.add( addButton,
+            new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 4, 4, 4, 2 ), 0, 0 ) );
 
-        leftPanel.add( removeButton, new GridBagConstraints( 1, 1, 1, 1, 0.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 4, 2, 4, 4 ), 0, 0 ) );
+        leftPanel.add( removeButton,
+            new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 4, 2, 4, 4 ), 0, 0 ) );
 
-        leftPanel.add( extScrollPane, new GridBagConstraints( 0, 2, 3, 1, 1.0,
-            1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 2, 0, 0, 0 ), 0, 0 ) );
+        leftPanel.add( extScrollPane,
+            new GridBagConstraints( 0, 2, 3, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 2, 0, 0, 0 ), 0, 0 ) );
 
         // ---------------------------------------------------------------------
         // Setup this panel.
@@ -414,9 +442,10 @@ class ExtensionsPanel extends JPanel
         splitPane.setLeftComponent( leftPanel );
         splitPane.setRightComponent( blankPanel );
 
-        this.add( splitPane, new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 10,
-                10, 10, 10 ), 0, 0 ) );
+        this.add( splitPane,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 10, 10, 10, 10 ), 0, 0 ) );
     }
 
     private void extensionSelected( int idx )

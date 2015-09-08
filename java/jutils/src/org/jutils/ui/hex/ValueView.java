@@ -192,28 +192,28 @@ public class ValueView implements IView<JPanel>
 
         button = new JRadioButton( "Most Significant Byte First" );
         button.setToolTipText( "Big Endian/Network Order" );
-        button.addActionListener( new EndiannessListener( this,
-            ByteOrder.BIG_ENDIAN ) );
+        button.addActionListener(
+            new EndiannessListener( this, ByteOrder.BIG_ENDIAN ) );
         button.setSelected( true );
         constraints = new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 0, 0,
-                4, 0 ), 0, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.NONE,
+            new Insets( 0, 0, 4, 0 ), 0, 0 );
         ep.add( button, constraints );
         group.add( button );
 
         button = new JRadioButton( "Least Significant Byte First" );
         button.setToolTipText( "Little Endian/Intel Order" );
-        button.addActionListener( new EndiannessListener( this,
-            ByteOrder.LITTLE_ENDIAN ) );
+        button.addActionListener(
+            new EndiannessListener( this, ByteOrder.LITTLE_ENDIAN ) );
         constraints = new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 0, 0,
-                0, 0 ), 0, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.NONE,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
         ep.add( button, constraints );
         group.add( button );
 
         constraints = new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 4, 4,
-                4, 4 ), 0, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.NONE,
+            new Insets( 4, 4, 4, 4 ), 0, 0 );
         panel.add( ep, constraints );
     }
 
@@ -238,18 +238,18 @@ public class ValueView implements IView<JPanel>
         field.setEditable( false );
 
         constraints = new GridBagConstraints( 0, row, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets( 4, 4,
-                4, 2 ), 0, 0 );
+            GridBagConstraints.EAST, GridBagConstraints.NONE,
+            new Insets( 4, 4, 4, 2 ), 0, 0 );
         panel.add( label, constraints );
 
         constraints = new GridBagConstraints( 1, row, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 4, 2,
-                4, 2 ), 0, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.NONE,
+            new Insets( 4, 2, 4, 2 ), 0, 0 );
         panel.add( field, constraints );
 
         constraints = new GridBagConstraints( 2, row, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 4, 4,
-                4, 2 ), 0, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.NONE,
+            new Insets( 4, 4, 4, 2 ), 0, 0 );
         panel.add( rbutton, constraints );
     }
 
@@ -291,8 +291,8 @@ public class ValueView implements IView<JPanel>
         setDefaultText();
 
         int remaining = bytes.length - offset;
-        ByteBuffer buf = ByteBuffer.wrap( bytes, offset, remaining > 8 ? 8
-            : remaining );
+        ByteBuffer buf = ByteBuffer.wrap( bytes, offset,
+            remaining > 8 ? 8 : remaining );
 
         buf.order( dataOrder );
 

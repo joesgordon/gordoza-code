@@ -95,7 +95,8 @@ public class ValidationTextArea implements IValidationField
                 reason = ex.getMessage();
             }
 
-            if( ignorePreviousValidity || listenerList.isValid() != newValidity )
+            if( ignorePreviousValidity ||
+                listenerList.isValid() != newValidity )
             {
                 setComponentValid( newValidity );
             }

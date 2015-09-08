@@ -80,7 +80,8 @@ public class DuakFrame implements IView<JFrame>
 
         ProgressDialog dialog = new ProgressDialog( getView(),
             "Analysis Progress" );
-        AnalysisThread analysisThread = new AnalysisThread( this, file, dialog );
+        AnalysisThread analysisThread = new AnalysisThread( this, file,
+            dialog );
         Stoppable stoppable = new Stoppable( analysisThread );
         Thread thread = new Thread( stoppable );
 
@@ -267,8 +268,8 @@ public class DuakFrame implements IView<JFrame>
 
             if( results != null )
             {
-                SwingUtilities.invokeLater( new PanelUpdater( view, results,
-                    dialog ) );
+                SwingUtilities.invokeLater(
+                    new PanelUpdater( view, results, dialog ) );
             }
         }
     }
@@ -304,8 +305,8 @@ public class DuakFrame implements IView<JFrame>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class FileDropped implements
-        ItemActionListener<IFileDropEvent>
+    private static class FileDropped
+        implements ItemActionListener<IFileDropEvent>
     {
         private final DuakFrame view;
 

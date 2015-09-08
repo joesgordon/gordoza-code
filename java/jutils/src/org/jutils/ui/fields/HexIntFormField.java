@@ -67,7 +67,8 @@ public class HexIntFormField implements IDataFormField<Integer>
      * @param min
      * @param max
      **************************************************************************/
-    public HexIntFormField( String name, String units, Integer min, Integer max )
+    public HexIntFormField( String name, String units, Integer min,
+        Integer max )
     {
         this( name, units, 20, null, min, max );
     }
@@ -99,8 +100,8 @@ public class HexIntFormField implements IDataFormField<Integer>
 
         ITextValidator textValidator;
 
-        textValidator = new DataTextValidator<>( new HexIntegerValidator( min,
-            max ), new ValueUpdater( this ) );
+        textValidator = new DataTextValidator<>(
+            new HexIntegerValidator( min, max ), new ValueUpdater( this ) );
         textField.getField().setValidator( textValidator );
     }
 

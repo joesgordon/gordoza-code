@@ -53,7 +53,8 @@ public class Stopwatch
     {
         if( stopTime == 0 )
         {
-            throw new IllegalStateException( "The watch must first be stopped" );
+            throw new IllegalStateException(
+                "The watch must first be stopped" );
         }
 
         return stopTime - startTime;

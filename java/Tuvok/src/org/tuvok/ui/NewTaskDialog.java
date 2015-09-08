@@ -48,23 +48,27 @@ public class NewTaskDialog extends JDialog
         jTextField1.setColumns( 15 );
         jButton1.setText( "OK" );
         jButton2.setText( "Cancel" );
-        jButton2.addActionListener( new NewTaskDialog_jButton2_actionAdapter(
-            this ) );
+        jButton2.addActionListener(
+            new NewTaskDialog_jButton2_actionAdapter( this ) );
         getContentPane().add( panel1 );
-        panel1.add( nameLabel, new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets( 5, 5,
-                5, 5 ), 0, 0 ) );
-        panel1.add( jTextField1, new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 5, 5,
-                5, 5 ), 0, 0 ) );
+        panel1.add( nameLabel,
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 5, 5, 5, 5 ), 0, 0 ) );
+        panel1.add( jTextField1,
+            new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 5, 5, 5, 5 ), 0, 0 ) );
 
-        panel1.add( jPanel2, new GridBagConstraints( 0, 1, 3, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        panel1.add( jPanel2,
+            new GridBagConstraints( 0, 1, 3, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
-        panel1.add( jPanel1, new GridBagConstraints( 0, 2, 3, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 ) );
+        panel1.add( jPanel1,
+            new GridBagConstraints( 0, 2, 3, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
         jPanel2.add( jButton1 );
         jPanel2.add( jButton2 );
     }

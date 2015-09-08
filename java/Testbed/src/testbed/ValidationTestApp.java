@@ -76,20 +76,24 @@ public class ValidationTestApp implements IFrameApp
         field3.setValidator( tvB );
         field4.setValidator( tvC );
 
-        panel.add( form.getView(), new GridBagConstraints( 0, 0, 3, 1, 1.0,
-            1.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-            new Insets( 8, 8, 8, 8 ), 0, 0 ) );
+        panel.add( form.getView(),
+            new GridBagConstraints( 0, 0, 3, 1, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 8, 8, 8, 8 ), 0, 0 ) );
 
-        panel.add( Box.createHorizontalStrut( 0 ), new GridBagConstraints( 0,
-            1, 1, 1, 1.0, 0.0, GridBagConstraints.EAST,
-            GridBagConstraints.NONE, new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        panel.add( Box.createHorizontalStrut( 0 ),
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
-        panel.add( okButton, new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets( 0, 0,
-                8, 8 ), 0, 0 ) );
-        panel.add( cancelButton, new GridBagConstraints( 2, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 0, 0,
-                8, 8 ), 0, 0 ) );
+        panel.add( okButton,
+            new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 0, 0, 8, 8 ), 0, 0 ) );
+        panel.add( cancelButton,
+            new GridBagConstraints( 2, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 0, 0, 8, 8 ), 0, 0 ) );
 
         frame.setContentPane( panel );
         frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
@@ -155,8 +159,8 @@ public class ValidationTestApp implements IFrameApp
         {
             if( text.compareTo( this.text ) != 0 )
             {
-                throw new ValidationException( text + " does not equal " +
-                    this.text );
+                throw new ValidationException(
+                    text + " does not equal " + this.text );
             }
         }
     }
@@ -184,8 +188,8 @@ public class ValidationTestApp implements IFrameApp
 
                 if( min != null && i < min )
                 {
-                    throw new ValidationException( "Value less than minimum: " +
-                        i + " < " + min );
+                    throw new ValidationException(
+                        "Value less than minimum: " + i + " < " + min );
                 }
                 if( max != null && i > max )
                 {

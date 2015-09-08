@@ -54,7 +54,8 @@ public class LicenseDialog extends JDialog
             loader.getUrl( LICENSE_FORMS ) );
         LicensePanel jgLooksPanel = new LicensePanel(
             loader.getUrl( LICENSE_LOOKS ) );
-        LicensePanel xpp3Panel = new LicensePanel( loader.getUrl( LICENSE_XPP3 ) );
+        LicensePanel xpp3Panel = new LicensePanel(
+            loader.getUrl( LICENSE_XPP3 ) );
         LicensePanel xstreamPanel = new LicensePanel(
             loader.getUrl( LICENSE_XSTREAM ) );
         LicensePanel crystalClearPanel = new LicensePanel(
@@ -131,8 +132,8 @@ class LicensePanel extends JPanel
             }
             catch( IOException e )
             {
-                throw new IllegalArgumentException( pageUrl.getFile() +
-                    " not found!" );
+                throw new IllegalArgumentException(
+                    pageUrl.getFile() + " not found!" );
             }
         }
         else

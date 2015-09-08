@@ -39,6 +39,7 @@ public class TransactionTableModel extends ItemTableModel<Transaction>
                 return trans.getTag();
         }
 
-        throw new IllegalArgumentException( "No information for column " + col );
+        throw new IllegalArgumentException(
+            "No information for column " + col );
     }
 }

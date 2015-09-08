@@ -73,8 +73,8 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
 
         String pre = new String( chars, lineStart, start );
         String mat = new String( chars, start, length );
-        String pst = end == lineEnd ? "" : new String( chars, end, lineEnd -
-            end );
+        String pst = end == lineEnd ? ""
+            : new String( chars, end, lineEnd - end );
 
         return new LineMatch( lineNum, pre, mat, pst );
     }

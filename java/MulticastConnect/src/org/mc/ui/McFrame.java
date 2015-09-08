@@ -60,15 +60,18 @@ public class McFrame extends JFrame
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout( new GridBagLayout() );
 
-        mainPanel.add( confPanel, new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 6,
-                6, 6, 6 ), 0, 0 ) );
-        mainPanel.add( messagesPanel, new GridBagConstraints( 0, 1, 1, 1, 1.0,
-            1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 6, 6, 6 ), 0, 0 ) );
-        mainPanel.add( inputPanel, new GridBagConstraints( 0, 2, 1, 1, 1.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 6, 6, 6 ), 0, 0 ) );
+        mainPanel.add( confPanel,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 6, 6, 6, 6 ), 0, 0 ) );
+        mainPanel.add( messagesPanel,
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 6, 6, 6 ), 0, 0 ) );
+        mainPanel.add( inputPanel,
+            new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 6, 6, 6 ), 0, 0 ) );
 
         setTitle( "MulticastConnect" );
         setContentPane( mainPanel );
@@ -146,7 +149,8 @@ public class McFrame extends JFrame
                 int msgSize = confPanel.getMessageSize();
                 NetworkInterface nic = confPanel.getNic();
 
-                commModel = new McComm( addressString, port, ttl, msgSize, nic );
+                commModel = new McComm( addressString, port, ttl, msgSize,
+                    nic );
                 receiver = new McRxThread( this, commModel );
                 rxThread = new Stoppable( receiver );
                 Thread thread = new Thread( rxThread );

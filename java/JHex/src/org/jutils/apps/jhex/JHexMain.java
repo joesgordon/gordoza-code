@@ -27,8 +27,8 @@ public class JHexMain
             file = new File( args[0] );
             if( !file.isFile() )
             {
-                System.err.println( "File does not exist: " +
-                    file.getAbsolutePath() );
+                System.err.println(
+                    "File does not exist: " + file.getAbsolutePath() );
                 System.exit( -1 );
             }
         }

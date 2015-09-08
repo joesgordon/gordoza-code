@@ -17,8 +17,8 @@ public class DoubleParser implements IParser<Double>
         }
         catch( NumberFormatException ex )
         {
-            throw new ValidationException( "Cannot parse \"" + str +
-                "\" as a double" );
+            throw new ValidationException(
+                "Cannot parse \"" + str + "\" as a double" );
         }
 
         return d;

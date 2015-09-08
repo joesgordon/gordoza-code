@@ -79,8 +79,8 @@ public final class HexUtils
                 return 'F';
         }
 
-        throw new IllegalArgumentException( "Outside the range of a nibble: " +
-            nibble );
+        throw new IllegalArgumentException(
+            "Outside the range of a nibble: " + nibble );
     }
 
     /***************************************************************************

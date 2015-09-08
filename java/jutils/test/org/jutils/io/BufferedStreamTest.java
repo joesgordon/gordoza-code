@@ -143,7 +143,8 @@ public class BufferedStreamTest
         }
         catch( IOException ex )
         {
-            Assert.fail( "An EOF Exception should have been thrown instead of an I/O Exception." );
+            Assert.fail(
+                "An EOF Exception should have been thrown instead of an I/O Exception." );
         }
     }
 
@@ -531,12 +532,12 @@ public class BufferedStreamTest
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class MockObjectSerializer implements
-        IStdSerializer<MockObject, IDataStream>
+    private static class MockObjectSerializer
+        implements IStdSerializer<MockObject, IDataStream>
     {
         @Override
-        public MockObject read( IDataStream stream ) throws IOException,
-            RuntimeFormatException
+        public MockObject read( IDataStream stream )
+            throws IOException, RuntimeFormatException
         {
             MockObject obj = new MockObject();
 

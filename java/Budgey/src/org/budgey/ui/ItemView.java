@@ -31,13 +31,15 @@ public final class ItemView
         cancelButton = new JButton( "Cancel",
             BudgeyIconConstants.getCancelIcon() );
 
-        panel.add( fieldsPanel, new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets( 0, 0,
-                0, 0 ), 0, 0 ) );
+        panel.add( fieldsPanel,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
-        panel.add( createButtonPanel(), new GridBagConstraints( 0, 1, 1, 1,
-            1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        panel.add( createButtonPanel(),
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
     }
 
     /***************************************************************************
@@ -73,17 +75,20 @@ public final class ItemView
 
         // panel.setBorder( BorderFactory.createLineBorder( Color.red ) );
 
-        panel.add( Box.createVerticalStrut( 0 ), new GridBagConstraints( 0, 0,
-            2, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        panel.add( Box.createVerticalStrut( 0 ),
+            new GridBagConstraints( 0, 0, 2, 1, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
-        panel.add( cancelButton, new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets( 4, 4,
-                20, 4 ), 30, 10 ) );
+        panel.add( cancelButton,
+            new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 4, 4, 20, 4 ), 30, 10 ) );
 
-        panel.add( okButton, new GridBagConstraints( 2, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets( 4, 4,
-                20, 40 ), 30, 10 ) );
+        panel.add( okButton,
+            new GridBagConstraints( 2, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 4, 4, 20, 40 ), 30, 10 ) );
 
         Dimension dim = Utils.getMaxComponentSize( cancelButton, okButton );
 

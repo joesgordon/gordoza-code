@@ -15,8 +15,8 @@ import org.jutils.utils.Usable;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class UsableFormField<T> implements IDataFormField<Usable<T>>,
-    IValidationField
+public class UsableFormField<T>
+    implements IDataFormField<Usable<T>>, IValidationField
 {
     /**  */
     private final JPanel panel;
@@ -39,8 +39,8 @@ public class UsableFormField<T> implements IDataFormField<Usable<T>>,
         this.usedField = new JCheckBox();
         this.panel = createView();
 
-        field.setUpdater( new DataUpdater<T>( this, new ReflectiveUpdater<T>(
-            this, "usable.data" ) ) );
+        field.setUpdater( new DataUpdater<T>( this,
+            new ReflectiveUpdater<T>( this, "usable.data" ) ) );
     }
 
     /***************************************************************************

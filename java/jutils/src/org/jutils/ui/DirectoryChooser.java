@@ -1,7 +1,7 @@
 package org.jutils.ui;
 
-import java.awt.Dialog.ModalityType;
 import java.awt.*;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -59,7 +59,8 @@ public class DirectoryChooser
     public DirectoryChooser( Window owner, String title, String message,
         String paths )
     {
-        this.dialog = new JDialog( owner, title, ModalityType.APPLICATION_MODAL );
+        this.dialog = new JDialog( owner, title,
+            ModalityType.APPLICATION_MODAL );
         this.tree = new DirectoryTree();
         this.messageLabel = new JLabel();
 
@@ -86,24 +87,24 @@ public class DirectoryChooser
 
         messageLabel.setText( message );
 
-        scrollPane.setMinimumSize( new Dimension(
-            messageLabel.getPreferredSize().width,
-            messageLabel.getPreferredSize().width ) );
+        scrollPane.setMinimumSize(
+            new Dimension( messageLabel.getPreferredSize().width,
+                messageLabel.getPreferredSize().width ) );
         scrollPane.setPreferredSize( scrollPane.getMinimumSize() );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 8, 8,
-                0, 8 ), 0, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.NONE,
+            new Insets( 8, 8, 0, 8 ), 0, 0 );
         mainPanel.add( messageLabel, constraints );
 
         constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 8,
-                8, 8, 8 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 8, 8, 8, 8 ), 0, 0 );
         mainPanel.add( scrollPane, constraints );
 
         constraints = new GridBagConstraints( 0, 2, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL, new Insets(
-                8, 4, 8, 4 ), 0, 0 );
+            GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
+            new Insets( 8, 4, 8, 4 ), 0, 0 );
         mainPanel.add( createButtonPanel(), constraints );
 
         return mainPanel;
@@ -128,8 +129,8 @@ public class DirectoryChooser
         newButton.addActionListener( new NewDirectoryListener( this ) );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 2, 4,
-                2, 2 ), 4, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.NONE,
+            new Insets( 2, 4, 2, 2 ), 4, 0 );
         panel.add( newButton, constraints );
 
         // ---------------------------------------------------------------------
@@ -140,8 +141,8 @@ public class DirectoryChooser
         okButton.addActionListener( new OkListener( this ) );
 
         constraints = new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 2, 2,
-                2, 2 ), 4, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.NONE,
+            new Insets( 2, 2, 2, 2 ), 4, 0 );
         panel.add( okButton, constraints );
 
         // ---------------------------------------------------------------------
@@ -152,8 +153,8 @@ public class DirectoryChooser
         cancelButton.addActionListener( new CancelListener( this ) );
 
         constraints = new GridBagConstraints( 2, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 2, 2,
-                2, 4 ), 4, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.NONE,
+            new Insets( 2, 2, 2, 4 ), 4, 0 );
         panel.add( cancelButton, constraints );
 
         Dimension dim = Utils.getMaxComponentSize( newButton, okButton,
@@ -331,8 +332,7 @@ public class DirectoryChooser
                     {
                         if( !newDir.mkdir() )
                         {
-                            JOptionPane.showMessageDialog(
-                                chooser.dialog,
+                            JOptionPane.showMessageDialog( chooser.dialog,
                                 "Please check the permissions on the parent directory.",
                                 "Cannot Create New Directory",
                                 JOptionPane.ERROR_MESSAGE );
@@ -354,8 +354,7 @@ public class DirectoryChooser
             }
             else
             {
-                JOptionPane.showMessageDialog(
-                    chooser.dialog,
+                JOptionPane.showMessageDialog( chooser.dialog,
                     "Please choose only one directory when creating a sub-directory.",
                     "Cannot Create New Directory", JOptionPane.ERROR_MESSAGE );
             }

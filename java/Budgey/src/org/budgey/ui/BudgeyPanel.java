@@ -63,7 +63,8 @@ public class BudgeyPanel extends JPanel
         calc = new BalanceCalculator();
 
         transactionListView = new TransactionListView();
-        transactionListView.addEditTransactionListener( new EditTransactionListener() );
+        transactionListView.addEditTransactionListener(
+            new EditTransactionListener() );
 
         transactionView = new TransactionView();
         transactionView.addOkListener( new TransactionOkListener() );
@@ -87,9 +88,10 @@ public class BudgeyPanel extends JPanel
 
         summaryPanel = new SummaryPanel();
 
-        add( createMainPanel(), new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 4,
-                4, 4, 4 ), 0, 0 ) );
+        add( createMainPanel(),
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
     }
 
     /***************************************************************************
@@ -140,27 +142,32 @@ public class BudgeyPanel extends JPanel
 
         accountField.setForeground( Color.white );
 
-        titlePanel.add( accountField, new GridBagConstraints( 0, 0, 1, 1, 1.0,
-            1.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(
-                4, 4, 4, 4 ), 0, 0 ) );
+        titlePanel.add( accountField,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
 
         sliderPanel.addCard( transactionListView.getPanel() );
         sliderPanel.addCard( transactionView.getPanel() );
 
         mainPanel.setBorder( new ShadowBorder() );
 
-        mainPanel.add( titlePanel, new GridBagConstraints( 0, 0, 2, 1, 1.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
-        mainPanel.add( createToolBar(), new GridBagConstraints( 0, 1, 1, 1,
-            1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
-        mainPanel.add( createSummaryPanel(), new GridBagConstraints( 1, 1, 1,
-            1, 1.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE,
-            new Insets( 4, 4, 4, 4 ), 0, 0 ) );
-        mainPanel.add( sliderPanel.getView(), new GridBagConstraints( 0, 2, 2,
-            1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        mainPanel.add( titlePanel,
+            new GridBagConstraints( 0, 0, 2, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        mainPanel.add( createToolBar(),
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        mainPanel.add( createSummaryPanel(),
+            new GridBagConstraints( 1, 1, 1, 1, 1.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+        mainPanel.add( sliderPanel.getView(),
+            new GridBagConstraints( 0, 2, 2, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
         return mainPanel;
     }
@@ -194,7 +201,8 @@ public class BudgeyPanel extends JPanel
         }
         else
         {
-            transactionListView.setTransactions( account.getCurrentMonthsTransactions() );
+            transactionListView.setTransactions(
+                account.getCurrentMonthsTransactions() );
         }
     }
 
@@ -291,8 +299,8 @@ public class BudgeyPanel extends JPanel
         }
     }
 
-    private class EditTransactionListener implements
-        ItemActionListener<Transaction>
+    private class EditTransactionListener
+        implements ItemActionListener<Transaction>
     {
         @Override
         public void actionPerformed( ItemActionEvent<Transaction> event )

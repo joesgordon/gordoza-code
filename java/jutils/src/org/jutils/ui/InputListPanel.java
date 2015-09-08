@@ -64,12 +64,14 @@ public class InputListPanel<T> implements IDataView<List<T>>
         list.addListSelectionListener( new ItemSelected<T>( this ) );
         list.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 
-        panel.add( textfield, new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
-        panel.add( scroll, new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 ) );
+        panel.add( textfield,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        panel.add( scroll,
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
         return panel;
     }

@@ -106,8 +106,8 @@ public class ShiftHexView implements IView<JComponent>
         // Setup left shift.
         // ---------------------------------------------------------------------
         icon = IconConstants.loader.getIcon( IconConstants.BACK_16 );
-        action = new ActionAdapter( new ShiftListener( this, -1 ),
-            "Shift Left", icon );
+        action = new ActionAdapter( new ShiftListener( this, -1 ), "Shift Left",
+            icon );
         SwingUtils.addActionToToolbar( toolbar, action, leftButton );
 
         key = KeyStroke.getKeyStroke( KeyEvent.VK_LEFT,
@@ -120,8 +120,8 @@ public class ShiftHexView implements IView<JComponent>
         // Setup right shift.
         // ---------------------------------------------------------------------
         icon = IconConstants.loader.getIcon( IconConstants.FORWARD_16 );
-        action = new ActionAdapter( new ShiftListener( this, 1 ),
-            "Shift Right", icon );
+        action = new ActionAdapter( new ShiftListener( this, 1 ), "Shift Right",
+            icon );
         SwingUtils.addActionToToolbar( toolbar, action, rightButton );
 
         key = KeyStroke.getKeyStroke( KeyEvent.VK_RIGHT,
@@ -134,7 +134,8 @@ public class ShiftHexView implements IView<JComponent>
         // Setup find.
         // ---------------------------------------------------------------------
         icon = IconConstants.loader.getIcon( IconConstants.FIND_16 );
-        action = new ActionAdapter( new FindListener( this ), "Find Bits", icon );
+        action = new ActionAdapter( new FindListener( this ), "Find Bits",
+            icon );
         SwingUtils.addActionToToolbar( toolbar, action );
 
         key = KeyStroke.getKeyStroke( "control F" );
@@ -239,8 +240,8 @@ public class ShiftHexView implements IView<JComponent>
             {
                 JOptionPane.showMessageDialog( parent,
                     "Cannot parse " + binaryString + " as a binary string:" +
-                        Utils.NEW_LINE + ex.getMessage(), "Parse Error",
-                    JOptionPane.ERROR_MESSAGE );
+                        Utils.NEW_LINE + ex.getMessage(),
+                    "Parse Error", JOptionPane.ERROR_MESSAGE );
                 bits = null;
             }
         }
@@ -396,10 +397,11 @@ public class ShiftHexView implements IView<JComponent>
                 }
                 catch( NumberFormatException ex )
                 {
-                    JOptionPane.showMessageDialog( view.view, "Cannot parse " +
-                        bits.toString() + " as a binary string:" +
-                        Utils.NEW_LINE + ex.getMessage(), "Parse Error",
-                        JOptionPane.ERROR_MESSAGE );
+                    JOptionPane.showMessageDialog( view.view,
+                        "Cannot parse " + bits.toString() +
+                            " as a binary string:" + Utils.NEW_LINE +
+                            ex.getMessage(),
+                        "Parse Error", JOptionPane.ERROR_MESSAGE );
                 }
             }
         }

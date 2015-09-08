@@ -46,14 +46,14 @@ public class HexByteValidator implements IDataValidator<Byte>
 
             if( min != null && i < min )
             {
-                throw new ValidationException( "Value less than minimum: " + i +
-                    " < " + min );
+                throw new ValidationException(
+                    "Value less than minimum: " + i + " < " + min );
             }
 
             if( max != null && i > max )
             {
-                throw new ValidationException( "Value greater than maximum: " +
-                    i + " > " + max );
+                throw new ValidationException(
+                    "Value greater than maximum: " + i + " > " + max );
             }
 
             return i;

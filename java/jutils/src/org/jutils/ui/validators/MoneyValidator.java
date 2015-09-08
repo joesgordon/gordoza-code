@@ -87,14 +87,14 @@ public class MoneyValidator implements IDataValidator<Integer>
 
             if( min != null && amount < min )
             {
-                throw new ValidationException( "Value less than minimum: " +
-                    amount + " < " + min );
+                throw new ValidationException(
+                    "Value less than minimum: " + amount + " < " + min );
             }
 
             if( max != null && amount > max )
             {
-                throw new ValidationException( "Value greater than maximum: " +
-                    amount + " > " + max );
+                throw new ValidationException(
+                    "Value greater than maximum: " + amount + " > " + max );
             }
 
             return amount;

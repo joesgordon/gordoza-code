@@ -42,7 +42,8 @@ public class McInputPanel extends JPanel
 
         msgCountTextField.setEnabled( false );
         msgDelayTextField.setEnabled( false );
-        sendButton.setIcon( IconConstants.loader.getIcon( IconConstants.FORWARD_24 ) );
+        sendButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.FORWARD_24 ) );
         sendButton.setText( "Send" );
 
         setLayout( new GridBagLayout() );
@@ -50,31 +51,40 @@ public class McInputPanel extends JPanel
 
         scheduleCheckBox.addActionListener( new ScheduleCheckListener() );
 
-        add( sendScrollPane, new GridBagConstraints( 0, 0, 5, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 6,
-                6, 6, 6 ), 0, 0 ) );
-        add( sendButton, new GridBagConstraints( 5, 0, 1, 2, 0.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 6, 0, 6, 6 ), 0, 10 ) );
+        add( sendScrollPane,
+            new GridBagConstraints( 0, 0, 5, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 6, 6, 6, 6 ), 0, 0 ) );
+        add( sendButton,
+            new GridBagConstraints( 5, 0, 1, 2, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 6, 0, 6, 6 ), 0, 10 ) );
 
-        add( scheduleCheckBox, new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 0, 6, 6, 6 ), 0, 10 ) );
-        add( new JLabel( "#" ), new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets( 0,
-                0, 6, 6 ), 0, 10 ) );
-        add( msgCountTextField, new GridBagConstraints( 2, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets( 0,
-                0, 6, 6 ), 0, 10 ) );
-        add( new JLabel( "Delay" ), new GridBagConstraints( 3, 1, 1, 1, 0.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-            new Insets( 0, 0, 6, 6 ), 0, 10 ) );
-        add( msgDelayTextField, new GridBagConstraints( 4, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 0, 0,
-                6, 6 ), 0, 10 ) );
+        add( scheduleCheckBox,
+            new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 0, 6, 6, 6 ), 0, 10 ) );
+        add( new JLabel( "#" ),
+            new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets( 0, 0, 6, 6 ), 0, 10 ) );
+        add( msgCountTextField,
+            new GridBagConstraints( 2, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets( 0, 0, 6, 6 ), 0, 10 ) );
+        add( new JLabel( "Delay" ),
+            new GridBagConstraints( 3, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets( 0, 0, 6, 6 ), 0, 10 ) );
+        add( msgDelayTextField,
+            new GridBagConstraints( 4, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 0, 0, 6, 6 ), 0, 10 ) );
 
-        msgCountTextField.setMinimumSize( msgDelayTextField.getPreferredSize() );
-        msgDelayTextField.setMinimumSize( msgDelayTextField.getPreferredSize() );
+        msgCountTextField.setMinimumSize(
+            msgDelayTextField.getPreferredSize() );
+        msgDelayTextField.setMinimumSize(
+            msgDelayTextField.getPreferredSize() );
 
         sendScrollPane.setMinimumSize( new Dimension( 200, 100 ) );
         sendScrollPane.setPreferredSize( getMinimumSize() );

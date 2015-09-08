@@ -87,13 +87,13 @@ public class PropertiesView implements IView<JPanel>
         rightView.setTitle( DEFAULT_TITLE );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 0.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 4,
-                4, 4, 4 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 4, 4, 4, 4 ), 0, 0 );
         view.add( listPane, constraints );
 
         constraints = new GridBagConstraints( 1, 0, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 4,
-                4, 4, 4 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 4, 4, 4, 4 ), 0, 0 );
         view.add( rightView.getView(), constraints );
 
         return view;

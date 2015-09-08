@@ -62,8 +62,8 @@ public final class ChartUtils
 
     public static double distance( Point lastlp, Point p )
     {
-        return Math.sqrt( Math.pow( lastlp.x - p.x, 2 ) +
-            Math.pow( lastlp.y - p.y, 2 ) );
+        return Math.sqrt(
+            Math.pow( lastlp.x - p.x, 2 ) + Math.pow( lastlp.y - p.y, 2 ) );
     }
 
     public static int findNearest( ISeriesData<?> series, double x )

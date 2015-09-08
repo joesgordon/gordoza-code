@@ -287,13 +287,14 @@ public class PositionIndicator extends JComponent
 
                 pi.repaint();
 
-                pi.posLabel.setText( String.format( "0x%016X",
-                    pi.getPosition( e.getX() ) ) );
+                pi.posLabel.setText(
+                    String.format( "0x%016X", pi.getPosition( e.getX() ) ) );
 
                 Point csp = pi.getLocationOnScreen();
                 Point msp = e.getLocationOnScreen();
 
-                msp.x = ( int )( csp.x + pi.getWidth() / 2.0 - pi.posWin.getWidth() / 2.0 );
+                msp.x = ( int )( csp.x + pi.getWidth() / 2.0 -
+                    pi.posWin.getWidth() / 2.0 );
                 msp.y = csp.y + pi.getHeight() + 2;
 
                 pi.posWin.setLocation( msp );

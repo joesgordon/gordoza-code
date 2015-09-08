@@ -51,13 +51,13 @@ public class CollapsibleView
         panel.add( separator, constraints );
 
         constraints = new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
         panel.add( Box.createHorizontalStrut( 0 ), constraints );
 
         constraints = new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
         panel.add( componentPanel, constraints );
 
         setComponent( Box.createVerticalStrut( 20 ) );
@@ -73,26 +73,27 @@ public class CollapsibleView
             IconConstants.loader.getIcon( "collapse.png" ) );
 
         collapseButton.addActionListener( new CollapseButtonListener() );
-        collapseButton.setSelectedIcon( IconConstants.loader.getIcon( "expand.png" ) );
+        collapseButton.setSelectedIcon(
+            IconConstants.loader.getIcon( "expand.png" ) );
 
         collapseButton.setBorderPainted( false );
         collapseButton.setOpaque( false );
 
-        titlePanel = new GradientPanel( new GridBagLayout(), new Color( 58,
-            110, 167 ) );
+        titlePanel = new GradientPanel( new GridBagLayout(),
+            new Color( 58, 110, 167 ) );
 
         Font bold = titleField.getFont().deriveFont( Font.BOLD );
         titleField.setFont( bold );
         titleField.setForeground( Color.white );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 0.0, 1.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 4, 4,
-                4, 4 ), 0, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.NONE,
+            new Insets( 4, 4, 4, 4 ), 0, 0 );
         titlePanel.add( collapseButton, constraints );
 
         constraints = new GridBagConstraints( 1, 0, 1, 1, 1.0, 1.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 4, 4,
-                4, 4 ), 0, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.NONE,
+            new Insets( 4, 4, 4, 4 ), 0, 0 );
         titlePanel.add( titleField, constraints );
         return titlePanel;
     }

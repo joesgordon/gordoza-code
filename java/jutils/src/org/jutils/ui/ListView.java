@@ -73,8 +73,8 @@ public class ListView<T> implements IDataView<List<T>>
         GridBagConstraints constraints;
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
         panel.add( createButtonsPanel(), constraints );
 
         // itemsPane.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
@@ -85,8 +85,8 @@ public class ListView<T> implements IDataView<List<T>>
         setItemsSize( 200, 200 );
 
         constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
         panel.add( itemsPane, constraints );
 
         return panel;
@@ -199,7 +199,8 @@ public class ListView<T> implements IDataView<List<T>>
     {
         items = data;
 
-        List<DisplayItem<T>> ditems = DisplayItem.createList( data, itemsModel );
+        List<DisplayItem<T>> ditems = DisplayItem.createList( data,
+            itemsModel );
 
         itemsListModel.setData( ditems );
         itemsList.clearSelection();
@@ -249,9 +250,9 @@ public class ListView<T> implements IDataView<List<T>>
                     }
                     else
                     {
-                        JOptionPane.showMessageDialog( view, "The name " +
-                            name +
-                            " already exists. Please Choose a different one.",
+                        JOptionPane.showMessageDialog( view,
+                            "The name " + name +
+                                " already exists. Please Choose a different one.",
                             "Name Exists", JOptionPane.ERROR_MESSAGE );
                     }
                 }
@@ -354,8 +355,7 @@ public class ListView<T> implements IDataView<List<T>>
     /***************************************************************************
      * Defines the listener to be called when an item is selected.
      **************************************************************************/
-    private static class ItemSelctedListener<T> implements
-        ListSelectionListener
+    private static class ItemSelctedListener<T> implements ListSelectionListener
     {
         private final ListView<T> view;
 
@@ -396,8 +396,8 @@ public class ListView<T> implements IDataView<List<T>>
 
             if( item != null )
             {
-                itemListView.itemsListModel.add( new DisplayItem<T>( item,
-                    itemListView.itemsModel ) );
+                itemListView.itemsListModel.add(
+                    new DisplayItem<T>( item, itemListView.itemsModel ) );
                 itemListView.items.add( item );
             }
         }
@@ -503,8 +503,8 @@ public class ListView<T> implements IDataView<List<T>>
      * a {@link ItemListCellRenderer} to render the cell.
      * @param <T> The type of item to be added to the list.
      **************************************************************************/
-    private static class DisplayItemRenderer<T> implements
-        ListCellRenderer<DisplayItem<T>>
+    private static class DisplayItemRenderer<T>
+        implements ListCellRenderer<DisplayItem<T>>
     {
         private final ItemListCellRenderer<T> renderer;
 

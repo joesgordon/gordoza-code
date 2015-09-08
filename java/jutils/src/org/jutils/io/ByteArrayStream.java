@@ -86,7 +86,8 @@ public class ByteArrayStream implements IStream
      * @param copy copies the provided buffer if {@code true}, simply uses the
      * buffer until it grows otherwise.
      **************************************************************************/
-    public ByteArrayStream( byte [] buf, int length, int increment, boolean copy )
+    public ByteArrayStream( byte [] buf, int length, int increment,
+        boolean copy )
     {
         if( copy )
         {
@@ -213,9 +214,9 @@ public class ByteArrayStream implements IStream
     {
         if( len > getAvailable() )
         {
-            throw new IOException( "Cannot fill with " + len +
-                " bytes as only " + getAvailableByteCount() +
-                " bytes are available." );
+            throw new IOException(
+                "Cannot fill with " + len + " bytes as only " +
+                    getAvailableByteCount() + " bytes are available." );
         }
 
         System.arraycopy( buffer, position, buf, off, len );

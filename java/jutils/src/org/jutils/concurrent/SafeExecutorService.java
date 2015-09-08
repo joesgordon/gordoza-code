@@ -14,7 +14,8 @@ public class SafeExecutorService extends ThreadPoolExecutor
      * @param numThreads
      * @param finishedHandler
      **************************************************************************/
-    public SafeExecutorService( int numThreads, IFinishedHandler finishedHandler )
+    public SafeExecutorService( int numThreads,
+        IFinishedHandler finishedHandler )
     {
         super( numThreads, // core threads
             numThreads, // max threads

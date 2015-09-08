@@ -27,7 +27,8 @@ public class ContentSequence implements CharSequence
      * @param start int
      * @param end int
      **************************************************************************/
-    public ContentSequence( AbstractDocument.Content content, int start, int end )
+    public ContentSequence( AbstractDocument.Content content, int start,
+        int end )
     {
         if( content == null )
         {
@@ -75,8 +76,8 @@ public class ContentSequence implements CharSequence
         }
         catch( BadLocationException ex )
         {
-            throw new ArrayIndexOutOfBoundsException( "Location " + index +
-                " does not exist in Content!" );
+            throw new ArrayIndexOutOfBoundsException(
+                "Location " + index + " does not exist in Content!" );
         }
 
         // LogUtils.printDebug( "charAt( " + index + " ) = " + seg.first() );

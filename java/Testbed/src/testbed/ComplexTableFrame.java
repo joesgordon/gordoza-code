@@ -32,10 +32,10 @@ public class ComplexTableFrame extends JFrame
     {
         final JButton nimbusButton = new JButton( "Nimbus" );
         final JButton jgoodiesButton = new JButton( "JGoodies" );
-        Dimension buttonSize = Utils.getMaxComponentSize( new Component[] {
-            nimbusButton, jgoodiesButton } );
+        Dimension buttonSize = Utils.getMaxComponentSize(
+            new Component[] { nimbusButton, jgoodiesButton } );
         CustomTableModel tableModel = new CustomTableModel();
-        JTable table = new JTable( tableModel )
+        JTable table = new JTable( tableModel)
         {
             // Returning the Class of each column will allow different
             // renderers to be used based on Class
@@ -107,16 +107,19 @@ public class ComplexTableFrame extends JFrame
         // );
         // table.setCellSelectionEnabled( false );
 
-        mainPanel.add( nimbusButton, new GridBagConstraints( 0, 0, 1, 1, 1.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        mainPanel.add( jgoodiesButton, new GridBagConstraints( 1, 0, 1, 1, 1.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        mainPanel.add( nimbusButton,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        mainPanel.add( jgoodiesButton,
+            new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-        mainPanel.add( tableScrollPane, new GridBagConstraints( 0, 1, 2, 1,
-            0.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        mainPanel.add( tableScrollPane,
+            new GridBagConstraints( 0, 1, 2, 1, 0.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
         setContentPane( mainPanel );
     }
@@ -196,8 +199,8 @@ class TableData
 /*******************************************************************************
  * 
  ******************************************************************************/
-class StateColumnCell extends AbstractCellEditor implements TableCellRenderer,
-    TableCellEditor
+class StateColumnCell extends AbstractCellEditor
+    implements TableCellRenderer, TableCellEditor
 {
     /**  */
     private TableDataCellPanel rendererCellPanel;
@@ -342,17 +345,20 @@ class TableDataCellPanel extends JPanel
 
         removeButton.setFocusPainted( false );
 
-        add( stateLabel, new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 2, 2,
-                2, 2 ), 0, 0 ) );
+        add( stateLabel,
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-        add( removeButton, new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.VERTICAL, new Insets(
-                2, 2, 2, 2 ), 0, 0 ) );
+        add( removeButton,
+            new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.VERTICAL,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-        add( Box.createHorizontalStrut( 0 ), new GridBagConstraints( 2, 0, 1,
-            1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        add( Box.createHorizontalStrut( 0 ),
+            new GridBagConstraints( 2, 0, 1, 1, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
     }
 
     /***************************************************************************

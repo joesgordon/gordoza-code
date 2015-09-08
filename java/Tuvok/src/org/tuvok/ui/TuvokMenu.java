@@ -30,7 +30,8 @@ public class TuvokMenu extends PopupMenu
         this.frame = frame;
 
         openMenuItem.setLabel( "Open" );
-        openMenuItem.addActionListener( new ToDLsMenu_openMenuItem_actionAdapter() );
+        openMenuItem.addActionListener(
+            new ToDLsMenu_openMenuItem_actionAdapter() );
 
         loadTaskMenuItem.setLabel( "Load Task" );
 
@@ -49,8 +50,7 @@ public class TuvokMenu extends PopupMenu
     /***************************************************************************
      * 
      **************************************************************************/
-    private class ToDLsMenu_openMenuItem_actionAdapter implements
-        ActionListener
+    private class ToDLsMenu_openMenuItem_actionAdapter implements ActionListener
     {
         public void actionPerformed( ActionEvent e )
         {

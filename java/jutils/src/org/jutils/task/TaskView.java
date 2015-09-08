@@ -71,7 +71,8 @@ public class TaskView implements ITaskView
         progressBar.setMinimum( 0 );
         progressBar.setMaximum( 100 );
 
-        cancelButton.setIcon( IconConstants.loader.getIcon( IconConstants.STOP_16 ) );
+        cancelButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.STOP_16 ) );
         cancelButton.addActionListener( new TaskCancelListener( this ) );
         cancelButton.setFocusable( false );
 
@@ -97,8 +98,8 @@ public class TaskView implements ITaskView
         }
 
         constraints = new GridBagConstraints( 0, 0, fieldCols, 1, 1.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL, new Insets(
-                0, 4, 4, 4 ), 0, 0 );
+            GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
+            new Insets( 0, 4, 4, 4 ), 0, 0 );
         contentPanel.add( messageField, constraints );
 
         constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
@@ -227,7 +228,8 @@ public class TaskView implements ITaskView
     {
         Window parent = Utils.getComponentsWindow( comp );
         TaskView view = new TaskView();
-        TaskRunner runner = new TaskRunner( task, TaskView.createEdtView( view ) );
+        TaskRunner runner = new TaskRunner( task,
+            TaskView.createEdtView( view ) );
         JDialog dialog = new JDialog( parent, ModalityType.DOCUMENT_MODAL );
         TaskFinishedListener finishedListener = new TaskFinishedListener(
             dialog );
@@ -422,8 +424,8 @@ public class TaskView implements ITaskView
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class TaskFinishedListener implements
-        ItemActionListener<Boolean>, Runnable
+    private static class TaskFinishedListener
+        implements ItemActionListener<Boolean>, Runnable
     {
         private final JDialog dialog;
 

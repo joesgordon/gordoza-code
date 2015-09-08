@@ -13,8 +13,9 @@ import org.jutils.chart.model.ISeriesData;
 import org.jutils.chart.model.Series;
 import org.jutils.chart.ui.ChartView;
 import org.jutils.io.OptionsSerializer;
-import org.jutils.ui.*;
+import org.jutils.ui.RecentFilesMenuView;
 import org.jutils.ui.RecentFilesMenuView.IRecentSelected;
+import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.model.IView;
@@ -218,7 +219,8 @@ public class JChartFrameView implements IView<JFrame>
         {
             view.userio.getOptions().recentFiles.push( event.getItem() );
             view.userio.write();
-            view.recentFiles.setData( view.userio.getOptions().recentFiles.toList() );
+            view.recentFiles.setData(
+                view.userio.getOptions().recentFiles.toList() );
         }
     }
 

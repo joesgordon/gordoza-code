@@ -7,8 +7,8 @@ import java.util.Locale;
 import javax.swing.*;
 import javax.swing.text.*;
 
-public class AutoComplete<T> extends JComboBox<T> implements
-    JComboBox.KeySelectionManager
+public class AutoComplete<T> extends JComboBox<T>
+    implements JComboBox.KeySelectionManager
 {
     private String searchFor;
 
@@ -68,7 +68,7 @@ public class AutoComplete<T> extends JComboBox<T> implements
 
     @Override
     public int selectionForKey( char aKey,
-        @SuppressWarnings( "rawtypes") ComboBoxModel aModel )
+        @SuppressWarnings( "rawtypes" ) ComboBoxModel aModel)
     {
         long now = new java.util.Date().getTime();
         if( searchFor != null && aKey == KeyEvent.VK_BACK_SPACE &&

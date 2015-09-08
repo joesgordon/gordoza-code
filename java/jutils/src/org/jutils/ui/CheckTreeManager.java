@@ -30,8 +30,8 @@ public class CheckTreeManager implements TreeSelectionListener
     {
         this.tree = tree;
         selectionModel = new CheckTreeSelectionModel( tree.getModel() );
-        tree.setCellRenderer( new CheckTreeCellRenderer(
-            tree.getCellRenderer(), selectionModel ) );
+        tree.setCellRenderer( new CheckTreeCellRenderer( tree.getCellRenderer(),
+            selectionModel ) );
         tree.addMouseListener( new CheckTreeManager_mouseAdapter( this ) );
         selectionModel.addTreeSelectionListener( this );
     }

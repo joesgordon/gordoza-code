@@ -87,7 +87,7 @@ public final class ListUtils
             }
         }
 
-        return maxEntry == null ? null : new Tuple2<K, Integer>(
-            maxEntry.getKey(), maxEntry.getValue() );
+        return maxEntry == null ? null
+            : new Tuple2<K, Integer>( maxEntry.getKey(), maxEntry.getValue() );
     }
 }

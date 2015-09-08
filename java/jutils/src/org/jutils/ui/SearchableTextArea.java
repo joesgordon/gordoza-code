@@ -42,11 +42,13 @@ public class SearchableTextArea extends JTextArea
      * @param rows int
      * @param columns int
      **************************************************************************/
-    public SearchableTextArea( Document doc, String text, int rows, int columns )
+    public SearchableTextArea( Document doc, String text, int rows,
+        int columns )
     {
         super( doc, text, rows, columns );
         this.addKeyListener( new SearchableTextArea_keyAdapter( this ) );
-        findDialog.addFindListener( new SearchableTextArea_findAdapter( this ) );
+        findDialog.addFindListener(
+            new SearchableTextArea_findAdapter( this ) );
         findDialog.setTitle( "Find" );
         findDialog.pack();
     }

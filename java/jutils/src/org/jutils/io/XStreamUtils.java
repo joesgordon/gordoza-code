@@ -42,8 +42,8 @@ public class XStreamUtils
      * @param outStream
      * @throws IOException
      **************************************************************************/
-    public static String writeObjectXStream( Object obj ) throws IOException,
-        XStreamException
+    public static String writeObjectXStream( Object obj )
+        throws IOException, XStreamException
     {
         XStream xstream = new XStream();
 

@@ -62,8 +62,8 @@ public class ValidationView implements IView<JPanel>
         this.errorField = new JTextField();
         this.unitsField = units == null ? null : new JLabel( units );
         this.errorConstraints = new GridBagConstraints( 0, 1, 2, 1, 1.0, 1.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
-                4, 0, 0, 0 ), 0, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+            new Insets( 4, 0, 0, 0 ), 0, 0 );
 
         Dimension dim = errorField.getPreferredSize();
         dim.width = field.getView().getPreferredSize().width;
@@ -89,15 +89,15 @@ public class ValidationView implements IView<JPanel>
         GridBagConstraints constraints;
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
-                0, 0, 0, 0 ), 0, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
         panel.add( fieldView, constraints );
 
         if( unitsField != null )
         {
             constraints = new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
-                GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(
-                    0, 4, 0, 0 ), 0, 0 );
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 0, 4, 0, 0 ), 0, 0 );
             panel.add( unitsField, constraints );
         }
 
@@ -144,8 +144,8 @@ public class ValidationView implements IView<JPanel>
      * Validity listener added to the validation field that show/hides/populates
      * the error field.
      **************************************************************************/
-    private static class FieldValidityChangedListener implements
-        IValidityChangedListener
+    private static class FieldValidityChangedListener
+        implements IValidityChangedListener
     {
         private final ValidationView view;
 

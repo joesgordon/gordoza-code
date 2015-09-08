@@ -34,9 +34,11 @@ public class CalendarPanel implements IDataView<Long>
     private static final String [] WEEK_DAYS = new String[] { "S", "M", "T",
         "W", "R", "F", "S" };
     /** The background of the header labels. */
-    private static final Color HEADER_BACKGROUND = new Color( 0x8D, 0x8D, 0x8D );
+    private static final Color HEADER_BACKGROUND = new Color( 0x8D, 0x8D,
+        0x8D );
     /** The foreground of the header labels. */
-    private static final Color HEADER_FOREGROUND = new Color( 0xFF, 0xFF, 0xFF );
+    private static final Color HEADER_FOREGROUND = new Color( 0xFF, 0xFF,
+        0xFF );
 
     /**  */
     private final JPanel view;
@@ -91,7 +93,8 @@ public class CalendarPanel implements IDataView<Long>
         this.showTime = showTime;
 
         this.timeSpinner = new JSpinner( new SpinnerDateModel() );
-        this.monthSpinner = new JSpinner( new CyclingSpinnerListModel( MONTHS ) );
+        this.monthSpinner = new JSpinner(
+            new CyclingSpinnerListModel( MONTHS ) );
         this.yearSpinner = new JSpinner( new SpinnerNumberModel() );
         this.weekdayLabels = new JLabel[WEEK_DAYS.length];
         this.dayLabels = new DayLabel[42];
@@ -179,8 +182,8 @@ public class CalendarPanel implements IDataView<Long>
         //
         // ---------------------------------------------------------------------
         constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets( 2,
-                0, 0, 0 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.NONE,
+            new Insets( 2, 0, 0, 0 ), 0, 0 );
         panel.add( createMonthPanel(), constraints );
 
         panel.setMinimumSize( panel.getPreferredSize() );
@@ -216,17 +219,20 @@ public class CalendarPanel implements IDataView<Long>
 
         if( showTime )
         {
-            panel.add( timeSpinner, new GridBagConstraints( 0, 0, 2, 1, 0.0,
-                0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                new Insets( 2, 0, 2, 0 ), 0, 0 ) );
+            panel.add( timeSpinner,
+                new GridBagConstraints( 0, 0, 2, 1, 0.0, 0.0,
+                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                    new Insets( 2, 0, 2, 0 ), 0, 0 ) );
         }
 
-        panel.add( monthSpinner, new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
-                showTime ? 2 : 0, 0, 0, 2 ), 0, 0 ) );
-        panel.add( yearSpinner, new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
-                showTime ? 2 : 0, 2, 0, 0 ), 15, 0 ) );
+        panel.add( monthSpinner,
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( showTime ? 2 : 0, 0, 0, 2 ), 0, 0 ) );
+        panel.add( yearSpinner,
+            new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( showTime ? 2 : 0, 2, 0, 0 ), 15, 0 ) );
 
         return panel;
     }
@@ -245,9 +251,8 @@ public class CalendarPanel implements IDataView<Long>
         for( int i = 0; i < weekdayLabels.length; i++ )
         {
             monthPanel.add( weekdayLabels[i], new GridBagConstraints( i, 0, 1,
-                1, 0.0, 0.0, GridBagConstraints.CENTER,
-                GridBagConstraints.BOTH, new Insets( 5, i == 0 ? 5 : 0, 0,
-                    i == 6 ? 5 : 0 ), 0, 0 ) );
+                1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 5, i == 0 ? 5 : 0, 0, i == 6 ? 5 : 0 ), 0, 0 ) );
         }
 
         for( int i = 0; i < dayLabels.length; i++ )
@@ -340,14 +345,15 @@ public class CalendarPanel implements IDataView<Long>
             cal.getActualMaximum( Calendar.DAY_OF_MONTH ) - 1;
         int todaysIndex = firstIndex + cal.get( Calendar.DAY_OF_MONTH ) - 1;
 
-        int lastDayPrevious = lastMonth.getActualMaximum( Calendar.DAY_OF_MONTH );
+        int lastDayPrevious = lastMonth.getActualMaximum(
+            Calendar.DAY_OF_MONTH );
 
         for( int i = 0; i < dayLabels.length; i++ )
         {
             if( i < firstIndex )
             {
-                dayLabels[i].setText( "" +
-                    ( lastDayPrevious - firstIndex + i + 1 ) );
+                dayLabels[i].setText(
+                    "" + ( lastDayPrevious - firstIndex + i + 1 ) );
                 dayLabels[i].setNonDay( true );
                 dayLabels[i].setYear( lastMonth.get( Calendar.YEAR ) );
                 dayLabels[i].setMonth( lastMonth.get( Calendar.MONTH ) );

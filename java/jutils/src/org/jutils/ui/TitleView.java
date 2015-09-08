@@ -68,13 +68,13 @@ public class TitleView implements IView<JPanel>
         panel.add( separator, constraints );
 
         constraints = new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
         panel.add( Box.createHorizontalStrut( 0 ), constraints );
 
         constraints = new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
         panel.add( compView.getView(), constraints );
 
         setComponent( Box.createVerticalStrut( 20 ) );
@@ -92,16 +92,16 @@ public class TitleView implements IView<JPanel>
         GridBagConstraints constraints;
         GradientPanel titlePanel;
 
-        titlePanel = new GradientPanel( new GridBagLayout(), new Color( 58,
-            110, 167 ) );
+        titlePanel = new GradientPanel( new GridBagLayout(),
+            new Color( 58, 110, 167 ) );
 
         Font bold = titleField.getFont().deriveFont( Font.BOLD );
         titleField.setFont( bold );
         titleField.setForeground( Color.white );
 
         constraints = new GridBagConstraints( 1, 0, 1, 1, 1.0, 1.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 4, 4,
-                4, 4 ), 0, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.NONE,
+            new Insets( 4, 4, 4, 4 ), 0, 0 );
         titlePanel.add( titleField, constraints );
         return titlePanel;
     }

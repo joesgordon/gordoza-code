@@ -106,42 +106,53 @@ public class McConfigurationPanel extends JPanel
             ;
         }
 
-        add( new JLabel( "Address:" ), new GridBagConstraints( 0, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(
-                6, 6, 6, 6 ), 0, 0 ) );
-        add( addressField, new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 6, 0,
-                6, 6 ), 0, 0 ) );
-        add( new JLabel( "TTL:" ), new GridBagConstraints( 2, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(
-                6, 0, 6, 6 ), 0, 0 ) );
-        add( ttlField, new GridBagConstraints( 3, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 6, 0,
-                6, 6 ), 0, 0 ) );
+        add( new JLabel( "Address:" ),
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 6, 6, 6, 6 ), 0, 0 ) );
+        add( addressField,
+            new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 6, 0, 6, 6 ), 0, 0 ) );
+        add( new JLabel( "TTL:" ),
+            new GridBagConstraints( 2, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 6, 0, 6, 6 ), 0, 0 ) );
+        add( ttlField,
+            new GridBagConstraints( 3, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 6, 0, 6, 6 ), 0, 0 ) );
 
-        add( new JLabel( "Port:" ), new GridBagConstraints( 0, 1, 1, 1, 0.0,
-            0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(
-                0, 6, 6, 6 ), 0, 0 ) );
-        add( portField, new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 0, 0,
-                6, 6 ), 0, 0 ) );
-        add( new JLabel( "Message Size:" ), new GridBagConstraints( 2, 1, 1, 1,
-            0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE,
-            new Insets( 0, 0, 6, 6 ), 0, 0 ) );
-        add( msgSizeField, new GridBagConstraints( 3, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 0, 0,
-                6, 6 ), 0, 0 ) );
+        add( new JLabel( "Port:" ),
+            new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 0, 6, 6, 6 ), 0, 0 ) );
+        add( portField,
+            new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 0, 0, 6, 6 ), 0, 0 ) );
+        add( new JLabel( "Message Size:" ),
+            new GridBagConstraints( 2, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 0, 0, 6, 6 ), 0, 0 ) );
+        add( msgSizeField,
+            new GridBagConstraints( 3, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 0, 0, 6, 6 ), 0, 0 ) );
 
-        add( new JLabel( "NIC:" ), new GridBagConstraints( 0, 2, 1, 1, 0.0,
-            0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(
-                0, 6, 6, 6 ), 0, 0 ) );
-        add( nicComboBox, new GridBagConstraints( 1, 2, 4, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
-                0, 0, 6, 6 ), 0, 0 ) );
+        add( new JLabel( "NIC:" ),
+            new GridBagConstraints( 0, 2, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 0, 6, 6, 6 ), 0, 0 ) );
+        add( nicComboBox,
+            new GridBagConstraints( 1, 2, 4, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 0, 0, 6, 6 ), 0, 0 ) );
 
-        add( bindButton, new GridBagConstraints( 4, 0, 1, 2, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets( 6,
-                0, 6, 6 ), 0, 10 ) );
+        add( bindButton,
+            new GridBagConstraints( 4, 0, 1, 2, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets( 6, 0, 6, 6 ), 0, 10 ) );
     }
 
     public NetworkInterface getNic()

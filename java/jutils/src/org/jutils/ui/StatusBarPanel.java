@@ -73,8 +73,8 @@ public class StatusBarPanel
         statusProgressBar.setLayout( new GridBagLayout() );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
-                0, 4, 0, 4 ), 0, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+            new Insets( 0, 4, 0, 4 ), 0, 0 );
         statusProgressBar.add( statusLabel, constraints );
 
         // ---------------------------------------------------------------------
@@ -89,15 +89,18 @@ public class StatusBarPanel
         statusProgressBar.setBorderPainted( false );
         statusProgressBar.setAlignmentX( Component.LEFT_ALIGNMENT );
 
-        view.add( statusProgressBar, new GridBagConstraints( 0, 0, 1, 1, 1.0,
-            1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
-        view.add( memoryLabel, new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.BOTH, new Insets( 0, 0,
-                0, 0 ), 0, 0 ) );
-        view.add( toolbar, new GridBagConstraints( 2, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.BOTH, new Insets( 0, 0,
-                0, 0 ), 0, 2 ) );
+        view.add( statusProgressBar,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        view.add( memoryLabel,
+            new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        view.add( toolbar,
+            new GridBagConstraints( 2, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 2 ) );
 
         flasher = new ComponentFlasher( memoryLabel );
         swingTimer = new Timer( 10000, new RefreshListener() );
@@ -124,7 +127,8 @@ public class StatusBarPanel
         JButton refreshButton = new JButton();
         refreshButton.setMargin( new Insets( 0, 0, 0, 0 ) );
         refreshButton.setText( "" );
-        refreshButton.setIcon( IconConstants.loader.getIcon( IconConstants.REFRESH_16 ) );
+        refreshButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.REFRESH_16 ) );
         refreshButton.setFocusable( false );
         refreshButton.addActionListener( new RefreshButtonListener() );
 

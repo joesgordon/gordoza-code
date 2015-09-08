@@ -45,7 +45,8 @@ public class McComm
         address = InetAddress.getByName( group );
         rxBuffer = new byte[msgLength];
         socket = new MulticastSocket( port );
-        rxPacket = new DatagramPacket( rxBuffer, rxBuffer.length, address, port );
+        rxPacket = new DatagramPacket( rxBuffer, rxBuffer.length, address,
+            port );
         this.port = port;
 
         socket.setNetworkInterface( nic );

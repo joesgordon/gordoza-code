@@ -101,8 +101,8 @@ public class DoubleValidator implements IDataValidator<Double>
                 msg += "<= " + max;
             }
 
-            throw new ValidationException( "Number (" + d +
-                ") out of bounds: " + msg );
+            throw new ValidationException(
+                "Number (" + d + ") out of bounds: " + msg );
         }
     }
 }

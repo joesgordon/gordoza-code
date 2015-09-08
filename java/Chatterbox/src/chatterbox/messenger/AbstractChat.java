@@ -23,8 +23,8 @@ public abstract class AbstractChat implements IChat
     private final String jvmName;
 
     /**
-     * @param user
-     * *************************************************************************
+     * @param user *
+     * ************************************************************************
      **************************************************************************/
     public AbstractChat( IUser user )
     {

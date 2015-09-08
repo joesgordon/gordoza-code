@@ -86,7 +86,8 @@ public class MappedStream implements IDataStream
 
         if( !readOnly )
         {
-            throw new IllegalArgumentException( "Writing is not yet supported." );
+            throw new IllegalArgumentException(
+                "Writing is not yet supported." );
         }
 
         this.raf = new RandomAccessFile( file, "r" );
@@ -226,8 +227,8 @@ public class MappedStream implements IDataStream
      * 
      **************************************************************************/
     @Override
-    public void readFully( byte [] buf, int off, int len ) throws EOFException,
-        IOException
+    public void readFully( byte [] buf, int off, int len )
+        throws EOFException, IOException
     {
         int bytesRead = 0;
 

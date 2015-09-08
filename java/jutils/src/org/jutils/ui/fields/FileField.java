@@ -65,7 +65,8 @@ public class FileField implements IDataView<File>, IValidationField
      * @param required
      * @param isSave
      **************************************************************************/
-    public FileField( ExistenceType existence, boolean required, boolean isSave )
+    public FileField( ExistenceType existence, boolean required,
+        boolean isSave )
     {
         this.changeListeners = new ItemActionList<>();
 
@@ -106,13 +107,12 @@ public class FileField implements IDataView<File>, IValidationField
 
         // LogUtils.printDebug( "Setting validator" );
         fileField.setValidator( validator );
-        fileField.getView().setDropTarget(
-            new FileDropTarget( new JTextFieldFilesListener(
-                fileField.getView(), existence ) ) );
+        fileField.getView().setDropTarget( new FileDropTarget(
+            new JTextFieldFilesListener( fileField.getView(), existence ) ) );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
-                0, 0, 0, 0 ), 0, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
         panel.add( fileField.getView(), constraints );
 
         button = new JButton(
@@ -120,8 +120,8 @@ public class FileField implements IDataView<File>, IValidationField
         button.addActionListener( browseListener );
 
         constraints = new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 0, 4,
-                0, 0 ), 0, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.NONE,
+            new Insets( 0, 4, 0, 0 ), 0, 0 );
         panel.add( button, constraints );
 
         return panel;

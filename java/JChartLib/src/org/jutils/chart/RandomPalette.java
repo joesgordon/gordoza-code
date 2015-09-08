@@ -22,7 +22,8 @@ public class RandomPalette implements IPalette
         Random r = new Random();
         for( int i = 0; i < 20; i++ )
         {
-            c = new Color( r.nextInt( 255 ), r.nextInt( 255 ), r.nextInt( 255 ) );
+            c = new Color( r.nextInt( 255 ), r.nextInt( 255 ),
+                r.nextInt( 255 ) );
             colors.add( c );
         }
 

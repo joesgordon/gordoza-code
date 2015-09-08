@@ -59,8 +59,8 @@ public class TristateCheckBox extends JCheckBox
         setModel( model );
         setState( initial );
 
-        setIcon( new TristateIcon( ( Icon )UIManager.getDefaults().get(
-            "CheckBox.icon" ) ) );
+        setIcon( new TristateIcon(
+            ( Icon )UIManager.getDefaults().get( "CheckBox.icon" ) ) );
     }
 
     /***************************************************************************
@@ -122,7 +122,7 @@ public class TristateCheckBox extends JCheckBox
      * @param args String[]
      * @throws Exception
      **************************************************************************/
-    public static void main( String args [] ) throws Exception
+    public static void main( String args[] ) throws Exception
     {
         SwingUtilities.invokeLater( new Runnable()
         {
@@ -180,23 +180,19 @@ public class TristateCheckBox extends JCheckBox
                 group.add( falseButton );
                 group.add( kindaButton );
 
-                frame.getContentPane().add(
-                    swingBox,
+                frame.getContentPane().add( swingBox,
                     new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
                         GridBagConstraints.WEST, GridBagConstraints.BOTH,
                         new Insets( 10, 10, 10, 10 ), 0, 0 ) );
-                frame.getContentPane().add(
-                    trueButton,
+                frame.getContentPane().add( trueButton,
                     new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
                         GridBagConstraints.WEST, GridBagConstraints.BOTH,
                         new Insets( 10, 10, 5, 10 ), 0, 0 ) );
-                frame.getContentPane().add(
-                    falseButton,
+                frame.getContentPane().add( falseButton,
                     new GridBagConstraints( 0, 2, 1, 1, 0.0, 1.0,
                         GridBagConstraints.WEST, GridBagConstraints.BOTH,
                         new Insets( 5, 10, 5, 10 ), 0, 0 ) );
-                frame.getContentPane().add(
-                    kindaButton,
+                frame.getContentPane().add( kindaButton,
                     new GridBagConstraints( 0, 3, 1, 1, 0.0, 0.0,
                         GridBagConstraints.WEST, GridBagConstraints.BOTH,
                         new Insets( 5, 10, 10, 10 ), 0, 0 ) );
@@ -270,8 +266,8 @@ class TristateIcon implements Icon
         int gap = 3;
 
         g.setColor( checkColor );
-        g.fill3DRect( x + gap, y + gap, controlSize - 2 * gap, controlSize - 2 *
-            gap, true );
+        g.fill3DRect( x + gap, y + gap, controlSize - 2 * gap,
+            controlSize - 2 * gap, true );
     }
 }
 

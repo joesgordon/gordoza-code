@@ -34,7 +34,8 @@ public class TextWidgetApp
                 StandardFrameView frameView = new StandardFrameView();
                 JFrame frame = frameView.getView();
                 TextLabel label = new TextLabel();
-                final TextWidget w = new TextWidget( label, TextDirection.RIGHT );
+                final TextWidget w = new TextWidget( label,
+                    TextDirection.RIGHT );
                 JPanel panel = new JPanel( new GridBagLayout() );
                 WidgetPanel wp = new WidgetPanel( new IChartWidget()
                 {

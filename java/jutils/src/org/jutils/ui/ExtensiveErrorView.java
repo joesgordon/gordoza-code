@@ -54,13 +54,13 @@ public class ExtensiveErrorView implements IView<JPanel>
         errorsField.setEditable( false );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
-                4, 4, 4, 4 ), 0, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+            new Insets( 4, 4, 4, 4 ), 0, 0 );
         panel.add( messageField, constraints );
 
         constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
-            GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets( 0, 4,
-                4, 4 ), 0, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.BOTH,
+            new Insets( 0, 4, 4, 4 ), 0, 0 );
         panel.add( errorsPane, constraints );
 
         return panel;
@@ -89,7 +89,8 @@ public class ExtensiveErrorView implements IView<JPanel>
      * @param message
      * @param errors
      **************************************************************************/
-    public static void invokeError( String title, String message, String errors )
+    public static void invokeError( String title, String message,
+        String errors )
     {
         IApplication app = new ExtErrorApp( title, message, errors );
         AppRunner.invokeLater( app );

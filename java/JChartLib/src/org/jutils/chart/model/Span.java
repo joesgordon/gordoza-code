@@ -93,9 +93,11 @@ public class Span
         if( getClass() != obj.getClass() )
             return false;
         Span other = ( Span )obj;
-        if( Double.doubleToLongBits( max ) != Double.doubleToLongBits( other.max ) )
+        if( Double.doubleToLongBits( max ) != Double.doubleToLongBits(
+            other.max ) )
             return false;
-        if( Double.doubleToLongBits( min ) != Double.doubleToLongBits( other.min ) )
+        if( Double.doubleToLongBits( min ) != Double.doubleToLongBits(
+            other.min ) )
             return false;
         return true;
     }

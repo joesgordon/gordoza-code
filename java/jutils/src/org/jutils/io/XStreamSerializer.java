@@ -22,8 +22,8 @@ public class XStreamSerializer<T>
     /***************************************************************************
      * 
      **************************************************************************/
-    public void write( T t, OutputStream stream ) throws IOException,
-        XStreamException
+    public void write( T t, OutputStream stream )
+        throws IOException, XStreamException
     {
         XStreamUtils.writeObjectXStream( t, stream );
     }

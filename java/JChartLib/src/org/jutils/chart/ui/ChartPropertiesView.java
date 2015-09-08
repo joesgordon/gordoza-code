@@ -49,13 +49,15 @@ public class ChartPropertiesView implements IDataView<Chart>
 
         setData( new Chart() );
 
-        gridlinesVisibleField.addActionListener( new CheckBoxUpdater(
-            new ReflectiveUpdater<Boolean>( this,
+        gridlinesVisibleField.addActionListener(
+            new CheckBoxUpdater( new ReflectiveUpdater<Boolean>( this,
                 "chart.options.gridlinesVisible" ) ) );
-        antiAliasField.addActionListener( new CheckBoxUpdater(
-            new ReflectiveUpdater<Boolean>( this, "chart.options.antialias" ) ) );
-        textAntiAliasField.addActionListener( new CheckBoxUpdater(
-            new ReflectiveUpdater<Boolean>( this, "chart.options.textAntiAlias" ) ) );
+        antiAliasField.addActionListener(
+            new CheckBoxUpdater( new ReflectiveUpdater<Boolean>( this,
+                "chart.options.antialias" ) ) );
+        textAntiAliasField.addActionListener(
+            new CheckBoxUpdater( new ReflectiveUpdater<Boolean>( this,
+                "chart.options.textAntiAlias" ) ) );
 
     }
 

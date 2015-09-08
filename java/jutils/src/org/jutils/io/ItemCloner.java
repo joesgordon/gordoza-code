@@ -45,8 +45,8 @@ public class ItemCloner<T>
         }
         catch( IOException ex )
         {
-            throw new IllegalStateException( "Could not clone item: " +
-                ex.getMessage(), ex );
+            throw new IllegalStateException(
+                "Could not clone item: " + ex.getMessage(), ex );
         }
 
         return clone;

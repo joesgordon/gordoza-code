@@ -63,19 +63,23 @@ public class AccountConfigPanel
         nameField.setValidator( new NameValidator( this ) );
         nameField.setColumns( 20 );
 
-        panel.add( new JLabel( "Name:" ), new GridBagConstraints( 0, 0, 1, 1,
-            0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-            new Insets( 4, 4, 2, 2 ), 0, 0 ) );
-        panel.add( nameField.getView(), new GridBagConstraints( 0, 1, 1, 1,
-            0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-            new Insets( 2, 4, 4, 4 ), 0, 0 ) );
+        panel.add( new JLabel( "Name:" ),
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 4, 4, 2, 2 ), 0, 0 ) );
+        panel.add( nameField.getView(),
+            new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 2, 4, 4, 4 ), 0, 0 ) );
 
-        panel.add( new JLabel( "Starting Balance:" ), new GridBagConstraints(
-            0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST,
-            GridBagConstraints.NONE, new Insets( 4, 4, 2, 2 ), 0, 0 ) );
-        panel.add( startingBalanceField.getView(), new GridBagConstraints( 0,
-            3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST,
-            GridBagConstraints.HORIZONTAL, new Insets( 2, 4, 4, 4 ), 0, 0 ) );
+        panel.add( new JLabel( "Starting Balance:" ),
+            new GridBagConstraints( 0, 2, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 4, 4, 2, 2 ), 0, 0 ) );
+        panel.add( startingBalanceField.getView(),
+            new GridBagConstraints( 0, 3, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 2, 4, 4, 4 ), 0, 0 ) );
 
         return panel;
     }
@@ -116,8 +120,7 @@ public class AccountConfigPanel
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class NameValidityChanged implements
-        IValidityChangedListener
+    private static class NameValidityChanged implements IValidityChangedListener
     {
         private final AccountConfigPanel panel;
 

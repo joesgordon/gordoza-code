@@ -70,19 +70,22 @@ public class FileSpyFrameView implements IView<JFrame>
     private JToolBar createToolBar()
     {
         JButton newButton = new JButton();
-        newButton.setIcon( IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
+        newButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
         newButton.setToolTipText( "Creates a new search tab." );
         newButton.addActionListener( new NewListener( spyPanel ) );
         newButton.setFocusable( false );
 
         JButton openButton = new JButton();
-        openButton.setIcon( IconConstants.loader.getIcon( IconConstants.OPEN_FILE_16 ) );
+        openButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.OPEN_FILE_16 ) );
         openButton.setToolTipText( "Opens a previously saved search tab." );
         openButton.addActionListener( new OpenListener() );
         openButton.setFocusable( false );
 
         JButton saveButton = new JButton();
-        saveButton.setIcon( IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
+        saveButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
         saveButton.setToolTipText( "Saves search tab." );
         saveButton.addActionListener( new SaveListener() );
         saveButton.setFocusable( false );
@@ -119,23 +122,27 @@ public class FileSpyFrameView implements IView<JFrame>
         JMenuItem newMenuItem = new JMenuItem( "New" );
         newMenuItem.setToolTipText( "Creates a new search tab." );
         newMenuItem.addActionListener( new NewListener( spyPanel ) );
-        newMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
+        newMenuItem.setIcon(
+            IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
 
         JMenuItem openMenuItem = new JMenuItem( "Open" );
         openMenuItem.setToolTipText( "Opens a previously saved search tab." );
         openMenuItem.addActionListener( new OpenListener() );
-        openMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.OPEN_FILE_16 ) );
+        openMenuItem.setIcon(
+            IconConstants.loader.getIcon( IconConstants.OPEN_FILE_16 ) );
 
         JMenuItem saveMenuItem = new JMenuItem( "Save" );
         saveMenuItem.setToolTipText( "Saves search tab." );
         saveMenuItem.addActionListener( new SaveListener() );
-        saveMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
+        saveMenuItem.setIcon(
+            IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
 
         JMenuItem exitMenuItem = new JMenuItem();
         exitMenuItem.setText( "Exit" );
         exitMenuItem.setToolTipText( "Exits the application." );
         exitMenuItem.addActionListener( new ExitListener( frame ) );
-        exitMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
+        exitMenuItem.setIcon(
+            IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
 
         fileMenu.add( newMenuItem );
         fileMenu.add( openMenuItem );
@@ -155,20 +162,23 @@ public class FileSpyFrameView implements IView<JFrame>
         JMenuItem menuItem;
 
         menuItem = new JMenuItem( "JG Windows" );
-        menuItem.addActionListener( new SetLafListener(
-            Options.JGOODIES_WINDOWS_NAME ) );
+        menuItem.addActionListener(
+            new SetLafListener( Options.JGOODIES_WINDOWS_NAME ) );
         viewMenu.add( menuItem );
 
         menuItem = new JMenuItem( "Plastic" );
-        menuItem.addActionListener( new SetLafListener( Options.PLASTIC_NAME ) );
+        menuItem.addActionListener(
+            new SetLafListener( Options.PLASTIC_NAME ) );
         viewMenu.add( menuItem );
 
         menuItem = new JMenuItem( "Plastic 3D" );
-        menuItem.addActionListener( new SetLafListener( Options.PLASTIC3D_NAME ) );
+        menuItem.addActionListener(
+            new SetLafListener( Options.PLASTIC3D_NAME ) );
         viewMenu.add( menuItem );
 
         menuItem = new JMenuItem( "Plastic XP" );
-        menuItem.addActionListener( new SetLafListener( Options.PLASTICXP_NAME ) );
+        menuItem.addActionListener(
+            new SetLafListener( Options.PLASTICXP_NAME ) );
         viewMenu.add( menuItem );
 
         viewMenu.addSeparator();
@@ -189,12 +199,13 @@ public class FileSpyFrameView implements IView<JFrame>
         JMenu toolsMenu = new JMenu( "Tools" );
 
         JMenuItem regexMenuItem = new JMenuItem( "Test RegEx" );
-        regexMenuItem.setToolTipText( "Allows you to test a regular "
-            + "expression." );
+        regexMenuItem.setToolTipText(
+            "Allows you to test a regular " + "expression." );
         regexMenuItem.addActionListener( new RegexListener() );
 
         JMenuItem fileOptionsMenuItem = new JMenuItem( "File Options" );
-        fileOptionsMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.EDIT_16 ) );
+        fileOptionsMenuItem.setIcon(
+            IconConstants.loader.getIcon( IconConstants.EDIT_16 ) );
         fileOptionsMenuItem.addActionListener( new OptionsListener() );
 
         toolsMenu.add( regexMenuItem );
@@ -211,7 +222,8 @@ public class FileSpyFrameView implements IView<JFrame>
         JMenu helpMenu = new JMenu( "Help" );
 
         JMenuItem aboutMenuItem = new JMenuItem( "About" );
-        aboutMenuItem.setToolTipText( "Presents infomation about this program." );
+        aboutMenuItem.setToolTipText(
+            "Presents infomation about this program." );
         aboutMenuItem.addActionListener( new AboutListener( frame ) );
 
         helpMenu.add( aboutMenuItem );
@@ -232,10 +244,10 @@ public class FileSpyFrameView implements IView<JFrame>
         }
         catch( Exception ex )
         {
-            JOptionPane.showMessageDialog(
-                frame,
+            JOptionPane.showMessageDialog( frame,
                 "Unable to set the look and feel to " + laf + ". " +
-                    ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE );
+                    ex.getMessage(),
+                "ERROR", JOptionPane.ERROR_MESSAGE );
         }
     }
 
@@ -266,8 +278,7 @@ public class FileSpyFrameView implements IView<JFrame>
                 try
                 {
                     params = ( SearchParams )SearchParams.read( fileChosen );
-                    params.name = fileChosen.getName().substring(
-                        0,
+                    params.name = fileChosen.getName().substring( 0,
                         fileChosen.getName().length() -
                             FileSpySearchFilter.FILESPY_SEARCH_EXT.length() );
                     spyPanel.setData( params );
@@ -457,8 +468,8 @@ public class FileSpyFrameView implements IView<JFrame>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class FileSpySearchFilter extends
-        javax.swing.filechooser.FileFilter
+    private static class FileSpySearchFilter
+        extends javax.swing.filechooser.FileFilter
     {
         public static final String FILESPY_SEARCH_EXT = ".fss";
 

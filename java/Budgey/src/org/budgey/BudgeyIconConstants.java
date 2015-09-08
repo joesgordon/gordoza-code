@@ -39,8 +39,8 @@ public final class BudgeyIconConstants
 
     public static List<? extends Image> getWalletIcons()
     {
-        return loader.getImages( "wallet16.png", "wallet24.png",
-            "wallet32.png", "wallet64.png", "wallet128.png", "wallet256.png" );
+        return loader.getImages( "wallet16.png", "wallet24.png", "wallet32.png",
+            "wallet64.png", "wallet128.png", "wallet256.png" );
     }
 
     public static Icon getCheckIcon()

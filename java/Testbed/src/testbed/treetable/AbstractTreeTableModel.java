@@ -151,7 +151,8 @@ public abstract class AbstractTreeTableModel implements TreeTableModel
                 if( e == null )
                     e = new TreeModelEvent( source, path, childIndices,
                         children );
-                ( ( TreeModelListener )listeners[i + 1] ).treeNodesInserted( e );
+                ( ( TreeModelListener )listeners[i + 1] ).treeNodesInserted(
+                    e );
             }
         }
     }
@@ -205,7 +206,8 @@ public abstract class AbstractTreeTableModel implements TreeTableModel
                 if( e == null )
                     e = new TreeModelEvent( source, path, childIndices,
                         children );
-                ( ( TreeModelListener )listeners[i + 1] ).treeStructureChanged( e );
+                ( ( TreeModelListener )listeners[i + 1] ).treeStructureChanged(
+                    e );
             }
         }
     }

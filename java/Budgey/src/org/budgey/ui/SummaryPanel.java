@@ -22,19 +22,23 @@ public class SummaryPanel extends JPanel
         JLabel availableLabel = new JLabel( "Your available funds are " );
         availableField = new MoneyLabel();
 
-        add( balanceLabel, new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets( 0, 0,
-                0, 0 ), 0, 0 ) );
-        add( balanceField, new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL, new Insets(
-                0, 0, 0, 0 ), 0, 0 ) );
+        add( balanceLabel,
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        add( balanceField,
+            new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
-        add( availableLabel, new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets( 4, 0,
-                0, 0 ), 0, 0 ) );
-        add( availableField, new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL, new Insets(
-                0, 0, 0, 0 ), 0, 0 ) );
+        add( availableLabel,
+            new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 4, 0, 0, 0 ), 0, 0 ) );
+        add( availableField,
+            new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
     }
 
     public void setBalance( Money amount )

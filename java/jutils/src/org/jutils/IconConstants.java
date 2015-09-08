@@ -127,8 +127,8 @@ public final class IconConstants
     public final static String UP_24 = "up24.png";
 
     /** The icon loader to be used to access icons in this project. */
-    public final static IconLoader loader = new IconLoader(
-        IconConstants.class, "icons" );
+    public final static IconLoader loader = new IconLoader( IconConstants.class,
+        "icons" );
 
     /***************************************************************************
      * Private constructor to prevent instantiation.
@@ -142,8 +142,8 @@ public final class IconConstants
      **************************************************************************/
     public static List<Image> getPageMagImages()
     {
-        return loader.getImages( PAGEMAG_16, PAGEMAG_24, PAGEMAG_32,
-            PAGEMAG_64, PAGEMAG_128 );
+        return loader.getImages( PAGEMAG_16, PAGEMAG_24, PAGEMAG_32, PAGEMAG_64,
+            PAGEMAG_128 );
     }
 
     /***************************************************************************

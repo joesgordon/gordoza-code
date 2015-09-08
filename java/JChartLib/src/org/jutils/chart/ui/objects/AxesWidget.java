@@ -66,7 +66,8 @@ public class AxesWidget implements IChartWidget
             new Font( "Helvetica", Font.PLAIN, 12 ) );
         this.domainText = new TextWidget( domainLabel );
 
-        this.rangeLabel = new TextLabel( new Font( "Helvetica", Font.PLAIN, 12 ) );
+        this.rangeLabel = new TextLabel(
+            new Font( "Helvetica", Font.PLAIN, 12 ) );
         this.rangeText = new TextWidget( rangeLabel );
 
         this.domainTitle = new TextWidget( chart.domainAxis.title );
@@ -142,7 +143,8 @@ public class AxesWidget implements IChartWidget
         // ---------------------------------------------------------------------
         // Draw secondary range title
         // ---------------------------------------------------------------------
-        if( chart.secRangeAxis.title.visible && context.range.secondary != null )
+        if( chart.secRangeAxis.title.visible &&
+            context.range.secondary != null )
         {
             d = srangeTitle.calculateSize( size );
 
@@ -259,8 +261,8 @@ public class AxesWidget implements IChartWidget
                 context.width, context.domain.secondary, false );
 
             gen = new TickGen( chart.rangeAxis );
-            List<Tick> rangeTicks = gen.genTicks( textSpace.top,
-                context.height, context.range.primary, true );
+            List<Tick> rangeTicks = gen.genTicks( textSpace.top, context.height,
+                context.range.primary, true );
 
             gen = new TickGen( chart.secRangeAxis );
             List<Tick> secRangeTicks = gen.genTicks( textSpace.top,
@@ -291,8 +293,8 @@ public class AxesWidget implements IChartWidget
                 {
                     t = rangeTicks.get( i );
 
-                    g2d.drawLine( textSpace.left, t.offset, textSpace.left +
-                        context.width, t.offset );
+                    g2d.drawLine( textSpace.left, t.offset,
+                        textSpace.left + context.width, t.offset );
                 }
             }
 
@@ -314,8 +316,8 @@ public class AxesWidget implements IChartWidget
             // -----------------------------------------------------------------
             // Draw domain labels.
             // -----------------------------------------------------------------
-            drawDomainLabels( g2d, domainTicks, textSpace.top + context.height +
-                2, textSpace.bottom, size );
+            drawDomainLabels( g2d, domainTicks,
+                textSpace.top + context.height + 2, textSpace.bottom, size );
 
             // -----------------------------------------------------------------
             // Draw secondary range ticks and labels.
@@ -335,8 +337,8 @@ public class AxesWidget implements IChartWidget
             // -----------------------------------------------------------------
             if( !secRangeTicks.isEmpty() )
             {
-                drawRangeLabels( g2d, secRangeTicks, width - textSpace.right +
-                    2, textSpace.right, true, size );
+                drawRangeLabels( g2d, secRangeTicks,
+                    width - textSpace.right + 2, textSpace.right, true, size );
             }
 
             axesLayer.repaint = false;
@@ -362,20 +364,21 @@ public class AxesWidget implements IChartWidget
 
         for( Tick t : domainTicks )
         {
-            g2d.drawLine( t.offset, textSpace.top + context.height -
-                MAJOR_TICK_LEN, t.offset, textSpace.top + context.height );
+            g2d.drawLine( t.offset,
+                textSpace.top + context.height - MAJOR_TICK_LEN, t.offset,
+                textSpace.top + context.height );
         }
 
         for( Tick t : secDomainTicks )
         {
-            g2d.drawLine( t.offset, textSpace.top, t.offset, textSpace.top +
-                MAJOR_TICK_LEN );
+            g2d.drawLine( t.offset, textSpace.top, t.offset,
+                textSpace.top + MAJOR_TICK_LEN );
         }
 
         for( Tick t : rangeTicks )
         {
-            g2d.drawLine( textSpace.left, t.offset, textSpace.left +
-                MAJOR_TICK_LEN, t.offset );
+            g2d.drawLine( textSpace.left, t.offset,
+                textSpace.left + MAJOR_TICK_LEN, t.offset );
         }
 
         for( Tick t : secRangeTicks )
@@ -467,7 +470,8 @@ public class AxesWidget implements IChartWidget
             rangeLabel.text = getTickText( b.secondaryRangeSpan.max );
             rMaxSize = rangeText.calculateSize( canvasSize );
 
-            textSpace.bottom = Math.max( textSpace.bottom, rMinSize.height / 2 );
+            textSpace.bottom = Math.max( textSpace.bottom,
+                rMinSize.height / 2 );
             textSpace.right = Math.max( textSpace.right, rMinSize.width );
             textSpace.right = Math.max( textSpace.right, rMaxSize.width );
             textSpace.top = Math.max( textSpace.top, rMaxSize.height / 2 );

@@ -156,7 +156,8 @@ public class BufferedStream implements IStream
                 stream.seek( position );
             }
 
-            int byteCount = stream.read( buf, off + bytesRead, len - bytesRead );
+            int byteCount = stream.read( buf, off + bytesRead,
+                len - bytesRead );
 
             if( byteCount > -1 )
             {
@@ -181,16 +182,16 @@ public class BufferedStream implements IStream
      * 
      **************************************************************************/
     @Override
-    public void readFully( byte [] buf, int off, int len ) throws EOFException,
-        IOException
+    public void readFully( byte [] buf, int off, int len )
+        throws EOFException, IOException
     {
         int totalRead = 0;
 
         if( getAvailable() < len )
         {
-            throw new EOFException( "Cannot read " + len +
-                " bytes from the stream; only " + getAvailable() +
-                " bytes available." );
+            throw new EOFException(
+                "Cannot read " + len + " bytes from the stream; only " +
+                    getAvailable() + " bytes available." );
         }
 
         while( totalRead < len )

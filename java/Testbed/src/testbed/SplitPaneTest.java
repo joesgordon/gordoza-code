@@ -6,7 +6,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-/** @see http://stackoverflow.com/questions/5069152 */
+/**
+ * @see http://stackoverflow.com/questions/5069152
+ */
 public class SplitPaneTest
 {
     double ratio = 0.9;

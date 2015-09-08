@@ -40,7 +40,8 @@ public class TxDialog
         mainPanel.setLayout( new GridBagLayout() );
 
         progressBar.setMinimum( 0 );
-        cancelButton.setIcon( IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
+        cancelButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
         cancelButton.addActionListener( new ActionListener()
         {
             @Override
@@ -57,15 +58,18 @@ public class TxDialog
             }
         } );
 
-        mainPanel.add( progressLabel, new GridBagConstraints( 0, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(
-                0, 4, 4, 4 ), 0, 0 ) );
-        mainPanel.add( progressBar, new GridBagConstraints( 0, 1, 1, 1, 1.0,
-            0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-            new Insets( 4, 4, 10, 4 ), 0, 0 ) );
-        mainPanel.add( cancelButton, new GridBagConstraints( 0, 2, 1, 1, 0.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-            new Insets( 10, 4, 0, 4 ), 0, 10 ) );
+        mainPanel.add( progressLabel,
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 0, 4, 4, 4 ), 0, 0 ) );
+        mainPanel.add( progressBar,
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 4, 4, 10, 4 ), 0, 0 ) );
+        mainPanel.add( cancelButton,
+            new GridBagConstraints( 0, 2, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets( 10, 4, 0, 4 ), 0, 10 ) );
 
         dialog.setContentPane( mainPanel );
         dialog.setResizable( false );

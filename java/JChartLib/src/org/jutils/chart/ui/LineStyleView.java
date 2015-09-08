@@ -47,8 +47,8 @@ public class LineStyleView implements IDataView<LineStyle>
             new ReflectiveUpdater<Boolean>( this, "line.visible" ) ) );
         shapeField.addItemListener( new ComboBoxUpdater<>(
             new ReflectiveUpdater<>( this, "line.type" ) ) );
-        weightField.setUpdater( new ReflectiveUpdater<Integer>( this,
-            "line.weight" ) );
+        weightField.setUpdater(
+            new ReflectiveUpdater<Integer>( this, "line.weight" ) );
         colorField.addUpdateListener( new ItemActionUpdater<>(
             new ReflectiveUpdater<Color>( this, "line.color" ) ) );
     }

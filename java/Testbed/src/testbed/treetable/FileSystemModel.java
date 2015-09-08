@@ -53,8 +53,8 @@ import java.util.Date;
  * @author Scott Violet
  */
 
-public class FileSystemModel extends AbstractTreeTableModel implements
-    TreeTableModel
+public class FileSystemModel extends AbstractTreeTableModel
+    implements TreeTableModel
 {
 
     // Names of the columns.

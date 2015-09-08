@@ -50,8 +50,8 @@ public final class ValidationComboField<T> implements IValidationField
         this.invalidBackground = Color.red;
 
         field.setBackground( validBackground );
-        field.addItemListener( new ComboBoxUpdater<T>(
-            new ValidationActionListener<T>( this ) ) );
+        field.addItemListener(
+            new ComboBoxUpdater<T>( new ValidationActionListener<T>( this ) ) );
     }
 
     /***************************************************************************

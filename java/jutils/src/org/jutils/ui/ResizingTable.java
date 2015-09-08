@@ -45,7 +45,7 @@ public class ResizingTable<T extends TableModel> extends JTable
         TableModel model = table.getModel();
         int colCount = model.getColumnCount();
         int rowCount = model.getRowCount();
-        int widths [] = new int[model.getColumnCount()];
+        int widths[] = new int[model.getColumnCount()];
         Component cellRenderer;
         TableCellRenderer tableCellRenderer;
         int defaultWidth;
@@ -61,7 +61,8 @@ public class ResizingTable<T extends TableModel> extends JTable
             // -----------------------------------------------------------------
             // Compute header width.
             // -----------------------------------------------------------------
-            tableCellRenderer = table.getColumnModel().getColumn( col ).getHeaderRenderer();
+            tableCellRenderer = table.getColumnModel().getColumn(
+                col ).getHeaderRenderer();
             if( tableCellRenderer == null )
             {
                 tableCellRenderer = table.getTableHeader().getDefaultRenderer();
@@ -106,8 +107,8 @@ public class ResizingTable<T extends TableModel> extends JTable
         }
     }
 
-    private static class TableChangedListener<T extends TableModel> implements
-        TableModelListener
+    private static class TableChangedListener<T extends TableModel>
+        implements TableModelListener
     {
         private ResizingTable<T> resizingTable;
 

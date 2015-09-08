@@ -25,9 +25,10 @@ public class SliderPanel extends JPanel
         super( new GridBagLayout() );
 
         createScrollPane();
-        super.add( scrollPane, new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 ) );
+        super.add( scrollPane,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
         super.addComponentListener( new ResizeListener() );
 
@@ -50,8 +51,10 @@ public class SliderPanel extends JPanel
         viewport = scrollPane.getViewport();
 
         scrollPane.setBorder( BorderFactory.createEmptyBorder() );
-        scrollPane.setVerticalScrollBarPolicy( ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER );
-        scrollPane.setHorizontalScrollBarPolicy( ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER );
+        scrollPane.setVerticalScrollBarPolicy(
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER );
+        scrollPane.setHorizontalScrollBarPolicy(
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER );
     }
 
     public void addPanel( JComponent comp )
@@ -212,7 +215,8 @@ public class SliderPanel extends JPanel
             Point position = viewport.getViewPosition();
 
             int nextPos = currentPanel * SliderPanel.this.getWidth();
-            int delta = ( int )( direction * SliderPanel.this.getWidth() / 45.0 );
+            int delta = ( int )( direction * SliderPanel.this.getWidth() /
+                45.0 );
 
             position.x += delta;
 

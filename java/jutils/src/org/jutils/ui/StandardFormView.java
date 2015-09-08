@@ -82,8 +82,8 @@ public class StandardFormView implements IView<JPanel>
         spacer = Box.createHorizontalStrut( 2 );
 
         constraints = new GridBagConstraints( 0, 0, 2, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
-                formMargin, 0, 0, 0 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( formMargin, 0, 0, 0 ), 0, 0 );
 
         view.add( spacer, constraints );
     }
@@ -138,8 +138,8 @@ public class StandardFormView implements IView<JPanel>
             label = new JLabel( field.getFieldName() + ":" );
 
             constraints = new GridBagConstraints( 0, index * 2, 1, 1, 0.0, 0.0,
-                labelAnchor, GridBagConstraints.NONE, new Insets( formMargin,
-                    formMargin, 0, right ), 0, 0 );
+                labelAnchor, GridBagConstraints.NONE,
+                new Insets( formMargin, formMargin, 0, right ), 0, 0 );
             view.add( label, constraints );
 
             fieldx = vertical ? 0 : 1;

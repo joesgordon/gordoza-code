@@ -106,8 +106,8 @@ public class AbstractCellEditor implements CellEditor
         {
             if( listeners[i] == CellEditorListener.class )
             {
-                ( ( CellEditorListener )listeners[i + 1] ).editingStopped( new ChangeEvent(
-                    this ) );
+                ( ( CellEditorListener )listeners[i + 1] ).editingStopped(
+                    new ChangeEvent( this ) );
             }
         }
     }
@@ -127,8 +127,8 @@ public class AbstractCellEditor implements CellEditor
         {
             if( listeners[i] == CellEditorListener.class )
             {
-                ( ( CellEditorListener )listeners[i + 1] ).editingCanceled( new ChangeEvent(
-                    this ) );
+                ( ( CellEditorListener )listeners[i + 1] ).editingCanceled(
+                    new ChangeEvent( this ) );
             }
         }
     }

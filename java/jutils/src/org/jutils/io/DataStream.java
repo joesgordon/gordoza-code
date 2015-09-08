@@ -89,8 +89,8 @@ public class DataStream implements IDataStream
      * 
      **************************************************************************/
     @Override
-    public void readFully( byte [] buf, int off, int len ) throws EOFException,
-        IOException
+    public void readFully( byte [] buf, int off, int len )
+        throws EOFException, IOException
     {
         stream.readFully( buf, off, len );
     }

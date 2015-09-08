@@ -125,37 +125,45 @@ public class AltCheckBox extends JCheckBox
 
                 panel.setLayout( new GridBagLayout() );
 
-                panel.add( plainCb, new GridBagConstraints( 0, 0, 1, 1, 1.0,
-                    0.0, GridBagConstraints.WEST, GridBagConstraints.BOTH,
-                    new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+                panel.add( plainCb,
+                    new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+                        GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                        new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-                panel.add( disabledCb, new GridBagConstraints( 0, 1, 1, 1, 1.0,
-                    0.0, GridBagConstraints.WEST, GridBagConstraints.BOTH,
-                    new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+                panel.add( disabledCb,
+                    new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
+                        GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                        new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-                panel.add( customBgCb, new GridBagConstraints( 0, 2, 1, 1, 1.0,
-                    0.0, GridBagConstraints.WEST, GridBagConstraints.BOTH,
-                    new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+                panel.add( customBgCb,
+                    new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.0,
+                        GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                        new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-                panel.add( customDisabledBgCb, new GridBagConstraints( 0, 3, 1,
-                    1, 1.0, 0.0, GridBagConstraints.WEST,
-                    GridBagConstraints.BOTH, new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+                panel.add( customDisabledBgCb,
+                    new GridBagConstraints( 0, 3, 1, 1, 1.0, 0.0,
+                        GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                        new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-                panel.add( customDbgCb, new GridBagConstraints( 0, 4, 1, 1,
-                    1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.BOTH,
-                    new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+                panel.add( customDbgCb,
+                    new GridBagConstraints( 0, 4, 1, 1, 1.0, 0.0,
+                        GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                        new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-                panel.add( customDisabledDbgCb, new GridBagConstraints( 0, 5,
-                    1, 1, 1.0, 0.0, GridBagConstraints.WEST,
-                    GridBagConstraints.BOTH, new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+                panel.add( customDisabledDbgCb,
+                    new GridBagConstraints( 0, 5, 1, 1, 1.0, 0.0,
+                        GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                        new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-                panel.add( customBgDbgCb, new GridBagConstraints( 0, 6, 1, 1,
-                    1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.BOTH,
-                    new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+                panel.add( customBgDbgCb,
+                    new GridBagConstraints( 0, 6, 1, 1, 1.0, 0.0,
+                        GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                        new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-                panel.add( customDisabledBgDbgCb, new GridBagConstraints( 0, 7,
-                    1, 1, 1.0, 0.0, GridBagConstraints.WEST,
-                    GridBagConstraints.BOTH, new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+                panel.add( customDisabledBgDbgCb,
+                    new GridBagConstraints( 0, 7, 1, 1, 1.0, 0.0,
+                        GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                        new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
                 frame.setTitle( "UCheckBox test" );
                 frame.setContentPane( panel );

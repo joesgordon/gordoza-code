@@ -75,8 +75,8 @@ public class FileOpener<T>
 
             if( !file.getName().endsWith( extension ) )
             {
-                file = new File( file.getParentFile(), file.getName() + "." +
-                    extension );
+                file = new File( file.getParentFile(),
+                    file.getName() + "." + extension );
             }
 
             try

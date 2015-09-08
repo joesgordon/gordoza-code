@@ -18,7 +18,9 @@ public class AggregateValidityChangedManager
     private final List<IValidationField> fields;
     /** The single listener to be added to each field. */
     private final AggregateValidityChangedListener listener;
-    /** The list of listeners to be invoked when the aggregate validity changes. */
+    /**
+     * The list of listeners to be invoked when the aggregate validity changes.
+     */
     private final ValidityListenerList validityListeners;
 
     /***************************************************************************
@@ -135,7 +137,8 @@ public class AggregateValidityChangedManager
             newValidity &= field.isValid();
             if( !newValidity )
             {
-                validityListeners.signalInvalid( field.getInvalidationReason() );
+                validityListeners.signalInvalid(
+                    field.getInvalidationReason() );
                 return;
             }
         }
@@ -147,8 +150,8 @@ public class AggregateValidityChangedManager
      * The aggregate listener to monitor every field for a change in validity.
      * @see AggregateValidityChangedManager#testValidity()
      **************************************************************************/
-    private static class AggregateValidityChangedListener implements
-        IValidityChangedListener
+    private static class AggregateValidityChangedListener
+        implements IValidityChangedListener
     {
         private final AggregateValidityChangedManager manager;
 

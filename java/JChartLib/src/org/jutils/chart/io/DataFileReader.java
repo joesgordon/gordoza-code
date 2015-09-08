@@ -19,8 +19,8 @@ public class DataFileReader implements IReader<ISeriesData<?>, File>
     }
 
     @Override
-    public DefaultSeries read( File f ) throws IOException,
-        RuntimeFormatException
+    public DefaultSeries read( File f )
+        throws IOException, RuntimeFormatException
     {
         ArrayList<XYPoint> points = new ArrayList<>();
         String line;

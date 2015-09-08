@@ -17,9 +17,10 @@ public class EditFrame extends JFrame
         chatEditorPane = new JTextPane();
         chatEditorPane.setBorder( BorderFactory.createLoweredBevelBorder() );
 
-        contentPanel.add( chatEditorPane, new GridBagConstraints( 0, 0, 1, 1,
-            1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+        contentPanel.add( chatEditorPane,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
 
         // ChatterboxFrame.addComponentListeners( chatEditorPane );
 

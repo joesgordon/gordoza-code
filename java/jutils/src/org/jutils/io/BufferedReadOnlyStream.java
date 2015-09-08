@@ -139,16 +139,16 @@ public class BufferedReadOnlyStream implements IStream
      * 
      **************************************************************************/
     @Override
-    public void readFully( byte [] buf, int off, int len ) throws EOFException,
-        IOException
+    public void readFully( byte [] buf, int off, int len )
+        throws EOFException, IOException
     {
         int bytesRead = 0;
 
         if( getAvailable() < len )
         {
-            throw new EOFException( "Cannot read " + len +
-                " bytes from the stream; only " + getAvailable() +
-                " bytes available." );
+            throw new EOFException(
+                "Cannot read " + len + " bytes from the stream; only " +
+                    getAvailable() + " bytes available." );
         }
 
         while( bytesRead < len )

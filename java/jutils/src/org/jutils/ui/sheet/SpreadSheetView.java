@@ -56,11 +56,13 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
 
         RowHeaderRenderer rhr = new RowHeaderRenderer( table );
 
-        rowHeader.setSelectionMode( ListSelectionModel.SINGLE_INTERVAL_SELECTION );
+        rowHeader.setSelectionMode(
+            ListSelectionModel.SINGLE_INTERVAL_SELECTION );
         rowHeader.setCellRenderer( rhr );
         rowHeader.setFixedCellHeight( table.getRowHeight() );
         rowHeader.setMinimumSize( new Dimension( 50, 5 ) );
-        rowHeader.setBackground( ( Color )UIManager.get( PropConstants.UI_PANEL_COLOR ) );
+        rowHeader.setBackground(
+            ( Color )UIManager.get( PropConstants.UI_PANEL_COLOR ) );
         rowHeader.setFixedCellWidth( 50 );
 
         table.addMouseListener( new TableMouseListener( this ) );
@@ -71,8 +73,10 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
         table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
 
         // scrollpane.getViewport().setBackground(table.getBackground());
-        scrollpane.setHorizontalScrollBarPolicy( ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS );
-        scrollpane.setVerticalScrollBarPolicy( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
+        scrollpane.setHorizontalScrollBarPolicy(
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS );
+        scrollpane.setVerticalScrollBarPolicy(
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
         scrollpane.setRowHeaderView( rowHeader );
         scrollpane.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
         scrollpane.setCorner( ScrollPaneConstants.UPPER_LEFT_CORNER,

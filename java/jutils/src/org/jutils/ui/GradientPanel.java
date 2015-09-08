@@ -81,8 +81,8 @@ public class GradientPanel extends JPanel
 
         Graphics2D g2 = ( Graphics2D )g;
         Paint storedPaint = g2.getPaint();
-        g2.setPaint( new GradientPaint( 0, 0, getBackground(), width, 0,
-            control ) );
+        g2.setPaint(
+            new GradientPaint( 0, 0, getBackground(), width, 0, control ) );
         g2.fillRect( 0, 0, width, height );
         g2.setPaint( storedPaint );
     }

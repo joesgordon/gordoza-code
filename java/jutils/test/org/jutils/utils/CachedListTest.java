@@ -97,7 +97,8 @@ public class CachedListTest
              DataStream stream = new DataStream( bufStream ) )
         {
             ICacher<Integer> cacher = createCacher();
-            CachedList<Integer> list = new CachedList<>( cacher, stream, count );
+            CachedList<Integer> list = new CachedList<>( cacher, stream,
+                count );
 
             for( int i = 0; i < testCount; i++ )
             {
@@ -133,7 +134,8 @@ public class CachedListTest
              DataStream stream = new DataStream( bufStream ) )
         {
             ICacher<Integer> cacher = createCacher();
-            CachedList<Integer> list = new CachedList<>( cacher, stream, count );
+            CachedList<Integer> list = new CachedList<>( cacher, stream,
+                count );
 
             for( int i = 0; i < testCount; i++ )
             {
@@ -161,7 +163,8 @@ public class CachedListTest
              DataStream stream = new DataStream( bufStream ) )
         {
             ICacher<Integer> cacher = createCacher();
-            CachedList<Integer> list = new CachedList<>( cacher, stream, count );
+            CachedList<Integer> list = new CachedList<>( cacher, stream,
+                count );
 
             for( int i = 0; i < testCount; i++ )
             {
@@ -198,15 +201,14 @@ public class CachedListTest
     private static class IntegerCacher implements ICacher<Integer>
     {
         @Override
-        public Integer read( IDataStream stream ) throws IOException,
-            RuntimeFormatException
+        public Integer read( IDataStream stream )
+            throws IOException, RuntimeFormatException
         {
             return stream.readInt();
         }
 
         @Override
-        public void write( Integer item, IDataStream stream )
-            throws IOException
+        public void write( Integer item, IDataStream stream ) throws IOException
         {
             stream.writeInt( item );
         }

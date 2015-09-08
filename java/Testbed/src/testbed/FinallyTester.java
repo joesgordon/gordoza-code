@@ -57,7 +57,8 @@ public class FinallyTester
 
         String str = "Algy met a bear. The bear was bulgy. The bulge was Algy";
 
-        String str2 = new String( str.getBytes(), Charset.forName( "US-ASCII" ) );
+        String str2 = new String( str.getBytes(),
+            Charset.forName( "US-ASCII" ) );
 
         if( !str.equals( str2 ) )
         {

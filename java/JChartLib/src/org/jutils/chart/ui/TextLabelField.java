@@ -76,8 +76,8 @@ public class TextLabelField implements IDataFormField<TextLabel>
         GridBagConstraints constraints;
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets( 0,
-                0, 0, 2 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.NONE,
+            new Insets( 0, 0, 0, 2 ), 0, 0 );
         panel.add( visibleField, constraints );
 
         constraints = new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
@@ -86,13 +86,13 @@ public class TextLabelField implements IDataFormField<TextLabel>
         panel.add( textField.getView(), constraints );
 
         constraints = new GridBagConstraints( 2, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets( 0,
-                2, 0, 2 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.NONE,
+            new Insets( 0, 2, 0, 2 ), 0, 0 );
         panel.add( new JButton( fontAction ), constraints );
 
         constraints = new GridBagConstraints( 3, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets( 0,
-                2, 0, 0 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.NONE,
+            new Insets( 0, 2, 0, 0 ), 0, 0 );
         panel.add( colorView.getView(), constraints );
 
         return panel;
@@ -196,8 +196,8 @@ public class TextLabelField implements IDataFormField<TextLabel>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class FontListener implements ActionListener,
-        ItemActionListener<Boolean>
+    private static class FontListener
+        implements ActionListener, ItemActionListener<Boolean>
     {
         private final TextLabelField field;
         private FontView fontView;

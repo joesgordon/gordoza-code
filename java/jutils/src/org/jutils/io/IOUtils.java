@@ -102,7 +102,8 @@ public final class IOUtils
 
                 ansPath = "";
 
-                for( int i = 0; i < ansParts.size() && i < pathParts.size(); i++ )
+                for( int i = 0; i < ansParts.size() &&
+                    i < pathParts.size(); i++ )
                 {
                     if( ansParts.get( i ).equals( pathParts.get( i ) ) )
                     {
@@ -309,8 +310,8 @@ public final class IOUtils
         }
         catch( URISyntaxException ex )
         {
-            throw new RuntimeException( "Unknown install location: " +
-                url.toString(), ex );
+            throw new RuntimeException(
+                "Unknown install location: " + url.toString(), ex );
         }
 
         return file;
@@ -347,8 +348,8 @@ public final class IOUtils
      * @return
      * @throws IOException
      **************************************************************************/
-    public static File createSelfDemisingTempFile( String prefix, String suffix )
-        throws IOException
+    public static File createSelfDemisingTempFile( String prefix,
+        String suffix ) throws IOException
     {
         File f = File.createTempFile( prefix, suffix );
 

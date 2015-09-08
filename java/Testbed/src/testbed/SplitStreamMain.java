@@ -32,8 +32,8 @@ public class SplitStreamMain
 
         if( !dir.mkdir() )
         {
-            System.out.println( "Cannot create directory " +
-                dir.getAbsolutePath() );
+            System.out.println(
+                "Cannot create directory " + dir.getAbsolutePath() );
             System.exit( 1 );
         }
 
@@ -65,11 +65,10 @@ public class SplitStreamMain
      * @param size int
      * @throws IOException
      **************************************************************************/
-    private static void writeFiles( File baseFile, int size )
-        throws IOException
+    private static void writeFiles( File baseFile, int size ) throws IOException
     {
         try( SplitFileOutputStream sfos = new SplitFileOutputStream( baseFile,
-                 size ); DataOutputStream stream = new DataOutputStream( sfos ) )
+            size ); DataOutputStream stream = new DataOutputStream( sfos ) )
         {
             for( int i = 0; i < CT_LIMIT; i++ )
             {

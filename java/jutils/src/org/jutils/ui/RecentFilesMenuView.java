@@ -91,8 +91,8 @@ public class RecentFilesMenuView implements IDataView<List<File>>
 
             if( file.exists() )
             {
-                item = new JMenuItem( ( this.files.size() + 1 ) + " " +
-                    file.getName() );
+                item = new JMenuItem(
+                    ( this.files.size() + 1 ) + " " + file.getName() );
                 item.setIcon( view.getSystemIcon( file ) );
                 item.addActionListener( new ItemSelected( this, file ) );
                 item.setToolTipText( file.getAbsolutePath() );
@@ -146,7 +146,8 @@ public class RecentFilesMenuView implements IDataView<List<File>>
         public void actionPerformed( ActionEvent e )
         {
             int modifiers = e.getModifiers();
-            boolean ctrlPressed = ( ActionEvent.CTRL_MASK & modifiers ) == ActionEvent.CTRL_MASK;
+            boolean ctrlPressed = ( ActionEvent.CTRL_MASK &
+                modifiers ) == ActionEvent.CTRL_MASK;
 
             // LogUtils.printDebug( "Ctrl pressed: " + ctrlPressed );
 

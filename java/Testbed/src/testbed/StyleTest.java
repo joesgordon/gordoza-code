@@ -45,7 +45,8 @@ public class StyleTest extends JFrame
                 boolean bold = false;
                 if( current.getAttribute( StyleConstants.Bold ) != null )
                 {
-                    Element run = styledDocument.getCharacterElement( textPane.getSelectionStart() );
+                    Element run = styledDocument.getCharacterElement(
+                        textPane.getSelectionStart() );
                     MutableAttributeSet curAttr = ( MutableAttributeSet )run.getAttributes();
 
                     bold = curAttr.containsAttributes( boldStyle );
@@ -101,8 +102,8 @@ public class StyleTest extends JFrame
                 "The quick brown ", null );
 
             start = styledDocument.getLength();
-            styledDocument.insertString( styledDocument.getLength(),
-                "duckling", boldStyle );
+            styledDocument.insertString( styledDocument.getLength(), "duckling",
+                boldStyle );
             end = styledDocument.getLength();
 
             styledDocument.insertString( styledDocument.getLength(),

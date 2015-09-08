@@ -67,8 +67,8 @@ public class FilteredWriter
         {
             if( !temp.delete() )
             {
-                throw new IOException( "Cannot delete temporary file: " +
-                    temp.getAbsolutePath() );
+                throw new IOException(
+                    "Cannot delete temporary file: " + temp.getAbsolutePath() );
             }
         }
     }

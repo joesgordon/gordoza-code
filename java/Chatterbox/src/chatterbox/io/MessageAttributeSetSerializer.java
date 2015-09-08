@@ -7,8 +7,8 @@ import org.jutils.io.IDataStream;
 
 import chatterbox.model.MessageAttributeSet;
 
-public class MessageAttributeSetSerializer implements
-    IDataSerializer<MessageAttributeSet>
+public class MessageAttributeSetSerializer
+    implements IDataSerializer<MessageAttributeSet>
 {
     @Override
     public MessageAttributeSet read( IDataStream stream ) throws IOException

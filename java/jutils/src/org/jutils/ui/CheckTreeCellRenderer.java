@@ -50,8 +50,8 @@ public class CheckTreeCellRenderer extends JPanel implements TreeCellRenderer
         boolean selected, boolean expanded, boolean leaf, int row,
         boolean hasFocus )
     {
-        Component renderer = delegate.getTreeCellRendererComponent( tree,
-            value, selected, expanded, leaf, row, hasFocus );
+        Component renderer = delegate.getTreeCellRendererComponent( tree, value,
+            selected, expanded, leaf, row, hasFocus );
 
         TreePath path = tree.getPathForRow( row );
         if( path != null )
@@ -62,8 +62,8 @@ public class CheckTreeCellRenderer extends JPanel implements TreeCellRenderer
             }
             else
             {
-                checkBox.setState( selectionModel.isPartiallySelected( path ) ? null
-                    : Boolean.FALSE );
+                checkBox.setState( selectionModel.isPartiallySelected( path )
+                    ? null : Boolean.FALSE );
             }
         }
         removeAll();

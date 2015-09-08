@@ -47,8 +47,8 @@ public interface ITaskStopManager
 
     /***************************************************************************
      * Adds a listener to be called when {@link #signalFinished()} is called;
-     * reports {@code true} if the process was not stopped preemptively, {@link
-     * false} otherwise.
+     * reports {@code true} if the process was not stopped preemptively,
+     * {@link false} otherwise.
      * @param l the listener to be added.
      **************************************************************************/
     public void addFinishedListener( ItemActionListener<Boolean> l );

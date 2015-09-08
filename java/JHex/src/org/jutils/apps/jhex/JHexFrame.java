@@ -1,7 +1,7 @@
 package org.jutils.apps.jhex;
 
-import java.awt.Dialog.ModalityType;
 import java.awt.*;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
@@ -18,8 +18,9 @@ import org.jutils.ui.RecentFilesMenuView.IRecentSelected;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
 import org.jutils.ui.fields.HexBytesFormField;
-import org.jutils.ui.hex.*;
+import org.jutils.ui.hex.HexEditorFilePanel;
 import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
+import org.jutils.ui.hex.ValueView;
 import org.jutils.ui.model.IView;
 import org.jutils.ui.validation.ValidationView;
 
@@ -97,11 +98,12 @@ public class JHexFrame implements IView<JFrame>
         JPanel editorView = editor.getView();
         KeyStroke key;
         Action action;
-        InputMap inMap = editorView.getInputMap( JComponent.WHEN_IN_FOCUSED_WINDOW );
+        InputMap inMap = editorView.getInputMap(
+            JComponent.WHEN_IN_FOCUSED_WINDOW );
         ActionMap acMap = editorView.getActionMap();
 
-        editorView.setDropTarget( new FileDropTarget( new FileDroppedListener(
-            this ) ) );
+        editorView.setDropTarget(
+            new FileDropTarget( new FileDroppedListener( this ) ) );
         editor.addRangeSelectedListener( new SelectionListener( this ) );
 
         key = KeyStroke.getKeyStroke( "control F" );
@@ -157,26 +159,27 @@ public class JHexFrame implements IView<JFrame>
         valuePanel.addSizeSelectedListener( new SizeSelectedListener( this ) );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 4,
-                4, 4, 4 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 4, 4, 4, 4 ), 0, 0 );
         panel.add( valuePanel.getView(), constraints );
 
         constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
         panel.add( new JSeparator(), constraints );
 
         okButton.addActionListener( new HideDialogListener( this ) );
 
         constraints = new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets( 10,
-                10, 10, 10 ), 30, 10 );
+            GridBagConstraints.CENTER, GridBagConstraints.NONE,
+            new Insets( 10, 10, 10, 10 ), 30, 10 );
         panel.add( okButton, constraints );
 
         dialog.setTitle( "Data View" );
         dialog.setContentPane( panel );
         dialog.setAlwaysOnTop( false );
-        dialog.setIconImages( IconConstants.loader.getImages( IconConstants.BINARY_32 ) );
+        dialog.setIconImages(
+            IconConstants.loader.getImages( IconConstants.BINARY_32 ) );
 
         dialog.pack();
         dialog.setLocationRelativeTo( frame );
@@ -255,7 +258,8 @@ public class JHexFrame implements IView<JFrame>
         toolbar.add( button );
 
         JToggleButton jtb = dataViewButton;
-        jtb.setIcon( JHexIconConstants.loader.getIcon( JHexIconConstants.SHOW_DATA ) );
+        jtb.setIcon(
+            JHexIconConstants.loader.getIcon( JHexIconConstants.SHOW_DATA ) );
         jtb.setToolTipText( "Show Data" );
         jtb.setFocusable( false );
         jtb.addActionListener( new ShowDataListener( this, jtb ) );
@@ -291,7 +295,8 @@ public class JHexFrame implements IView<JFrame>
 
         item = new JMenuItem( "Open" );
         item.addActionListener( new OpenListener( this ) );
-        item.setIcon( IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+        item.setIcon(
+            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
         fileMenu.add( item, idx++ );
 
         item = new JMenuItem( "Save" );
@@ -326,7 +331,8 @@ public class JHexFrame implements IView<JFrame>
         JMenuItem item;
 
         item = new JMenuItem( "Go To Offset" );
-        item.setIcon( JHexIconConstants.loader.getIcon( JHexIconConstants.GOTO ) );
+        item.setIcon(
+            JHexIconConstants.loader.getIcon( JHexIconConstants.GOTO ) );
         item.addActionListener( new GoToListener( this ) );
         menu.add( item );
 
@@ -432,8 +438,8 @@ public class JHexFrame implements IView<JFrame>
     private void saveFile()
     {
         JOptionPane.showMessageDialog( frame,
-            "This functionality is not yet implemented.",
-            "Not Yet Implemented", JOptionPane.INFORMATION_MESSAGE );
+            "This functionality is not yet implemented.", "Not Yet Implemented",
+            JOptionPane.INFORMATION_MESSAGE );
 
         if( "".length() < 1 )
         {
@@ -473,12 +479,14 @@ public class JHexFrame implements IView<JFrame>
     private void showSearchDialog()
     {
         HexBytesFormField hexField = new HexBytesFormField( "Hex Bytes" );
-        ValidationView view = new ValidationView( hexField.getValidationField() );
+        ValidationView view = new ValidationView(
+            hexField.getValidationField() );
         StandardFormView form = new StandardFormView( true );
 
         form.addField( hexField.getFieldName(), view.getView() );
 
-        hexField.getTextField().addAncestorListener( new RequestFocusListener() );
+        hexField.getTextField().addAncestorListener(
+            new RequestFocusListener() );
 
         int ans = JOptionPane.showOptionDialog( frame, form.getView(),
             "Enter Hexadecimal String", JOptionPane.OK_CANCEL_OPTION,
@@ -529,8 +537,8 @@ public class JHexFrame implements IView<JFrame>
         // ) +
         // " @ " + fromOffset + " " + ( isForward ? "Forward" : "Backward" ) );
 
-        SearchTask task = new SearchTask( bytes, editor.getStream(),
-            fromOffset, isForward );
+        SearchTask task = new SearchTask( bytes, editor.getStream(), fromOffset,
+            isForward );
 
         TaskView.startAndShow( frame, task, "Byte Search" );
 
@@ -560,9 +568,9 @@ public class JHexFrame implements IView<JFrame>
             }
             catch( NumberFormatException ex )
             {
-                JOptionPane.showMessageDialog( frame, "'" + ans.toString() +
-                    "' is not a hexadecimal string.", "ERROR",
-                    JOptionPane.ERROR_MESSAGE );
+                JOptionPane.showMessageDialog( frame,
+                    "'" + ans.toString() + "' is not a hexadecimal string.",
+                    "ERROR", JOptionPane.ERROR_MESSAGE );
                 return;
             }
 
@@ -733,8 +741,8 @@ public class JHexFrame implements IView<JFrame>
     /***************************************************************************
      * Listener to open a file that is drag and dropped onto the table.
      **************************************************************************/
-    private static class FileDroppedListener implements
-        ItemActionListener<IFileDropEvent>
+    private static class FileDroppedListener
+        implements ItemActionListener<IFileDropEvent>
     {
         private final JHexFrame frame;
 
@@ -812,7 +820,8 @@ public class JHexFrame implements IView<JFrame>
 
             if( button.isSelected() )
             {
-                view.editor.setHighlightLength( view.valuePanel.getSelectedSize() );
+                view.editor.setHighlightLength(
+                    view.valuePanel.getSelectedSize() );
             }
             else
             {
@@ -856,7 +865,8 @@ public class JHexFrame implements IView<JFrame>
         @Override
         public void rangeSelected( int start, int end )
         {
-            frame.valuePanel.setBytes( frame.editor.getBuffer().getBytes(), end );
+            frame.valuePanel.setBytes( frame.editor.getBuffer().getBytes(),
+                end );
 
             // LogUtils.printDebug( "col: " + col + ", row: " + row +
             // ", start: "
@@ -868,8 +878,8 @@ public class JHexFrame implements IView<JFrame>
     /***************************************************************************
      * Listener to update the buffer size.
      **************************************************************************/
-    private static class SizeSelectedListener implements
-        ItemActionListener<Integer>
+    private static class SizeSelectedListener
+        implements ItemActionListener<Integer>
     {
         private final JHexFrame frame;
 

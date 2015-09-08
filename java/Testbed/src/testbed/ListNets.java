@@ -46,7 +46,8 @@ public class ListNets
         try( MulticastSocket socket = new MulticastSocket( TEST_PORT ) )
         {
             socket.setNetworkInterface( nic );
-            socket.setInterface( nic.getInterfaceAddresses().get( 0 ).getAddress() );
+            socket.setInterface(
+                nic.getInterfaceAddresses().get( 0 ).getAddress() );
         }
     }
 
@@ -60,7 +61,8 @@ public class ListNets
             socket.getPort() + "'";
         socket.joinGroup( group );
 
-        InetSocketAddress sendAddress = new InetSocketAddress( group, TEST_PORT );
+        InetSocketAddress sendAddress = new InetSocketAddress( group,
+            TEST_PORT );
         byte[] bytes = message.getBytes();
         DatagramPacket packet = new DatagramPacket( bytes, bytes.length,
             sendAddress );

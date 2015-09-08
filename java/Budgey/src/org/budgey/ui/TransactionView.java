@@ -63,33 +63,41 @@ public class TransactionView
 
         amountField.setValidator( new AmountValidtor() );
 
-        panel.add( new JLabel( "Second Party:" ), new GridBagConstraints( 0, 0,
-            1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-            new Insets( 4, 4, 2, 2 ), 0, 0 ) );
-        panel.add( secondPartyField.getView(), new GridBagConstraints( 0, 1, 1,
-            1, 0.0, 0.0, GridBagConstraints.WEST,
-            GridBagConstraints.HORIZONTAL, new Insets( 2, 4, 4, 4 ), 0, 0 ) );
+        panel.add( new JLabel( "Second Party:" ),
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 4, 4, 2, 2 ), 0, 0 ) );
+        panel.add( secondPartyField.getView(),
+            new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 2, 4, 4, 4 ), 0, 0 ) );
 
-        panel.add( new JLabel( "Tag:" ), new GridBagConstraints( 0, 2, 1, 1,
-            0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-            new Insets( 4, 4, 2, 2 ), 0, 0 ) );
-        panel.add( tagField, new GridBagConstraints( 0, 3, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
-                2, 4, 4, 4 ), 0, 0 ) );
+        panel.add( new JLabel( "Tag:" ),
+            new GridBagConstraints( 0, 2, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 4, 4, 2, 2 ), 0, 0 ) );
+        panel.add( tagField,
+            new GridBagConstraints( 0, 3, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 2, 4, 4, 4 ), 0, 0 ) );
 
-        panel.add( new JLabel( "Amount:" ), new GridBagConstraints( 0, 4, 1, 1,
-            0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-            new Insets( 4, 4, 2, 2 ), 0, 0 ) );
-        panel.add( amountField.getView(), new GridBagConstraints( 0, 5, 1, 1,
-            0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-            new Insets( 2, 4, 4, 4 ), 0, 0 ) );
+        panel.add( new JLabel( "Amount:" ),
+            new GridBagConstraints( 0, 4, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 4, 4, 2, 2 ), 0, 0 ) );
+        panel.add( amountField.getView(),
+            new GridBagConstraints( 0, 5, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 2, 4, 4, 4 ), 0, 0 ) );
 
-        panel.add( new JLabel( "Date:" ), new GridBagConstraints( 0, 6, 1, 1,
-            0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-            new Insets( 4, 4, 2, 2 ), 0, 0 ) );
-        panel.add( dateField.getView(), new GridBagConstraints( 0, 7, 1, 1,
-            0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-            new Insets( 2, 4, 4, 4 ), 0, 0 ) );
+        panel.add( new JLabel( "Date:" ),
+            new GridBagConstraints( 0, 6, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 4, 4, 2, 2 ), 0, 0 ) );
+        panel.add( dateField.getView(),
+            new GridBagConstraints( 0, 7, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 2, 4, 4, 4 ), 0, 0 ) );
 
         return panel;
     }

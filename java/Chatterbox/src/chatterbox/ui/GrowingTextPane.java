@@ -35,7 +35,8 @@ public class GrowingTextPane extends JTextPane
 
             private void revalidateWindow()
             {
-                Window window = SwingUtilities.getWindowAncestor( GrowingTextPane.this );
+                Window window = SwingUtilities.getWindowAncestor(
+                    GrowingTextPane.this );
 
                 window.validate();
             }

@@ -55,8 +55,8 @@ public class TickGen
             tickMets = calculateMetrics();
         }
 
-        String fmt = tickMets.tickOrder > -1 ? "%.0f" : "%." +
-            Math.abs( tickMets.tickOrder ) + "f";
+        String fmt = tickMets.tickOrder > -1 ? "%.0f"
+            : "%." + Math.abs( tickMets.tickOrder ) + "f";
 
         for( int i = 0; i < tickMets.tickCount; i++ )
         {
@@ -83,8 +83,10 @@ public class TickGen
 
         metrics.tickStart = axis.tickStart;
         metrics.tickWidth = axis.tickWidth;
-        metrics.tickCount = ( int )( ( axis.tickEnd - axis.tickStart ) / axis.tickWidth ) + 1;
-        metrics.tickOrder = ( int )Math.floor( Math.log10( metrics.tickWidth ) );
+        metrics.tickCount = ( int )( ( axis.tickEnd - axis.tickStart ) /
+            axis.tickWidth ) + 1;
+        metrics.tickOrder = ( int )Math.floor(
+            Math.log10( metrics.tickWidth ) );
 
         return metrics;
     }
@@ -107,10 +109,10 @@ public class TickGen
 
         int minTickCsOrder = ( int )Math.floor( Math.log10( minTickCs ) );
 
-        int minTickCsNorm = ( int )Math.floor( minTickCs * 10 /
-            Math.pow( 10, minTickCsOrder ) );
-        int maxTickCsNorm = ( int )Math.floor( maxTickCs * 10 /
-            Math.pow( 10, minTickCsOrder ) );
+        int minTickCsNorm = ( int )Math.floor(
+            minTickCs * 10 / Math.pow( 10, minTickCsOrder ) );
+        int maxTickCsNorm = ( int )Math.floor(
+            maxTickCs * 10 / Math.pow( 10, minTickCsOrder ) );
 
         int tickWidthCsNorm = 0;
 
@@ -160,8 +162,8 @@ public class TickGen
         tickStart = tickStart / 10 * Math.pow( 10, tickCsOrder );
         tickStop = tickStop / 10 * Math.pow( 10, tickCsOrder );
 
-        metrics.tickCount = ( int )( Math.round( ( tickStop - tickStart ) /
-            tickWidthCs ) ) + 1;
+        metrics.tickCount = ( int )( Math.round(
+            ( tickStop - tickStart ) / tickWidthCs ) ) + 1;
         metrics.tickOrder = tickCsOrder;
         metrics.tickStart = tickStart;
         metrics.tickWidth = tickWidthCs;
@@ -197,7 +199,8 @@ public class TickGen
      * @param size
      * @return
      **************************************************************************/
-    private static ChartContext createContext( double min, double max, int size )
+    private static ChartContext createContext( double min, double max,
+        int size )
     {
         ChartContext context = new ChartContext();
         Bounds b = new Bounds();

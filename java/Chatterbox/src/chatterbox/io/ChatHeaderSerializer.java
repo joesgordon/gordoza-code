@@ -12,13 +12,13 @@ public class ChatHeaderSerializer implements IDataSerializer<ChatHeader>
     private static final long HEADER_MAGiC_NUM = 0x20FE90FA286BEB40L;
 
     @Override
-    public ChatHeader read( IDataStream stream ) throws IOException,
-        RuntimeFormatException
+    public ChatHeader read( IDataStream stream )
+        throws IOException, RuntimeFormatException
     {
         if( stream.getAvailable() < 14 )
         {
-            throw new RuntimeFormatException( "Message length too short: " +
-                stream.getAvailable() );
+            throw new RuntimeFormatException(
+                "Message length too short: " + stream.getAvailable() );
         }
 
         long num;
@@ -41,8 +41,8 @@ public class ChatHeaderSerializer implements IDataSerializer<ChatHeader>
         }
         catch( IllegalArgumentException ex )
         {
-            throw new RuntimeFormatException( "Invalid message type: " +
-                msgTypeNum, ex );
+            throw new RuntimeFormatException(
+                "Invalid message type: " + msgTypeNum, ex );
         }
         length = stream.readInt();
 

@@ -121,7 +121,8 @@ public class TextWidget implements IChartWidget
             // if( label.text.equals( "Y Values" ) )
             // {
             // LogUtils.printDebug( String.format(
-            // "text: loc: (%d,%d), rp: (%f,%f), tsize: (%d,%d), size: (%d,%d), a: %f",
+            // "text: loc: (%d,%d), rp: (%f,%f), tsize: (%d,%d), size: (%d,%d),
+            // a: %f",
             // tx, ty, rx, ry, ts.width, ts.height, size.width,
             // size.height, direction.angle ) );
             // }
@@ -164,7 +165,8 @@ public class TextWidget implements IChartWidget
         dim.width = metrics.stringWidth( label.text );
         dim.height = metrics.getHeight();
 
-        if( direction == TextDirection.RIGHT || direction == TextDirection.LEFT )
+        if( direction == TextDirection.RIGHT ||
+            direction == TextDirection.LEFT )
         {
             int i = dim.width;
             dim.width = dim.height;

@@ -59,8 +59,8 @@ public class ItemListView<T> implements IDataView<List<T>>
         GridBagConstraints constraints;
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets( 8,
-                8, 8, 8 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.NONE,
+            new Insets( 8, 8, 8, 8 ), 0, 0 );
         panel.add( label, constraints );
 
         return panel;
@@ -77,13 +77,13 @@ public class ItemListView<T> implements IDataView<List<T>>
         itemsView.addSelectedListener( new ItemSelected<T>( this ) );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 0.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 8,
-                8, 8, 8 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 8, 8, 8, 8 ), 0, 0 );
         panel.add( itemsView.getView(), constraints );
 
         constraints = new GridBagConstraints( 1, 0, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 8,
-                0, 8, 8 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 8, 0, 8, 8 ), 0, 0 );
         panel.add( itempane, constraints );
 
         return panel;

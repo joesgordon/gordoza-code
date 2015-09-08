@@ -36,7 +36,8 @@ public class TaskUpdater
     public void update( Number position )
     {
         this.position = position;
-        int percent = ( int )( position.doubleValue() * 100.0 / length.doubleValue() );
+        int percent = ( int )( position.doubleValue() * 100.0 /
+            length.doubleValue() );
         if( percent != this.percent )
         {
             this.percent = percent;

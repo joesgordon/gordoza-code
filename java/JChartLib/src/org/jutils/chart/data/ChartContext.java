@@ -63,14 +63,18 @@ public class ChartContext
         autoBounds.secondaryDomainSpan = chart.calculateSecondaryDomainSpan();
         autoBounds.secondaryRangeSpan = chart.calculateSecondaryRangeSpan();
 
-        if( ( bounds.secondaryDomainSpan == null && autoBounds.secondaryDomainSpan != null ) ||
-            ( bounds.secondaryDomainSpan != null && autoBounds.secondaryDomainSpan == null ) )
+        if( ( bounds.secondaryDomainSpan == null &&
+            autoBounds.secondaryDomainSpan != null ) ||
+            ( bounds.secondaryDomainSpan != null &&
+                autoBounds.secondaryDomainSpan == null ) )
         {
             bounds.secondaryDomainSpan = autoBounds.secondaryDomainSpan;
         }
 
-        if( ( bounds.secondaryRangeSpan == null && autoBounds.secondaryRangeSpan != null ) ||
-            ( bounds.secondaryRangeSpan != null && autoBounds.secondaryRangeSpan == null ) )
+        if( ( bounds.secondaryRangeSpan == null &&
+            autoBounds.secondaryRangeSpan != null ) ||
+            ( bounds.secondaryRangeSpan != null &&
+                autoBounds.secondaryRangeSpan == null ) )
         {
             bounds.secondaryRangeSpan = autoBounds.secondaryRangeSpan;
         }
@@ -251,8 +255,8 @@ public class ChartContext
         @Override
         public int fromCoord( double c )
         {
-            return ( int )Math.round( stats.length - ( c - stats.span.min ) *
-                stats.scale );
+            return ( int )Math.round(
+                stats.length - ( c - stats.span.min ) * stats.scale );
             // return ( int )( stats.length - ( c - stats.span.min ) *
             // stats.scale );
         }

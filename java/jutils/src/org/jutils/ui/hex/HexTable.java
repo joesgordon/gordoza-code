@@ -82,8 +82,8 @@ public class HexTable extends JTable
             column.setResizable( false );
         }
 
-        setPreferredScrollableViewportSize( new Dimension( w * 21,
-            25 * getRowHeight() ) );
+        setPreferredScrollableViewportSize(
+            new Dimension( w * 21, 25 * getRowHeight() ) );
     }
 
     /***************************************************************************
@@ -392,7 +392,8 @@ public class HexTable extends JTable
 
         @Override
         public Component getTableCellRendererComponent( JTable table,
-            Object value, boolean isSelected, boolean hasFocus, int row, int col )
+            Object value, boolean isSelected, boolean hasFocus, int row,
+            int col )
         {
             int selectStart = ht.selection.start;
             int selectEnd = ht.selection.end;

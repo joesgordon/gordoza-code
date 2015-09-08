@@ -29,9 +29,8 @@ public class RowHeaderRenderer implements ListCellRenderer<Object>
         return f;
     }
 
-    public Component getListCellRendererComponent(
-        JList<? extends Object> list, Object value, int index,
-        boolean isSelected, boolean cellHasFocus )
+    public Component getListCellRendererComponent( JList<? extends Object> list,
+        Object value, int index, boolean isSelected, boolean cellHasFocus )
     {
         Component c = tcr.getTableCellRendererComponent( table, value,
             isSelected, cellHasFocus, 0, 0 );

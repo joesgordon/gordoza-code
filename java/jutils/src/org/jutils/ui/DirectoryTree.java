@@ -75,7 +75,8 @@ public class DirectoryTree implements IView<JTree>
         tree.setCellRenderer( new Renderer() );
         tree.addTreeWillExpandListener( new ExpansionListener() );
 
-        tree.setDropTarget( new FileDropTarget( new FileDroppedListener( this ) ) );
+        tree.setDropTarget(
+            new FileDropTarget( new FileDroppedListener( this ) ) );
     }
 
     /***************************************************************************
@@ -188,9 +189,9 @@ public class DirectoryTree implements IView<JTree>
 
             if( node == null )
             {
-                System.err.println( "Could not find path " +
-                    dir.getAbsolutePath() + ":" + filesPath[i].getName() +
-                    " in " + dmtr.toString() );
+                System.err.println(
+                    "Could not find path " + dir.getAbsolutePath() + ":" +
+                        filesPath[i].getName() + " in " + dmtr.toString() );
                 path = new TreePath( dmtr.getPath() );
                 break;
             }
@@ -267,7 +268,8 @@ public class DirectoryTree implements IView<JTree>
                     dir.getPath() + ":" + file.getPath() );
                 return fn;
             }
-            else if( file.getAbsolutePath().compareTo( dir.getAbsolutePath() ) == 0 )
+            else if( file.getAbsolutePath().compareTo(
+                dir.getAbsolutePath() ) == 0 )
             {
                 LogUtils.printDebug( "DEBUG: Somehow " +
                     file.getAbsolutePath() + " which is a " + file.getClass() +
@@ -407,7 +409,8 @@ public class DirectoryTree implements IView<JTree>
         {
             if( desc == null )
             {
-                desc = DirectoryTree.FILE_SYSTEM.getSystemDisplayName( getFolder() );
+                desc = DirectoryTree.FILE_SYSTEM.getSystemDisplayName(
+                    getFolder() );
             }
 
             return desc;
@@ -439,8 +442,8 @@ public class DirectoryTree implements IView<JTree>
         {
         }
 
-        public Component getTreeCellRendererComponent( JTree tree,
-            Object value, boolean sel, boolean expanded, boolean leaf, int row,
+        public Component getTreeCellRendererComponent( JTree tree, Object value,
+            boolean sel, boolean expanded, boolean leaf, int row,
             boolean hasFocus )
         {
             super.getTreeCellRendererComponent( tree, value, sel, expanded,
@@ -457,8 +460,8 @@ public class DirectoryTree implements IView<JTree>
         }
     }
 
-    private static class FileDroppedListener implements
-        ItemActionListener<IFileDropEvent>
+    private static class FileDroppedListener
+        implements ItemActionListener<IFileDropEvent>
     {
         private final DirectoryTree tree;
 

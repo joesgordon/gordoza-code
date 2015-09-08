@@ -29,7 +29,8 @@ public class ReflectiveUpdater<T> implements IUpdater<T>
         }
     }
 
-    public ReflectiveUpdater( Object obj, String structureName, String dataName )
+    public ReflectiveUpdater( Object obj, String structureName,
+        String dataName )
     {
         this( obj, structureName + "." + dataName );
     }

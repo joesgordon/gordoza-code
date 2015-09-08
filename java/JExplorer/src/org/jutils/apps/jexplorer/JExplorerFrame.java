@@ -128,7 +128,9 @@ public class JExplorerFrame extends JFrame
      */
     private LinkedList<File> lastDirs = new LinkedList<File>();
 
-    /** The list of directories forward (in history) from the current directory. */
+    /**
+     * The list of directories forward (in history) from the current directory.
+     */
     private LinkedList<File> nextDirs = new LinkedList<File>();
 
     /***************************************************************************
@@ -160,12 +162,14 @@ public class JExplorerFrame extends JFrame
 
         exitMenuItem.setText( "Exit" );
         exitMenuItem.addActionListener( new ExitListener( this ) );
-        exitMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
+        exitMenuItem.setIcon(
+            IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
         fileMenu.add( exitMenuItem );
 
         toolsMenu.setText( "Tools" );
         optionsMenuItem.setText( "Options" );
-        optionsMenuItem.setIcon( IconConstants.loader.getIcon( IconConstants.CONFIG_16 ) );
+        optionsMenuItem.setIcon(
+            IconConstants.loader.getIcon( IconConstants.CONFIG_16 ) );
         // optionsMenuItem.setIcon( IconLoader.getIcon( IconLoader.EDIT_16 ) );
         optionsMenuItem.addActionListener( optionsMenuItemListener );
         toolsMenu.add( optionsMenuItem );
@@ -184,14 +188,16 @@ public class JExplorerFrame extends JFrame
 
         backButton.setText( "" );
         backButton.setToolTipText( BACKWARD_TIP );
-        backButton.setIcon( IconConstants.loader.getIcon( IconConstants.BACK_24 ) );
+        backButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.BACK_24 ) );
         backButton.setFocusable( false );
         backButton.setEnabled( false );
         backButton.addActionListener( backButtonListener );
 
         nextButton.setText( "" );
         nextButton.setToolTipText( FORWARD_TIP );
-        nextButton.setIcon( IconConstants.loader.getIcon( IconConstants.FORWARD_24 ) );
+        nextButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.FORWARD_24 ) );
         nextButton.setFocusable( false );
         nextButton.setEnabled( false );
         nextButton.addActionListener( nextButtonListener );
@@ -204,7 +210,8 @@ public class JExplorerFrame extends JFrame
 
         refreshButton.setText( "" );
         refreshButton.setToolTipText( "Refresh the current directory" );
-        refreshButton.setIcon( IconConstants.loader.getIcon( IconConstants.REFRESH_24 ) );
+        refreshButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.REFRESH_24 ) );
         refreshButton.setFocusable( false );
 
         toolbar.add( backButton );
@@ -223,12 +230,14 @@ public class JExplorerFrame extends JFrame
         addressField.setText( "" );
         addressField.addActionListener( addressFieldListener );
 
-        addressPanel.add( addressLabel, new GridBagConstraints( 0, 0, 1, 1,
-            0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 4, 4, 4, 4 ), 0, 0 ) );
-        addressPanel.add( addressField, new GridBagConstraints( 1, 0, 1, 1,
-            1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+        addressPanel.add( addressLabel,
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+        addressPanel.add( addressField,
+            new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
 
         // ---------------------------------------------------------------------
         // Setup main panel.
@@ -251,13 +260,15 @@ public class JExplorerFrame extends JFrame
         splitPane.setLeftComponent( treeScrollPane );
         splitPane.setRightComponent( tableScrollPane );
 
-        mainPanel.add( addressPanel, new GridBagConstraints( 0, 0, 1, 1, 1.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        mainPanel.add( addressPanel,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
-        mainPanel.add( splitPane, new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 4,
-                4, 4, 4 ), 0, 0 ) );
+        mainPanel.add( splitPane,
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
 
         // ---------------------------------------------------------------------
         // Setup frame
@@ -312,8 +323,9 @@ public class JExplorerFrame extends JFrame
                 showDirInTable( dir );
             }
             addressField.setText( dir.getAbsolutePath() );
-            statusPanel.setText( this.fileTable.getExplorerTableModel().getRowCount() +
-                " items." );
+            statusPanel.setText(
+                this.fileTable.getExplorerTableModel().getRowCount() +
+                    " items." );
         }
 
         upButton.setEnabled( parent != null );
@@ -362,9 +374,10 @@ public class JExplorerFrame extends JFrame
         }
         else
         {
-            JOptionPane.showMessageDialog( this,
-                "User does not have permissions to view: " + Utils.NEW_LINE +
-                    dir.getAbsolutePath(), "ERROR", JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog(
+                this, "User does not have permissions to view: " +
+                    Utils.NEW_LINE + dir.getAbsolutePath(),
+                "ERROR", JOptionPane.ERROR_MESSAGE );
         }
     }
 
@@ -513,8 +526,8 @@ public class JExplorerFrame extends JFrame
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class JExplorer_backButton_actionAdapter implements
-        ActionListener
+    private static class JExplorer_backButton_actionAdapter
+        implements ActionListener
     {
         private JExplorerFrame adaptee;
 
@@ -532,7 +545,8 @@ public class JExplorerFrame extends JFrame
 
                 adaptee.backButton.setEnabled( !adaptee.lastDirs.isEmpty() );
                 adaptee.nextButton.setEnabled( true );
-                adaptee.nextButton.setToolTipText( adaptee.currentDirectory.getAbsolutePath() );
+                adaptee.nextButton.setToolTipText(
+                    adaptee.currentDirectory.getAbsolutePath() );
 
                 adaptee.setDirectory( file );
 
@@ -576,7 +590,8 @@ class JExplorer_optionsMenuItem_actionAdapter implements ActionListener
 
     public void actionPerformed( ActionEvent e )
     {
-        FileConfigurationDialog dialog = FileConfigurationDialog.showDialog( adaptee );
+        FileConfigurationDialog dialog = FileConfigurationDialog.showDialog(
+            adaptee );
         dialog.getClass();
     }
 }
@@ -601,8 +616,9 @@ class JExplorer_addressField_actionAdapter implements ActionListener
         }
         else
         {
-            JOptionPane.showMessageDialog( adaptee, file.getAbsolutePath() +
-                " is not a directory!", "ERROR", JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog( adaptee,
+                file.getAbsolutePath() + " is not a directory!", "ERROR",
+                JOptionPane.ERROR_MESSAGE );
         }
     }
 }

@@ -16,7 +16,8 @@ class DayLabel extends JLabel
     /**  */
     private final Color dayFG = new Color( 0x00, 0x00, 0x00 );
     /**  */
-    private final Color daySelectedBG = UIManager.getColor( "TextArea.selectionBackground" );
+    private final Color daySelectedBG = UIManager.getColor(
+        "TextArea.selectionBackground" );
     /**  */
     private final Color daySelectedFG = new Color( 0xFF, 0xFF, 0xFF );
     /**  */

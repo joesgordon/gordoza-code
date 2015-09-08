@@ -185,21 +185,25 @@ public class SearchView implements IDataView<SearchParams>
         resultsPane.setRightComponent( rightResultsScroll );
         resultsPane.setDividerLocation( 300 );
 
-        view.add( createSearchPanel( enterListener ), new GridBagConstraints(
-            0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER,
-            GridBagConstraints.BOTH, new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        view.add( createSearchPanel( enterListener ),
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
-        view.add( createBrowsePanel( enterListener ), new GridBagConstraints(
-            0, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER,
-            GridBagConstraints.BOTH, new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        view.add( createBrowsePanel( enterListener ),
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
-        view.add( createOptionsPanel(), new GridBagConstraints( 0, 2, 1, 1,
-            1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        view.add( createOptionsPanel(),
+            new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
-        view.add( resultsPane, new GridBagConstraints( 0, 3, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 2,
-                2, 2, 2 ), 0, 0 ) );
+        view.add( resultsPane,
+            new GridBagConstraints( 0, 3, 1, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
         setData( new SearchParams() );
     }
@@ -222,28 +226,28 @@ public class SearchView implements IDataView<SearchParams>
         GridBagConstraints constraints;
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 0.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
         optionsPanel.add( createSizePanel(), constraints );
 
         constraints = new GridBagConstraints( 1, 0, 1, 1, 0.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
         optionsPanel.add( createTimePanel(), constraints );
 
         constraints = new GridBagConstraints( 2, 0, 1, 1, 0.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
         optionsPanel.add( createFileOptionsPanel(), constraints );
 
         constraints = new GridBagConstraints( 3, 0, 1, 1, 0.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
         optionsPanel.add( createContentOptionsPanel(), constraints );
 
         constraints = new GridBagConstraints( 4, 0, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
         optionsPanel.add( Box.createHorizontalStrut( 0 ), constraints );
 
         optionsPanel.setMinimumSize( optionsPanel.getPreferredSize() );
@@ -263,23 +267,23 @@ public class SearchView implements IDataView<SearchParams>
         sizePanel.setBorder( BorderFactory.createTitledBorder( "Size (kb)" ) );
 
         moreThanCheckBox.setText( "More Than :" );
-        moreThanCheckBox.setToolTipText( "Specifies that files should be "
-            + "larger than given." );
-        moreThanCheckBox.addActionListener( new CheckBoxEnabler_actionAdapter(
-            moreThanTextField ) );
+        moreThanCheckBox.setToolTipText(
+            "Specifies that files should be " + "larger than given." );
+        moreThanCheckBox.addActionListener(
+            new CheckBoxEnabler_actionAdapter( moreThanTextField ) );
         moreThanTextField.setColumns( 6 );
-        moreThanTextField.setToolTipText( "The amount the file should be "
-            + "larger than." );
+        moreThanTextField.setToolTipText(
+            "The amount the file should be " + "larger than." );
         moreThanTextField.setHorizontalAlignment( JTextField.RIGHT );
 
         lessThanCheckBox.setText( "Less Than :" );
-        lessThanCheckBox.setToolTipText( "Specifies that files should be "
-            + "smaller than given." );
-        lessThanCheckBox.addActionListener( new CheckBoxEnabler_actionAdapter(
-            lessThanTextField ) );
+        lessThanCheckBox.setToolTipText(
+            "Specifies that files should be " + "smaller than given." );
+        lessThanCheckBox.addActionListener(
+            new CheckBoxEnabler_actionAdapter( lessThanTextField ) );
         lessThanTextField.setColumns( 6 );
-        lessThanTextField.setToolTipText( "The amount the file should be "
-            + "smaller than." );
+        lessThanTextField.setToolTipText(
+            "The amount the file should be " + "smaller than." );
         lessThanTextField.setHorizontalAlignment( JTextField.RIGHT );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
@@ -297,8 +301,8 @@ public class SearchView implements IDataView<SearchParams>
             constraints );
 
         constraints = new GridBagConstraints( 0, 2, 3, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
         sizePanel.add( Box.createHorizontalStrut( 0 ), constraints );
 
         sizePanel.setMinimumSize( sizePanel.getPreferredSize() );
@@ -311,23 +315,24 @@ public class SearchView implements IDataView<SearchParams>
         JPanel advancedPanel = new JPanel( new GridBagLayout() );
         GridBagConstraints constraints;
 
-        advancedPanel.setBorder( BorderFactory.createTitledBorder( "Time Options" ) );
+        advancedPanel.setBorder(
+            BorderFactory.createTitledBorder( "Time Options" ) );
 
         afterCheckBox.setText( "After :" );
-        afterCheckBox.setToolTipText( "Specifies that files should be "
-            + "modified after the date given." );
-        afterCheckBox.addActionListener( new CheckBoxEnabler_actionAdapter(
-            afterTextField.getView() ) );
-        afterTextField.setToolTipText( "The date the file should be "
-            + "modified after." );
+        afterCheckBox.setToolTipText( "Specifies that files should be " +
+            "modified after the date given." );
+        afterCheckBox.addActionListener(
+            new CheckBoxEnabler_actionAdapter( afterTextField.getView() ) );
+        afterTextField.setToolTipText(
+            "The date the file should be " + "modified after." );
 
         beforeCheckBox.setText( "Before :" );
-        beforeCheckBox.setToolTipText( "Specifies that files should be "
-            + "modified before the date given." );
-        beforeCheckBox.addActionListener( new CheckBoxEnabler_actionAdapter(
-            beforeTextField.getView() ) );
-        beforeTextField.setToolTipText( "The date the file should be "
-            + "modified before." );
+        beforeCheckBox.setToolTipText( "Specifies that files should be " +
+            "modified before the date given." );
+        beforeCheckBox.addActionListener(
+            new CheckBoxEnabler_actionAdapter( beforeTextField.getView() ) );
+        beforeTextField.setToolTipText(
+            "The date the file should be " + "modified before." );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
@@ -344,8 +349,8 @@ public class SearchView implements IDataView<SearchParams>
             constraints );
 
         constraints = new GridBagConstraints( 0, 2, 3, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
         advancedPanel.add( Box.createHorizontalStrut( 0 ), constraints );
 
         return advancedPanel;
@@ -358,34 +363,38 @@ public class SearchView implements IDataView<SearchParams>
     {
         JPanel fileOptionsPanel = new JPanel( new GridBagLayout() );
 
-        fileOptionsPanel.setBorder( BorderFactory.createTitledBorder( "Filename Options" ) );
+        fileOptionsPanel.setBorder(
+            BorderFactory.createTitledBorder( "Filename Options" ) );
 
         fileRegexCheckBox.setText( "Use Regular Expressions" );
-        fileRegexCheckBox.setToolTipText( "Specifies to use regular instead "
-            + "of literal expressions." );
+        fileRegexCheckBox.setToolTipText(
+            "Specifies to use regular instead " + "of literal expressions." );
         fileMatchCheckBox.setText( "Match Case" );
-        fileMatchCheckBox.setToolTipText( "Specifies to match the case of "
-            + "the filename search." );
+        fileMatchCheckBox.setToolTipText(
+            "Specifies to match the case of " + "the filename search." );
         fileNotCheckBox.setText( "Specify Not Condition" );
-        fileNotCheckBox.setToolTipText( "Specifies to return all files "
-            + "NOT matched by the filename expression." );
+        fileNotCheckBox.setToolTipText( "Specifies to return all files " +
+            "NOT matched by the filename expression." );
 
-        fileOptionsPanel.add( fileRegexCheckBox, new GridBagConstraints( 0, 0,
-            1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        fileOptionsPanel.add( fileRegexCheckBox,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-        fileOptionsPanel.add( fileMatchCheckBox, new GridBagConstraints( 0, 1,
-            1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        fileOptionsPanel.add( fileMatchCheckBox,
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-        fileOptionsPanel.add( fileNotCheckBox, new GridBagConstraints( 0, 2, 1,
-            1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        fileOptionsPanel.add( fileNotCheckBox,
+            new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
         fileOptionsPanel.add( Box.createHorizontalStrut( 1 ),
             new GridBagConstraints( 0, 3, 1, 1, 1.0, 1.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
-                    0, 0, 0, 0 ), 0, 0 ) );
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
         return fileOptionsPanel;
     }
@@ -393,27 +402,30 @@ public class SearchView implements IDataView<SearchParams>
     private JPanel createContentOptionsPanel()
     {
         JPanel contentOptionsPanel = new JPanel( new GridBagLayout() );
-        contentOptionsPanel.setBorder( BorderFactory.createTitledBorder( "Content Options" ) );
+        contentOptionsPanel.setBorder(
+            BorderFactory.createTitledBorder( "Content Options" ) );
 
         contentRegexCheckBox.setText( "Use Regular Expressions" );
-        contentRegexCheckBox.setToolTipText( "Specifies to use regular "
-            + "instead of literal expressions." );
+        contentRegexCheckBox.setToolTipText(
+            "Specifies to use regular " + "instead of literal expressions." );
         contentMatchCheckBox.setText( "Match Case" );
-        contentMatchCheckBox.setToolTipText( "Specifies to match the case of "
-            + "the filename search." );
+        contentMatchCheckBox.setToolTipText(
+            "Specifies to match the case of " + "the filename search." );
 
-        contentOptionsPanel.add( contentRegexCheckBox, new GridBagConstraints(
-            0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER,
-            GridBagConstraints.BOTH, new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        contentOptionsPanel.add( contentRegexCheckBox,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-        contentOptionsPanel.add( contentMatchCheckBox, new GridBagConstraints(
-            0, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER,
-            GridBagConstraints.BOTH, new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        contentOptionsPanel.add( contentMatchCheckBox,
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
         contentOptionsPanel.add( Box.createHorizontalStrut( 1 ),
             new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
-                    0, 0, 0, 0 ), 0, 0 ) );
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
         return contentOptionsPanel;
     }
@@ -431,32 +443,37 @@ public class SearchView implements IDataView<SearchParams>
         browsePanel.setLayout( browseLayout );
 
         browseLabel.setText( "Search In :" );
-        searchInComboBox.setToolTipText( "The directory in which the "
-            + "search will be performed." );
+        searchInComboBox.setToolTipText(
+            "The directory in which the " + "search will be performed." );
         searchInComboBox.setModel( searchInModel );
         searchInComboBox.setEditable( true );
         searchInComboBox.getEditor().getEditorComponent().addKeyListener(
             enterListener );
 
         subfoldersCheckBox.setText( "Search Subfolders" );
-        subfoldersCheckBox.setToolTipText( "Signifies that sub folders "
-            + "should be searched." );
+        subfoldersCheckBox.setToolTipText(
+            "Signifies that sub folders " + "should be searched." );
         browseButton.setToolTipText( "Choose the directory to be searched." );
-        browseButton.setIcon( IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+        browseButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
         browseButton.addActionListener( browseListener );
 
-        browsePanel.add( browseLabel, new GridBagConstraints( 0, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(
-                2, 2, 2, 2 ), 0, 0 ) );
-        browsePanel.add( searchInComboBox, new GridBagConstraints( 1, 0, 1, 1,
-            1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        browsePanel.add( subfoldersCheckBox, new GridBagConstraints( 2, 0, 1,
-            1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        browsePanel.add( browseButton, new GridBagConstraints( 3, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        browsePanel.add( browseLabel,
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        browsePanel.add( searchInComboBox,
+            new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        browsePanel.add( subfoldersCheckBox,
+            new GridBagConstraints( 2, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        browsePanel.add( browseButton,
+            new GridBagConstraints( 3, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
         return browsePanel;
     }
@@ -471,8 +488,8 @@ public class SearchView implements IDataView<SearchParams>
         JLabel filenameLabel = new JLabel();
 
         filenameLabel.setText( "Filename : " );
-        filenameComboBox.setToolTipText( "Literal or regular expression for "
-            + "a filename." );
+        filenameComboBox.setToolTipText(
+            "Literal or regular expression for " + "a filename." );
         filenameComboBox.setModel( filenameModel );
         filenameComboBox.setEditable( true );
         filenameComboBox.getEditor().getEditorComponent().addKeyListener(
@@ -485,33 +502,38 @@ public class SearchView implements IDataView<SearchParams>
         startButton.addActionListener( startListener );
 
         contentsCheckBox.setText( "Containing Text :" );
-        contentsCheckBox.setToolTipText( "Signifies that contents should "
-            + "also be checked." );
-        contentsCheckBox.addActionListener( new CheckBoxEnabler_actionAdapter(
-            contentsComboBox ) );
-        contentsComboBox.setToolTipText( "Literal or regular expression "
-            + "for a line within a file." );
+        contentsCheckBox.setToolTipText(
+            "Signifies that contents should " + "also be checked." );
+        contentsCheckBox.addActionListener(
+            new CheckBoxEnabler_actionAdapter( contentsComboBox ) );
+        contentsComboBox.setToolTipText(
+            "Literal or regular expression " + "for a line within a file." );
         contentsComboBox.setModel( contentsModel );
         contentsComboBox.setEditable( true );
         contentsComboBox.getEditor().getEditorComponent().addKeyListener(
             enterListener );
 
-        searchPanel.add( filenameLabel, new GridBagConstraints( 0, 0, 1, 1,
-            0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        searchPanel.add( filenameComboBox, new GridBagConstraints( 1, 0, 1, 1,
-            1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        searchPanel.add( startButton, new GridBagConstraints( 2, 0, 1, 2, 0.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 2, 2, 2, 2 ), 10, 0 ) );
+        searchPanel.add( filenameLabel,
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        searchPanel.add( filenameComboBox,
+            new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        searchPanel.add( startButton,
+            new GridBagConstraints( 2, 0, 1, 2, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 2, 2, 2, 2 ), 10, 0 ) );
 
-        searchPanel.add( contentsCheckBox, new GridBagConstraints( 0, 1, 1, 1,
-            0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        searchPanel.add( contentsComboBox, new GridBagConstraints( 1, 1, 1, 1,
-            1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        searchPanel.add( contentsCheckBox,
+            new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        searchPanel.add( contentsComboBox,
+            new GridBagConstraints( 1, 1, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
         return searchPanel;
     }
@@ -538,12 +560,14 @@ public class SearchView implements IDataView<SearchParams>
 
         panel.setLayout( layout );
 
-        panel.add( left, new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 2,
-                2, 2, 2 ), 0, 0 ) );
-        panel.add( right, new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 2,
-                2, 2, 2 ), 0, 0 ) );
+        panel.add( left,
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        panel.add( right,
+            new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
         return panel;
     }
@@ -570,7 +594,8 @@ public class SearchView implements IDataView<SearchParams>
 
         params.searchSubfolders = subfoldersCheckBox.isSelected();
 
-        params.setSearchFolders( IOUtils.getFilesFromString( searchInComboBox.getSelectedItem().toString() ) );
+        params.setSearchFolders( IOUtils.getFilesFromString(
+            searchInComboBox.getSelectedItem().toString() ) );
 
         if( moreThanCheckBox.isSelected() )
         {
@@ -766,8 +791,8 @@ public class SearchView implements IDataView<SearchParams>
         {
             if( !f.isDirectory() )
             {
-                errBuffer.append( "Non-existant directory: " +
-                    f.getAbsolutePath() );
+                errBuffer.append(
+                    "Non-existant directory: " + f.getAbsolutePath() );
             }
         }
 
@@ -897,7 +922,8 @@ public class SearchView implements IDataView<SearchParams>
                     LineMatch line = ( LineMatch )lines.get( i );
                     // LogUtils.printDebug( "\tWriting line:" + i );
 
-                    rightResultsPane.appendText( line.lineNumber + ": \t", null );
+                    rightResultsPane.appendText( line.lineNumber + ": \t",
+                        null );
                     rightResultsPane.appendText( line.preMatch, null );
                     rightResultsPane.appendText( line.match, matchStyle );
                     rightResultsPane.appendText( line.postMatch, null );
@@ -919,7 +945,8 @@ public class SearchView implements IDataView<SearchParams>
      **************************************************************************/
     private void setSearchStarted()
     {
-        startButton.setIcon( IconConstants.loader.getIcon( IconConstants.STOP_16 ) );
+        startButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.STOP_16 ) );
         startButton.setText( "Stop" );
         startButton.setActionCommand( "Stop" );
     }
@@ -1011,8 +1038,8 @@ public class SearchView implements IDataView<SearchParams>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class SearchPanel_listSelectionAdapter implements
-        ListSelectionListener
+    private static class SearchPanel_listSelectionAdapter
+        implements ListSelectionListener
     {
         private SearchView adaptee;
 
@@ -1030,8 +1057,7 @@ public class SearchView implements IDataView<SearchParams>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class CheckBoxEnabler_actionAdapter implements
-        ActionListener
+    private static class CheckBoxEnabler_actionAdapter implements ActionListener
     {
         private JComponent [] components;
 
@@ -1101,7 +1127,8 @@ public class SearchView implements IDataView<SearchParams>
                     catch( Exception ex )
                     {
                         JOptionPane.showMessageDialog( panel.view,
-                            ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE );
+                            ex.getMessage(), "ERROR",
+                            JOptionPane.ERROR_MESSAGE );
                     }
                     // }
                 }

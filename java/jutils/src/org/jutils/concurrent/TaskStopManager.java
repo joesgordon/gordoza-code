@@ -12,7 +12,9 @@ import org.jutils.ui.event.ItemActionListener;
  ******************************************************************************/
 public final class TaskStopManager implements ITaskStopManager
 {
-    /** Execution continues as long as {@code continueRunning} is {@code true}. */
+    /**
+     * Execution continues as long as {@code continueRunning} is {@code true}.
+     */
     private volatile boolean continueRunning;
     /** {@code true} after {@link #run()} returns {@code false} otherwise. */
     private volatile boolean isFinished;
@@ -20,7 +22,9 @@ public final class TaskStopManager implements ITaskStopManager
     private final ReentrantLock stopLock;
     /** Condition used to signal that {@link #run()} is complete. */
     private final Condition stopCondition;
-    /** List of listeners to be called when {@link #signalFinished()} is called. */
+    /**
+     * List of listeners to be called when {@link #signalFinished()} is called.
+     */
     private final ItemActionList<Boolean> finishedListeners;
 
     /***************************************************************************

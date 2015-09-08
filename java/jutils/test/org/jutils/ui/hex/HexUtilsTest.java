@@ -1,10 +1,10 @@
 package org.jutils.ui.hex;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
 import org.jutils.NumberParsingUtils;
 import org.jutils.io.LogUtils;
+
+import junit.framework.Assert;
 
 public class HexUtilsTest
 {

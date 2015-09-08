@@ -104,8 +104,8 @@ public class TabComponentsDemo extends JFrame
         JMenuBar menuBar = new JMenuBar();
         // create Options menu
         tabComponentsItem = new JCheckBoxMenuItem( "Use TabComponents", true );
-        tabComponentsItem.setAccelerator( KeyStroke.getKeyStroke(
-            KeyEvent.VK_T, InputEvent.ALT_MASK ) );
+        tabComponentsItem.setAccelerator(
+            KeyStroke.getKeyStroke( KeyEvent.VK_T, InputEvent.ALT_MASK ) );
         tabComponentsItem.addActionListener( new ActionListener()
         {
             public void actionPerformed( ActionEvent e )
@@ -124,8 +124,8 @@ public class TabComponentsDemo extends JFrame
             }
         } );
         scrollLayoutItem = new JCheckBoxMenuItem( "Set ScrollLayout" );
-        scrollLayoutItem.setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_S,
-            InputEvent.ALT_MASK ) );
+        scrollLayoutItem.setAccelerator(
+            KeyStroke.getKeyStroke( KeyEvent.VK_S, InputEvent.ALT_MASK ) );
         scrollLayoutItem.addActionListener( new ActionListener()
         {
             public void actionPerformed( ActionEvent e )
@@ -141,8 +141,8 @@ public class TabComponentsDemo extends JFrame
             }
         } );
         JMenuItem resetItem = new JMenuItem( "Reset JTabbedPane" );
-        resetItem.setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_R,
-            InputEvent.ALT_MASK ) );
+        resetItem.setAccelerator(
+            KeyStroke.getKeyStroke( KeyEvent.VK_R, InputEvent.ALT_MASK ) );
         resetItem.addActionListener( new ActionListener()
         {
             public void actionPerformed( ActionEvent e )

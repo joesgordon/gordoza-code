@@ -21,8 +21,8 @@ public class GradientButtonUI extends BasicButtonUI
     {
         this.color1 = new Color( 0xCDCDCD );
         this.color2 = new Color( 0x050505 );
-        this.colorMouseHover = new Color( 192, 192, 192, 100 /* alpha */);
-        this.colorMouseClick = new Color( 90, 90, 90, 100 /* alpha */);
+        this.colorMouseHover = new Color( 192, 192, 192, 100 /* alpha */ );
+        this.colorMouseClick = new Color( 90, 90, 90, 100 /* alpha */ );
         this.colorFocus = new Color( 0xE0E0E0 );
     }
 
@@ -45,8 +45,8 @@ public class GradientButtonUI extends BasicButtonUI
 
             // Create a gradient paint with the colors provided.
             GradientPaint gradient;
-            gradient = new GradientPaint( 0, 0, color1, 0, c.getHeight() -
-                c.getHeight() / 3, color2 );
+            gradient = new GradientPaint( 0, 0, color1, 0,
+                c.getHeight() - c.getHeight() / 3, color2 );
 
             Paint oldPaint = g2.getPaint();
             g2.setPaint( gradient );
@@ -65,8 +65,8 @@ public class GradientButtonUI extends BasicButtonUI
         paint( g, c );
     }
 
-    protected void paintFocus( Graphics g, AbstractButton b,
-        Rectangle viewRect, Rectangle textRect, Rectangle iconRect )
+    protected void paintFocus( Graphics g, AbstractButton b, Rectangle viewRect,
+        Rectangle textRect, Rectangle iconRect )
     {
         super.paintFocus( g, b, viewRect, textRect, iconRect );
     }

@@ -15,7 +15,8 @@ import org.jutils.PropConstants;
 public class ByteCellRenderer implements TableCellRenderer
 {
     /**  */
-    public static final Color ALTERNATING_ROW_COLOR = new Color( 210, 225, 240 );
+    public static final Color ALTERNATING_ROW_COLOR = new Color( 210, 225,
+        240 );
 
     /**  */
     private final DefaultTableCellRenderer renderer;

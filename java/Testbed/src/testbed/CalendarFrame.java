@@ -21,8 +21,8 @@ public class CalendarFrame extends JFrame
     private CalendarPanel calPanel = new CalendarPanel();
 
     /***************************************************************************
-	 * 
-	 **************************************************************************/
+     * 
+     **************************************************************************/
     public CalendarFrame()
     {
         try
@@ -49,9 +49,10 @@ public class CalendarFrame extends JFrame
 
         calPanel.setDate( null );
 
-        contentPane.add( calPanel.getView(), new GridBagConstraints( 0, 0, 1,
-            1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        contentPane.add( calPanel.getView(),
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
     }
 
     /***************************************************************************
@@ -65,7 +66,8 @@ public class CalendarFrame extends JFrame
             {
                 try
                 {
-                    UIManager.setLookAndFeel( com.jgoodies.looks.Options.getCrossPlatformLookAndFeelClassName() );
+                    UIManager.setLookAndFeel(
+                        com.jgoodies.looks.Options.getCrossPlatformLookAndFeelClassName() );
                     // UIManager.setLookAndFeel( UIManager.
                     // getCrossPlatformLookAndFeelClassName() );
                 }

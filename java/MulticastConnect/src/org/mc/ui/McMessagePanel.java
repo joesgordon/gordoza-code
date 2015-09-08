@@ -9,8 +9,8 @@ import org.mc.McMessage;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class McMessagePanel extends JPanel implements
-    ListCellRenderer<McMessage>
+public class McMessagePanel extends JPanel
+    implements ListCellRenderer<McMessage>
 {
     /**  */
     private JLabel addressLabel;
@@ -54,27 +54,33 @@ public class McMessagePanel extends JPanel implements
         contentsField.setOpaque( false );
         contentsField.setEditable( false );
 
-        add( addressLabel, new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets( 2, 2,
-                2, 2 ), 0, 0 ) );
-        add( addressField, new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 2, 2,
-                2, 2 ), 0, 0 ) );
+        add( addressLabel,
+            new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        add( addressField,
+            new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-        add( timeLabel, new GridBagConstraints( 2, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets( 2, 2,
-                2, 2 ), 0, 0 ) );
-        add( timeField, new GridBagConstraints( 3, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 2, 2,
-                2, 2 ), 0, 0 ) );
+        add( timeLabel,
+            new GridBagConstraints( 2, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        add( timeField,
+            new GridBagConstraints( 3, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-        add( contentsField, new GridBagConstraints( 0, 2, 4, 1, 1.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 2, 2,
-                2, 2 ), 0, 0 ) );
+        add( contentsField,
+            new GridBagConstraints( 0, 2, 4, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-        add( Box.createVerticalStrut( 0 ), new GridBagConstraints( 1, 10, 4, 1,
-            1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        add( Box.createVerticalStrut( 0 ),
+            new GridBagConstraints( 1, 10, 4, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
         backgroundColor = Color.white;
         foregroundColor = contentsField.getForeground();
@@ -115,8 +121,8 @@ public class McMessagePanel extends JPanel implements
     {
         String selfStr = msg.selfMessage ? "(Self) " : "";
         addressField.setText( selfStr + msg.address );
-        contentsField.setText( new String( msg.contents, 0,
-            msg.contents.length - 1 ) );
+        contentsField.setText(
+            new String( msg.contents, 0, msg.contents.length - 1 ) );
         timeField.setText( msg.getDateTime() );
     }
 }

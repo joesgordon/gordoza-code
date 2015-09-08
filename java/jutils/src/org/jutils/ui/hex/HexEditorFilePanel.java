@@ -62,9 +62,10 @@ public class HexEditorFilePanel implements IView<JPanel>
         titlePanel.setTitle( "No File Loaded" );
         titlePanel.setComponent( titleContent );
 
-        view.add( createContentPanel(), new GridBagConstraints( 0, 0, 1, 1,
-            1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+        view.add( createContentPanel(),
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
     }
 
     /***************************************************************************
@@ -91,9 +92,10 @@ public class HexEditorFilePanel implements IView<JPanel>
         // Setup progress bar.
         // ---------------------------------------------------------------------
         progressBar.setLayout( new GridBagLayout() );
-        progressBar.add( offsetLabel, new GridBagConstraints( 0, 0, 1, 1, 1.0,
-            1.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(
-                2, 10, 2, 10 ), 0, 0 ) );
+        progressBar.add( offsetLabel,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 2, 10, 2, 10 ), 0, 0 ) );
 
         progressBar.setLength( 100 );
         progressBar.setOffset( 0 );
@@ -104,8 +106,8 @@ public class HexEditorFilePanel implements IView<JPanel>
         // editor.setShowGrid( true );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
         panel.add( hexView.getView(), constraints );
 
         constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
@@ -138,9 +140,9 @@ public class HexEditorFilePanel implements IView<JPanel>
         hexView.setStartingAddress( startOffset );
         hexView.setBuffer( new ByteBuffer( buffer ) );
 
-        offsetLabel.setText( String.format(
-            "Showing 0x%016X - 0x%016X of 0x%016X", startOffset,
-            nextOffset - 1, fileLength ) );
+        offsetLabel.setText(
+            String.format( "Showing 0x%016X - 0x%016X of 0x%016X", startOffset,
+                nextOffset - 1, fileLength ) );
 
         // TODO create listener list to notify when buttons should be
         // dis/en-abled

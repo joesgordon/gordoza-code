@@ -212,7 +212,8 @@ public class FileChooserListener implements ActionListener
         String filename = file.getName();
         int dotIndex = filename.length() - extension.length() - 1;
 
-        if( !( filename.endsWith( extension ) && filename.charAt( dotIndex ) == '.' ) )
+        if( !( filename.endsWith( extension ) &&
+            filename.charAt( dotIndex ) == '.' ) )
         {
             file = new File( file.getParentFile(), filename + "." + extension );
         }

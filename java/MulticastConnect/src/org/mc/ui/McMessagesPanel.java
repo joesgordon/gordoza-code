@@ -51,21 +51,22 @@ public class McMessagesPanel extends JPanel
         vScrollBar.addAdjustmentListener( new EndScroller( vScrollBar ) );
         filterCheckBox.addActionListener( new FilterCheckListener() );
 
-        setBorder( BorderFactory.createTitledBorder( "Sent/Received Messages" ) );
+        setBorder(
+            BorderFactory.createTitledBorder( "Sent/Received Messages" ) );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 6, 6,
-                6, 6 ), 0, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.NONE,
+            new Insets( 6, 6, 6, 6 ), 0, 0 );
         add( filterCheckBox, constraints );
 
         constraints = new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.CENTER, new Insets( 6,
-                0, 6, 6 ), 20, 10 );
+            GridBagConstraints.EAST, GridBagConstraints.CENTER,
+            new Insets( 6, 0, 6, 6 ), 20, 10 );
         add( clearButton, constraints );
 
         constraints = new GridBagConstraints( 0, 1, 2, 1, 1.0, 1.0,
-            GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets( 0, 6,
-                6, 6 ), 0, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.BOTH,
+            new Insets( 0, 6, 6, 6 ), 0, 0 );
         add( displayScrollPane, constraints );
 
         setMinimumSize( new Dimension( 200, 200 ) );

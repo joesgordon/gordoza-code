@@ -9,8 +9,8 @@ import javax.swing.*;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class StandardUncaughtExceptionHandler implements
-    Thread.UncaughtExceptionHandler
+public class StandardUncaughtExceptionHandler
+    implements Thread.UncaughtExceptionHandler
 {
     /**  */
     private final JFrame frame;
@@ -52,8 +52,8 @@ public class StandardUncaughtExceptionHandler implements
      **************************************************************************/
     private void displayException( Throwable ex )
     {
-        exView.setMessage( "The following error has occurred. You may "
-            + "choose to ignore and continue or quit." );
+        exView.setMessage( "The following error has occurred. You may " +
+            "choose to ignore and continue or quit." );
 
         exView.setException( ex );
 

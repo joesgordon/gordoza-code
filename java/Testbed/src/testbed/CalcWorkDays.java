@@ -73,7 +73,8 @@ public class CalcWorkDays
         printNumDays( 0, startCal, endCal );
 
         // end Saturday to start Saturday
-        int days = ( int )( ( endCal.getTimeInMillis() - startCal.getTimeInMillis() ) / MILLIS_IN_DAY );
+        int days = ( int )( ( endCal.getTimeInMillis() -
+            startCal.getTimeInMillis() ) / MILLIS_IN_DAY );
         days = days - ( days * 2 / 7 );
 
         return days - dow1 + dow2;
@@ -185,7 +186,8 @@ public class CalcWorkDays
     {
         int numDays;
 
-        numDays = getWorkingDaysBetweenTwoDates( start.getTime(), end.getTime() );
+        numDays = getWorkingDaysBetweenTwoDates( start.getTime(),
+            end.getTime() );
         printNumDays( numDays, start, end );
 
         numDays = getWorkingDays( start, end );

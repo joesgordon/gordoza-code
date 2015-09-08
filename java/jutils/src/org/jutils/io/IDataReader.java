@@ -9,6 +9,6 @@ public interface IDataReader<T> extends IReader<T, IDataStream>
      * @return
      * @throws IOException
      **************************************************************************/
-    public T read( IDataStream stream ) throws IOException,
-        RuntimeFormatException;
+    public T read( IDataStream stream )
+        throws IOException, RuntimeFormatException;
 }

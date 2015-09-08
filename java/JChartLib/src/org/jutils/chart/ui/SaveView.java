@@ -35,10 +35,10 @@ public class SaveView implements IDataView<SaveOptions>
 
         outputField.addChangeListener( new ItemActionUpdater<>(
             new ReflectiveUpdater<File>( this, "options.file" ) ) );
-        widthField.setUpdater( new ReflectiveUpdater<Integer>( this,
-            "options.size.width" ) );
-        heightField.setUpdater( new ReflectiveUpdater<Integer>( this,
-            "options.size.height" ) );
+        widthField.setUpdater(
+            new ReflectiveUpdater<Integer>( this, "options.size.width" ) );
+        heightField.setUpdater(
+            new ReflectiveUpdater<Integer>( this, "options.size.height" ) );
     }
 
     @Override

@@ -194,8 +194,8 @@ public class ItemsTableModel<T> extends AbstractTableModel
 
         if( col < 0 || col > columnNames.size() )
         {
-            throw new IllegalArgumentException( "Unsupported column index: " +
-                col );
+            throw new IllegalArgumentException(
+                "Unsupported column index: " + col );
         }
 
         return tableConfig.getItemData( item, col );
@@ -211,8 +211,8 @@ public class ItemsTableModel<T> extends AbstractTableModel
 
         if( col < 0 || col > columnNames.size() )
         {
-            throw new IllegalArgumentException( "Unsupported column index: " +
-                col );
+            throw new IllegalArgumentException(
+                "Unsupported column index: " + col );
         }
 
         tableConfig.setItemData( item, col, data );

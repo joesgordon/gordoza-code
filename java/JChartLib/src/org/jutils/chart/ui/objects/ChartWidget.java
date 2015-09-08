@@ -122,7 +122,8 @@ public class ChartWidget implements IChartWidget
      * @param wLoc
      * @param wSize
      **************************************************************************/
-    private void drawSubtitle( Graphics2D graphics, Point wLoc, Dimension wSize )
+    private void drawSubtitle( Graphics2D graphics, Point wLoc,
+        Dimension wSize )
     {
         if( chart.subtitle.visible )
         {
@@ -145,7 +146,8 @@ public class ChartWidget implements IChartWidget
      * @param wLoc
      * @param wSize
      **************************************************************************/
-    private void drawTopBottom( Graphics2D graphics, Point wLoc, Dimension wSize )
+    private void drawTopBottom( Graphics2D graphics, Point wLoc,
+        Dimension wSize )
     {
         if( chart.topBottomLabel.visible )
         {

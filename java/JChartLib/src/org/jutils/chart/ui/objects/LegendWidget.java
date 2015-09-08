@@ -70,8 +70,8 @@ public class LegendWidget implements IChartWidget
                     return caluclateSize( canvasSize, true );
             }
 
-            throw new IllegalStateException( "Unsupported legend side: " +
-                chart.chart.legend.side );
+            throw new IllegalStateException(
+                "Unsupported legend side: " + chart.chart.legend.side );
         }
 
         return size;
@@ -214,8 +214,9 @@ public class LegendWidget implements IChartWidget
                 nameLabel.text = key.s.series.name;
                 Dimension ts = nameWidget.calculateSize( key.size );
                 nameWidget.repaint();
-                nameWidget.draw( graphics, new Point( x, y +
-                    ( key.size.height - ts.height ) / 2 ), key.size );
+                nameWidget.draw( graphics,
+                    new Point( x, y + ( key.size.height - ts.height ) / 2 ),
+                    key.size );
 
                 p.x = p.x + 6;
                 p.y = p.y + key.size.height / 2;
@@ -278,12 +279,13 @@ public class LegendWidget implements IChartWidget
                 x += isVertical ? 0 : key.size.width + itemSpacing;
                 y += isVertical ? key.size.height + itemSpacing : 0;
 
-                list.size.width = isVertical ? Math.max( list.size.width,
-                    key.size.width ) : list.size.width + key.size.width + space;
+                list.size.width = isVertical
+                    ? Math.max( list.size.width, key.size.width )
+                    : list.size.width + key.size.width + space;
 
-                list.size.height = isVertical ? list.size.height +
-                    key.size.height + space : Math.max( list.size.height,
-                    key.size.height );
+                list.size.height = isVertical
+                    ? list.size.height + key.size.height + space
+                    : Math.max( list.size.height, key.size.height );
             }
 
             for( KeyList kl : items )

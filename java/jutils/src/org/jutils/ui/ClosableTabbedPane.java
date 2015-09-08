@@ -141,7 +141,8 @@ public class ClosableTabbedPane extends JTabbedPane
             {
                 return;
             }
-            Rectangle rect = ( ( CloseTabIcon )getIconAt( tabNumber ) ).getBounds();
+            Rectangle rect = ( ( CloseTabIcon )getIconAt(
+                tabNumber ) ).getBounds();
             if( rect.contains( e.getX(), e.getY() ) )
             {
                 // the tab is being closed

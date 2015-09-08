@@ -86,15 +86,15 @@ public class ZipWriter implements Closeable
         return contents;
     }
 
-    private static void addContents( File dir, String path, DirContents contents )
-        throws IOException
+    private static void addContents( File dir, String path,
+        DirContents contents ) throws IOException
     {
         File [] files = dir.listFiles();
 
         if( files == null )
         {
-            throw new IOException( "Cannot list files in directory: " +
-                dir.getAbsolutePath() );
+            throw new IOException(
+                "Cannot list files in directory: " + dir.getAbsolutePath() );
         }
 
         for( File f : files )

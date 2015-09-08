@@ -38,17 +38,20 @@ public class ProgressDialog extends JDialog
 
         // cancelButton.
 
-        panel.add( statusLabel, new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
-                4, 4, 2, 4 ), 0, 0 ) );
+        panel.add( statusLabel,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 4, 4, 2, 4 ), 0, 0 ) );
 
-        panel.add( progressBar, new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
-                2, 4, 4, 4 ), 0, 0 ) );
+        panel.add( progressBar,
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 2, 4, 4, 4 ), 0, 0 ) );
 
-        panel.add( cancelButton, new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets( 0,
-                4, 0, 4 ), 30, 15 ) );
+        panel.add( cancelButton,
+            new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets( 0, 4, 0, 4 ), 30, 15 ) );
 
         return panel;
     }

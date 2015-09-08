@@ -4,8 +4,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -322,8 +322,8 @@ public class PropEditPanel
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class ColorUIResourceRenderer implements
-        IRenderer<ColorUIResource>
+    private static class ColorUIResourceRenderer
+        implements IRenderer<ColorUIResource>
     {
         private ColorRenderer renderer = new ColorRenderer();
 
@@ -349,13 +349,13 @@ public class PropEditPanel
 
             button.setData( c );
 
-            button.addUpdateListener( new ButtonListener( button, props, key ) );
+            button.addUpdateListener(
+                new ButtonListener( button, props, key ) );
 
             return button.getView();
         }
 
-        private static class ButtonListener implements
-            ItemActionListener<Color>
+        private static class ButtonListener implements ItemActionListener<Color>
         {
             private final ColorButtonView button;
             private final Map<Object, Object> props;
@@ -484,8 +484,8 @@ public class PropEditPanel
         private final JTextField field;
         private final Map<Object, Object> props;
 
-        public ValueDocumentListener( JTextField field,
-            Map<Object, Object> map, Object key )
+        public ValueDocumentListener( JTextField field, Map<Object, Object> map,
+            Object key )
         {
             this.field = field;
             this.key = key;
@@ -520,8 +520,8 @@ public class PropEditPanel
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class EntryComparator implements
-        Comparator<Entry<Object, Object>>
+    private static class EntryComparator
+        implements Comparator<Entry<Object, Object>>
     {
         @Override
         public int compare( Entry<Object, Object> thisEntry,

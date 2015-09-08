@@ -50,10 +50,11 @@ public class TestProb4
 
             p = new Period( start, stop );
 
-            System.out.println( "The calculation took: " +
-                daysHoursMinutes.print( p ) );
+            System.out.println(
+                "The calculation took: " + daysHoursMinutes.print( p ) );
 
-            p = new Period( ( stop.getMillis() - start.getMillis() ) * ( i + 1 ) );
+            p = new Period(
+                ( stop.getMillis() - start.getMillis() ) * ( i + 1 ) );
             System.out.println( "The calculation for " + ( i + 1 ) +
                 " should take: " + daysHoursMinutes.print( p ) );
 

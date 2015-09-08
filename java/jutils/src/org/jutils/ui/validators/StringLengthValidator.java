@@ -68,8 +68,8 @@ public class StringLengthValidator implements IDataValidator<String>
             }
             else
             {
-                throw new ValidationException( "Must be at least " + minLength +
-                    " characters." );
+                throw new ValidationException(
+                    "Must be at least " + minLength + " characters." );
             }
         }
 

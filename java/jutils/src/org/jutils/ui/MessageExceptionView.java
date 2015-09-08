@@ -38,8 +38,8 @@ public class MessageExceptionView implements IView<JComponent>
         panel.add( messageField, constraints );
 
         constraints = new GridBagConstraints( 0, row++, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
         panel.add( exceptionField.getView(), constraints );
 
         return panel;
@@ -95,8 +95,8 @@ public class MessageExceptionView implements IView<JComponent>
         SwingUtilities.invokeLater( new AppRunner( app ) );
     }
 
-    public static void invokeAndWait( Throwable ex, String title, String message )
-        throws InvocationTargetException, InterruptedException
+    public static void invokeAndWait( Throwable ex, String title,
+        String message ) throws InvocationTargetException, InterruptedException
     {
         IApplication app = new DefaultApp( ex, title, message );
 

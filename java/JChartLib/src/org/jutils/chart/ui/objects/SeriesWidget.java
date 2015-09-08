@@ -4,7 +4,8 @@ import java.awt.*;
 
 import org.jutils.SwingUtils;
 import org.jutils.chart.ChartUtils;
-import org.jutils.chart.data.*;
+import org.jutils.chart.data.Bounds;
+import org.jutils.chart.data.ChartContext;
 import org.jutils.chart.data.ChartContext.IDimensionCoords;
 import org.jutils.chart.model.*;
 import org.jutils.chart.ui.IChartWidget;
@@ -52,7 +53,8 @@ public class SeriesWidget implements IChartWidget
         highlight.setColor( series.highlight.color );
         line.setColor( series.line.color );
         line.setSize( series.line.weight );
-        selectedMarker.setColor( SwingUtils.inverseColor( series.marker.color ) );
+        selectedMarker.setColor(
+            SwingUtils.inverseColor( series.marker.color ) );
 
         trackPoint = true;
 
@@ -75,7 +77,8 @@ public class SeriesWidget implements IChartWidget
         highlight.setColor( series.highlight.color );
         line.setColor( series.line.color );
         line.setSize( series.line.weight );
-        selectedMarker.setColor( SwingUtils.inverseColor( series.marker.color ) );
+        selectedMarker.setColor(
+            SwingUtils.inverseColor( series.marker.color ) );
 
         Point p = new Point();
         Point last = new Point( -100, -100 );
@@ -90,8 +93,8 @@ public class SeriesWidget implements IChartWidget
         // Span spany = series.isPrimaryRange ? context.primaryRangeSpan
         // : context.secondaryRangeSpan;
 
-        IDimensionCoords domain = series.isPrimaryDomain ? context.domain.primary
-            : context.domain.secondary;
+        IDimensionCoords domain = series.isPrimaryDomain
+            ? context.domain.primary : context.domain.secondary;
         IDimensionCoords range = series.isPrimaryRange ? context.range.primary
             : context.range.secondary;
 

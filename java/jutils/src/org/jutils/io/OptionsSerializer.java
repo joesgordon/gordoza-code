@@ -106,9 +106,8 @@ public class OptionsSerializer<T>
             }
             catch( XStreamException ex )
             {
-                file.renameTo( new File(
-                    file.getAbsoluteFile().getParentFile(), file.getName() +
-                        ".broken" ) );
+                file.renameTo( new File( file.getAbsoluteFile().getParentFile(),
+                    file.getName() + ".broken" ) );
                 options = getDefault();
                 write();
                 creator.warn( "User options file is out of date: " +
@@ -134,7 +133,8 @@ public class OptionsSerializer<T>
             {
                 creator.warn( "Existing user options are of type " +
                     obj.getClass().getName() +
-                    " and are not assignable to the type " + options.getClass() );
+                    " and are not assignable to the type " +
+                    options.getClass() );
                 options = getDefault();
             }
         }
@@ -177,8 +177,9 @@ public class OptionsSerializer<T>
         }
         catch( XStreamException ex )
         {
-            creator.warn( "Unable to write options because of an serialization error: " +
-                ex.getMessage() );
+            creator.warn(
+                "Unable to write options because of an serialization error: " +
+                    ex.getMessage() );
         }
     }
 
@@ -214,13 +215,13 @@ public class OptionsSerializer<T>
             }
             catch( NoSuchMethodException ex )
             {
-                throw new IllegalArgumentException( cls.getName() +
-                    " has no default constructor", ex );
+                throw new IllegalArgumentException(
+                    cls.getName() + " has no default constructor", ex );
             }
             catch( SecurityException ex )
             {
-                throw new IllegalArgumentException( cls.getName() +
-                    " has no accesible constructor", ex );
+                throw new IllegalArgumentException(
+                    cls.getName() + " has no accesible constructor", ex );
             }
         }
 
@@ -274,8 +275,9 @@ public class OptionsSerializer<T>
     {
         if( !IOUtils.ensureParentExists( file ) )
         {
-            LogUtils.printWarning( "User options directory cannot be created: " +
-                file.getParentFile().getAbsolutePath() );
+            LogUtils.printWarning(
+                "User options directory cannot be created: " +
+                    file.getParentFile().getAbsolutePath() );
         }
 
         return new OptionsSerializer<T>( creator, file );

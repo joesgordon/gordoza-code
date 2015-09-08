@@ -58,14 +58,15 @@ public class SeriesView implements IDataView<Series>
 
         setData( new Series( new DefaultSeries( new ArrayList<XYPoint>() ) ) );
 
-        titleField.setUpdater( new ReflectiveUpdater<String>( this,
-            "series.name" ) );
+        titleField.setUpdater(
+            new ReflectiveUpdater<String>( this, "series.name" ) );
 
         visibleField.addActionListener( new CheckBoxUpdater(
             new ReflectiveUpdater<Boolean>( this, "series.visible" ) ) );
 
-        primaryDomainField.addActionListener( new CheckBoxUpdater(
-            new ReflectiveUpdater<Boolean>( this, "series.isPrimaryDomain" ) ) );
+        primaryDomainField.addActionListener(
+            new CheckBoxUpdater( new ReflectiveUpdater<Boolean>( this,
+                "series.isPrimaryDomain" ) ) );
 
         primaryRangeField.addActionListener( new CheckBoxUpdater(
             new ReflectiveUpdater<Boolean>( this, "series.isPrimaryRange" ) ) );

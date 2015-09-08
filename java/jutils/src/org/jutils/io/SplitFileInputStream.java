@@ -27,8 +27,8 @@ public class SplitFileInputStream extends InputStream
         {
             if( !setupNextFile() )
             {
-                throw new FileNotFoundException( "File cannot be found: " +
-                    file.getAbsolutePath() );
+                throw new FileNotFoundException(
+                    "File cannot be found: " + file.getAbsolutePath() );
             }
         }
         catch( IOException ex )
@@ -91,7 +91,7 @@ public class SplitFileInputStream extends InputStream
      * @return int
      * @throws IOException
      **************************************************************************/
-    public int read( byte b [] ) throws IOException
+    public int read( byte b[] ) throws IOException
     {
         return this.read( b, 0, b.length );
     }
@@ -103,7 +103,7 @@ public class SplitFileInputStream extends InputStream
      * @return int
      * @throws IOException
      **************************************************************************/
-    public int read( byte b [], int off, int len ) throws IOException
+    public int read( byte b[], int off, int len ) throws IOException
     {
         int thisLen = 0;
         int bytesRead = 0;

@@ -82,8 +82,8 @@ public class AltEditorPane extends JTextPane
         }
         else
         {
-            throw new IllegalArgumentException( "Document must be of type " +
-                StyledDocument.class.getName() );
+            throw new IllegalArgumentException(
+                "Document must be of type " + StyledDocument.class.getName() );
         }
     }
 
@@ -106,7 +106,8 @@ public class AltEditorPane extends JTextPane
         Component parent = getParent();
         ComponentUI ui = getUI();
 
-        return parent != null ? ( ui.getPreferredSize( this ).width <= parent.getSize().width )
+        return parent != null
+            ? ( ui.getPreferredSize( this ).width <= parent.getSize().width )
             : true;
     }
 

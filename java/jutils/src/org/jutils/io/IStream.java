@@ -67,8 +67,8 @@ public interface IStream extends Closeable
      * than end of file, or if the stream has been closed, or if some other I/O
      * error occurs.
      **************************************************************************/
-    public void readFully( byte [] buf, int off, int len ) throws EOFException,
-        IOException;
+    public void readFully( byte [] buf, int off, int len )
+        throws EOFException, IOException;
 
     /***************************************************************************
      * Closes this stream and releases any system resources associated with the

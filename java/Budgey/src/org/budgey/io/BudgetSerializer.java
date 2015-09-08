@@ -10,8 +10,8 @@ import org.jutils.io.XStreamUtils;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class BudgetSerializer implements
-    ISerializer<Budget, InputStream, OutputStream>
+public class BudgetSerializer
+    implements ISerializer<Budget, InputStream, OutputStream>
 {
     /***************************************************************************
      * 

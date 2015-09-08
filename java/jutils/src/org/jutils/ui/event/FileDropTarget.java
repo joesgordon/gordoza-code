@@ -120,8 +120,8 @@ public class FileDropTarget extends DropTarget
         public static <T> void invokeLater( ItemActionListener<T> listener,
             ItemActionEvent<T> event )
         {
-            SwingUtilities.invokeLater( new ItemActionRunnable<>( listener,
-                event ) );
+            SwingUtilities.invokeLater(
+                new ItemActionRunnable<>( listener, event ) );
         }
     }
 
@@ -165,8 +165,8 @@ public class FileDropTarget extends DropTarget
      * Generic implementation of an {@link ItemActionListener} for use in a
      * {@link FileDropTarget}
      **************************************************************************/
-    public static class JTextFieldFilesListener implements
-        ItemActionListener<IFileDropEvent>
+    public static class JTextFieldFilesListener
+        implements ItemActionListener<IFileDropEvent>
     {
         private final JTextField field;
         private final ExistenceType existence;
@@ -198,7 +198,8 @@ public class FileDropTarget extends DropTarget
                 {
                     continue;
                 }
-                else if( existence == ExistenceType.FILE_ONLY && !file.isFile() )
+                else if( existence == ExistenceType.FILE_ONLY &&
+                    !file.isFile() )
                 {
                     continue;
                 }

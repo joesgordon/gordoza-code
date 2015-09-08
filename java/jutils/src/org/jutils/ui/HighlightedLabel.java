@@ -114,8 +114,8 @@ public class HighlightedLabel extends JLabel
                 return;
             }
             int txtWidth = fontMetrics.stringWidth( text );
-            int offWidth = fontMetrics.stringWidth( text.substring( 0,
-                highlightOffset ) );
+            int offWidth = fontMetrics.stringWidth(
+                text.substring( 0, highlightOffset ) );
             int highWidth = fontMetrics.stringWidth( text.substring(
                 highlightOffset, highlightOffset + highlightLength ) );
             int x = offWidth;
@@ -154,17 +154,17 @@ public class HighlightedLabel extends JLabel
                 JFrame frame = new JFrame();
                 JPanel panel = new JPanel();
 
-                HighlightedLabel label1 = new HighlightedLabel( new Font(
-                    "Monospaced", Font.PLAIN, 12 ) );
+                HighlightedLabel label1 = new HighlightedLabel(
+                    new Font( "Monospaced", Font.PLAIN, 12 ) );
                 label1.setText( "Sample un-highlighted" );
 
-                HighlightedLabel label2 = new HighlightedLabel( new Font(
-                    "Sans Serif", Font.BOLD, 16 ) );
+                HighlightedLabel label2 = new HighlightedLabel(
+                    new Font( "Sans Serif", Font.BOLD, 16 ) );
                 label2.setText( "Sample with highlight" );
                 label2.setHighlight( 12, 9 );
 
-                HighlightedLabel label3 = new HighlightedLabel( new Font(
-                    "Sans Serif", Font.BOLD, 16 ) );
+                HighlightedLabel label3 = new HighlightedLabel(
+                    new Font( "Sans Serif", Font.BOLD, 16 ) );
                 label3.setText( "Sample with highlight" );
                 label3.setHighlight( 12, 9 );
                 label3.setHorizontalAlignment( SwingConstants.CENTER );
@@ -175,22 +175,22 @@ public class HighlightedLabel extends JLabel
                 label4.setHighlight( 8, 3 );
 
                 panel.setLayout( new GridBagLayout() );
-                panel.add( label1, new GridBagConstraints( 0, 0, 1, 1, 1.0,
-                    0.33, GridBagConstraints.NORTH,
-                    GridBagConstraints.HORIZONTAL, new Insets( 3, 3, 3, 3 ), 0,
-                    0 ) );
-                panel.add( label2, new GridBagConstraints( 0, 1, 1, 1, 1.0,
-                    0.33, GridBagConstraints.NORTH,
-                    GridBagConstraints.HORIZONTAL, new Insets( 3, 3, 3, 3 ), 0,
-                    0 ) );
-                panel.add( label3, new GridBagConstraints( 0, 2, 1, 1, 1.0,
-                    0.33, GridBagConstraints.NORTH,
-                    GridBagConstraints.HORIZONTAL, new Insets( 3, 3, 3, 3 ), 0,
-                    0 ) );
-                panel.add( label4, new GridBagConstraints( 0, 3, 1, 1, 1.0,
-                    0.33, GridBagConstraints.NORTH,
-                    GridBagConstraints.HORIZONTAL, new Insets( 3, 3, 3, 3 ), 0,
-                    0 ) );
+                panel.add( label1,
+                    new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.33,
+                        GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
+                        new Insets( 3, 3, 3, 3 ), 0, 0 ) );
+                panel.add( label2,
+                    new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.33,
+                        GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
+                        new Insets( 3, 3, 3, 3 ), 0, 0 ) );
+                panel.add( label3,
+                    new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.33,
+                        GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
+                        new Insets( 3, 3, 3, 3 ), 0, 0 ) );
+                panel.add( label4,
+                    new GridBagConstraints( 0, 3, 1, 1, 1.0, 0.33,
+                        GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
+                        new Insets( 3, 3, 3, 3 ), 0, 0 ) );
 
                 frame.setTitle( "UHighlightedLabel demo" );
                 frame.setContentPane( panel );

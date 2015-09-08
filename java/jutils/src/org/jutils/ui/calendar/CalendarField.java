@@ -50,23 +50,26 @@ public class CalendarField implements IView<JPanel>
 
         dateTextField.setColumns( 10 );
         dateTextField.setHorizontalAlignment( SwingConstants.RIGHT );
-        dateTextField.setFormatterFactory( new DefaultFormatterFactory(
-            formatter ) );
+        dateTextField.setFormatterFactory(
+            new DefaultFormatterFactory( formatter ) );
         dateTextField.setMinimumSize( dateTextField.getPreferredSize() );
         dateTextField.getDocument().addDocumentListener(
             new DateListener( this, updaterList ) );
 
         calendarButton.setText( "" );
         calendarButton.addActionListener( new CalendarButtonListener() );
-        calendarButton.setIcon( IconConstants.loader.getIcon( IconConstants.CALENDAR_16 ) );
+        calendarButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.CALENDAR_16 ) );
         calendarButton.setMargin( new Insets( 0, 0, 0, 0 ) );
 
-        view.add( dateTextField, new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
-        view.add( calendarButton, new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.VERTICAL, new Insets(
-                0, 2, 0, 0 ), 0, 0 ) );
+        view.add( dateTextField,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        view.add( calendarButton,
+            new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
+                new Insets( 0, 2, 0, 0 ), 0, 0 ) );
 
         setDate( new GregorianCalendar() );
     }

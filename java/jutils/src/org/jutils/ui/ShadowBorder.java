@@ -15,7 +15,8 @@ public class ShadowBorder extends AbstractBorder
         return INSETS;
     }
 
-    public void paintBorder( Component c, Graphics g, int x, int y, int w, int h )
+    public void paintBorder( Component c, Graphics g, int x, int y, int w,
+        int h )
     {
 
         Color shadow = UIManager.getColor( "controlShadow" );

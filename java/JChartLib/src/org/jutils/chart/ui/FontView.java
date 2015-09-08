@@ -37,10 +37,10 @@ public class FontView implements IDataView<Font>
         this.sizesField = new JList<>( FontChooserDialog.FONT_SIZES );
         this.view = createView();
 
-        namesField.addListSelectionListener( new ListUpdater<String>(
-            new NameUpdater( this ) ) );
-        sizesField.addListSelectionListener( new ListUpdater<Integer>(
-            new SizeUpdater( this ) ) );
+        namesField.addListSelectionListener(
+            new ListUpdater<String>( new NameUpdater( this ) ) );
+        sizesField.addListSelectionListener(
+            new ListUpdater<Integer>( new SizeUpdater( this ) ) );
 
         setData( new Font( Font.MONOSPACED, Font.PLAIN, 12 ) );
     }

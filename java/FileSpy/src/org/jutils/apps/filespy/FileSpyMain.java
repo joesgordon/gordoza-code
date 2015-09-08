@@ -30,8 +30,7 @@ public class FileSpyMain
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class OptionsCreator implements
-        IOptionsCreator<FileSpyData>
+    private static class OptionsCreator implements IOptionsCreator<FileSpyData>
     {
         @Override
         public FileSpyData createDefaultOptions()

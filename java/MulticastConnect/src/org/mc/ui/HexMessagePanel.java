@@ -11,8 +11,8 @@ import org.jutils.ui.hex.ByteBuffer;
 import org.jutils.ui.hex.HexTable;
 import org.mc.McMessage;
 
-public class HexMessagePanel extends JPanel implements
-    ListCellRenderer<McMessage>
+public class HexMessagePanel extends JPanel
+    implements ListCellRenderer<McMessage>
 {
     private JLabel addressLabel;
 
@@ -47,23 +47,28 @@ public class HexMessagePanel extends JPanel implements
         contentsField.setFocusable( false );
         contentsField.setCellSelectionEnabled( false );
 
-        add( addressLabel, new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets( 2, 2,
-                2, 2 ), 0, 0 ) );
-        add( addressField, new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 2, 2,
-                2, 2 ), 0, 0 ) );
+        add( addressLabel,
+            new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        add( addressField,
+            new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-        add( timeLabel, new GridBagConstraints( 2, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets( 2, 2,
-                2, 2 ), 0, 0 ) );
-        add( timeField, new GridBagConstraints( 3, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 2, 2,
-                2, 2 ), 0, 0 ) );
+        add( timeLabel,
+            new GridBagConstraints( 2, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        add( timeField,
+            new GridBagConstraints( 3, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-        add( contentsField, new GridBagConstraints( 0, 2, 4, 1, 1.0, 1.0,
-            GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets( 2, 2,
-                2, 2 ), 0, 0 ) );
+        add( contentsField,
+            new GridBagConstraints( 0, 2, 4, 1, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
         // add( Box.createVerticalStrut( 0 ), new GridBagConstraints( 1, 10, 4,
         // 1,

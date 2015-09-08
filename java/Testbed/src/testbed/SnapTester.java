@@ -134,7 +134,8 @@ public class SnapTester implements IFrameApp
                 doDeselectedAction();
             }
 
-            LogUtils.printDebug( "Selected dir " + promptForFolder( snapPanel ) );
+            LogUtils.printDebug(
+                "Selected dir " + promptForFolder( snapPanel ) );
         }
 
         protected abstract void doSelectedAction();
@@ -168,7 +169,8 @@ public class SnapTester implements IFrameApp
     {
         private JToggleButton otherButton;
 
-        public SnapToggleAction( JToggleButton button, JToggleButton otherButton )
+        public SnapToggleAction( JToggleButton button,
+            JToggleButton otherButton )
         {
             super( button );
             this.otherButton = otherButton;

@@ -153,9 +153,10 @@ public class CollectionTogglePanel<T> extends JPanel
                 button.setSelected( true );
             }
 
-            add( button, new GridBagConstraints( 0, i, 1, 1, 1.0, 1.0,
-                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-                new Insets( 2, 0, 2, 0 ), 0, 0 ) );
+            add( button,
+                new GridBagConstraints( 0, i, 1, 1, 1.0, 1.0,
+                    GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                    new Insets( 2, 0, 2, 0 ), 0, 0 ) );
         }
     }
 
@@ -218,7 +219,8 @@ public class CollectionTogglePanel<T> extends JPanel
 
                 cp0.setToggles( false );
                 cp0.setValues( Arrays.asList( TestEnum.values() ) );
-                cp0.setBorder( BorderFactory.createTitledBorder( "Collection Panel 0" ) );
+                cp0.setBorder(
+                    BorderFactory.createTitledBorder( "Collection Panel 0" ) );
                 cp0.addActionListener( new ActionListener()
                 {
                     public void actionPerformed( ActionEvent e )
@@ -233,21 +235,25 @@ public class CollectionTogglePanel<T> extends JPanel
                 } );
 
                 cp1.setValues( Arrays.asList( TestEnum.values() ) );
-                cp1.setBorder( BorderFactory.createTitledBorder( "Collection Panel 1" ) );
+                cp1.setBorder(
+                    BorderFactory.createTitledBorder( "Collection Panel 1" ) );
 
-                label.setText( cp0.getValue() != null ? cp0.getValue().toString()
-                    : "NULL" );
+                label.setText( cp0.getValue() != null
+                    ? cp0.getValue().toString() : "NULL" );
 
                 panel.setLayout( new GridBagLayout() );
-                panel.add( cp0, new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
-                    new Insets( 4, 4, 4, 4 ), 0, 0 ) );
-                panel.add( cp1, new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
-                    new Insets( 4, 4, 4, 4 ), 0, 0 ) );
-                panel.add( label, new GridBagConstraints( 0, 1, 2, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.NONE,
-                    new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+                panel.add( cp0,
+                    new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                        GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
+                        new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+                panel.add( cp1,
+                    new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
+                        GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
+                        new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+                panel.add( label,
+                    new GridBagConstraints( 0, 1, 2, 1, 0.0, 0.0,
+                        GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                        new Insets( 4, 4, 4, 4 ), 0, 0 ) );
 
                 frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
                 frame.setContentPane( panel );

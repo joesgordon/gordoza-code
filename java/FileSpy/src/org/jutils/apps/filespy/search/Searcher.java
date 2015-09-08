@@ -55,7 +55,8 @@ public class Searcher
         statusBar.setText( "" );
         resultsTable.clearTable();
 
-        SearchThread searchTask = new SearchThread( handler, params, finalizer );
+        SearchThread searchTask = new SearchThread( handler, params,
+            finalizer );
 
         stoppableTask = new Stoppable( searchTask );
         searchThread = new Thread( stoppableTask );
@@ -97,8 +98,8 @@ public class Searcher
         public void run()
         {
             stopwatch.stop();
-            finishedListener.actionPerformed( new ItemActionEvent<Long>( this,
-                stopwatch.getElapsed() ) );
+            finishedListener.actionPerformed(
+                new ItemActionEvent<Long>( this, stopwatch.getElapsed() ) );
         }
     }
 }

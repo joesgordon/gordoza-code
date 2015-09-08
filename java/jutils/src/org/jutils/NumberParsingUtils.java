@@ -172,8 +172,8 @@ public final class NumberParsingUtils
                 return 0xF;
         }
 
-        throw new NumberFormatException( "'" + c +
-            "' is not a hexadecimal digit" );
+        throw new NumberFormatException(
+            "'" + c + "' is not a hexadecimal digit" );
     }
 
     /***************************************************************************
@@ -204,9 +204,9 @@ public final class NumberParsingUtils
                     break;
 
                 default:
-                    throw new NumberFormatException( "Non-binary character '" +
-                        str.charAt( i ) + "' found at index " + i +
-                        " in string " + str );
+                    throw new NumberFormatException(
+                        "Non-binary character '" + str.charAt( i ) +
+                            "' found at index " + i + " in string " + str );
             }
             ;
         }

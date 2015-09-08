@@ -91,7 +91,7 @@ public class SplitFileOutputStream extends OutputStream
      * @param b byte[]
      * @throws IOException
      **************************************************************************/
-    public void write( byte b [] ) throws IOException
+    public void write( byte b[] ) throws IOException
     {
         this.write( b, 0, b.length );
     }
@@ -102,7 +102,7 @@ public class SplitFileOutputStream extends OutputStream
      * @param len int
      * @throws IOException
      **************************************************************************/
-    public void write( byte b [], int off, int len ) throws IOException
+    public void write( byte b[], int off, int len ) throws IOException
     {
         int thisLen = 0;
         while( len > 0 )

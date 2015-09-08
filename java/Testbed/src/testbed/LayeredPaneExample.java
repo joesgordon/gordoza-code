@@ -42,7 +42,8 @@ public class LayeredPaneExample implements IFrameApp
     private JLayeredPane createLayers( StatusBarPanel statusBar )
     {
         JLayeredPane layeredPane = new JLayeredPane();
-        JPanel pane = new SearchView( statusBar, FileSpyMain.createUserIO() ).getView();
+        JPanel pane = new SearchView( statusBar,
+            FileSpyMain.createUserIO() ).getView();
 
         pane.setBounds( 0, 0, 500, 500 );
 

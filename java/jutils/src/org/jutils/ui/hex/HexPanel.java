@@ -42,13 +42,15 @@ public class HexPanel implements IView<JComponent>
 
         table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
 
-        rowHeader.setBackground( ( Color )UIManager.get( PropConstants.UI_PANEL_COLOR ) );
+        rowHeader.setBackground(
+            ( Color )UIManager.get( PropConstants.UI_PANEL_COLOR ) );
         rowHeader.setFixedCellWidth( 50 );
 
         // TODO select row when row header is selected
 
         rowHeader.setFocusable( true );
-        rowHeader.setSelectionMode( ListSelectionModel.SINGLE_INTERVAL_SELECTION );
+        rowHeader.setSelectionMode(
+            ListSelectionModel.SINGLE_INTERVAL_SELECTION );
         rowHeader.setFixedCellHeight( table.getRowHeight() );
 
         // ---------------------------------------------------------------------
@@ -64,9 +66,10 @@ public class HexPanel implements IView<JComponent>
         scrollPane.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
         scrollPane.setRowHeaderView( rowHeader );
 
-        panel.add( scrollPane, new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                0, 0, 0 ), 0, 0 ) );
+        panel.add( scrollPane,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
         Dimension dim = panel.getMinimumSize();
         dim.width = 600;
@@ -217,7 +220,8 @@ public class HexPanel implements IView<JComponent>
         public void setSize( int count )
         {
             rowCount = count;
-            int w = Long.toHexString( startingAddress + count * 16 - 1 ).length();
+            int w = Long.toHexString(
+                startingAddress + count * 16 - 1 ).length();
 
             if( w > 0 )
             {

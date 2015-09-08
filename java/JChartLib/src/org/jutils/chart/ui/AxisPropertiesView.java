@@ -53,15 +53,15 @@ public class AxisPropertiesView implements IDataView<Axis>
 
         setData( new Axis() );
 
-        autoTicksField.addActionListener( new CheckBoxUpdater(
-            new AutoTicksUpdater( this, new ReflectiveUpdater<Boolean>( this,
-                "axis.autoTicks" ) ) ) );
-        tickStartField.setUpdater( new ReflectiveUpdater<Double>( this,
-            "axis.tickStart" ) );
-        tickEndField.setUpdater( new ReflectiveUpdater<Double>( this,
-            "axis.tickEnd" ) );
-        tickWidthField.setUpdater( new ReflectiveUpdater<Double>( this,
-            "axis.tickWidth" ) );
+        autoTicksField.addActionListener(
+            new CheckBoxUpdater( new AutoTicksUpdater( this,
+                new ReflectiveUpdater<Boolean>( this, "axis.autoTicks" ) ) ) );
+        tickStartField.setUpdater(
+            new ReflectiveUpdater<Double>( this, "axis.tickStart" ) );
+        tickEndField.setUpdater(
+            new ReflectiveUpdater<Double>( this, "axis.tickEnd" ) );
+        tickWidthField.setUpdater(
+            new ReflectiveUpdater<Double>( this, "axis.tickWidth" ) );
         dockZeroField.addActionListener( new CheckBoxUpdater(
             new ReflectiveUpdater<Boolean>( this, "axis.dockZero" ) ) );
     }

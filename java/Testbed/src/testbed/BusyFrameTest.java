@@ -50,14 +50,12 @@ public class BusyFrameTest extends BusyFrame
         splitPane.setLeftComponent( treeScrollPane );
         splitPane.setRightComponent( textScrollPane );
 
-        this.getContentPane().add(
-            splitPane,
+        this.getContentPane().add( splitPane,
             new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
-                    4, 4, 4, 4 ), 0, 0 ) );
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
 
-        this.getContentPane().add(
-            new StatusBarPanel().getView(),
+        this.getContentPane().add( new StatusBarPanel().getView(),
             new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
                 new Insets( 0, 0, 0, 0 ), 0, 0 ) );
@@ -74,7 +72,8 @@ public class BusyFrameTest extends BusyFrame
             {
                 try
                 {
-                    UIManager.setLookAndFeel( com.jgoodies.looks.Options.getCrossPlatformLookAndFeelClassName() );
+                    UIManager.setLookAndFeel(
+                        com.jgoodies.looks.Options.getCrossPlatformLookAndFeelClassName() );
                     // UIManager.setLookAndFeel( UIManager.
                     // getCrossPlatformLookAndFeelClassName() );
                 }
@@ -133,8 +132,8 @@ public class BusyFrameTest extends BusyFrame
         if( f != null )
         {
             buffer.append( name + "Filename: " + f.getName() + Utils.NEW_LINE );
-            buffer.append( name + "Abs Path: " + f.getAbsolutePath() +
-                Utils.NEW_LINE );
+            buffer.append(
+                name + "Abs Path: " + f.getAbsolutePath() + Utils.NEW_LINE );
             buffer.append( name + "Can Path: " );
             try
             {
@@ -188,23 +187,27 @@ public class BusyFrameTest extends BusyFrame
             printFileInfo( buffer, p, null );
             buffer.append( Utils.NEW_LINE );
 
-            buffer.append( "Properties of the file created with the absolute path:" +
-                Utils.NEW_LINE );
+            buffer.append(
+                "Properties of the file created with the absolute path:" +
+                    Utils.NEW_LINE );
             printFileInfo( buffer, da, null );
             buffer.append( Utils.NEW_LINE );
 
-            buffer.append( "Properties of the parent of the file created with the absolute path:" +
-                Utils.NEW_LINE );
+            buffer.append(
+                "Properties of the parent of the file created with the absolute path:" +
+                    Utils.NEW_LINE );
             printFileInfo( buffer, dap, null );
             buffer.append( Utils.NEW_LINE );
 
-            buffer.append( "Properties of the file created with the canonical path:" +
-                Utils.NEW_LINE );
+            buffer.append(
+                "Properties of the file created with the canonical path:" +
+                    Utils.NEW_LINE );
             printFileInfo( buffer, dc, null );
             buffer.append( Utils.NEW_LINE );
 
-            buffer.append( "Properties of the parent of the file created with the canonical path:" +
-                Utils.NEW_LINE );
+            buffer.append(
+                "Properties of the parent of the file created with the canonical path:" +
+                    Utils.NEW_LINE );
             printFileInfo( buffer, dcp, null );
 
             textArea.setText( buffer.toString() );

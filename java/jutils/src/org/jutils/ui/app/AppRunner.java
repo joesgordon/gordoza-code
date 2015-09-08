@@ -114,8 +114,8 @@ public class AppRunner implements Runnable
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class ScrollPaneFocusListener implements
-        PropertyChangeListener
+    private static class ScrollPaneFocusListener
+        implements PropertyChangeListener
     {
         @Override
         public void propertyChange( PropertyChangeEvent evt )
@@ -167,10 +167,11 @@ public class AppRunner implements Runnable
      * @param defaultValue
      * @return
      **************************************************************************/
-    public static <T> T invokeInput( String message, String title,
-        T [] options, T defaultValue )
+    public static <T> T invokeInput( String message, String title, T [] options,
+        T defaultValue )
     {
-        InputApp<T> app = new InputApp<>( message, title, options, defaultValue );
+        InputApp<T> app = new InputApp<>( message, title, options,
+            defaultValue );
 
         invokeAndWait( app );
 

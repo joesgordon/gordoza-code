@@ -56,8 +56,8 @@ public class LongParse
         long estTime = System.nanoTime() - start;
         double sec = estTime / 1000000000.0;
 
-        LogUtils.printDebug( parser.getName() +
-            String.format( " took: %3f", sec ) );
+        LogUtils.printDebug(
+            parser.getName() + String.format( " took: %3f", sec ) );
     }
 
     /**
@@ -177,8 +177,8 @@ public class LongParse
                 return 0xF;
         }
 
-        throw new NumberFormatException( "'" + c +
-            "' is not a hexadecimal digit" );
+        throw new NumberFormatException(
+            "'" + c + "' is not a hexadecimal digit" );
     }
 
     private static interface IHexLongParser

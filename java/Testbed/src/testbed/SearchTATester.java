@@ -46,9 +46,10 @@ public class SearchTATester extends JFrame
         textArea.setToolTipText( "Press CTRL+F to find text" );
         textAreaPane.setViewportView( textArea );
 
-        contentPane.add( textAreaPane, new GridBagConstraints( 0, 1, 1, 1, 1.0,
-            1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 10, 10, 10, 10 ), 0, 0 ) );
+        contentPane.add( textAreaPane,
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 10, 10, 10, 10 ), 0, 0 ) );
     }
 
     /***************************************************************************
@@ -81,7 +82,8 @@ public class SearchTATester extends JFrame
             {
                 try
                 {
-                    UIManager.setLookAndFeel( com.jgoodies.looks.Options.getCrossPlatformLookAndFeelClassName() );
+                    UIManager.setLookAndFeel(
+                        com.jgoodies.looks.Options.getCrossPlatformLookAndFeelClassName() );
 
                     // UIManager.setLookAndFeel( UIManager.
                     // getCrossPlatformLookAndFeelClassName() );

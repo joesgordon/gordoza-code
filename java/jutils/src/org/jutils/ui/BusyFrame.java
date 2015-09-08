@@ -97,8 +97,8 @@ public class BusyFrame extends JFrame
     public final void setFrameBusyLater( boolean busy, String message,
         boolean cancelable, ActionListener cancelAction )
     {
-        SwingUtilities.invokeLater( new BusySetter( this, busy, message,
-            cancelable, cancelAction ) );
+        SwingUtilities.invokeLater(
+            new BusySetter( this, busy, message, cancelable, cancelAction ) );
     }
 
     /***************************************************************************
@@ -304,17 +304,20 @@ class SeeThroughPane extends JComponent implements ActionListener
         button.addActionListener( this );
         button.setCursor( new Cursor( Cursor.DEFAULT_CURSOR ) );
 
-        add( label, new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets( 0,
-                0, 20, 0 ), 20, 20 ) );
+        add( label,
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets( 0, 0, 20, 0 ), 20, 20 ) );
 
-        add( button, new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets( 0,
-                0, 0, 0 ), 20, 10 ) );
+        add( button,
+            new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets( 0, 0, 0, 0 ), 20, 10 ) );
 
-        add( waitLabel, new GridBagConstraints( 0, 2, 1, 1, 0.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets( 20,
-                0, 0, 0 ), 0, 0 ) );
+        add( waitLabel,
+            new GridBagConstraints( 0, 2, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets( 20, 0, 0, 0 ), 0, 0 ) );
     }
 
     public void setCancelAction( ActionListener cancelAction )

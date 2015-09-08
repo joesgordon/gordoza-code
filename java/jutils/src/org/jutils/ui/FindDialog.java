@@ -98,15 +98,18 @@ public class FindDialog extends JDialog
 
         wrapCheckBox.setText( "Wrap Around" );
 
-        optionsPanel.add( matchCheckBox, new GridBagConstraints( 0, 0, 2, 1,
-            0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        optionsPanel.add( regexCheckBox, new GridBagConstraints( 0, 1, 2, 1,
-            0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        optionsPanel.add( wrapCheckBox, new GridBagConstraints( 0, 2, 2, 1,
-            0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        optionsPanel.add( matchCheckBox,
+            new GridBagConstraints( 0, 0, 2, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        optionsPanel.add( regexCheckBox,
+            new GridBagConstraints( 0, 1, 2, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        optionsPanel.add( wrapCheckBox,
+            new GridBagConstraints( 0, 2, 2, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
         // ---------------------------------------------------------------------
         // Setup Main Panel
@@ -131,26 +134,32 @@ public class FindDialog extends JDialog
         errorLabel.setBorder( BorderFactory.createLineBorder( Color.red ) );
         errorLabel.setVisible( false );
 
-        contentPane.add( findLable, new GridBagConstraints( 0, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(
-                5, 5, 5, 5 ), 0, 0 ) );
-        contentPane.add( findTextField, new GridBagConstraints( 1, 0, 2, 1,
-            0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 5, 5, 5, 5 ), 0, 0 ) );
-        contentPane.add( findButton, new GridBagConstraints( 3, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 5, 5, 5, 5 ), 0, 0 ) );
+        contentPane.add( findLable,
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 5, 5, 5, 5 ), 0, 0 ) );
+        contentPane.add( findTextField,
+            new GridBagConstraints( 1, 0, 2, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 5, 5, 5, 5 ), 0, 0 ) );
+        contentPane.add( findButton,
+            new GridBagConstraints( 3, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 5, 5, 5, 5 ), 0, 0 ) );
 
-        contentPane.add( optionsPanel, new GridBagConstraints( 0, 1, 2, 2, 1.0,
-            1.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(
-                0, 0, 0, 0 ), 0, 0 ) );
-        contentPane.add( cancelButton, new GridBagConstraints( 3, 1, 1, 1, 0.0,
-            0.0, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
-            new Insets( 5, 5, 5, 5 ), 0, 0 ) );
+        contentPane.add( optionsPanel,
+            new GridBagConstraints( 0, 1, 2, 2, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        contentPane.add( cancelButton,
+            new GridBagConstraints( 3, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
+                new Insets( 5, 5, 5, 5 ), 0, 0 ) );
 
-        contentPane.add( errorLabel, new GridBagConstraints( 2, 2, 2, 1, 1.0,
-            1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(
-                0, 0, 0, 0 ), 0, 0 ) );
+        contentPane.add( errorLabel,
+            new GridBagConstraints( 2, 2, 2, 1, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
         getContentPane().add( contentPane );
         pack();

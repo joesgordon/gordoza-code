@@ -76,7 +76,7 @@ public class JTreeTable extends JTable
         tree.setSelectionModel( new DefaultTreeSelectionModel()
         {
             // Extend the implementation of the constructor, as if:
-            /* public this() */{
+            /* public this() */ {
                 setSelectionModel( listSelectionModel );
             }
         } );
@@ -108,8 +108,8 @@ public class JTreeTable extends JTable
     // The renderer used to display the tree nodes, a JTree.
     //
 
-    public class TreeTableCellRenderer extends JTree implements
-        TableCellRenderer
+    public class TreeTableCellRenderer extends JTree
+        implements TableCellRenderer
     {
 
         protected int visibleRow;
@@ -148,8 +148,8 @@ public class JTreeTable extends JTable
     // The editor used to interact with tree nodes, a JTree.
     //
 
-    public class TreeTableCellEditor extends AbstractCellEditor implements
-        TableCellEditor
+    public class TreeTableCellEditor extends AbstractCellEditor
+        implements TableCellEditor
     {
         public Component getTableCellEditorComponent( JTable table,
             Object value, boolean isSelected, int r, int c )

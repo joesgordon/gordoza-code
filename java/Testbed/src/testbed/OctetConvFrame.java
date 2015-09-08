@@ -58,8 +58,8 @@ public class OctetConvFrame implements IFrameApp
         hexField.setValidator( hexListener );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 6, 6,
-                6, 6 ), 0, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.NONE,
+            new Insets( 6, 6, 6, 6 ), 0, 0 );
         panel.add( octLabel, constraints );
 
         constraints = new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
@@ -68,8 +68,8 @@ public class OctetConvFrame implements IFrameApp
         panel.add( octField.getView(), constraints );
 
         constraints = new GridBagConstraints( 0, 2, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 6, 6,
-                6, 6 ), 0, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.NONE,
+            new Insets( 6, 6, 6, 6 ), 0, 0 );
         panel.add( decLabel, constraints );
 
         constraints = new GridBagConstraints( 0, 3, 1, 1, 0.0, 0.0,
@@ -78,8 +78,8 @@ public class OctetConvFrame implements IFrameApp
         panel.add( decField.getView(), constraints );
 
         constraints = new GridBagConstraints( 0, 4, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 12,
-                6, 6, 6 ), 0, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.NONE,
+            new Insets( 12, 6, 6, 6 ), 0, 0 );
         panel.add( hexLabel, constraints );
 
         constraints = new GridBagConstraints( 0, 5, 1, 1, 1.0, 0.0,
@@ -263,8 +263,7 @@ public class OctetConvFrame implements IFrameApp
         }
 
         @Override
-        public final void validateText( String text )
-            throws ValidationException
+        public final void validateText( String text ) throws ValidationException
         {
             if( enabled )
             {

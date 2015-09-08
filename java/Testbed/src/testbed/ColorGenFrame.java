@@ -123,20 +123,24 @@ public class ColorGenFrame extends JFrame
         progressBar.setStringPainted( true );
         progressBar.setString( "" );
 
-        mainPanel.add( compLabel, new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets( 4, 4,
-                4, 4 ), 0, 0 ) );
-        mainPanel.add( comparatorComboBox, new GridBagConstraints( 1, 0, 1, 1,
-            1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+        mainPanel.add( compLabel,
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+        mainPanel.add( comparatorComboBox,
+            new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
 
-        mainPanel.add( progressBar, new GridBagConstraints( 0, 1, 2, 1, 1.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+        mainPanel.add( progressBar,
+            new GridBagConstraints( 0, 1, 2, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
 
-        mainPanel.add( colorScrollPane, new GridBagConstraints( 0, 2, 2, 1,
-            1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+        mainPanel.add( colorScrollPane,
+            new GridBagConstraints( 0, 2, 2, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
 
         // ---------------------------------------------------------------------
         // Setup content panel.
@@ -177,8 +181,9 @@ public class ColorGenFrame extends JFrame
             }
             catch( FileNotFoundException ex )
             {
-                JOptionPane.showMessageDialog( this, "Error writing file: " +
-                    ex, "ERROR", JOptionPane.ERROR_MESSAGE );
+                JOptionPane.showMessageDialog( this,
+                    "Error writing file: " + ex, "ERROR",
+                    JOptionPane.ERROR_MESSAGE );
             }
         }
     }
@@ -435,8 +440,8 @@ class ColorListCellRenderer extends DefaultListCellRenderer
     public Component getListCellRendererComponent( JList<?> list, Object value,
         int index, boolean isSelected, boolean cellHasFocus )
     {
-        Component comp = super.getListCellRendererComponent( list, value,
-            index, isSelected, cellHasFocus );
+        Component comp = super.getListCellRendererComponent( list, value, index,
+            isSelected, cellHasFocus );
 
         if( value != null )
         {
@@ -578,8 +583,8 @@ class SmartColor extends GenericColor
                 return new GenericColor( z, y, x );
         }
 
-        throw new ArrayIndexOutOfBoundsException( idx + " < 0 or >= " +
-            NUM_COLORS );
+        throw new ArrayIndexOutOfBoundsException(
+            idx + " < 0 or >= " + NUM_COLORS );
     }
 
     /****************************************************************************

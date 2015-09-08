@@ -150,8 +150,8 @@ public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel<T>
         catch( ClassCastException ex )
         {
             ex.printStackTrace();
-            throw new IllegalArgumentException( "Item is not of type 'T': " +
-                anItem.toString(), ex );
+            throw new IllegalArgumentException(
+                "Item is not of type 'T': " + anItem.toString(), ex );
         }
     }
 
@@ -172,8 +172,8 @@ public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel<T>
     {
         if( !ldListeners.remove( l ) )
         {
-            throw new IllegalArgumentException( "Listener not found: " +
-                l.toString() );
+            throw new IllegalArgumentException(
+                "Listener not found: " + l.toString() );
         }
     }
 
@@ -485,8 +485,8 @@ public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel<T>
 
         if( !result )
         {
-            throw new IllegalArgumentException( "Unable to add " +
-                obj.toString() );
+            throw new IllegalArgumentException(
+                "Unable to add " + obj.toString() );
         }
     }
 
@@ -511,8 +511,8 @@ public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel<T>
 
         if( !result )
         {
-            throw new IllegalArgumentException( "Unable to remove " +
-                obj.toString() );
+            throw new IllegalArgumentException(
+                "Unable to remove " + obj.toString() );
         }
     }
 

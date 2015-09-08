@@ -200,8 +200,8 @@ public class SearchThread implements IStoppableTask
                 }
                 else
                 {
-                    searchHandler.addErrorMessage( "Cannot read file" +
-                        file.getAbsolutePath() );
+                    searchHandler.addErrorMessage(
+                        "Cannot read file" + file.getAbsolutePath() );
                 }
             }
             else
@@ -216,8 +216,9 @@ public class SearchThread implements IStoppableTask
 
             if( children == null )
             {
-                searchHandler.addErrorMessage( "Do not have permission to list " +
-                    file.getAbsolutePath() );
+                searchHandler.addErrorMessage(
+                    "Do not have permission to list " +
+                        file.getAbsolutePath() );
             }
             else
             {

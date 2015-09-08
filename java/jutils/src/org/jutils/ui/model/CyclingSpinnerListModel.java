@@ -32,8 +32,8 @@ public class CyclingSpinnerListModel extends SpinnerListModel
     }
 
     /***************************************************************************
-	 * 
-	 **************************************************************************/
+     * 
+     **************************************************************************/
     public Object getNextValue()
     {
         Object value = super.getNextValue();
@@ -49,8 +49,8 @@ public class CyclingSpinnerListModel extends SpinnerListModel
     }
 
     /***************************************************************************
-	 * 
-	 **************************************************************************/
+     * 
+     **************************************************************************/
     public Object getPreviousValue()
     {
         Object value = super.getPreviousValue();

@@ -93,7 +93,8 @@ public class SearchResultsHandler
 
         private final List<? extends ExplorerItem> list;
 
-        public UiFilesAdder( SearchView panel, List<? extends ExplorerItem> list )
+        public UiFilesAdder( SearchView panel,
+            List<? extends ExplorerItem> list )
         {
             this.searchPanel = panel;
             this.list = list;

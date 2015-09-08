@@ -56,8 +56,8 @@ public class DuakPanel extends JPanel
 
         sorter = new TableRowSorter<FileResultsTableModel>( tableModel );
         // sorter.setComparator( 1, new FileResultsComparer() );
-        RowSorter.SortKey [] keys = new RowSorter.SortKey[] { new RowSorter.SortKey(
-            1, SortOrder.DESCENDING ) };
+        RowSorter.SortKey [] keys = new RowSorter.SortKey[] {
+            new RowSorter.SortKey( 1, SortOrder.DESCENDING ) };
         sorter.setSortKeys( Arrays.asList( keys ) );
         // sorter.toggleSortOrder( 1 );
 
@@ -70,17 +70,20 @@ public class DuakPanel extends JPanel
             new FileResultTableCellRenderer() );
         table.addMouseListener( new FolderOpenedListener() );
 
-        add( locationLabel, new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
-                4, 4, 2, 4 ), 0, 0 ) );
+        add( locationLabel,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 4, 4, 2, 4 ), 0, 0 ) );
 
-        add( totalLabel, new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
-                4, 4, 2, 4 ), 0, 0 ) );
+        add( totalLabel,
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 4, 4, 2, 4 ), 0, 0 ) );
 
-        add( tableScrollPane, new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
-            GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets( 2, 4,
-                4, 4 ), 0, 0 ) );
+        add( tableScrollPane,
+            new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 2, 4, 4, 4 ), 0, 0 ) );
     }
 
     /***************************************************************************
@@ -195,13 +198,14 @@ public class DuakPanel extends JPanel
                         catch( IOException ex )
                         {
                             MessageExceptionView.showExceptionDialog( table,
-                                "Cannot open file: " + f.getName(),
-                                "I/O Error", ex );
+                                "Cannot open file: " + f.getName(), "I/O Error",
+                                ex );
                         }
                     }
                     else
                     {
-                        folderOpenedListeners.fireListeners( DuakPanel.this, fi );
+                        folderOpenedListeners.fireListeners( DuakPanel.this,
+                            fi );
                     }
                 }
             }
@@ -270,7 +274,8 @@ public class DuakPanel extends JPanel
 
                 try
                 {
-                    desktop.open( fi.getFile().getAbsoluteFile().getParentFile() );
+                    desktop.open(
+                        fi.getFile().getAbsoluteFile().getParentFile() );
                 }
                 catch( IOException ex )
                 {
@@ -285,8 +290,8 @@ public class DuakPanel extends JPanel
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class FileResultTableCellRenderer extends
-        DefaultTableCellRenderer
+    private static class FileResultTableCellRenderer
+        extends DefaultTableCellRenderer
     {
         private FileIconLoader iconLoader;
 
@@ -332,7 +337,8 @@ public class DuakPanel extends JPanel
         {
             fsv = FileSystemView.getFileSystemView();
             iconMap = new HashMap<File, Icon>();
-            defaultIcon = IconConstants.loader.getIcon( IconConstants.OPEN_FILE_16 );
+            defaultIcon = IconConstants.loader.getIcon(
+                IconConstants.OPEN_FILE_16 );
         }
 
         public String getSystemName( File file )

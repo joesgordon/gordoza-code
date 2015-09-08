@@ -83,17 +83,20 @@ public class RegexPanel implements IView<JPanel>
         regexScrollPane.setMinimumSize( dim );
         regexScrollPane.setPreferredSize( dim );
 
-        regexPanel.add( regexScrollPane, new GridBagConstraints( 0, 0, 1, 2,
-            1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 8 ), 0, 0 ) );
+        regexPanel.add( regexScrollPane,
+            new GridBagConstraints( 0, 0, 1, 2, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 8 ), 0, 0 ) );
 
-        regexPanel.add( createButtonPanel(), new GridBagConstraints( 1, 0, 1,
-            1, 0.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 4, 0 ), 0, 0 ) );
+        regexPanel.add( createButtonPanel(),
+            new GridBagConstraints( 1, 0, 1, 1, 0.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 4, 0 ), 0, 0 ) );
 
-        regexPanel.add( createOptionsPanel(), new GridBagConstraints( 1, 1, 1,
-            1, 0.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        regexPanel.add( createOptionsPanel(),
+            new GridBagConstraints( 1, 1, 1, 1, 0.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
         return regexPanel;
     }
@@ -130,23 +133,25 @@ public class RegexPanel implements IView<JPanel>
         caseCheckBox.setText( "Case-Insensitive" );
         caseCheckBox.setToolTipText( "Enables case-insensitive matching." );
         multilineCheckBox.setText( "Multiline" );
-        multilineCheckBox.setToolTipText( "^ and $ match just after or just "
-            + "before, respectively, a line terminator or the end of the "
-            + "input sequence." );
+        multilineCheckBox.setToolTipText( "^ and $ match just after or just " +
+            "before, respectively, a line terminator or the end of the " +
+            "input sequence." );
         commentsCheckBox.setText( "Comments" );
         commentsCheckBox.setSelected( true );
-        commentsCheckBox.setToolTipText( "whitespace is ignored, and embedded "
-            + "comments starting with # are ignored until the end of a line." );
+        commentsCheckBox.setToolTipText(
+            "whitespace is ignored, and embedded " +
+                "comments starting with # are ignored until the end of a line." );
         globalCheckBox.setText( "Global" );
-        globalCheckBox.setToolTipText( ". matches any character, including a "
-            + "line terminator." );
+        globalCheckBox.setToolTipText(
+            ". matches any character, including a " + "line terminator." );
 
         form.addField( null, caseCheckBox );
         form.addField( null, multilineCheckBox );
         form.addField( null, commentsCheckBox );
         form.addField( null, globalCheckBox );
 
-        form.getView().setBorder( BorderFactory.createTitledBorder( "Options" ) );
+        form.getView().setBorder(
+            BorderFactory.createTitledBorder( "Options" ) );
 
         return form.getView();
     }
@@ -190,7 +195,8 @@ public class RegexPanel implements IView<JPanel>
             {
                 int indexFirst = matcher.start();
                 int indexLast = matcher.end();
-                String text = seq.subSequence( indexFirst, indexLast ).toString();
+                String text = seq.subSequence( indexFirst,
+                    indexLast ).toString();
 
                 resultStr.append( "Matched Text: " + Utils.NEW_LINE );
                 resultStr.append( text + Utils.NEW_LINE );

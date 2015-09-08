@@ -66,9 +66,10 @@ public class SliderTestFrame extends JFrame
         size.width = 75;
         comboBox.setPreferredSize( size );
         comboBox.addActionListener( new ComboListener() );
-        comboPanel.add( comboBox, new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        comboPanel.add( comboBox,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
         comboPanel.setOpaque( false );
         comboPanel.setMaximumSize( size );
         toolbar.addSeparator( new Dimension( 4, 0 ) );

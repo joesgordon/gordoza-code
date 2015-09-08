@@ -8,8 +8,8 @@ import javax.swing.ListModel;
 /*******************************************************************************
  * Provides a {@link ListModel} with Generics.
  ******************************************************************************/
-public class CollectionListModel<T> extends AbstractListModel<T> implements
-    Iterable<T>
+public class CollectionListModel<T> extends AbstractListModel<T>
+    implements Iterable<T>
 {
     /** The items contained within the list. */
     private List<T> items;

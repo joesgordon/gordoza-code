@@ -73,11 +73,12 @@ public class ButtonTestFrame implements IFrameApp
         UIManager.put( "CheckBox.background", new Color( 0x808080 ) );
         UIManager.put( "Button.background", Color.black );
         UIManager.put( "Button.foreground", Color.white );
-        UIManager.put( "RadioButtonMenuItem.background", new Color( 0x808080 ) );
+        UIManager.put( "RadioButtonMenuItem.background",
+            new Color( 0x808080 ) );
         UIManager.put( "ToolBar.background", new Color( 0x808080 ) );
 
-        LogUtils.printDebug( "ButtonUI = " +
-            UIManager.getDefaults().getString( "ButtonUI" ) );
+        LogUtils.printDebug(
+            "ButtonUI = " + UIManager.getDefaults().getString( "ButtonUI" ) );
 
         FrameApplication.invokeLater( new ButtonTestFrame(), true,
             UIManager.getCrossPlatformLookAndFeelClassName() );

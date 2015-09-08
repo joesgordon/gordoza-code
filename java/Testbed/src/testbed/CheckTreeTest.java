@@ -24,9 +24,10 @@ public class CheckTreeTest extends JFrame
         JPanel mainPanel = ( JPanel )this.getContentPane();
         mainPanel.setLayout( new GridBagLayout() );
 
-        mainPanel.add( checkScrollPane, new GridBagConstraints( 0, 0, 1, 1,
-            1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 10, 10, 10, 10 ), 0, 0 ) );
+        mainPanel.add( checkScrollPane,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 10, 10, 10, 10 ), 0, 0 ) );
 
         this.setTitle( "Check Tree Test" );
         this.setSize( 200, 300 );

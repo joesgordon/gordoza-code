@@ -47,8 +47,8 @@ public class MarkerStyleView implements IDataView<MarkerStyle>
             new ReflectiveUpdater<Boolean>( this, "marker.visible" ) ) );
         shapeField.addItemListener( new ComboBoxUpdater<>(
             new ReflectiveUpdater<>( this, "marker.type" ) ) );
-        weightField.setUpdater( new ReflectiveUpdater<Integer>( this,
-            "marker.weight" ) );
+        weightField.setUpdater(
+            new ReflectiveUpdater<Integer>( this, "marker.weight" ) );
         colorField.addUpdateListener( new ItemActionUpdater<>(
             new ReflectiveUpdater<Color>( this, "marker.color" ) ) );
     }

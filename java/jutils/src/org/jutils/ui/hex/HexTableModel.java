@@ -64,8 +64,8 @@ public class HexTableModel extends AbstractTableModel
 
         if( i < 0 || i > 255 )
         {
-            throw new NumberFormatException( "Number outside range of byte: " +
-                Integer.toHexString( i ) );
+            throw new NumberFormatException(
+                "Number outside range of byte: " + Integer.toHexString( i ) );
         }
 
         buffer.set( getOffset( row, col ), ( byte )i );

@@ -85,7 +85,8 @@ public class SearchTask implements ITask
 
         TaskUpdater updater = new TaskUpdater( handler, count );
 
-        for( long idx = 0; idx < count && !found && handler.canContinue(); idx++ )
+        for( long idx = 0; idx < count && !found &&
+            handler.canContinue(); idx++ )
         {
             if( bytes.length > stream.getAvailable() )
             {

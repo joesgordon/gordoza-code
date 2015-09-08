@@ -49,8 +49,8 @@ public class BorderPropertiesView implements IDataView<WidgetBorder>
             new ReflectiveUpdater<Boolean>( this, "border.visible" ) ) );
         colorField.addUpdateListener( new UpdaterItemListener<Color>(
             new ReflectiveUpdater<Color>( this, "border.color" ) ) );
-        thicknessField.setUpdater( new ReflectiveUpdater<Integer>( this,
-            "border.thickness" ) );
+        thicknessField.setUpdater(
+            new ReflectiveUpdater<Integer>( this, "border.thickness" ) );
 
     }
 

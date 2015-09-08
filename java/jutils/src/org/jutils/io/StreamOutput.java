@@ -32,7 +32,7 @@ public class StreamOutput extends OutputStream
      * 
      **************************************************************************/
     @Override
-    public void write( byte b [], int off, int len ) throws IOException
+    public void write( byte b[], int off, int len ) throws IOException
     {
         stream.write( b, off, len );
     }

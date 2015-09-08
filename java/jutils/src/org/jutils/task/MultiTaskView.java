@@ -57,26 +57,27 @@ public class MultiTaskView implements IMultiTaskView
         progressBar.setStringPainted( true );
 
         cancelButton.setText( "Cancel" );
-        cancelButton.setIcon( IconConstants.loader.getIcon( IconConstants.STOP_16 ) );
+        cancelButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.STOP_16 ) );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL, new Insets(
-                4, 4, 2, 4 ), 0, 0 );
+            GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
+            new Insets( 4, 4, 2, 4 ), 0, 0 );
         panel.add( titleField, constraints );
 
         constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL, new Insets(
-                4, 4, 2, 4 ), 0, 0 );
+            GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
+            new Insets( 4, 4, 2, 4 ), 0, 0 );
         panel.add( progressBar, constraints );
 
         constraints = new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
-            GridBagConstraints.EAST, GridBagConstraints.BOTH, new Insets( 4, 4,
-                2, 4 ), 0, 0 );
+            GridBagConstraints.EAST, GridBagConstraints.BOTH,
+            new Insets( 4, 4, 2, 4 ), 0, 0 );
         panel.add( progressList.getView(), constraints );
 
         constraints = new GridBagConstraints( 0, 3, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets( 4,
-                4, 4, 4 ), 20, 20 );
+            GridBagConstraints.CENTER, GridBagConstraints.NONE,
+            new Insets( 4, 4, 4, 4 ), 20, 20 );
         panel.add( cancelButton, constraints );
 
         return panel;
@@ -100,8 +101,8 @@ public class MultiTaskView implements IMultiTaskView
 
         progressList.addView( statusView );
 
-        statusView.addCancelListener( new TaskCancelledListener( this,
-            statusView ) );
+        statusView.addCancelListener(
+            new TaskCancelledListener( this, statusView ) );
 
         return statusView;
     }
@@ -192,13 +193,14 @@ public class MultiTaskView implements IMultiTaskView
         IMultiTaskView view = MultiTaskView.createEdtView( mtv );
         JDialog dialog = new JDialog( parent, ModalityType.DOCUMENT_MODAL );
 
-        MultiTaskRunner runner = new MultiTaskRunner( tasker, view, numThreads );
+        MultiTaskRunner runner = new MultiTaskRunner( tasker, view,
+            numThreads );
         CancelListener cl = new CancelListener( runner );
 
         mtv.addCancelListener( cl );
 
-        runner.addFinishedListener( new FinishedListener( dialog,
-            runner.handler ) );
+        runner.addFinishedListener(
+            new FinishedListener( dialog, runner.handler ) );
 
         dialog.setDefaultCloseOperation( JDialog.DO_NOTHING_ON_CLOSE );
         dialog.addWindowListener( new CancelListener( runner ) );
@@ -371,8 +373,8 @@ public class MultiTaskView implements IMultiTaskView
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class CancelListener extends WindowAdapter implements
-        ActionListener
+    private static class CancelListener extends WindowAdapter
+        implements ActionListener
     {
         private final MultiTaskRunner runner;
 

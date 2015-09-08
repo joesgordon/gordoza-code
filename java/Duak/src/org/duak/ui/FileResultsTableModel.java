@@ -42,7 +42,7 @@ public class FileResultsTableModel extends ItemTableModel<FileInfo>
                 return new FileSize( fr.getSize() );
         }
 
-        throw new IllegalArgumentException( "Column " + col +
-            " does not exist in this model." );
+        throw new IllegalArgumentException(
+            "Column " + col + " does not exist in this model." );
     }
 }

@@ -86,13 +86,15 @@ public class FontChooserDialog extends JDialog
         fontNameInputList.setToolTipText( "Font name" );
         fontSizeInputList.setToolTipText( "Font size" );
 
-        fontPanel.add( fontNameInputList.getView(), new GridBagConstraints( 0,
-            0, 1, 1, 0.5, 1.0, GridBagConstraints.CENTER,
-            GridBagConstraints.BOTH, new Insets( 0, 4, 4, 2 ), 0, 0 ) );
+        fontPanel.add( fontNameInputList.getView(),
+            new GridBagConstraints( 0, 0, 1, 1, 0.5, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 4, 4, 2 ), 0, 0 ) );
 
-        fontPanel.add( fontSizeInputList.getView(), new GridBagConstraints( 1,
-            0, 1, 1, 0.5, 1.0, GridBagConstraints.CENTER,
-            GridBagConstraints.BOTH, new Insets( 0, 2, 4, 4 ), 0, 0 ) );
+        fontPanel.add( fontSizeInputList.getView(),
+            new GridBagConstraints( 1, 0, 1, 1, 0.5, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 2, 4, 4 ), 0, 0 ) );
 
         // ---------------------------------------------------------------------
         // Setup color panel.
@@ -102,13 +104,15 @@ public class FontChooserDialog extends JDialog
 
         colorComboBox.setToolTipText( "Font color" );
 
-        colorPanel.add( colorLabel, new GridBagConstraints( 0, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-            new Insets( 0, 0, 0, 2 ), 0, 0 ) );
+        colorPanel.add( colorLabel,
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets( 0, 0, 0, 2 ), 0, 0 ) );
 
-        colorPanel.add( colorComboBox, new GridBagConstraints( 1, 0, 1, 1, 1.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 0, 2, 0, 0 ), 0, 0 ) );
+        colorPanel.add( colorComboBox,
+            new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 0, 2, 0, 0 ), 0, 0 ) );
 
         // ---------------------------------------------------------------------
         // Setup effects panel.
@@ -128,29 +132,36 @@ public class FontChooserDialog extends JDialog
 
         superscriptCheckBox.setToolTipText( "Superscript font" );
 
-        effectsPanel.add( boldCheckBox, new GridBagConstraints( 0, 0, 1, 1,
-            1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-            new Insets( 0, 4, 2, 2 ), 0, 0 ) );
-        effectsPanel.add( italicCheckBox, new GridBagConstraints( 1, 0, 1, 1,
-            1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-            new Insets( 0, 2, 2, 2 ), 0, 0 ) );
-        effectsPanel.add( underlineCheckBox, new GridBagConstraints( 2, 0, 1,
-            1, 1.0, 0.0, GridBagConstraints.WEST,
-            GridBagConstraints.HORIZONTAL, new Insets( 0, 2, 2, 4 ), 0, 0 ) );
+        effectsPanel.add( boldCheckBox,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 0, 4, 2, 2 ), 0, 0 ) );
+        effectsPanel.add( italicCheckBox,
+            new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 0, 2, 2, 2 ), 0, 0 ) );
+        effectsPanel.add( underlineCheckBox,
+            new GridBagConstraints( 2, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 0, 2, 2, 4 ), 0, 0 ) );
 
-        effectsPanel.add( strikethroughCheckBox, new GridBagConstraints( 0, 1,
-            1, 1, 1.0, 0.0, GridBagConstraints.WEST,
-            GridBagConstraints.HORIZONTAL, new Insets( 2, 4, 2, 2 ), 0, 0 ) );
-        effectsPanel.add( subscriptCheckBox, new GridBagConstraints( 1, 1, 1,
-            1, 1.0, 0.0, GridBagConstraints.WEST,
-            GridBagConstraints.HORIZONTAL, new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        effectsPanel.add( superscriptCheckBox, new GridBagConstraints( 2, 1, 1,
-            1, 1.0, 0.0, GridBagConstraints.WEST,
-            GridBagConstraints.HORIZONTAL, new Insets( 2, 2, 2, 4 ), 0, 0 ) );
+        effectsPanel.add( strikethroughCheckBox,
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 2, 4, 2, 2 ), 0, 0 ) );
+        effectsPanel.add( subscriptCheckBox,
+            new GridBagConstraints( 1, 1, 1, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        effectsPanel.add( superscriptCheckBox,
+            new GridBagConstraints( 2, 1, 1, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 2, 2, 2, 4 ), 0, 0 ) );
 
-        effectsPanel.add( colorPanel, new GridBagConstraints( 0, 2, 3, 1, 1.0,
-            0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-            new Insets( 2, 4, 4, 4 ), 0, 0 ) );
+        effectsPanel.add( colorPanel,
+            new GridBagConstraints( 0, 2, 3, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 2, 4, 4, 4 ), 0, 0 ) );
 
         // ---------------------------------------------------------------------
         // Setup preview panel.
@@ -158,9 +169,10 @@ public class FontChooserDialog extends JDialog
         JPanel previewPanel = new JPanel( new GridBagLayout() );
         previewPanel.setBorder( BorderFactory.createTitledBorder( "Preview" ) );
 
-        previewPanel.add( previewLabel, new GridBagConstraints( 0, 0, 1, 1,
-            1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        previewPanel.add( previewLabel,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
         // ---------------------------------------------------------------------
         // Setup button panel.
@@ -194,30 +206,36 @@ public class FontChooserDialog extends JDialog
 
         Utils.setMaxComponentSize( btOK, btCancel );
 
-        buttonPanel.add( btOK, new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets( 4, 4,
-                4, 2 ), 10, 10 ) );
-        buttonPanel.add( btCancel, new GridBagConstraints( 1, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(
-                4, 2, 4, 4 ), 10, 10 ) );
+        buttonPanel.add( btOK,
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 4, 4, 4, 2 ), 10, 10 ) );
+        buttonPanel.add( btCancel,
+            new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 4, 2, 4, 4 ), 10, 10 ) );
 
         // ---------------------------------------------------------------------
         // Setup content panel.
         // ---------------------------------------------------------------------
         JPanel contentPanel = new JPanel( new GridBagLayout() );
 
-        contentPanel.add( fontPanel, new GridBagConstraints( 0, 0, 1, 1, 1.0,
-            1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
-        contentPanel.add( effectsPanel, new GridBagConstraints( 0, 1, 1, 1,
-            1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
-        contentPanel.add( previewPanel, new GridBagConstraints( 0, 2, 1, 1,
-            1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 2 ) );
-        contentPanel.add( buttonPanel, new GridBagConstraints( 0, 3, 1, 1, 1.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        contentPanel.add( fontPanel,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        contentPanel.add( effectsPanel,
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        contentPanel.add( previewPanel,
+            new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 2 ) );
+        contentPanel.add( buttonPanel,
+            new GridBagConstraints( 0, 3, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
         setContentPane( contentPanel );
 
@@ -277,7 +295,8 @@ public class FontChooserDialog extends JDialog
         boldCheckBox.setSelected( StyleConstants.isBold( a ) );
         italicCheckBox.setSelected( StyleConstants.isItalic( a ) );
         underlineCheckBox.setSelected( StyleConstants.isUnderline( a ) );
-        strikethroughCheckBox.setSelected( StyleConstants.isStrikeThrough( a ) );
+        strikethroughCheckBox.setSelected(
+            StyleConstants.isStrikeThrough( a ) );
         subscriptCheckBox.setSelected( StyleConstants.isSubscript( a ) );
         superscriptCheckBox.setSelected( StyleConstants.isSuperscript( a ) );
 
@@ -357,7 +376,7 @@ public class FontChooserDialog extends JDialog
     /***************************************************************************
      * @param argv
      **************************************************************************/
-    public static void main( String argv [] )
+    public static void main( String argv[] )
     {
         IApplication app = new IApplication()
         {
@@ -411,9 +430,10 @@ public class FontChooserDialog extends JDialog
             setBorder( new LineBorder( Color.black ) );
             setMinimumSize( new Dimension( 120, 80 ) );
             setPreferredSize( new Dimension( 120, 80 ) );
-            add( textPane, new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
-                    0, 0, 0, 0 ), 0, 0 ) );
+            add( textPane,
+                new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                    new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
             centerText();
         }
@@ -421,7 +441,8 @@ public class FontChooserDialog extends JDialog
         private void centerText()
         {
             MutableAttributeSet standard = new SimpleAttributeSet();
-            StyleConstants.setAlignment( standard, StyleConstants.ALIGN_CENTER );
+            StyleConstants.setAlignment( standard,
+                StyleConstants.ALIGN_CENTER );
             textPane.getStyledDocument().setParagraphAttributes( 0,
                 textPane.getStyledDocument().getLength(), standard, true );
         }
@@ -467,8 +488,8 @@ public class FontChooserDialog extends JDialog
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class ColorComboRenderer extends JLabel implements
-        ListCellRenderer<Color>
+    private static class ColorComboRenderer extends JLabel
+        implements ListCellRenderer<Color>
     {
         private ColorIcon icon;
 

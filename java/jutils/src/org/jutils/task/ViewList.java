@@ -38,8 +38,10 @@ public class ViewList implements IView<JComponent>
         JScrollPane scrollpane = new JScrollPane( panel );
 
         scrollpane.setBorder( new LineBorder( Color.gray, 1 ) );
-        scrollpane.setVerticalScrollBarPolicy( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
-        scrollpane.setHorizontalScrollBarPolicy( ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER );
+        scrollpane.setVerticalScrollBarPolicy(
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
+        scrollpane.setHorizontalScrollBarPolicy(
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER );
 
         panel.add( itemsPanel, BorderLayout.NORTH );
         panel.add( Box.createHorizontalStrut( 0 ), BorderLayout.CENTER );
@@ -81,8 +83,8 @@ public class ViewList implements IView<JComponent>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class OnlyVerticalScrollPanel extends JPanel implements
-        Scrollable
+    private static class OnlyVerticalScrollPanel extends JPanel
+        implements Scrollable
     {
         public OnlyVerticalScrollPanel( LayoutManager lm )
         {
