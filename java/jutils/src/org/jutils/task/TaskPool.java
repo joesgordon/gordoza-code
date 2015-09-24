@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import org.jutils.concurrent.*;
@@ -119,7 +120,23 @@ public class TaskPool
                 stopManager.addFinishedListener(
                     new TaskFinishedListener( this, runner, tasker, view ) );
 
-                pool.submit( runner );
+                try
+                {
+                    pool.submit( runner );
+                }
+                catch( RejectedExecutionException ex )
+                {
+                    if( pool.isShutdown() )
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        throw new RuntimeException(
+                            "Pool not excepting a task, but still running",
+                            ex );
+                    }
+                }
             }
             else
             {

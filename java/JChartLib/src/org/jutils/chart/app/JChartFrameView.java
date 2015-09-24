@@ -78,7 +78,9 @@ public class JChartFrameView implements IView<JFrame>
 
         chartView.chart.title.text = "Example Data Sets";
 
-        data = ChartUtils.createLineSeries( 1000000, -1.0, 0.0, -5.0, 5.0 );
+        int pointCount = 10000;
+
+        data = ChartUtils.createLineSeries( pointCount, -1.0, 0.0, -5.0, 5.0 );
         s = new Series( data );
         s.name = "y = -x";
         s.marker.color = new Color( 0xFF9933 );
@@ -86,7 +88,8 @@ public class JChartFrameView implements IView<JFrame>
         s.line.color = new Color( 0xCC6622 );
         chartView.addSeries( s, true );
 
-        data = ChartUtils.createSinSeries( 1000000, 1.0, 4.0, 0.0, -5.0, 5.0 );
+        data = ChartUtils.createSinSeries( pointCount, 1.0, 4.0, 0.0, -5.0,
+            5.0 );
         s = new Series( data );
         s.name = "y = sin(x)";
         s.marker.color = new Color( 0x339933 );
@@ -95,7 +98,7 @@ public class JChartFrameView implements IView<JFrame>
         s.line.weight = 4;
         chartView.addSeries( s, true );
 
-        data = ChartUtils.createLineSeries( 1000000, 1.0, 0.0, 5.0, 10.0 );
+        data = ChartUtils.createLineSeries( pointCount, 1.0, 0.0, 5.0, 10.0 );
         s = new Series( data );
         s.name = "y = x";
         s.line.weight = 4;
@@ -103,7 +106,8 @@ public class JChartFrameView implements IView<JFrame>
         s.isPrimaryRange = false;
         chartView.addSeries( s, true );
 
-        // data = ChartUtils.createSinSeries( 1000000, 4.0, 40.0, 0.0, -5.0, 5.0
+        // data = ChartUtils.createSinSeries( pointCount, 4.0, 40.0, 0.0, -5.0,
+        // 5.0
         // );
         // s = new Series( data );
         // s.name = "y = sin(x)";

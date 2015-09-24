@@ -404,6 +404,24 @@ public class AxesWidget implements IChartWidget
     }
 
     /***************************************************************************
+     * @param trans
+     * @param g2d
+     * @param x
+     * @param y
+     * @param h
+     **************************************************************************/
+    private void drawDomainLabel( Graphics2D g2d, Tick t, int y, int h,
+        Dimension canvasSize )
+    {
+        domainLabel.text = t.label;
+        int tw = domainText.calculateSize( canvasSize ).width;
+        Point p = new Point( t.offset - tw / 2, y );
+        Dimension d = new Dimension( tw, h );
+        domainText.repaint();
+        domainText.draw( g2d, p, d );
+    }
+
+    /***************************************************************************
      * @param g2d
      * @param ticks
      * @param x
@@ -417,6 +435,28 @@ public class AxesWidget implements IChartWidget
         {
             drawRangeLabel( g2d, t, x, w, leftAlign, canvasSize );
         }
+    }
+
+    /***************************************************************************
+     * @param trans
+     * @param g2d
+     * @param x
+     * @param leftAlign
+     * @param y
+     * @param h
+     **************************************************************************/
+    private void drawRangeLabel( Graphics2D g2d, Tick t, int x, int w,
+        boolean leftAlign, Dimension canvasSize )
+    {
+        rangeLabel.text = t.label;
+        Dimension d = rangeText.calculateSize( canvasSize );
+        int tw = d.width;
+        int h = d.height;
+        int tx = leftAlign ? x : x + w - tw;
+        Point p = new Point( tx, t.offset - h / 2 );
+
+        rangeText.repaint();
+        rangeText.draw( g2d, p, d );
     }
 
     /***************************************************************************
@@ -486,24 +526,6 @@ public class AxesWidget implements IChartWidget
     }
 
     /***************************************************************************
-     * @param trans
-     * @param g2d
-     * @param x
-     * @param y
-     * @param h
-     **************************************************************************/
-    private void drawDomainLabel( Graphics2D g2d, Tick t, int y, int h,
-        Dimension canvasSize )
-    {
-        domainLabel.text = t.label;
-        int tw = domainText.calculateSize( canvasSize ).width;
-        Point p = new Point( t.offset - tw / 2, y );
-        Dimension d = new Dimension( tw, h );
-        domainText.repaint();
-        domainText.draw( g2d, p, d );
-    }
-
-    /***************************************************************************
      * @param value
      * @return
      **************************************************************************/
@@ -517,27 +539,5 @@ public class AxesWidget implements IChartWidget
         // return String.format( fmt, value );
 
         return String.format( "%.3f", value );
-    }
-
-    /***************************************************************************
-     * @param trans
-     * @param g2d
-     * @param x
-     * @param leftAlign
-     * @param y
-     * @param h
-     **************************************************************************/
-    private void drawRangeLabel( Graphics2D g2d, Tick t, int x, int w,
-        boolean leftAlign, Dimension canvasSize )
-    {
-        rangeLabel.text = t.label;
-        Dimension d = rangeText.calculateSize( canvasSize );
-        int tw = d.width;
-        int h = d.height;
-        int tx = leftAlign ? x : x + w - tw;
-        Point p = new Point( tx, t.offset - h / 2 );
-
-        rangeText.repaint();
-        rangeText.draw( g2d, p, d );
     }
 }
