@@ -4,9 +4,8 @@ import java.awt.*;
 
 import org.jutils.SwingUtils;
 import org.jutils.chart.ChartUtils;
-import org.jutils.chart.data.Bounds;
 import org.jutils.chart.data.ChartContext;
-import org.jutils.chart.data.ChartContext.IDimensionCoords;
+import org.jutils.chart.data.ChartContext.IAxisCoords;
 import org.jutils.chart.model.*;
 import org.jutils.chart.ui.IChartWidget;
 import org.jutils.chart.ui.Layer2d;
@@ -83,20 +82,18 @@ public class SeriesWidget implements IChartWidget
         Point p = new Point();
         Point last = new Point( -100, -100 );
         IDataPoint dp;
-        Bounds b = context.getBounds();
 
         // LogUtils.printDebug( "series: " + series.name + " weight: " +
         // series.marker.weight );
 
-        Span spanx = series.isPrimaryDomain ? b.primaryDomainSpan
-            : b.secondaryDomainSpan;
+        IAxisCoords domain = series.isPrimaryDomain ? context.domainCoords
+            : context.secDomainCoords;
+        IAxisCoords range = series.isPrimaryRange ? context.rangeCoords
+            : context.secRangeCoords;
+
+        Interval spanx = domain.getBounds();
         // Span spany = series.isPrimaryRange ? context.primaryRangeSpan
         // : context.secondaryRangeSpan;
-
-        IDimensionCoords domain = series.isPrimaryDomain
-            ? context.domain.primary : context.domain.secondary;
-        IDimensionCoords range = series.isPrimaryRange ? context.range.primary
-            : context.range.secondary;
 
         if( spanx == null )
         {
@@ -189,7 +186,7 @@ public class SeriesWidget implements IChartWidget
      * @param domain
      * @param range
      **************************************************************************/
-    public void setSelected( Span domain, Span range )
+    public void setSelected( Interval domain, Interval range )
     {
         for( IDataPoint xy : series.data )
         {

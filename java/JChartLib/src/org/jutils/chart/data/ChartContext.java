@@ -1,7 +1,10 @@
 package org.jutils.chart.data;
 
-import org.jutils.chart.model.Chart;
-import org.jutils.chart.model.Span;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jutils.chart.model.*;
 
 /*******************************************************************************
  * 
@@ -18,66 +21,45 @@ public class ChartContext
     public int height;
 
     /**  */
-    private Bounds bounds;
+    public final Chart chart;
     /**  */
-    private Bounds autoBounds;
-
+    public final IAxisCoords domainCoords;
     /**  */
-    public AxisCoords domain;
+    public final IAxisCoords rangeCoords;
     /**  */
-    public AxisCoords range;
+    public final IAxisCoords secDomainCoords;
+    /**  */
+    public final IAxisCoords secRangeCoords;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public ChartContext()
+    public ChartContext( Chart chart )
     {
-        x = 0;
-        y = 0;
-        width = 0;
-        height = 0;
+        this.chart = chart;
 
-        this.bounds = new Bounds();
-        this.autoBounds = new Bounds();
+        this.x = 0;
+        this.y = 0;
+        this.width = 0;
+        this.height = 0;
+
+        this.domainCoords = new DomainDimensionCoords( chart.domainAxis, true );
+        this.rangeCoords = new RangeDimensionCoords( chart.rangeAxis, true );
+        this.secDomainCoords = new DomainDimensionCoords( chart.secDomainAxis,
+            false );
+        this.secRangeCoords = new RangeDimensionCoords( chart.secRangeAxis,
+            false );
     }
 
     /***************************************************************************
      * @param chart
      **************************************************************************/
-    public void setAutoBounds( Chart chart )
+    public void calculateAutoBounds()
     {
-        calculateAutoBounds( chart );
-
-        bounds = new Bounds( autoBounds );
-
-        latchCoords();
-    }
-
-    /***************************************************************************
-     * @param chart
-     **************************************************************************/
-    public void calculateAutoBounds( Chart chart )
-    {
-        autoBounds.primaryDomainSpan = chart.calculatePrimaryDomainSpan();
-        autoBounds.primaryRangeSpan = chart.calculatePrimaryRangeSpan();
-        autoBounds.secondaryDomainSpan = chart.calculateSecondaryDomainSpan();
-        autoBounds.secondaryRangeSpan = chart.calculateSecondaryRangeSpan();
-
-        if( ( bounds.secondaryDomainSpan == null &&
-            autoBounds.secondaryDomainSpan != null ) ||
-            ( bounds.secondaryDomainSpan != null &&
-                autoBounds.secondaryDomainSpan == null ) )
-        {
-            bounds.secondaryDomainSpan = autoBounds.secondaryDomainSpan;
-        }
-
-        if( ( bounds.secondaryRangeSpan == null &&
-            autoBounds.secondaryRangeSpan != null ) ||
-            ( bounds.secondaryRangeSpan != null &&
-                autoBounds.secondaryRangeSpan == null ) )
-        {
-            bounds.secondaryRangeSpan = autoBounds.secondaryRangeSpan;
-        }
+        domainCoords.calculateBounds( chart.series );
+        rangeCoords.calculateBounds( chart.series );
+        secDomainCoords.calculateBounds( chart.series );
+        secRangeCoords.calculateBounds( chart.series );
     }
 
     /***************************************************************************
@@ -85,7 +67,10 @@ public class ChartContext
      **************************************************************************/
     public void restoreAutoBounds()
     {
-        bounds = new Bounds( autoBounds );
+        chart.domainAxis.calcBounds = true;
+        chart.rangeAxis.calcBounds = true;
+        chart.secDomainAxis.calcBounds = true;
+        chart.secRangeAxis.calcBounds = true;
 
         latchCoords();
     }
@@ -95,81 +80,248 @@ public class ChartContext
      **************************************************************************/
     public void latchCoords()
     {
-        this.domain = new AxisCoords( width, true, bounds.primaryDomainSpan,
-            bounds.secondaryDomainSpan );
-        this.range = new AxisCoords( height, false, bounds.primaryRangeSpan,
-            bounds.secondaryRangeSpan );
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public Bounds getBounds()
-    {
-        return new Bounds( bounds );
-    }
-
-    /***************************************************************************
-     * @param b
-     **************************************************************************/
-    public void setBounds( Bounds b )
-    {
-        this.bounds = new Bounds( b );
-
-        latchCoords();
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public boolean isAutoBounds()
-    {
-        return bounds.equals( autoBounds );
+        domainCoords.latchCoords( chart.domainAxis.getBounds(), width );
+        rangeCoords.latchCoords( chart.rangeAxis.getBounds(), height );
+        secDomainCoords.latchCoords( chart.secDomainAxis.getBounds(), width );
+        secRangeCoords.latchCoords( chart.secRangeAxis.getBounds(), height );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public static class AxisCoords
+    public static List<Interval> getIntervals( List<Series> series,
+        boolean isDomain, boolean isPrimary )
     {
-        public final IDimensionCoords primary;
-        public final IDimensionCoords secondary;
+        List<Interval> intervals = new ArrayList<>( series.size() );
 
-        public AxisCoords( int length, boolean isDomain, Span primarySpan,
-            Span secondarySpan )
+        for( Series s : series )
         {
-            IDimensionCoords primary;
-            IDimensionCoords secondary = null;
+            boolean isRequestedAxis = false;
 
-            if( isDomain )
+            if( isDomain && isPrimary ) // primary domain
             {
-                DimensionStats stats;
+                isRequestedAxis = s.isPrimaryDomain;
+            }
+            else if( isDomain && !isPrimary ) // secondary domain
+            {
+                isRequestedAxis = !s.isPrimaryDomain;
+            }
+            else if( !isDomain && isPrimary ) // primary range
+            {
+                isRequestedAxis = s.isPrimaryRange;
+            }
+            else if( !isDomain && !isPrimary ) // secondary range
+            {
+                isRequestedAxis = !s.isPrimaryRange;
+            }
 
-                stats = new DimensionStats( primarySpan, length );
-                primary = new DomainDimensionCoords( stats );
+            if( s.visible && isRequestedAxis )
+            {
+                Interval span;
 
-                if( secondarySpan != null )
+                if( isDomain )
                 {
-                    stats = new DimensionStats( secondarySpan, length );
-                    secondary = new DomainDimensionCoords( stats );
+                    span = s.calcDomainSpan();
                 }
+                else
+                {
+                    span = s.calcRangeSpan();
+                }
+
+                intervals.add( span );
+            }
+        }
+
+        return intervals;
+    }
+
+    public boolean isAutoBounds()
+    {
+        // TODO This is terrible fix it!!!!
+        return chart.domainAxis.calcBounds && chart.rangeAxis.calcBounds &&
+            chart.secDomainAxis.calcBounds && chart.secDomainAxis.calcBounds;
+    }
+
+    public Point ensurePoint( Point p )
+    {
+        p.x = ensureHorizontal( p.x );
+        p.y = ensureVertical( p.y );
+
+        return p;
+    }
+
+    private int ensureHorizontal( int x )
+    {
+        x = Math.max( x, this.x );
+        x = Math.min( x, x + width );
+
+        return x;
+    }
+
+    private int ensureVertical( int y )
+    {
+        y = Math.max( y, y );
+        y = Math.min( y, y + height );
+
+        return y;
+    }
+
+    /***************************************************************************
+     * Returns the bounds for the provided intervals that includes each interval
+     * or {@code null} if the list is empty.
+     * @param isPrimary
+     * @param isDomain
+     * @param intervals
+     * @return
+     **************************************************************************/
+    private static Interval calculateAutoBounds( List<Series> series,
+        boolean isDomain, boolean isPrimary )
+    {
+        List<Interval> intervals = getIntervals( series, isDomain, isPrimary );
+        Double min = null;
+        Double max = null;
+
+        for( Interval span : intervals )
+        {
+            if( span == null )
+            {
+                continue;
+            }
+
+            if( min == null )
+            {
+                min = span.min;
+                max = span.max;
             }
             else
             {
-                DimensionStats stats;
-
-                stats = new DimensionStats( primarySpan, length );
-                primary = new RangeDimensionCoords( stats );
-
-                if( secondarySpan != null )
-                {
-                    stats = new DimensionStats( secondarySpan, length );
-                    secondary = new RangeDimensionCoords( stats );
-                }
+                min = Math.min( min, span.min );
+                max = Math.max( max, span.max );
             }
+        }
 
-            this.primary = primary;
-            this.secondary = secondary;
+        if( min == null )
+        {
+            return null;
+        }
+        else if( min.equals( max ) )
+        {
+            min -= 0.5;
+            max += 0.5;
+        }
+
+        double r = max - min;
+
+        return new Interval( min - 0.03 * r, max + 0.03 * r );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public static interface IAxisCoords
+    {
+        public double fromScreen( int s );
+
+        public int fromCoord( double c );
+
+        public Interval getBounds();
+
+        public void calculateBounds( List<Series> series );
+
+        public void latchCoords( Interval bounds, int length );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static abstract class AbrstractCoords implements IAxisCoords
+    {
+        private final Axis axis;
+        private final boolean isDomain;
+        private final boolean isPrimary;
+        protected DimensionStats stats;
+
+        public AbrstractCoords( Axis axis, boolean isDomain, boolean isPrimary )
+        {
+            this.axis = axis;
+            this.isDomain = isDomain;
+            this.isPrimary = isPrimary;
+            this.stats = new DimensionStats( new Interval( -5, 5 ), 500 );
+        }
+
+        @Override
+        public abstract double fromScreen( int s );
+
+        @Override
+        public abstract int fromCoord( double c );
+
+        @Override
+        public final Interval getBounds()
+        {
+            return stats.bounds;
+        }
+
+        @Override
+        public final void calculateBounds( List<Series> series )
+        {
+            axis.autoBounds = calculateAutoBounds( series, isDomain,
+                isPrimary );
+        }
+
+        @Override
+        public final void latchCoords( Interval bounds, int length )
+        {
+            this.stats = new DimensionStats( bounds, length );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    static class DomainDimensionCoords extends AbrstractCoords
+    {
+        public DomainDimensionCoords( Axis axis, boolean isPrimary )
+        {
+            super( axis, true, isPrimary );
+        }
+
+        @Override
+        public double fromScreen( int s )
+        {
+            return s / stats.scale + stats.bounds.min;
+        }
+
+        @Override
+        public int fromCoord( double c )
+        {
+            return ( int )Math.round( ( c - stats.bounds.min ) * stats.scale );
+            // return ( int )( ( c - stats.span.min ) * stats.scale );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class RangeDimensionCoords extends AbrstractCoords
+    {
+        public RangeDimensionCoords( Axis axis, boolean isPrimary )
+        {
+            super( axis, false, isPrimary );
+        }
+
+        @Override
+        public double fromScreen( int s )
+        {
+            return stats.bounds.max - s / stats.scale;
+        }
+
+        @Override
+        public int fromCoord( double c )
+        {
+            return ( int )Math.round(
+                stats.length - ( c - stats.bounds.min ) * stats.scale );
+            // return ( int )( stats.length - ( c - stats.span.min ) *
+            // stats.scale );
         }
     }
 
@@ -178,93 +330,15 @@ public class ChartContext
      **************************************************************************/
     private static class DimensionStats
     {
-        public final Span span;
+        public final Interval bounds;
         public final double scale;
         public final int length;
 
-        public DimensionStats( Span span, int length )
+        public DimensionStats( Interval bounds, int length )
         {
-            this.span = span;
+            this.bounds = bounds;
             this.length = length;
-            this.scale = length / span.range;
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public static interface IDimensionCoords
-    {
-        public double fromScreen( int s );
-
-        public int fromCoord( double c );
-
-        public Span getSpan();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class DomainDimensionCoords implements IDimensionCoords
-    {
-        public final DimensionStats stats;
-
-        public DomainDimensionCoords( DimensionStats stats )
-        {
-            this.stats = stats;
-        }
-
-        @Override
-        public double fromScreen( int s )
-        {
-            return s / stats.scale + stats.span.min;
-        }
-
-        @Override
-        public int fromCoord( double c )
-        {
-            return ( int )Math.round( ( c - stats.span.min ) * stats.scale );
-            // return ( int )( ( c - stats.span.min ) * stats.scale );
-        }
-
-        @Override
-        public Span getSpan()
-        {
-            return stats.span;
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class RangeDimensionCoords implements IDimensionCoords
-    {
-        public final DimensionStats stats;
-
-        public RangeDimensionCoords( DimensionStats stats )
-        {
-            this.stats = stats;
-        }
-
-        @Override
-        public double fromScreen( int s )
-        {
-            return -1 * s / stats.scale + stats.span.max;
-        }
-
-        @Override
-        public int fromCoord( double c )
-        {
-            return ( int )Math.round(
-                stats.length - ( c - stats.span.min ) * stats.scale );
-            // return ( int )( stats.length - ( c - stats.span.min ) *
-            // stats.scale );
-        }
-
-        @Override
-        public Span getSpan()
-        {
-            return stats.span;
+            this.scale = bounds != null ? length / bounds.range : 0;
         }
     }
 }

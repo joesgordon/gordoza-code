@@ -52,7 +52,7 @@ public class Series
     /***************************************************************************
      * @return
      **************************************************************************/
-    public Span calcDomainSpan()
+    public Interval calcDomainSpan()
     {
         Double min = null;
         Double max = null;
@@ -79,13 +79,13 @@ public class Series
             return null;
         }
 
-        return new Span( min, max );
+        return new Interval( min, max );
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    public Span calcRangeSpan()
+    public Interval calcRangeSpan()
     {
         Double min = null;
         Double max = null;
@@ -112,7 +112,7 @@ public class Series
             return null;
         }
 
-        return new Span( min, max );
+        return new Interval( min, max );
     }
 
     /***************************************************************************

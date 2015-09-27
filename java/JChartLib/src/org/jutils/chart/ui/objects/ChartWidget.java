@@ -2,7 +2,6 @@ package org.jutils.chart.ui.objects;
 
 import java.awt.*;
 
-import org.jutils.chart.data.Bounds;
 import org.jutils.chart.data.ChartContext;
 import org.jutils.chart.model.Chart;
 import org.jutils.chart.model.HorizontalAlignment;
@@ -37,7 +36,7 @@ public class ChartWidget implements IChartWidget
     {
         this.chart = chart;
 
-        this.context = new ChartContext();
+        this.context = new ChartContext( chart );
         this.topBottom = new TextWidget( chart.topBottomLabel );
         this.title = new TextWidget( chart.title );
         this.subtitle = new TextWidget( chart.subtitle );
@@ -266,9 +265,9 @@ public class ChartWidget implements IChartWidget
     /***************************************************************************
      * 
      **************************************************************************/
-    public void setAutoBounds()
+    public void restoreAutoBounds()
     {
-        context.setAutoBounds( chart );
+        context.restoreAutoBounds();
     }
 
     /***************************************************************************
@@ -276,15 +275,15 @@ public class ChartWidget implements IChartWidget
      **************************************************************************/
     public void calculateAutoBounds()
     {
-        context.calculateAutoBounds( chart );
+        context.calculateAutoBounds();
     }
 
     /***************************************************************************
      * @param b
      **************************************************************************/
-    public void setBounds( Bounds b )
+    public void latchBounds()
     {
-        context.setBounds( b );
+        context.latchCoords();
 
         axes.axesLayer.repaint = true;
     }

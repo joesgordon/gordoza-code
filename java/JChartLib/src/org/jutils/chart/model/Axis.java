@@ -21,6 +21,12 @@ public class Axis
     public double tickEnd;
     /**  */
     public double tickWidth;
+    /**  */
+    private Interval bounds;
+    /**  */
+    public Interval autoBounds;
+    /**  */
+    public boolean calcBounds;
 
     /***************************************************************************
      * 
@@ -34,6 +40,9 @@ public class Axis
         this.tickEnd = 5.0;
         this.tickWidth = 1.0;
         this.dockZero = false;
+        this.bounds = new Interval( -5.0, 5.0 );
+        this.autoBounds = new Interval( -5.0, 5.0 );
+        this.calcBounds = true;
 
         title.alignment = HorizontalAlignment.CENTER;
         title.font = title.font.deriveFont( 14.0f ).deriveFont( Font.BOLD );
@@ -43,5 +52,27 @@ public class Axis
         subtitle.alignment = HorizontalAlignment.CENTER;
         subtitle.font = subtitle.font.deriveFont( 10.0f );
         subtitle.visible = false;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public Interval getBounds()
+    {
+        return calcBounds ? autoBounds : bounds;
+    }
+
+    /***************************************************************************
+     * @param bounds
+     **************************************************************************/
+    public void setBounds( Interval bounds )
+    {
+        this.calcBounds = false;
+        this.bounds = bounds;
+    }
+
+    public boolean isUsed()
+    {
+        return autoBounds != null;
     }
 }

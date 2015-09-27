@@ -3,6 +3,8 @@ package org.jutils.io;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.jutils.Utils;
+
 /*******************************************************************************
  * 
  ******************************************************************************/
@@ -38,6 +40,16 @@ public class LogUtils
     public static void printError( String message )
     {
         printMessage( "ERROR", message );
+    }
+
+    /***************************************************************************
+     * @param message
+     * @param ex
+     **************************************************************************/
+    public static void printError( String message, Exception ex )
+    {
+        printMessage( "ERROR", message );
+        Utils.printStackTrace( ex );
     }
 
     /***************************************************************************

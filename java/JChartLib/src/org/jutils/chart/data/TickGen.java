@@ -1,10 +1,9 @@
 package org.jutils.chart.data;
 
-import java.util.*;
+import java.util.List;
 
-import org.jutils.chart.data.ChartContext.IDimensionCoords;
 import org.jutils.chart.model.Axis;
-import org.jutils.chart.model.Span;
+import org.jutils.chart.model.Interval;
 
 /*******************************************************************************
  * 
@@ -16,8 +15,6 @@ public class TickGen
     /**  */
     private static final int DEFAULT_MAX_SIZE = ( int )( 96 * 1.25 );
     /**  */
-    private final Axis axis;
-    /**  */
     private int minTickSize;
     /**  */
     private int maxTickSize;
@@ -25,9 +22,8 @@ public class TickGen
     /***************************************************************************
      * @param axis
      **************************************************************************/
-    public TickGen( Axis axis )
+    public TickGen()
     {
-        this.axis = axis;
         this.minTickSize = DEFAULT_MIN_SIZE;
         this.maxTickSize = DEFAULT_MAX_SIZE;
     }
@@ -39,25 +35,26 @@ public class TickGen
      * @param range
      * @return
      **************************************************************************/
-    public List<Tick> genTicks( int offset, int dist, IDimensionCoords coords,
-        boolean range )
+    public void genTicks( Axis axis, int dist, List<Tick> ticks )
     {
-        List<Tick> ticks = new ArrayList<>();
+        Interval bounds = axis.getBounds();
 
-        if( coords == null )
+        ticks.clear();
+
+        if( bounds == null )
         {
-            return ticks;
+            return;
         }
 
         TickMetrics tickMets = new TickMetrics();
 
         if( axis.autoTicks )
         {
-            tickMets = generateTickMetrics( dist, coords.getSpan() );
+            tickMets = generateTickMetrics( dist, bounds );
         }
         else
         {
-            tickMets = calculateMetrics();
+            tickMets = calculateMetrics( axis );
         }
 
         int order = Math.abs( tickMets.tickOrder );
@@ -75,23 +72,15 @@ public class TickGen
         for( int i = 0; i < tickMets.tickCount; i++ )
         {
             double d = tickMets.tickStart + tickMets.tickWidth * i;
-            int off = offset + coords.fromCoord( d );
 
-            ticks.add( new Tick( off, d, String.format( fmt, d ) ) );
+            ticks.add( new Tick( d, String.format( fmt, d ) ) );
         }
-
-        if( range )
-        {
-            Collections.reverse( ticks );
-        }
-
-        return ticks;
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    private TickMetrics calculateMetrics()
+    private TickMetrics calculateMetrics( Axis axis )
     {
         TickMetrics metrics = new TickMetrics();
 
@@ -110,7 +99,7 @@ public class TickGen
      * @param coords
      * @return
      **************************************************************************/
-    TickMetrics generateTickMetrics( int dist, Span span )
+    TickMetrics generateTickMetrics( int dist, Interval span )
     {
         TickMetrics metrics = new TickMetrics();
 
@@ -182,41 +171,6 @@ public class TickGen
         metrics.tickWidth = tickWidthCs;
 
         return metrics;
-    }
-
-    /***************************************************************************
-     * @param offset
-     * @param dist
-     * @param sectionCount
-     * @param min
-     * @param max
-     * @return
-     **************************************************************************/
-    public static List<Tick> genTicks( int offset, int dist, int sectionCount,
-        IDimensionCoords coords, boolean range )
-    {
-        List<Tick> ticks = new ArrayList<>();
-
-        if( coords == null )
-        {
-            return ticks;
-        }
-
-        Span span = coords.getSpan();
-
-        ticks.add( new Tick( offset, range ? span.max : span.min ) );
-
-        for( int i = 1; i < sectionCount; i++ )
-        {
-            double d = range ? span.max - i * span.range / sectionCount
-                : span.min + i * span.range / sectionCount;
-            int off = offset + coords.fromCoord( d );
-            ticks.add( new Tick( off, d ) );
-        }
-
-        ticks.add( new Tick( offset + dist, range ? span.min : span.max ) );
-
-        return ticks;
     }
 
     /***************************************************************************

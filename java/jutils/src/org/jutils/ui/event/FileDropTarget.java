@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.swing.*;
 
+import org.jutils.io.LogUtils;
 import org.jutils.ui.validators.FileValidator.ExistenceType;
 
 /*******************************************************************************
@@ -54,7 +55,7 @@ public class FileDropTarget extends DropTarget
         }
         catch( Exception ex )
         {
-            ex.printStackTrace();
+            LogUtils.printError( "Unable to drag and drop file", ex );
         }
     }
 

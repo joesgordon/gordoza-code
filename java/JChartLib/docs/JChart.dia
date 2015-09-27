@@ -28,7 +28,7 @@
           <dia:boolean val="false"/>
         </dia:attribute>
         <dia:attribute name="scaling">
-          <dia:real val="0.39662960171699524"/>
+          <dia:real val="0.39662954211235046"/>
         </dia:attribute>
         <dia:attribute name="fitto">
           <dia:boolean val="true"/>
@@ -74,7 +74,7 @@
         <dia:point val="14.4636,1.23435"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="14.4136,1.18435;27.3336,14.2843"/>
+        <dia:rectangle val="14.4136,1.18435;27.3336,14.2844"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
         <dia:point val="14.4636,1.23435"/>
@@ -1371,7 +1371,7 @@
         <dia:point val="17.0015,21.6967"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="16.9515,21.6467;25.2515,31.3467"/>
+        <dia:rectangle val="16.9515,21.6467;25.2515,30.5467"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
         <dia:point val="17.0015,21.6967"/>
@@ -1380,7 +1380,7 @@
         <dia:real val="8.1999999999999993"/>
       </dia:attribute>
       <dia:attribute name="elem_height">
-        <dia:real val="9.5999999999999996"/>
+        <dia:real val="8.7999999999999989"/>
       </dia:attribute>
       <dia:attribute name="name">
         <dia:string>#Axis#</dia:string>
@@ -1633,33 +1633,10 @@
         </dia:composite>
         <dia:composite type="umlattribute">
           <dia:attribute name="name">
-            <dia:string>#min#</dia:string>
+            <dia:string>#bounds#</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
-            <dia:string>#Double#</dia:string>
-          </dia:attribute>
-          <dia:attribute name="value">
-            <dia:string>##</dia:string>
-          </dia:attribute>
-          <dia:attribute name="comment">
-            <dia:string>##</dia:string>
-          </dia:attribute>
-          <dia:attribute name="visibility">
-            <dia:enum val="0"/>
-          </dia:attribute>
-          <dia:attribute name="abstract">
-            <dia:boolean val="false"/>
-          </dia:attribute>
-          <dia:attribute name="class_scope">
-            <dia:boolean val="false"/>
-          </dia:attribute>
-        </dia:composite>
-        <dia:composite type="umlattribute">
-          <dia:attribute name="name">
-            <dia:string>#max#</dia:string>
-          </dia:attribute>
-          <dia:attribute name="type">
-            <dia:string>#Double#</dia:string>
+            <dia:string>#Interval#</dia:string>
           </dia:attribute>
           <dia:attribute name="value">
             <dia:string>##</dia:string>
@@ -1950,7 +1927,7 @@
         <dia:real val="4"/>
       </dia:attribute>
       <dia:attribute name="name">
-        <dia:string>#Span#</dia:string>
+        <dia:string>#Interval#</dia:string>
       </dia:attribute>
       <dia:attribute name="stereotype">
         <dia:string>##</dia:string>
@@ -3132,16 +3109,16 @@
     </dia:object>
     <dia:object type="UML - Class" version="0" id="O11">
       <dia:attribute name="obj_pos">
-        <dia:point val="30.9522,1.16185"/>
+        <dia:point val="28.8022,1.36185"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="30.9022,1.11185;41.1272,11.0118"/>
+        <dia:rectangle val="28.7522,1.31185;41.2872,11.2119"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
-        <dia:point val="30.9522,1.16185"/>
+        <dia:point val="28.8022,1.36185"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
-        <dia:real val="10.125"/>
+        <dia:real val="12.434999999999999"/>
       </dia:attribute>
       <dia:attribute name="elem_height">
         <dia:real val="9.8000000000000007"/>
@@ -3454,13 +3431,13 @@
         </dia:composite>
         <dia:composite type="umloperation">
           <dia:attribute name="name">
-            <dia:string>#calcDomainSpan#</dia:string>
+            <dia:string>#calcDomainInterval#</dia:string>
           </dia:attribute>
           <dia:attribute name="stereotype">
             <dia:string>##</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
-            <dia:string>#Span#</dia:string>
+            <dia:string>#Interval#</dia:string>
           </dia:attribute>
           <dia:attribute name="visibility">
             <dia:enum val="0"/>
@@ -3484,13 +3461,13 @@
         </dia:composite>
         <dia:composite type="umloperation">
           <dia:attribute name="name">
-            <dia:string>#calcRangeSpan#</dia:string>
+            <dia:string>#calcRangeInterval#</dia:string>
           </dia:attribute>
           <dia:attribute name="stereotype">
             <dia:string>##</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
-            <dia:string>#Span#</dia:string>
+            <dia:string>#Interval#</dia:string>
           </dia:attribute>
           <dia:attribute name="visibility">
             <dia:enum val="0"/>
@@ -3790,7 +3767,7 @@
         <dia:point val="-2.74165,4.61817"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="-2.79165,4.56817;13.2083,16.6682"/>
+        <dia:rectangle val="-2.79165,4.56817;13.2084,16.6682"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
         <dia:point val="-2.74165,4.61817"/>

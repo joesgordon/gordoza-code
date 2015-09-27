@@ -15,8 +15,8 @@ import org.jutils.*;
 import org.jutils.chart.*;
 import org.jutils.chart.app.JChartAppConstants;
 import org.jutils.chart.app.UserData;
-import org.jutils.chart.data.*;
-import org.jutils.chart.data.ChartContext.IDimensionCoords;
+import org.jutils.chart.data.ChartContext;
+import org.jutils.chart.data.SaveOptions;
 import org.jutils.chart.io.DataFileReader;
 import org.jutils.chart.model.*;
 import org.jutils.chart.ui.event.SaveSeriesDataListener;
@@ -99,7 +99,8 @@ public class ChartView implements IView<JComponent>
 
         mainPanel.setObject( chartWidget );
 
-        ChartMouseListenter ml = new ChartMouseListenter( this );
+        ChartMouseListenter ml = new ChartMouseListenter( this, chartWidget,
+            mainPanel );
 
         mainPanel.addComponentListener( new ChartComponentListener( this ) );
         mainPanel.addMouseListener( ml );
@@ -341,6 +342,7 @@ public class ChartView implements IView<JComponent>
         chart.series.add( s );
         chartWidget.plot.serieses.add(
             new SeriesWidget( chart, s, chartWidget.context ) );
+        chartWidget.context.calculateAutoBounds();
         restoreAndRepaintChart();
 
         propertiesView.addSeries( s, chart.series.size() );
@@ -432,11 +434,9 @@ public class ChartView implements IView<JComponent>
 
     public void setPrimaryRangeBounds( double min, double max )
     {
-        Bounds b = chartWidget.context.getBounds();
+        chart.domainAxis.setBounds( new Interval( min, max ) );
 
-        b.primaryRangeSpan = new Span( min, max );
-
-        chartWidget.context.setBounds( b );
+        chartWidget.context.latchCoords();
 
         chartWidget.plot.seriesLayer.repaint = true;
         chartWidget.axes.axesLayer.repaint = true;
@@ -459,22 +459,21 @@ public class ChartView implements IView<JComponent>
      **************************************************************************/
     public void zoomIn()
     {
-        Bounds b = chartWidget.context.getBounds();
+        chart.domainAxis.setBounds( chart.domainAxis.getBounds().zoomIn() );
+        chart.rangeAxis.setBounds( chart.rangeAxis.getBounds().zoomIn() );
 
-        b.primaryDomainSpan = b.primaryDomainSpan.zoomIn();
-        b.primaryRangeSpan = b.primaryRangeSpan.zoomIn();
-
-        if( b.secondaryDomainSpan != null )
+        if( chart.secDomainAxis.isUsed() )
         {
-            b.secondaryDomainSpan = b.secondaryDomainSpan.zoomIn();
+            chart.secDomainAxis.setBounds(
+                chart.secDomainAxis.getBounds().zoomIn() );
+        }
+        if( chart.secRangeAxis.isUsed() )
+        {
+            chart.secRangeAxis.setBounds(
+                chart.secRangeAxis.getBounds().zoomIn() );
         }
 
-        if( b.secondaryRangeSpan != null )
-        {
-            b.secondaryRangeSpan = b.secondaryRangeSpan.zoomIn();
-        }
-
-        chartWidget.context.setBounds( b );
+        chartWidget.context.latchCoords();
 
         chartWidget.plot.seriesLayer.repaint = true;
         chartWidget.axes.axesLayer.repaint = true;
@@ -486,22 +485,22 @@ public class ChartView implements IView<JComponent>
      **************************************************************************/
     public void zoomOut()
     {
-        Bounds b = chartWidget.context.getBounds();
+        chart.domainAxis.setBounds( chart.domainAxis.getBounds().zoomOut() );
+        chart.rangeAxis.setBounds( chart.rangeAxis.getBounds().zoomOut() );
 
-        b.primaryDomainSpan = b.primaryDomainSpan.zoomOut();
-        b.primaryRangeSpan = b.primaryRangeSpan.zoomOut();
-
-        if( b.secondaryDomainSpan != null )
+        if( chart.secDomainAxis.isUsed() )
         {
-            b.secondaryDomainSpan = b.secondaryDomainSpan.zoomOut();
+            chart.secDomainAxis.setBounds(
+                chart.secDomainAxis.getBounds().zoomOut() );
         }
 
-        if( b.secondaryRangeSpan != null )
+        if( chart.secRangeAxis.isUsed() )
         {
-            b.secondaryRangeSpan = b.secondaryRangeSpan.zoomOut();
+            chart.secRangeAxis.setBounds(
+                chart.secRangeAxis.getBounds().zoomOut() );
         }
 
-        chartWidget.context.setBounds( b );
+        chartWidget.context.latchCoords();
 
         chartWidget.plot.seriesLayer.repaint = true;
         chartWidget.axes.axesLayer.repaint = true;
@@ -513,7 +512,7 @@ public class ChartView implements IView<JComponent>
      **************************************************************************/
     private void restoreAndRepaintChart()
     {
-        chartWidget.setAutoBounds();
+        chartWidget.restoreAutoBounds();
         repaintChart();
     }
 
@@ -630,291 +629,6 @@ public class ChartView implements IView<JComponent>
                 view.importData( files.get( i ), addData );
                 addData = true;
             }
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class ChartMouseListenter extends MouseAdapter
-    {
-        private final ChartView view;
-
-        public ChartMouseListenter( ChartView view )
-        {
-            this.view = view;
-        }
-
-        @Override
-        public void mouseDragged( MouseEvent e )
-        {
-            view.chartWidget.plot.selection.visible = true;
-            view.chartWidget.plot.selection.end = e.getPoint();
-
-            view.chartWidget.plot.highlightLayer.repaint = true;
-            view.mainPanel.repaint();
-        }
-
-        public void mouseWheelMoved( MouseWheelEvent e )
-        {
-            if( e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL )
-            {
-                int zoomAmount = e.getWheelRotation();
-
-                if( zoomAmount < 0 )
-                {
-                    view.zoomIn();
-                }
-                else
-                {
-                    view.zoomOut();
-                }
-            }
-        }
-
-        public void mouseClicked( MouseEvent e )
-        {
-            if( SwingUtilities.isLeftMouseButton( e ) &&
-                e.getClickCount() == 2 )
-            {
-                view.zoomRestore();
-            }
-            else if( SwingUtilities.isRightMouseButton( e ) &&
-                e.getClickCount() == 2 )
-            {
-                for( SeriesWidget sw : view.chartWidget.plot.serieses )
-                {
-                    sw.clearSelected();
-                    view.chartWidget.plot.seriesLayer.repaint = true;
-                    view.mainPanel.repaint();
-                }
-            }
-        }
-
-        @Override
-        public void mousePressed( MouseEvent e )
-        {
-            view.mainPanel.requestFocus();
-
-            view.chartWidget.plot.selection.start = e.getPoint();
-        }
-
-        @Override
-        public void mouseReleased( MouseEvent evt )
-        {
-            if( !view.chartWidget.plot.selection.visible )
-            {
-                return;
-            }
-
-            view.chartWidget.plot.selection.visible = false;
-
-            ChartContext context = view.chartWidget.context;
-
-            Point s = view.chartWidget.plot.selection.start;
-            Point e = evt.getPoint();
-
-            if( s == null )
-            {
-                return;
-            }
-
-            s.x = Math.max( s.x, context.x );
-            s.x = Math.min( s.x, context.x + context.width );
-            s.y = Math.max( s.y, context.y );
-            s.y = Math.min( s.y, context.y + context.height );
-
-            e.x = Math.max( e.x, context.x );
-            e.x = Math.min( e.x, context.x + context.width );
-            e.y = Math.max( e.y, context.y );
-            e.y = Math.min( e.y, context.y + context.height );
-
-            s.x -= context.x;
-            e.x -= context.x;
-
-            s.y -= context.y;
-            e.y -= context.y;
-
-            int xmin = Math.min( s.x, e.x );
-            int xmax = Math.max( s.x, e.x );
-
-            int ymin = Math.min( s.y, e.y );
-            int ymax = Math.max( s.y, e.y );
-
-            double dmin;
-            double dmax;
-
-            Span pds;
-            Span prs;
-            Span sds = null;
-            Span srs = null;
-
-            dmin = context.domain.primary.fromScreen( xmin );
-            dmax = context.domain.primary.fromScreen( xmax );
-            pds = new Span( dmin, dmax );
-
-            dmin = context.range.primary.fromScreen( ymax );
-            dmax = context.range.primary.fromScreen( ymin );
-            prs = new Span( dmin, dmax );
-            // LogUtils.printDebug( "primary domain from " + ymin + " to " +
-            // ymax );
-            // LogUtils.printDebug( "primary domain from " + dmin + " to " +
-            // dmax );
-
-            if( context.domain.secondary != null )
-            {
-                dmin = context.domain.secondary.fromScreen( xmin );
-                dmax = context.domain.secondary.fromScreen( xmax );
-                sds = new Span( dmin, dmax );
-            }
-
-            if( context.range.secondary != null )
-            {
-                dmin = context.range.secondary.fromScreen( ymax );
-                dmax = context.range.secondary.fromScreen( ymin );
-                srs = new Span( dmin, dmax );
-            }
-
-            if( pds.range == 0.0 || prs.range == 0.0 ||
-                ( sds != null && sds.range == 0.0 ) ||
-                ( srs != null && srs.range == 0.0 ) )
-            {
-                view.chartWidget.plot.highlightLayer.repaint = true;
-                view.mainPanel.repaint();
-                return;
-            }
-
-            if( SwingUtilities.isLeftMouseButton( evt ) )
-            {
-                Bounds b = context.getBounds();
-
-                b.primaryDomainSpan = pds;
-                b.primaryRangeSpan = prs;
-                b.secondaryDomainSpan = sds;
-                b.secondaryRangeSpan = srs;
-
-                view.chartWidget.setBounds( b );
-            }
-            else if( SwingUtilities.isMiddleMouseButton( evt ) )
-            {
-                ;
-            }
-            else
-            {
-                Span ds;
-                Span rs;
-
-                for( SeriesWidget sw : view.chartWidget.plot.serieses )
-                {
-                    if( sw.series.isPrimaryDomain )
-                    {
-                        ds = pds;
-                    }
-                    else
-                    {
-                        ds = sds;
-                    }
-
-                    if( sw.series.isPrimaryRange )
-                    {
-                        rs = prs;
-                    }
-                    else
-                    {
-                        rs = srs;
-                    }
-
-                    sw.setSelected( ds, rs );
-                }
-            }
-
-            view.chartWidget.plot.seriesLayer.repaint = true;
-            view.chartWidget.plot.highlightLayer.repaint = true;
-            view.mainPanel.repaint();
-        }
-
-        @Override
-        public void mouseMoved( MouseEvent e )
-        {
-            Point p = new Point( e.getX() - view.chartWidget.context.x,
-                e.getY() - 20 );
-            XYPoint xy = new XYPoint();
-            int idx;
-
-            ChartContext context = view.chartWidget.context;
-
-            // if( p.x < 0 || p.y < 0 || p.x > context.width ||
-            // p.y > context.height )
-            // {
-            // for( SeriesWidget s : view.chartWidget.plot.serieses )
-            // {
-            // s.highlight.setLocation( new Point( -5, -5 ) );
-            // }
-            // }
-
-            // LogUtils.printDebug( "hover: " + mx );
-
-            int seriesIdx = 0;
-            for( SeriesWidget s : view.chartWidget.plot.serieses )
-            {
-                Point sp = new Point( p );
-                IDimensionCoords domainCoords;
-                IDimensionCoords rangeCoords;
-
-                if( !s.series.visible )
-                {
-                    continue;
-                }
-
-                if( s.series.isPrimaryDomain )
-                {
-                    domainCoords = context.domain.primary;
-                }
-                else
-                {
-                    domainCoords = context.domain.secondary;
-                }
-
-                if( domainCoords != null )
-                {
-                    xy.x = domainCoords.fromScreen( sp.x );
-
-                    idx = ChartUtils.findNearest( s.series.data, xy.x );
-
-                    if( idx > -1 )
-                    {
-                        if( s.series.isPrimaryRange )
-                        {
-                            rangeCoords = context.range.primary;
-                        }
-                        else
-                        {
-                            rangeCoords = context.range.secondary;
-                        }
-
-                        if( domainCoords == null || rangeCoords == null )
-                        {
-                            continue;
-                        }
-
-                        xy = new XYPoint( s.series.data.get( idx ) );
-                        sp.x = domainCoords.fromCoord( xy.x );
-                        sp.y = rangeCoords.fromCoord( xy.y );
-
-                        // LogUtils.printDebug( "hover [" + s.series.name +
-                        // "]: " +
-                        // p.x + xy.x );
-
-                        s.highlight.setLocation( new Point( sp ) );
-
-                        view.propertiesView.setSelected( seriesIdx, idx );
-                    }
-                }
-                seriesIdx++;
-            }
-
-            view.chartWidget.plot.highlightLayer.repaint = true;
-            view.mainPanel.repaint();
         }
     }
 
@@ -1135,11 +849,12 @@ public class ChartView implements IView<JComponent>
 
             if( context.isAutoBounds() )
             {
-                context.setAutoBounds( view.chart );
+                context.calculateAutoBounds();
+                context.restoreAutoBounds();
             }
             else
             {
-                context.calculateAutoBounds( view.chart );
+                context.calculateAutoBounds();
             }
 
             view.chartWidget.plot.seriesLayer.repaint = true;
