@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jutils.Utils;
 import org.jutils.chart.data.*;
 import org.jutils.chart.data.ChartContext.IAxisCoords;
 import org.jutils.chart.model.*;
@@ -479,64 +480,62 @@ public class AxesWidget implements IChartWidget
     {
         Insets textSpace = new Insets( 0, 0, 0, 0 );
 
-        Dimension dMinSize;
-        Dimension dMaxSize;
-        Dimension rMinSize;
-        Dimension rMaxSize;
-        Interval b;
+        AxisSizes domainSizes = new AxisSizes( ticks.domainTicks, domainLabel,
+            domainText );
+        AxisSizes rangeSizes = new AxisSizes( ticks.rangeTicks, rangeLabel,
+            rangeText );
+        AxisSizes secDomainSizes = new AxisSizes( ticks.secDomainTicks,
+            domainLabel, domainText );
+        AxisSizes secRangeSizes = new AxisSizes( ticks.secRangeTicks,
+            rangeLabel, rangeText );
 
-        b = chart.domainAxis.getBounds();
-        domainLabel.text = getTickText( b.min );
-        dMinSize = domainText.calculateSize( canvasSize );
-        domainLabel.text = getTickText( b.max );
-        dMaxSize = domainText.calculateSize( canvasSize );
+        // ---------------------------------------------------------------------
+        // The top offset is the maximum of the largest secondary domain height,
+        // half the maximum range height, and half the maximum secondary range
+        // height.
+        // ---------------------------------------------------------------------
+        textSpace.top = Utils.max( secDomainSizes.size.height,
+            Math.round( rangeSizes.maxSize.height / 2.0f ),
+            Math.round( secRangeSizes.maxSize.height / 2.0f ) );
 
-        b = chart.rangeAxis.getBounds();
-        rangeLabel.text = getTickText( b.min );
-        rMinSize = rangeText.calculateSize( canvasSize );
-        rangeLabel.text = getTickText( b.max );
-        rMaxSize = rangeText.calculateSize( canvasSize );
+        // ---------------------------------------------------------------------
+        // The left offset is the maximum of the largest range width, half the
+        // minimum domain width, and half the minimum secondary domain width.
+        // ---------------------------------------------------------------------
+        textSpace.left = Utils.max( rangeSizes.size.width,
+            Math.round( domainSizes.minSize.width / 2.0f ),
+            Math.round( secDomainSizes.minSize.width / 2.0f ) );
 
-        textSpace.left = Math.max( dMinSize.width / 2, rMaxSize.width );
-        textSpace.left = Math.max( textSpace.left, rMinSize.width );
-        textSpace.right = dMaxSize.width / 2;
-        textSpace.bottom = Math.max( dMinSize.height, rMinSize.height / 2 );
-        textSpace.top = rMaxSize.height / 2;
+        // ---------------------------------------------------------------------
+        // The bottom offset is the maximum of the largest domain height, half
+        // the minimum range height, and half the minimum secondary range
+        // height.
+        // ---------------------------------------------------------------------
+        textSpace.bottom = Utils.max( domainSizes.size.height,
+            Math.round( rangeSizes.minSize.height / 2.0f ),
+            Math.round( secRangeSizes.minSize.height / 2.0f ) );
 
-        if( chart.secDomainAxis.isUsed() )
-        {
-            b = chart.secDomainAxis.getBounds();
-            domainLabel.text = getTickText( b.min );
-            dMinSize = domainText.calculateSize( canvasSize );
-            domainLabel.text = getTickText( b.max );
-            dMaxSize = domainText.calculateSize( canvasSize );
-
-            textSpace.left = Math.max( textSpace.left, dMinSize.width / 2 );
-            textSpace.right = Math.max( textSpace.right, dMaxSize.width / 2 );
-            textSpace.top = Math.max( textSpace.top, dMinSize.height );
-
-            textSpace.top += 4;
-        }
-
-        if( chart.secRangeAxis.isUsed() )
-        {
-            b = chart.secRangeAxis.getBounds();
-            rangeLabel.text = getTickText( b.min );
-            rMinSize = rangeText.calculateSize( canvasSize );
-            rangeLabel.text = getTickText( b.max );
-            rMaxSize = rangeText.calculateSize( canvasSize );
-
-            textSpace.bottom = Math.max( textSpace.bottom,
-                rMinSize.height / 2 );
-            textSpace.right = Math.max( textSpace.right, rMinSize.width );
-            textSpace.right = Math.max( textSpace.right, rMaxSize.width );
-            textSpace.top = Math.max( textSpace.top, rMaxSize.height / 2 );
-
-            textSpace.right += 4;
-        }
+        // ---------------------------------------------------------------------
+        // The right offset is the maximum of the largest secondary range width,
+        // half the maximum domain width, and half the maximum secondary domain
+        // width.
+        // ---------------------------------------------------------------------
+        textSpace.right = Utils.max( secRangeSizes.size.width,
+            Math.round( domainSizes.maxSize.width / 2.0f ),
+            Math.round( secDomainSizes.maxSize.width / 2.0f ) );
 
         textSpace.left += 4;
         textSpace.bottom += 4;
+
+        if( !ticks.secDomainTicks.isEmpty() )
+        {
+            textSpace.top += 4;
+        }
+
+        if( !ticks.secRangeTicks.isEmpty() )
+        {
+            textSpace.right += 4;
+        }
 
         return textSpace;
     }
@@ -545,18 +544,51 @@ public class AxesWidget implements IChartWidget
      * @param value
      * @return
      **************************************************************************/
-    private static String getTickText( double value )
+    private static void getTickSize( Tick t, TextLabel label, TextWidget w,
+        Dimension size )
     {
-        // double abs = Math.abs( value );
-        // boolean useScientific = abs != 0.0 && ( abs > 999999999 || abs <
-        // 0.001 );
-        // String fmt = useScientific ? "%.10E" : "%.3f";
-        //
-        // return String.format( fmt, value );
+        label.text = t.label;
+        Dimension d = w.calculateSize( null );
 
-        return String.format( "%.3f", value );
+        size.width = d.width;
+        size.height = d.height;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static final class AxisSizes
+    {
+        public final Dimension minSize;
+        public final Dimension maxSize;
+        public final Dimension size;
+
+        public AxisSizes( List<Tick> ticks, TextLabel label, TextWidget w )
+        {
+            this.minSize = new Dimension( 0, 0 );
+            this.maxSize = new Dimension( 0, 0 );
+            this.size = new Dimension( 0, 0 );
+
+            if( !ticks.isEmpty() )
+            {
+                getTickSize( ticks.get( 0 ), label, w, minSize );
+                getTickSize( ticks.get( ticks.size() - 1 ), label, w, maxSize );
+
+                Utils.getMaxSize( size, minSize, maxSize );
+
+                Dimension d = new Dimension();
+                for( int i = 1; i < ( ticks.size() - 1 ); i++ )
+                {
+                    getTickSize( ticks.get( i ), label, w, d );
+                    Utils.getMaxSize( size, d );
+                }
+            }
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static final class Ticks
     {
 

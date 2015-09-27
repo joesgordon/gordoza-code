@@ -221,6 +221,40 @@ public final class Utils
     }
 
     /***************************************************************************
+     * Determines the maximum size from the provided sizes.
+     * @param max
+     * @param sizes
+     **************************************************************************/
+    public static void getMaxSize( Dimension max, Dimension... sizes )
+    {
+        max.width = sizes[0].width;
+        max.height = sizes[0].height;
+
+        for( int i = 1; i < sizes.length; i++ )
+        {
+            max.width = Math.max( max.width, sizes[i].width );
+            max.height = Math.max( max.height, sizes[i].height );
+        }
+    }
+
+    /***************************************************************************
+     * Returns the maximum value of the provided list.
+     * @param values
+     * @return
+     **************************************************************************/
+    public static int max( int... values )
+    {
+        int max = values[0];
+
+        for( int i = 0; i < values.length; i++ )
+        {
+            Math.max( max, values[i] );
+        }
+
+        return max;
+    }
+
+    /***************************************************************************
      * Builds a URL for a resource relative to the provided class by the
      * provided string.
      * @param c the class from which the relative path of the resource is known.
