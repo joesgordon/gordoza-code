@@ -12,6 +12,7 @@ import org.jutils.chart.data.XYPoint;
 import org.jutils.chart.model.Interval;
 import org.jutils.chart.ui.objects.ChartWidget;
 import org.jutils.chart.ui.objects.SeriesWidget;
+import org.jutils.io.LogUtils;
 
 /***************************************************************************
  * 
@@ -61,6 +62,9 @@ public class ChartMouseListenter extends MouseAdapter
             {
                 view.zoomOut();
             }
+
+            LogUtils.printDebug(
+                "Sec Range bounds: " + view.chart.secRangeAxis.getBounds() );
         }
     }
 

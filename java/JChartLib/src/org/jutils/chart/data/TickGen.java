@@ -146,15 +146,16 @@ public class TickGen
         double tickWidthCs = tickWidthCsNorm * Math.pow( 10, minTickCsOrder ) /
             10.0;
 
-        int tickCsOrder = ( int )Math.floor( Math.log10( tickWidthCs ) );
+        double tickCsOrder = Math.floor( Math.log10( tickWidthCs ) );
 
         double minCsNorm = span.min * 10 / Math.pow( 10, tickCsOrder );
         double maxCsNorm = span.max * 10 / Math.pow( 10, tickCsOrder );
 
-        int addend = 10 * ( int )( tickWidthCs / Math.pow( 10, tickCsOrder ) );
+        double addend = Math.floor(
+            10 * tickWidthCs / Math.pow( 10, tickCsOrder ) );
 
-        int minTickNorm = addend * ( int )Math.floor( minCsNorm / addend );
-        int maxTickNorm = addend * ( int )Math.floor( maxCsNorm / addend );
+        double minTickNorm = addend * ( int )Math.floor( minCsNorm / addend );
+        double maxTickNorm = addend * ( int )Math.floor( maxCsNorm / addend );
 
         double tickStart = minTickNorm < minCsNorm ? minTickNorm + addend
             : minTickNorm;
@@ -166,9 +167,12 @@ public class TickGen
 
         metrics.tickCount = ( int )( Math.round(
             ( tickStop - tickStart ) / tickWidthCs ) ) + 1;
-        metrics.tickOrder = tickCsOrder;
+        metrics.tickOrder = ( int )tickCsOrder;
         metrics.tickStart = tickStart;
         metrics.tickWidth = tickWidthCs;
+
+        // LogUtils.printDebug( "tick count = " + metrics.tickCount + " for " +
+        // dist + " w/ " + span );
 
         return metrics;
     }
