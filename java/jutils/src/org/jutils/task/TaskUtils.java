@@ -6,7 +6,7 @@ import java.awt.Window;
 import javax.swing.JOptionPane;
 
 import org.jutils.Utils;
-import org.jutils.ui.ExtensiveErrorView;
+import org.jutils.ui.VerboseMessageView;
 import org.jutils.ui.MessageExceptionView;
 
 /*******************************************************************************
@@ -33,9 +33,9 @@ public final class TaskUtils
         }
         else if( error.description != null )
         {
-            ExtensiveErrorView view = new ExtensiveErrorView();
+            VerboseMessageView view = new VerboseMessageView();
 
-            view.setErrors( error.message, error.description );
+            view.setMessages( error.message, error.description );
 
             JOptionPane.showMessageDialog( parent, view.getView(), error.name,
                 JOptionPane.ERROR_MESSAGE );

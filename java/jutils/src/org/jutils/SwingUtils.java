@@ -303,7 +303,29 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * 
+     * @param parent
+     * @param message
+     * @param title
+     * @param messageType
+     **************************************************************************/
+    public static JDialog createOkDialog( Component parent, Object message,
+        String title, int messageType )
+    {
+        JOptionPane jop = new JOptionPane( message, messageType,
+            JOptionPane.DEFAULT_OPTION );
+
+        JDialog dialog = jop.createDialog( parent, title );
+
+        return dialog;
+    }
+
+    /***************************************************************************
+     * @param parent
+     * @param msg
+     * @param title
+     * @param okText
+     * @param initialFocusSelector
+     * @return
      **************************************************************************/
     public static boolean showOkCancelDialog( Component parent, Object msg,
         String title, String okText, final Runnable initialFocusSelector )

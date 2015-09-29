@@ -73,4 +73,11 @@ public class Usable<T>
             throw new ValidationException( name + " is used but not defined." );
         }
     }
+
+    @Override
+    public String toString()
+    {
+        return ( isUsed ? "enabled" : "disabled" ) + " " +
+            ( data == null ? "" : data.toString() );
+    }
 }

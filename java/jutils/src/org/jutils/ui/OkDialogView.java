@@ -155,16 +155,26 @@ public class OkDialogView implements IView<JDialog>
         }
     }
 
+    /***************************************************************************
+     * @param text
+     **************************************************************************/
     public void setOkButtonText( String text )
     {
         okButton.setText( text );
     }
 
+    /***************************************************************************
+     * @param icon
+     **************************************************************************/
     public void setOkButtonIcon( Icon icon )
     {
         okButton.setIcon( icon );
     }
 
+    /***************************************************************************
+     * @param text
+     * @param icon
+     **************************************************************************/
     public void setOkButtonText( String text, Icon icon )
     {
         okButton.setText( text );
