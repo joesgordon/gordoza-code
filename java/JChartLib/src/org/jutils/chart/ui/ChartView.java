@@ -19,6 +19,7 @@ import org.jutils.chart.data.ChartContext;
 import org.jutils.chart.data.SaveOptions;
 import org.jutils.chart.io.DataFileReader;
 import org.jutils.chart.model.*;
+import org.jutils.chart.ui.event.ChartMouseListenter;
 import org.jutils.chart.ui.event.SaveSeriesDataListener;
 import org.jutils.chart.ui.objects.ChartWidget;
 import org.jutils.chart.ui.objects.SeriesWidget;

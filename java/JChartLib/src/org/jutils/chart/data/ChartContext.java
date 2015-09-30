@@ -160,8 +160,8 @@ public class ChartContext
 
     private int ensureVertical( int y )
     {
-        y = Math.max( y, y );
-        y = Math.min( y, y + height );
+        y = Math.max( y, y + height );
+        y = Math.min( y, this.y );
 
         return y;
     }

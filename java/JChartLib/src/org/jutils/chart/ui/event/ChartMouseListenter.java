@@ -1,4 +1,4 @@
-package org.jutils.chart.ui;
+package org.jutils.chart.ui.event;
 
 import java.awt.Point;
 import java.awt.event.*;
@@ -10,6 +10,8 @@ import org.jutils.chart.data.ChartContext;
 import org.jutils.chart.data.ChartContext.IAxisCoords;
 import org.jutils.chart.data.XYPoint;
 import org.jutils.chart.model.Interval;
+import org.jutils.chart.ui.ChartView;
+import org.jutils.chart.ui.WidgetPanel;
 import org.jutils.chart.ui.objects.ChartWidget;
 import org.jutils.chart.ui.objects.SeriesWidget;
 import org.jutils.io.LogUtils;
