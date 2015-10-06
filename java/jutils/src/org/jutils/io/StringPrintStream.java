@@ -5,7 +5,7 @@ import org.jutils.Utils;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class StringPrintStream
+public class StringPrintStream implements IPrintStream
 {
     /**  */
     private final StringBuilder buffer;
@@ -19,16 +19,18 @@ public class StringPrintStream
     }
 
     /***************************************************************************
-     * @param str
+     * 
      **************************************************************************/
+    @Override
     public void print( String str )
     {
         buffer.append( str );
     }
 
     /***************************************************************************
-     * @param str
+     * 
      **************************************************************************/
+    @Override
     public void println( String str )
     {
         buffer.append( str );
@@ -38,6 +40,7 @@ public class StringPrintStream
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public void println()
     {
         buffer.append( Utils.NEW_LINE );
@@ -58,5 +61,32 @@ public class StringPrintStream
     public String toString()
     {
         return buffer.toString();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void println( String format, Object... args )
+    {
+        println( String.format( format, args ) );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void print( String format, Object... args )
+    {
+        print( String.format( format, args ) );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void println( char [] chars )
+    {
+        buffer.append( chars );
     }
 }

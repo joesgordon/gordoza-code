@@ -21,7 +21,8 @@ public class DataStream implements IDataStream
     private final ByteOrder order;
 
     /***************************************************************************
-     * @param stream
+     * Creates a data stream that reads data with big endian byte ordering.
+     * @param stream the stream to be wrapped as a data stream.
      **************************************************************************/
     public DataStream( IStream stream )
     {
@@ -29,7 +30,9 @@ public class DataStream implements IDataStream
     }
 
     /***************************************************************************
-     * @param stream
+     * Creates a data stream that reads data with the provided byte ordering.
+     * @param stream the stream to be wrapped as a data stream.
+     * @param order the byte order of data in the stream.
      **************************************************************************/
     public DataStream( IStream stream, ByteOrder order )
     {

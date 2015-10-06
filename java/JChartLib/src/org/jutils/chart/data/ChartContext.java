@@ -135,6 +135,9 @@ public class ChartContext
         return intervals;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public boolean isAutoBounds()
     {
         // TODO This is terrible fix it!!!!
@@ -142,6 +145,10 @@ public class ChartContext
             chart.secDomainAxis.calcBounds && chart.secDomainAxis.calcBounds;
     }
 
+    /***************************************************************************
+     * @param p
+     * @return
+     **************************************************************************/
     public Point ensurePoint( Point p )
     {
         p.x = ensureHorizontal( p.x );
@@ -150,18 +157,26 @@ public class ChartContext
         return p;
     }
 
+    /***************************************************************************
+     * @param x
+     * @return
+     **************************************************************************/
     private int ensureHorizontal( int x )
     {
         x = Math.max( x, this.x );
-        x = Math.min( x, x + width );
+        x = Math.min( x, this.x + width );
 
         return x;
     }
 
+    /***************************************************************************
+     * @param y
+     * @return
+     **************************************************************************/
     private int ensureVertical( int y )
     {
-        y = Math.max( y, y + height );
-        y = Math.min( y, this.y );
+        y = Math.max( y, this.y );
+        y = Math.min( y, this.y + height );
 
         return y;
     }

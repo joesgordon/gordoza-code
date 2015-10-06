@@ -7,7 +7,7 @@ import org.jutils.Utils;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class FastPrintStream implements Closeable
+public class FastPrintStream implements IPrintStream, Closeable
 {
     /**  */
     private final BufferedWriter writer;
@@ -31,8 +31,9 @@ public class FastPrintStream implements Closeable
     }
 
     /***************************************************************************
-     * @param str
+     * 
      **************************************************************************/
+    @Override
     public void print( String str )
     {
         write( str );
@@ -41,14 +42,16 @@ public class FastPrintStream implements Closeable
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public void println()
     {
         writeNewLine();
     }
 
     /***************************************************************************
-     * @param line
+     * 
      **************************************************************************/
+    @Override
     public void println( String line )
     {
         write( line );
@@ -56,17 +59,27 @@ public class FastPrintStream implements Closeable
     }
 
     /***************************************************************************
-     * @param format
-     * @param args
+     * 
      **************************************************************************/
+    @Override
     public void println( String format, Object... args )
     {
         println( String.format( format, args ) );
     }
 
     /***************************************************************************
-     * @param chars
+     * 
      **************************************************************************/
+    @Override
+    public void print( String format, Object... args )
+    {
+        print( String.format( format, args ) );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
     public void println( char [] chars )
     {
         write( chars );
