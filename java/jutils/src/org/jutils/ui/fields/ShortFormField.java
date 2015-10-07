@@ -1,7 +1,6 @@
 package org.jutils.ui.fields;
 
-import java.awt.Component;
-
+import javax.swing.JComponent;
 import javax.swing.JTextField;
 
 import org.jutils.ui.event.updater.IUpdater;
@@ -94,7 +93,7 @@ public class ShortFormField implements IDataFormField<Short>
      * 
      **************************************************************************/
     @Override
-    public Component getField()
+    public JComponent getField()
     {
         return textField.getView();
     }

@@ -1,6 +1,6 @@
 package org.jutils.ui.fields;
 
-import java.awt.Component;
+import javax.swing.JComponent;
 
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.validation.ValidationTextView;
@@ -36,6 +36,14 @@ public class DoubleFormField implements IDataFormField<Double>
     public DoubleFormField( String name, Double min, Double max )
     {
         this( name, null, 20, null, min, max );
+    }
+
+    /***************************************************************************
+     * @param name
+     **************************************************************************/
+    public DoubleFormField( String name, String units, Double min, Double max )
+    {
+        this( name, units, 20, null, min, max );
     }
 
     /***************************************************************************
@@ -104,7 +112,7 @@ public class DoubleFormField implements IDataFormField<Double>
      * 
      **************************************************************************/
     @Override
-    public Component getField()
+    public JComponent getField()
     {
         return textField.getView();
     }

@@ -3,7 +3,7 @@ package org.jutils.ui.hex;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.*;
-import java.util.Arrays;
+import java.util.*;
 
 import javax.swing.*;
 
@@ -43,6 +43,9 @@ public class ShiftHexView implements IView<JComponent>
     /**  */
     private int bitOffset;
 
+    /**  */
+    private List<byte []> bytesLists;
+
     /***************************************************************************
      * 
      **************************************************************************/
@@ -52,6 +55,7 @@ public class ShiftHexView implements IView<JComponent>
         this.leftButton = new JButton();
         this.rightButton = new JButton();
         this.offLabel = new JLabel();
+        this.bytesLists = new ArrayList<>();
 
         this.view = createView();
 
@@ -173,6 +177,12 @@ public class ShiftHexView implements IView<JComponent>
         resetData();
     }
 
+    public void setListOfBytes( List<byte []> bytesLists )
+    {
+        this.bytesLists.clear();
+        this.bytesLists.addAll( bytesLists );
+    }
+
     /***************************************************************************
      * 
      **************************************************************************/
@@ -218,37 +228,19 @@ public class ShiftHexView implements IView<JComponent>
      * @return
      **************************************************************************/
     public static BitArray promptForBinaryString( Component parent,
-        BitArray lastSearch )
+        BitArray lastSearch, List<byte []> bytesLists )
     {
-        BitArray bits = new BitArray();
+        BitArrayView bitsView = new BitArrayView( bytesLists );
         String search = lastSearch == null ? "0000" : lastSearch.toString();
-        Object ans = JOptionPane.showInputDialog( parent,
+        BitArray bits = new BitArray();
+
+        bits.set( search );
+
+        bitsView.setData( bits );
+
+        bits = SwingUtils.showQuestion( parent,
             "Enter binary string to be found:", "Enter Search String",
-            JOptionPane.QUESTION_MESSAGE, null, null, search );
-
-        if( ans != null )
-        {
-            String binaryString = ans.toString();
-
-            try
-            {
-                binaryString = binaryString.replace( " ", "" );
-
-                bits.set( binaryString );
-            }
-            catch( NumberFormatException ex )
-            {
-                JOptionPane.showMessageDialog( parent,
-                    "Cannot parse " + binaryString + " as a binary string:" +
-                        Utils.NEW_LINE + ex.getMessage(),
-                    "Parse Error", JOptionPane.ERROR_MESSAGE );
-                bits = null;
-            }
-        }
-        else
-        {
-            bits = null;
-        }
+            bitsView );
 
         return bits;
     }
@@ -382,7 +374,8 @@ public class ShiftHexView implements IView<JComponent>
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            BitArray bits = promptForBinaryString( view.view, view.lastSearch );
+            BitArray bits = promptForBinaryString( view.view, view.lastSearch,
+                view.bytesLists );
 
             if( bits != null && bits.size() > 0 )
             {

@@ -129,7 +129,7 @@ public class TextLabelField implements IDataFormField<TextLabel>
      * 
      **************************************************************************/
     @Override
-    public Component getField()
+    public JComponent getField()
     {
         return view;
     }

@@ -70,7 +70,7 @@ public class RegexPanel implements IView<JPanel>
     /***************************************************************************
      * @return
      **************************************************************************/
-    private Component createRegexPanel()
+    private JComponent createRegexPanel()
     {
         JScrollPane regexScrollPane = new JScrollPane();
         JPanel regexPanel = new JPanel( new GridBagLayout() );

@@ -1,6 +1,6 @@
 package org.jutils.ui.fields;
 
-import java.awt.Component;
+import javax.swing.JComponent;
 
 /*******************************************************************************
  * 
@@ -15,5 +15,5 @@ public interface IFormField
     /**************************************************************************
      * @return
      **************************************************************************/
-    public Component getField();
+    public JComponent getField();
 }

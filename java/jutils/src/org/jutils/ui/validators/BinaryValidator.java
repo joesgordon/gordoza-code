@@ -16,6 +16,11 @@ public class BinaryValidator implements IDataValidator<BitArray>
     {
         BitArray bits = new BitArray();
 
+        if( text.isEmpty() )
+        {
+            throw new ValidationException( "The string is empty" );
+        }
+
         try
         {
             bits.set( text );

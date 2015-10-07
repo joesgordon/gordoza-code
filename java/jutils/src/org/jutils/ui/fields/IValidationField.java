@@ -2,6 +2,8 @@ package org.jutils.ui.fields;
 
 import java.awt.Color;
 
+import javax.swing.JComponent;
+
 import org.jutils.ui.model.IComponentView;
 import org.jutils.ui.validation.IValidityChangedListener;
 
@@ -47,4 +49,10 @@ public interface IValidationField extends IComponentView
      * @param bg the new invalid background color.
      **************************************************************************/
     public void setInvalidBackground( Color bg );
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public JComponent getView();
 }

@@ -1,8 +1,9 @@
 package org.jutils.ui.fields;
 
-import java.awt.Component;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.swing.JComponent;
 
 import org.jutils.ui.event.updater.ComboBoxUpdater;
 import org.jutils.ui.event.updater.IUpdater;
@@ -57,7 +58,7 @@ public final class ComboFormField<T> implements IDataFormField<T>
      * 
      **************************************************************************/
     @Override
-    public Component getField()
+    public JComponent getField()
     {
         return field.getView();
     }

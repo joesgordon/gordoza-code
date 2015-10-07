@@ -109,7 +109,7 @@ public class StandardFormView implements IView<JPanel>
      * @param name
      * @param comp
      **************************************************************************/
-    public void addField( String name, Component comp )
+    public void addField( String name, JComponent comp )
     {
         addField( new DefaultFormField( name, comp ) );
     }
@@ -318,9 +318,9 @@ public class StandardFormView implements IView<JPanel>
     public static class DefaultFormField implements IFormField
     {
         public String name;
-        public Component comp;
+        public JComponent comp;
 
-        public DefaultFormField( String name, Component comp )
+        public DefaultFormField( String name, JComponent comp )
         {
             this.name = name;
             this.comp = comp;
@@ -333,7 +333,7 @@ public class StandardFormView implements IView<JPanel>
         }
 
         @Override
-        public Component getField()
+        public JComponent getField()
         {
             return comp;
         }

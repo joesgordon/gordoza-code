@@ -4,8 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import org.jutils.IconConstants;
 import org.jutils.ui.event.*;
@@ -131,7 +130,7 @@ public class FileField implements IDataView<File>, IValidationField
      * 
      **************************************************************************/
     @Override
-    public Component getView()
+    public JComponent getView()
     {
         return view;
     }

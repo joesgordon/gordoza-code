@@ -1,11 +1,11 @@
 package org.jutils.ui.fields;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JCheckBox;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.event.updater.ReflectiveUpdater;
@@ -71,7 +71,7 @@ public class UsableFormField<T>
      * 
      **************************************************************************/
     @Override
-    public Component getField()
+    public JComponent getField()
     {
         return panel;
     }
@@ -154,7 +154,7 @@ public class UsableFormField<T>
      * 
      **************************************************************************/
     @Override
-    public Component getView()
+    public JComponent getView()
     {
         return getField();
     }

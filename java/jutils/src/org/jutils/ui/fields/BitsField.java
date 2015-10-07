@@ -1,12 +1,15 @@
 package org.jutils.ui.fields;
 
-import java.awt.Component;
+import javax.swing.JComponent;
 
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.validation.ValidationTextView;
 import org.jutils.ui.validators.*;
 import org.jutils.utils.BitArray;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class BitsField implements IDataFormField<BitArray>
 {
     /**  */
@@ -46,7 +49,7 @@ public class BitsField implements IDataFormField<BitArray>
      * 
      **************************************************************************/
     @Override
-    public Component getField()
+    public JComponent getField()
     {
         return textField.getView();
     }

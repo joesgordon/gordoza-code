@@ -138,6 +138,35 @@ public final class SwingUtils
         return value;
     }
 
+    public static <T> T showQuestion( Component parent, String message,
+        String title, IDataView<T> view )
+    {
+        JPanel panel = new JPanel( new BorderLayout() );
+
+        panel.add( new JLabel( message ), BorderLayout.NORTH );
+        panel.add( view.getView(), BorderLayout.CENTER );
+
+        JOptionPane jop = new JOptionPane( panel, JOptionPane.QUESTION_MESSAGE,
+            JOptionPane.OK_CANCEL_OPTION, null, null, null );
+
+        JDialog dialog = jop.createDialog( parent, title );
+
+        dialog.setVisible( true );
+
+        // ---------------------------------------------------------------------
+        // Prompt user.
+        // ---------------------------------------------------------------------
+        Object ans = jop.getValue();
+        T data = null;
+
+        if( ans instanceof Integer && ( Integer )ans == JOptionPane.OK_OPTION )
+        {
+            data = view.getData();
+        }
+
+        return data;
+    }
+
     /***************************************************************************
      * @param toolbar
      * @param container
