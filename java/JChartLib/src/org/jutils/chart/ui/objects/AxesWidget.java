@@ -110,7 +110,7 @@ public class AxesWidget implements IChartWidget
         // ---------------------------------------------------------------------
         // Draw secondary domain title
         // ---------------------------------------------------------------------
-        if( chart.secDomainAxis.title.visible && chart.secDomainAxis.isUsed() )
+        if( chart.secDomainAxis.title.visible && chart.secDomainAxis.isUsed )
         {
             d = sdomainTitle.calculateSize( size );
 
@@ -147,7 +147,7 @@ public class AxesWidget implements IChartWidget
         // ---------------------------------------------------------------------
         // Draw secondary range title
         // ---------------------------------------------------------------------
-        if( chart.secRangeAxis.title.visible && chart.secRangeAxis.isUsed() )
+        if( chart.secRangeAxis.title.visible && chart.secRangeAxis.isUsed )
         {
             d = srangeTitle.calculateSize( size );
 
@@ -524,17 +524,17 @@ public class AxesWidget implements IChartWidget
             Math.round( domainSizes.maxSize.width / 2.0f ),
             Math.round( secDomainSizes.maxSize.width / 2.0f ) );
 
-        textSpace.left += 4;
-        textSpace.bottom += 4;
+        textSpace.left += 5;
+        textSpace.bottom += 5;
 
         if( !ticks.secDomainTicks.isEmpty() )
         {
-            textSpace.top += 4;
+            textSpace.top += 5;
         }
 
         if( !ticks.secRangeTicks.isEmpty() )
         {
-            textSpace.right += 4;
+            textSpace.right += 5;
         }
 
         return textSpace;
@@ -577,7 +577,8 @@ public class AxesWidget implements IChartWidget
                 Utils.getMaxSize( size, minSize, maxSize );
 
                 Dimension d = new Dimension();
-                for( int i = 1; i < ( ticks.size() - 1 ); i++ )
+
+                for( int i = 1; i < ticks.size(); i++ )
                 {
                     getTickSize( ticks.get( i ), label, w, d );
                     Utils.getMaxSize( size, d );

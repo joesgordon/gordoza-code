@@ -100,6 +100,20 @@ public final class Utils
     /***************************************************************************
      * Prints the stack trace from the caller.
      **************************************************************************/
+    public static String getStackTrace()
+    {
+        Throwable tr = new Throwable();
+        StackTraceElement [] trace = tr.getStackTrace();
+        StackTraceElement [] newTrace = Arrays.copyOfRange( trace, 1,
+            trace.length );
+        tr.setStackTrace( newTrace );
+
+        return printStackTrace( tr );
+    }
+
+    /***************************************************************************
+     * Prints the stack trace from the caller.
+     **************************************************************************/
     public static void printStackTrace()
     {
         Throwable tr = new Throwable();
@@ -246,7 +260,7 @@ public final class Utils
     {
         int max = values[0];
 
-        for( int i = 0; i < values.length; i++ )
+        for( int i = 1; i < values.length; i++ )
         {
             Math.max( max, values[i] );
         }

@@ -86,7 +86,7 @@ public class ChartMouseListenter extends MouseAdapter
             for( SeriesWidget sw : chartWidget.plot.serieses )
             {
                 sw.clearSelected();
-                chartWidget.plot.seriesLayer.repaint = true;
+                chartWidget.plot.repaint();
                 panel.repaint();
             }
         }
@@ -141,12 +141,12 @@ public class ChartMouseListenter extends MouseAdapter
         // LogUtils.printDebug( "primary domain from " + dmin + " to " +
         // dmax );
 
-        if( view.chart.secDomainAxis.isUsed() )
+        if( view.chart.secDomainAxis.isUsed )
         {
             sds = getBounds( context.secDomainCoords, start.x, end.x );
         }
 
-        if( view.chart.secRangeAxis.isUsed() )
+        if( view.chart.secRangeAxis.isUsed )
         {
             srs = getBounds( context.secRangeCoords, end.y, start.y );
         }
@@ -202,7 +202,7 @@ public class ChartMouseListenter extends MouseAdapter
             }
         }
 
-        chartWidget.plot.seriesLayer.repaint = true;
+        chartWidget.plot.repaint();
         chartWidget.plot.highlightLayer.repaint = true;
         panel.repaint();
     }

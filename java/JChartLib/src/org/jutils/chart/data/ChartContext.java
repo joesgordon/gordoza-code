@@ -4,24 +4,25 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jutils.Utils;
 import org.jutils.chart.model.*;
+import org.jutils.io.LogUtils;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
 public class ChartContext
 {
-    /**  */
+    /** The x coordinate of the plot drawing area. */
     public int x;
-    /**  */
+    /** The y coordinate of the plot drawing area. */
     public int y;
-    /**  */
+    /** The width of the plot drawing area. */
     public int width;
-    /**  */
+    /** The height of the plot drawing area. */
     public int height;
 
     /**  */
-    public final Chart chart;
     /**  */
     public final IAxisCoords domainCoords;
     /**  */
@@ -36,8 +37,6 @@ public class ChartContext
      **************************************************************************/
     public ChartContext( Chart chart )
     {
-        this.chart = chart;
-
         this.x = 0;
         this.y = 0;
         this.width = 0;
@@ -54,12 +53,12 @@ public class ChartContext
     /***************************************************************************
      * @param chart
      **************************************************************************/
-    public void calculateAutoBounds()
+    public void calculateAutoBounds( List<Series> series )
     {
-        domainCoords.calculateBounds( chart.series );
-        rangeCoords.calculateBounds( chart.series );
-        secDomainCoords.calculateBounds( chart.series );
-        secRangeCoords.calculateBounds( chart.series );
+        domainCoords.calculateBounds( series );
+        rangeCoords.calculateBounds( series );
+        secDomainCoords.calculateBounds( series );
+        secRangeCoords.calculateBounds( series );
     }
 
     /***************************************************************************
@@ -67,10 +66,10 @@ public class ChartContext
      **************************************************************************/
     public void restoreAutoBounds()
     {
-        chart.domainAxis.calcBounds = true;
-        chart.rangeAxis.calcBounds = true;
-        chart.secDomainAxis.calcBounds = true;
-        chart.secRangeAxis.calcBounds = true;
+        domainCoords.getAxis().restoreAuto();
+        rangeCoords.getAxis().restoreAuto();
+        secDomainCoords.getAxis().restoreAuto();
+        secRangeCoords.getAxis().restoreAuto();
 
         latchCoords();
     }
@@ -80,10 +79,13 @@ public class ChartContext
      **************************************************************************/
     public void latchCoords()
     {
-        domainCoords.latchCoords( chart.domainAxis.getBounds(), width );
-        rangeCoords.latchCoords( chart.rangeAxis.getBounds(), height );
-        secDomainCoords.latchCoords( chart.secDomainAxis.getBounds(), width );
-        secRangeCoords.latchCoords( chart.secRangeAxis.getBounds(), height );
+        LogUtils.printDebug( "Latching Coords" + Utils.getStackTrace() );
+        domainCoords.latchCoords( domainCoords.getAxis().getBounds(), width );
+        rangeCoords.latchCoords( rangeCoords.getAxis().getBounds(), height );
+        secDomainCoords.latchCoords( secDomainCoords.getAxis().getBounds(),
+            width );
+        secRangeCoords.latchCoords( secRangeCoords.getAxis().getBounds(),
+            height );
     }
 
     /***************************************************************************
@@ -141,8 +143,10 @@ public class ChartContext
     public boolean isAutoBounds()
     {
         // TODO This is terrible fix it!!!!
-        return chart.domainAxis.calcBounds && chart.rangeAxis.calcBounds &&
-            chart.secDomainAxis.calcBounds && chart.secDomainAxis.calcBounds;
+        return domainCoords.getAxis().isAutoBounds() &&
+            rangeCoords.getAxis().isAutoBounds() &&
+            secDomainCoords.getAxis().isAutoBounds() &&
+            secRangeCoords.getAxis().isAutoBounds();
     }
 
     /***************************************************************************
@@ -244,6 +248,8 @@ public class ChartContext
         public void calculateBounds( List<Series> series );
 
         public void latchCoords( Interval bounds, int length );
+
+        public Axis getAxis();
     }
 
     /***************************************************************************
@@ -279,14 +285,26 @@ public class ChartContext
         @Override
         public final void calculateBounds( List<Series> series )
         {
-            axis.autoBounds = calculateAutoBounds( series, isDomain,
-                isPrimary );
+            axis.setAutoBounds(
+                calculateAutoBounds( series, isDomain, isPrimary ) );
         }
 
         @Override
         public final void latchCoords( Interval bounds, int length )
         {
             this.stats = new DimensionStats( bounds, length );
+
+            if( bounds != null )
+            {
+                LogUtils.printDebug(
+                    "Latching " + bounds.toString() + " with len " + length );
+            }
+        }
+
+        @Override
+        public Axis getAxis()
+        {
+            return axis;
         }
     }
 

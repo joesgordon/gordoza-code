@@ -98,7 +98,7 @@ public class JChartFrameView implements IView<JFrame>
         s.line.weight = 4;
         chartView.addSeries( s, true );
 
-        data = ChartUtils.createLineSeries( pointCount, 1.0, 0.0, 5.0, 10.0 );
+        data = ChartUtils.createLineSeries( pointCount, 1.0, 0.0, 5.1, 10.9 );
         s = new Series( data );
         s.name = "y = x";
         s.line.weight = 4;

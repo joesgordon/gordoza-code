@@ -275,7 +275,7 @@ public class ChartWidget implements IChartWidget
      **************************************************************************/
     public void calculateAutoBounds()
     {
-        context.calculateAutoBounds();
+        context.calculateAutoBounds( chart.series );
     }
 
     /***************************************************************************
@@ -286,5 +286,18 @@ public class ChartWidget implements IChartWidget
         context.latchCoords();
 
         axes.axesLayer.repaint = true;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public void repaint()
+    {
+        title.repaint();
+        subtitle.repaint();
+        topBottom.repaint();
+        legend.repaint();
+        plot.repaint();
+        axes.repaint();
     }
 }

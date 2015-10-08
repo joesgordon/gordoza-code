@@ -343,10 +343,11 @@ public class ChartView implements IView<JComponent>
         chart.series.add( s );
         chartWidget.plot.serieses.add(
             new SeriesWidget( chart, s, chartWidget.context ) );
-        chartWidget.context.calculateAutoBounds();
-        restoreAndRepaintChart();
-
         propertiesView.addSeries( s, chart.series.size() );
+
+        chartWidget.context.calculateAutoBounds( chart.series );
+        zoomRestore();
+        repaintChart();
     }
 
     /***************************************************************************
@@ -439,8 +440,7 @@ public class ChartView implements IView<JComponent>
 
         chartWidget.context.latchCoords();
 
-        chartWidget.plot.seriesLayer.repaint = true;
-        chartWidget.axes.axesLayer.repaint = true;
+        chartWidget.plot.repaint();
         mainPanel.repaint();
     }
 
@@ -450,7 +450,7 @@ public class ChartView implements IView<JComponent>
     public void zoomRestore()
     {
         chartWidget.context.restoreAutoBounds();
-        chartWidget.plot.seriesLayer.repaint = true;
+        chartWidget.plot.repaint();
         chartWidget.axes.axesLayer.repaint = true;
         mainPanel.repaint();
     }
@@ -463,12 +463,12 @@ public class ChartView implements IView<JComponent>
         chart.domainAxis.setBounds( chart.domainAxis.getBounds().zoomIn() );
         chart.rangeAxis.setBounds( chart.rangeAxis.getBounds().zoomIn() );
 
-        if( chart.secDomainAxis.isUsed() )
+        if( chart.secDomainAxis.isUsed )
         {
             chart.secDomainAxis.setBounds(
                 chart.secDomainAxis.getBounds().zoomIn() );
         }
-        if( chart.secRangeAxis.isUsed() )
+        if( chart.secRangeAxis.isUsed )
         {
             chart.secRangeAxis.setBounds(
                 chart.secRangeAxis.getBounds().zoomIn() );
@@ -476,7 +476,7 @@ public class ChartView implements IView<JComponent>
 
         chartWidget.context.latchCoords();
 
-        chartWidget.plot.seriesLayer.repaint = true;
+        chartWidget.plot.repaint();
         chartWidget.axes.axesLayer.repaint = true;
         mainPanel.repaint();
     }
@@ -489,13 +489,13 @@ public class ChartView implements IView<JComponent>
         chart.domainAxis.setBounds( chart.domainAxis.getBounds().zoomOut() );
         chart.rangeAxis.setBounds( chart.rangeAxis.getBounds().zoomOut() );
 
-        if( chart.secDomainAxis.isUsed() )
+        if( chart.secDomainAxis.isUsed )
         {
             chart.secDomainAxis.setBounds(
                 chart.secDomainAxis.getBounds().zoomOut() );
         }
 
-        if( chart.secRangeAxis.isUsed() )
+        if( chart.secRangeAxis.isUsed )
         {
             chart.secRangeAxis.setBounds(
                 chart.secRangeAxis.getBounds().zoomOut() );
@@ -503,7 +503,7 @@ public class ChartView implements IView<JComponent>
 
         chartWidget.context.latchCoords();
 
-        chartWidget.plot.seriesLayer.repaint = true;
+        chartWidget.plot.repaint();
         chartWidget.axes.axesLayer.repaint = true;
         mainPanel.repaint();
     }
@@ -522,13 +522,7 @@ public class ChartView implements IView<JComponent>
      **************************************************************************/
     private void repaintChart()
     {
-        chartWidget.title.repaint();
-        chartWidget.subtitle.repaint();
-        chartWidget.topBottom.repaint();
-        chartWidget.legend.repaint();
-        chartWidget.plot.seriesLayer.repaint = true;
-        chartWidget.plot.highlightLayer.repaint = true;
-        chartWidget.axes.repaint();
+        chartWidget.repaint();
         mainPanel.repaint();
     }
 
@@ -810,7 +804,7 @@ public class ChartView implements IView<JComponent>
         public void componentResized( ComponentEvent e )
         {
             view.chartWidget.axes.axesLayer.repaint = true;
-            view.chartWidget.plot.seriesLayer.repaint = true;
+            view.chartWidget.plot.repaint();
             view.chartWidget.plot.highlightLayer.clear();
             view.chartWidget.plot.highlightLayer.repaint = false;
             view.mainPanel.repaint();
@@ -850,15 +844,15 @@ public class ChartView implements IView<JComponent>
 
             if( context.isAutoBounds() )
             {
-                context.calculateAutoBounds();
+                context.calculateAutoBounds( view.chart.series );
                 context.restoreAutoBounds();
             }
             else
             {
-                context.calculateAutoBounds();
+                context.calculateAutoBounds( view.chart.series );
             }
 
-            view.chartWidget.plot.seriesLayer.repaint = true;
+            view.chartWidget.plot.repaint();
             view.chartWidget.axes.axesLayer.repaint = true;
             view.mainPanel.repaint();
         }

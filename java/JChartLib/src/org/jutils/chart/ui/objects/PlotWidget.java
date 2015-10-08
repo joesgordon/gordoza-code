@@ -14,7 +14,7 @@ import org.jutils.chart.ui.Layer2d;
 public class PlotWidget implements IChartWidget
 {
     /**  */
-    public final Layer2d seriesLayer;
+    private final Layer2d seriesLayer;
     /**  */
     public final Layer2d highlightLayer;
     /**  */
@@ -112,5 +112,14 @@ public class PlotWidget implements IChartWidget
     public Dimension calculateSize( Dimension canvasSize )
     {
         return null;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public void repaint()
+    {
+        seriesLayer.repaint = true;
+        highlightLayer.repaint = true;
     }
 }

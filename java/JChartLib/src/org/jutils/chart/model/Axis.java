@@ -12,6 +12,8 @@ public class Axis
     /**  */
     public final TextLabel subtitle;
     /**  */
+    public boolean isUsed;
+    /**  */
     public boolean autoTicks;
     /**  */
     public boolean dockZero;
@@ -24,9 +26,9 @@ public class Axis
     /**  */
     private Interval bounds;
     /**  */
-    public Interval autoBounds;
+    private Interval autoBounds;
     /**  */
-    public boolean calcBounds;
+    private boolean calcBounds;
 
     /***************************************************************************
      * 
@@ -71,8 +73,28 @@ public class Axis
         this.bounds = bounds;
     }
 
-    public boolean isUsed()
+    /***************************************************************************
+     * @param bounds
+     **************************************************************************/
+    public void setAutoBounds( Interval bounds )
     {
-        return autoBounds != null;
+        this.isUsed = bounds != null;
+        this.autoBounds = bounds;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public void restoreAuto()
+    {
+        this.calcBounds = true;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public boolean isAutoBounds()
+    {
+        return calcBounds;
     }
 }
