@@ -222,8 +222,7 @@ public class LegendWidget implements IChartWidget
                 p.y = p.y + key.size.height / 2;
                 int ms = key.s.marker.getSize();
                 key.s.marker.setSize( 10 );
-                key.s.marker.setLocation( p );
-                key.s.marker.draw( graphics, p, size );
+                key.s.marker.draw( graphics, p );
                 key.s.marker.setSize( ms );
             }
         }

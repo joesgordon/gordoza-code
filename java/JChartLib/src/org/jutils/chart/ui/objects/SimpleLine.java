@@ -22,62 +22,16 @@ public class SimpleLine implements ILine
     public SimpleLine()
     {
         this.color = new Color( 0x0066CC );
-        this.setSize( 4 );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void draw( Graphics2D graphics, Point location, Dimension size )
+    public void draw( Graphics2D graphics, Point from, Point to )
     {
         graphics.setColor( color );
-
-        graphics.drawLine( p1.x, p1.y, p2.x, p2.y );
+        graphics.drawLine( from.x, from.y, to.x, to.y );
     }
 
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setPoints( Point p1, Point p2 )
-    {
-        this.p1 = p1;
-        this.p2 = p2;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setColor( Color color )
-    {
-        this.color = color;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setSize( int size )
-    {
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public double getSize()
-    {
-        return 1;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public Dimension calculateSize( Dimension canvasSize )
-    {
-        return null;
-    }
 }

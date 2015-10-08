@@ -12,11 +12,7 @@ public class SolidLine implements ILine
     /**  */
     public Color color;
     /**  */
-    public int size;
-    /**  */
-    public Point p1;
-    /**  */
-    public Point p2;
+    private int size;
 
     /**  */
     private BasicStroke solidStroke;
@@ -34,38 +30,18 @@ public class SolidLine implements ILine
      * 
      **************************************************************************/
     @Override
-    public void draw( Graphics2D graphics, Point location, Dimension size )
+    public void draw( Graphics2D graphics, Point from, Point to )
     {
         graphics.setColor( color );
 
         graphics.setStroke( solidStroke );
 
-        graphics.drawLine( p1.x, p1.y, p2.x, p2.y );
+        graphics.drawLine( from.x, from.y, to.x, to.y );
     }
 
     /***************************************************************************
-     * 
+     * @param size
      **************************************************************************/
-    @Override
-    public void setPoints( Point p1, Point p2 )
-    {
-        this.p1 = p1;
-        this.p2 = p2;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setColor( Color color )
-    {
-        this.color = color;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
     public void setSize( int size )
     {
         this.size = size;
@@ -74,20 +50,10 @@ public class SolidLine implements ILine
     }
 
     /***************************************************************************
-     * 
+     * @return
      **************************************************************************/
-    @Override
     public double getSize()
     {
         return size;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public Dimension calculateSize( Dimension canvasSize )
-    {
-        return null;
     }
 }

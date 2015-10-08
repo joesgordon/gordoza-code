@@ -85,6 +85,7 @@ public class PlotWidget implements IChartWidget
         p = new Point( context.x, context.y );
         d = new Dimension( context.width, context.height );
         g2d = highlightLayer.setSize( width, height );
+
         if( highlightLayer.repaint )
         {
             highlightLayer.clear();
@@ -92,9 +93,9 @@ public class PlotWidget implements IChartWidget
             for( SeriesWidget s : serieses )
             {
                 if( s.series.visible && s.trackPoint &&
-                    s.series.highlight.visible )
+                    s.highlightLocation != null )
                 {
-                    s.highlight.draw( g2d, location, size );
+                    s.highlight.draw( g2d, s.highlightLocation );
                 }
             }
 
@@ -102,6 +103,7 @@ public class PlotWidget implements IChartWidget
 
             selection.draw( g2d, p, d );
         }
+
         highlightLayer.paint( graphics, x, y );
     }
 

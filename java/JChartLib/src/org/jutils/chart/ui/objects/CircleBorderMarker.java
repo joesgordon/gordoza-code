@@ -10,17 +10,13 @@ import org.jutils.chart.model.IMarker;
 public class CircleBorderMarker implements IMarker
 {
     /**  */
-    private Color color;
+    public Color color;
     /**  */
     private Color borderColor;
     /**  */
     private int diameter;
     /**  */
     private int radius;
-    /**  */
-    private int x;
-    /**  */
-    private int y;
 
     /***************************************************************************
      * 
@@ -31,45 +27,23 @@ public class CircleBorderMarker implements IMarker
         borderColor = new Color( 0xCC0000 );
 
         setSize( 6 );
-        x = 5;
-        y = 5;
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void draw( Graphics2D g, Point location, Dimension size )
+    public void draw( Graphics2D graphics, Point location )
     {
-        {
-            g.setColor( borderColor );
+        graphics.setColor( borderColor );
 
-            g.fillOval( x - radius - 2, y - radius - 2, diameter + 4,
-                diameter + 4 );
-        }
+        graphics.fillOval( location.x - radius - 2, location.y - radius - 2,
+            diameter + 4, diameter + 4 );
 
-        g.setColor( color );
+        graphics.setColor( color );
 
-        g.fillOval( x - radius, y - radius, diameter, diameter );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setLocation( Point p )
-    {
-        this.x = p.x;
-        this.y = p.y;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setColor( Color color )
-    {
-        this.color = color;
+        graphics.fillOval( location.x - radius, location.y - radius, diameter,
+            diameter );
     }
 
     /***************************************************************************
@@ -87,23 +61,5 @@ public class CircleBorderMarker implements IMarker
     {
         this.diameter = r;
         this.radius = r / 2;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public Dimension calculateSize( Dimension canvasSize )
-    {
-        return new Dimension( diameter, diameter );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public int getSize()
-    {
-        return diameter;
     }
 }

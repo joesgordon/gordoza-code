@@ -314,7 +314,7 @@ public class ChartMouseListenter extends MouseAdapter
                     // "]: " +
                     // p.x + xy.x );
 
-                    s.highlight.setLocation( new Point( sp ) );
+                    s.setHighlightLocation( new Point( sp ) );
 
                     view.propertiesView.setSelected( seriesIdx, idx );
                 }

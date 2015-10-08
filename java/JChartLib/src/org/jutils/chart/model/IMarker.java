@@ -1,17 +1,16 @@
 package org.jutils.chart.model;
 
-import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Point;
 
-import org.jutils.chart.ui.IChartWidget;
-
-public interface IMarker extends IChartWidget
+/*******************************************************************************
+ * 
+ ******************************************************************************/
+public interface IMarker
 {
-    public void setLocation( Point p );
-
-    public void setColor( Color color );
-
-    public void setSize( int r );
-
-    public int getSize();
+    /***************************************************************************
+     * @param graphics
+     * @param location
+     **************************************************************************/
+    public void draw( Graphics2D graphics, Point location );
 }

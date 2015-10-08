@@ -1,33 +1,17 @@
 package org.jutils.chart.model;
 
-import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Point;
-
-import org.jutils.chart.ui.IChartWidget;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public interface ILine extends IChartWidget
+public interface ILine
 {
     /***************************************************************************
-     * @param p1
-     * @param p2
+     * @param graphics
+     * @param from
+     * @param to
      **************************************************************************/
-    public void setPoints( Point p1, Point p2 );
-
-    /***************************************************************************
-     * @param color
-     **************************************************************************/
-    public void setColor( Color color );
-
-    /***************************************************************************
-     * @param size
-     **************************************************************************/
-    public void setSize( int size );
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public double getSize();
+    public void draw( Graphics2D graphics, Point from, Point to );
 }

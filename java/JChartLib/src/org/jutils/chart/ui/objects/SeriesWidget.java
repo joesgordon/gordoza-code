@@ -21,18 +21,20 @@ public class SeriesWidget implements IChartWidget
     public final Series series;
 
     /**  */
-    public final IMarker marker;
+    public final CircleMarker marker;
     /**  */
-    public final IMarker selectedMarker;
+    public final CircleMarker selectedMarker;
     /**  */
     public final CircleBorderMarker highlight;
     /**  */
-    public final ILine line;
+    public SimpleLine line;
 
     /**  */
     public final ChartContext context;
     /**  */
     public boolean trackPoint;
+    /**  */
+    public Point highlightLocation;
 
     /***************************************************************************
      * @param data
@@ -48,12 +50,10 @@ public class SeriesWidget implements IChartWidget
         this.highlight = new CircleBorderMarker();
         this.line = new SimpleLine();
 
-        marker.setColor( series.marker.color );
-        highlight.setColor( series.highlight.color );
-        line.setColor( series.line.color );
-        line.setSize( series.line.weight );
-        selectedMarker.setColor(
-            SwingUtils.inverseColor( series.marker.color ) );
+        marker.color = series.marker.color;
+        highlight.color = series.highlight.color;
+        line.color = series.line.color;
+        selectedMarker.color = SwingUtils.inverseColor( series.marker.color );
 
         trackPoint = true;
 
@@ -71,13 +71,11 @@ public class SeriesWidget implements IChartWidget
             return;
         }
 
-        marker.setColor( series.marker.color );
+        marker.color = series.marker.color;
         marker.setSize( series.marker.weight );
-        highlight.setColor( series.highlight.color );
-        line.setColor( series.line.color );
-        line.setSize( series.line.weight );
-        selectedMarker.setColor(
-            SwingUtils.inverseColor( series.marker.color ) );
+        highlight.color = series.highlight.color;
+        line.color = series.line.color;
+        selectedMarker.color = SwingUtils.inverseColor( series.marker.color );
 
         Point p = new Point();
         Point last = new Point( -100, -100 );
@@ -119,12 +117,10 @@ public class SeriesWidget implements IChartWidget
             Point mp = new Point( r, r );
 
             g2d = markerLayer.setSize( d, d );
-            marker.setLocation( mp );
-            marker.draw( g2d, mp, null );
+            marker.draw( g2d, mp );
 
             g2d = selectedLayer.setSize( d, d );
-            selectedMarker.setLocation( mp );
-            selectedMarker.draw( g2d, mp, null );
+            selectedMarker.draw( g2d, mp );
         }
 
         for( int i = start; i < end; i++ )
@@ -143,9 +139,7 @@ public class SeriesWidget implements IChartWidget
             {
                 if( series.line.visible && last.x != -100 )
                 {
-                    line.setPoints( last, p );
-
-                    line.draw( graphics, p, size );
+                    line.draw( graphics, last, p );
                 }
 
                 if( series.marker.visible )
@@ -196,5 +190,10 @@ public class SeriesWidget implements IChartWidget
                 xy.setSelected( true );
             }
         }
+    }
+
+    public void setHighlightLocation( Point point )
+    {
+        this.highlightLocation = point;
     }
 }
