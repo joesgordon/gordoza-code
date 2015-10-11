@@ -61,7 +61,8 @@ public class TextWidget implements IChartWidget
 
             if( ts.width > 0 && ts.height > 0 )
             {
-                Graphics2D g2d = layer.setSize( ts.width, ts.height );
+                layer.setSize( ts );
+                Graphics2D g2d = layer.getGraphics();
 
                 g2d.setColor( label.color );
                 g2d.setFont( label.font );

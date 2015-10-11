@@ -11,6 +11,9 @@ import org.jutils.Utils;
 public class Layer2d
 {
     /**  */
+    private final Dimension size;
+
+    /**  */
     public BufferedImage img;
     /**  */
     private Graphics2D graphics;
@@ -23,18 +26,19 @@ public class Layer2d
      **************************************************************************/
     public Layer2d()
     {
-        repaint = true;
+        this.repaint = true;
+        this.size = new Dimension( 100, 100 );
 
-        createImage( 100, 100 );
+        createImage();
     }
 
     /***************************************************************************
      * @param width
      * @param height
      **************************************************************************/
-    private void createImage( int width, int height )
+    private void createImage()
     {
-        img = Utils.createTransparentImage( width, height );
+        img = Utils.createTransparentImage( size.width, size.height );
 
         graphics = img.createGraphics();
 
@@ -49,6 +53,11 @@ public class Layer2d
      **************************************************************************/
     public Graphics2D getGraphics()
     {
+        if( size.width != img.getWidth() || size.height != img.getHeight() )
+        {
+            createImage();
+        }
+
         return graphics;
     }
 
@@ -75,14 +84,10 @@ public class Layer2d
      * @param height
      * @return
      **************************************************************************/
-    public Graphics2D setSize( int width, int height )
+    public void setSize( Dimension size )
     {
-        if( width != img.getWidth() || height != img.getHeight() )
-        {
-            createImage( width, height );
-        }
-
-        return getGraphics();
+        this.size.width = size.width;
+        this.size.height = size.height;
     }
 
     /***************************************************************************
@@ -101,13 +106,5 @@ public class Layer2d
     public void paint( Graphics2D graphics, int x, int y )
     {
         graphics.drawImage( img, x, y, null );
-    }
-
-    /***************************************************************************
-     * @param size
-     **************************************************************************/
-    public void setSize( Dimension size )
-    {
-        setSize( size.width, size.height );
     }
 }

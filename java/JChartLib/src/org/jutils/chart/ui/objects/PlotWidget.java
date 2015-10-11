@@ -60,7 +60,8 @@ public class PlotWidget implements IChartWidget
      *
      **************************************************************************/
     @Override
-    public void draw( Graphics2D graphics, Point location, Dimension size )
+    public void draw( Graphics2D graphics, Point unusedPoint,
+        Dimension unusedSize )
     {
         if( !series.visible )
         {
@@ -111,11 +112,14 @@ public class PlotWidget implements IChartWidget
         {
             Graphics2D g2d;
             Point mp = new Point( r, r );
+            Dimension dim = new Dimension( d, d );
 
-            g2d = markerLayer.setSize( d, d );
+            markerLayer.setSize( dim );
+            g2d = markerLayer.getGraphics();
             marker.draw( g2d, mp );
 
-            g2d = selectedLayer.setSize( d, d );
+            selectedLayer.setSize( dim );
+            g2d = selectedLayer.getGraphics();
             selectedMarker.draw( g2d, mp );
         }
 
@@ -123,13 +127,13 @@ public class PlotWidget implements IChartWidget
         {
             dp = series.data.get( i );
 
-            if( series.data.isHidden( i ) )
+            if( dp.isHidden() )
             {
                 continue;
             }
 
-            p.x = domain.fromCoord( series.data.getX( i ) );
-            p.y = range.fromCoord( series.data.getY( i ) );
+            p.x = domain.fromCoord( dp.getX() );
+            p.y = range.fromCoord( dp.getY() );
 
             if( p.x != last.x || p.y != last.y )
             {
@@ -140,8 +144,7 @@ public class PlotWidget implements IChartWidget
 
                 if( series.marker.visible )
                 {
-                    Layer2d l2d = series.data.isSelected( i ) ? selectedLayer
-                        : markerLayer;
+                    Layer2d l2d = dp.isSelected() ? selectedLayer : markerLayer;
 
                     // m.draw( graphics, p, size );
                     l2d.paint( graphics, p.x - r, p.y - r );

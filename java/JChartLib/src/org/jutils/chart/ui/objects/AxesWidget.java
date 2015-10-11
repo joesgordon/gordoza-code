@@ -429,7 +429,6 @@ public class AxesWidget implements IChartWidget
         int x = location.x;
         int y = location.y;
         int width = size.width;
-        int height = size.height;
 
         // LogUtils.printDebug( "axes: w: " + width + ", h: " + height );
 
@@ -438,7 +437,8 @@ public class AxesWidget implements IChartWidget
         // ---------------------------------------------------------------------
         if( axesLayer.repaint )
         {
-            Graphics2D g2d = axesLayer.setSize( width, height );
+            axesLayer.setSize( size );
+            Graphics2D g2d = axesLayer.getGraphics();
 
             axesLayer.clear();
 

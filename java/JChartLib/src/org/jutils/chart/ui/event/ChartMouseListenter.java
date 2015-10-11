@@ -37,10 +37,10 @@ public class ChartMouseListenter extends MouseAdapter
     @Override
     public void mouseDragged( MouseEvent e )
     {
-        chartWidget.plot.selection.visible = true;
-        chartWidget.plot.selection.end = e.getPoint();
+        chartWidget.plots.selection.visible = true;
+        chartWidget.plots.selection.end = e.getPoint();
 
-        chartWidget.plot.highlightLayer.repaint = true;
+        chartWidget.plots.highlightLayer.repaint = true;
         panel.repaint();
     }
 
@@ -81,10 +81,10 @@ public class ChartMouseListenter extends MouseAdapter
         else if( SwingUtilities.isRightMouseButton( e ) &&
             e.getClickCount() == 2 )
         {
-            for( PlotWidget sw : chartWidget.plot.plots )
+            for( PlotWidget sw : chartWidget.plots.plots )
             {
                 sw.clearSelected();
-                chartWidget.plot.repaint();
+                chartWidget.plots.repaint();
                 panel.repaint();
             }
         }
@@ -98,7 +98,7 @@ public class ChartMouseListenter extends MouseAdapter
     {
         panel.requestFocus();
 
-        chartWidget.plot.selection.start = e.getPoint();
+        chartWidget.plots.selection.start = e.getPoint();
     }
 
     /***************************************************************************
@@ -107,16 +107,16 @@ public class ChartMouseListenter extends MouseAdapter
     @Override
     public void mouseReleased( MouseEvent evt )
     {
-        if( !chartWidget.plot.selection.visible )
+        if( !chartWidget.plots.selection.visible )
         {
             return;
         }
 
-        chartWidget.plot.selection.visible = false;
+        chartWidget.plots.selection.visible = false;
 
         PlotContext context = chartWidget.context;
 
-        Point start = chartWidget.plot.selection.start;
+        Point start = chartWidget.plots.selection.start;
         Point end = evt.getPoint();
 
         if( start == null )
@@ -153,7 +153,7 @@ public class ChartMouseListenter extends MouseAdapter
             ( sds != null && sds.range == 0.0 ) ||
             ( srs != null && srs.range == 0.0 ) )
         {
-            chartWidget.plot.highlightLayer.repaint = true;
+            chartWidget.plots.highlightLayer.repaint = true;
             panel.repaint();
             return;
         }
@@ -176,7 +176,7 @@ public class ChartMouseListenter extends MouseAdapter
             Interval ds;
             Interval rs;
 
-            for( PlotWidget sw : chartWidget.plot.plots )
+            for( PlotWidget sw : chartWidget.plots.plots )
             {
                 if( sw.series.isPrimaryDomain )
                 {
@@ -200,8 +200,8 @@ public class ChartMouseListenter extends MouseAdapter
             }
         }
 
-        chartWidget.plot.repaint();
-        chartWidget.plot.highlightLayer.repaint = true;
+        chartWidget.plots.repaint();
+        chartWidget.plots.highlightLayer.repaint = true;
         panel.repaint();
     }
 
@@ -262,7 +262,7 @@ public class ChartMouseListenter extends MouseAdapter
         // LogUtils.printDebug( "hover: " + mx );
 
         int seriesIdx = 0;
-        for( PlotWidget s : chartWidget.plot.plots )
+        for( PlotWidget s : chartWidget.plots.plots )
         {
             Point sp = new Point( p );
             IAxisCoords domainCoords;
@@ -320,7 +320,7 @@ public class ChartMouseListenter extends MouseAdapter
             seriesIdx++;
         }
 
-        chartWidget.plot.highlightLayer.repaint = true;
+        chartWidget.plots.highlightLayer.repaint = true;
         panel.repaint();
     }
 }

@@ -22,7 +22,7 @@ public class ChartWidget implements IChartWidget
     /**  */
     public final AxesWidget axes;
     /**  */
-    public final PlotsWidget plot;
+    public final PlotsWidget plots;
     /**  */
     public final TextWidget topBottom;
 
@@ -40,7 +40,7 @@ public class ChartWidget implements IChartWidget
         this.topBottom = new TextWidget( chart.topBottomLabel );
         this.title = new TextWidget( chart.title );
         this.subtitle = new TextWidget( chart.subtitle );
-        this.plot = new PlotsWidget( context );
+        this.plots = new PlotsWidget( context );
         this.axes = new AxesWidget( context, chart );
         this.legend = new LegendWidget( this );
     }
@@ -105,7 +105,9 @@ public class ChartWidget implements IChartWidget
         // ---------------------------------------------------------------------
         wLoc = new Point( context.x, context.y );
         wSize = new Dimension( context.width, context.height );
-        plot.draw( graphics, wLoc, wSize );
+        plots.layout( wSize );
+        plots.draw( ( Graphics2D )graphics.create( wLoc.x, wLoc.y, wSize.width,
+            wSize.height ), new Point(), wSize );
     }
 
     /***************************************************************************
@@ -113,7 +115,7 @@ public class ChartWidget implements IChartWidget
      **************************************************************************/
     public void clear()
     {
-        plot.plots.clear();
+        plots.plots.clear();
     }
 
     /***************************************************************************
@@ -254,12 +256,12 @@ public class ChartWidget implements IChartWidget
      **************************************************************************/
     public void setTrackingVisible( boolean visible )
     {
-        for( PlotWidget s : plot.plots )
+        for( PlotWidget s : plots.plots )
         {
             s.trackPoint = visible;
         }
 
-        plot.highlightLayer.repaint = true;
+        plots.highlightLayer.repaint = true;
     }
 
     /***************************************************************************
@@ -297,7 +299,7 @@ public class ChartWidget implements IChartWidget
         subtitle.repaint();
         topBottom.repaint();
         legend.repaint();
-        plot.repaint();
+        plots.repaint();
         axes.repaint();
     }
 }

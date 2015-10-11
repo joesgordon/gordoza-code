@@ -339,7 +339,7 @@ public class ChartView implements IView<JComponent>
         }
 
         chart.series.add( s );
-        chartWidget.plot.plots.add( new PlotWidget( s, chartWidget.context ) );
+        chartWidget.plots.plots.add( new PlotWidget( s, chartWidget.context ) );
         propertiesView.addSeries( s, chart.series.size() );
 
         chartWidget.context.calculateAutoBounds( chart.series );
@@ -412,7 +412,7 @@ public class ChartView implements IView<JComponent>
                 JOptionPane.ERROR_MESSAGE );
         }
 
-        if( chartWidget.plot.plots.size() < 2 )
+        if( chartWidget.plots.plots.size() < 2 )
         {
             setTitle( file.getName() );
         }
@@ -437,7 +437,7 @@ public class ChartView implements IView<JComponent>
 
         chartWidget.context.latchCoords();
 
-        chartWidget.plot.repaint();
+        chartWidget.plots.repaint();
         mainPanel.repaint();
     }
 
@@ -447,7 +447,7 @@ public class ChartView implements IView<JComponent>
     public void zoomRestore()
     {
         chartWidget.context.restoreAutoBounds();
-        chartWidget.plot.repaint();
+        chartWidget.plots.repaint();
         chartWidget.axes.axesLayer.repaint = true;
         mainPanel.repaint();
     }
@@ -473,7 +473,7 @@ public class ChartView implements IView<JComponent>
 
         chartWidget.context.latchCoords();
 
-        chartWidget.plot.repaint();
+        chartWidget.plots.repaint();
         chartWidget.axes.axesLayer.repaint = true;
         mainPanel.repaint();
     }
@@ -500,7 +500,7 @@ public class ChartView implements IView<JComponent>
 
         chartWidget.context.latchCoords();
 
-        chartWidget.plot.repaint();
+        chartWidget.plots.repaint();
         chartWidget.axes.axesLayer.repaint = true;
         mainPanel.repaint();
     }
@@ -801,9 +801,9 @@ public class ChartView implements IView<JComponent>
         public void componentResized( ComponentEvent e )
         {
             view.chartWidget.axes.axesLayer.repaint = true;
-            view.chartWidget.plot.repaint();
-            view.chartWidget.plot.highlightLayer.clear();
-            view.chartWidget.plot.highlightLayer.repaint = false;
+            view.chartWidget.plots.repaint();
+            view.chartWidget.plots.highlightLayer.clear();
+            view.chartWidget.plots.highlightLayer.repaint = false;
             view.mainPanel.repaint();
         }
     }
@@ -825,7 +825,7 @@ public class ChartView implements IView<JComponent>
         {
             // System.out.println( "Deleting points..." );
 
-            for( PlotWidget series : view.chartWidget.plot.plots )
+            for( PlotWidget series : view.chartWidget.plots.plots )
             {
                 for( IDataPoint xy : series.series.data )
                 {
@@ -849,7 +849,7 @@ public class ChartView implements IView<JComponent>
                 context.calculateAutoBounds( view.chart.series );
             }
 
-            view.chartWidget.plot.repaint();
+            view.chartWidget.plots.repaint();
             view.chartWidget.axes.axesLayer.repaint = true;
             view.mainPanel.repaint();
         }
