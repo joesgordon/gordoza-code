@@ -51,7 +51,8 @@ public class SelectionWidget implements IChartWidget
      * 
      **************************************************************************/
     @Override
-    public void draw( Graphics2D graphics, Point location, Dimension size )
+    public void draw( Graphics2D graphics, Point unusedPoint,
+        Dimension unusedSize )
     {
         if( visible && start != null )
         {

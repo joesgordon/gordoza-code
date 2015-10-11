@@ -7,6 +7,9 @@ import org.jutils.chart.ChartUtils;
 import org.jutils.chart.model.*;
 import org.jutils.chart.ui.IChartWidget;
 import org.jutils.chart.ui.Layer2d;
+import org.jutils.chart.ui.lines.SimpleLine;
+import org.jutils.chart.ui.markers.CircleBorderMarker;
+import org.jutils.chart.ui.markers.CircleMarker;
 import org.jutils.chart.ui.objects.PlotContext.IAxisCoords;
 
 /*******************************************************************************

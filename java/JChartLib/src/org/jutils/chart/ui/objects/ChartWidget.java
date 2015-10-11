@@ -107,7 +107,7 @@ public class ChartWidget implements IChartWidget
         wSize = new Dimension( context.width, context.height );
         plots.layout( wSize );
         plots.draw( ( Graphics2D )graphics.create( wLoc.x, wLoc.y, wSize.width,
-            wSize.height ), new Point(), wSize );
+            wSize.height ), null, null );
     }
 
     /***************************************************************************

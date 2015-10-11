@@ -57,9 +57,6 @@ public class PlotsWidget implements IChartWidget
     {
         Graphics2D g2d;
 
-        Point pt;
-        Dimension d;
-
         if( context.width < 1 || context.height < 1 )
         {
             return;
@@ -75,7 +72,7 @@ public class PlotsWidget implements IChartWidget
 
             for( PlotWidget s : plots )
             {
-                s.draw( g2d, unusedPoint, unusedSize );
+                s.draw( g2d, null, null );
             }
 
             seriesLayer.repaint = false;
@@ -85,8 +82,6 @@ public class PlotsWidget implements IChartWidget
         // ---------------------------------------------------------------------
         // Draw highlight layer.
         // ---------------------------------------------------------------------
-        pt = new Point( context.x, context.y );
-        d = new Dimension( context.width, context.height );
         g2d = highlightLayer.getGraphics();
 
         if( highlightLayer.repaint )
@@ -104,7 +99,7 @@ public class PlotsWidget implements IChartWidget
 
             highlightLayer.repaint = false;
 
-            selection.draw( g2d, pt, d );
+            selection.draw( g2d, null, null );
         }
 
         highlightLayer.paint( graphics, 0, 0 );
