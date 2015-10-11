@@ -81,7 +81,7 @@ public class ChartMouseListenter extends MouseAdapter
         else if( SwingUtilities.isRightMouseButton( e ) &&
             e.getClickCount() == 2 )
         {
-            for( SeriesWidget sw : chartWidget.plot.plots )
+            for( PlotWidget sw : chartWidget.plot.plots )
             {
                 sw.clearSelected();
                 chartWidget.plot.repaint();
@@ -176,7 +176,7 @@ public class ChartMouseListenter extends MouseAdapter
             Interval ds;
             Interval rs;
 
-            for( SeriesWidget sw : chartWidget.plot.plots )
+            for( PlotWidget sw : chartWidget.plot.plots )
             {
                 if( sw.series.isPrimaryDomain )
                 {
@@ -262,7 +262,7 @@ public class ChartMouseListenter extends MouseAdapter
         // LogUtils.printDebug( "hover: " + mx );
 
         int seriesIdx = 0;
-        for( SeriesWidget s : chartWidget.plot.plots )
+        for( PlotWidget s : chartWidget.plot.plots )
         {
             Point sp = new Point( p );
             IAxisCoords domainCoords;

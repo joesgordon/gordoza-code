@@ -79,6 +79,15 @@ public class DefaultSeries implements ISeriesData<XYPoint>
      * 
      **************************************************************************/
     @Override
+    public boolean isSelected( int index )
+    {
+        return get( index ).hidden;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
     public void setHidden( int index, boolean hidden )
     {
         XYPoint point = get( index );

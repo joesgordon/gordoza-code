@@ -254,7 +254,7 @@ public class ChartWidget implements IChartWidget
      **************************************************************************/
     public void setTrackingVisible( boolean visible )
     {
-        for( SeriesWidget s : plot.plots )
+        for( PlotWidget s : plot.plots )
         {
             s.trackPoint = visible;
         }

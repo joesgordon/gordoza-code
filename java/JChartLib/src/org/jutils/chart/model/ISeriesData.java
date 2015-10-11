@@ -39,4 +39,10 @@ public interface ISeriesData<T extends IDataPoint> extends Iterable<T>
      * @param hidden
      **************************************************************************/
     public void setHidden( int index, boolean hidden );
+
+    /***************************************************************************
+     * @param index
+     * @return
+     **************************************************************************/
+    public boolean isSelected( int index );
 }

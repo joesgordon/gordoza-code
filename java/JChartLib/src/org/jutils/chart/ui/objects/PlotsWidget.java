@@ -20,7 +20,7 @@ public class PlotsWidget implements IChartWidget
     public final SelectionWidget selection;
 
     /**  */
-    public final List<SeriesWidget> plots;
+    public final List<PlotWidget> plots;
 
     /**  */
     public final PlotContext context;
@@ -69,7 +69,7 @@ public class PlotsWidget implements IChartWidget
         {
             seriesLayer.clear();
 
-            for( SeriesWidget s : plots )
+            for( PlotWidget s : plots )
             {
                 s.draw( g2d, location, size );
             }
@@ -89,7 +89,7 @@ public class PlotsWidget implements IChartWidget
         {
             highlightLayer.clear();
 
-            for( SeriesWidget p : plots )
+            for( PlotWidget p : plots )
             {
                 if( p.series.visible && p.trackPoint &&
                     p.highlightLocation != null )

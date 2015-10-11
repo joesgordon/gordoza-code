@@ -109,7 +109,7 @@ public class LegendWidget implements IChartWidget
     {
         List<SeriesKey> keys = new ArrayList<>();
 
-        for( SeriesWidget s : chart.plot.plots )
+        for( PlotWidget s : chart.plot.plots )
         {
             if( s.series.visible )
             {
@@ -320,11 +320,11 @@ public class LegendWidget implements IChartWidget
      **************************************************************************/
     private static class SeriesKey
     {
-        public final SeriesWidget s;
+        public final PlotWidget s;
         public final Point loc;
         public final Dimension size;
 
-        public SeriesKey( SeriesWidget s, Dimension size )
+        public SeriesKey( PlotWidget s, Dimension size )
         {
             this.s = s;
             this.loc = new Point();

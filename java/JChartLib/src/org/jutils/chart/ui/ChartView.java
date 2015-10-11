@@ -339,8 +339,7 @@ public class ChartView implements IView<JComponent>
         }
 
         chart.series.add( s );
-        chartWidget.plot.plots.add(
-            new SeriesWidget( chart, s, chartWidget.context ) );
+        chartWidget.plot.plots.add( new PlotWidget( s, chartWidget.context ) );
         propertiesView.addSeries( s, chart.series.size() );
 
         chartWidget.context.calculateAutoBounds( chart.series );
@@ -826,7 +825,7 @@ public class ChartView implements IView<JComponent>
         {
             // System.out.println( "Deleting points..." );
 
-            for( SeriesWidget series : view.chartWidget.plot.plots )
+            for( PlotWidget series : view.chartWidget.plot.plots )
             {
                 for( IDataPoint xy : series.series.data )
                 {
