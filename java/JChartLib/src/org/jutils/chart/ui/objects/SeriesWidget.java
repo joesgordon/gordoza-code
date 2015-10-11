@@ -4,11 +4,10 @@ import java.awt.*;
 
 import org.jutils.SwingUtils;
 import org.jutils.chart.ChartUtils;
-import org.jutils.chart.data.ChartContext;
-import org.jutils.chart.data.ChartContext.IAxisCoords;
 import org.jutils.chart.model.*;
 import org.jutils.chart.ui.IChartWidget;
 import org.jutils.chart.ui.Layer2d;
+import org.jutils.chart.ui.objects.PlotContext.IAxisCoords;
 
 /*******************************************************************************
  * 
@@ -30,7 +29,7 @@ public class SeriesWidget implements IChartWidget
     public SimpleLine line;
 
     /**  */
-    public final ChartContext context;
+    public final PlotContext context;
     /**  */
     public boolean trackPoint;
     /**  */
@@ -39,7 +38,7 @@ public class SeriesWidget implements IChartWidget
     /***************************************************************************
      * @param data
      **************************************************************************/
-    public SeriesWidget( Chart chart, Series series, ChartContext context )
+    public SeriesWidget( Chart chart, Series series, PlotContext context )
     {
         this.chart = chart;
         this.series = series;

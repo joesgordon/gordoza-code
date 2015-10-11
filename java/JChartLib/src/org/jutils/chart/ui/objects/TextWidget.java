@@ -13,7 +13,7 @@ import org.jutils.chart.ui.Layer2d;
 public class TextWidget implements IChartWidget
 {
     /**  */
-    private final TextLabel label;
+    public final TextLabel label;
     /**  */
     private final Layer2d layer;
     /**  */

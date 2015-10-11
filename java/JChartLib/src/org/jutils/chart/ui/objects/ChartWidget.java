@@ -2,7 +2,6 @@ package org.jutils.chart.ui.objects;
 
 import java.awt.*;
 
-import org.jutils.chart.data.ChartContext;
 import org.jutils.chart.model.Chart;
 import org.jutils.chart.model.HorizontalAlignment;
 import org.jutils.chart.ui.IChartWidget;
@@ -13,19 +12,20 @@ import org.jutils.chart.ui.IChartWidget;
 public class ChartWidget implements IChartWidget
 {
     /**  */
-    public final ChartContext context;
+    public final PlotContext context;
     /**  */
-    public final TextWidget topBottom;
+    public final LegendWidget legend;
     /**  */
     public final TextWidget title;
     /**  */
     public final TextWidget subtitle;
     /**  */
-    public final PlotWidget plot;
-    /**  */
     public final AxesWidget axes;
     /**  */
-    public final LegendWidget legend;
+    public final PlotsWidget plot;
+    /**  */
+    public final TextWidget topBottom;
+
     /**  */
     final Chart chart;
 
@@ -36,11 +36,11 @@ public class ChartWidget implements IChartWidget
     {
         this.chart = chart;
 
-        this.context = new ChartContext( chart );
+        this.context = new PlotContext( chart );
         this.topBottom = new TextWidget( chart.topBottomLabel );
         this.title = new TextWidget( chart.title );
         this.subtitle = new TextWidget( chart.subtitle );
-        this.plot = new PlotWidget( context );
+        this.plot = new PlotsWidget( context );
         this.axes = new AxesWidget( context, chart );
         this.legend = new LegendWidget( this );
     }
@@ -113,7 +113,7 @@ public class ChartWidget implements IChartWidget
      **************************************************************************/
     public void clear()
     {
-        plot.serieses.clear();
+        plot.plots.clear();
     }
 
     /***************************************************************************
@@ -254,7 +254,7 @@ public class ChartWidget implements IChartWidget
      **************************************************************************/
     public void setTrackingVisible( boolean visible )
     {
-        for( SeriesWidget s : plot.serieses )
+        for( SeriesWidget s : plot.plots )
         {
             s.trackPoint = visible;
         }

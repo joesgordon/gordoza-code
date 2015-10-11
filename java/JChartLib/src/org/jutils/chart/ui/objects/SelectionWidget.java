@@ -2,7 +2,6 @@ package org.jutils.chart.ui.objects;
 
 import java.awt.*;
 
-import org.jutils.chart.data.ChartContext;
 import org.jutils.chart.ui.IChartWidget;
 
 /*******************************************************************************
@@ -11,7 +10,7 @@ import org.jutils.chart.ui.IChartWidget;
 public class SelectionWidget implements IChartWidget
 {
     /**  */
-    private ChartContext context;
+    private PlotContext context;
 
     /**  */
     private Stroke borderStroke;
@@ -28,7 +27,10 @@ public class SelectionWidget implements IChartWidget
     /**  */
     public boolean visible;
 
-    public SelectionWidget( ChartContext context )
+    /***************************************************************************
+     * @param context
+     **************************************************************************/
+    public SelectionWidget( PlotContext context )
     {
         this.context = context;
         this.borderStroke = new BasicStroke( 2 );

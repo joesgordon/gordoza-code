@@ -5,8 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import org.jutils.IconConstants;
-import org.jutils.chart.model.HorizontalAlignment;
-import org.jutils.chart.model.TextLabel;
+import org.jutils.chart.model.*;
 import org.jutils.chart.ui.IChartWidget;
 import org.jutils.chart.ui.WidgetPanel;
 import org.jutils.ui.JGoodiesToolBar;

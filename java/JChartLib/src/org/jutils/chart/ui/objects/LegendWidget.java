@@ -109,7 +109,7 @@ public class LegendWidget implements IChartWidget
     {
         List<SeriesKey> keys = new ArrayList<>();
 
-        for( SeriesWidget s : chart.plot.serieses )
+        for( SeriesWidget s : chart.plot.plots )
         {
             if( s.series.visible )
             {

@@ -15,14 +15,12 @@ import org.jutils.*;
 import org.jutils.chart.*;
 import org.jutils.chart.app.JChartAppConstants;
 import org.jutils.chart.app.UserData;
-import org.jutils.chart.data.ChartContext;
 import org.jutils.chart.data.SaveOptions;
 import org.jutils.chart.io.DataFileReader;
 import org.jutils.chart.model.*;
 import org.jutils.chart.ui.event.ChartMouseListenter;
 import org.jutils.chart.ui.event.SaveSeriesDataListener;
-import org.jutils.chart.ui.objects.ChartWidget;
-import org.jutils.chart.ui.objects.SeriesWidget;
+import org.jutils.chart.ui.objects.*;
 import org.jutils.io.IOUtils;
 import org.jutils.io.OptionsSerializer;
 import org.jutils.ui.JGoodiesToolBar;
@@ -341,7 +339,7 @@ public class ChartView implements IView<JComponent>
         }
 
         chart.series.add( s );
-        chartWidget.plot.serieses.add(
+        chartWidget.plot.plots.add(
             new SeriesWidget( chart, s, chartWidget.context ) );
         propertiesView.addSeries( s, chart.series.size() );
 
@@ -415,7 +413,7 @@ public class ChartView implements IView<JComponent>
                 JOptionPane.ERROR_MESSAGE );
         }
 
-        if( chartWidget.plot.serieses.size() < 2 )
+        if( chartWidget.plot.plots.size() < 2 )
         {
             setTitle( file.getName() );
         }
@@ -828,7 +826,7 @@ public class ChartView implements IView<JComponent>
         {
             // System.out.println( "Deleting points..." );
 
-            for( SeriesWidget series : view.chartWidget.plot.serieses )
+            for( SeriesWidget series : view.chartWidget.plot.plots )
             {
                 for( IDataPoint xy : series.series.data )
                 {
@@ -840,7 +838,7 @@ public class ChartView implements IView<JComponent>
                 }
             }
 
-            ChartContext context = view.chartWidget.context;
+            PlotContext context = view.chartWidget.context;
 
             if( context.isAutoBounds() )
             {

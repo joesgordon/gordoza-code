@@ -6,14 +6,12 @@ import java.awt.event.*;
 import javax.swing.SwingUtilities;
 
 import org.jutils.chart.ChartUtils;
-import org.jutils.chart.data.ChartContext;
-import org.jutils.chart.data.ChartContext.IAxisCoords;
 import org.jutils.chart.data.XYPoint;
 import org.jutils.chart.model.Interval;
 import org.jutils.chart.ui.ChartView;
 import org.jutils.chart.ui.WidgetPanel;
-import org.jutils.chart.ui.objects.ChartWidget;
-import org.jutils.chart.ui.objects.SeriesWidget;
+import org.jutils.chart.ui.objects.*;
+import org.jutils.chart.ui.objects.PlotContext.IAxisCoords;
 import org.jutils.io.LogUtils;
 
 /***************************************************************************
@@ -83,7 +81,7 @@ public class ChartMouseListenter extends MouseAdapter
         else if( SwingUtilities.isRightMouseButton( e ) &&
             e.getClickCount() == 2 )
         {
-            for( SeriesWidget sw : chartWidget.plot.serieses )
+            for( SeriesWidget sw : chartWidget.plot.plots )
             {
                 sw.clearSelected();
                 chartWidget.plot.repaint();
@@ -116,7 +114,7 @@ public class ChartMouseListenter extends MouseAdapter
 
         chartWidget.plot.selection.visible = false;
 
-        ChartContext context = chartWidget.context;
+        PlotContext context = chartWidget.context;
 
         Point start = chartWidget.plot.selection.start;
         Point end = evt.getPoint();
@@ -178,7 +176,7 @@ public class ChartMouseListenter extends MouseAdapter
             Interval ds;
             Interval rs;
 
-            for( SeriesWidget sw : chartWidget.plot.serieses )
+            for( SeriesWidget sw : chartWidget.plot.plots )
             {
                 if( sw.series.isPrimaryDomain )
                 {
@@ -250,7 +248,7 @@ public class ChartMouseListenter extends MouseAdapter
         XYPoint xy = new XYPoint();
         int idx;
 
-        ChartContext context = chartWidget.context;
+        PlotContext context = chartWidget.context;
 
         // if( p.x < 0 || p.y < 0 || p.x > context.width ||
         // p.y > context.height )
@@ -264,7 +262,7 @@ public class ChartMouseListenter extends MouseAdapter
         // LogUtils.printDebug( "hover: " + mx );
 
         int seriesIdx = 0;
-        for( SeriesWidget s : chartWidget.plot.serieses )
+        for( SeriesWidget s : chartWidget.plot.plots )
         {
             Point sp = new Point( p );
             IAxisCoords domainCoords;

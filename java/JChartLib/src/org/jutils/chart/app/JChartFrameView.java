@@ -60,8 +60,14 @@ public class JChartFrameView implements IView<JFrame>
         recentFiles.setData( userio.getOptions().recentFiles.toList() );
         recentFiles.addSelectedListener( new FileSelected( this ) );
 
+        chartView.chart.domainAxis.title.visible = true;
+        chartView.chart.domainAxis.title.text = "X Values";
+
         chartView.chart.rangeAxis.title.visible = true;
         chartView.chart.rangeAxis.title.text = "Y Values";
+
+        chartView.chart.secDomainAxis.title.visible = true;
+        chartView.chart.secDomainAxis.title.text = "Sec X Values";
 
         chartView.chart.secRangeAxis.title.visible = true;
         chartView.chart.secRangeAxis.title.text = "Sec Y Values";
