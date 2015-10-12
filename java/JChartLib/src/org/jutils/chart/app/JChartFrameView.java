@@ -72,6 +72,8 @@ public class JChartFrameView implements IView<JFrame>
         chartView.chart.secRangeAxis.title.visible = true;
         chartView.chart.secRangeAxis.title.text = "Sec Y Values";
 
+        chartView.chart.legend.visible = true;
+
         Series s;
         ISeriesData<?> data;
 

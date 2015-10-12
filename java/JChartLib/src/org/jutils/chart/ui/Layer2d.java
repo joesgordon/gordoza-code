@@ -56,6 +56,9 @@ public class Layer2d
         if( size.width != img.getWidth() || size.height != img.getHeight() )
         {
             createImage();
+
+            size.width = img.getWidth();
+            size.height = img.getHeight();
         }
 
         return graphics;

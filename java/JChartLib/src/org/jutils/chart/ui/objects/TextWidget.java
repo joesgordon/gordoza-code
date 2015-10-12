@@ -40,8 +40,10 @@ public class TextWidget implements IChartWidget
         this.layer = new Layer2d();
         this.direction = direction;
 
-        layer.getGraphics().setFont( label.font );
-        metrics = layer.getGraphics().getFontMetrics();
+        Graphics2D g = layer.getGraphics();
+
+        g.setFont( label.font );
+        metrics = g.getFontMetrics();
     }
 
     /***************************************************************************
@@ -150,11 +152,7 @@ public class TextWidget implements IChartWidget
         }
     }
 
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public Dimension calculateSize( Dimension canvasSize )
+    public Dimension layout( Dimension size )
     {
         Dimension dim = new Dimension();
 
@@ -163,7 +161,13 @@ public class TextWidget implements IChartWidget
             return dim;
         }
 
+        Graphics2D g = layer.getGraphics();
+
+        g.setFont( label.font );
+        metrics = g.getFontMetrics();
+
         dim.width = metrics.stringWidth( label.text );
+        // dim.height = label.font.getSize() + 2;
         dim.height = metrics.getHeight();
 
         if( direction == TextDirection.RIGHT ||
@@ -175,6 +179,15 @@ public class TextWidget implements IChartWidget
         }
 
         return dim;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Dimension calculateSize( Dimension canvasSize )
+    {
+        return layout( canvasSize );
     }
 
     /***************************************************************************

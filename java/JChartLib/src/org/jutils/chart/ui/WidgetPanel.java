@@ -70,6 +70,7 @@ public class WidgetPanel extends JComponent
 
         layer.setSize( size );
 
+        obj.calculateSize( size );
         obj.draw( layer.getGraphics(), new Point(), size );
 
         layer.paint( ( Graphics2D )g );

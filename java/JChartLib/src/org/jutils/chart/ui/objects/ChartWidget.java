@@ -42,7 +42,7 @@ public class ChartWidget implements IChartWidget
         this.subtitle = new TextWidget( chart.subtitle );
         this.plots = new PlotsWidget( context );
         this.axes = new AxesWidget( context, chart );
-        this.legend = new LegendWidget( this );
+        this.legend = new LegendWidget( chart.legend, plots.plots );
     }
 
     /***************************************************************************
@@ -200,10 +200,14 @@ public class ChartWidget implements IChartWidget
      **************************************************************************/
     private void drawLegend( Graphics2D graphics, Point wLoc, Dimension wSize )
     {
+        // graphics.setColor( Color.green );
+        // graphics.drawRect( wLoc.x, wLoc.y, wSize.width, wSize.height );
+
         if( chart.legend.visible )
         {
-            Dimension size = legend.calculateSize( wSize );
+            Dimension size = new Dimension( wSize );
             Point loc = new Point( wLoc );
+            size = legend.layout( size );
 
             switch( chart.legend.side )
             {
@@ -226,7 +230,11 @@ public class ChartWidget implements IChartWidget
                     break;
             }
 
-            legend.draw( graphics, loc, new Dimension( size ) );
+            size = legend.layout( size );
+
+            legend.repaint();
+            legend.draw( ( Graphics2D )graphics.create( loc.x, loc.y,
+                size.width, size.height ), null, null );
 
             switch( chart.legend.side )
             {
