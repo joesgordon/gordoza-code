@@ -431,9 +431,13 @@ public class ChartView implements IView<JComponent>
         restoreAndRepaintChart();
     }
 
+    /***************************************************************************
+     * @param min
+     * @param max
+     **************************************************************************/
     public void setPrimaryRangeBounds( double min, double max )
     {
-        chart.domainAxis.setBounds( new Interval( min, max ) );
+        chart.rangeAxis.setBounds( new Interval( min, max ) );
 
         chartWidget.context.latchCoords();
 

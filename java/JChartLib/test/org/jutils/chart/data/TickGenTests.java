@@ -34,7 +34,8 @@ public class TickGenTests
         // bounds = new Interval( 19, 21 );
         // bounds = new Interval( 4.700843367370089E-4, 5.299156632624369E-4 );
         // bounds = new Interval( 7.499749815335413, 7.499750184664589 );
-        bounds = new Interval( 7.499749993160572, 7.49975000683943 );
+        // bounds = new Interval( 7.499749993160572, 7.49975000683943 );
+        bounds = new Interval( 7.99970999206626, 7.999710007933737 );
         axis.setBounds( bounds );
         gen.genTicks( axis, width, ticks );
 
@@ -43,6 +44,7 @@ public class TickGenTests
         {
             LogUtils.printDebug( "Tick @ " + t.value + " : " + t.label );
         }
+        Assert.assertNotEquals( 0, ticks.size() );
     }
 
     /***************************************************************************

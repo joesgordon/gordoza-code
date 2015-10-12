@@ -7,7 +7,6 @@ import java.util.List;
 import org.jutils.chart.model.*;
 import org.jutils.chart.ui.IChartWidget;
 import org.jutils.chart.ui.Layer2d;
-import org.jutils.io.LogUtils;
 
 /*******************************************************************************
  * 
@@ -60,8 +59,6 @@ public class LegendWidget implements IChartWidget
     public void repaint()
     {
         layer.repaint = true;
-
-        LogUtils.printDebug( "repaint" );
     }
 
     /***************************************************************************
