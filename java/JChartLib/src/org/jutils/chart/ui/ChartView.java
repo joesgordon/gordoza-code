@@ -459,20 +459,28 @@ public class ChartView implements IView<JComponent>
     /***************************************************************************
      * 
      **************************************************************************/
-    public void zoomIn()
+    public void zoomIn( ZoomDirection dir )
     {
-        chart.domainAxis.setBounds( chart.domainAxis.getBounds().zoomIn() );
-        chart.rangeAxis.setBounds( chart.rangeAxis.getBounds().zoomIn() );
+        if( dir.zoomHorizontal )
+        {
+            chart.domainAxis.setBounds( chart.domainAxis.getBounds().zoomIn() );
 
-        if( chart.secDomainAxis.isUsed )
-        {
-            chart.secDomainAxis.setBounds(
-                chart.secDomainAxis.getBounds().zoomIn() );
+            if( chart.secDomainAxis.isUsed )
+            {
+                chart.secDomainAxis.setBounds(
+                    chart.secDomainAxis.getBounds().zoomIn() );
+            }
         }
-        if( chart.secRangeAxis.isUsed )
+
+        if( dir.zoomVertical )
         {
-            chart.secRangeAxis.setBounds(
-                chart.secRangeAxis.getBounds().zoomIn() );
+            chart.rangeAxis.setBounds( chart.rangeAxis.getBounds().zoomIn() );
+
+            if( chart.secRangeAxis.isUsed )
+            {
+                chart.secRangeAxis.setBounds(
+                    chart.secRangeAxis.getBounds().zoomIn() );
+            }
         }
 
         chartWidget.context.latchCoords();
@@ -485,21 +493,29 @@ public class ChartView implements IView<JComponent>
     /***************************************************************************
      * 
      **************************************************************************/
-    public void zoomOut()
+    public void zoomOut( ZoomDirection dir )
     {
-        chart.domainAxis.setBounds( chart.domainAxis.getBounds().zoomOut() );
-        chart.rangeAxis.setBounds( chart.rangeAxis.getBounds().zoomOut() );
-
-        if( chart.secDomainAxis.isUsed )
+        if( dir.zoomHorizontal )
         {
-            chart.secDomainAxis.setBounds(
-                chart.secDomainAxis.getBounds().zoomOut() );
+            chart.domainAxis.setBounds(
+                chart.domainAxis.getBounds().zoomOut() );
+
+            if( chart.secDomainAxis.isUsed )
+            {
+                chart.secDomainAxis.setBounds(
+                    chart.secDomainAxis.getBounds().zoomOut() );
+            }
         }
 
-        if( chart.secRangeAxis.isUsed )
+        if( dir.zoomVertical )
         {
-            chart.secRangeAxis.setBounds(
-                chart.secRangeAxis.getBounds().zoomOut() );
+            chart.rangeAxis.setBounds( chart.rangeAxis.getBounds().zoomOut() );
+
+            if( chart.secRangeAxis.isUsed )
+            {
+                chart.secRangeAxis.setBounds(
+                    chart.secRangeAxis.getBounds().zoomOut() );
+            }
         }
 
         chartWidget.context.latchCoords();
@@ -929,6 +945,7 @@ public class ChartView implements IView<JComponent>
             if( event.getItem() )
             {
                 view.chartWidget.calculateAutoBounds();
+                view.chartWidget.latchBounds();
                 view.repaintChart();
             }
         }
@@ -949,7 +966,11 @@ public class ChartView implements IView<JComponent>
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            view.zoomIn();
+            int mods = e.getModifiers();
+            boolean shift = ( mods & InputEvent.SHIFT_MASK ) != 0;
+            boolean ctrl = ( mods & InputEvent.CTRL_MASK ) != 0;
+
+            view.zoomIn( ZoomDirection.get( shift, ctrl ) );
         }
     }
 
@@ -968,7 +989,11 @@ public class ChartView implements IView<JComponent>
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            view.zoomOut();
+            int mods = e.getModifiers();
+            boolean shift = ( mods & InputEvent.SHIFT_MASK ) != 0;
+            boolean ctrl = ( mods & InputEvent.CTRL_MASK ) != 0;
+
+            view.zoomOut( ZoomDirection.get( shift, ctrl ) );
         }
     }
 }

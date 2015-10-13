@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jutils.chart.model.*;
-import org.jutils.io.LogUtils;
 
 /*******************************************************************************
  * 
@@ -78,7 +77,7 @@ public class PlotContext
     public void latchCoords()
     {
         // TODO Remove bread crumb
-        LogUtils.printDebug( "Latching Coords" );
+        // LogUtils.printDebug( "Latching Coords" );
         // LogUtils.printDebug( Utils.getStackTrace() );
 
         domainCoords.latchCoords( domainCoords.getAxis().getBounds(), width );
@@ -296,11 +295,11 @@ public class PlotContext
             this.stats = new DimensionStats( bounds, length );
 
             // TODO Remove bread crumb
-            if( bounds != null )
-            {
-                LogUtils.printDebug(
-                    "Latching " + bounds.toString() + " with len " + length );
-            }
+            // if( bounds != null )
+            // {
+            // LogUtils.printDebug(
+            // "Latching " + bounds.toString() + " with len " + length );
+            // }
         }
 
         @Override

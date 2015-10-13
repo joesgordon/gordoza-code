@@ -8,11 +8,9 @@ import javax.swing.SwingUtilities;
 import org.jutils.chart.ChartUtils;
 import org.jutils.chart.data.XYPoint;
 import org.jutils.chart.model.Interval;
-import org.jutils.chart.ui.ChartView;
-import org.jutils.chart.ui.WidgetPanel;
+import org.jutils.chart.ui.*;
 import org.jutils.chart.ui.objects.*;
 import org.jutils.chart.ui.objects.PlotContext.IAxisCoords;
-import org.jutils.io.LogUtils;
 
 /***************************************************************************
  * 
@@ -53,18 +51,22 @@ public class ChartMouseListenter extends MouseAdapter
         if( e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL )
         {
             int zoomAmount = e.getWheelRotation();
+            int exmod = e.getModifiersEx();
+
+            boolean shift = ( MouseWheelEvent.SHIFT_DOWN_MASK &
+                exmod ) == MouseWheelEvent.SHIFT_DOWN_MASK;
+
+            boolean ctrl = ( MouseWheelEvent.CTRL_DOWN_MASK &
+                exmod ) == MouseWheelEvent.CTRL_DOWN_MASK;
 
             if( zoomAmount < 0 )
             {
-                view.zoomIn();
+                view.zoomIn( ZoomDirection.get( shift, ctrl ) );
             }
             else
             {
-                view.zoomOut();
+                view.zoomOut( ZoomDirection.get( shift, ctrl ) );
             }
-
-            LogUtils.printDebug(
-                "Sec Range bounds: " + view.chart.secRangeAxis.getBounds() );
         }
     }
 
@@ -176,27 +178,30 @@ public class ChartMouseListenter extends MouseAdapter
             Interval ds;
             Interval rs;
 
-            for( PlotWidget sw : chartWidget.plots.plots )
+            for( PlotWidget plot : chartWidget.plots.plots )
             {
-                if( sw.series.isPrimaryDomain )
+                if( plot.series.visible )
                 {
-                    ds = pds;
-                }
-                else
-                {
-                    ds = sds;
-                }
+                    if( plot.series.isPrimaryDomain )
+                    {
+                        ds = pds;
+                    }
+                    else
+                    {
+                        ds = sds;
+                    }
 
-                if( sw.series.isPrimaryRange )
-                {
-                    rs = prs;
-                }
-                else
-                {
-                    rs = srs;
-                }
+                    if( plot.series.isPrimaryRange )
+                    {
+                        rs = prs;
+                    }
+                    else
+                    {
+                        rs = srs;
+                    }
 
-                sw.setSelected( ds, rs );
+                    plot.setSelected( ds, rs );
+                }
             }
         }
 
