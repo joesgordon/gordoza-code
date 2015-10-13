@@ -12,15 +12,23 @@ import org.jutils.chart.ui.*;
 import org.jutils.chart.ui.objects.*;
 import org.jutils.chart.ui.objects.PlotContext.IAxisCoords;
 
-/***************************************************************************
+/*******************************************************************************
  * 
- **************************************************************************/
+ *****************************************************************************/
 public class ChartMouseListenter extends MouseAdapter
 {
+    /**  */
     private final ChartView view;
+    /**  */
     private final ChartWidget chartWidget;
+    /**  */
     private final WidgetPanel panel;
 
+    /***************************************************************************
+     * @param view
+     * @param chartWidget
+     * @param panel
+     **************************************************************************/
     public ChartMouseListenter( ChartView view, ChartWidget chartWidget,
         WidgetPanel panel )
     {
@@ -210,6 +218,12 @@ public class ChartMouseListenter extends MouseAdapter
         panel.repaint();
     }
 
+    /***************************************************************************
+     * @param coords
+     * @param min
+     * @param max
+     * @return
+     **************************************************************************/
     private Interval getBounds( IAxisCoords coords, int min, int max )
     {
         double dmin = coords.fromScreen( min );
@@ -218,10 +232,10 @@ public class ChartMouseListenter extends MouseAdapter
         return new Interval( dmin, dmax );
     }
 
-    /**
+    /***************************************************************************
      * @param start
      * @param end
-     */
+     **************************************************************************/
     private void validateDragArea( Point start, Point end )
     {
         start.x -= chartWidget.context.x;
@@ -267,18 +281,18 @@ public class ChartMouseListenter extends MouseAdapter
         // LogUtils.printDebug( "hover: " + mx );
 
         int seriesIdx = 0;
-        for( PlotWidget s : chartWidget.plots.plots )
+        for( PlotWidget plot : chartWidget.plots.plots )
         {
             Point sp = new Point( p );
             IAxisCoords domainCoords;
             IAxisCoords rangeCoords;
 
-            if( !s.series.visible )
+            if( !plot.series.visible )
             {
                 continue;
             }
 
-            if( s.series.isPrimaryDomain )
+            if( plot.series.isPrimaryDomain )
             {
                 domainCoords = context.domainCoords;
             }
@@ -291,11 +305,11 @@ public class ChartMouseListenter extends MouseAdapter
             {
                 xy.x = domainCoords.fromScreen( sp.x );
 
-                idx = ChartUtils.findNearest( s.series.data, xy.x );
+                idx = ChartUtils.findNearest( plot.series.data, xy.x );
 
                 if( idx > -1 )
                 {
-                    if( s.series.isPrimaryRange )
+                    if( plot.series.isPrimaryRange )
                     {
                         rangeCoords = context.rangeCoords;
                     }
@@ -304,12 +318,13 @@ public class ChartMouseListenter extends MouseAdapter
                         rangeCoords = context.secRangeCoords;
                     }
 
-                    if( domainCoords == null || rangeCoords == null )
+                    if( domainCoords.getBounds() == null ||
+                        rangeCoords.getBounds() == null )
                     {
                         continue;
                     }
 
-                    xy = new XYPoint( s.series.data.get( idx ) );
+                    xy = new XYPoint( plot.series.data.get( idx ) );
                     sp.x = domainCoords.fromCoord( xy.x );
                     sp.y = rangeCoords.fromCoord( xy.y );
 
@@ -317,7 +332,7 @@ public class ChartMouseListenter extends MouseAdapter
                     // "]: " +
                     // p.x + xy.x );
 
-                    s.setHighlightLocation( new Point( sp ) );
+                    plot.setHighlightLocation( new Point( sp ) );
 
                     view.propertiesView.setSelected( seriesIdx, idx );
                 }
