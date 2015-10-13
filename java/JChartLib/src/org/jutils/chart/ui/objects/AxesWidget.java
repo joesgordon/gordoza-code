@@ -235,44 +235,7 @@ public class AxesWidget implements IChartWidget
             space.right = d.width;
         }
 
-        // TODO Auto-generated method stub
-
         return space;
-    }
-
-    /***************************************************************************
-     * @param graphics
-     * @param location
-     * @param size
-     **************************************************************************/
-    private void draw2( Graphics2D graphics, Point location, Dimension size )
-    {
-        Ticks ticks;
-        Insets textSpace;
-
-        ticks = calculateTicks();
-        textSpace = calculateLabelInsets( size, ticks );
-        positionTicks( ticks, textSpace );
-
-        // -----------------------------------------------------------------
-        // Calculate context
-        // -----------------------------------------------------------------
-        context.x = location.x + textSpace.left;
-        context.y = location.y + textSpace.top;
-
-        context.width = size.width - AXIS_WEIGHT / 2 - textSpace.left -
-            textSpace.right;
-        context.height = size.height - AXIS_WEIGHT / 2 - textSpace.top -
-            textSpace.bottom;
-
-        context.width = Math.max( 0, context.width );
-        context.height = Math.max( 0, context.height );
-
-        context.latchCoords();
-
-        drawTitles( graphics, location, size, textSpace );
-
-        drawTicksAndAxes( graphics, location, size, textSpace, ticks );
     }
 
     /***************************************************************************

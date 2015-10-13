@@ -51,8 +51,16 @@ public class ChartWidget implements IChartWidget
     @Override
     public Dimension calculateSize( Dimension canvasSize )
     {
+        return layout( canvasSize );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public Dimension layout( Dimension size )
+    {
         // TODO Auto-generated method stub
-        return null;
+        return size;
     }
 
     /***************************************************************************

@@ -36,9 +36,11 @@ public class TickGenTests
         // bounds = new Interval( 7.499749815335413, 7.499750184664589 );
         // bounds = new Interval( 7.499749993160572, 7.49975000683943 );
         bounds = new Interval( 7.99970999206626, 7.999710007933737 );
+        // bounds = new Interval( 0, Math.nextUp( 0 ) );
         axis.setBounds( bounds );
         gen.genTicks( axis, width, ticks );
 
+        LogUtils.printDebug( "Interval: " + bounds.toString() );
         LogUtils.printDebug( "Tick count: " + ticks.size() );
         for( Tick t : ticks )
         {

@@ -118,23 +118,23 @@ public class TickGen
 
         int tickWidthCsNorm = 0;
 
-        if( 100 >= minTickCsNorm && 100 <= maxTickCsNorm )
+        if( minTickCsNorm <= 100 && 100 <= maxTickCsNorm )
         {
             tickWidthCsNorm = 100;
         }
-        else if( 50 >= minTickCsNorm && 50 <= maxTickCsNorm )
+        else if( minTickCsNorm <= 50 && 50 <= maxTickCsNorm )
         {
             tickWidthCsNorm = 50;
         }
-        else if( 20 >= minTickCsNorm && 20 <= maxTickCsNorm )
-        {
-            tickWidthCsNorm = 20;
-        }
-        else if( 25 >= minTickCsNorm && 25 <= maxTickCsNorm )
+        // else if( minTickCsNorm <= 20 && 20 <= maxTickCsNorm )
+        // {
+        // tickWidthCsNorm = 20;
+        // }
+        else if( minTickCsNorm < 25 && 25 <= maxTickCsNorm )
         {
             tickWidthCsNorm = 25;
         }
-        else if( 75 >= minTickCsNorm && 75 <= maxTickCsNorm )
+        else if( minTickCsNorm <= 75 && 75 <= maxTickCsNorm )
         {
             tickWidthCsNorm = 75;
         }
@@ -148,14 +148,16 @@ public class TickGen
 
         double tickCsOrder = Math.floor( Math.log10( tickWidthCs ) );
 
-        double minCsNorm = span.min * 10 / Math.pow( 10, tickCsOrder );
-        double maxCsNorm = span.max * 10 / Math.pow( 10, tickCsOrder );
+        long minCsNorm = Math.round(
+            span.min * 10 / Math.pow( 10, tickCsOrder ) );
+        long maxCsNorm = Math.round(
+            span.max * 10 / Math.pow( 10, tickCsOrder ) );
 
-        double addend = Math.floor(
+        double addend = Math.round(
             10 * tickWidthCs / Math.pow( 10, tickCsOrder ) );
 
-        double minTickNorm = addend * ( int )Math.floor( minCsNorm / addend );
-        double maxTickNorm = addend * ( int )Math.floor( maxCsNorm / addend );
+        double minTickNorm = addend * ( long )Math.floor( minCsNorm / addend );
+        double maxTickNorm = addend * ( long )Math.floor( maxCsNorm / addend );
 
         double tickStart = minTickNorm < minCsNorm ? minTickNorm + addend
             : minTickNorm;
