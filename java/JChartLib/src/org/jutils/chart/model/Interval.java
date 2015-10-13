@@ -49,12 +49,20 @@ public class Interval
     public Interval zoomIn()
     {
         double r;
-        double min;
-        double max;
+        double min = this.min;
+        double max = this.max;
 
         r = range / 3.0;
-        min = this.min + r;
-        max = this.max - r;
+
+        double maxTest = Math.nextUp( Math.nextUp(
+            Math.nextUp( Math.nextUp( Math.nextUp( Math.nextUp( min ) ) ) ) ) );
+
+        if( max > maxTest )
+        {
+            min += r;
+            max -= r;
+        }
+
         return new Interval( min, max );
     }
 
@@ -64,12 +72,17 @@ public class Interval
     public Interval zoomOut()
     {
         double r;
-        double min;
-        double max;
+        double min = this.min;
+        double max = this.max;
 
-        r = range;
-        min = this.min - r;
-        max = this.max + r;
+        r = range * 3.0;
+
+        if( !Double.isNaN( r ) && !Double.isInfinite( r ) )
+        {
+            min -= r;
+            max += r;
+        }
+
         return new Interval( min, max );
     }
 

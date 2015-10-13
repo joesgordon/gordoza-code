@@ -36,7 +36,8 @@ public class ChartWidget implements IChartWidget
     {
         this.chart = chart;
 
-        this.context = new PlotContext( chart );
+        this.context = new PlotContext( chart.domainAxis, chart.rangeAxis,
+            chart.secDomainAxis, chart.secRangeAxis );
         this.topBottom = new TextWidget( chart.topBottomLabel );
         this.title = new TextWidget( chart.title );
         this.subtitle = new TextWidget( chart.subtitle );

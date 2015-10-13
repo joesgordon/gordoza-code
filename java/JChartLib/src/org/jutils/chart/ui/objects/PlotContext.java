@@ -33,19 +33,19 @@ public class PlotContext
     /***************************************************************************
      * 
      **************************************************************************/
-    public PlotContext( Chart chart )
+    public PlotContext( Axis domainAxis, Axis rangeAxis, Axis secDomainAxis,
+        Axis secRangeAxis )
     {
         this.x = 0;
         this.y = 0;
         this.width = 0;
         this.height = 0;
 
-        this.domainCoords = new DomainDimensionCoords( chart.domainAxis, true );
-        this.rangeCoords = new RangeDimensionCoords( chart.rangeAxis, true );
-        this.secDomainCoords = new DomainDimensionCoords( chart.secDomainAxis,
+        this.domainCoords = new DomainDimensionCoords( domainAxis, true );
+        this.rangeCoords = new RangeDimensionCoords( rangeAxis, true );
+        this.secDomainCoords = new DomainDimensionCoords( secDomainAxis,
             false );
-        this.secRangeCoords = new RangeDimensionCoords( chart.secRangeAxis,
-            false );
+        this.secRangeCoords = new RangeDimensionCoords( secRangeAxis, false );
     }
 
     /***************************************************************************
