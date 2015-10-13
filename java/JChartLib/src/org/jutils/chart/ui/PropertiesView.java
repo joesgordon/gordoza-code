@@ -40,6 +40,8 @@ public class PropertiesView implements IView<JPanel>
     private final LegendPropertiesView legendPropView;
     /**  */
     private final AxisPropertiesView axisPropView;
+    /**  */
+    private final PlotsPropertiesView plotsPropView;
 
     /**  */
     private final List<SeriesPropertiesView> seriesViews;
@@ -61,6 +63,7 @@ public class PropertiesView implements IView<JPanel>
         this.chartPropView = new ChartPropertiesView();
         this.legendPropView = new LegendPropertiesView();
         this.axisPropView = new AxisPropertiesView();
+        this.plotsPropView = new PlotsPropertiesView();
 
         this.view = createView();
 
@@ -126,7 +129,8 @@ public class PropertiesView implements IView<JPanel>
             axisPropView );
         navModel.addElement( node );
 
-        node = new ListNode<String>( "Series", "", null );
+        node = new ListNode<List<Series>>( "Plots", chart.series,
+            plotsPropView );
         navModel.addElement( node );
     }
 
