@@ -2,6 +2,7 @@ package org.jutils.task;
 
 import java.awt.event.ActionListener;
 
+import org.jutils.Stopwatch;
 import org.jutils.ui.event.ActionListenerList;
 
 /*******************************************************************************
@@ -16,6 +17,8 @@ public class MultiTaskRunner implements Runnable
 
     /**  */
     private final ActionListenerList finishedListeners;
+
+    private TaskMetrics metrics;
 
     /***************************************************************************
      * @param tasker
@@ -36,7 +39,16 @@ public class MultiTaskRunner implements Runnable
     @Override
     public void run()
     {
+        long start;
+        long stop;
+        Stopwatch watch = new Stopwatch();
+
+        start = watch.start();
         pool.start();
+        stop = watch.stop();
+
+        metrics = new TaskMetrics( start, stop, !handler.canContinue() );
+
         finishedListeners.fireListeners( this, 0, null );
     }
 
@@ -46,6 +58,11 @@ public class MultiTaskRunner implements Runnable
     public void stop()
     {
         pool.shutdown();
+    }
+
+    public TaskMetrics getMetrics()
+    {
+        return metrics;
     }
 
     /***************************************************************************

@@ -185,7 +185,7 @@ public class MultiTaskView implements IMultiTaskView
      * @param title
      * @param numThreads
      **************************************************************************/
-    public static void startAndShow( Component comp, IMultiTask tasker,
+    public static TaskMetrics startAndShow( Component comp, IMultiTask tasker,
         String title, int numThreads )
     {
         Window parent = Utils.getComponentsWindow( comp );
@@ -215,6 +215,8 @@ public class MultiTaskView implements IMultiTaskView
         thread.start();
 
         dialog.setVisible( true );
+
+        return runner.getMetrics();
     }
 
     /***************************************************************************
