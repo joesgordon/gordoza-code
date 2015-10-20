@@ -66,6 +66,9 @@ public class ChartView implements IView<JComponent>
     /**  */
     public final Chart chart;
 
+    /**  */
+    public JDialog propertiesDialog;
+
     /***************************************************************************
      * 
      **************************************************************************/
@@ -618,6 +621,14 @@ public class ChartView implements IView<JComponent>
     /***************************************************************************
      * 
      **************************************************************************/
+    public void closeOptions()
+    {
+        propertiesDialog.dispose();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class ChartDropTarget
         implements ItemActionListener<IFileDropEvent>
     {
@@ -899,24 +910,10 @@ public class ChartView implements IView<JComponent>
         implements ActionListener, ItemActionListener<Boolean>
     {
         private final ChartView view;
-        private final JDialog d;
 
         public PropertiesDialogListener( ChartView view )
         {
             this.view = view;
-            OkDialogView okView = new OkDialogView( view.getView(),
-                view.propertiesView.getView(), ModalityType.MODELESS,
-                OkDialogButtons.OK_APPLY );
-
-            this.d = okView.getView();
-
-            okView.addOkListener( this );
-
-            d.setIconImages( ChartIcons.getChartImages() );
-            d.setTitle( "Chart Properties" );
-            d.setSize( 650, 400 );
-            d.validate();
-            d.setLocationRelativeTo( view.getView() );
         }
 
         @Override
@@ -936,7 +933,25 @@ public class ChartView implements IView<JComponent>
 
         private JDialog createDialog()
         {
-            return d;
+            if( view.propertiesDialog == null )
+            {
+                OkDialogView okView = new OkDialogView( view.getView(),
+                    view.propertiesView.getView(), ModalityType.MODELESS,
+                    OkDialogButtons.OK_APPLY );
+
+                view.propertiesDialog = okView.getView();
+
+                okView.addOkListener( this );
+
+                view.propertiesDialog.setIconImages(
+                    ChartIcons.getChartImages() );
+                view.propertiesDialog.setTitle( "Chart Properties" );
+                view.propertiesDialog.setSize( 650, 400 );
+                view.propertiesDialog.validate();
+                view.propertiesDialog.setLocationRelativeTo( view.getView() );
+            }
+
+            return view.propertiesDialog;
         }
 
         @Override

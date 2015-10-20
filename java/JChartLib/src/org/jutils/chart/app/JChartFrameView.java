@@ -1,8 +1,7 @@
 package org.jutils.chart.app;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.File;
 
 import javax.swing.*;
@@ -54,6 +53,7 @@ public class JChartFrameView implements IView<JFrame>
 
         frame.setTitle( title );
         frame.setIconImages( ChartIcons.getChartImages() );
+        frame.addWindowListener( new ChartWindowListener( this ) );
 
         chartView.addFileLoadedListener( new FileLoadedListener( this ) );
 
@@ -252,6 +252,25 @@ public class JChartFrameView implements IView<JFrame>
         public void selected( File file, boolean ctrlPressed )
         {
             view.chartView.importData( file, ctrlPressed );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class ChartWindowListener extends WindowAdapter
+    {
+        private final JChartFrameView view;
+
+        public ChartWindowListener( JChartFrameView view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void windowClosing( WindowEvent e )
+        {
+            view.chartView.closeOptions();
         }
     }
 }
