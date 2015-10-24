@@ -623,7 +623,10 @@ public class ChartView implements IView<JComponent>
      **************************************************************************/
     public void closeOptions()
     {
-        propertiesDialog.dispose();
+        if( propertiesDialog != null )
+        {
+            propertiesDialog.dispose();
+        }
     }
 
     /***************************************************************************
