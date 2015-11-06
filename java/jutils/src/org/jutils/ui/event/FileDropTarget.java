@@ -170,7 +170,7 @@ public class FileDropTarget extends DropTarget
         implements ItemActionListener<IFileDropEvent>
     {
         private final JTextField field;
-        private final ExistenceType existence;
+        // private final ExistenceType existence;
 
         public JTextFieldFilesListener( JTextField field )
         {
@@ -180,7 +180,7 @@ public class FileDropTarget extends DropTarget
         public JTextFieldFilesListener( JTextField field,
             ExistenceType existence )
         {
-            this.existence = existence;
+            // this.existence = existence;
             this.field = field;
         }
 
@@ -194,28 +194,28 @@ public class FileDropTarget extends DropTarget
             {
                 File file = files.get( i );
 
-                if( existence == ExistenceType.DIRECTORY_ONLY &&
-                    !file.isDirectory() )
-                {
-                    continue;
-                }
-                else if( existence == ExistenceType.FILE_ONLY &&
-                    !file.isFile() )
-                {
-                    continue;
-                }
-                else if( existence == ExistenceType.FILE_OR_DIRECTORY &&
-                    !file.exists() )
-                {
-                    continue;
-                }
+                // if( existence == ExistenceType.DIRECTORY_ONLY &&
+                // !file.isDirectory() )
+                // {
+                // continue;
+                // }
+                // else if( existence == ExistenceType.FILE_ONLY &&
+                // !file.isFile() )
+                // {
+                // continue;
+                // }
+                // else if( existence == ExistenceType.FILE_OR_DIRECTORY &&
+                // !file.exists() )
+                // {
+                // continue;
+                // }
 
                 if( paths.length() > 0 )
                 {
                     paths.append( File.pathSeparator );
                 }
 
-                paths.append( files.get( i ).getAbsolutePath() );
+                paths.append( file.getAbsolutePath() );
             }
 
             field.setText( paths.toString() );
