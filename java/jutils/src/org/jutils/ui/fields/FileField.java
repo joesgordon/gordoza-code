@@ -67,10 +67,22 @@ public class FileField implements IDataView<File>, IValidationField
     public FileField( ExistenceType existence, boolean required,
         boolean isSave )
     {
+        this( existence, required, isSave, true );
+    }
+
+    /***************************************************************************
+     * @param existence
+     * @param required
+     * @param isSave
+     * @param showButton
+     **************************************************************************/
+    public FileField( ExistenceType existence, boolean required, boolean isSave,
+        boolean showButton )
+    {
         this.changeListeners = new ItemActionList<>();
 
         this.fileField = new ValidationTextField();
-        this.view = createView( existence, required, isSave );
+        this.view = createView( existence, required, isSave, showButton );
 
         fileField.getView().setColumns( 20 );
 
@@ -80,10 +92,11 @@ public class FileField implements IDataView<File>, IValidationField
     /***************************************************************************
      * @param isSave
      * @param existence
+     * @param showButton
      * @return
      **************************************************************************/
     private JPanel createView( ExistenceType existence, boolean required,
-        boolean isSave )
+        boolean isSave, boolean showButton )
     {
         JPanel panel = new JPanel( new GridBagLayout() );
         GridBagConstraints constraints;
@@ -114,14 +127,17 @@ public class FileField implements IDataView<File>, IValidationField
             new Insets( 0, 0, 0, 0 ), 0, 0 );
         panel.add( fileField.getView(), constraints );
 
-        button = new JButton(
-            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
-        button.addActionListener( browseListener );
+        if( showButton )
+        {
+            button = new JButton(
+                IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+            button.addActionListener( browseListener );
 
-        constraints = new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE,
-            new Insets( 0, 4, 0, 0 ), 0, 0 );
-        panel.add( button, constraints );
+            constraints = new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 0, 4, 0, 0 ), 0, 0 );
+            panel.add( button, constraints );
+        }
 
         return panel;
     }

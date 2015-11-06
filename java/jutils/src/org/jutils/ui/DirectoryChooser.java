@@ -5,6 +5,7 @@ import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -13,6 +14,11 @@ import org.jutils.io.IOUtils;
 import org.jutils.io.LogUtils;
 import org.jutils.ui.app.AppRunner;
 import org.jutils.ui.app.IApplication;
+import org.jutils.ui.event.ItemActionEvent;
+import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.fields.FileField;
+import org.jutils.ui.validation.ValidationView;
+import org.jutils.ui.validators.FileValidator.ExistenceType;
 
 /*******************************************************************************
  *
@@ -22,9 +28,11 @@ public class DirectoryChooser
     /**  */
     private final JDialog dialog;
     /**  */
-    private final DirectoryTree tree;
-    /**  */
     private final JLabel messageLabel;
+    /**  */
+    private final FileField dirField;
+    /**  */
+    private final DirectoryTree tree;
 
     /**  */
     private File [] selected;
@@ -56,6 +64,12 @@ public class DirectoryChooser
         this( owner, title, message, null );
     }
 
+    /***************************************************************************
+     * @param owner
+     * @param title
+     * @param message
+     * @param paths
+     **************************************************************************/
     public DirectoryChooser( Window owner, String title, String message,
         String paths )
     {
@@ -63,6 +77,8 @@ public class DirectoryChooser
             ModalityType.APPLICATION_MODAL );
         this.tree = new DirectoryTree();
         this.messageLabel = new JLabel();
+        this.dirField = new FileField( ExistenceType.DIRECTORY_ONLY, true,
+            false, false );
 
         this.selected = null;
 
@@ -87,6 +103,10 @@ public class DirectoryChooser
 
         messageLabel.setText( message );
 
+        dirField.addChangeListener( new DirFieldListener( this ) );
+
+        tree.addSelectedListener( new DirsSelectedListener( this ) );
+
         scrollPane.setMinimumSize(
             new Dimension( messageLabel.getPreferredSize().width,
                 messageLabel.getPreferredSize().width ) );
@@ -97,12 +117,17 @@ public class DirectoryChooser
             new Insets( 8, 8, 0, 8 ), 0, 0 );
         mainPanel.add( messageLabel, constraints );
 
-        constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
+        constraints = new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
+            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+            new Insets( 8, 8, 0, 8 ), 0, 0 );
+        mainPanel.add( new ValidationView( dirField ).getView(), constraints );
+
+        constraints = new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets( 8, 8, 8, 8 ), 0, 0 );
         mainPanel.add( scrollPane, constraints );
 
-        constraints = new GridBagConstraints( 0, 2, 1, 1, 0.0, 0.0,
+        constraints = new GridBagConstraints( 0, 3, 1, 1, 0.0, 0.0,
             GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
             new Insets( 8, 4, 8, 4 ), 0, 0 );
         mainPanel.add( createButtonPanel(), constraints );
@@ -228,6 +253,7 @@ public class DirectoryChooser
     public void setSelectedPaths( String paths )
     {
         tree.setSelectedPaths( paths );
+        dirField.setData( new File( tree.getSelectedPaths() ) );
     }
 
     /***************************************************************************
@@ -358,6 +384,47 @@ public class DirectoryChooser
                     "Please choose only one directory when creating a sub-directory.",
                     "Cannot Create New Directory", JOptionPane.ERROR_MESSAGE );
             }
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class DirFieldListener implements ItemActionListener<File>
+    {
+        private final DirectoryChooser chooser;
+
+        public DirFieldListener( DirectoryChooser chooser )
+        {
+            this.chooser = chooser;
+        }
+
+        @Override
+        public void actionPerformed( ItemActionEvent<File> event )
+        {
+            chooser.tree.setSelected( new File[] { event.getItem() } );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class DirsSelectedListener
+        implements ItemActionListener<List<File>>
+    {
+        private final DirectoryChooser chooser;
+
+        public DirsSelectedListener( DirectoryChooser chooser )
+        {
+            this.chooser = chooser;
+        }
+
+        @Override
+        public void actionPerformed( ItemActionEvent<List<File>> event )
+        {
+            List<File> files = event.getItem();
+
+            chooser.dirField.setData( files.get( 0 ) );
         }
     }
 }

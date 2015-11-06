@@ -1,7 +1,6 @@
 package org.jutils.ui.event;
 
 import java.awt.Component;
-import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -44,7 +43,7 @@ public class DirectoryChooserListener implements ActionListener
     {
         File lastFile = dirListener.getDefaultFile();
         DirectoryChooser chooser = new DirectoryChooser(
-            ( Frame )SwingUtilities.getWindowAncestor( parent ) );
+            SwingUtilities.getWindowAncestor( parent ) );
 
         chooser.setTitle( title );
 

@@ -6,8 +6,7 @@ import java.util.*;
 
 import javax.swing.Icon;
 import javax.swing.JTree;
-import javax.swing.event.TreeExpansionEvent;
-import javax.swing.event.TreeWillExpandListener;
+import javax.swing.event.*;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.tree.*;
 
@@ -32,6 +31,10 @@ public class DirectoryTree implements IView<JTree>
     private final DefaultMutableTreeNode root;
     /**  */
     private final DefaultTreeModel treeModel;
+    /**  */
+    private final ItemActionList<List<File>> selectedListeners;
+    /**  */
+    private final SelectionListener localSelectedListener;
 
     /***************************************************************************
      * 
@@ -57,6 +60,8 @@ public class DirectoryTree implements IView<JTree>
         this.root = new DefaultMutableTreeNode();
         this.treeModel = new DefaultTreeModel( root );
         this.tree = new JTree( treeModel );
+        this.selectedListeners = new ItemActionList<>();
+        this.localSelectedListener = new SelectionListener( this );
 
         if( rootFiles != null )
         {
@@ -77,6 +82,7 @@ public class DirectoryTree implements IView<JTree>
 
         tree.setDropTarget(
             new FileDropTarget( new FileDroppedListener( this ) ) );
+        tree.addTreeSelectionListener( localSelectedListener );
     }
 
     /***************************************************************************
@@ -94,6 +100,16 @@ public class DirectoryTree implements IView<JTree>
     public void clearSelection()
     {
         tree.clearSelection();
+    }
+
+    /***************************************************************************
+     * @return String
+     **************************************************************************/
+    public String getSelectedPaths()
+    {
+        File [] selected = getSelected();
+
+        return IOUtils.getStringFromFiles( selected );
     }
 
     /***************************************************************************
@@ -118,18 +134,73 @@ public class DirectoryTree implements IView<JTree>
     }
 
     /***************************************************************************
+     * @param paths String
+     **************************************************************************/
+    public void setSelectedPaths( String paths )
+    {
+        File [] dirs = null;
+
+        if( paths != null )
+        {
+            dirs = IOUtils.getFilesFromString( paths );
+        }
+
+        setSelected( dirs );
+    }
+
+    /***************************************************************************
      * @param dirs File[]
      **************************************************************************/
     public void setSelected( File [] dirs )
     {
+        localSelectedListener.setEnabled( false );
+
+        if( dirs == null )
+        {
+            clearSelection();
+            return;
+        }
+
         TreePath [] treePaths = getTreePaths( dirs );
 
         // LogUtils.printDebug( "DEBUG: Selecting " + dirs.length + " folders"
         // );
+
         if( treePaths.length > 0 )
         {
             tree.scrollPathToVisible( treePaths[0] );
             tree.setSelectionPaths( treePaths );
+        }
+
+        localSelectedListener.setEnabled( true );
+    }
+
+    /***************************************************************************
+     * @param l
+     **************************************************************************/
+    public void addSelectedListener( ItemActionListener<List<File>> l )
+    {
+        selectedListeners.addListener( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public void refreshSelected()
+    {
+        TreePath [] paths = tree.getSelectionPaths();
+
+        if( paths != null )
+        {
+            for( TreePath path : paths )
+            {
+                Object lastComp = path.getLastPathComponent();
+                FolderNode node = ( FolderNode )lastComp;
+
+                node.removeAllChildren();
+                expandFolderPath( path );
+                treeModel.reload( node );
+            }
         }
     }
 
@@ -283,31 +354,6 @@ public class DirectoryTree implements IView<JTree>
     }
 
     /***************************************************************************
-     * @param paths String
-     **************************************************************************/
-    public void setSelectedPaths( String paths )
-    {
-        if( paths == null )
-        {
-            clearSelection();
-        }
-        else
-        {
-            setSelected( IOUtils.getFilesFromString( paths ) );
-        }
-    }
-
-    /***************************************************************************
-     * @return String
-     **************************************************************************/
-    public String getSelectedPaths()
-    {
-        File [] selected = getSelected();
-
-        return IOUtils.getStringFromFiles( selected );
-    }
-
-    /***************************************************************************
      * @param f File
      * @param node DefaultMutableTreeNode
      * @param recurse boolean
@@ -341,27 +387,6 @@ public class DirectoryTree implements IView<JTree>
     }
 
     /***************************************************************************
-     * 
-     **************************************************************************/
-    public void refreshSelected()
-    {
-        TreePath [] paths = tree.getSelectionPaths();
-
-        if( paths != null )
-        {
-            for( TreePath path : paths )
-            {
-                Object lastComp = path.getLastPathComponent();
-                FolderNode node = ( FolderNode )lastComp;
-
-                node.removeAllChildren();
-                expandFolderPath( path );
-                treeModel.reload( node );
-            }
-        }
-    }
-
-    /***************************************************************************
      * @param event TreeExpansionEvent
      * @throws ExpandVetoException
      **************************************************************************/
@@ -376,6 +401,9 @@ public class DirectoryTree implements IView<JTree>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private class ExpansionListener implements TreeWillExpandListener
     {
         @Override
@@ -394,6 +422,9 @@ public class DirectoryTree implements IView<JTree>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class FolderNode extends DefaultMutableTreeNode
     {
         private String desc = null;
@@ -436,6 +467,9 @@ public class DirectoryTree implements IView<JTree>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class Renderer extends DefaultTreeCellRenderer
     {
         public Renderer()
@@ -460,6 +494,9 @@ public class DirectoryTree implements IView<JTree>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class FileDroppedListener
         implements ItemActionListener<IFileDropEvent>
     {
@@ -487,6 +524,45 @@ public class DirectoryTree implements IView<JTree>
             {
                 tree.setSelected( files.toArray( new File[0] ) );
             }
+        }
+    }
+
+    private static class SelectionListener implements TreeSelectionListener
+    {
+        private final DirectoryTree dirTree;
+
+        private boolean enabled;
+
+        public SelectionListener( DirectoryTree dirTree )
+        {
+            this.dirTree = dirTree;
+        }
+
+        public void setEnabled( boolean enabled )
+        {
+            this.enabled = enabled;
+        }
+
+        @Override
+        public void valueChanged( TreeSelectionEvent e )
+        {
+            TreePath [] paths = dirTree.tree.getSelectionPaths();
+
+            if( !enabled || paths == null || paths.length == 0 )
+            {
+                return;
+            }
+
+            List<File> files = new ArrayList<>( paths.length );
+
+            for( TreePath path : paths )
+            {
+                FolderNode node = ( FolderNode )path.getLastPathComponent();
+
+                files.add( node.getFolder() );
+            }
+
+            dirTree.selectedListeners.fireListeners( dirTree, files );
         }
     }
 }
