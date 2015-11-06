@@ -110,6 +110,11 @@ public class FileChooserListener implements ActionListener
         chooser.addChoosableFileFilter( filter );
     }
 
+    public void setAcceptAllFileFilterUsed( boolean used )
+    {
+        chooser.setAcceptAllFileFilterUsed( used );
+    }
+
     /***************************************************************************
      * Shows a {@link JFileChooser} in response to an action.
      * @param event ignored.

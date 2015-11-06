@@ -13,6 +13,9 @@ import org.jutils.ui.event.updater.*;
 import org.jutils.ui.fields.IntegerFormField;
 import org.jutils.ui.model.IDataView;
 
+/***************************************************************************
+ * 
+ **************************************************************************/
 public class LineStyleView implements IDataView<LineStyle>
 {
     /**  */

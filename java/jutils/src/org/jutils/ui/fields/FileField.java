@@ -261,12 +261,9 @@ public class FileField implements IDataView<File>, IValidationField
         {
             File f = view.getData();
 
-            if( f != null )
+            while( f != null && !f.exists() )
             {
-                while( !f.exists() && !f.getParentFile().exists() )
-                {
-                    f = f.getParentFile();
-                }
+                f = f.getParentFile();
             }
 
             return f;

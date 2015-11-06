@@ -43,11 +43,18 @@ public class ChartMouseListenter extends MouseAdapter
     @Override
     public void mouseDragged( MouseEvent e )
     {
-        chartWidget.plots.selection.visible = true;
-        chartWidget.plots.selection.end = e.getPoint();
+        if( SwingUtilities.isMiddleMouseButton( e ) )
+        {
+            ;
+        }
+        else
+        {
+            chartWidget.plots.selection.visible = true;
+            chartWidget.plots.selection.end = e.getPoint();
 
-        chartWidget.plots.highlightLayer.repaint = true;
-        panel.repaint();
+            chartWidget.plots.highlightLayer.repaint = true;
+            panel.repaint();
+        }
     }
 
     /***************************************************************************

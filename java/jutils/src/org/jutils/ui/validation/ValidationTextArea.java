@@ -9,6 +9,9 @@ import javax.swing.event.DocumentListener;
 import org.jutils.ui.fields.IValidationField;
 import org.jutils.ui.validators.ITextValidator;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class ValidationTextArea implements IValidationField
 {
     private final JTextArea field;
@@ -22,6 +25,9 @@ public class ValidationTextArea implements IValidationField
     /**  */
     private ITextValidator validator;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public ValidationTextArea()
     {
         this.field = new JTextArea();

@@ -350,6 +350,13 @@ public class ChartView implements IView<JComponent>
         repaintChart();
     }
 
+    public void recalculateBounds()
+    {
+        chartWidget.context.calculateAutoBounds( chart.series );
+        zoomRestore();
+        repaintChart();
+    }
+
     /***************************************************************************
      * @param files
      **************************************************************************/
@@ -370,6 +377,33 @@ public class ChartView implements IView<JComponent>
      * @param file
      * @param addData
      **************************************************************************/
+    public void addSeries( ISeriesData<?> data, String name, String resource,
+        boolean addData )
+    {
+        Series s = new Series( data );
+
+        Color c = palette.next();
+
+        s.name = name;
+        s.resource = resource;
+        s.marker.color = c;
+        s.highlight.color = c;
+        s.line.color = c;
+
+        addSeries( s, addData );
+
+        // LogUtils.printDebug( String.format( "x => (%f,%f)",
+        // chart.plot.context.xMin, chart.plot.context.xMax ) );
+        //
+        // LogUtils.printDebug( String.format( "y => (%f,%f)",
+        // chart.plot.context.yMin, chart.plot.context.yMax ) );
+        // LogUtils.printDebug( "" );
+    }
+
+    /***************************************************************************
+     * @param file
+     * @param addData
+     **************************************************************************/
     public void importData( File file, boolean addData )
     {
         if( !addData )
@@ -381,44 +415,31 @@ public class ChartView implements IView<JComponent>
         {
             DataFileReader reader = new DataFileReader();
             ISeriesData<?> data = reader.read( file );
-            Series s = new Series( data );
 
-            Color c = palette.next();
-
-            s.name = IOUtils.removeFilenameExtension( file );
-            s.resource = file.getAbsolutePath();
-            s.marker.color = c;
-            s.highlight.color = c;
-            s.line.color = c;
-
-            addSeries( s, addData );
-
-            // LogUtils.printDebug( String.format( "x => (%f,%f)",
-            // chart.plot.context.xMin, chart.plot.context.xMax ) );
-            //
-            // LogUtils.printDebug( String.format( "y => (%f,%f)",
-            // chart.plot.context.yMin, chart.plot.context.yMax ) );
-            // LogUtils.printDebug( "" );
-
-            fileLoadedListeners.fireListeners( this, file );
+            addSeries( data, IOUtils.removeFilenameExtension( file ),
+                file.getAbsolutePath(), addData );
         }
         catch( FileNotFoundException ex )
         {
             JOptionPane.showMessageDialog( mainPanel,
                 "The file was not found: " + file.getAbsolutePath(),
                 "File Not Found", JOptionPane.ERROR_MESSAGE );
+            return;
         }
         catch( IOException ex )
         {
             JOptionPane.showMessageDialog( mainPanel,
                 "I/O Exception: " + ex.getMessage(), "I/O Exception",
                 JOptionPane.ERROR_MESSAGE );
+            return;
         }
 
         if( chartWidget.plots.plots.size() < 2 )
         {
             setTitle( file.getName() );
         }
+
+        fileLoadedListeners.fireListeners( this, file );
     }
 
     /***************************************************************************
