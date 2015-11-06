@@ -701,7 +701,7 @@ public class AxesWidget implements IChartWidget
                 for( int i = 1; i < ticks.size(); i++ )
                 {
                     getTickSize( ticks.get( i ), w, d );
-                    Utils.getMaxSize( size, d );
+                    Utils.getMaxSize( size, size, d );
                 }
             }
         }

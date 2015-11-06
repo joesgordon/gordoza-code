@@ -957,23 +957,22 @@ public class ChartView implements IView<JComponent>
 
         private JDialog createDialog()
         {
-            if( view.propertiesDialog == null )
-            {
-                OkDialogView okView = new OkDialogView( view.getView(),
-                    view.propertiesView.getView(), ModalityType.MODELESS,
-                    OkDialogButtons.OK_APPLY );
+            // if( view.propertiesDialog == null )
+            // {
+            OkDialogView okView = new OkDialogView( view.getView(),
+                view.propertiesView.getView(), ModalityType.MODELESS,
+                OkDialogButtons.OK_APPLY );
 
-                view.propertiesDialog = okView.getView();
+            view.propertiesDialog = okView.getView();
 
-                okView.addOkListener( this );
+            okView.addOkListener( this );
 
-                view.propertiesDialog.setIconImages(
-                    ChartIcons.getChartImages() );
-                view.propertiesDialog.setTitle( "Chart Properties" );
-                view.propertiesDialog.setSize( 650, 400 );
-                view.propertiesDialog.validate();
-                view.propertiesDialog.setLocationRelativeTo( view.getView() );
-            }
+            view.propertiesDialog.setIconImages( ChartIcons.getChartImages() );
+            view.propertiesDialog.setTitle( "Chart Properties" );
+            view.propertiesDialog.setSize( 650, 400 );
+            view.propertiesDialog.validate();
+            view.propertiesDialog.setLocationRelativeTo( view.getView() );
+            // }
 
             return view.propertiesDialog;
         }
