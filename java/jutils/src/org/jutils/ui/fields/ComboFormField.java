@@ -118,6 +118,14 @@ public final class ComboFormField<T> implements IDataFormField<T>
     }
 
     /***************************************************************************
+     * @param editable
+     **************************************************************************/
+    public void setUserEditable( boolean editable )
+    {
+        field.getView().setEditable( editable );
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     private static class ComboValidListener<T> implements IUpdater<T>
