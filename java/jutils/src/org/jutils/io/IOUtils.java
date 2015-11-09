@@ -323,6 +323,32 @@ public final class IOUtils
      * @throws FileNotFoundException
      * @throws IOException
      **************************************************************************/
+    public static String readAll( File file )
+        throws FileNotFoundException, IOException
+    {
+        StringBuilder lines = new StringBuilder();
+
+        try( FileReader fr = new FileReader( file );
+             BufferedReader reader = new BufferedReader( fr ) )
+        {
+            String line;
+
+            while( ( line = reader.readLine() ) != null )
+            {
+                lines.append( line );
+                lines.append( Utils.NEW_LINE );
+            }
+        }
+
+        return lines.toString();
+    }
+
+    /***************************************************************************
+     * @param file
+     * @return
+     * @throws FileNotFoundException
+     * @throws IOException
+     **************************************************************************/
     public static List<String> readAllLines( File file )
         throws FileNotFoundException, IOException
     {
