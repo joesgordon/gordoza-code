@@ -16,9 +16,9 @@ import org.jutils.ui.app.AppRunner;
 import org.jutils.ui.app.IApplication;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
-import org.jutils.ui.fields.FileField;
-import org.jutils.ui.validation.ValidationView;
-import org.jutils.ui.validators.FileValidator.ExistenceType;
+import org.jutils.ui.fields.ValidationTextField;
+import org.jutils.ui.validation.*;
+import org.jutils.ui.validators.ITextValidator;
 
 /*******************************************************************************
  *
@@ -30,7 +30,7 @@ public class DirectoryChooser
     /**  */
     private final JLabel messageLabel;
     /**  */
-    private final FileField dirField;
+    private final ValidationTextField dirsField;
     /**  */
     private final DirectoryTree tree;
 
@@ -77,8 +77,7 @@ public class DirectoryChooser
             ModalityType.APPLICATION_MODAL );
         this.tree = new DirectoryTree();
         this.messageLabel = new JLabel();
-        this.dirField = new FileField( ExistenceType.DIRECTORY_ONLY, true,
-            false, false );
+        this.dirsField = new ValidationTextField();
 
         this.selected = null;
 
@@ -86,7 +85,7 @@ public class DirectoryChooser
 
         dialog.setDefaultCloseOperation( JDialog.DISPOSE_ON_CLOSE );
         dialog.setContentPane( createContentPanel( message ) );
-        dialog.setSize( 350, 550 );
+        dialog.setSize( 600, 500 );
         dialog.validate();
         dialog.setLocationRelativeTo( owner );
     }
@@ -103,7 +102,8 @@ public class DirectoryChooser
 
         messageLabel.setText( message );
 
-        dirField.addChangeListener( new DirFieldListener( this ) );
+        dirsField.setValidator( new DirsValidator() );
+        dirsField.addValidityChanged( new DirFieldListener( this ) );
 
         tree.addSelectedListener( new DirsSelectedListener( this ) );
 
@@ -117,15 +117,15 @@ public class DirectoryChooser
             new Insets( 8, 8, 0, 8 ), 0, 0 );
         mainPanel.add( messageLabel, constraints );
 
-        constraints = new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-            new Insets( 8, 8, 0, 8 ), 0, 0 );
-        mainPanel.add( new ValidationView( dirField ).getView(), constraints );
-
-        constraints = new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
+        constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets( 8, 8, 8, 8 ), 0, 0 );
         mainPanel.add( scrollPane, constraints );
+
+        constraints = new GridBagConstraints( 0, 2, 1, 1, 0.0, 0.0,
+            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+            new Insets( 8, 8, 0, 8 ), 0, 0 );
+        mainPanel.add( new ValidationView( dirsField ).getView(), constraints );
 
         constraints = new GridBagConstraints( 0, 3, 1, 1, 0.0, 0.0,
             GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
@@ -253,7 +253,7 @@ public class DirectoryChooser
     public void setSelectedPaths( String paths )
     {
         tree.setSelectedPaths( paths );
-        dirField.setData( new File( tree.getSelectedPaths() ) );
+        dirsField.setText( tree.getSelectedPaths() );
     }
 
     /***************************************************************************
@@ -390,7 +390,7 @@ public class DirectoryChooser
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class DirFieldListener implements ItemActionListener<File>
+    private static class DirFieldListener implements IValidityChangedListener
     {
         private final DirectoryChooser chooser;
 
@@ -400,9 +400,41 @@ public class DirectoryChooser
         }
 
         @Override
-        public void actionPerformed( ItemActionEvent<File> event )
+        public void signalValid()
         {
-            chooser.tree.setSelected( new File[] { event.getItem() } );
+            chooser.tree.setSelectedPaths( chooser.dirsField.getText() );
+        }
+
+        @Override
+        public void signalInvalid( String reason )
+        {
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class DirsValidator implements ITextValidator
+    {
+        @Override
+        public void validateText( String text ) throws ValidationException
+        {
+            if( text == null )
+            {
+                throw new ValidationException( "Null text" );
+            }
+
+            File [] dirs = IOUtils.getFilesFromString( text );
+
+            if( dirs.length < 1 )
+            {
+                throw new ValidationException( "Empty paths string" );
+            }
+
+            for( File d : dirs )
+            {
+                IOUtils.validateDirInput( d, "Directories Chosen" );
+            }
         }
     }
 
@@ -424,7 +456,8 @@ public class DirectoryChooser
         {
             List<File> files = event.getItem();
 
-            chooser.dirField.setData( files.get( 0 ) );
+            chooser.dirsField.setText(
+                Utils.collectionToString( files, File.pathSeparator ) );
         }
     }
 }
