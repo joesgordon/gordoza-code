@@ -58,6 +58,14 @@ public class ViewList implements IView<JComponent>
     }
 
     /***************************************************************************
+     * @return
+     **************************************************************************/
+    public int getCount()
+    {
+        return itemsPanel.getComponentCount();
+    }
+
+    /***************************************************************************
      * @param view
      **************************************************************************/
     public void removeView( IView<? extends Component> view )

@@ -31,6 +31,9 @@ public class MultiTaskView implements IMultiTaskView
     /**  */
     private final TaskStopManager stopManager;
 
+    /**  */
+    private String title;
+
     /***************************************************************************
      * 
      **************************************************************************/
@@ -44,6 +47,8 @@ public class MultiTaskView implements IMultiTaskView
         this.view = createView();
 
         this.stopManager = new TaskStopManager();
+
+        this.title = "";
     }
 
     /***************************************************************************
@@ -100,6 +105,7 @@ public class MultiTaskView implements IMultiTaskView
         statusView.signalPercent( -1 );
 
         progressList.addView( statusView );
+        setTitle( this.title );
 
         statusView.addCancelListener(
             new TaskCancelledListener( this, statusView ) );
@@ -114,6 +120,7 @@ public class MultiTaskView implements IMultiTaskView
     public void removeTask( ITaskView view )
     {
         progressList.removeView( view );
+        setTitle( this.title );
     }
 
     /***************************************************************************
@@ -122,7 +129,13 @@ public class MultiTaskView implements IMultiTaskView
     @Override
     public void setTitle( String title )
     {
-        titleField.setText( title );
+        this.title = title == null ? "" : title;
+
+        String space = this.title.isEmpty() ? "" : " ";
+        String txt = this.title + space + "(" + progressList.getCount() +
+            " Concurrent)";
+
+        titleField.setText( txt );
     }
 
     /***************************************************************************
