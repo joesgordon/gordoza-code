@@ -83,6 +83,7 @@ public class FastPrintStream implements IPrintStream, Closeable
     public void println( char [] chars )
     {
         write( chars );
+        writeNewLine();
     }
 
     /***************************************************************************
