@@ -169,7 +169,7 @@ public class PropertiesView implements IView<JPanel>
      **************************************************************************/
     public void clear()
     {
-        list.removeAll();
+        removeAllSeries();
         seriesViews.clear();
     }
 

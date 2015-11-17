@@ -644,6 +644,7 @@ public class ChartView implements IView<JComponent>
      **************************************************************************/
     public void closeOptions()
     {
+        clear();
         if( propertiesDialog != null )
         {
             propertiesDialog.dispose();
