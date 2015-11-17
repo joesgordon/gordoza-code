@@ -73,7 +73,9 @@ public class FileSpyFrameView implements IView<JFrame>
         newButton.setIcon(
             IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
         newButton.setToolTipText( "Creates a new search tab." );
-        newButton.addActionListener( new NewListener( spyPanel ) );
+        newButton.addActionListener( ( e ) -> {
+            spyPanel.setData( null );
+        } );
         newButton.setFocusable( false );
 
         JButton openButton = new JButton();
@@ -87,7 +89,9 @@ public class FileSpyFrameView implements IView<JFrame>
         saveButton.setIcon(
             IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
         saveButton.setToolTipText( "Saves search tab." );
-        saveButton.addActionListener( new SaveListener() );
+        saveButton.addActionListener( ( e ) -> {
+            saveSearchParams();
+        } );
         saveButton.setFocusable( false );
 
         JToolBar toolbar = new JGoodiesToolBar();
@@ -121,7 +125,9 @@ public class FileSpyFrameView implements IView<JFrame>
 
         JMenuItem newMenuItem = new JMenuItem( "New" );
         newMenuItem.setToolTipText( "Creates a new search tab." );
-        newMenuItem.addActionListener( new NewListener( spyPanel ) );
+        newMenuItem.addActionListener( ( e ) -> {
+            spyPanel.setData( null );
+        } );
         newMenuItem.setIcon(
             IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
 
@@ -133,7 +139,9 @@ public class FileSpyFrameView implements IView<JFrame>
 
         JMenuItem saveMenuItem = new JMenuItem( "Save" );
         saveMenuItem.setToolTipText( "Saves search tab." );
-        saveMenuItem.addActionListener( new SaveListener() );
+        saveMenuItem.addActionListener( ( e ) -> {
+            saveSearchParams();
+        } );
         saveMenuItem.setIcon(
             IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
 
@@ -201,12 +209,16 @@ public class FileSpyFrameView implements IView<JFrame>
         JMenuItem regexMenuItem = new JMenuItem( "Test RegEx" );
         regexMenuItem.setToolTipText(
             "Allows you to test a regular " + "expression." );
-        regexMenuItem.addActionListener( new RegexListener() );
+        regexMenuItem.addActionListener( ( e ) -> {
+            showRegexHelper();
+        } );
 
         JMenuItem fileOptionsMenuItem = new JMenuItem( "File Options" );
         fileOptionsMenuItem.setIcon(
             IconConstants.loader.getIcon( IconConstants.EDIT_16 ) );
-        fileOptionsMenuItem.addActionListener( new OptionsListener() );
+        fileOptionsMenuItem.addActionListener( ( e ) -> {
+            showFileConfig();
+        } );
 
         toolsMenu.add( regexMenuItem );
         toolsMenu.add( fileOptionsMenuItem );
@@ -368,62 +380,11 @@ public class FileSpyFrameView implements IView<JFrame>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class NewListener implements ActionListener
-    {
-        private final SearchView fsPanel;
-
-        public NewListener( SearchView fsPanel )
-        {
-            this.fsPanel = fsPanel;
-        }
-
-        public void actionPerformed( ActionEvent e )
-        {
-            fsPanel.setData( null );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
     private class OpenListener implements ActionListener
     {
         public void actionPerformed( ActionEvent e )
         {
             openSearchParams();
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private class SaveListener implements ActionListener
-    {
-        public void actionPerformed( ActionEvent e )
-        {
-            saveSearchParams();
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private class RegexListener implements ActionListener
-    {
-        public void actionPerformed( ActionEvent e )
-        {
-            showRegexHelper();
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private class OptionsListener implements ActionListener
-    {
-        public void actionPerformed( ActionEvent e )
-        {
-            showFileConfig();
         }
     }
 

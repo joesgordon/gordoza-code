@@ -11,11 +11,20 @@ import org.jutils.concurrent.IConsumer;
 import org.jutils.concurrent.ITaskStopManager;
 import org.jutils.io.LogUtils;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class FileContentsSearcher implements IConsumer<SearchRecord>
 {
+    /**  */
     private final Pattern contentsPattern;
+    /**  */
     private final SearchResultsHandler searchHandler;
 
+    /***************************************************************************
+     * @param contentsPattern
+     * @param searchHandler
+     **************************************************************************/
     public FileContentsSearcher( Pattern contentsPattern,
         SearchResultsHandler searchHandler )
     {
@@ -23,6 +32,12 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
         this.searchHandler = searchHandler;
     }
 
+    /***************************************************************************
+     * @param str
+     * @param record
+     * @param lineNumber
+     * @return
+     **************************************************************************/
     private boolean searchString( String str, SearchRecord record,
         int lineNumber )
     {
@@ -48,12 +63,12 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
         return matched;
     }
 
-    /***********************************************************************
+    /***************************************************************************
      * @param chars
      * @param matcher
      * @param lineNum
      * @return
-     **********************************************************************/
+     **************************************************************************/
     private LineMatch createLineMatch( byte [] chars, Matcher matcher,
         int lineNum )
     {
@@ -79,10 +94,10 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
         return new LineMatch( lineNum, pre, mat, pst );
     }
 
-    /***********************************************************************
+    /***************************************************************************
      * @param file
      * @throws IOException
-     **********************************************************************/
+     **************************************************************************/
     private void searchFile( SearchRecord record, ITaskStopManager stopper )
         throws IOException
     {
@@ -118,9 +133,9 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
         }
     }
 
-    /***********************************************************************
+    /***************************************************************************
      * 
-     **********************************************************************/
+     **************************************************************************/
     @Override
     public void consume( SearchRecord data, ITaskStopManager stopper )
     {

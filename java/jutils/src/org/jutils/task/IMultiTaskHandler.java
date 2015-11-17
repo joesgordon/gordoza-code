@@ -7,8 +7,8 @@ package org.jutils.task;
 public interface IMultiTaskHandler
 {
     /***************************************************************************
-     * Gets the next task in the queue. This function is guaranteed to be called
-     * in a thread-safe manner.
+     * Gets the next task in the queue or {@code null} if none remain. This
+     * function is guaranteed to be called in a thread-safe manner.
      * @return the next task in the queue.
      **************************************************************************/
     public ITask nextTask();

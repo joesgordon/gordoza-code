@@ -69,12 +69,22 @@ public class SearchThread implements IStoppableTask
         }
 
         contentsConsumer.stopAcceptingInput();
-        contentsSearcherThread.interrupt();
 
-        /*
-         * try { searcher.stopAndWaitFor(); } catch( InterruptedException e ) {
-         * ; }
-         */
+        while( stopper.continueProcessing() )
+        {
+
+            try
+            {
+                searcher.waitFor();
+            }
+            catch( InterruptedException e )
+            {
+                ;
+            }
+
+        }
+
+        // contentsSearcherThread.interrupt();
 
         searchHandler.updateStatus( "" );
 
