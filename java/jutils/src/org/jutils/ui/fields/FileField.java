@@ -13,7 +13,6 @@ import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.model.IDataView;
 import org.jutils.ui.validation.IValidityChangedListener;
 import org.jutils.ui.validators.*;
-import org.jutils.ui.validators.FileValidator.ExistenceType;
 
 /*******************************************************************************
  * 

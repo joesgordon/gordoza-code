@@ -10,7 +10,7 @@ import org.jutils.ui.event.updater.ReflectiveUpdater;
 import org.jutils.ui.fields.FileField;
 import org.jutils.ui.fields.IntegerFormField;
 import org.jutils.ui.model.IDataView;
-import org.jutils.ui.validators.FileValidator.ExistenceType;
+import org.jutils.ui.validators.ExistenceType;
 
 public class SaveView implements IDataView<SaveOptions>
 {

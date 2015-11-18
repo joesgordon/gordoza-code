@@ -100,15 +100,4 @@ public class FileValidator implements IDataValidator<File>
 
         return f.getAbsoluteFile();
     }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public static enum ExistenceType
-    {
-        DO_NOT_CHECK,
-        FILE_ONLY,
-        DIRECTORY_ONLY,
-        FILE_OR_DIRECTORY;
-    }
 }
