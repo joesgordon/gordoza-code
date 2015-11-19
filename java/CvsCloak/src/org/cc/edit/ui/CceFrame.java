@@ -243,7 +243,8 @@ public class CceFrame extends JFrame
         {
             JFileChooser fc = new JFileChooser();
 
-            if( fc.showSaveDialog( CceFrame.this ) == JFileChooser.APPROVE_OPTION )
+            if( fc.showSaveDialog(
+                CceFrame.this ) == JFileChooser.APPROVE_OPTION )
             {
                 File file = fc.getSelectedFile();
 
@@ -276,42 +277,36 @@ public class CceFrame extends JFrame
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            // TODO Auto-generated method stub
             JFileChooser fc = new JFileChooser();
 
-            if( fc.showOpenDialog( CceFrame.this ) == JFileChooser.APPROVE_OPTION )
+            if( fc.showOpenDialog(
+                CceFrame.this ) == JFileChooser.APPROVE_OPTION )
             {
                 File file = fc.getSelectedFile();
-
-                IStream stream = null;
 
                 try( FileStream out = new FileStream( file );
                      DataStream leout = new DataStream( out,
                          ByteOrder.LITTLE_ENDIAN ) )
                 {
-                    stream = leout;
-
-                    AppModelSerializer serializer = new AppModelSerializer();
-                    setData( serializer.read( leout ) );
-                }
-                catch( RuntimeFormatException ex )
-                {
-                    String posStr = "????";
-                    if( stream != null )
+                    try
                     {
-                        try
+
+                        AppModelSerializer serializer = new AppModelSerializer();
+                        setData( serializer.read( leout ) );
+                    }
+                    catch( RuntimeFormatException ex )
+                    {
+                        String posStr = "????";
+                        if( leout != null )
                         {
-                            long l = stream.getPosition();
+                            long l = leout.getPosition();
                             posStr = String.format( "0x%016X", l );
                         }
-                        catch( IOException ex1 )
-                        {
-                        }
-                    }
 
-                    JOptionPane.showMessageDialog( CceFrame.this,
-                        ex.getMessage() + " @ 0x" + posStr, "ERROR",
-                        JOptionPane.ERROR_MESSAGE );
+                        JOptionPane.showMessageDialog( CceFrame.this,
+                            ex.getMessage() + " @ 0x" + posStr, "ERROR",
+                            JOptionPane.ERROR_MESSAGE );
+                    }
                 }
                 catch( FileNotFoundException ex )
                 {
