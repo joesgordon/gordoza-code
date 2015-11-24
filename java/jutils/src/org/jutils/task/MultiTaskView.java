@@ -208,7 +208,7 @@ public class MultiTaskView implements IMultiTaskView
 
         MultiTaskRunner runner = new MultiTaskRunner( tasker, view,
             numThreads );
-        CancelListener cl = new CancelListener( runner );
+        CancelListener cl = new CancelListener( mtv, runner );
 
         mtv.addCancelListener( cl );
 
@@ -216,7 +216,7 @@ public class MultiTaskView implements IMultiTaskView
             new FinishedListener( dialog, runner.handler ) );
 
         dialog.setDefaultCloseOperation( JDialog.DO_NOTHING_ON_CLOSE );
-        dialog.addWindowListener( new CancelListener( runner ) );
+        dialog.addWindowListener( new CancelListener( mtv, runner ) );
         dialog.setTitle( title );
         dialog.setContentPane( view.getView() );
         dialog.pack();
@@ -391,22 +391,30 @@ public class MultiTaskView implements IMultiTaskView
     private static class CancelListener extends WindowAdapter
         implements ActionListener
     {
+        private final MultiTaskView view;
         private final MultiTaskRunner runner;
 
-        public CancelListener( MultiTaskRunner runner )
+        public CancelListener( MultiTaskView view, MultiTaskRunner runner )
         {
+            this.view = view;
             this.runner = runner;
         }
 
         @Override
         public void windowClosing( WindowEvent e )
         {
-            runner.stop();
+            stop();
         }
 
         @Override
         public void actionPerformed( ActionEvent e )
         {
+            stop();
+        }
+
+        private void stop()
+        {
+            view.cancelButton.setEnabled( false );
             runner.stop();
         }
     }

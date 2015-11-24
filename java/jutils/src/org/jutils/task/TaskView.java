@@ -305,6 +305,7 @@ public class TaskView implements ITaskView
         @Override
         public void actionPerformed( ActionEvent e )
         {
+            view.cancelButton.setEnabled( false );
             view.cancelListeners.fireListeners( this, 0, null );
         }
     }
