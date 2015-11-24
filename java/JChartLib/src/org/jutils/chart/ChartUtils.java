@@ -20,6 +20,14 @@ public final class ChartUtils
     {
     }
 
+    /***************************************************************************
+     * @param count
+     * @param slope
+     * @param offset
+     * @param min
+     * @param max
+     * @return
+     **************************************************************************/
     public static ISeriesData<?> createLineSeries( int count, double slope,
         double offset, double min, double max )
     {
@@ -40,6 +48,15 @@ public final class ChartUtils
         return new DefaultSeries( points );
     }
 
+    /**
+     * @param count
+     * @param amplitude
+     * @param frequency
+     * @param phase
+     * @param min
+     * @param max
+     * @return
+     */
     public static ISeriesData<?> createSinSeries( int count, double amplitude,
         double frequency, double phase, double min, double max )
     {
@@ -60,12 +77,22 @@ public final class ChartUtils
         return new DefaultSeries( points );
     }
 
+    /***************************************************************************
+     * @param lastlp
+     * @param p
+     * @return
+     **************************************************************************/
     public static double distance( Point lastlp, Point p )
     {
         return Math.sqrt(
             Math.pow( lastlp.x - p.x, 2 ) + Math.pow( lastlp.y - p.y, 2 ) );
     }
 
+    /***************************************************************************
+     * @param series
+     * @param x
+     * @return
+     **************************************************************************/
     public static int findNearest( ISeriesData<?> series, double x )
     {
         int lo = 0;
@@ -168,6 +195,9 @@ public final class ChartUtils
         return value;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public static ISeriesData<?> createTestSeries()
     {
         List<XYPoint> points = new ArrayList<>();

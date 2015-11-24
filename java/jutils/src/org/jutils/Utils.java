@@ -287,7 +287,34 @@ public final class Utils
      **************************************************************************/
     public static List<String> split( String str )
     {
-        return split( str, ' ', '\t' );
+        return splitSkip( str, false, ' ', '\t' );
+    }
+
+    /***************************************************************************
+     * @param str
+     * @return
+     **************************************************************************/
+    public static List<String> split( String str, char... delimeters )
+    {
+        return splitSkip( str, false, delimeters );
+    }
+
+    /***************************************************************************
+     * @param str
+     * @return
+     **************************************************************************/
+    public static List<String> splitSkip( String str )
+    {
+        return splitSkip( str, true, ' ', '\t' );
+    }
+
+    /***************************************************************************
+     * @param str
+     * @return
+     **************************************************************************/
+    public static List<String> splitSkip( String str, char... delimeters )
+    {
+        return splitSkip( str, true, delimeters );
     }
 
     /***************************************************************************
@@ -295,13 +322,12 @@ public final class Utils
      * @param delimeters
      * @return
      **************************************************************************/
-    public static List<String> split( String str, char... delimeters )
+    public static List<String> splitSkip( String str, boolean skip,
+        char... delimeters )
     {
         List<String> fields = new ArrayList<>();
-        int start = 0;
-        int end;
+        int start = -1;
         char c;
-        boolean found = false;
         boolean isDelim = false;
 
         for( int i = 0; i < str.length(); i++ )
@@ -321,26 +347,18 @@ public final class Utils
 
             if( isDelim )
             {
-                if( found )
+                start++;
+                if( !skip || i > start )
                 {
-                    end = i;
-
-                    fields.add( str.substring( start, end ) );
-                    found = false;
-                }
-            }
-            else
-            {
-                if( !found )
-                {
-                    start = i;
+                    fields.add( str.substring( start, i ) );
                 }
 
-                found = true;
+                start = i;
             }
         }
 
-        if( found )
+        start++;
+        if( !skip || start < str.length() )
         {
             fields.add( str.substring( start ) );
         }

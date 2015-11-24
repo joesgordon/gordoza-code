@@ -26,7 +26,7 @@ public class DataLineReader
             return null;
         }
 
-        List<String> values = Utils.split( line );
+        List<String> values = Utils.splitSkip( line );
 
         if( values.size() < 2 )
         {
