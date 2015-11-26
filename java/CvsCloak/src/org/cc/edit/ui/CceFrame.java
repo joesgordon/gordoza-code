@@ -19,6 +19,7 @@ import org.cc.edit.ui.nodes.AppModelNode;
 import org.cc.edit.ui.undo.ButtonLister;
 import org.cc.edit.ui.undo.ItemPanel;
 import org.jutils.IconConstants;
+import org.jutils.ValidationException;
 import org.jutils.io.*;
 import org.jutils.ui.*;
 import org.jutils.ui.event.ItemActionEvent;
@@ -294,7 +295,7 @@ public class CceFrame extends JFrame
                         AppModelSerializer serializer = new AppModelSerializer();
                         setData( serializer.read( leout ) );
                     }
-                    catch( RuntimeFormatException ex )
+                    catch( ValidationException ex )
                     {
                         String posStr = "????";
                         if( leout != null )

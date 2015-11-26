@@ -2,20 +2,22 @@ package org.cc.edit.io;
 
 import java.io.IOException;
 
-import org.jutils.io.*;
+import org.jutils.ValidationException;
+import org.jutils.io.IDataSerializer;
+import org.jutils.io.IDataStream;
 
 public class StringSerializer implements IDataSerializer<String>
 {
     @Override
-    public String read( IDataStream stream ) throws IOException,
-        RuntimeFormatException
+    public String read( IDataStream stream )
+        throws IOException, ValidationException
     {
         String str = null;
         int numChars = stream.readInt();
 
         if( numChars > 2048 )
         {
-            throw new RuntimeFormatException( "Cannot read string of size 0x" +
+            throw new ValidationException( "Cannot read string of size 0x" +
                 Integer.toHexString( numChars ).toUpperCase() );
         }
 

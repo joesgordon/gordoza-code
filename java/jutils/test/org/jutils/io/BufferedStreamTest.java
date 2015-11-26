@@ -4,6 +4,7 @@ import java.io.*;
 
 import org.junit.*;
 import org.jutils.IconConstants;
+import org.jutils.ValidationException;
 
 /*******************************************************************************
  * 
@@ -459,6 +460,11 @@ public class BufferedStreamTest
             ex.printStackTrace();
             Assert.fail( ex.getMessage() );
         }
+        catch( ValidationException ex )
+        {
+            ex.printStackTrace();
+            Assert.fail( ex.getMessage() );
+        }
     }
 
     /***************************************************************************
@@ -537,7 +543,7 @@ public class BufferedStreamTest
     {
         @Override
         public MockObject read( IDataStream stream )
-            throws IOException, RuntimeFormatException
+            throws IOException, ValidationException
         {
             MockObject obj = new MockObject();
 

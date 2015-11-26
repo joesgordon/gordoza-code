@@ -3,6 +3,7 @@ package org.cc.edit.io;
 import java.io.IOException;
 
 import org.cc.data.*;
+import org.jutils.ValidationException;
 import org.jutils.io.IDataSerializer;
 import org.jutils.io.IDataStream;
 
@@ -29,14 +30,16 @@ public class BaselineSerializer implements IDataSerializer<Baseline>
         lockInfoSerializer = new LockInfoSerializer();
         ctsSerializer = new ListSerializer<ClosedTask>(
             new ClosedTaskSerializer() );
-        otsSerializer = new ListSerializer<OpenTask>( new OpenTaskSerializer() );
+        otsSerializer = new ListSerializer<OpenTask>(
+            new OpenTaskSerializer() );
     }
 
     /***************************************************************************
-     * 
+     * @throws ValidationException
      **************************************************************************/
     @Override
-    public Baseline read( IDataStream stream ) throws IOException
+    public Baseline read( IDataStream stream )
+        throws IOException, ValidationException
     {
         Baseline item = new Baseline();
 

@@ -3,7 +3,9 @@ package org.cc.edit.io;
 import java.io.IOException;
 
 import org.cc.data.LockInfo;
-import org.jutils.io.*;
+import org.jutils.ValidationException;
+import org.jutils.io.IDataSerializer;
+import org.jutils.io.IDataStream;
 
 /*******************************************************************************
  * 
@@ -25,8 +27,8 @@ public class LockInfoSerializer implements IDataSerializer<LockInfo>
      * 
      **************************************************************************/
     @Override
-    public LockInfo read( IDataStream stream ) throws IOException,
-        RuntimeFormatException
+    public LockInfo read( IDataStream stream )
+        throws IOException, ValidationException
     {
         LockInfo info = null;
         boolean locked = stream.readBoolean();

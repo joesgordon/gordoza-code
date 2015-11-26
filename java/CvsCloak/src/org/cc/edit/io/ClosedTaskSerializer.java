@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.cc.data.ClosedTask;
 import org.cc.data.VersionedFile;
+import org.jutils.ValidationException;
 import org.jutils.io.IDataSerializer;
 import org.jutils.io.IDataStream;
 
@@ -20,7 +21,8 @@ public class ClosedTaskSerializer implements IDataSerializer<ClosedTask>
     }
 
     @Override
-    public ClosedTask read( IDataStream stream ) throws IOException
+    public ClosedTask read( IDataStream stream )
+        throws IOException, ValidationException
     {
         ClosedTask t = new ClosedTask();
 

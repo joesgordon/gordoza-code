@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jutils.ValidationException;
 import org.jutils.task.*;
 
 import chatterbox.ChatterboxConstants;
@@ -76,7 +77,12 @@ public class UserCheckTask implements ITask
             }
             catch( IOException ex )
             {
-                handler.signalError( new TaskError( "Send Error", ex ) );
+                handler.signalError( new TaskError( "Send I/O Error", ex ) );
+            }
+            catch( ValidationException ex )
+            {
+                handler.signalError(
+                    new TaskError( "Send Validation Error", ex ) );
             }
 
             synchronized( userlogs )
@@ -114,8 +120,9 @@ public class UserCheckTask implements ITask
 
     /***************************************************************************
      * @throws IOException
+     * @throws ValidationException
      **************************************************************************/
-    private void sendAvailable() throws IOException
+    private void sendAvailable() throws IOException, ValidationException
     {
         IUser user = chat.getLocalUser();
         UserAvailableMessage message = new UserAvailableMessage( user );

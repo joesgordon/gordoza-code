@@ -3,6 +3,8 @@ package chatterbox.messenger;
 import java.io.IOException;
 import java.util.TimerTask;
 
+import org.jutils.ValidationException;
+
 import chatterbox.data.messages.UserAvailableMessage;
 
 /*******************************************************************************
@@ -36,7 +38,7 @@ public class UserAvailableTask extends TimerTask
             // "Sending available: " + chat.getLocalUser().getUserId() );
             chat.sendMessage( message );
         }
-        catch( IOException ex )
+        catch( IOException | ValidationException ex )
         {
             // TODO Maybe do something else here
             ex.printStackTrace();

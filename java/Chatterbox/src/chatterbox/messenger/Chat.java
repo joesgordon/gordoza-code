@@ -3,6 +3,7 @@ package chatterbox.messenger;
 import java.io.IOException;
 import java.util.*;
 
+import org.jutils.ValidationException;
 import org.jutils.io.*;
 import org.jutils.task.TaskError;
 import org.jutils.task.TaskRunner;
@@ -216,8 +217,10 @@ public class Chat extends AbstractChat
     /***************************************************************************
      * @param message
      * @throws IOException
+     * @throws ValidationException
      **************************************************************************/
-    public void sendMessage( UserAvailableMessage message ) throws IOException
+    public void sendMessage( UserAvailableMessage message )
+        throws IOException, ValidationException
     {
         try( ByteArrayStream stream = new ByteArrayStream( 1 );
              DataStream out = new DataStream( stream ) )
@@ -236,8 +239,10 @@ public class Chat extends AbstractChat
     /***************************************************************************
      * @param message
      * @throws IOException
+     * @throws ValidationException
      **************************************************************************/
-    public void sendMessage( UserLeftMessage message ) throws IOException
+    public void sendMessage( UserLeftMessage message )
+        throws IOException, ValidationException
     {
         try( ByteArrayStream stream = new ByteArrayStream( 1024 );
              DataStream out = new DataStream( stream ) )
@@ -254,8 +259,10 @@ public class Chat extends AbstractChat
     /***************************************************************************
      * @param message
      * @throws IOException
+     * @throws ValidationException
      **************************************************************************/
-    public void sendMessage( ChatMessage message ) throws IOException
+    public void sendMessage( ChatMessage message )
+        throws IOException, ValidationException
     {
         try( ByteArrayStream stream = new ByteArrayStream( 1024 );
              DataStream out = new DataStream( stream ) )
@@ -274,7 +281,7 @@ public class Chat extends AbstractChat
      * @throws IOException
      **************************************************************************/
     private void sendBytes( ChatMessageType messageType, byte[] msgBytes )
-        throws IOException, RuntimeFormatException
+        throws IOException, ValidationException
     {
         ChatHeader header;
 
@@ -290,7 +297,7 @@ public class Chat extends AbstractChat
 
             if( msgBytes.length > 65535 )
             {
-                throw new RuntimeFormatException(
+                throw new ValidationException(
                     "Message is too long: " + msgBytes.length );
             }
 
@@ -335,14 +342,14 @@ public class Chat extends AbstractChat
             {
                 LogUtils.printError( "I/O error: " + ex.getMessage() );
             }
-            catch( RuntimeFormatException ex )
+            catch( ValidationException ex )
             {
                 LogUtils.printWarning( ex.getMessage() );
             }
         }
 
         private void parseMessage( IDataStream stream )
-            throws IOException, RuntimeFormatException
+            throws IOException, ValidationException
         {
             ChatHeader header = msgSerializer.headerSerializer.read( stream );
 

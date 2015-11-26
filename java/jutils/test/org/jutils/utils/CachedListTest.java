@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.jutils.ValidationException;
 import org.jutils.io.*;
 import org.jutils.utils.CachedList.ICacher;
 
@@ -202,7 +203,7 @@ public class CachedListTest
     {
         @Override
         public Integer read( IDataStream stream )
-            throws IOException, RuntimeFormatException
+            throws IOException, ValidationException
         {
             return stream.readInt();
         }

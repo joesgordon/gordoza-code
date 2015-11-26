@@ -7,13 +7,25 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import org.jutils.Utils;
+import org.jutils.ValidationException;
 
+/*******************************************************************************
+ * @param <T>
+ ******************************************************************************/
 public class FileOpener<T>
 {
+    /**  */
     private ISerializer<T, InputStream, OutputStream> serializer;
+    /**  */
     private LastDirectorySaver saver;
+    /**  */
     private String extension;
 
+    /***************************************************************************
+     * @param serializer
+     * @param saver
+     * @param ext
+     **************************************************************************/
     public FileOpener( ISerializer<T, InputStream, OutputStream> serializer,
         LastDirectorySaver saver, String ext )
     {
@@ -22,6 +34,10 @@ public class FileOpener<T>
         this.extension = ext;
     }
 
+    /***************************************************************************
+     * @param comp
+     * @return
+     **************************************************************************/
     public T open( Component comp )
     {
         JFileChooser chooser;
@@ -54,11 +70,25 @@ public class FileOpener<T>
                 JOptionPane.showMessageDialog( comp, msg, "Error reading file",
                     JOptionPane.ERROR_MESSAGE );
             }
+            catch( ValidationException ex )
+            {
+                String msg = "Invalid format in file: " + Utils.NEW_LINE;
+                msg += "    " + file.getAbsolutePath() + Utils.NEW_LINE;
+                msg += "    " + ex.getMessage();
+
+                JOptionPane.showMessageDialog( comp, msg, "Error reading file",
+                    JOptionPane.ERROR_MESSAGE );
+            }
         }
 
         return item;
     }
 
+    /***************************************************************************
+     * @param item
+     * @param comp
+     * @return
+     **************************************************************************/
     public boolean save( T item, Component comp )
     {
         JFileChooser chooser;
@@ -103,6 +133,9 @@ public class FileOpener<T>
         return saved;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public static interface LastDirectorySaver
     {
         public void saveLastOpenDir( File file );

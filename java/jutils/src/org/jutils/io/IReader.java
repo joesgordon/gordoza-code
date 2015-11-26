@@ -2,6 +2,8 @@ package org.jutils.io;
 
 import java.io.IOException;
 
+import org.jutils.ValidationException;
+
 /*******************************************************************************
  * Defines a generic method of reading a type from a resource.
  * @param <T> the type to be read.
@@ -16,5 +18,5 @@ public interface IReader<T, R>
      * @throws RuntimeFormatException any error due to incorrect format or other
      * non-I/O errors that might arise
      **************************************************************************/
-    public T read( R resource ) throws IOException, RuntimeFormatException;
+    public T read( R resource ) throws IOException, ValidationException;
 }

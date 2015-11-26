@@ -5,17 +5,26 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.*;
 
-import org.jutils.io.RuntimeFormatException;
+import org.jutils.ValidationException;
 import org.jutils.ui.app.AppRunner;
 import org.jutils.ui.app.IApplication;
 import org.jutils.ui.model.IView;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class MessageExceptionView implements IView<JComponent>
 {
+    /**  */
     private final JPanel view;
+    /**  */
     private final ExceptionView exceptionField;
+    /**  */
     private final JTextField messageField;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public MessageExceptionView()
     {
         this.exceptionField = new ExceptionView();
@@ -23,6 +32,9 @@ public class MessageExceptionView implements IView<JComponent>
         this.view = createView();
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private JPanel createView()
     {
         JPanel panel = new JPanel( new GridBagLayout() );
@@ -45,12 +57,18 @@ public class MessageExceptionView implements IView<JComponent>
         return panel;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public JComponent getView()
     {
         return view;
     }
 
+    /***************************************************************************
+     * @param message
+     **************************************************************************/
     public void setMessage( String message )
     {
         if( message != null )
@@ -65,17 +83,31 @@ public class MessageExceptionView implements IView<JComponent>
         }
     }
 
+    /***************************************************************************
+     * @param th
+     **************************************************************************/
     public void setException( Throwable th )
     {
         exceptionField.setException( th );
     }
 
+    /***************************************************************************
+     * @param parent
+     * @param title
+     * @param th
+     **************************************************************************/
     public static void showExceptionDialog( Component parent, String title,
         Throwable th )
     {
         showExceptionDialog( parent, null, title, th );
     }
 
+    /***************************************************************************
+     * @param parent
+     * @param message
+     * @param title
+     * @param th
+     **************************************************************************/
     public static void showExceptionDialog( Component parent, String message,
         String title, Throwable th )
     {
@@ -88,6 +120,11 @@ public class MessageExceptionView implements IView<JComponent>
             JOptionPane.ERROR_MESSAGE );
     }
 
+    /***************************************************************************
+     * @param ex
+     * @param title
+     * @param message
+     **************************************************************************/
     public static void invokeLater( Throwable ex, String title, String message )
     {
         IApplication app = new DefaultApp( ex, title, message );
@@ -95,6 +132,13 @@ public class MessageExceptionView implements IView<JComponent>
         SwingUtilities.invokeLater( new AppRunner( app ) );
     }
 
+    /***************************************************************************
+     * @param ex
+     * @param title
+     * @param message
+     * @throws InvocationTargetException
+     * @throws InterruptedException
+     **************************************************************************/
     public static void invokeAndWait( Throwable ex, String title,
         String message ) throws InvocationTargetException, InterruptedException
     {
@@ -103,14 +147,20 @@ public class MessageExceptionView implements IView<JComponent>
         SwingUtilities.invokeAndWait( new AppRunner( app ) );
     }
 
+    /***************************************************************************
+     * @param args
+     **************************************************************************/
     public static void main( String [] args )
     {
-        RuntimeFormatException ex = new RuntimeFormatException(
+        ValidationException ex = new ValidationException(
             "Wrong, three tries for a quarter." );
 
         invokeLater( ex, "WRONG!", "It didn't work" );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class DefaultApp implements IApplication
     {
         private final Throwable ex;

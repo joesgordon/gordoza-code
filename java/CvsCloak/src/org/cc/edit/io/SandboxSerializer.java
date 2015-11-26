@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.cc.data.Sandbox;
+import org.jutils.ValidationException;
 import org.jutils.io.IDataSerializer;
 import org.jutils.io.IDataStream;
 
@@ -17,7 +18,8 @@ public class SandboxSerializer implements IDataSerializer<Sandbox>
     }
 
     @Override
-    public Sandbox read( IDataStream stream ) throws IOException
+    public Sandbox read( IDataStream stream )
+        throws IOException, ValidationException
     {
         File file = ss.read( stream );
         Sandbox s = new Sandbox( file );

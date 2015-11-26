@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jutils.ValidationException;
 import org.jutils.io.IDataSerializer;
 import org.jutils.io.IDataStream;
 
@@ -17,7 +18,8 @@ public class ListSerializer<T> implements IDataSerializer<List<T>>
     }
 
     @Override
-    public List<T> read( IDataStream stream ) throws IOException
+    public List<T> read( IDataStream stream )
+        throws IOException, ValidationException
     {
         List<T> list = new ArrayList<T>();
         int count = stream.readInt();

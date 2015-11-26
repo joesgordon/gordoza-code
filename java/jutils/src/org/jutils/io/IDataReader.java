@@ -2,6 +2,8 @@ package org.jutils.io;
 
 import java.io.IOException;
 
+import org.jutils.ValidationException;
+
 public interface IDataReader<T> extends IReader<T, IDataStream>
 {
     /***************************************************************************
@@ -9,6 +11,5 @@ public interface IDataReader<T> extends IReader<T, IDataStream>
      * @return
      * @throws IOException
      **************************************************************************/
-    public T read( IDataStream stream )
-        throws IOException, RuntimeFormatException;
+    public T read( IDataStream stream ) throws IOException, ValidationException;
 }

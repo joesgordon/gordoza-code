@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.cc.data.ClosedTask;
 import org.cc.data.Release;
+import org.jutils.ValidationException;
 import org.jutils.io.IDataSerializer;
 import org.jutils.io.IDataStream;
 
@@ -20,7 +21,8 @@ public class ReleaseSerializer implements IDataSerializer<Release>
     }
 
     @Override
-    public Release read( IDataStream stream ) throws IOException
+    public Release read( IDataStream stream )
+        throws IOException, ValidationException
     {
         Release item = new Release();
 

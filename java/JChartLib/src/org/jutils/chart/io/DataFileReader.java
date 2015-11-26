@@ -3,24 +3,33 @@ package org.jutils.chart.io;
 import java.io.*;
 import java.util.ArrayList;
 
+import org.jutils.ValidationException;
 import org.jutils.chart.data.DefaultSeries;
 import org.jutils.chart.data.XYPoint;
 import org.jutils.chart.model.ISeriesData;
 import org.jutils.io.IReader;
-import org.jutils.io.RuntimeFormatException;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class DataFileReader implements IReader<ISeriesData<?>, File>
 {
+    /**  */
     private final DataLineReader lineReader;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public DataFileReader()
     {
         this.lineReader = new DataLineReader();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
-    public DefaultSeries read( File f )
-        throws IOException, RuntimeFormatException
+    public DefaultSeries read( File f ) throws IOException, ValidationException
     {
         ArrayList<XYPoint> points = new ArrayList<>();
         String line;

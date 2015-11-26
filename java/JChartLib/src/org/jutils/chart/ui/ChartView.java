@@ -433,6 +433,13 @@ public class ChartView implements IView<JComponent>
                 JOptionPane.ERROR_MESSAGE );
             return;
         }
+        catch( ValidationException ex )
+        {
+            JOptionPane.showMessageDialog( mainPanel,
+                "Format Error: " + ex.getMessage(), "Format Error",
+                JOptionPane.ERROR_MESSAGE );
+            return;
+        }
 
         if( chartWidget.plots.plots.size() < 2 )
         {

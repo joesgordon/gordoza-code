@@ -3,6 +3,7 @@ package org.jutils.utils;
 import java.io.IOException;
 import java.util.*;
 
+import org.jutils.ValidationException;
 import org.jutils.io.IDataStream;
 import org.jutils.io.IStdSerializer;
 
@@ -192,6 +193,10 @@ public class CachedList<T> implements List<T>
         {
             return false;
         }
+        catch( ValidationException ex )
+        {
+            return false;
+        }
 
         return true;
     }
@@ -199,8 +204,9 @@ public class CachedList<T> implements List<T>
     /***************************************************************************
      * @param index
      * @throws IOException
+     * @throws ValidationException
      **************************************************************************/
-    private void readCache( int index ) throws IOException
+    private void readCache( int index ) throws IOException, ValidationException
     {
         int cacheIndex = index / cacheCount;
 

@@ -2,7 +2,9 @@ package chatterbox.io;
 
 import java.io.IOException;
 
-import org.jutils.io.*;
+import org.jutils.ValidationException;
+import org.jutils.io.IDataSerializer;
+import org.jutils.io.IDataStream;
 
 import chatterbox.data.ChatHeader;
 import chatterbox.data.ChatMessageType;
@@ -13,11 +15,11 @@ public class ChatHeaderSerializer implements IDataSerializer<ChatHeader>
 
     @Override
     public ChatHeader read( IDataStream stream )
-        throws IOException, RuntimeFormatException
+        throws IOException, ValidationException
     {
         if( stream.getAvailable() < 14 )
         {
-            throw new RuntimeFormatException(
+            throw new ValidationException(
                 "Message length too short: " + stream.getAvailable() );
         }
 
@@ -30,7 +32,7 @@ public class ChatHeaderSerializer implements IDataSerializer<ChatHeader>
 
         if( num != HEADER_MAGiC_NUM )
         {
-            throw new RuntimeFormatException(
+            throw new ValidationException(
                 "A non-Chatterbox message was received." );
         }
 
@@ -41,7 +43,7 @@ public class ChatHeaderSerializer implements IDataSerializer<ChatHeader>
         }
         catch( IllegalArgumentException ex )
         {
-            throw new RuntimeFormatException(
+            throw new ValidationException(
                 "Invalid message type: " + msgTypeNum, ex );
         }
         length = stream.readInt();
@@ -51,7 +53,7 @@ public class ChatHeaderSerializer implements IDataSerializer<ChatHeader>
 
     @Override
     public void write( ChatHeader header, IDataStream stream )
-        throws IOException, RuntimeFormatException
+        throws IOException
     {
         stream.writeLong( HEADER_MAGiC_NUM );
         stream.writeShort( header.getMessageType().toShort() );

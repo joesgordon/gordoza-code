@@ -3,6 +3,7 @@ package org.cc.edit.io;
 import java.io.IOException;
 
 import org.cc.data.*;
+import org.jutils.ValidationException;
 import org.jutils.io.IDataSerializer;
 import org.jutils.io.IDataStream;
 
@@ -31,10 +32,11 @@ public class OpenTaskSerializer implements IDataSerializer<OpenTask>
     }
 
     /***************************************************************************
-     * 
+     * @throws ValidationException
      **************************************************************************/
     @Override
-    public OpenTask read( IDataStream stream ) throws IOException
+    public OpenTask read( IDataStream stream )
+        throws IOException, ValidationException
     {
         OpenTask t = new OpenTask();
 

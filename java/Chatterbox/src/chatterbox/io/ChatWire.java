@@ -3,8 +3,8 @@ package chatterbox.io;
 import java.io.IOException;
 import java.net.*;
 
+import org.jutils.ValidationException;
 import org.jutils.concurrent.Stoppable;
-import org.jutils.io.RuntimeFormatException;
 import org.jutils.ui.event.ItemActionListener;
 
 import chatterbox.data.RawMessage;
@@ -92,12 +92,13 @@ public class ChatWire
     /***************************************************************************
      * @param bytes
      * @throws IOException
+     * @throws ValidationException
      **************************************************************************/
-    public void send( byte[] msgBytes ) throws IOException
+    public void send( byte[] msgBytes ) throws IOException, ValidationException
     {
         if( msgBytes.length > 65535 )
         {
-            throw new RuntimeFormatException(
+            throw new ValidationException(
                 "Message is too long: " + msgBytes.length );
         }
 

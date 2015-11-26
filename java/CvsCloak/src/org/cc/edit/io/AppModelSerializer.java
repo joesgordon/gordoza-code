@@ -4,7 +4,9 @@ import java.io.IOException;
 
 import org.cc.data.Repository;
 import org.cc.data.VersioningSystem;
-import org.jutils.io.*;
+import org.jutils.ValidationException;
+import org.jutils.io.IDataSerializer;
+import org.jutils.io.IDataStream;
 
 /*******************************************************************************
  * 
@@ -33,8 +35,8 @@ public class AppModelSerializer implements IDataSerializer<VersioningSystem>
      * 
      **************************************************************************/
     @Override
-    public VersioningSystem read( IDataStream stream ) throws IOException,
-        RuntimeFormatException
+    public VersioningSystem read( IDataStream stream )
+        throws IOException, ValidationException
     {
         VersioningSystem item = new VersioningSystem();
 

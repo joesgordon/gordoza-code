@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.cc.data.Product;
 import org.cc.data.Release;
+import org.jutils.ValidationException;
 import org.jutils.io.IDataSerializer;
 import org.jutils.io.IDataStream;
 
@@ -34,7 +35,8 @@ public class ProductSerializer implements IDataSerializer<Product>
      * 
      **************************************************************************/
     @Override
-    public Product read( IDataStream stream ) throws IOException
+    public Product read( IDataStream stream )
+        throws IOException, ValidationException
     {
         Product item = new Product();
 

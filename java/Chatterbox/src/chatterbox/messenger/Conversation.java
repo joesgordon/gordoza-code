@@ -3,6 +3,8 @@ package chatterbox.messenger;
 import java.io.IOException;
 import java.util.List;
 
+import org.jutils.ValidationException;
+
 import chatterbox.model.ChatMessage;
 import chatterbox.model.IUser;
 
@@ -38,6 +40,10 @@ public class Conversation extends AbstractConversation
             chat.sendMessage( message );
         }
         catch( IOException ex )
+        {
+            throw new RuntimeException( ex );
+        }
+        catch( ValidationException ex )
         {
             throw new RuntimeException( ex );
         }

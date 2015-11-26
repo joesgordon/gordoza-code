@@ -3,6 +3,7 @@ package org.cc.edit.io;
 import java.io.IOException;
 
 import org.cc.data.*;
+import org.jutils.ValidationException;
 import org.jutils.io.IDataSerializer;
 import org.jutils.io.IDataStream;
 
@@ -40,7 +41,8 @@ public class RepositorySerializer implements IDataSerializer<Repository>
      * 
      **************************************************************************/
     @Override
-    public Repository read( IDataStream stream ) throws IOException
+    public Repository read( IDataStream stream )
+        throws IOException, ValidationException
     {
         Repository item = new Repository( fileSerializer.read( stream ) );
 
