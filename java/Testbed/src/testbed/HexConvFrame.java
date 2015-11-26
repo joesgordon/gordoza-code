@@ -5,11 +5,11 @@ import java.awt.*;
 import javax.swing.*;
 
 import org.jutils.NumberParsingUtils;
+import org.jutils.ValidationException;
 import org.jutils.ui.app.FrameApplication;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.fields.ValidationTextField;
-import org.jutils.ui.validation.ValidationException;
 import org.jutils.ui.validators.ITextValidator;
 
 public class HexConvFrame implements IFrameApp

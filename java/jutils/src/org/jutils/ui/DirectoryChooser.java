@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.*;
 
 import org.jutils.Utils;
+import org.jutils.ValidationException;
 import org.jutils.io.IOUtils;
 import org.jutils.io.LogUtils;
 import org.jutils.ui.app.AppRunner;

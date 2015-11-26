@@ -1,6 +1,6 @@
 package org.jutils.ui.validators;
 
-import org.jutils.ui.validation.ValidationException;
+import org.jutils.ValidationException;
 
 /*******************************************************************************
  * An {@link IDataValidator} that ensures that a string is a given length.

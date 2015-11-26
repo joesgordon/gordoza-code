@@ -1,6 +1,6 @@
 package org.jutils.utils;
 
-import org.jutils.ui.validation.ValidationException;
+import org.jutils.ValidationException;
 
 /*******************************************************************************
  * 

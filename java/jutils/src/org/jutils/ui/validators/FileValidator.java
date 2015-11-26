@@ -2,7 +2,7 @@ package org.jutils.ui.validators;
 
 import java.io.File;
 
-import org.jutils.ui.validation.ValidationException;
+import org.jutils.ValidationException;
 
 /***************************************************************************
  * 

@@ -7,7 +7,7 @@ import java.nio.file.Files;
 import java.util.*;
 
 import org.jutils.Utils;
-import org.jutils.ui.validation.ValidationException;
+import org.jutils.ValidationException;
 
 /*******************************************************************************
  *

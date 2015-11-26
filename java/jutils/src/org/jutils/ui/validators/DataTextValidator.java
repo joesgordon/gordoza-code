@@ -1,7 +1,7 @@
 package org.jutils.ui.validators;
 
+import org.jutils.ValidationException;
 import org.jutils.ui.event.updater.IUpdater;
-import org.jutils.ui.validation.ValidationException;
 
 /*******************************************************************************
  * Validator that updates an object with the latest data when the data is valid.

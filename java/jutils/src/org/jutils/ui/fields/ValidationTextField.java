@@ -6,6 +6,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.jutils.ValidationException;
 import org.jutils.ui.validation.*;
 import org.jutils.ui.validators.ITextValidator;
 

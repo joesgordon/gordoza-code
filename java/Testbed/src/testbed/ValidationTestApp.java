@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import org.jutils.Utils;
+import org.jutils.ValidationException;
 import org.jutils.ui.ExitListener;
 import org.jutils.ui.StandardFormView;
 import org.jutils.ui.app.FrameApplication;

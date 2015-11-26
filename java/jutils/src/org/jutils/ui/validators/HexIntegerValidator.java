@@ -1,7 +1,7 @@
 package org.jutils.ui.validators;
 
 import org.jutils.NumberParsingUtils;
-import org.jutils.ui.validation.ValidationException;
+import org.jutils.ValidationException;
 
 /*******************************************************************************
  * A validator that ensures that the provided text represents a hexadecimal

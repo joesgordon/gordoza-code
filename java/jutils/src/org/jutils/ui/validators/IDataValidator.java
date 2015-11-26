@@ -1,7 +1,7 @@
 package org.jutils.ui.validators;
 
+import org.jutils.ValidationException;
 import org.jutils.ui.FormatException;
-import org.jutils.ui.validation.ValidationException;
 
 /*******************************************************************************
  * Defines a method for validating the text format of some data.

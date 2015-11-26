@@ -1,6 +1,6 @@
 package org.jutils.io;
 
-import org.jutils.ui.validation.ValidationException;
+import org.jutils.ValidationException;
 
 public interface IParser<T>
 {

@@ -1,7 +1,7 @@
 package org.jutils.ui.validators;
 
+import org.jutils.ValidationException;
 import org.jutils.ui.hex.HexUtils;
-import org.jutils.ui.validation.ValidationException;
 
 /*******************************************************************************
  * A validator that ensures that integers fall within a specified range.

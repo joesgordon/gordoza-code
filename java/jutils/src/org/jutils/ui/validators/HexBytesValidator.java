@@ -2,8 +2,8 @@ package org.jutils.ui.validators;
 
 import java.util.List;
 
+import org.jutils.ValidationException;
 import org.jutils.ui.hex.HexUtils;
-import org.jutils.ui.validation.ValidationException;
 
 /*******************************************************************************
  * 

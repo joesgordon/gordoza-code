@@ -1,7 +1,7 @@
 package org.jutils.io.parsers;
 
+import org.jutils.ValidationException;
 import org.jutils.io.IParser;
-import org.jutils.ui.validation.ValidationException;
 
 public class DoubleParser implements IParser<Double>
 {
