@@ -32,15 +32,15 @@ public class JChartFrameView implements IView<JFrame>
     private final RecentFilesMenuView recentFiles;
 
     /**  */
-    private final OptionsSerializer<UserData> userio;
+    private final OptionsSerializer<UserData> options;
 
     /***************************************************************************
      * @param title
-     * @param userio
+     * @param options
      **************************************************************************/
     public JChartFrameView( String title )
     {
-        this.userio = JChartAppConstants.getUserIO();
+        this.options = JChartAppConstants.getOptions();
 
         this.frameView = new StandardFrameView();
         this.chartView = new ChartView();
@@ -57,7 +57,7 @@ public class JChartFrameView implements IView<JFrame>
 
         chartView.addFileLoadedListener( new FileLoadedListener( this ) );
 
-        recentFiles.setData( userio.getOptions().recentFiles.toList() );
+        recentFiles.setData( options.getOptions().recentFiles.toList() );
         recentFiles.addSelectedListener( new FileSelected( this ) );
 
         chartView.chart.domainAxis.title.visible = true;
@@ -229,10 +229,10 @@ public class JChartFrameView implements IView<JFrame>
         @Override
         public void actionPerformed( ItemActionEvent<File> event )
         {
-            view.userio.getOptions().recentFiles.push( event.getItem() );
-            view.userio.write();
+            view.options.getOptions().recentFiles.push( event.getItem() );
+            view.options.write();
             view.recentFiles.setData(
-                view.userio.getOptions().recentFiles.toList() );
+                view.options.getOptions().recentFiles.toList() );
         }
     }
 

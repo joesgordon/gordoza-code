@@ -98,7 +98,7 @@ public class ChatFrameView implements IView<JFrame>
         OkDialogView dialogView = new OkDialogView( getView(),
             configView.getView(), OkDialogButtons.OK_CANCEL );
 
-        ChatterConfig config = ChatterboxConstants.getUserIO().getOptions();
+        ChatterConfig config = ChatterboxConstants.getOptions().getOptions();
 
         config.chatCfg.set( chatView.getChat().getConfig() );
 
@@ -172,7 +172,7 @@ public class ChatFrameView implements IView<JFrame>
                 IChat chat = view.chatView.getChat();
                 ChatConfig config = chat.getConfig();
 
-                ChatterboxConstants.getUserIO().write( newCfg );
+                ChatterboxConstants.getOptions().write( newCfg );
 
                 if( newCfg.chatCfg.address.equals( config.address ) ||
                     newCfg.chatCfg.port != config.port )

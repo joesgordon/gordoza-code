@@ -24,20 +24,20 @@ public class ChatterboxConstants
     public static final TimeZone UTC = TimeZone.getTimeZone( "UTC" );
 
     /**  */
-    private static OptionsSerializer<ChatterConfig> userio;
+    private static OptionsSerializer<ChatterConfig> options;
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    public static OptionsSerializer<ChatterConfig> getUserIO()
+    public static OptionsSerializer<ChatterConfig> getOptions()
     {
-        if( userio == null )
+        if( options == null )
         {
-            userio = OptionsSerializer.getUserIO( ChatterConfig.class,
+            options = OptionsSerializer.getOptions( ChatterConfig.class,
                 USER_FILE );
         }
 
-        return userio;
+        return options;
     }
 
     /***************************************************************************

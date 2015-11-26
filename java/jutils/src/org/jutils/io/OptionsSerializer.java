@@ -270,7 +270,7 @@ public class OptionsSerializer<T>
      * @param file the file to be used for serialization.
      * @return the new options serializer.
      **************************************************************************/
-    public static <T> OptionsSerializer<T> getUserIO(
+    public static <T> OptionsSerializer<T> getOptions(
         IOptionsCreator<T> creator, File file )
     {
         if( !IOUtils.ensureParentExists( file ) )
@@ -286,8 +286,8 @@ public class OptionsSerializer<T>
     /***************************************************************************
      * @param <T>
      **************************************************************************/
-    public static <T> OptionsSerializer<T> getUserIO( Class<T> cls, File file )
+    public static <T> OptionsSerializer<T> getOptions( Class<T> cls, File file )
     {
-        return getUserIO( new DefaultOptionsCreator<T>( cls ), file );
+        return getOptions( new DefaultOptionsCreator<T>( cls ), file );
     }
 }

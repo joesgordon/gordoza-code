@@ -5,9 +5,12 @@ import java.io.*;
 import javax.swing.JOptionPane;
 
 import org.jutils.Utils;
+import org.jutils.chart.app.JChartAppConstants;
+import org.jutils.chart.app.UserData;
 import org.jutils.chart.io.FilteredWriter;
 import org.jutils.chart.model.Series;
 import org.jutils.io.IOUtils;
+import org.jutils.io.OptionsSerializer;
 import org.jutils.ui.event.IFileSelectionListener;
 import org.jutils.ui.model.IDataView;
 
@@ -17,7 +20,7 @@ import org.jutils.ui.model.IDataView;
 public class SaveSeriesDataListener implements IFileSelectionListener
 {
     /**  */
-    private IDataView<Series> view;
+    private final IDataView<Series> view;
 
     /***************************************************************************
      * @param view
@@ -52,6 +55,12 @@ public class SaveSeriesDataListener implements IFileSelectionListener
             String name = IOUtils.removeFilenameExtension( file );
 
             file = new File( file.getParentFile(), name + "_filtered." + ext );
+        }
+        else
+        {
+            OptionsSerializer<UserData> options = JChartAppConstants.getOptions();
+
+            file = options.getOptions().lastDataFile;
         }
 
         return file;
@@ -104,6 +113,9 @@ public class SaveSeriesDataListener implements IFileSelectionListener
         throws FileNotFoundException, IOException
     {
         FilteredWriter fw = new FilteredWriter();
+        OptionsSerializer<UserData> options = JChartAppConstants.getOptions();
+
+        options.getOptions().lastDataFile = toFile;
 
         if( fromFile == null )
         {

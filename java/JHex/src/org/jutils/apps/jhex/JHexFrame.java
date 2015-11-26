@@ -39,7 +39,7 @@ public class JHexFrame implements IView<JFrame>
     /** The file tree displaying the directories in the given file system. */
     private final HexEditorFilePanel editor;
     /** The serializer to access user options. */
-    private final OptionsSerializer<JHexOptions> userio;
+    private final OptionsSerializer<JHexOptions> options;
     /**
      * The dialog to show the data in different formats starting at the
      * currently selected byte.
@@ -65,21 +65,18 @@ public class JHexFrame implements IView<JFrame>
 
     /***************************************************************************
      * Creates a JHex frame.
-     * @param userio the serializer used to access user data.
      **************************************************************************/
-    public JHexFrame( OptionsSerializer<JHexOptions> userio )
+    public JHexFrame()
     {
-        this( userio, true );
+        this( true );
     }
 
     /***************************************************************************
-     * @param userio
      * @param closeFileWithFrame
      **************************************************************************/
-    public JHexFrame( OptionsSerializer<JHexOptions> userio,
-        boolean closeFileWithFrame )
+    public JHexFrame( boolean closeFileWithFrame )
     {
-        this.userio = userio;
+        this.options = JHexMain.getOptions();
 
         this.frameView = new StandardFrameView();
         this.frame = frameView.getView();
@@ -317,7 +314,7 @@ public class JHexFrame implements IView<JFrame>
      **************************************************************************/
     private void updateFileMenu()
     {
-        JHexOptions options = userio.getOptions();
+        JHexOptions options = this.options.getOptions();
 
         recentFiles.setData( options.lastAccessedFiles.toList() );
     }
@@ -391,7 +388,7 @@ public class JHexFrame implements IView<JFrame>
     {
         JFileChooser chooser = new JFileChooser();
         int choice = JFileChooser.CANCEL_OPTION;
-        JHexOptions options = userio.getOptions();
+        JHexOptions options = this.options.getOptions();
 
         chooser.setSelectedFile( options.getLastFile() );
         choice = chooser.showOpenDialog( frame );
@@ -414,10 +411,10 @@ public class JHexFrame implements IView<JFrame>
             return;
         }
 
-        JHexOptions options = userio.getOptions();
+        JHexOptions options = this.options.getOptions();
 
         options.lastAccessedFiles.push( f );
-        userio.write();
+        this.options.write();
 
         try
         {
@@ -448,7 +445,7 @@ public class JHexFrame implements IView<JFrame>
 
         JFileChooser chooser = new JFileChooser();
         int choice = JFileChooser.CANCEL_OPTION;
-        JHexOptions options = userio.getOptions();
+        JHexOptions options = this.options.getOptions();
 
         chooser.setSelectedFile( options.getLastFile() );
         choice = chooser.showSaveDialog( frame );
@@ -458,7 +455,7 @@ public class JHexFrame implements IView<JFrame>
             File f = chooser.getSelectedFile();
 
             options.lastAccessedFiles.push( f );
-            userio.write();
+            this.options.write();
 
             try
             {

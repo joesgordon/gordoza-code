@@ -61,7 +61,7 @@ public class ChartView implements IView<JComponent>
     private final ItemActionList<File> fileLoadedListeners;
 
     /**  */
-    private final OptionsSerializer<UserData> userio;
+    private final OptionsSerializer<UserData> options;
 
     /**  */
     public final Chart chart;
@@ -83,7 +83,7 @@ public class ChartView implements IView<JComponent>
      **************************************************************************/
     public ChartView( boolean allowOpen, boolean gradientToolbar )
     {
-        this.userio = JChartAppConstants.getUserIO();
+        this.options = JChartAppConstants.getOptions();
         this.chart = new Chart();
         this.mainPanel = new WidgetPanel();
         this.chartWidget = new ChartWidget( chart );
@@ -695,7 +695,7 @@ public class ChartView implements IView<JComponent>
         @Override
         public File getDefaultFile()
         {
-            return view.userio.getOptions().recentFiles.first();
+            return view.options.getOptions().recentFiles.first();
         }
 
         @Override
@@ -755,19 +755,19 @@ public class ChartView implements IView<JComponent>
 
             SaveOptions options = saveView.getData();
 
-            view.userio.getOptions().lastImageFile = options.file;
-            view.userio.write();
+            view.options.getOptions().lastImageFile = options.file;
+            view.options.write();
 
             view.saveAsImage( options.file, options.size );
         }
 
         public File getDefaultFile()
         {
-            File f = view.userio.getOptions().lastImageFile;
+            File f = view.options.getOptions().lastImageFile;
 
             if( f == null )
             {
-                f = view.userio.getOptions().recentFiles.first();
+                f = view.options.getOptions().recentFiles.first();
 
                 if( f != null )
                 {

@@ -17,14 +17,31 @@ public class FileSpyMain
     public static final File USER_OPTIONS_FILE = IOUtils.getUsersFile(
         ".jutils", "filespy", "options.xml" );
 
+    /**  */
+    private static OptionsSerializer<FileSpyData> options;
+
     /***************************************************************************
      * Application entry point.
      * @param args String[]
      **************************************************************************/
     public static void main( String [] args )
     {
-        IFrameApp app = new FileSpyApp( createUserIO() );
+        IFrameApp app = new FileSpyApp();
         FrameApplication.invokeLater( app );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public static OptionsSerializer<FileSpyData> getOptions()
+    {
+        if( options == null )
+        {
+            options = OptionsSerializer.getOptions( new OptionsCreator(),
+                USER_OPTIONS_FILE );
+        }
+
+        return options;
     }
 
     /***************************************************************************
@@ -51,14 +68,5 @@ public class FileSpyMain
         {
             LogUtils.printWarning( message );
         }
-    }
-
-    public static OptionsSerializer<FileSpyData> createUserIO()
-    {
-        OptionsSerializer<FileSpyData> userio;
-        userio = OptionsSerializer.getUserIO( new OptionsCreator(),
-            USER_OPTIONS_FILE );
-
-        return userio;
     }
 }

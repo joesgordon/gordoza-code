@@ -15,6 +15,9 @@ public class JHexMain
     public static final File USER_OPTIONS_FILE = IOUtils.getUsersFile(
         ".jutils", "jhex", "options.xml" );
 
+    /**  */
+    private static OptionsSerializer<JHexOptions> options;
+
     /***************************************************************************
      * @param args Program arguments.
      **************************************************************************/
@@ -33,16 +36,21 @@ public class JHexMain
             }
         }
 
-        JHexApp hexApp = new JHexApp( getUserIO(), file );
+        JHexApp hexApp = new JHexApp( file );
         FrameApplication.invokeLater( hexApp );
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    public static OptionsSerializer<JHexOptions> getUserIO()
+    public static OptionsSerializer<JHexOptions> getOptions()
     {
-        return OptionsSerializer.getUserIO( JHexOptions.class,
-            USER_OPTIONS_FILE );
+        if( options == null )
+        {
+            options = OptionsSerializer.getOptions( JHexOptions.class,
+                USER_OPTIONS_FILE );
+        }
+
+        return options;
     }
 }

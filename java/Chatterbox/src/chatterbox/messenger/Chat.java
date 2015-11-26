@@ -143,11 +143,11 @@ public class Chat extends AbstractChat
             {
                 localMe.setDisplayName( user.getDisplayName() );
 
-                OptionsSerializer<ChatterConfig> userio;
+                OptionsSerializer<ChatterConfig> options;
 
-                userio = ChatterboxConstants.getUserIO();
-                userio.getOptions().chatCfg.displayName = user.getDisplayName();
-                userio.write();
+                options = ChatterboxConstants.getOptions();
+                options.getOptions().chatCfg.displayName = user.getDisplayName();
+                options.write();
             }
 
             // return;

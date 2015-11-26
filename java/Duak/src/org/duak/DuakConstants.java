@@ -15,7 +15,7 @@ public final class DuakConstants
         "duak", "options.xml" );
 
     /**  */
-    private static OptionsSerializer<DuakOptions> userio;
+    private static OptionsSerializer<DuakOptions> options;
 
     /***************************************************************************
      * 
@@ -29,12 +29,12 @@ public final class DuakConstants
      **************************************************************************/
     public static OptionsSerializer<DuakOptions> getOptions()
     {
-        if( userio == null )
+        if( options == null )
         {
-            userio = OptionsSerializer.getUserIO( DuakOptions.class,
+            options = OptionsSerializer.getOptions( DuakOptions.class,
                 OPTIONS_FILE );
         }
 
-        return userio;
+        return options;
     }
 }

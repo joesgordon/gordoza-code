@@ -112,7 +112,7 @@ public class SliderTestFrame extends JFrame
     private JPanel createPanel3( StatusBarPanel statusBar )
     {
         SearchView panel = new SearchView( statusBar,
-            FileSpyMain.createUserIO() );
+            FileSpyMain.getOptions() );
 
         return panel.getView();
     }

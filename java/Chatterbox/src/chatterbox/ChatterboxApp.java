@@ -52,15 +52,15 @@ public class ChatterboxApp implements IFrameApp
     @Override
     public void finalizeGui()
     {
-        OptionsSerializer<ChatterConfig> userio = ChatterboxConstants.getUserIO();
-        ChatterConfig config = userio.getOptions();
+        OptionsSerializer<ChatterConfig> options = ChatterboxConstants.getOptions();
+        ChatterConfig config = options.getOptions();
 
         while( config != null )
         {
             try
             {
                 chat.connect( config.chatCfg );
-                userio.write();
+                options.write();
                 break;
             }
             catch( IOException ex )

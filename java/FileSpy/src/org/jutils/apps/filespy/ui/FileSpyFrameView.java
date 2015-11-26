@@ -10,6 +10,7 @@ import java.io.IOException;
 import javax.swing.*;
 
 import org.jutils.IconConstants;
+import org.jutils.apps.filespy.FileSpyMain;
 import org.jutils.apps.filespy.data.FileSpyData;
 import org.jutils.apps.filespy.data.SearchParams;
 import org.jutils.io.OptionsSerializer;
@@ -30,18 +31,18 @@ public class FileSpyFrameView implements IView<JFrame>
     /**  */
     private final JFrame frame;
     /**  */
-    private final OptionsSerializer<FileSpyData> userio;
+    private final OptionsSerializer<FileSpyData> options;
 
     /***************************************************************************
      *
      **************************************************************************/
-    public FileSpyFrameView( OptionsSerializer<FileSpyData> userio )
+    public FileSpyFrameView()
     {
         StatusBarPanel statusBar = new StatusBarPanel();
 
-        this.userio = userio;
+        this.options = FileSpyMain.getOptions();
         this.frame = new JFrame();
-        this.spyPanel = new SearchView( statusBar, userio );
+        this.spyPanel = new SearchView( statusBar, options );
 
         JPanel contentPane = new JPanel( new BorderLayout() );
 
@@ -272,7 +273,7 @@ public class FileSpyFrameView implements IView<JFrame>
         JFileChooser chooser = new JFileChooser();
         int result = JFileChooser.ERROR_OPTION;
         File fileChosen = null;
-        FileSpyData configData = userio.getOptions();
+        FileSpyData configData = options.getOptions();
 
         chooser.setCurrentDirectory( configData.lastSavedLocation );
         chooser.setAcceptAllFileFilterUsed( false );
@@ -282,7 +283,7 @@ public class FileSpyFrameView implements IView<JFrame>
         result = chooser.showOpenDialog( frame );
         if( result == JFileChooser.APPROVE_OPTION )
         {
-            userio.write();
+            options.write();
 
             fileChosen = chooser.getSelectedFile();
             if( fileChosen != null && fileChosen.isFile() )
@@ -313,7 +314,7 @@ public class FileSpyFrameView implements IView<JFrame>
         JFileChooser chooser = new JFileChooser();
         int result = JFileChooser.ERROR_OPTION;
         File fileChosen = null;
-        FileSpyData configData = userio.getOptions();
+        FileSpyData configData = options.getOptions();
 
         chooser.setCurrentDirectory( configData.lastSavedLocation );
         chooser.setAcceptAllFileFilterUsed( false );
@@ -323,7 +324,7 @@ public class FileSpyFrameView implements IView<JFrame>
         result = chooser.showSaveDialog( frame );
         if( result == JFileChooser.APPROVE_OPTION )
         {
-            userio.write();
+            options.write();
 
             fileChosen = chooser.getSelectedFile();
             if( !fileChosen.getName().endsWith(

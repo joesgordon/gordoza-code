@@ -99,7 +99,7 @@ public class SearchView implements IDataView<SearchParams>
     private final StatusBarPanel statusBar;
 
     /**  */
-    private final OptionsSerializer<FileSpyData> userio;
+    private final OptionsSerializer<FileSpyData> options;
 
     /**  */
     private Searcher searcher;
@@ -108,10 +108,10 @@ public class SearchView implements IDataView<SearchParams>
      *
      **************************************************************************/
     public SearchView( StatusBarPanel statusBar,
-        OptionsSerializer<FileSpyData> userio )
+        OptionsSerializer<FileSpyData> options )
     {
         this.statusBar = statusBar;
-        this.userio = userio;
+        this.options = options;
 
         view = new JPanel( new GridBagLayout() );
         filenameComboBox = new JComboBox<String>();
@@ -148,7 +148,7 @@ public class SearchView implements IDataView<SearchParams>
         // ---------------------------------------------------------------------
         // Setup search panel
         // ---------------------------------------------------------------------
-        FileSpyData configData = userio.getOptions();
+        FileSpyData configData = options.getOptions();
 
         filenameModel = new ItemComboBoxModel<String>( configData.filenames );
         contentsModel = new ItemComboBoxModel<String>( configData.contents );
@@ -851,7 +851,7 @@ public class SearchView implements IDataView<SearchParams>
 
         setSearchStarted();
 
-        FileSpyData configData = userio.getOptions();
+        FileSpyData configData = options.getOptions();
         Object contents = contentsComboBox.getSelectedItem();
         Object filename = filenameComboBox.getSelectedItem();
         Object folder = searchInComboBox.getSelectedItem();
@@ -868,7 +868,7 @@ public class SearchView implements IDataView<SearchParams>
 
         configData.folders.push( folder.toString() );
 
-        userio.write();
+        options.write();
     }
 
     /***************************************************************************

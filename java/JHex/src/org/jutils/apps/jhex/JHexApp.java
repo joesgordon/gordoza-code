@@ -5,7 +5,6 @@ import java.io.File;
 
 import javax.swing.JFrame;
 
-import org.jutils.io.OptionsSerializer;
 import org.jutils.ui.app.IFrameApp;
 
 /***************************************************************************
@@ -16,39 +15,33 @@ public class JHexApp implements IFrameApp
     /**  */
     private final File file;
     /**  */
-    private final OptionsSerializer<JHexOptions> userio;
-    /**  */
     private final boolean closeFileWithFrame;
 
     /**  */
     private JHexFrame view;
 
     /***************************************************************************
-     * @param userio
+     *
      **************************************************************************/
-    public JHexApp( OptionsSerializer<JHexOptions> userio )
+    public JHexApp()
     {
-        this( userio, null );
+        this( null );
     }
 
     /***************************************************************************
-     * @param userio
      * @param file
      **************************************************************************/
-    public JHexApp( OptionsSerializer<JHexOptions> userio, File file )
+    public JHexApp( File file )
     {
-        this( userio, file, true );
+        this( file, true );
     }
 
     /***************************************************************************
-     * @param userio
      * @param file
      * @param closeFileWithFrame
      **************************************************************************/
-    public JHexApp( OptionsSerializer<JHexOptions> userio, File file,
-        boolean closeFileWithFrame )
+    public JHexApp( File file, boolean closeFileWithFrame )
     {
-        this.userio = userio;
         this.file = file;
         this.closeFileWithFrame = closeFileWithFrame;
     }
@@ -67,7 +60,7 @@ public class JHexApp implements IFrameApp
     @Override
     public JFrame createFrame()
     {
-        view = new JHexFrame( userio, closeFileWithFrame );
+        view = new JHexFrame( closeFileWithFrame );
         JFrame frame = view.getView();
 
         frame.setSize( new Dimension( 800, 600 ) );
