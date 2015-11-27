@@ -42,7 +42,7 @@ public class BitBufferTest
 
         bits.set( "111011111110" );
 
-        BitPosition pos = buf.find( bits, 0 );
+        BitPosition pos = buf.find( bits, 0, true );
 
         Assert.assertNotNull( pos );
         Assert.assertEquals( 0, pos.getByte() );

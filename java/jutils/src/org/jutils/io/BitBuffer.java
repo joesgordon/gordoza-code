@@ -244,57 +244,64 @@ public class BitBuffer
      * Finds the specified bits starting at the provided byte index.
      * @param bits the bits to be found.
      * @param start the beginning byte index to start looking.
+     * @param findFoward
      * @return the bit position where the provided bits were found or null if
      * not found.
      **************************************************************************/
-    public BitPosition find( BitArray bits, int start )
+    public BitPosition find( BitArray bitsToFind, int start,
+        boolean findFoward )
     {
         BitPosition startPos = new BitPosition( start, 0 );
 
-        return find( bits, startPos );
+        return find( bitsToFind, startPos, findFoward );
     }
 
     /**************************************************************************
      * Finds the specified bits starting at the provided position.
-     * @param bits the bits to be found.
+     * @param bitsToFind the bits to be found.
      * @param start the beginning position to start looking.
+     * @param findFoward
      * @return the bit position where the provided bits were found or null if
      * not found.
      *************************************************************************/
-    public BitPosition find( BitArray bits, BitPosition start )
+    public BitPosition find( BitArray bitsToFind, BitPosition start,
+        boolean findFoward )
     {
-        BitPosition curPos = new BitPosition( position );
-        int idx = 0;
-        boolean bit;
-        BitPosition pos = null;
+        BitBuffer copy = new BitBuffer( this.buffer );
+        BitPosition pos = new BitPosition( start );
+        int bitInc = findFoward ? 1 : -1;
 
-        position.set( start );
-
-        while( remainingBits() > 0 )
+        while( copy.remainingBits() >= bitsToFind.size() && pos.getBit() > -1 )
         {
-            bit = readBit();
+            LogUtils.printDebug( "pos: " + pos.toString() );
+            copy.setPosition( pos );
 
-            if( bit == bits.get( idx ) )
+            if( copy.isNextEqual( bitsToFind ) )
             {
-                idx++;
-
-                if( idx >= bits.size() )
-                {
-                    pos = new BitPosition( position );
-                    pos.increment( -bits.size() );
-                    break;
-                }
+                return pos;
             }
-            else
+
+            pos.increment( bitInc );
+        }
+
+        return null;
+    }
+
+    /***************************************************************************
+     * @param bitsToFind
+     * @return
+     **************************************************************************/
+    private boolean isNextEqual( BitArray bitsToFind )
+    {
+        for( int i = 0; i < bitsToFind.size(); i++ )
+        {
+            if( readBit() != bitsToFind.get( i ) )
             {
-                position.increment( -idx );
-                idx = 0;
+                return false;
             }
         }
 
-        position.set( curPos.getByte(), curPos.getBit() );
-
-        return pos;
+        return true;
     }
 
     /***************************************************************************
