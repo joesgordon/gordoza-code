@@ -273,7 +273,6 @@ public class BitBuffer
 
         while( copy.remainingBits() >= bitsToFind.size() && pos.getBit() > -1 )
         {
-            LogUtils.printDebug( "pos: " + pos.toString() );
             copy.setPosition( pos );
 
             if( copy.isNextEqual( bitsToFind ) )

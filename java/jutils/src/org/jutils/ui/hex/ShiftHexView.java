@@ -8,7 +8,8 @@ import java.util.*;
 import javax.swing.*;
 
 import org.jutils.*;
-import org.jutils.io.*;
+import org.jutils.io.BitBuffer;
+import org.jutils.io.BitPosition;
 import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.model.IView;
 import org.jutils.utils.BitArray;
@@ -281,8 +282,6 @@ public class ShiftHexView implements IView<JComponent>
     private void find( BitArray bitsToFind, BitPosition start,
         boolean findForward )
     {
-        // LogUtils.printDebug( "Starting from " + start );
-
         BitPosition pos = orig.find( bitsToFind, start, findForward );
 
         this.lastSearch = bitsToFind;
@@ -298,8 +297,6 @@ public class ShiftHexView implements IView<JComponent>
             int off = pos.getByte();
 
             off += pos.getBit() == 0 ? 0 : 1;
-
-            // LogUtils.printDebug( "Found " + bits.toString() + " @ " + off );
 
             hexPanel.setSelected( off, off );
 
@@ -365,9 +362,6 @@ public class ShiftHexView implements IView<JComponent>
         {
             int bitIncrement = findForward ? 1 : -1;
 
-            LogUtils.printDebug(
-                "Finding " + ( findForward ? "forwards" : "backwards" ) );
-
             if( view.lastSearch != null )
             {
                 BitPosition pos = view.getSelectedPostion();
@@ -377,8 +371,6 @@ public class ShiftHexView implements IView<JComponent>
                     if( view.lastMatch != null )
                     {
                         pos = new BitPosition( view.lastMatch );
-                        LogUtils.printDebug(
-                            "Last Found at " + pos.toString() );
                         pos.increment( bitIncrement );
                     }
                     else
@@ -388,11 +380,8 @@ public class ShiftHexView implements IView<JComponent>
                 }
                 else
                 {
-                    LogUtils.printDebug( "Selected at " + pos.toString() );
                     pos.increment( bitIncrement );
                 }
-
-                LogUtils.printDebug( "Starting at " + pos.toString() );
 
                 view.find( view.lastSearch, pos, findForward );
             }
