@@ -29,6 +29,14 @@ public class LogUtils
     /***************************************************************************
      * @param message
      **************************************************************************/
+    public static void printDebug( String format, Object... args )
+    {
+        printMessage( "DEBUG", format, args );
+    }
+
+    /***************************************************************************
+     * @param message
+     **************************************************************************/
     public static void printWarning( String message )
     {
         printMessage( "WARNING", message );
@@ -37,9 +45,25 @@ public class LogUtils
     /***************************************************************************
      * @param message
      **************************************************************************/
+    public static void printWarning( String format, Object... args )
+    {
+        printMessage( "WARNING", format, args );
+    }
+
+    /***************************************************************************
+     * @param message
+     **************************************************************************/
     public static void printError( String message )
     {
         printMessage( "ERROR", message );
+    }
+
+    /***************************************************************************
+     * @param message
+     **************************************************************************/
+    public static void printError( String format, Object... args )
+    {
+        printMessage( "ERROR", format, args );
     }
 
     /***************************************************************************
@@ -58,6 +82,24 @@ public class LogUtils
     public static void printInfo( String message )
     {
         printMessage( "INFO", message );
+    }
+
+    /***************************************************************************
+     * @param message
+     **************************************************************************/
+    public static void printInfo( String format, Object... args )
+    {
+        printMessage( "INFO", format, args );
+    }
+
+    /***************************************************************************
+     * @param msgClass
+     * @param message
+     **************************************************************************/
+    private static void printMessage( String msgClass, String format,
+        Object... args )
+    {
+        printMessage( msgClass, String.format( format, args ) );
     }
 
     /***************************************************************************

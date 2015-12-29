@@ -685,4 +685,20 @@ public final class IOUtils
 
         return paths;
     }
+
+    /***************************************************************************
+     * @param dir
+     * @param ext
+     * @return
+     **************************************************************************/
+    public static List<File> getAllFiles( File dir, String ext )
+    {
+        FileFilter filter = new ExtensionFilter( ext );
+        File [] fa = dir.listFiles( filter );
+        List<File> files = new ArrayList<>( fa.length );
+
+        Collections.addAll( files, fa );
+
+        return files;
+    }
 }

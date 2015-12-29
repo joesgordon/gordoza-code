@@ -11,7 +11,17 @@ import java.nio.channels.FileChannel.MapMode;
  * href="http://stackoverflow.com/a/5623638/1741">stackoverflow</a> and several
  * other sources, a {@link RandomAccessFile} should be buffered using a
  * memory-mapped file via {@link FileChannel#map(MapMode, long, long)}. This is
- * an implementation of said buffering.
+ * an implementation of said buffering.</p> <h1><b>WARNING</b></h1> Do not use
+ * this class if you intend to delete the file to be mapped. See <a
+ * href="http://bugs.java.com/view_bug.do?bug_id=4715154">bug JDK-4715154</a>.
+ * You will be unable to delete any file that has been mapped. The close
+ * operation will set the local {@link MappedByteBuffer} (JavaDoc specifies that
+ * the mapping remains valid until it is garbage collected) to {@code null} and
+ * call {@link System#gc()} in an attempt to garbage collect the mapped buffer
+ * prior to any delete call that is made. This is, of course, not garenteed to
+ * work since the garbage collection call is only a request and therefore it
+ * cannot be ensured that the buffer has been garbage collected prior to the
+ * delete call.
  ******************************************************************************/
 public class MappedStream implements IDataStream
 {
@@ -244,7 +254,12 @@ public class MappedStream implements IDataStream
     @Override
     public void close() throws IOException
     {
+        buffer = null;
+        channel.close();
         raf.close();
+        System.gc();
+
+        // LogUtils.printDebug( "Closing mapped file" );
     }
 
     /***************************************************************************

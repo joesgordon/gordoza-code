@@ -6,9 +6,14 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.jutils.utils.BitArray;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class BitBufferTest
 {
+    /**  */
     private static final byte [] fromArray;
+    /**  */
     private static final byte [] toArray;
 
     static
@@ -19,6 +24,9 @@ public class BitBufferTest
         new Random().nextBytes( fromArray );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testNonZero()
     {
@@ -33,6 +41,9 @@ public class BitBufferTest
         Assert.assertTrue( "The from array is all zeros", false );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testFind()
     {
@@ -49,6 +60,9 @@ public class BitBufferTest
         Assert.assertEquals( 4, pos.getBit() );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testRead()
     {

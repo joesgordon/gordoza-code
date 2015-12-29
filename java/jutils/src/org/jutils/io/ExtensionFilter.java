@@ -4,7 +4,7 @@ import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
 
-public class ExtensionFilter extends FileFilter
+public class ExtensionFilter extends FileFilter implements java.io.FileFilter
 {
     private final String extension;
 
