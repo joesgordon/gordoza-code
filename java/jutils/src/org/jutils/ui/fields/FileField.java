@@ -28,7 +28,7 @@ public class FileField implements IDataView<File>, IValidationField
 
     /***************************************************************************
      * Creates a File view with an {@link ExistenceType} of FILE_ONLY, required,
-     * and opens files.
+     * opens files, and displays a browse button..
      **************************************************************************/
     public FileField()
     {
@@ -37,8 +37,9 @@ public class FileField implements IDataView<File>, IValidationField
 
     /***************************************************************************
      * Creates a File view with the provided {@link ExistenceType}, required,
-     * and opens file if the existence is {@link ExistenceType#FILE_ONLY}.
-     * @param existence
+     * and opens file if the existence is {@link ExistenceType#FILE_ONLY} that
+     * displays a browse button.
+     * @param existence type of existence to be checked: file/dir/either/none.
      **************************************************************************/
     public FileField( ExistenceType existence )
     {
@@ -47,9 +48,9 @@ public class FileField implements IDataView<File>, IValidationField
 
     /***************************************************************************
      * Creates a File view with the provided {@link ExistenceType} and required,
-     * and saves files.
-     * @param existence
-     * @param required
+     * and saves files that displays a browse button.
+     * @param existence type of existence to be checked: file/dir/either/none.
+     * @param required if the path can be empty or is required.
      **************************************************************************/
     public FileField( ExistenceType existence, boolean required )
     {
@@ -58,10 +59,10 @@ public class FileField implements IDataView<File>, IValidationField
 
     /***************************************************************************
      * Creates a File view with the provided {@link ExistenceType}, required,
-     * and save boolean.
-     * @param existence
-     * @param required
-     * @param isSave
+     * and save boolean that displays a browse button.
+     * @param existence type of existence to be checked: file/dir/either/none.
+     * @param required if the path can be empty or is required.
+     * @param isSave if the path is to be be save to (alt. read from).
      **************************************************************************/
     public FileField( ExistenceType existence, boolean required,
         boolean isSave )
@@ -70,10 +71,11 @@ public class FileField implements IDataView<File>, IValidationField
     }
 
     /***************************************************************************
-     * @param existence
-     * @param required
-     * @param isSave
-     * @param showButton
+     * Creates a File view according to the parameters provided:
+     * @param existence type of existence to be checked: file/dir/either/none.
+     * @param required if the path can be empty or is required.
+     * @param isSave if the path is to be be save to (alt. read from).
+     * @param showButton denotes whether the browse button should be shown.
      **************************************************************************/
     public FileField( ExistenceType existence, boolean required, boolean isSave,
         boolean showButton )
@@ -89,9 +91,10 @@ public class FileField implements IDataView<File>, IValidationField
     }
 
     /***************************************************************************
-     * @param isSave
-     * @param existence
-     * @param showButton
+     * @param existence type of existence to be checked: file/dir/either/none.
+     * @param required if the path can be empty or is required.s
+     * @param isSave if the path is to be be save to (alt. read from).
+     * @param showButton denotes whether the browse button should be shown.
      * @return
      **************************************************************************/
     private JPanel createView( ExistenceType existence, boolean required,

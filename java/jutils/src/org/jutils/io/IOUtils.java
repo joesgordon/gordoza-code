@@ -250,6 +250,18 @@ public final class IOUtils
         return new File( dir, filename );
     }
 
+    public static long getTotalSize( List<File> files )
+    {
+        long size = 0;
+
+        for( File f : files )
+        {
+            size += f.length();
+        }
+
+        return size;
+    }
+
     /***************************************************************************
      * @param file
      * @return
@@ -539,6 +551,21 @@ public final class IOUtils
     }
 
     /***************************************************************************
+     * @param dir
+     * @param name
+     * @throws ValidationException
+     **************************************************************************/
+    public static void validateExistsInput( File dir, String name )
+        throws ValidationException
+    {
+        if( !dir.exists() )
+        {
+            throw new ValidationException( "The specified " + name +
+                " path does not exist: " + dir.getName() );
+        }
+    }
+
+    /***************************************************************************
      * @param outputFile
      * @param string
      * @throws ValidationException
@@ -565,7 +592,7 @@ public final class IOUtils
         else if( !file.isFile() )
         {
             throw new ValidationException( "The specified " + name +
-                " file is not a directory: " + file.getName() );
+                " file is not a file: " + file.getName() );
         }
         else if( !file.canWrite() )
         {
