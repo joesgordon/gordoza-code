@@ -1,10 +1,13 @@
 package org.jutils.io;
 
+import java.awt.Component;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.*;
+
+import javax.swing.JOptionPane;
 
 import org.jutils.Utils;
 import org.jutils.ValidationException;
@@ -727,5 +730,71 @@ public final class IOUtils
         Collections.addAll( files, fa );
 
         return files;
+    }
+
+    /***************************************************************************
+     * Checks for contents in the provided directory and asks the user if the
+     * contents should be deleted
+     * @param dir
+     * @param parent
+     * @return
+     **************************************************************************/
+    public static boolean checkForContents( File dir, Component parent )
+    {
+        File outDir = dir;
+        File [] files = outDir.listFiles();
+
+        if( files == null )
+        {
+            JOptionPane.showMessageDialog( parent,
+                "Output directory does not exist or cannot be read: " +
+                    Utils.NEW_LINE + outDir.getAbsolutePath(),
+                "Configuration Error", JOptionPane.ERROR_MESSAGE );
+
+            return false;
+        }
+        else if( files.length == 0 )
+        {
+            return true;
+        }
+
+        String delOption = "Delete";
+        String contOption = "Continue";
+        String cancelOption = "Cancel";
+        String [] options = new String[] { delOption, contOption,
+            cancelOption };
+        int ans = JOptionPane.showOptionDialog( parent,
+            "The output directory contains files. Do you want to delete them before proceeding?",
+            "Output Directory Not Empty", JOptionPane.YES_NO_CANCEL_OPTION,
+            JOptionPane.QUESTION_MESSAGE, null, options, delOption );
+
+        if( ans == JOptionPane.CLOSED_OPTION ||
+            ans == JOptionPane.CANCEL_OPTION )
+        {
+            return false;
+        }
+        else if( ans == JOptionPane.YES_OPTION )
+        {
+            try
+            {
+                IOUtils.removeContents( outDir );
+                return true;
+            }
+            catch( IOException ex )
+            {
+                JOptionPane.showMessageDialog( parent,
+                    "Unable to delete output directory contents: " +
+                        ex.getMessage(),
+                    "Deletion Error", JOptionPane.ERROR_MESSAGE );
+                return false;
+            }
+        }
+        else if( ans == JOptionPane.NO_OPTION )
+        {
+            return true;
+        }
+
+        throw new IllegalStateException(
+            "Incorrect handling of call to JOptionPane.showOptionDialog" );
     }
 }
