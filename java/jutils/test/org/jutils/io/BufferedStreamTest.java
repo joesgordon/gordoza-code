@@ -58,15 +58,7 @@ public class BufferedStreamTest
     @After
     public void tearDown()
     {
-        try
-        {
-            byteStream.close();
-        }
-        catch( IOException ex )
-        {
-            ex.printStackTrace();
-            Assert.fail( ex.getMessage() );
-        }
+        byteStream.close();
     }
 
     /***************************************************************************
