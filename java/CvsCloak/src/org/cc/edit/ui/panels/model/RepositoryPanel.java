@@ -16,7 +16,7 @@ import org.cc.data.*;
 import org.cc.edit.ui.InfoPanel;
 import org.cc.edit.ui.panels.*;
 import org.jutils.IconConstants;
-import org.jutils.Utils;
+import org.jutils.SwingUtils;
 import org.jutils.ui.DirectoryChooser;
 import org.jutils.ui.event.*;
 
@@ -60,32 +60,39 @@ public class RepositoryPanel extends InfoPanel<Repository>
 
         productsPanel.setBorder( new TitledBorder( "Products" ) );
 
-        add( createLocationPanel(), new GridBagConstraints( 0, 1, 1, 1, 1.0,
-            0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-            new Insets( 4, 4, 0, 4 ), 0, 0 ) );
+        add( createLocationPanel(),
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 4, 4, 0, 4 ), 0, 0 ) );
 
-        add( lockPanel, new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
-                4, 4, 0, 4 ), 0, 0 ) );
+        add( lockPanel,
+            new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 4, 4, 0, 4 ), 0, 0 ) );
 
-        add( new JLabel( "Trunk Name :" ), new GridBagConstraints( 0, 3, 3, 1,
-            0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-            new Insets( 4, 4, 0, 4 ), 0, 0 ) );
-        add( trunkNameField, new GridBagConstraints( 0, 4, 1, 1, 1.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
-                0, 4, 4, 4 ), 0, 0 ) );
+        add( new JLabel( "Trunk Name :" ),
+            new GridBagConstraints( 0, 3, 3, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 4, 4, 0, 4 ), 0, 0 ) );
+        add( trunkNameField,
+            new GridBagConstraints( 0, 4, 1, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 0, 4, 4, 4 ), 0, 0 ) );
 
-        add( baselinesPanel, new GridBagConstraints( 0, 5, 1, 1, 1.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets( 4, 4,
-                4, 4 ), 0, 0 ) );
+        add( baselinesPanel,
+            new GridBagConstraints( 0, 5, 1, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
 
-        add( productsPanel, new GridBagConstraints( 0, 6, 1, 1, 1.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets( 4, 4,
-                4, 4 ), 0, 0 ) );
+        add( productsPanel,
+            new GridBagConstraints( 0, 6, 1, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
 
-        add( Box.createVerticalStrut( 0 ), new GridBagConstraints( 0, 7, 1, 1,
-            1.0, 1.0, GridBagConstraints.EAST, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        add( Box.createVerticalStrut( 0 ),
+            new GridBagConstraints( 0, 7, 1, 1, 1.0, 1.0,
+                GridBagConstraints.EAST, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
     }
 
     public void addLocationChangedListener( ItemActionListener<File> l )
@@ -120,17 +127,21 @@ public class RepositoryPanel extends InfoPanel<Repository>
         locationButton.setToolTipText( "Browse" );
         locationButton.addActionListener( new LocationButtonActionListener() );
 
-        locationField.getDocument().addDocumentListener( new LocationUpdater() );
+        locationField.getDocument().addDocumentListener(
+            new LocationUpdater() );
 
-        panel.add( locationLabel, new GridBagConstraints( 0, 0, 2, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 0, 0,
-                0, 0 ), 0, 0 ) );
-        panel.add( locationField, new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
-                4, 0, 0, 4 ), 0, 0 ) );
-        panel.add( locationButton, new GridBagConstraints( 1, 1, 1, 1, 0.0,
-            0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-            new Insets( 4, 0, 0, 0 ), 0, 0 ) );
+        panel.add( locationLabel,
+            new GridBagConstraints( 0, 0, 2, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        panel.add( locationField,
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 4, 0, 0, 4 ), 0, 0 ) );
+        panel.add( locationButton,
+            new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 4, 0, 0, 0 ), 0, 0 ) );
 
         return panel;
     }
@@ -164,7 +175,7 @@ public class RepositoryPanel extends InfoPanel<Repository>
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            Frame frame = Utils.getComponentsFrame( RepositoryPanel.this );
+            Frame frame = SwingUtils.getComponentsFrame( RepositoryPanel.this );
             DirectoryChooser fd = new DirectoryChooser( frame );
             fd.setSelectedPaths( locationField.getText() );
             fd.setVisible( true );
@@ -222,7 +233,8 @@ public class RepositoryPanel extends InfoPanel<Repository>
         {
             File file = new File( locationField.getText() );
             getData().setLocation( file );
-            locationChangedListeners.fireListeners( RepositoryPanel.this, file );
+            locationChangedListeners.fireListeners( RepositoryPanel.this,
+                file );
         }
 
         @Override

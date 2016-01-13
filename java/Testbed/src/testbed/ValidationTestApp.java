@@ -5,14 +5,15 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import org.jutils.Utils;
+import org.jutils.SwingUtils;
 import org.jutils.ValidationException;
 import org.jutils.ui.ExitListener;
 import org.jutils.ui.StandardFormView;
 import org.jutils.ui.app.FrameApplication;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.fields.ValidationTextField;
-import org.jutils.ui.validation.*;
+import org.jutils.ui.validation.AggregateValidityChangedManager;
+import org.jutils.ui.validation.IValidityChangedListener;
 import org.jutils.ui.validators.ITextValidator;
 
 public class ValidationTestApp implements IFrameApp
@@ -42,7 +43,8 @@ public class ValidationTestApp implements IFrameApp
 
         final JButton okButton = new JButton( "OK" );
         JButton cancelButton = new JButton( "Cancel" );
-        Dimension btnSize = Utils.getMaxComponentSize( okButton, cancelButton );
+        Dimension btnSize = SwingUtils.getMaxComponentSize( okButton,
+            cancelButton );
 
         ITextValidator tvA = new IntegerValidator( 0, 25 );
         ITextValidator tvB = new IntegerValidator( 1, 24 );

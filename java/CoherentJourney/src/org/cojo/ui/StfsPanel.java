@@ -11,7 +11,7 @@ import org.cojo.model.IChangeRequest;
 import org.cojo.model.ISoftwareTask;
 import org.cojo.ui.tableModels.StfTableModel;
 import org.jutils.IconConstants;
-import org.jutils.Utils;
+import org.jutils.SwingUtils;
 
 /***************************************************************************
  * 
@@ -48,7 +48,7 @@ public class StfsPanel extends JPanel
      **************************************************************************/
     private void showStfDialog()
     {
-        Frame frame = Utils.getComponentsFrame( this );
+        Frame frame = SwingUtils.getComponentsFrame( this );
         StfPanel stfPanel = new StfPanel();
         JEditDialog stfDialog = new JEditDialog( frame, stfPanel );
 
@@ -107,11 +107,13 @@ public class StfsPanel extends JPanel
         JButton addButton = new JButton();
         JButton deleteButton = new JButton();
 
-        addButton.setIcon( IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 ) );
+        addButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 ) );
         addButton.setToolTipText( "Add an STF" );
         addButton.setFocusable( false );
 
-        deleteButton.setIcon( IconConstants.loader.getIcon( IconConstants.EDIT_DELETE_16 ) );
+        deleteButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.EDIT_DELETE_16 ) );
         deleteButton.setToolTipText( "Delete an STF" );
         deleteButton.setFocusable( false );
 

@@ -13,7 +13,7 @@ import javax.swing.text.DateFormatter;
 import javax.swing.text.DefaultFormatterFactory;
 
 import org.jutils.IconConstants;
-import org.jutils.Utils;
+import org.jutils.SwingUtils;
 import org.jutils.ui.event.updater.DataUpdaterList;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.model.IView;
@@ -177,7 +177,7 @@ public class CalendarField implements IView<JPanel>
     public void displayDialog()
     {
         CalendarDialog dialog = new CalendarDialog(
-            Utils.getComponentsFrame( view ), "Select Date", true );
+            SwingUtils.getComponentsFrame( view ), "Select Date", true );
 
         try
         {

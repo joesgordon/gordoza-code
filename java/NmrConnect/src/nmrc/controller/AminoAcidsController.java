@@ -5,6 +5,11 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.*;
 
+import org.jutils.SwingUtils;
+import org.jutils.io.LogUtils;
+import org.jutils.ui.event.ItemActionEvent;
+import org.jutils.ui.event.ItemActionListener;
+
 import nmrc.alg.PreviousPeakMatcher;
 import nmrc.data.AssignmentOption;
 import nmrc.model.*;
@@ -13,11 +18,6 @@ import nmrc.ui.PeakAssignerQuery;
 import nmrc.ui.panels.AminoAcidsPanel;
 import nmrc.ui.tables.models.AminoAcidTableModel;
 import nmrc.ui.tables.models.PeakTableModel;
-
-import org.jutils.Utils;
-import org.jutils.io.LogUtils;
-import org.jutils.ui.event.ItemActionEvent;
-import org.jutils.ui.event.ItemActionListener;
 
 /*******************************************************************************
  * 
@@ -92,7 +92,7 @@ public class AminoAcidsController
             choicesModel.setItems( choices );
 
             ChoicesDialog<IPeak> dialog = new ChoicesDialog<IPeak>(
-                Utils.getComponentsFrame( aaPanel ), "", baseModel,
+                SwingUtils.getComponentsFrame( aaPanel ), "", baseModel,
                 choicesModel );
 
             dialog.setVisible( true );
@@ -106,7 +106,7 @@ public class AminoAcidsController
                         choice, aminoAcid, nmrData );
 
                     assigner.assignPeakToAminoAcid( new PeakAssignerQuery(
-                        Utils.getComponentsFrame( aaPanel ) ) );
+                        SwingUtils.getComponentsFrame( aaPanel ) ) );
 
                     aaPanel.setData( nmrData );
                 }
@@ -144,7 +144,8 @@ class PeakToAminoAcidAssigner
      * @param aa
      * @param nmrData
      **************************************************************************/
-    public PeakToAminoAcidAssigner( IPeak peak, IAminoAcid aa, INmrData nmrData )
+    public PeakToAminoAcidAssigner( IPeak peak, IAminoAcid aa,
+        INmrData nmrData )
     {
         this.peak = peak;
         this.aa = aa;
@@ -212,7 +213,8 @@ class PeakToAminoAcidAssigner
 
         int aaToPeak = peakIndex - aaIndex;
 
-        IAssignmentOption mainOption = getMainOption( aaIndex, peakIndex, chain );
+        IAssignmentOption mainOption = getMainOption( aaIndex, peakIndex,
+            chain );
 
         // ---------------------------------------------------------------------
         // Build the full list of options.
@@ -369,10 +371,12 @@ class PeakToAminoAcidAssigner
             hasStart = option.getAminoAcidStart() - 1 > -1;
             hasEnd = option.getAminoAcidEnd() < nmrData.getAminoAcids().size();
 
-            startAa = hasStart ? nmrData.getAminoAcids().get(
-                option.getAminoAcidStart() - 1 ) : null;
-            endAa = hasEnd ? nmrData.getAminoAcids().get(
-                option.getAminoAcidEnd() ) : null;
+            startAa = hasStart
+                ? nmrData.getAminoAcids().get( option.getAminoAcidStart() - 1 )
+                : null;
+            endAa = hasEnd
+                ? nmrData.getAminoAcids().get( option.getAminoAcidEnd() )
+                : null;
 
             startPeak = chain.get( option.getPeakStart() );
             endPeak = chain.get( option.getPeakEnd() - 1 );

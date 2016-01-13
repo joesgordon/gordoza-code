@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import org.jutils.Utils;
+import org.jutils.SwingUtils;
 import org.jutils.ui.PropEditPanel;
 import org.jutils.ui.app.FrameApplication;
 import org.jutils.ui.app.IFrameApp;
@@ -44,7 +44,7 @@ public class PropEditUiMain implements IFrameApp
         refreshButton.addActionListener( new RefreshUiListener( this ) );
         openButton.addActionListener( new OpenListener() );
 
-        Utils.setMaxComponentSize( showButton, refreshButton, openButton );
+        SwingUtils.setMaxComponentSize( showButton, refreshButton, openButton );
 
         panel.add( showButton );
         panel.add( openButton );

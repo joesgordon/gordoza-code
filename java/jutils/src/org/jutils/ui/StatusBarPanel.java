@@ -345,7 +345,8 @@ public class StatusBarPanel
     {
         public void actionPerformed( ActionEvent e )
         {
-            Frame frame = Utils.getComponentsFrame( StatusBarPanel.this.view );
+            Frame frame = SwingUtils.getComponentsFrame(
+                StatusBarPanel.this.view );
             Integer delay = new Integer( 10 );
             Object obj = JOptionPane.showInputDialog( frame,
                 "New Delay in seconds: ", delay );

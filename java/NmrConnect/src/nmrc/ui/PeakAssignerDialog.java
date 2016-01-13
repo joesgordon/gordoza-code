@@ -8,12 +8,12 @@ import java.util.List;
 
 import javax.swing.*;
 
+import org.jutils.SwingUtils;
+
 import nmrc.data.AminoAcid;
 import nmrc.model.*;
 import nmrc.ui.tables.ObjectTable;
 import nmrc.ui.tables.models.AminoAcidTableModel;
-
-import org.jutils.Utils;
 
 /*******************************************************************************
  * 
@@ -43,17 +43,20 @@ public class PeakAssignerDialog extends JDialog
 
         assignerPanel = new PeakAssignerPanel();
 
-        mainPanel.add( messageLabel, new GridBagConstraints( 0, 0, 1, 1, 1.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        mainPanel.add( messageLabel,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
-        mainPanel.add( assignerPanel, new GridBagConstraints( 0, 1, 1, 1, 1.0,
-            1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        mainPanel.add( assignerPanel,
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
-        mainPanel.add( createButtonPanel(), new GridBagConstraints( 0, 2, 1, 1,
-            0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        mainPanel.add( createButtonPanel(),
+            new GridBagConstraints( 0, 2, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
         setContentPane( mainPanel );
 
@@ -82,7 +85,8 @@ public class PeakAssignerDialog extends JDialog
         JButton okButton = new JButton( "Ok" );
         JButton cancelButton = new JButton( "Cancel" );
 
-        Dimension dim = Utils.getMaxComponentSize( okButton, cancelButton );
+        Dimension dim = SwingUtils.getMaxComponentSize( okButton,
+            cancelButton );
 
         okButton.setPreferredSize( dim );
         cancelButton.setPreferredSize( dim );
@@ -90,13 +94,15 @@ public class PeakAssignerDialog extends JDialog
         okButton.addActionListener( new ButtonListener( false ) );
         cancelButton.addActionListener( new ButtonListener( true ) );
 
-        buttonPanel.add( okButton, new GridBagConstraints( 0, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-            new Insets( 10, 0, 10, 10 ), 10, 5 ) );
+        buttonPanel.add( okButton,
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets( 10, 0, 10, 10 ), 10, 5 ) );
 
-        buttonPanel.add( cancelButton, new GridBagConstraints( 1, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-            new Insets( 10, 10, 10, 0 ), 10, 5 ) );
+        buttonPanel.add( cancelButton,
+            new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets( 10, 10, 10, 0 ), 10, 5 ) );
 
         return buttonPanel;
     }
@@ -172,16 +178,19 @@ class PeakAssignerPanel extends JPanel
 
         optionComboBox.addActionListener( new ComboBoxListener() );
 
-        add( optionsLabel, new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets( 2,
-                2, 2, 2 ), 0, 0 ) );
-        add( optionComboBox, new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        add( optionsLabel,
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        add( optionComboBox,
+            new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-        add( tableScrollPane, new GridBagConstraints( 0, 1, 2, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 2,
-                2, 2, 2 ), 0, 0 ) );
+        add( tableScrollPane,
+            new GridBagConstraints( 0, 1, 2, 1, 1.0, 1.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
     }
 
     /***************************************************************************

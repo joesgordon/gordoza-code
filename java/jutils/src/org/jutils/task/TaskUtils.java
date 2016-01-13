@@ -5,9 +5,9 @@ import java.awt.Window;
 
 import javax.swing.JOptionPane;
 
-import org.jutils.Utils;
-import org.jutils.ui.VerboseMessageView;
+import org.jutils.SwingUtils;
 import org.jutils.ui.MessageExceptionView;
+import org.jutils.ui.VerboseMessageView;
 
 /*******************************************************************************
  * 
@@ -23,7 +23,7 @@ public final class TaskUtils
      **************************************************************************/
     public static void displayError( Component comp, TaskError error )
     {
-        Window parent = Utils.getComponentsWindow( comp );
+        Window parent = SwingUtils.getComponentsWindow( comp );
 
         if( error.exception != null )
         {

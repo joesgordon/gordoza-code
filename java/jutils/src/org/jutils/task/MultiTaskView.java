@@ -8,7 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import javax.swing.*;
 
 import org.jutils.IconConstants;
-import org.jutils.Utils;
+import org.jutils.SwingUtils;
 import org.jutils.concurrent.TaskStopManager;
 
 /*******************************************************************************
@@ -201,7 +201,7 @@ public class MultiTaskView implements IMultiTaskView
     public static TaskMetrics startAndShow( Component comp, IMultiTask tasker,
         String title, int numThreads )
     {
-        Window parent = Utils.getComponentsWindow( comp );
+        Window parent = SwingUtils.getComponentsWindow( comp );
         MultiTaskView mtv = new MultiTaskView();
         IMultiTaskView view = MultiTaskView.createEdtView( mtv );
         JDialog dialog = new JDialog( parent, ModalityType.DOCUMENT_MODAL );

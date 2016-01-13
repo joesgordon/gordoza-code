@@ -7,6 +7,7 @@ import java.util.regex.*;
 
 import javax.swing.*;
 
+import org.jutils.SwingUtils;
 import org.jutils.Utils;
 import org.jutils.ui.*;
 import org.jutils.ui.app.FrameApplication;
@@ -220,8 +221,9 @@ public class RegexPanel implements IView<JPanel>
         }
         catch( PatternSyntaxException ex )
         {
-            JOptionPane.showMessageDialog( Utils.getComponentsWindow( view ),
-                ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog(
+                SwingUtils.getComponentsWindow( view ), ex.getMessage(),
+                "ERROR", JOptionPane.ERROR_MESSAGE );
             regexTextArea.requestFocus();
             regexTextArea.select( ex.getIndex() - 1, ex.getIndex() );
         }
@@ -272,7 +274,7 @@ public class RegexPanel implements IView<JPanel>
 
         public void actionPerformed( ActionEvent e )
         {
-            Window win = Utils.getComponentsWindow( view.view );
+            Window win = SwingUtils.getComponentsWindow( view.view );
 
             ExitListener.doDefaultCloseOperation( win );
         }

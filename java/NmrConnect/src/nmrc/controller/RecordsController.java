@@ -2,16 +2,16 @@ package nmrc.controller;
 
 import java.util.*;
 
+import org.jutils.SwingUtils;
+import org.jutils.ui.event.ItemActionEvent;
+import org.jutils.ui.event.ItemActionListener;
+
 import nmrc.alg.DuplicatePeakFinder;
 import nmrc.data.Peak;
 import nmrc.model.*;
 import nmrc.ui.ChoicesDialog;
 import nmrc.ui.panels.RecordsPanel;
 import nmrc.ui.tables.models.PeakRecordTableModel;
-
-import org.jutils.Utils;
-import org.jutils.ui.event.ItemActionEvent;
-import org.jutils.ui.event.ItemActionListener;
 
 /*******************************************************************************
  * 
@@ -84,7 +84,7 @@ public class RecordsController
             choicesModel.setItems( choices );
 
             ChoicesDialog<IPeak> dialog = new ChoicesDialog<IPeak>(
-                Utils.getComponentsFrame( recordsPanel ), "", peakModel,
+                SwingUtils.getComponentsFrame( recordsPanel ), "", peakModel,
                 choicesModel );
 
             dialog.setVisible( true );

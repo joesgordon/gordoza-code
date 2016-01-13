@@ -5,6 +5,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+import org.jutils.SwingUtils;
+import org.jutils.ui.event.ItemActionEvent;
+import org.jutils.ui.event.ItemActionListener;
+
 import nmrc.alg.PreviousPeakFinder;
 import nmrc.alg.PreviousPeakSorter;
 import nmrc.data.PeakMatch;
@@ -12,10 +16,6 @@ import nmrc.model.IPeak;
 import nmrc.model.IPeakChooser;
 import nmrc.ui.PeakMatchChooser;
 import nmrc.ui.panels.PeaksPanel;
-
-import org.jutils.Utils;
-import org.jutils.ui.event.ItemActionEvent;
-import org.jutils.ui.event.ItemActionListener;
 
 /*******************************************************************************
  * 
@@ -43,7 +43,7 @@ public class PeaksController
      **************************************************************************/
     private void findAllPreviousPeaks()
     {
-        Frame frame = Utils.getComponentsFrame( peaksPanel );
+        Frame frame = SwingUtils.getComponentsFrame( peaksPanel );
         PreviousPeakFinder finder = new PreviousPeakFinder();
 
         IPeakChooser chooser = new PeakMatchChooser( frame );
@@ -60,7 +60,7 @@ public class PeaksController
     private void findPreviousPeak( boolean ignorePreviousAssignments )
     {
         List<PeakMatch> matches;
-        Frame frame = Utils.getComponentsFrame( peaksPanel );
+        Frame frame = SwingUtils.getComponentsFrame( peaksPanel );
         IPeak selectedPeak = peaksPanel.getSelectedPeak();
 
         if( selectedPeak != null )

@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.swing.*;
 
-import org.jutils.Utils;
+import org.jutils.SwingUtils;
 import org.jutils.ui.hex.ByteBuffer;
 import org.jutils.ui.hex.HexPanel;
 import org.mc.McMessage;
@@ -172,7 +172,7 @@ public class McMessagesPanel extends JPanel
         {
             if( e.getClickCount() == 2 )
             {
-                Frame f = Utils.getComponentsFrame( displayList );
+                Frame f = SwingUtils.getComponentsFrame( displayList );
                 int index = displayList.locationToIndex( e.getPoint() );
                 ListModel<McMessage> dlm = displayList.getModel();
                 McMessage item = dlm.getElementAt( index );

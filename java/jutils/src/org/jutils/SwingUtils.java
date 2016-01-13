@@ -477,6 +477,132 @@ public final class SwingUtils
     }
 
     /***************************************************************************
+     * Creates a {@link ComboBoxModel} with the provided array of items.
+     * @param items the items to be contained within the model.
+     * @return the model containing the items.
+     **************************************************************************/
+    public static <T> ComboBoxModel<T> createModel( T [] items )
+    {
+        DefaultComboBoxModel<T> model = new DefaultComboBoxModel<T>();
+
+        for( T option : items )
+        {
+            model.addElement( option );
+        }
+
+        return model;
+    }
+
+    /***************************************************************************
+     * Programmatically closes the provided window. See the StackOverflow
+     * question <a href="http://stackoverflow.com/questions/1234912">How to
+     * programmatically close a JFrame</a> for more information.
+     * @param win the window to be closed.
+     **************************************************************************/
+    public static void closeWindow( Window win )
+    {
+        win.dispatchEvent( new WindowEvent( win, WindowEvent.WINDOW_CLOSING ) );
+    }
+
+    /***************************************************************************
+     * Search the component's parent tree looking for an object of the provided
+     * type.
+     * @param comp the child component.
+     * @param type the type of parent to be found.
+     * @return the component of the type provided or {@code null} if not found.
+     **************************************************************************/
+    public static Component getParentOfType( Component comp, Class<?> type )
+    {
+        Component parent = null;
+        Component parentComp = comp;
+
+        while( parentComp != null )
+        {
+            if( type.isAssignableFrom( parentComp.getClass() ) )
+            {
+                parent = parentComp;
+                break;
+            }
+            parentComp = parentComp.getParent();
+        }
+
+        return parent;
+    }
+
+    /***************************************************************************
+     * Returns the {@link Window} containing the provided component.
+     * @param comp the child component.
+     * @return the window owning the provided component or {@code null} if the
+     * component is orphaned.
+     **************************************************************************/
+    public static Window getComponentsWindow( Component comp )
+    {
+        Object win = getParentOfType( comp, Window.class );
+        return win != null ? ( Window )win : null;
+    }
+
+    /***************************************************************************
+     * Returns the {@link Frame} containing the provided component.
+     * @param comp the child component.
+     * @return the frame owning the provided component or {@code null} if the
+     * component is orphaned or the owning window is not a frame.
+     **************************************************************************/
+    public static Frame getComponentsFrame( Component comp )
+    {
+        Object win = getParentOfType( comp, Frame.class );
+        return win != null ? ( Frame )win : null;
+    }
+
+    /***************************************************************************
+     * Returns the {@link JFrame} containing the provided component or
+     * {@code null} if none exists.
+     * @param comp the child component.
+     **************************************************************************/
+    public static JFrame getComponentsJFrame( Component comp )
+    {
+        Object win = getParentOfType( comp, JFrame.class );
+        return win != null ? ( JFrame )win : null;
+    }
+
+    /***************************************************************************
+     * Finds the maximum width and length of the provided components and sets
+     * the preferred size of each to the maximum.
+     * @param comps the components to be evaluated.
+     * @return the maximum size.
+     **************************************************************************/
+    public static Dimension setMaxComponentSize( Component... comps )
+    {
+        Dimension dim = getMaxComponentSize( comps );
+
+        for( Component comp : comps )
+        {
+            comp.setPreferredSize( dim );
+        }
+
+        return dim;
+    }
+
+    /***************************************************************************
+     * Finds the maximum width and length of the provided components.
+     * @param comps the components to be evaluated.
+     * @return the maximum size.
+     **************************************************************************/
+    public static Dimension getMaxComponentSize( Component... comps )
+    {
+        Dimension max = new Dimension( 0, 0 );
+        Dimension dim;
+
+        for( Component comp : comps )
+        {
+            dim = comp.getPreferredSize();
+            max.width = Math.max( max.width, dim.width );
+            max.height = Math.max( max.height, dim.height );
+        }
+
+        return max;
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     public static class CopyListener<T> implements ActionListener

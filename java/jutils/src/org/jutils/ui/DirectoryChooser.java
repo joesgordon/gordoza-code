@@ -9,8 +9,7 @@ import java.util.List;
 
 import javax.swing.*;
 
-import org.jutils.Utils;
-import org.jutils.ValidationException;
+import org.jutils.*;
 import org.jutils.io.IOUtils;
 import org.jutils.io.LogUtils;
 import org.jutils.ui.app.AppRunner;
@@ -18,7 +17,8 @@ import org.jutils.ui.app.IApplication;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.fields.ValidationTextField;
-import org.jutils.ui.validation.*;
+import org.jutils.ui.validation.IValidityChangedListener;
+import org.jutils.ui.validation.ValidationView;
 import org.jutils.ui.validators.ITextValidator;
 
 /*******************************************************************************
@@ -183,7 +183,7 @@ public class DirectoryChooser
             new Insets( 2, 2, 2, 4 ), 4, 0 );
         panel.add( cancelButton, constraints );
 
-        Dimension dim = Utils.getMaxComponentSize( newButton, okButton,
+        Dimension dim = SwingUtils.getMaxComponentSize( newButton, okButton,
             cancelButton );
 
         newButton.setMinimumSize( dim );

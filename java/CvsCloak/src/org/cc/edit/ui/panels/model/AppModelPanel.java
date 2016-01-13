@@ -13,7 +13,7 @@ import org.cc.data.*;
 import org.cc.edit.ui.InfoPanel;
 import org.cc.edit.ui.panels.ListInfoPanel;
 import org.cc.edit.ui.panels.NullableLockInfoPanel;
-import org.jutils.Utils;
+import org.jutils.SwingUtils;
 import org.jutils.ui.DirectoryChooser;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.updater.ComboBoxUpdater;
@@ -64,24 +64,29 @@ public class AppModelPanel extends InfoPanel<VersioningSystem>
         reposPanel.addAddItemListener( new NewRepositoryListener() );
         reposPanel.addItemRemovedListener( new RemovedRepositoryListener() );
 
-        add( new JLabel( "Default Repository :" ), new GridBagConstraints( 0,
-            0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST,
-            GridBagConstraints.NONE, new Insets( 4, 4, 0, 4 ), 0, 0 ) );
-        add( defaultField, new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
-                0, 4, 4, 4 ), 0, 0 ) );
+        add( new JLabel( "Default Repository :" ),
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 4, 4, 0, 4 ), 0, 0 ) );
+        add( defaultField,
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 0, 4, 4, 4 ), 0, 0 ) );
 
-        add( lockPanel, new GridBagConstraints( 0, 3, 1, 1, 1.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
-                4, 4, 4, 4 ), 0, 0 ) );
+        add( lockPanel,
+            new GridBagConstraints( 0, 3, 1, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
 
-        add( reposPanel, new GridBagConstraints( 0, 4, 1, 1, 1.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets( 0, 4,
-                4, 4 ), 0, 0 ) );
+        add( reposPanel,
+            new GridBagConstraints( 0, 4, 1, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 0, 4, 4, 4 ), 0, 0 ) );
 
-        add( Box.createVerticalStrut( 0 ), new GridBagConstraints( 0, 10, 4, 1,
-            1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH,
-            new Insets( 0, 4, 0, 4 ), 0, 0 ) );
+        add( Box.createVerticalStrut( 0 ),
+            new GridBagConstraints( 0, 10, 4, 1, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 0, 4, 0, 4 ), 0, 0 ) );
     }
 
     public void addRepoAddedListener( ItemActionListener<Repository> l )
@@ -103,12 +108,14 @@ public class AppModelPanel extends InfoPanel<VersioningSystem>
         defaultField.removeAllItems();
         for( int i = 0; i < data.getRepositories().size(); i++ )
         {
-            defaultField.addItem( data.getRepositories().get( i ).getLocation() );
+            defaultField.addItem(
+                data.getRepositories().get( i ).getLocation() );
         }
 
         if( data.getDefaultRepository() != null )
         {
-            defaultField.setSelectedItem( new File( data.getDefaultRepository() ) );
+            defaultField.setSelectedItem(
+                new File( data.getDefaultRepository() ) );
         }
         lockPanel.setData( data.getLockInfo() );
 
@@ -123,12 +130,13 @@ public class AppModelPanel extends InfoPanel<VersioningSystem>
         @Override
         public void actionPerformed( ActionEvent event )
         {
-            Frame f = Utils.getComponentsFrame( reposPanel );
+            Frame f = SwingUtils.getComponentsFrame( reposPanel );
             DirectoryChooser d = new DirectoryChooser( f );
 
             if( reposPanel.getData().size() > 1 )
             {
-                d.setSelectedPaths( reposPanel.getData().get( 0 ).getLocation().getAbsolutePath() );
+                d.setSelectedPaths( reposPanel.getData().get(
+                    0 ).getLocation().getAbsolutePath() );
             }
 
             d.setVisible( true );
@@ -152,9 +160,9 @@ public class AppModelPanel extends InfoPanel<VersioningSystem>
             else if( files != null && files.length > 1 )
             {
                 JOptionPane.showMessageDialog( f,
-                    "A repository path cannot be multiple directories. Please "
-                        + "select only one.", "ERROR",
-                    JOptionPane.ERROR_MESSAGE );
+                    "A repository path cannot be multiple directories. Please " +
+                        "select only one.",
+                    "ERROR", JOptionPane.ERROR_MESSAGE );
             }
         }
     }
@@ -162,8 +170,8 @@ public class AppModelPanel extends InfoPanel<VersioningSystem>
     /***************************************************************************
      * 
      **************************************************************************/
-    private class RemovedRepositoryListener implements
-        ItemActionListener<Repository>
+    private class RemovedRepositoryListener
+        implements ItemActionListener<Repository>
     {
         @Override
         public void actionPerformed( ItemActionEvent<Repository> event )

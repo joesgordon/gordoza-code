@@ -10,7 +10,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import org.jutils.IconConstants;
-import org.jutils.Utils;
+import org.jutils.SwingUtils;
 import org.jutils.ui.event.*;
 
 /*******************************************************************************
@@ -226,7 +226,7 @@ public class TaskView implements ITaskView
     public static TaskMetrics startAndShow( Component comp, ITask task,
         String title, boolean playNotify )
     {
-        Window parent = Utils.getComponentsWindow( comp );
+        Window parent = SwingUtils.getComponentsWindow( comp );
         TaskView view = new TaskView();
         TaskRunner runner = new TaskRunner( task,
             TaskView.createEdtView( view ) );

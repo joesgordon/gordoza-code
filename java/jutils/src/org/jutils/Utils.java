@@ -2,7 +2,6 @@ package org.jutils;
 
 import java.awt.*;
 import java.awt.datatransfer.*;
-import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
@@ -10,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JTable;
 
 /*******************************************************************************
  * Utility class for general static functions.
@@ -40,10 +39,12 @@ public final class Utils
     }
 
     /***************************************************************************
-     * @param a
-     * @param b
-     * @param epsilon
-     * @return
+     * Provides a method of comparing two doubles within a given precision.
+     * @param a double to compare.
+     * @param b double to compare.
+     * @param epsilon precision of comparison.
+     * @return {@code true} if the doubles are equal to within the provided
+     * precision; {@code false} otherwise.
      **************************************************************************/
     public static boolean doubleEquals( double a, double b, double epsilon )
     {
@@ -59,42 +60,6 @@ public final class Utils
         SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "HH:mm:ss:SSS" );
         DATE_FORMAT.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
         return DATE_FORMAT.format( d );
-    }
-
-    /***************************************************************************
-     * From SO http://stackoverflow.com/questions/1410168
-     * @param s
-     * @return
-     **************************************************************************/
-    public static long parseHexLong2( String s )
-    {
-        int len = s.length();
-
-        if( len > 16 )
-        {
-            throw new NumberFormatException(
-                "A long may be no longer than 16 hexadecimal characters: [" +
-                    len + "] '" + s + "'" );
-        }
-        else if( len == 0 )
-        {
-            throw new NumberFormatException( "Empty string" );
-        }
-
-        long msb = 0;
-        long lsb = 0;
-
-        if( len > 8 )
-        {
-            msb = Long.parseLong( s.substring( 0, len - 8 ), 16 );
-            lsb = Long.parseLong( s.substring( len - 8 ), 16 );
-        }
-        else
-        {
-            lsb = Long.parseLong( s, 16 );
-        }
-
-        return msb << 32 | lsb;
     }
 
     /***************************************************************************
@@ -138,103 +103,6 @@ public final class Utils
     }
 
     /***************************************************************************
-     * Search the component's parent tree looking for an object of the provided
-     * type.
-     * @param comp the child component.
-     * @param type the type of parent to be found.
-     * @return the component of the type provided or {@code null} if not found.
-     **************************************************************************/
-    public static Component getParentOfType( Component comp, Class<?> type )
-    {
-        Component parent = null;
-        Component parentComp = comp;
-
-        while( parentComp != null )
-        {
-            if( type.isAssignableFrom( parentComp.getClass() ) )
-            {
-                parent = parentComp;
-                break;
-            }
-            parentComp = parentComp.getParent();
-        }
-
-        return parent;
-    }
-
-    /***************************************************************************
-     * Returns the {@link Window} containing the provided component.
-     * @param comp the child component.
-     * @return the window owning the provided component or {@code null} if the
-     * component is orphaned.
-     **************************************************************************/
-    public static Window getComponentsWindow( Component comp )
-    {
-        Object win = getParentOfType( comp, Window.class );
-        return win != null ? ( Window )win : null;
-    }
-
-    /***************************************************************************
-     * Returns the {@link Frame} containing the provided component.
-     * @param comp the child component.
-     * @return the frame owning the provided component or {@code null} if the
-     * component is orphaned or the owning window is not a frame.
-     **************************************************************************/
-    public static Frame getComponentsFrame( Component comp )
-    {
-        Object win = getParentOfType( comp, Frame.class );
-        return win != null ? ( Frame )win : null;
-    }
-
-    /***************************************************************************
-     * @param comp
-     * @return
-     **************************************************************************/
-    public static JFrame getComponentsJFrame( Component comp )
-    {
-        Object win = getParentOfType( comp, JFrame.class );
-        return win != null ? ( JFrame )win : null;
-    }
-
-    /***************************************************************************
-     * Finds the maximum width and length of the provided components and sets
-     * the preferred size of each to the maximum.
-     * @param comps the components to be evaluated.
-     * @return the maximum size.
-     **************************************************************************/
-    public static Dimension setMaxComponentSize( Component... comps )
-    {
-        Dimension dim = getMaxComponentSize( comps );
-
-        for( Component comp : comps )
-        {
-            comp.setPreferredSize( dim );
-        }
-
-        return dim;
-    }
-
-    /***************************************************************************
-     * Finds the maximum width and length of the provided components.
-     * @param comps the components to be evaluated.
-     * @return the maximum size.
-     **************************************************************************/
-    public static Dimension getMaxComponentSize( Component... comps )
-    {
-        Dimension max = new Dimension( 0, 0 );
-        Dimension dim;
-
-        for( Component comp : comps )
-        {
-            dim = comp.getPreferredSize();
-            max.width = Math.max( max.width, dim.width );
-            max.height = Math.max( max.height, dim.height );
-        }
-
-        return max;
-    }
-
-    /***************************************************************************
      * Determines the maximum size from the provided sizes.
      * @param max
      * @param sizes
@@ -253,8 +121,7 @@ public final class Utils
 
     /***************************************************************************
      * Returns the maximum value of the provided list.
-     * @param values
-     * @return
+     * @param values list of values to find a maximum.
      **************************************************************************/
     public static int max( int... values )
     {
@@ -282,6 +149,7 @@ public final class Utils
     }
 
     /***************************************************************************
+     * Splits a string on either a space or a tab character.
      * @param str
      * @return
      **************************************************************************/
@@ -512,34 +380,6 @@ public final class Utils
     }
 
     /***************************************************************************
-     * Creates a {@link ComboBoxModel} with the provided array of items.
-     * @param items the items to be contained within the model.
-     * @return the model containing the items.
-     **************************************************************************/
-    public static <T> ComboBoxModel<T> createModel( T [] items )
-    {
-        DefaultComboBoxModel<T> model = new DefaultComboBoxModel<T>();
-
-        for( T option : items )
-        {
-            model.addElement( option );
-        }
-
-        return model;
-    }
-
-    /***************************************************************************
-     * Programmatically closes the provided window. See the StackOverflow
-     * question <a href="http://stackoverflow.com/questions/1234912">How to
-     * programmatically close a JFrame</a> for more information.
-     * @param win the window to be closed.
-     **************************************************************************/
-    public static void closeWindow( Window win )
-    {
-        win.dispatchEvent( new WindowEvent( win, WindowEvent.WINDOW_CLOSING ) );
-    }
-
-    /***************************************************************************
      * Scrolls to the row and column provided.
      * @param table the table to be scrolled.
      * @param row the row to be scrolled to.
@@ -596,14 +436,19 @@ public final class Utils
     }
 
     /***************************************************************************
-     * @param src
-     * @param srcPos
-     * @param dest
-     * @param destPos
-     * @param length
+     * Wraps {@link System#arraycopy(Object, int, Object, int, int)} to provide
+     * better exceptions when arguments are not valid.
+     * @param src the buffer from which bytes are copied.
+     * @param srcPos the starting position in the source buffer.
+     * @param dest the buffer to which bytes are copied.
+     * @param destPos the starting position in the destination buffer.
+     * @param length the number of bytes to be copied.
+     * @throws ArrayIndexOutOfBoundsException if (a) the positions or length is
+     * negative, or (b) a position + length is greater than the length of the
+     * buffer.
      **************************************************************************/
     public static <T> void byteArrayCopy( byte [] src, int srcPos, byte [] dest,
-        int destPos, int length )
+        int destPos, int length ) throws ArrayIndexOutOfBoundsException
     {
         try
         {

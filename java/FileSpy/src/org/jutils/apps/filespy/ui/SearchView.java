@@ -981,7 +981,8 @@ public class SearchView implements IDataView<SearchParams>
         public void actionPerformed( ActionEvent e )
         {
             DirectoryChooser chooser = new DirectoryChooser(
-                Utils.getComponentsFrame( panel.view ), "Choose Directories",
+                SwingUtils.getComponentsFrame( panel.view ),
+                "Choose Directories",
                 "Choose one or more directories in which to search:" );
             String selectedItemStr = panel.searchInComboBox.getSelectedItem().toString();
             File curFile = new File( selectedItemStr );

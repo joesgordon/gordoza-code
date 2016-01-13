@@ -11,7 +11,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.*;
 
 import org.jutils.IconConstants;
-import org.jutils.Utils;
+import org.jutils.SwingUtils;
 import org.jutils.io.LogUtils;
 
 import com.jgoodies.looks.Options;
@@ -32,7 +32,7 @@ public class ComplexTableFrame extends JFrame
     {
         final JButton nimbusButton = new JButton( "Nimbus" );
         final JButton jgoodiesButton = new JButton( "JGoodies" );
-        Dimension buttonSize = Utils.getMaxComponentSize(
+        Dimension buttonSize = SwingUtils.getMaxComponentSize(
             new Component[] { nimbusButton, jgoodiesButton } );
         CustomTableModel tableModel = new CustomTableModel();
         JTable table = new JTable( tableModel)

@@ -8,7 +8,6 @@ import java.util.List;
 import javax.swing.*;
 
 import org.jutils.SwingUtils;
-import org.jutils.Utils;
 import org.jutils.ui.event.*;
 import org.jutils.ui.model.IView;
 
@@ -112,7 +111,7 @@ public class OkDialogView implements IView<JDialog>
     public OkDialogView( Component parent, Component content,
         ModalityType modalityType, OkDialogButtons buttons )
     {
-        this( Utils.getComponentsWindow( parent ), content, modalityType,
+        this( SwingUtils.getComponentsWindow( parent ), content, modalityType,
             buttons );
     }
 
@@ -313,7 +312,7 @@ public class OkDialogView implements IView<JDialog>
         // IconConstants.CHECK_16 ) );
         applyButton.addActionListener( new ApplyListener( this ) );
 
-        Utils.setMaxComponentSize( okButton, cancelButton, applyButton );
+        SwingUtils.setMaxComponentSize( okButton, cancelButton, applyButton );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.NONE,
@@ -363,7 +362,7 @@ public class OkDialogView implements IView<JDialog>
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            Utils.closeWindow( view.dialog );
+            SwingUtils.closeWindow( view.dialog );
             view.okListeners.fireListeners( view, true );
         }
     }
@@ -383,7 +382,7 @@ public class OkDialogView implements IView<JDialog>
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            Utils.closeWindow( view.dialog );
+            SwingUtils.closeWindow( view.dialog );
             view.okListeners.fireListeners( view, false );
         }
     }

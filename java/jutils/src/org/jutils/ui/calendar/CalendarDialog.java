@@ -7,7 +7,7 @@ import java.util.Calendar;
 
 import javax.swing.*;
 
-import org.jutils.Utils;
+import org.jutils.SwingUtils;
 
 /*******************************************************************************
  *
@@ -83,7 +83,8 @@ public class CalendarDialog extends JDialog
         JButton cancelButton = new JButton( "Cancel" );
         cancelButton.addActionListener( new ButtonListener( false ) );
 
-        Dimension max = Utils.getMaxComponentSize( okButton, cancelButton );
+        Dimension max = SwingUtils.getMaxComponentSize( okButton,
+            cancelButton );
 
         okButton.setPreferredSize( max );
         cancelButton.setPreferredSize( max );

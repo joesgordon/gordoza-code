@@ -4,11 +4,11 @@ import java.awt.Component;
 import java.awt.Frame;
 import java.util.List;
 
+import org.jutils.SwingUtils;
+
 import nmrc.model.IPeak;
 import nmrc.ui.RecordChoiceDialog;
 import nmrc.ui.tables.models.PeakRecordTableModel;
-
-import org.jutils.Utils;
 
 /*******************************************************************************
  * Class that finds all the duplicate peaks in a given list of peaks.
@@ -22,7 +22,7 @@ public class DuplicatePeakFinder
      **************************************************************************/
     public void findDuplicates( Component owner, List<IPeak> peaks )
     {
-        Frame frame = Utils.getComponentsFrame( owner );
+        Frame frame = SwingUtils.getComponentsFrame( owner );
         ItemFinder<IPeak> peakFinder = new ItemFinder<IPeak>();
 
         for( int i = 0; i < peaks.size(); i++ )
@@ -33,8 +33,8 @@ public class DuplicatePeakFinder
 
             if( dups.size() > 0 )
             {
-                RecordChoiceDialog dialog = new RecordChoiceDialog( frame,
-                    dups, peak, PeakRecordTableModel.COL_NAMES,
+                RecordChoiceDialog dialog = new RecordChoiceDialog( frame, dups,
+                    peak, PeakRecordTableModel.COL_NAMES,
                     "Choose the peaks that are the same:" );
                 dialog.setVisible( true );
                 if( dialog.isCancelled() )

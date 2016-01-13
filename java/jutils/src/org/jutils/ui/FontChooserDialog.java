@@ -7,7 +7,7 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.text.*;
 
-import org.jutils.Utils;
+import org.jutils.SwingUtils;
 import org.jutils.ui.app.AppRunner;
 import org.jutils.ui.app.IApplication;
 import org.jutils.ui.event.ItemActionEvent;
@@ -204,7 +204,7 @@ public class FontChooserDialog extends JDialog
         btCancel.setToolTipText( "Exit without save" );
         btCancel.addActionListener( cancelActionListener );
 
-        Utils.setMaxComponentSize( btOK, btCancel );
+        SwingUtils.setMaxComponentSize( btOK, btCancel );
 
         buttonPanel.add( btOK,
             new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,

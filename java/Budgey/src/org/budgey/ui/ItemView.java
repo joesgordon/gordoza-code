@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import org.budgey.BudgeyIconConstants;
-import org.jutils.Utils;
+import org.jutils.SwingUtils;
 
 /*******************************************************************************
  * 
@@ -90,7 +90,8 @@ public final class ItemView
                 GridBagConstraints.EAST, GridBagConstraints.NONE,
                 new Insets( 4, 4, 20, 40 ), 30, 10 ) );
 
-        Dimension dim = Utils.getMaxComponentSize( cancelButton, okButton );
+        Dimension dim = SwingUtils.getMaxComponentSize( cancelButton,
+            okButton );
 
         cancelButton.setPreferredSize( dim );
         okButton.setPreferredSize( dim );

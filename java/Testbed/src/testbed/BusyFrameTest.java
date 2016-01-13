@@ -10,6 +10,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeSelectionModel;
 
+import org.jutils.SwingUtils;
 import org.jutils.Utils;
 import org.jutils.ui.*;
 
@@ -106,7 +107,7 @@ public class BusyFrameTest extends BusyFrame
     public void dirButton_actionPerformed( ActionEvent e )
     {
         DirectoryChooser fd = new DirectoryChooser(
-            Utils.getComponentsFrame( this ), "Choose Dir(s)",
+            SwingUtils.getComponentsFrame( this ), "Choose Dir(s)",
             "Select 1 or more directories:" );
         fd.setVisible( true );
 

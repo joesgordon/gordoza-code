@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import org.jutils.Utils;
+import org.jutils.SwingUtils;
 
 /**
  * 
@@ -38,7 +38,8 @@ public class TableChoiceDialog extends JDialog
         JButton okButton = new JButton( "Ok" );
         JButton cancelButton = new JButton( "Cancel" );
 
-        Dimension maxSize = Utils.getMaxComponentSize( okButton, cancelButton );
+        Dimension maxSize = SwingUtils.getMaxComponentSize( okButton,
+            cancelButton );
 
         okButton.setPreferredSize( maxSize );
         okButton.addActionListener( new ActionListener()
@@ -65,12 +66,14 @@ public class TableChoiceDialog extends JDialog
             }
         } );
 
-        buttonPanel.add( okButton, new GridBagConstraints( 0, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(
-                0, 0, 0, 10 ), 20, 0 ) );
-        buttonPanel.add( cancelButton, new GridBagConstraints( 1, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(
-                10, 0, 0, 0 ), 20, 0 ) );
+        buttonPanel.add( okButton,
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 0, 0, 0, 10 ), 20, 0 ) );
+        buttonPanel.add( cancelButton,
+            new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 10, 0, 0, 0 ), 20, 0 ) );
 
         // ---------------------------------------------------------------------
         // Setup content panel.
@@ -81,17 +84,20 @@ public class TableChoiceDialog extends JDialog
 
         table.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 
-        contentPanel.add( label, new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 4, 4,
-                4, 4 ), 0, 0 ) );
+        contentPanel.add( label,
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
 
-        contentPanel.add( tableScrollPane, new GridBagConstraints( 0, 1, 1, 1,
-            1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH,
-            new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+        contentPanel.add( tableScrollPane,
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
 
-        contentPanel.add( buttonPanel, new GridBagConstraints( 0, 2, 1, 1, 1.0,
-            0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+        contentPanel.add( buttonPanel,
+            new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
     }
 
     /**
