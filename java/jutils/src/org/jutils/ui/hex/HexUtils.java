@@ -125,9 +125,17 @@ public final class HexUtils
      **************************************************************************/
     public static String toHexString( byte [] bytes, String delim )
     {
+        return toHexString( bytes, 0, bytes.length, delim );
+    }
+
+    public static String toHexString( byte [] bytes, int index, int len,
+        String delim )
+    {
         List<Byte> byteList = new ArrayList<Byte>( bytes.length );
 
-        for( int i = 0; i < bytes.length; i++ )
+        int end = index + len;
+
+        for( int i = index; i < end; i++ )
         {
             byteList.add( bytes[i] );
         }

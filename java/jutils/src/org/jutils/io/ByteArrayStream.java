@@ -359,4 +359,9 @@ public class ByteArrayStream implements IStream
     {
         return position;
     }
+
+    public int getRemainingBuffer()
+    {
+        return buffer.length - position;
+    }
 }
