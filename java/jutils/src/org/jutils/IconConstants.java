@@ -14,6 +14,8 @@ import com.sun.media.sound.JavaSoundAudioClip;
  ******************************************************************************/
 public final class IconConstants
 {
+    public final static String ANALYZE_16 = "analyze016.png";
+
     public final static String ATOMIC_32 = "atomic32.png";
 
     public final static String BACK_16 = "back16.png";

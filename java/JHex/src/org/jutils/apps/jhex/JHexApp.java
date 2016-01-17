@@ -5,6 +5,7 @@ import java.io.File;
 
 import javax.swing.JFrame;
 
+import org.jutils.apps.jhex.ui.JHexFrame;
 import org.jutils.ui.app.IFrameApp;
 
 /***************************************************************************

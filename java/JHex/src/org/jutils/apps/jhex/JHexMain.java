@@ -2,6 +2,7 @@ package org.jutils.apps.jhex;
 
 import java.io.File;
 
+import org.jutils.apps.jhex.data.JHexOptions;
 import org.jutils.io.IOUtils;
 import org.jutils.io.OptionsSerializer;
 import org.jutils.ui.app.FrameApplication;

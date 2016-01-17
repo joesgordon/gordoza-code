@@ -263,7 +263,7 @@ public class ByteArrayStream implements IStream
     }
 
     /***************************************************************************
-     * 
+     * Returns the length of the stream (long version of {@link #getSize()}.
      **************************************************************************/
     @Override
     public long getLength()
@@ -318,7 +318,9 @@ public class ByteArrayStream implements IStream
     }
 
     /***************************************************************************
-     * @param i
+     * Concatenates the stream to the provided length. This function does not
+     * modify the position of the next read/write operation.
+     * @param len new length of the stream.
      **************************************************************************/
     public void setLength( int len )
     {
@@ -326,7 +328,8 @@ public class ByteArrayStream implements IStream
     }
 
     /***************************************************************************
-     * Returns the size of the buffer as a signed 32-bit value.
+     * Returns the size of the buffer as a signed 32-bit value (integer version
+     * of {@link #getLength()}.
      **************************************************************************/
     public int getSize()
     {
@@ -334,7 +337,10 @@ public class ByteArrayStream implements IStream
     }
 
     /***************************************************************************
-     * @param position
+     * Shifts the data from the provided position through {@link #getSize()} to
+     * the beginning of the stream, concatenates the stream to that length, and
+     * moves the position of the stream to the end.
+     * @param position the starting position of the data to be shifted.
      **************************************************************************/
     public void shift( int position )
     {
@@ -345,7 +351,8 @@ public class ByteArrayStream implements IStream
     }
 
     /***************************************************************************
-     * @return
+     * Returns the number of bytes left in the stream (integer version of
+     * {@link #getAvailable()}).
      **************************************************************************/
     public int getRemainingSize()
     {
@@ -353,13 +360,16 @@ public class ByteArrayStream implements IStream
     }
 
     /***************************************************************************
-     * @return
+     * Returns the 32-bit signed representation of {@link #getPosition()}.
      **************************************************************************/
     public int getIndex()
     {
         return position;
     }
 
+    /***************************************************************************
+     * Returns the number of bytes left in the buffer underlying this stream.
+     **************************************************************************/
     public int getRemainingBuffer()
     {
         return buffer.length - position;

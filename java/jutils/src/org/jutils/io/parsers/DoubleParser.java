@@ -5,7 +5,6 @@ import org.jutils.io.IParser;
 
 public class DoubleParser implements IParser<Double>
 {
-
     @Override
     public Double parse( String str ) throws ValidationException
     {
@@ -23,5 +22,4 @@ public class DoubleParser implements IParser<Double>
 
         return d;
     }
-
 }

@@ -15,7 +15,6 @@ public class JHexIconConstants
     /**  */
     public static final IconLoader loader = new IconLoader(
         JHexIconConstants.class, "icons" );
-
     /**  */
     public static final String INCH_LEFT = "arrow-left.png";
     /**  */

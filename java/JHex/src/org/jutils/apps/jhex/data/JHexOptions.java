@@ -1,4 +1,4 @@
-package org.jutils.apps.jhex;
+package org.jutils.apps.jhex.data;
 
 import java.io.File;
 
