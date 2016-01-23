@@ -1,10 +1,11 @@
 package org.jutils.ui.fields;
 
 import java.awt.Color;
-import java.util.Arrays;
-import java.util.List;
+import java.awt.event.ItemListener;
+import java.util.*;
 
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 
 import org.jutils.ui.event.updater.ComboBoxUpdater;
 import org.jutils.ui.event.updater.IUpdater;
@@ -18,11 +19,13 @@ import org.jutils.ui.validation.ValidityListenerList;
 public final class ValidationComboField<T> implements IValidationField
 {
     /**  */
-    private final ItemComboBoxModel<T> model;
+    private final ItemComboBoxModel<DescriptorObject> model;
     /**  */
-    private final JComboBox<T> field;
+    private final JComboBox<DescriptorObject> field;
     /**  */
     private final ValidityListenerList listenerList;
+    /**  */
+    private final IDescriptor<T> descriptor;
 
     /**  */
     private Color validBackground;
@@ -42,9 +45,20 @@ public final class ValidationComboField<T> implements IValidationField
      **************************************************************************/
     public ValidationComboField( List<T> items )
     {
-        this.model = new ItemComboBoxModel<T>( items );
-        this.field = new JComboBox<T>( model );
+        this( items, new ObjectDescriptor<T>() );
+    }
+
+    /***************************************************************************
+     * @param items
+     * @param descriptor
+     **************************************************************************/
+    public ValidationComboField( List<T> items, IDescriptor<T> descriptor )
+    {
+        this.model = new ItemComboBoxModel<>( buildList( items ) );
+        this.field = new JComboBox<>( model );
         this.listenerList = new ValidityListenerList();
+        this.descriptor = descriptor != null ? descriptor
+            : new ObjectDescriptor<T>();
 
         this.validBackground = field.getBackground();
         this.invalidBackground = Color.red;
@@ -58,7 +72,7 @@ public final class ValidationComboField<T> implements IValidationField
      * 
      **************************************************************************/
     @Override
-    public JComboBox<T> getView()
+    public JComponent getView()
     {
         return field;
     }
@@ -68,7 +82,8 @@ public final class ValidationComboField<T> implements IValidationField
      **************************************************************************/
     public T getSelectedItem()
     {
-        return model.getSelectedItem();
+        DescriptorObject obj = model.getSelectedItem();
+        return obj == null ? null : obj.item;
     }
 
     /***************************************************************************
@@ -76,7 +91,7 @@ public final class ValidationComboField<T> implements IValidationField
      **************************************************************************/
     public void setSelectedItem( T item )
     {
-        model.setSelectedItem( item );
+        model.setSelectedItem( new DescriptorObject( item ) );
     }
 
     /***************************************************************************
@@ -151,6 +166,38 @@ public final class ValidationComboField<T> implements IValidationField
     }
 
     /***************************************************************************
+     * @param editable
+     **************************************************************************/
+    public void setEditable( boolean editable )
+    {
+        field.setEditable( editable );
+    }
+
+    /***************************************************************************
+     * @param listener
+     **************************************************************************/
+    public void addItemListener( ItemListener listener )
+    {
+        field.addItemListener( listener );
+    }
+
+    /***************************************************************************
+     * @param items
+     * @return
+     **************************************************************************/
+    private List<DescriptorObject> buildList( List<T> items )
+    {
+        List<DescriptorObject> listObjects = new ArrayList<>();
+
+        for( T item : items )
+        {
+            listObjects.add( new DescriptorObject( item ) );
+        }
+
+        return listObjects;
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     private static class ValidationActionListener<T> implements IUpdater<T>
@@ -177,6 +224,59 @@ public final class ValidationComboField<T> implements IValidationField
                 field.field.setBackground( field.validBackground );
                 field.listenerList.signalValid();
             }
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public static interface IDescriptor<T>
+    {
+        public String getDescription( T item );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private class DescriptorObject
+    {
+        public final T item;
+
+        public DescriptorObject( T item )
+        {
+            this.item = item;
+        }
+
+        public String toString()
+        {
+            return descriptor.getDescription( item );
+        }
+
+        public boolean equals( Object obj )
+        {
+            if( obj != null )
+            {
+                if( obj instanceof ValidationComboField.DescriptorObject )
+                {
+                    DescriptorObject dobj = ( DescriptorObject )obj;
+
+                    return dobj.item == item;
+                }
+            }
+
+            return false;
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class ObjectDescriptor<T> implements IDescriptor<T>
+    {
+        @Override
+        public String getDescription( T item )
+        {
+            return item.toString();
         }
     }
 }

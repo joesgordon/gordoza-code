@@ -7,6 +7,7 @@ import javax.swing.JComponent;
 
 import org.jutils.ui.event.updater.ComboBoxUpdater;
 import org.jutils.ui.event.updater.IUpdater;
+import org.jutils.ui.fields.ValidationComboField.IDescriptor;
 
 /*******************************************************************************
  * 
@@ -27,7 +28,17 @@ public final class ComboFormField<T> implements IDataFormField<T>
      **************************************************************************/
     public ComboFormField( String name, T [] items )
     {
-        this( name, Arrays.asList( items ) );
+        this( name, items, null );
+    }
+
+    /***************************************************************************
+     * @param name
+     * @param items
+     * @param descriptor
+     **************************************************************************/
+    public ComboFormField( String name, T [] items, IDescriptor<T> descriptor )
+    {
+        this( name, Arrays.asList( items ), descriptor );
     }
 
     /***************************************************************************
@@ -36,12 +47,23 @@ public final class ComboFormField<T> implements IDataFormField<T>
      **************************************************************************/
     public ComboFormField( String name, List<T> items )
     {
-        this.field = new ValidationComboField<>( items );
+        this( name, items, null );
+    }
+
+    /***************************************************************************
+     * @param name
+     * @param items
+     * @param descriptor
+     **************************************************************************/
+    public ComboFormField( String name, List<T> items,
+        IDescriptor<T> descriptor )
+    {
+        this.field = new ValidationComboField<>( items, descriptor );
         this.name = name;
 
         this.updater = null;
 
-        field.getView().addItemListener(
+        field.addItemListener(
             new ComboBoxUpdater<>( new ComboValidListener<T>( this ) ) );
     }
 
@@ -122,7 +144,7 @@ public final class ComboFormField<T> implements IDataFormField<T>
      **************************************************************************/
     public void setUserEditable( boolean editable )
     {
-        field.getView().setEditable( editable );
+        field.setEditable( editable );
     }
 
     /***************************************************************************
