@@ -42,6 +42,15 @@ public class ByteArrayStream implements IStream
     }
 
     /***************************************************************************
+     * @param size
+     * @param b
+     **************************************************************************/
+    public ByteArrayStream( int size, boolean b )
+    {
+        this( new byte[size], 0, 0, false );
+    }
+
+    /***************************************************************************
      * Creates a new stream backed by a copy of the provided buffer with a
      * length of the size of the provided buffer.
      * @param buf the initial buffer for the stream.
@@ -315,6 +324,14 @@ public class ByteArrayStream implements IStream
         Utils.byteArrayCopy( buffer, 0, bytes, 0, bufferSize );
 
         return bytes;
+    }
+
+    /***************************************************************************
+     * Returns the buffer that backs this stream.
+     **************************************************************************/
+    public byte [] getBuffer()
+    {
+        return buffer;
     }
 
     /***************************************************************************

@@ -258,6 +258,7 @@ public final class ValidationComboField<T> implements IValidationField
             {
                 if( obj instanceof ValidationComboField.DescriptorObject )
                 {
+                    @SuppressWarnings( "unchecked")
                     DescriptorObject dobj = ( DescriptorObject )obj;
 
                     return dobj.item == item;
@@ -276,6 +277,11 @@ public final class ValidationComboField<T> implements IValidationField
         @Override
         public String getDescription( T item )
         {
+            if( item == null )
+            {
+                return "";
+            }
+
             return item.toString();
         }
     }
