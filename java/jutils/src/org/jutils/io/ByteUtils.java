@@ -69,4 +69,26 @@ public final class ByteUtils
 
         return s;
     }
+
+    /***************************************************************************
+     * @param a
+     * @param b
+     * @return
+     **************************************************************************/
+    public static byte min( byte a, byte b )
+    {
+        return ( byte )Math.min( Byte.toUnsignedInt( a ),
+            Byte.toUnsignedInt( b ) );
+    }
+
+    /***************************************************************************
+     * @param a
+     * @param b
+     * @return
+     **************************************************************************/
+    public static byte max( byte a, byte b )
+    {
+        return ( byte )Math.max( Byte.toUnsignedInt( a ),
+            Byte.toUnsignedInt( b ) );
+    }
 }
