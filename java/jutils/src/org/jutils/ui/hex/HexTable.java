@@ -160,6 +160,11 @@ public class HexTable extends JTable
                 selection.start = selection.end;
             }
 
+            if( selection.start < 0 || selection.end >= model.getBufferSize() )
+            {
+                return;
+            }
+
             repaint();
 
             renderer.setHighlightOffset( selection.end );
