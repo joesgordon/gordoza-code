@@ -154,7 +154,7 @@ public class BitBuffer
     }
 
     /***************************************************************************
-     * Returns the position of the next read/write operation.
+     * Returns a copy of the position of the next read/write operation.
      **************************************************************************/
     public BitPosition getPosition()
     {
@@ -175,6 +175,15 @@ public class BitBuffer
     public int getBit()
     {
         return position.getBit();
+    }
+
+    /***************************************************************************
+     * Return the position in bits.
+     * @see BitPosition#getPosition()
+     **************************************************************************/
+    public long getBitPosition()
+    {
+        return position.getPosition();
     }
 
     /***************************************************************************

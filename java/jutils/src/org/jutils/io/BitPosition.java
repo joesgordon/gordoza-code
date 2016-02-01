@@ -112,6 +112,14 @@ public class BitPosition
     }
 
     /***************************************************************************
+     * Returns the position in bits.
+     **************************************************************************/
+    public int getPosition()
+    {
+        return byteIndex * 8 + bitIndex;
+    }
+
+    /***************************************************************************
      * Sets this position to the provided position.
      * @param bitpos the bit and byte indexes to be copied.
      **************************************************************************/
