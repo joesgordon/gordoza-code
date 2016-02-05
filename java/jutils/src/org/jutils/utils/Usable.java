@@ -1,6 +1,7 @@
 package org.jutils.utils;
 
 import org.jutils.ValidationException;
+import org.jutils.io.IStringSerializer;
 
 /*******************************************************************************
  * 
@@ -74,10 +75,28 @@ public class Usable<T>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public String toString()
     {
         return ( isUsed ? "enabled" : "disabled" ) + " " +
             ( data == null ? "" : data.toString() );
+    }
+
+    /***************************************************************************
+     * @param stringMarshaller
+     * @return
+     **************************************************************************/
+    public String toString( IStringSerializer<T> stringMarshaller )
+    {
+        if( isUsed )
+        {
+            return "disabled";
+        }
+
+        return String.format( "enabled: %s",
+            data == null ? "" : stringMarshaller.toString( data ) );
     }
 }

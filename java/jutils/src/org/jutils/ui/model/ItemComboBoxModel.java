@@ -7,6 +7,7 @@ import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
 import org.jutils.ListUtils;
+import org.jutils.io.IStringSerializer;
 
 public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel<T>
 {
@@ -613,13 +614,5 @@ public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel<T>
 
             return item.equals( obj );
         }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public static interface IStringSerializer<R>
-    {
-        public String toString( R item );
     }
 }
