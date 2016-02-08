@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JComponent;
+import javax.swing.ListCellRenderer;
 
 import org.jutils.ui.event.updater.ComboBoxUpdater;
 import org.jutils.ui.event.updater.IUpdater;
@@ -167,5 +168,10 @@ public final class ComboFormField<T> implements IDataFormField<T>
                 field.updater.update( field.getValue() );
             }
         }
+    }
+
+    public void setRenderer( ListCellRenderer<Object> r )
+    {
+        field.setRenderer( r );
     }
 }

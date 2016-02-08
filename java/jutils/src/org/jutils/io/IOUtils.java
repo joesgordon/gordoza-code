@@ -4,7 +4,7 @@ import java.awt.Component;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
+import java.nio.file.*;
 import java.util.*;
 
 import javax.swing.JOptionPane;
@@ -796,5 +796,28 @@ public final class IOUtils
 
         throw new IllegalStateException(
             "Incorrect handling of call to JOptionPane.showOptionDialog" );
+    }
+
+    /***************************************************************************
+     * @param dir
+     * @param filePattern
+     * @return
+     * @throws IOException
+     **************************************************************************/
+    public static List<File> listWithWildcard( File dir, String filePattern )
+        throws IOException
+    {
+        List<File> files = new ArrayList<>();
+
+        try( DirectoryStream<Path> paths = Files.newDirectoryStream(
+            dir.toPath(), filePattern ) )
+        {
+            for( Path p : paths )
+            {
+                files.add( p.toFile() );
+            }
+        }
+
+        return files;
     }
 }

@@ -1,11 +1,11 @@
 package org.jutils.ui.fields;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ItemListener;
 import java.util.*;
 
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
+import javax.swing.*;
 
 import org.jutils.ui.event.updater.ComboBoxUpdater;
 import org.jutils.ui.event.updater.IUpdater;
@@ -198,6 +198,14 @@ public final class ValidationComboField<T> implements IValidationField
     }
 
     /***************************************************************************
+     * @param renderer
+     **************************************************************************/
+    public void setRenderer( ListCellRenderer<Object> renderer )
+    {
+        field.setRenderer( new DescriptorRenderer( renderer ) );
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     private static class ValidationActionListener<T> implements IUpdater<T>
@@ -283,6 +291,28 @@ public final class ValidationComboField<T> implements IValidationField
             }
 
             return item.toString();
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private class DescriptorRenderer implements ListCellRenderer<Object>
+    {
+        private final ListCellRenderer<Object> renderer;
+
+        public DescriptorRenderer( ListCellRenderer<Object> renderer )
+        {
+            this.renderer = renderer;
+        }
+
+        @Override
+        public Component getListCellRendererComponent(
+            JList<? extends Object> list, Object value, int index,
+            boolean isSelected, boolean cellHasFocus )
+        {
+            return renderer.getListCellRendererComponent( list, value, index,
+                isSelected, cellHasFocus );
         }
     }
 }

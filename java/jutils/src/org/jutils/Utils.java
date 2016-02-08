@@ -570,6 +570,63 @@ public final class Utils
         return -( low + 1 ); // key not found
     }
 
+    public static List<String> getMonospacedFonts()
+    {
+        List<String> fonts = new ArrayList<>();
+
+        GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        String [] fontFamilyNames = graphicsEnvironment.getAvailableFontFamilyNames();
+
+        BufferedImage bufferedImage = new BufferedImage( 1, 1,
+            BufferedImage.TYPE_INT_ARGB );
+        Graphics graphics = bufferedImage.createGraphics();
+
+        for( String fontFamilyName : fontFamilyNames )
+        {
+            boolean isMonospaced = true;
+
+            int fontStyle = Font.PLAIN;
+            int fontSize = 12;
+            Font font = new Font( fontFamilyName, fontStyle, fontSize );
+            FontMetrics fontMetrics = graphics.getFontMetrics( font );
+
+            int firstCharacterWidth = 0;
+            boolean hasFirstCharacterWidth = false;
+            for( int codePoint = 0; codePoint < 128; codePoint++ )
+            {
+                if( Character.isValidCodePoint( codePoint ) &&
+                    ( Character.isLetter( codePoint ) ||
+                        Character.isDigit( codePoint ) ) )
+                {
+                    char character = ( char )codePoint;
+                    int characterWidth = fontMetrics.charWidth( character );
+                    if( hasFirstCharacterWidth )
+                    {
+                        if( characterWidth != firstCharacterWidth )
+                        {
+                            isMonospaced = false;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        firstCharacterWidth = characterWidth;
+                        hasFirstCharacterWidth = true;
+                    }
+                }
+            }
+
+            if( isMonospaced )
+            {
+                fonts.add( fontFamilyName );
+            }
+        }
+
+        graphics.dispose();
+
+        return fonts;
+    }
+
     /***************************************************************************
      * Object that can compare an item object to a key object. Used for sorting
      * or searching a list of the items type by a field of the item.
