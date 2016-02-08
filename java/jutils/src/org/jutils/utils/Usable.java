@@ -99,4 +99,13 @@ public class Usable<T>
         return String.format( "enabled: %s",
             data == null ? "" : stringMarshaller.toString( data ) );
     }
+
+    /***************************************************************************
+     * @param defaultValue
+     * @return
+     **************************************************************************/
+    public T get( T defaultValue )
+    {
+        return isUsed ? data : defaultValue;
+    }
 }
