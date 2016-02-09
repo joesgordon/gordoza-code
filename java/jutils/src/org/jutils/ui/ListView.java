@@ -304,6 +304,14 @@ public class ListView<T> implements IDataView<List<T>>
     }
 
     /***************************************************************************
+     * 
+     **************************************************************************/
+    public void clear()
+    {
+        itemsListModel.clear();
+    }
+
+    /***************************************************************************
      * The model used for this view. This model does not provide the data, but
      * provides methods of accessing said data.
      **************************************************************************/
