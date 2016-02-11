@@ -238,14 +238,6 @@ public final class ValidationComboField<T> implements IValidationField
     /***************************************************************************
      * 
      **************************************************************************/
-    public static interface IDescriptor<T>
-    {
-        public String getDescription( T item );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
     private class DescriptorObject
     {
         public final T item;

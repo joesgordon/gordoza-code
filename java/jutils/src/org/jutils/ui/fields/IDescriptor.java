@@ -1,18 +1,13 @@
 package org.jutils.ui.fields;
 
-import org.jutils.INamedEnum;
-
 /*******************************************************************************
- * Defines an {@link IDescriptor} for {@link INamedEnum}s.
+ * 
  ******************************************************************************/
-public class NamedEnumDescriptor<T extends INamedEnum> implements IDescriptor<T>
+public interface IDescriptor<T>
 {
     /***************************************************************************
-     * 
+     * @param item
+     * @return
      **************************************************************************/
-    @Override
-    public String getDescription( T item )
-    {
-        return item == null ? null : item.getName();
-    }
+    public String getDescription( T item );
 }

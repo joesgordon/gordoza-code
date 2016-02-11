@@ -8,7 +8,6 @@ import javax.swing.ListCellRenderer;
 
 import org.jutils.ui.event.updater.ComboBoxUpdater;
 import org.jutils.ui.event.updater.IUpdater;
-import org.jutils.ui.fields.ValidationComboField.IDescriptor;
 
 /*******************************************************************************
  * 
