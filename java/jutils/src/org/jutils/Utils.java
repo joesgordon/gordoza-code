@@ -11,6 +11,8 @@ import java.util.List;
 
 import javax.swing.JTable;
 
+import org.jutils.io.LogUtils;
+
 /*******************************************************************************
  * Utility class for general static functions.
  ******************************************************************************/
@@ -513,15 +515,11 @@ public final class Utils
     {
         StringSelection selection = new StringSelection( text );
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        clipboard.setContents( selection, new ClipboardOwner()
-        {
-            @Override
-            public void lostOwnership( Clipboard clipboard,
-                Transferable contents )
-            {
-                // do nothing
-            }
-        } );
+        ClipboardOwner co = ( cc, tc ) -> {
+        };
+
+        clipboard.setContents( selection, co );
+
     }
 
     /***************************************************************************
@@ -570,6 +568,28 @@ public final class Utils
         return -( low + 1 ); // key not found
     }
 
+    /***************************************************************************
+     * Returns the mask needed to remove the upper bits from the provided value.
+     * @param v the value for which the mask will be generated.
+     **************************************************************************/
+    public static int getMaskForValue( int v )
+    {
+        v--;
+        v |= v >> 1;
+        v |= v >> 2;
+        v |= v >> 4;
+        v |= v >> 8;
+        v |= v >> 16;
+        // v++;
+
+        return v;
+    }
+
+    /***************************************************************************
+     * Returns a list containing the font family names of all available
+     * monospace fonts that can display the ASCII numbers, lower case, and upper
+     * case values.
+     **************************************************************************/
     public static List<String> getMonospacedFonts()
     {
         List<String> fonts = new ArrayList<>();
@@ -592,8 +612,33 @@ public final class Utils
 
             int firstCharacterWidth = 0;
             boolean hasFirstCharacterWidth = false;
-            for( int codePoint = 0; codePoint < 128; codePoint++ )
+            int [] chars = new int[62];
+
+            for( int i = 0; i < 10; i++ )
             {
+                chars[i] = i + 0x30;
+            }
+            for( int i = 0; i < 26; i++ )
+            {
+                chars[i + 10] = i + 0x41;
+            }
+            for( int i = 0; i < 26; i++ )
+            {
+                chars[i + 36] = i + 0x61;
+            }
+
+            for( int i = 0; i < chars.length; i++ )
+            {
+                int codePoint = chars[i];
+
+                if( !font.canDisplay( codePoint ) )
+                {
+                    isMonospaced = false;
+                    LogUtils.printDebug( "%s cannot display 0x%02X '%c' @ %d",
+                        fontFamilyName, codePoint, ( char )codePoint, i );
+                    break;
+                }
+
                 if( Character.isValidCodePoint( codePoint ) &&
                     ( Character.isLetter( codePoint ) ||
                         Character.isDigit( codePoint ) ) )

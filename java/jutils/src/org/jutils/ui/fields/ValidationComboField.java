@@ -269,7 +269,7 @@ public final class ValidationComboField<T> implements IValidationField
                     @SuppressWarnings( "unchecked")
                     DescriptorObject dobj = ( DescriptorObject )obj;
 
-                    return dobj.item == item;
+                    return dobj.item.equals( item );
                 }
             }
 

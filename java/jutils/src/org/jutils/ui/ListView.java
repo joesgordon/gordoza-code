@@ -197,7 +197,7 @@ public class ListView<T> implements IDataView<List<T>>
     @Override
     public void setData( List<T> data )
     {
-        items = data;
+        this.items = data;
 
         List<DisplayItem<T>> ditems = DisplayItem.createList( data,
             itemsModel );
