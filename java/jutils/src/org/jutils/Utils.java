@@ -11,8 +11,6 @@ import java.util.List;
 
 import javax.swing.JTable;
 
-import org.jutils.io.LogUtils;
-
 /*******************************************************************************
  * Utility class for general static functions.
  ******************************************************************************/
@@ -634,8 +632,9 @@ public final class Utils
                 if( !font.canDisplay( codePoint ) )
                 {
                     isMonospaced = false;
-                    LogUtils.printDebug( "%s cannot display 0x%02X '%c' @ %d",
-                        fontFamilyName, codePoint, ( char )codePoint, i );
+                    // LogUtils.printDebug( "%s cannot display 0x%02X '%c' @
+                    // %d",
+                    // fontFamilyName, codePoint, ( char )codePoint, i );
                     break;
                 }
 
