@@ -13,6 +13,6 @@ public class NamedEnumDescriptor<T extends INamedEnum> implements IDescriptor<T>
     @Override
     public String getDescription( T item )
     {
-        return item == null ? null : item.getName();
+        return item == null ? "" : item.getName();
     }
 }
