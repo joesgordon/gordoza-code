@@ -608,6 +608,11 @@ public final class Utils
             Font font = new Font( fontFamilyName, fontStyle, fontSize );
             FontMetrics fontMetrics = graphics.getFontMetrics( font );
 
+            if( fontMetrics.getHeight() > 2 * fontSize )
+            {
+                continue;
+            }
+
             int firstCharacterWidth = 0;
             boolean hasFirstCharacterWidth = false;
             int [] chars = new int[62];
