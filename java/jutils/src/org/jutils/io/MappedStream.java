@@ -1,10 +1,11 @@
 package org.jutils.io;
 
 import java.io.*;
-import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
+
+import org.jutils.utils.ByteOrdering;
 
 /*******************************************************************************
  * According to <a
@@ -37,7 +38,7 @@ public class MappedStream implements IDataStream
     /**  */
     private final int bufferSize;
     /**  */
-    private final ByteOrder order;
+    private final ByteOrdering order;
 
     /**  */
     private long length;
@@ -64,7 +65,7 @@ public class MappedStream implements IDataStream
     public MappedStream( File file, boolean readOnly )
         throws FileNotFoundException
     {
-        this( file, readOnly, ByteOrder.BIG_ENDIAN );
+        this( file, readOnly, ByteOrdering.BIG_ENDIAN );
     }
 
     /***************************************************************************
@@ -73,7 +74,7 @@ public class MappedStream implements IDataStream
      * @param order
      * @throws FileNotFoundException
      **************************************************************************/
-    public MappedStream( File file, boolean readOnly, ByteOrder order )
+    public MappedStream( File file, boolean readOnly, ByteOrdering order )
         throws FileNotFoundException
     {
         this( file, readOnly, order, DEFAULT_BUFFER_SIZE );
@@ -86,7 +87,7 @@ public class MappedStream implements IDataStream
      * @param bufferSize
      * @throws FileNotFoundException
      **************************************************************************/
-    public MappedStream( File file, boolean readOnly, ByteOrder order,
+    public MappedStream( File file, boolean readOnly, ByteOrdering order,
         int bufferSize ) throws FileNotFoundException
     {
         if( bufferSize < 1024 )
@@ -132,7 +133,7 @@ public class MappedStream implements IDataStream
 
         buffer = channel.map( mode, position, size );
         buffer.load();
-        buffer.order( order );
+        buffer.order( order.order );
 
         bufferPos = position;
     }
@@ -362,7 +363,7 @@ public class MappedStream implements IDataStream
      * 
      **************************************************************************/
     @Override
-    public ByteOrder getOrder()
+    public ByteOrdering getOrder()
     {
         return order;
     }

@@ -11,16 +11,19 @@ import javax.swing.*;
 
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
-import org.jutils.apps.jhex.*;
+import org.jutils.apps.jhex.JHexIconConstants;
+import org.jutils.apps.jhex.JHexMain;
 import org.jutils.apps.jhex.data.HexBufferSize;
 import org.jutils.apps.jhex.data.JHexOptions;
 import org.jutils.apps.jhex.task.DataDistributionTask;
 import org.jutils.apps.jhex.task.SearchTask;
+import org.jutils.chart.ChartIcons;
 import org.jutils.datadist.DataDistribution;
 import org.jutils.io.IStream;
 import org.jutils.io.OptionsSerializer;
 import org.jutils.task.TaskView;
 import org.jutils.ui.*;
+import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
 import org.jutils.ui.fields.HexBytesFormField;
@@ -275,7 +278,21 @@ public class JHexFrame implements IView<JFrame>
         button.addActionListener( ( e ) -> showAnalyzer() );
         toolbar.add( button );
 
+        SwingUtils.addActionToToolbar( toolbar, createPlotAction() );
+
         return toolbar;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createPlotAction()
+    {
+        Icon icon;
+
+        icon = ChartIcons.getIcon( ChartIcons.CHART_016 );
+
+        return new ActionAdapter( ( e ) -> showPlot(), "Plot", icon );
     }
 
     /***************************************************************************
@@ -398,6 +415,30 @@ public class JHexFrame implements IView<JFrame>
 
             msgView.show( getView(), "Finished Analyzing" );
         }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private void showPlot()
+    {
+        @SuppressWarnings( "resource")
+        IStream stream = editor.getStream();
+
+        if( stream == null )
+        {
+            return;
+        }
+
+        Window w = SwingUtils.getComponentsWindow( frame );
+        DataPlotView plotView = new DataPlotView( stream );
+        OkDialogView dialogView = new OkDialogView( w, plotView.getView(),
+            ModalityType.DOCUMENT_MODAL, OkDialogButtons.OK_ONLY );
+
+        dialogView.setOkButtonText( "Close" );
+
+        dialogView.show( "Data Plot", JHexIconConstants.getAppImages(),
+            new Dimension( 640, 480 ) );
     }
 
     /***************************************************************************

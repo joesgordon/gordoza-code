@@ -293,8 +293,15 @@ public class BufferedStream implements IStream
         else
         {
             // -----------------------------------------------------------------
-            // Otherwise, write directly to the stream and cache afterwards.
+            // Otherwise, write buffer, then directly to the stream and cache
+            // afterwards.
             // -----------------------------------------------------------------
+            if( writeOnNextFlush )
+            {
+                buffer.writeToStream( stream );
+                flush();
+            }
+
             stream.seek( position );
             stream.write( b );
             position++;

@@ -1,10 +1,10 @@
 package org.jutils.io;
 
 import java.io.*;
-import java.nio.ByteOrder;
 import java.util.Random;
 
 import org.jutils.Stopwatch;
+import org.jutils.utils.ByteOrdering;
 
 /*******************************************************************************
  * 
@@ -91,7 +91,7 @@ public class MappedBenchmarkMain
         throws FileNotFoundException, IOException
     {
         try( MappedStream stream = new MappedStream( file, true,
-            ByteOrder.BIG_ENDIAN, BUF_SIZE ) )
+            ByteOrdering.BIG_ENDIAN, BUF_SIZE ) )
         {
             readStream( stream );
         }

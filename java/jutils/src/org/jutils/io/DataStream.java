@@ -3,7 +3,8 @@ package org.jutils.io;
 import java.io.EOFException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
+
+import org.jutils.utils.ByteOrdering;
 
 /*******************************************************************************
  * 
@@ -18,7 +19,7 @@ public class DataStream implements IDataStream
     /**  */
     private final byte [] bytes;
     /**  */
-    private final ByteOrder order;
+    private final ByteOrdering order;
 
     /***************************************************************************
      * Creates a data stream that reads data with big endian byte ordering.
@@ -26,7 +27,7 @@ public class DataStream implements IDataStream
      **************************************************************************/
     public DataStream( IStream stream )
     {
-        this( stream, ByteOrder.BIG_ENDIAN );
+        this( stream, ByteOrdering.BIG_ENDIAN );
     }
 
     /***************************************************************************
@@ -34,7 +35,7 @@ public class DataStream implements IDataStream
      * @param stream the stream to be wrapped as a data stream.
      * @param order the byte order of data in the stream.
      **************************************************************************/
-    public DataStream( IStream stream, ByteOrder order )
+    public DataStream( IStream stream, ByteOrdering order )
     {
         this.stream = stream;
 
@@ -43,7 +44,7 @@ public class DataStream implements IDataStream
         this.order = order;
 
         this.buffer = ByteBuffer.wrap( bytes );
-        this.buffer.order( order );
+        this.buffer.order( order.order );
     }
 
     // -------------------------------------------------------------------------
@@ -327,7 +328,7 @@ public class DataStream implements IDataStream
      * 
      **************************************************************************/
     @Override
-    public ByteOrder getOrder()
+    public ByteOrdering getOrder()
     {
         return order;
     }

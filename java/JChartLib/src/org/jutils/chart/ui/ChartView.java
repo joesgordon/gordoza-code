@@ -350,6 +350,9 @@ public class ChartView implements IView<JComponent>
         repaintChart();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public void recalculateBounds()
     {
         chartWidget.context.calculateAutoBounds( chart.series );
@@ -377,12 +380,21 @@ public class ChartView implements IView<JComponent>
      * @param file
      * @param addData
      **************************************************************************/
-    public void addSeries( ISeriesData<?> data, String name, String resource,
+    public Series addSeries( ISeriesData<?> data, String name, String resource,
         boolean addData )
     {
         Series s = new Series( data );
 
-        Color c = palette.next();
+        Color c;
+        if( addData )
+        {
+            c = palette.next();
+        }
+        else
+        {
+            palette.reset();
+            c = palette.next();
+        }
 
         s.name = name;
         s.resource = resource;
@@ -398,6 +410,8 @@ public class ChartView implements IView<JComponent>
         // LogUtils.printDebug( String.format( "y => (%f,%f)",
         // chart.plot.context.yMin, chart.plot.context.yMax ) );
         // LogUtils.printDebug( "" );
+
+        return s;
     }
 
     /***************************************************************************

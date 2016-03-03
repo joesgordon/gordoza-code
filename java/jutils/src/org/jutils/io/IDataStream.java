@@ -1,7 +1,8 @@
 package org.jutils.io;
 
 import java.io.IOException;
-import java.nio.ByteOrder;
+
+import org.jutils.utils.ByteOrdering;
 
 /*******************************************************************************
  * 
@@ -11,7 +12,7 @@ public interface IDataStream extends IStream
     /***************************************************************************
      * @return
      **************************************************************************/
-    public ByteOrder getOrder();
+    public ByteOrdering getOrder();
 
     /***************************************************************************
      * @return

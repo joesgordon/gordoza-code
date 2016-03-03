@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.nio.ByteOrder;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -24,6 +23,7 @@ import org.jutils.io.*;
 import org.jutils.ui.*;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
+import org.jutils.utils.ByteOrdering;
 
 /*******************************************************************************
  * 
@@ -287,7 +287,7 @@ public class CceFrame extends JFrame
 
                 try( FileStream out = new FileStream( file );
                      DataStream leout = new DataStream( out,
-                         ByteOrder.LITTLE_ENDIAN ) )
+                         ByteOrdering.LITTLE_ENDIAN ) )
                 {
                     try
                     {

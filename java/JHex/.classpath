@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="/libs/xpp3_min-1.1.4c.jar"/>
 	<classpathentry kind="lib" path="/libs/xstream-1.4.jar"/>
 	<classpathentry kind="lib" path="/libs/jgoodies.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JChartLib"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
