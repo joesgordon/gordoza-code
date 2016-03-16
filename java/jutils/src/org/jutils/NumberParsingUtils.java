@@ -229,4 +229,61 @@ public final class NumberParsingUtils
 
         return builder.toString();
     }
+
+    /***************************************************************************
+     * @param bits
+     * @return
+     **************************************************************************/
+    public static String toBinaryString( long value )
+    {
+        StringBuilder builder = new StringBuilder( 64 );
+
+        boolean foundLeading = false;
+
+        for( int i = 0; i < 64; i++ )
+        {
+            int b = ( int )( ( value >>> ( 63 - i ) ) & 1 );
+
+            if( b == 1 || foundLeading )
+            {
+                foundLeading = true;
+                builder.append( b == 0 ? "0" : "1" );
+            }
+        }
+
+        String str = builder.toString();
+
+        return str.isEmpty() ? "0" : str;
+    }
+
+    /***************************************************************************
+     * @param text
+     * @return
+     **************************************************************************/
+    public static long parseBinary( String text )
+    {
+        long value = 0;
+
+        if( text.isEmpty() )
+        {
+            throw new NumberFormatException(
+                "Cannot parse binary from an empty string" );
+        }
+
+        for( int i = 0; i < text.length(); i++ )
+        {
+            char c = text.charAt( i );
+            if( c == '1' )
+            {
+                value &= ( 1 << ( text.length() - i - 1 ) );
+            }
+            else if( c != '0' )
+            {
+                throw new NumberFormatException(
+                    "Character is not binary: " + c );
+            }
+        }
+
+        return value;
+    }
 }

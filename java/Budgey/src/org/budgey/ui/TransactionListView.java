@@ -12,11 +12,12 @@ import org.budgey.data.Transaction;
 import org.budgey.ui.model.TransactionTableModel;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class TransactionListView
+public class TransactionListView implements IView<Component>
 {
     /**  */
     private final JPanel transactionPanel;
@@ -55,7 +56,8 @@ public class TransactionListView
     /***************************************************************************
      * @return
      **************************************************************************/
-    public Component getPanel()
+    @Override
+    public Component getView()
     {
         return transactionPanel;
     }

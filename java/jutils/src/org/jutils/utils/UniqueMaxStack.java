@@ -48,7 +48,7 @@ public class UniqueMaxStack<T> implements Iterable<T>
      **************************************************************************/
     public T first()
     {
-        return stack.getFirst();
+        return isEmpty() ? null : stack.getFirst();
     }
 
     /***************************************************************************

@@ -2,19 +2,29 @@ package org.budgey.ui;
 
 import java.awt.*;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import org.budgey.data.Money;
+import org.jutils.ui.model.IView;
 
-public class SummaryPanel extends JPanel
+/*******************************************************************************
+ * 
+ ******************************************************************************/
+public class SummaryPanel implements IView<Component>
 {
-    private MoneyLabel balanceField;
-    private MoneyLabel availableField;
+    /**  */
+    private final JPanel view;
+    /**  */
+    private final MoneyLabel balanceField;
+    /**  */
+    private final MoneyLabel availableField;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public SummaryPanel()
     {
-        super( new GridBagLayout() );
+        this.view = new JPanel( new GridBagLayout() );
 
         JLabel balanceLabel = new JLabel( "Your account balance is " );
         balanceField = new MoneyLabel();
@@ -22,32 +32,40 @@ public class SummaryPanel extends JPanel
         JLabel availableLabel = new JLabel( "Your available funds are " );
         availableField = new MoneyLabel();
 
-        add( balanceLabel,
+        view.add( balanceLabel,
             new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
                 GridBagConstraints.EAST, GridBagConstraints.NONE,
                 new Insets( 0, 0, 0, 0 ), 0, 0 ) );
-        add( balanceField,
+        view.add( balanceField.getView(),
             new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
                 GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
                 new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
-        add( availableLabel,
+        view.add( availableLabel,
             new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
                 GridBagConstraints.EAST, GridBagConstraints.NONE,
                 new Insets( 4, 0, 0, 0 ), 0, 0 ) );
-        add( availableField,
+        view.add( availableField.getView(),
             new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
                 GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
-                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+                new Insets( 4, 0, 0, 0 ), 0, 0 ) );
     }
 
-    public void setBalance( Money amount )
+    /***************************************************************************
+     * @param amount
+     **************************************************************************/
+    public void setData( Money balance, Money available )
     {
-        balanceField.setMoney( amount );
+        balanceField.setData( balance );
+        availableField.setData( available );
     }
 
-    public void setAvailable( Money amount )
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public JComponent getView()
     {
-        availableField.setMoney( amount );
+        return view;
     }
 }

@@ -1,56 +1,84 @@
 package org.budgey.ui;
 
 import java.awt.Color;
+import java.awt.Font;
 
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.JTextComponent;
 
 import org.budgey.data.Money;
+import org.jutils.ui.model.IDataView;
 
-public class MoneyLabel extends JLabel
+/*******************************************************************************
+ * 
+ ******************************************************************************/
+public class MoneyLabel implements IDataView<Money>
 {
-    private Color negativeColor;
+    /**  */
+    private final JTextField moneyField;
+
+    /**  */
+    private final Color negativeColor;
+
+    private final Color positiveColor;
+
+    /**  */
     private Money money;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public MoneyLabel()
     {
-        super();
+        this.moneyField = new JTextField();
+        this.negativeColor = Color.red;
+        this.positiveColor = UIManager.getColor( "Panel.background" );
 
-        // setEditable( false );
-
-        negativeColor = Color.red;
-
-        // setBorder( BorderFactory.createLineBorder( Color.gray ) );
-        setOpaque( true );
-        setHorizontalAlignment( SwingConstants.RIGHT );
+        moneyField.setOpaque( true );
+        moneyField.setHorizontalAlignment( SwingConstants.RIGHT );
+        moneyField.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
+        moneyField.setEditable( false );
+        moneyField.setFont( moneyField.getFont().deriveFont( Font.BOLD ) );
     }
 
-    public void setMoney( Money amount )
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public JTextComponent getView()
     {
-        money = amount;
-
-        setText( createAmountFieldString( amount ) );
-        invalidate();
+        return moneyField;
     }
 
-    public Money getMoney()
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Money getData()
     {
         return money;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
-    public Color getBackground()
+    public void setData( Money money )
     {
-        if( money != null && money.isNegative() )
+        this.money = money;
+
+        if( money.isNegative() )
         {
-            return negativeColor;
+            moneyField.setBackground( negativeColor );
+        }
+        else
+        {
+            moneyField.setBackground( positiveColor );
         }
 
-        return super.getBackground();
-    }
-
-    private static String createAmountFieldString( Money amount )
-    {
-        return "<html><b>" + amount.toString() + "</b></html>";
+        moneyField.setText( money.toString() );
+        moneyField.validate();
+        moneyField.setMinimumSize( moneyField.getPreferredSize() );
     }
 }

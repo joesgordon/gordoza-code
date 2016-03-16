@@ -1,43 +1,32 @@
 package org.budgey.data;
 
 import java.io.File;
-import java.io.IOException;
 
-import org.jutils.io.XStreamUtils;
+import org.jutils.utils.UniqueMaxStack;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class BudgeyOptions
 {
-    public File lastOpenDir;
-    public File lastSaveDir;
+    /**  */
+    public final UniqueMaxStack<File> lastBudgets;
 
-    private transient File optionsFile;
-
-    public static BudgeyOptions read( File file )
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public BudgeyOptions()
     {
-        BudgeyOptions options;
-
-        try
-        {
-            options = ( BudgeyOptions )XStreamUtils.readObjectXStream( file );
-        }
-        catch( IOException e )
-        {
-            options = new BudgeyOptions();
-        }
-        options.optionsFile = file;
-
-        return options;
+        this.lastBudgets = new UniqueMaxStack<>( 20 );
     }
 
-    public void write()
+    /***************************************************************************
+     * @param options
+     **************************************************************************/
+    public BudgeyOptions( BudgeyOptions options )
     {
-        try
-        {
-            XStreamUtils.writeObjectXStream( this, optionsFile );
-        }
-        catch( IOException e )
-        {
-            // IOException? Meh.
-        }
+        this();
+
+        lastBudgets.pushAll( options.lastBudgets );
     }
 }

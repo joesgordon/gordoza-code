@@ -7,11 +7,12 @@ import javax.swing.*;
 
 import org.budgey.BudgeyIconConstants;
 import org.jutils.SwingUtils;
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public final class ItemView
+public final class ItemView implements IView<Component>
 {
     /**  */
     private final JPanel panel;
@@ -40,14 +41,6 @@ public final class ItemView
             new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
                 GridBagConstraints.WEST, GridBagConstraints.BOTH,
                 new Insets( 0, 0, 0, 0 ), 0, 0 ) );
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public Component getPanel()
-    {
-        return panel;
     }
 
     /***************************************************************************
@@ -113,5 +106,14 @@ public final class ItemView
     public void setCancelVisible( boolean visible )
     {
         cancelButton.setVisible( visible );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Component getView()
+    {
+        return panel;
     }
 }

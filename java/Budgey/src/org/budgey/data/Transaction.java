@@ -6,7 +6,7 @@ public class Transaction
 {
     private long date;
     private String secondParty;
-    private String tag;
+    private String tags;
     private Money amount;
     private transient Money runningBalance;
 
@@ -14,7 +14,7 @@ public class Transaction
     {
         date = new Date().getTime();
         secondParty = "";
-        tag = "";
+        tags = "";
         amount = new Money( 0 );
         runningBalance = new Money( 0 );
     }
@@ -52,7 +52,7 @@ public class Transaction
 
     public String getTag()
     {
-        return tag;
+        return tags;
     }
 
     public void setAmount( Money m )

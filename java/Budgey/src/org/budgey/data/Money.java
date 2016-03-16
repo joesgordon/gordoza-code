@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 public class Money
 {
     /**  */
-    private long cents;
+    private final long cents;
 
     /***************************************************************************
      * @param cents

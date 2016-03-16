@@ -1,76 +1,81 @@
 package org.budgey.ui;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.awt.Container;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.io.*;
 
 import javax.swing.*;
 
 import org.budgey.BudgeyIconConstants;
+import org.budgey.BudgeyMain;
 import org.budgey.data.Budget;
 import org.budgey.data.BudgeyOptions;
-import org.budgey.io.BudgetSerializer;
 import org.jutils.IconConstants;
-import org.jutils.io.FileOpener;
-import org.jutils.io.FileOpener.LastDirectorySaver;
+import org.jutils.SwingUtils;
+import org.jutils.io.OptionsSerializer;
+import org.jutils.io.XStreamUtils;
 import org.jutils.ui.JGoodiesToolBar;
-import org.jutils.ui.StatusBarPanel;
+import org.jutils.ui.StandardFrameView;
+import org.jutils.ui.event.*;
+import org.jutils.ui.model.IDataView;
+import org.jutils.ui.model.IView;
+
+import com.thoughtworks.xstream.XStreamException;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class BudgeyFrame extends JFrame
+public class BudgeyFrame implements IView<JFrame>
 {
-    private BudgeyPanel budgeyPanel;
-    private BudgeyOptions options;
-    private FileOpener<Budget> opener;
+    /**  */
+    private final StandardFrameView frameView;
+    /**  */
+    private final IDataView<Budget> budgeyPanel;
+    /**  */
+    private final OptionsSerializer<BudgeyOptions> options;
 
-    public BudgeyFrame( BudgeyOptions options )
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public BudgeyFrame()
     {
         super();
 
-        this.options = options;
-        this.opener = new FileOpener<Budget>( new BudgetSerializer(),
-            new OptionsSaver(), "bgt" );
+        this.frameView = new StandardFrameView();
+        this.budgeyPanel = new BudgeyView();
+        this.options = BudgeyMain.getOptions();
 
-        setContentPane( createContentPane() );
-        setIconImages( BudgeyIconConstants.getWalletIcons() );
+        frameView.setContent( ( Container )budgeyPanel.getView() );
+        frameView.setToolbar( createToolBar() );
+
+        JFrame frame = frameView.getView();
+
+        frame.setSize( 640, 480 );
+        frame.setTitle( "Budgey" );
+        setBudget( new Budget() );
+
+        frame.setIconImages( BudgeyIconConstants.getWalletIcons() );
     }
 
-    private Container createContentPane()
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public JFrame getView()
     {
-        JPanel panel = new JPanel( new BorderLayout() );
-        budgeyPanel = new BudgeyPanel();
-
-        panel.add( createToolBar(), BorderLayout.NORTH );
-        panel.add( budgeyPanel, BorderLayout.CENTER );
-        panel.add( new StatusBarPanel().getView(), BorderLayout.SOUTH );
-
-        return panel;
+        return frameView.getView();
     }
 
-    private Component createToolBar()
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private JToolBar createToolBar()
     {
-        JGoodiesToolBar toolbar = new JGoodiesToolBar();
+        JToolBar toolbar = new JGoodiesToolBar();
 
-        JButton newButton = new JButton(
-            IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
-        newButton.setFocusable( false );
-        newButton.addActionListener( new NewButtonListener() );
-        toolbar.add( newButton );
-
-        JButton openButton = new JButton(
-            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
-        openButton.setFocusable( false );
-        openButton.addActionListener( new OpenButtonListener() );
-        toolbar.add( openButton );
-
-        JButton saveButton = new JButton(
-            IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
-        saveButton.setFocusable( false );
-        saveButton.addActionListener( new SaveButtonListener() );
-        toolbar.add( saveButton );
+        SwingUtils.addActionToToolbar( toolbar, createNewAction() );
+        SwingUtils.addActionToToolbar( toolbar, createOpenAction() );
+        SwingUtils.addActionToToolbar( toolbar, createSaveAction() );
 
         toolbar.addSeparator();
 
@@ -91,78 +96,83 @@ public class BudgeyFrame extends JFrame
     }
 
     /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createNewAction()
+    {
+        Icon icon = IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 );
+        ActionListener listener = ( e ) -> setBudget( new Budget() );
+        return new ActionAdapter( listener, "New Budget", icon );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createOpenAction()
+    {
+        Icon icon = IconConstants.loader.getIcon(
+            IconConstants.OPEN_FOLDER_16 );
+        ActionListener listener = new FileChooserListener( getView(),
+            "Open Budget", new OpenButtonListener(), false );
+        return new ActionAdapter( listener, "Open Budget", icon );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createSaveAction()
+    {
+        Icon icon = IconConstants.loader.getIcon( IconConstants.SAVE_16 );
+        ActionListener listener = new FileChooserListener( getView(),
+            "Save Budget", new SaveButtonListener(), true );
+        return new ActionAdapter( listener, "Save Budget", icon );
+    }
+
+    /***************************************************************************
      * @param budget
      **************************************************************************/
     public void setBudget( Budget budget )
     {
-        budgeyPanel.setBudget( budget );
+        budgeyPanel.setData( budget );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public void showAccountConfigPanel()
-    {
-        budgeyPanel.showAccountConfigScreen();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private class OptionsSaver implements LastDirectorySaver
+    private class OpenButtonListener implements IFileSelectionListener
     {
         @Override
-        public void saveLastOpenDir( File file )
+        public File getDefaultFile()
         {
-            options.lastOpenDir = file;
-            options.write();
+            return options.getOptions().lastBudgets.first();
         }
 
         @Override
-        public File getLastOpenDir()
+        public void filesChosen( File [] files )
         {
-            return options.lastOpenDir;
-        }
+            File file = files[0];
 
-        @Override
-        public void saveLastSaveDir( File file )
-        {
-            options.lastSaveDir = file;
-            options.write();
-        }
+            options.getOptions().lastBudgets.push( file );
 
-        @Override
-        public File getLastSaveDir()
-        {
-            return options.lastSaveDir;
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private class NewButtonListener implements ActionListener
-    {
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            budgeyPanel.setBudget( new Budget() );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private class OpenButtonListener implements ActionListener
-    {
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            Budget b = opener.open( BudgeyFrame.this );
-
-            if( b != null )
+            try
             {
-                budgeyPanel.setBudget( b );
+                Budget b = XStreamUtils.readObjectXStream( file );
+                budgeyPanel.setData( b );
+            }
+            catch( XStreamException ex )
+            {
+                JOptionPane.showMessageDialog( getView(), ex.getMessage(),
+                    "Data Error", JOptionPane.ERROR_MESSAGE );
+            }
+            catch( FileNotFoundException ex )
+            {
+                JOptionPane.showMessageDialog( getView(), ex.getMessage(),
+                    "File Not Found Error", JOptionPane.ERROR_MESSAGE );
+            }
+            catch( IOException ex )
+            {
+                JOptionPane.showMessageDialog( getView(), ex.getMessage(),
+                    "I/O Error", JOptionPane.ERROR_MESSAGE );
             }
         }
     }
@@ -170,12 +180,35 @@ public class BudgeyFrame extends JFrame
     /***************************************************************************
      * 
      **************************************************************************/
-    private class SaveButtonListener implements ActionListener
+    private class SaveButtonListener implements IFileSelectionListener
     {
         @Override
-        public void actionPerformed( ActionEvent e )
+        public File getDefaultFile()
         {
-            opener.save( budgeyPanel.getBudget(), BudgeyFrame.this );
+            return options.getOptions().lastBudgets.first();
+        }
+
+        @Override
+        public void filesChosen( File [] files )
+        {
+            File file = files[0];
+
+            options.getOptions().lastBudgets.push( file );
+
+            try
+            {
+                XStreamUtils.writeObjectXStream( budgeyPanel.getData(), file );
+            }
+            catch( XStreamException ex )
+            {
+                JOptionPane.showMessageDialog( getView(), ex.getMessage(),
+                    "Data Error", JOptionPane.ERROR_MESSAGE );
+            }
+            catch( IOException ex )
+            {
+                JOptionPane.showMessageDialog( getView(), ex.getMessage(),
+                    "I/O Error", JOptionPane.ERROR_MESSAGE );
+            }
         }
     }
 }
