@@ -1,6 +1,7 @@
 package org.jutils.ui.hex;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +50,16 @@ public class HexBytesField implements IDataFormField<byte []>
 
         comboField.setEditable( true );
         comboField.setEditor( new SyncComboEditor( bytesField ) );
+
+        Dimension dim;
+
+        dim = comboField.getMinimumSize();
+        dim.width = 25;
+        comboField.setMinimumSize( dim );
+
+        dim = comboField.getPreferredSize();
+        dim.width = 50;
+        comboField.setPreferredSize( dim );
     }
 
     /***************************************************************************

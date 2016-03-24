@@ -1,5 +1,6 @@
 package chatterbox.ui;
 
+import java.awt.Dialog.ModalityType;
 import java.awt.event.*;
 import java.io.IOException;
 
@@ -96,7 +97,8 @@ public class ChatFrameView implements IView<JFrame>
     {
         ChatterConfigView configView = new ChatterConfigView();
         OkDialogView dialogView = new OkDialogView( getView(),
-            configView.getView(), OkDialogButtons.OK_CANCEL );
+            configView.getView(), ModalityType.DOCUMENT_MODAL,
+            OkDialogButtons.OK_CANCEL );
 
         ChatterConfig config = ChatterboxConstants.getOptions().getOptions();
 

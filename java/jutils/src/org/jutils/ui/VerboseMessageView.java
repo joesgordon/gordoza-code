@@ -1,6 +1,7 @@
 package org.jutils.ui;
 
 import java.awt.*;
+import java.awt.Dialog.ModalityType;
 
 import javax.swing.*;
 
@@ -30,10 +31,8 @@ public class VerboseMessageView implements IView<JPanel>
 
         view = createView();
 
-        JTextField textField = new JTextField();
-
-        textField.setEditable( false );
-        verboseMessageField.setBackground( textField.getBackground() );
+        verboseMessageField.setBackground(
+            UIManager.getColor( "TextField.inactiveBackground" ) );
     }
 
     /***************************************************************************
@@ -93,7 +92,18 @@ public class VerboseMessageView implements IView<JPanel>
      **************************************************************************/
     public void show( Component parent, String title )
     {
-        OkDialogView dialogView = new OkDialogView( parent, getView() );
+        show( parent, title, ModalityType.DOCUMENT_MODAL );
+    }
+
+    /***************************************************************************
+     * @param parent
+     * @param title
+     * @param modality
+     **************************************************************************/
+    public void show( Component parent, String title, ModalityType modality )
+    {
+        OkDialogView dialogView = new OkDialogView( parent, getView(),
+            modality );
         JDialog dialog = dialogView.getView();
 
         dialog.setTitle( title );

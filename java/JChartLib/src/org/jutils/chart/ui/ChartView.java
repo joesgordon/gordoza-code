@@ -749,7 +749,8 @@ public class ChartView implements IView<JComponent>
             saveView = new SaveView();
             SaveOptions options = new SaveOptions();
             OkDialogView okView = new OkDialogView( view.getView(),
-                saveView.getView(), OkDialogButtons.OK_CANCEL );
+                saveView.getView(), ModalityType.DOCUMENT_MODAL,
+                OkDialogButtons.OK_CANCEL );
             JDialog dialog = okView.getView();
 
             options.file = getDefaultFile();

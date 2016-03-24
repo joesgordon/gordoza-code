@@ -694,4 +694,35 @@ public final class Utils
          **********************************************************************/
         public int compare( K thisKey, T thatItem );
     }
+
+    /***************************************************************************
+     * @param text
+     * @return
+     **************************************************************************/
+    public static String toTitleCase( String text )
+    {
+        StringBuilder titleCase = new StringBuilder();
+        boolean nextTitleCase = true;
+
+        for( char c : text.toCharArray() )
+        {
+            if( Character.isSpaceChar( c ) )
+            {
+                nextTitleCase = true;
+            }
+            else if( nextTitleCase )
+            {
+                c = Character.toTitleCase( c );
+                nextTitleCase = false;
+            }
+            else
+            {
+                c = Character.toLowerCase( c );
+            }
+
+            titleCase.append( c );
+        }
+
+        return titleCase.toString();
+    }
 }

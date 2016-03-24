@@ -48,7 +48,7 @@ public class MultiTaskViewApp implements IApplication
         view.setPercent( 500 / 120 );
 
         OkDialogView okView = new OkDialogView( null, view.getView(),
-            ModalityType.APPLICATION_MODAL, OkDialogButtons.OK_CANCEL );
+            ModalityType.DOCUMENT_MODAL, OkDialogButtons.OK_CANCEL );
         JDialog dialog = okView.getView();
 
         dialog.setTitle( "Decoding 2849 parameters" );

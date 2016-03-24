@@ -55,16 +55,16 @@ public class BitArray implements Iterable<Boolean>
     }
 
     /***************************************************************************
-     * @param str
+     * @param binaryString
      * @throws NumberFormatException
      **************************************************************************/
-    public void set( String str ) throws NumberFormatException
+    public void set( String binaryString ) throws NumberFormatException
     {
         bits.clear();
 
-        for( int i = 0; i < str.length(); i++ )
+        for( int i = 0; i < binaryString.length(); i++ )
         {
-            char c = str.charAt( i );
+            char c = binaryString.charAt( i );
 
             if( c == '0' )
             {
@@ -191,13 +191,28 @@ public class BitArray implements Iterable<Boolean>
         return new String( str );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public String toHexLeft()
     {
         return HexUtils.toHexString( getLeftAligned() );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public String toHexRight()
     {
         return HexUtils.toHexString( getRightAligned() );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public String getDescription()
+    {
+        return String.format( "%s (<- = 0x%s) (-> = 0x%s)", toString(),
+            toHexLeft(), toHexRight() );
     }
 }

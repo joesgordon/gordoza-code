@@ -1,6 +1,7 @@
 package org.jutils.chart.ui;
 
 import java.awt.*;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -212,7 +213,7 @@ public class TextLabelField implements IDataFormField<TextLabel>
         {
             fontView = new FontView();
             OkDialogView okView = new OkDialogView( field.getField(),
-                fontView.getView() );
+                fontView.getView(), ModalityType.DOCUMENT_MODAL );
             JDialog dialog = okView.getView();
 
             fontView.setData( field.label.font );
