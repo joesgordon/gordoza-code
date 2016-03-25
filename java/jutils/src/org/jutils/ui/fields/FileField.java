@@ -25,6 +25,8 @@ public class FileField implements IDataView<File>, IValidationField
     private final ValidationTextField fileField;
     /**  */
     private final ItemActionList<File> changeListeners;
+    /**  */
+    private final FileChooserListener fileListener;
 
     /***************************************************************************
      * Creates a File view with an {@link ExistenceType} of FILE_ONLY, required,
@@ -83,11 +85,31 @@ public class FileField implements IDataView<File>, IValidationField
         this.changeListeners = new ItemActionList<>();
 
         this.fileField = new ValidationTextField();
+        this.fileListener = createFileListener( existence, isSave );
         this.view = createView( existence, required, isSave, showButton );
 
         fileField.getView().setColumns( 20 );
 
         fileField.setText( "" );
+    }
+
+    /***************************************************************************
+     * @param existence
+     * @param isSave
+     * @return
+     **************************************************************************/
+    private FileChooserListener createFileListener( ExistenceType existence,
+        boolean isSave )
+    {
+        FileChooserListener fcl = null;
+
+        if( existence != ExistenceType.DIRECTORY_ONLY )
+        {
+            fcl = new FileChooserListener( fileField.getView(), "Choose File",
+                new FileBrowseListener( this ), isSave );
+        }
+
+        return fcl;
     }
 
     /***************************************************************************
@@ -112,8 +134,7 @@ public class FileField implements IDataView<File>, IValidationField
         }
         else
         {
-            browseListener = new FileChooserListener( panel, "Choose File",
-                new FileBrowseListener( this ), isSave );
+            browseListener = fileListener;
         }
 
         ITextValidator validator = new DataTextValidator<File>(
@@ -260,6 +281,21 @@ public class FileField implements IDataView<File>, IValidationField
     public void addChangeListener( ItemActionListener<File> l )
     {
         changeListeners.addListener( l );
+    }
+
+    /***************************************************************************
+     * @param description
+     * @param extensions
+     **************************************************************************/
+    public void addExtension( String description, String... extensions )
+    {
+        if( fileListener == null )
+        {
+            throw new IllegalStateException(
+                "Cannot add extensions to a chooser that is directory only" );
+        }
+
+        fileListener.addExtension( description, extensions );
     }
 
     /***************************************************************************
