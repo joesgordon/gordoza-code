@@ -1,12 +1,14 @@
 package org.jutils.ui.fields;
 
 import java.awt.*;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.*;
 
-import org.jutils.IconConstants;
+import org.jutils.*;
+import org.jutils.io.IOUtils;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.JTextFieldFilesListener;
 import org.jutils.ui.event.updater.IUpdater;
@@ -23,6 +25,8 @@ public class FileField implements IDataView<File>, IValidationField
     private final JPanel view;
     /**  */
     private final ValidationTextField fileField;
+    /**  */
+    private final JPopupMenu openMenu;
     /**  */
     private final ItemActionList<File> changeListeners;
     /**  */
@@ -86,11 +90,121 @@ public class FileField implements IDataView<File>, IValidationField
 
         this.fileField = new ValidationTextField();
         this.fileListener = createFileListener( existence, isSave );
+        this.openMenu = createMenu();
         this.view = createView( existence, required, isSave, showButton );
 
         fileField.getView().setColumns( 20 );
 
         fileField.setText( "" );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private JPopupMenu createMenu()
+    {
+        JPopupMenu menu = new JPopupMenu();
+        JMenuItem item;
+
+        item = new JMenuItem( createOpenPathAction() );
+        menu.add( item );
+
+        item = new JMenuItem( createOpenParentAction() );
+        menu.add( item );
+
+        return menu;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createOpenParentAction()
+    {
+        Icon icon = IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 );
+
+        return new ActionAdapter( ( e ) -> openParent(), "Open Parent", icon );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createOpenPathAction()
+    {
+        Icon icon = IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 );
+
+        return new ActionAdapter( ( e ) -> openPath(), "Open Path", icon );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private void openPath()
+    {
+        File file = getData();
+        if( file != null )
+        {
+            openPath( file );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private void openParent()
+    {
+        File file = getData();
+        if( file != null )
+        {
+            openPath( file.getParentFile() );
+        }
+    }
+
+    /***************************************************************************
+     * @param file
+     **************************************************************************/
+    private void openPath( File file )
+    {
+        if( !file.exists() )
+        {
+            String [] choices = new String[] { "Open Parent", "Cancel" };
+            String choice = SwingUtils.showConfirmMessage( getView(),
+                "File does not exist. Open existing parent?",
+                "File does not exist", choices, choices[0] );
+
+            if( choices[0].equals( choice ) )
+            {
+                File parent = IOUtils.getExistingDir( file.getAbsolutePath() );
+
+                if( parent == null )
+                {
+                    JOptionPane.showMessageDialog( getView(),
+                        "No parent exists for file:" + Utils.NEW_LINE +
+                            file.getAbsolutePath(),
+                        "Error Opening File", JOptionPane.ERROR_MESSAGE );
+                    return;
+                }
+                else
+                {
+                    file = parent;
+                }
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        try
+        {
+            Desktop.getDesktop().open( file );
+        }
+        catch( IOException ex )
+        {
+            JOptionPane.showMessageDialog( getView(),
+                "Could not open file externally:" + Utils.NEW_LINE +
+                    file.getAbsolutePath(),
+                "Error Opening File", JOptionPane.ERROR_MESSAGE );
+        }
     }
 
     /***************************************************************************
@@ -160,6 +274,8 @@ public class FileField implements IDataView<File>, IValidationField
                 GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets( 0, 4, 0, 0 ), 0, 0 );
             panel.add( button, constraints );
+
+            button.addMouseListener( new MenuListener( this ) );
         }
 
         return panel;
@@ -348,6 +464,29 @@ public class FileField implements IDataView<File>, IValidationField
             // LogUtils.printDebug( "File changed to " + file.getAbsolutePath()
             // );
             view.changeListeners.fireListeners( view, file );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class MenuListener extends MouseAdapter
+    {
+        private final FileField field;
+
+        public MenuListener( FileField field )
+        {
+            this.field = field;
+        }
+
+        @Override
+        public void mouseClicked( MouseEvent e )
+        {
+            if( SwingUtilities.isRightMouseButton( e ) &&
+                e.getClickCount() == 1 )
+            {
+                field.openMenu.show( e.getComponent(), e.getX(), e.getY() );
+            }
         }
     }
 }

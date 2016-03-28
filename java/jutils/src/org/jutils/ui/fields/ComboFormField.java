@@ -140,6 +140,22 @@ public final class ComboFormField<T> implements IDataFormField<T>
     }
 
     /***************************************************************************
+     * @param r
+     **************************************************************************/
+    public void setRenderer( ListCellRenderer<Object> r )
+    {
+        field.setRenderer( r );
+    }
+
+    /***************************************************************************
+     * @param items
+     **************************************************************************/
+    public void setValues( List<T> items )
+    {
+        field.setItems( items );
+    }
+
+    /***************************************************************************
      * @param editable
      **************************************************************************/
     public void setUserEditable( boolean editable )
@@ -167,10 +183,5 @@ public final class ComboFormField<T> implements IDataFormField<T>
                 field.updater.update( field.getValue() );
             }
         }
-    }
-
-    public void setRenderer( ListCellRenderer<Object> r )
-    {
-        field.setRenderer( r );
     }
 }
