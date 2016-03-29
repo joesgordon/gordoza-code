@@ -7,7 +7,7 @@ import org.jutils.Utils;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class FastPrintStream implements IPrintStream, Closeable
+public class FastPrintStream implements IPrintStream
 {
     /**  */
     private final BufferedWriter writer;

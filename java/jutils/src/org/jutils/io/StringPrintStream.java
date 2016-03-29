@@ -89,4 +89,10 @@ public class StringPrintStream implements IPrintStream
     {
         buffer.append( chars );
     }
+
+    @Override
+    public void close()
+    {
+        buffer.setLength( 0 );
+    }
 }

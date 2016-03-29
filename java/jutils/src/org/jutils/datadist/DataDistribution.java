@@ -26,14 +26,19 @@ public class DataDistribution
      **************************************************************************/
     public String getDescription()
     {
-        StringPrintStream stream = new StringPrintStream();
+        String desc = null;
 
-        for( int i = 0; i < records.size(); i++ )
+        try( StringPrintStream stream = new StringPrintStream() )
         {
-            DataRecord dr = records.get( i );
-            stream.println( "#%03d %08X: %d", i + 1, dr.data, dr.count );
+            for( int i = 0; i < records.size(); i++ )
+            {
+                DataRecord dr = records.get( i );
+                stream.println( "#%03d %08X: %d", i + 1, dr.data, dr.count );
+            }
+
+            desc = stream.toString();
         }
 
-        return stream.toString();
+        return desc;
     }
 }

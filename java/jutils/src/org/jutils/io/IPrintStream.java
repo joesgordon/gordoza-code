@@ -1,9 +1,11 @@
 package org.jutils.io;
 
+import java.io.Closeable;
+
 /*******************************************************************************
  * 
  ******************************************************************************/
-public interface IPrintStream
+public interface IPrintStream extends Closeable
 {
     /***************************************************************************
      * @param str
