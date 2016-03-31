@@ -51,6 +51,7 @@ public final class TaskStopManager implements ITaskStopManager
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public void removeFinishedListener( ItemActionListener<Boolean> l )
     {
         finishedListeners.removeListener( l );

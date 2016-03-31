@@ -3,16 +3,18 @@ package org.jutils.concurrent;
 import java.util.concurrent.*;
 
 /*******************************************************************************
- * 
+ * Defines a thread pool that reports errors that occur.
  ******************************************************************************/
 public class SafeExecutorService extends ThreadPoolExecutor
 {
-    /**  */
+    /** The callbacks to run upon completion of the task. */
     private final IFinishedHandler finishedHandler;
 
     /***************************************************************************
-     * @param numThreads
-     * @param finishedHandler
+     * Creates a new thread pool with the provided number of threads and
+     * finished handler.
+     * @param numThreads the number of threads to use in the thread pool.
+     * @param finishedHandler the callbacks to run upon completion of the task.
      **************************************************************************/
     public SafeExecutorService( int numThreads,
         IFinishedHandler finishedHandler )
@@ -45,7 +47,7 @@ public class SafeExecutorService extends ThreadPoolExecutor
                     future.get();
                 }
 
-                finishedHandler.complete();
+                finishedHandler.signalComplete();
             }
             catch( CancellationException ce )
             {
@@ -63,7 +65,7 @@ public class SafeExecutorService extends ThreadPoolExecutor
 
         if( t != null )
         {
-            finishedHandler.handleError( t );
+            finishedHandler.signalError( t );
         }
     }
 }

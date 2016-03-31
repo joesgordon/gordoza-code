@@ -6,15 +6,16 @@ import java.util.List;
 import org.jutils.io.StringPrintStream;
 
 /*******************************************************************************
- * 
+ * Defines an object to store the distribution of data found.
  ******************************************************************************/
 public class DataDistribution
 {
-    /**  */
+    /** The most frequent data found. */
     public final List<DataRecord> records;
 
     /***************************************************************************
-     * @param size
+     * Creates a data distribution with an initial capacity.
+     * @param size the initial capacity of the records list.
      **************************************************************************/
     public DataDistribution( int size )
     {
@@ -22,7 +23,8 @@ public class DataDistribution
     }
 
     /***************************************************************************
-     * @return
+     * Builds a multi-line description of the distribution for logging/viewing.
+     * @return the multi-line description.
      **************************************************************************/
     public String getDescription()
     {

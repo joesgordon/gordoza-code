@@ -46,7 +46,7 @@ public class SearchThread implements IStoppableTask
     {
         FileContentsSearcher contentsSearcher = new FileContentsSearcher(
             params.getContentsPattern(), searchHandler );
-        Consumer<SearchRecord> contentsConsumer = new Consumer<SearchRecord>(
+        ConsumerTask<SearchRecord> contentsConsumer = new ConsumerTask<SearchRecord>(
             contentsSearcher, finalizer );
         Stoppable searcher = new Stoppable( contentsConsumer );
         Thread contentsSearcherThread = new Thread( searcher );
@@ -72,7 +72,6 @@ public class SearchThread implements IStoppableTask
 
         while( stopper.continueProcessing() )
         {
-
             try
             {
                 searcher.waitFor();
@@ -81,7 +80,6 @@ public class SearchThread implements IStoppableTask
             {
                 ;
             }
-
         }
 
         // contentsSearcherThread.interrupt();
@@ -180,7 +178,7 @@ public class SearchThread implements IStoppableTask
     /***********************************************************************
      * @param file
      **********************************************************************/
-    private void findFiles( File file, Consumer<SearchRecord> contentsConsumer,
+    private void findFiles( File file, ConsumerTask<SearchRecord> contentsConsumer,
         ITaskStopManager stopper )
     {
         boolean isDir = file.isDirectory();
@@ -247,11 +245,11 @@ public class SearchThread implements IStoppableTask
     {
         private final Stoppable searcher;
         /**  */
-        private final Consumer<SearchRecord> contentsConsumer;
+        private final ConsumerTask<SearchRecord> contentsConsumer;
         /**  */
         private final Thread contentsSearcherThread;
 
-        public StopListener( Consumer<SearchRecord> contentsConsumer,
+        public StopListener( ConsumerTask<SearchRecord> contentsConsumer,
             Stoppable searcher, Thread contentsSearcherThread )
         {
             this.contentsConsumer = contentsConsumer;

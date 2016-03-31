@@ -1,5 +1,9 @@
 package org.jutils.concurrent;
 
+/*******************************************************************************
+ * Defines a method for serially consuming items.
+ * @param <T> the type of item to be consumed.
+ ******************************************************************************/
 public interface IConsumer<T>
 {
     /***************************************************************************

@@ -1,24 +1,26 @@
 package org.jutils;
 
 /*******************************************************************************
- * 
+ * Defines an exception for validation errors.
  ******************************************************************************/
 public class ValidationException extends Exception
 {
     /***************************************************************************
-     * @param string
+     * Creates a new exception with the provided message.
+     * @param message the reason for the error.
      **************************************************************************/
-    public ValidationException( String string )
+    public ValidationException( String message )
     {
-        super( string );
+        super( message );
     }
 
     /***************************************************************************
-     * @param string
-     * @param cause
+     * Creates a new exception with the provided message and cause.
+     * @param message the reason for the error.
+     * @param cause the exception to be encapsulated.
      **************************************************************************/
-    public ValidationException( String string, Throwable cause )
+    public ValidationException( String message, Throwable cause )
     {
-        super( string, cause );
+        super( message, cause );
     }
 }

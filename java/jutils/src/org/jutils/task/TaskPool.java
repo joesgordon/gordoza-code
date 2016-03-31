@@ -180,7 +180,7 @@ public class TaskPool
         }
 
         @Override
-        public void complete()
+        public void signalComplete()
         {
             if( !pool.pool.isShutdown() )
             {
@@ -191,7 +191,7 @@ public class TaskPool
         }
 
         @Override
-        public void handleError( Throwable t )
+        public void signalError( Throwable t )
         {
             pool.tasker.signalError(
                 new TaskError( "An unrecoverable error occured", t ) );

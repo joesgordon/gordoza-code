@@ -6,23 +6,44 @@ import java.util.Map.Entry;
 import org.jutils.io.ByteUtils;
 
 /*******************************************************************************
- * 
+ * Creates an object to build data distributions over large amounts of data. In
+ * order to reduce memory overhead, this class uses a naive algorithm that
+ * assumes that data is uniformly distributed throughout the file. Data is read
+ * as overlapping integers read from each byte index.
  ******************************************************************************/
 public class DistributionBuilder
 {
-    /**  */
+    /**
+     * The latest findings limited to the user provided count after each data
+     * addition.
+     */
     private final Map<Integer, Long> findings;
+    /** The maximum number of records to retain after each addition. */
+    private final int recordLimit;
 
     /***************************************************************************
-     * 
+     * Creates a new builder limited to 100 records.
      **************************************************************************/
     public DistributionBuilder()
     {
-        this.findings = new HashMap<>();
+        this( 100 );
     }
 
     /***************************************************************************
-     * @param buffer
+     * Creates a new builder limited to the provided number of records.
+     * @param recordLimit the maximum number of records to retain after each
+     * addition.
+     **************************************************************************/
+    public DistributionBuilder( int recordLimit )
+    {
+        this.findings = new HashMap<>( recordLimit );
+        this.recordLimit = recordLimit;
+    }
+
+    /***************************************************************************
+     * Adds the data in the provided buffer to the distribution and limits the
+     * number of records to the user provided value.
+     * @param buffer the bytes to be added.
      **************************************************************************/
     public void addData( byte [] buffer )
     {
@@ -30,9 +51,11 @@ public class DistributionBuilder
     }
 
     /***************************************************************************
-     * @param buffer
-     * @param index
-     * @param length
+     * Adds the data in the provided buffer to the distribution and limits the
+     * number of records to the user provided value.
+     * @param buffer the bytes to be added.
+     * @param index the beginning index to start reading data.
+     * @param length the number of bytes to be read.
      **************************************************************************/
     public void addData( byte [] buffer, int index, int length )
     {
@@ -59,7 +82,8 @@ public class DistributionBuilder
     }
 
     /***************************************************************************
-     * @param value
+     * Adds the integer read to the distribution.
+     * @param value the data to be added.
      **************************************************************************/
     public void addValue( int value )
     {
@@ -69,7 +93,9 @@ public class DistributionBuilder
     }
 
     /***************************************************************************
-     * @return
+     * Builds a distribution of cataloged data sorted by count and limited to
+     * the user provided number of records..
+     * @return the distribution built.
      **************************************************************************/
     public DataDistribution buildDistribution()
     {
@@ -87,16 +113,16 @@ public class DistributionBuilder
         // LogUtils.printInfo( "\t\tSorting" );
         Collections.sort( dd.records, new CountComparator() );
 
-        if( dd.records.size() > 100 )
+        if( dd.records.size() > recordLimit )
         {
-            dd.records.subList( 100, dd.records.size() ).clear();
+            dd.records.subList( recordLimit, dd.records.size() ).clear();
         }
 
         return dd;
     }
 
     /***************************************************************************
-     * 
+     * {@link Compartor} used to sort {@link DataRecord}s.
      **************************************************************************/
     private static class CountComparator implements Comparator<DataRecord>
     {
