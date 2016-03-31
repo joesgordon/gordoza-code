@@ -149,9 +149,11 @@ public final class Utils
     }
 
     /***************************************************************************
-     * Splits a string on either a space or a tab character.
-     * @param str
-     * @return
+     * Splits the provided string into multiple fields delimited by spaces,
+     * retaining empty fields as empty strings.
+     * @param str the delimited string of items.
+     * @param delimeters the list of characters that could separate each item.
+     * @return the list of items found.
      **************************************************************************/
     public static List<String> split( String str )
     {
@@ -159,8 +161,11 @@ public final class Utils
     }
 
     /***************************************************************************
-     * @param str
-     * @return
+     * Splits the provided string into multiple fields delimited by the provided
+     * list of characters, retaining empty fields as empty strings.
+     * @param str the delimited string of items.
+     * @param delimeters the list of characters that could separate each item.
+     * @return the list of items found.
      **************************************************************************/
     public static List<String> split( String str, char... delimeters )
     {
@@ -168,8 +173,10 @@ public final class Utils
     }
 
     /***************************************************************************
-     * @param str
-     * @return
+     * Splits the provided string into multiple fields delimited by spaces,
+     * skipping empty fields.
+     * @param str the delimited string of items.
+     * @return the list of items found.
      **************************************************************************/
     public static List<String> splitSkip( String str )
     {
@@ -177,8 +184,11 @@ public final class Utils
     }
 
     /***************************************************************************
-     * @param str
-     * @return
+     * Splits the provided string into multiple fields delimited by the provided
+     * list of characters, skipping empty fields.
+     * @param str the delimited string of items.
+     * @param delimeters the list of characters that could separate each item.
+     * @return the list of items found.
      **************************************************************************/
     public static List<String> splitSkip( String str, char... delimeters )
     {
@@ -186,9 +196,13 @@ public final class Utils
     }
 
     /***************************************************************************
-     * @param str
-     * @param delimeters
-     * @return
+     * Splits the provided string into multiple fields delimited by the provided
+     * list of characters, skipping empty fields if indicated.
+     * @param str the delimited string of items.
+     * @param skip skips empty fields when {@code true}; returns an empty string
+     * for each empty field otherwise.
+     * @param delimeters the list of characters that could separate each item.
+     * @return the list of items found.
      **************************************************************************/
     public static List<String> splitSkip( String str, boolean skip,
         char... delimeters )
@@ -246,9 +260,11 @@ public final class Utils
     }
 
     /***************************************************************************
-     * @param items
-     * @param delimiter
-     * @return
+     * Calls {@link Object#toString()} for each object in the array and places
+     * the provided delimiter between each.
+     * @param items the objects to convert to a string.
+     * @param delimiter the characters to place between the items.
+     * @return the string of items.
      **************************************************************************/
     public static String arrayToString( Object [] items, String delimiter )
     {
@@ -266,8 +282,8 @@ public final class Utils
     }
 
     /***************************************************************************
-     * Performs the same operations as {@link #arrayToString(Object[])} but with
-     * variable argument syntax.
+     * Calls {@link Object#toString()} for each item and places a comma between
+     * each.
      * @param items the objects to convert to a string.
      * @return the comma separated string of items.
      **************************************************************************/
@@ -277,8 +293,10 @@ public final class Utils
     }
 
     /***************************************************************************
-     * @param items
-     * @return
+     * Calls {@link Object#toString()} for each object in the array and places
+     * the provided delimiter between each.
+     * @param items the items to be concatenated.
+     * @return the comma separated string of items.
      **************************************************************************/
     public static String itemsToString( Object... items )
     {
@@ -286,9 +304,11 @@ public final class Utils
     }
 
     /***************************************************************************
-     * @param delimiter
-     * @param items
-     * @return
+     * Calls {@link Object#toString()} for each object in the array and places
+     * the provided delimiter between each.
+     * @param delimiter the characters to place between the items.
+     * @param items the items to be concatenated.
+     * @return the string of items.
      **************************************************************************/
     public static String itemsToString( String delimiter, Object... items )
     {
@@ -296,8 +316,8 @@ public final class Utils
     }
 
     /***************************************************************************
-     * Performs the same operations as {@link #arrayToString(Object[])} but with
-     * a list rather than an array.
+     * Calls {@link Object#toString()} for each object in the collection and
+     * places a comma between each.
      * @param items the collection to convert to a string.
      * @return the comma separated list of items.
      **************************************************************************/
@@ -307,9 +327,11 @@ public final class Utils
     }
 
     /***************************************************************************
-     * @param items
-     * @param delimiter
-     * @return
+     * Calls {@link Object#toString()} for each object in the collection and
+     * places the provided delimiter between each.
+     * @param items the items to be concatenated.
+     * @param delimiter the characters to place between the items.
+     * @return the string of items.
      **************************************************************************/
     public static String collectionToString( Collection<?> items,
         String delimiter )
@@ -413,14 +435,18 @@ public final class Utils
     }
 
     /***************************************************************************
-     * @param src
-     * @param srcPos
-     * @param dest
-     * @param destPos
-     * @param length
+     * Wraps {@code System#arraycopy(Object, int, Object, int, int)} because it
+     * does not provide any information when an
+     * {@link ArrayIndexOutOfBoundsException} occurs.
+     * @param src the source array.
+     * @param srcPos the starting position in the source array.
+     * @param dest the destination array.
+     * @param destPos the starting position in the destination array.
+     * @param length the number of items to be copied.
+     * @throws ArrayIndexOutOfBoundsException
      **************************************************************************/
     public static <T> void arrayCopy( T [] src, int srcPos, T [] dest,
-        int destPos, int length )
+        int destPos, int length ) throws ArrayIndexOutOfBoundsException
     {
         try
         {
@@ -464,21 +490,23 @@ public final class Utils
     }
 
     /***************************************************************************
-     * @param colNames
-     * @param string
-     * @return
+     * Creates a new array containing the provided item followed by the provided
+     * array.
+     * @param array the items to which the item shall be added.
+     * @param item the item to push to beginning of the array.
+     * @return the new array.
      **************************************************************************/
-    public static <T> T [] addFirst( T [] array, T first )
+    public static <T> T [] addFirst( T [] array, T item )
     {
         ArrayList<T> list = new ArrayList<T>( Arrays.asList( array ) );
 
-        list.add( 0, first );
+        list.add( 0, item );
 
         return list.toArray( array );
     }
 
     /***************************************************************************
-     * @return
+     * Returns the text on the system clipboard.
      **************************************************************************/
     public static String getClipboardText()
     {
@@ -507,7 +535,8 @@ public final class Utils
     }
 
     /***************************************************************************
-     * @param text
+     * Sets the text on the system clipboard to the provided text.
+     * @param text the text to be placed on the system clipboard.
      **************************************************************************/
     public static void setClipboardText( String text )
     {
@@ -677,27 +706,11 @@ public final class Utils
     }
 
     /***************************************************************************
-     * Object that can compare an item object to a key object. Used for sorting
-     * or searching a list of the items type by a field of the item.
-     * @see Comparator#compare(Object, Object)
-     **************************************************************************/
-    public static interface IComparator<T, K>
-    {
-        /***********************************************************************
-         * Compares its two arguments for order. Returns <ul> <li>a negative
-         * integer if {@code thisKey < thatItem}</li> <li>zero if
-         * {@code thisKey == thatItem}, or </li> <li>a positive integer if
-         * {@code thisKey > thatItem},</li> </ul>
-         * @param item
-         * @param key
-         * @return
-         **********************************************************************/
-        public int compare( K thisKey, T thatItem );
-    }
-
-    /***************************************************************************
-     * @param text
-     * @return
+     * Returns the provided text where the character after every space (
+     * {@link Character#isSpace(char)} is upper case and all others are lower
+     * case.
+     * @param text the text to be converted.
+     * @return the title case text.
      **************************************************************************/
     public static String toTitleCase( String text )
     {
@@ -724,5 +737,24 @@ public final class Utils
         }
 
         return titleCase.toString();
+    }
+
+    /***************************************************************************
+     * Object that can compare an item object to a key object. Used for sorting
+     * or searching a list of the items type by a field of the item.
+     * @see Comparator#compare(Object, Object)
+     **************************************************************************/
+    public static interface IComparator<T, K>
+    {
+        /***********************************************************************
+         * Compares its two arguments for order. Returns <ul> <li>a negative
+         * integer if {@code thisKey < thatItem}</li> <li>zero if
+         * {@code thisKey == thatItem}, or </li> <li>a positive integer if
+         * {@code thisKey > thatItem},</li> </ul>
+         * @param item
+         * @param key
+         * @return
+         **********************************************************************/
+        public int compare( K thisKey, T thatItem );
     }
 }

@@ -1,8 +1,5 @@
 package org.jutils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /*******************************************************************************
  * Static helper class for parsing numbers. This class exists because the java
  * standard library is, IMHO, broken. If you have a long (int, short, and byte
@@ -177,62 +174,10 @@ public final class NumberParsingUtils
     }
 
     /***************************************************************************
-     * @param str
-     * @return
-     * @throws NumberFormatException
-     **************************************************************************/
-    public static List<Boolean> fromBinaryString( String str )
-        throws NumberFormatException
-    {
-        List<Boolean> bits = new ArrayList<>( str.length() );
-
-        if( str.isEmpty() )
-        {
-            throw new NumberFormatException( "The string is empty" );
-        }
-
-        for( int i = 0; i < str.length(); i++ )
-        {
-            switch( str.charAt( i ) )
-            {
-                case '0':
-                    bits.add( false );
-                    break;
-
-                case '1':
-                    bits.add( true );
-                    break;
-
-                default:
-                    throw new NumberFormatException(
-                        "Non-binary character '" + str.charAt( i ) +
-                            "' found at index " + i + " in string " + str );
-            }
-            ;
-        }
-
-        return bits;
-    }
-
-    /***************************************************************************
-     * @param bits
-     * @return
-     **************************************************************************/
-    public static String toBinaryString( Iterable<Boolean> bits )
-    {
-        StringBuilder builder = new StringBuilder();
-
-        for( Boolean bit : bits )
-        {
-            builder.append( bit ? "1" : 0 );
-        }
-
-        return builder.toString();
-    }
-
-    /***************************************************************************
-     * @param bits
-     * @return
+     * Converts the provided long into a string of its binary representation
+     * without any leading 0's.
+     * @param value the long to convert.
+     * @return the binary string.
      **************************************************************************/
     public static String toBinaryString( long value )
     {
@@ -257,10 +202,12 @@ public final class NumberParsingUtils
     }
 
     /***************************************************************************
-     * @param text
-     * @return
+     * Parses binary from the provided text into a long.
+     * @param text the binary string.
+     * @return the value of the binary string.
+     * @throws NumberFormatException any error in converting the binary sting.
      **************************************************************************/
-    public static long parseBinary( String text )
+    public static long parseBinary( String text ) throws NumberFormatException
     {
         long value = 0;
 
@@ -268,6 +215,12 @@ public final class NumberParsingUtils
         {
             throw new NumberFormatException(
                 "Cannot parse binary from an empty string" );
+        }
+
+        if( text.length() > 64 )
+        {
+            throw new NumberFormatException(
+                "Cannot parse a long from a " + text.length() + "-bit string" );
         }
 
         for( int i = 0; i < text.length(); i++ )

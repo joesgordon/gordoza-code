@@ -2,8 +2,7 @@ package org.jutils.io;
 
 import java.awt.Component;
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.net.*;
 import java.nio.file.*;
 import java.util.*;
 
@@ -17,19 +16,19 @@ import org.jutils.ValidationException;
  ******************************************************************************/
 public final class IOUtils
 {
-    /**  */
-    public static final File USERS_DIR = new File(
-        System.getProperty( "user.home" ) );
-    /**  */
+    /** The user directory as returned by {@link System#getProperty(String)}. */
+    public static final File USERS_DIR;
+    /** The installation directory of this class/jar. */
     public static final File INSTALL_DIR;
 
     static
     {
+        USERS_DIR = new File( System.getProperty( "user.home" ) );
         INSTALL_DIR = getInstallDir( IOUtils.class );
     }
 
     /***************************************************************************
-     *
+     * Declare the default and only constructor private to prevent instances.
      **************************************************************************/
     private IOUtils()
     {
@@ -59,8 +58,9 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param files
-     * @return
+     * Returns the deepest common path of the provided files.
+     * @param files the files to find the common path.
+     * @return the common path.
      **************************************************************************/
     public static File findClosestCommonAncestor( File... files )
     {
@@ -68,8 +68,9 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param files
-     * @return
+     * Returns the deepest common path of the provided files.
+     * @param files the files to find the common path.
+     * @return the common path.
      **************************************************************************/
     public static File findClosestCommonAncestor( List<File> files )
     {
@@ -147,6 +148,12 @@ public final class IOUtils
         return ans;
     }
 
+    /***************************************************************************
+     * Replaces all backslashes with forward slashes and adds a trailing slash
+     * if needed.
+     * @param file the file to standardize.
+     * @return the standardized file.
+     **************************************************************************/
     public static String getStandardAbsPath( File file )
     {
         String path = file.getAbsolutePath().replace( '\\', '/' );
@@ -157,26 +164,6 @@ public final class IOUtils
         }
 
         return path;
-    }
-
-    /***************************************************************************
-     * @param str1
-     * @param str2
-     * @return
-     **************************************************************************/
-    public static int findFirstDiff( String str1, String str2 )
-    {
-        int idx = 0;
-
-        for( ; idx < str1.length() && idx < str2.length(); idx++ )
-        {
-            if( str1.charAt( idx ) != str2.charAt( idx ) )
-            {
-                break;
-            }
-        }
-
-        return idx;
     }
 
     /***************************************************************************
@@ -203,8 +190,10 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param filename
-     * @return
+     * Returns a file in the user's home directory with the provided relative
+     * path.
+     * @param filename the path relative to the user's home directory.
+     * @return the user's file.
      **************************************************************************/
     public static File getUsersFile( String filename )
     {
@@ -212,8 +201,10 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param names
-     * @return
+     * Returns a path to a file in the user's home directory
+     * {@code/names[0]/names[1]/.../names[n]}. @param names the names of each
+     * part of the relative path within the user's home directory.
+     * @return a path to a file in the user's home directory.
      **************************************************************************/
     public static File getUsersFile( String... names )
     {
@@ -234,8 +225,9 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param filename
-     * @return
+     * Returns a path to a resource that is a sibling to this class/jar file.
+     * @param filename the name of the resource.
+     * @return the path to the installed resource.
      **************************************************************************/
     public static File getInstallFile( String filename )
     {
@@ -243,8 +235,10 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param filename
-     * @return
+     * Returns a path to a resource that is a sibling to the class/jar file.
+     * @param filename the name of the resource.
+     * @param installClass the class contained within the desired installation.
+     * @return the path to the installed resource.
      **************************************************************************/
     public static File getInstallFile( String filename, Class<?> installClass )
     {
@@ -253,6 +247,13 @@ public final class IOUtils
         return new File( dir, filename );
     }
 
+    /***************************************************************************
+     * Returns the combined size of the provided files. This does not work for
+     * directories. The returned size is the actual size and may (probably) not
+     * reflect the size on disk.
+     * @param files the files from which a total size will be calculated.
+     * @return the total size of all files.
+     **************************************************************************/
     public static long getTotalSize( List<File> files )
     {
         long size = 0;
@@ -266,8 +267,11 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param file
-     * @return
+     * Returns a path that is the same as the provided with any extension
+     * removed. This will not remove multiple extensions; only the effective
+     * one.
+     * @param file the path to be duplicated.
+     * @return a new path with the extension removed.
      **************************************************************************/
     public static File removeExtension( File file )
     {
@@ -277,9 +281,11 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param file
-     * @param ext
-     * @return
+     * Returns a path that is the same as the provided with the extension
+     * replaced with the provided extension.
+     * @param file the path to be duplicated.
+     * @param ext the extension to replace any existing.
+     * @return a new path with the replaced extension.
      **************************************************************************/
     public static File replaceExtension( File file, String ext )
     {
@@ -293,8 +299,8 @@ public final class IOUtils
     /***************************************************************************
      * Returns the file name minus the extension. Does not include path
      * information.
-     * @param file
-     * @return
+     * @param file the path to be parsed.
+     * @return the simple file name.
      **************************************************************************/
     public static String removeFilenameExtension( File file )
     {
@@ -311,8 +317,10 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param installClass
-     * @return
+     * Returns the directory containing the jar or class file containing the
+     * provided class.
+     * @param installClass the class to be located.
+     * @return the containing directory or {@code null} if the code is remote.
      **************************************************************************/
     public static File getInstallDir( Class<?> installClass )
     {
@@ -325,18 +333,20 @@ public final class IOUtils
         }
         catch( URISyntaxException ex )
         {
-            throw new RuntimeException(
-                "Unknown install location: " + url.toString(), ex );
+            file = null;
         }
 
         return file;
     }
 
     /***************************************************************************
-     * @param file
-     * @return
-     * @throws FileNotFoundException
-     * @throws IOException
+     * Reads the provided file into a single string.
+     * @param file the file to be read.
+     * @return the text in the file.
+     * @throws FileNotFoundException if the file does not exist, is a directory
+     * rather than a regular file, or for some other reason cannot be opened for
+     * reading.
+     * @throws IOException if any I/O error occurs.
      **************************************************************************/
     public static String readAll( File file )
         throws FileNotFoundException, IOException
@@ -359,10 +369,13 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param file
-     * @return
-     * @throws FileNotFoundException
-     * @throws IOException
+     * Returns every line in the provided file as an entry in a list.
+     * @param file the file to be read.
+     * @return the list of lines (without line separators).
+     * @throws FileNotFoundException if the file does not exist, is a directory
+     * rather than a regular file, or for some other reason cannot be opened for
+     * reading.
+     * @throws IOException if any I/O error occurs.
      **************************************************************************/
     public static List<String> readAllLines( File file )
         throws FileNotFoundException, IOException
@@ -384,22 +397,6 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param prefix
-     * @param suffix
-     * @return
-     * @throws IOException
-     **************************************************************************/
-    public static File createSelfDemisingTempFile( String prefix,
-        String suffix ) throws IOException
-    {
-        File f = File.createTempFile( prefix, suffix );
-
-        f.deleteOnExit();
-
-        return f;
-    }
-
-    /***************************************************************************
      * Returns a list of all files (in which {@code isDirectory() == false})
      * found in the provided directory.
      * @param directory the directory to be searched.
@@ -415,37 +412,37 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param file
-     * @param files
+     * Recursively adds all paths within the provided directory that are not
+     * themselves a directory.
+     * @param directory the directory to be searched.
+     * @param files the list of files to be added to.
      **************************************************************************/
-    private static void getAllFiles( File file, List<File> files )
+    private static void getAllFiles( File directory, List<File> files )
     {
-        if( file.isDirectory() )
+        File [] fs = directory.listFiles();
+
+        if( fs == null )
         {
-            File [] fs = file.listFiles();
+            return;
+        }
 
-            if( fs == null )
+        for( File f : fs )
+        {
+            if( f.isDirectory() )
             {
-                return;
+                getAllFiles( f, files );
             }
-
-            for( File f : fs )
+            else
             {
-                if( f.isDirectory() )
-                {
-                    getAllFiles( f, files );
-                }
-                else
-                {
-                    files.add( f );
-                }
+                files.add( f );
             }
         }
     }
 
     /***************************************************************************
-     * @param file
-     * @return
+     * Returns the file extension for the provided file.
+     * @param file the file from which an extension is parsed.
+     * @return the file extension or an empty string if no extension exists.
      **************************************************************************/
     public static String getFileExtension( File file )
     {
@@ -463,29 +460,35 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param file
-     * @return
+     * Returns a list of directories that contain the provided path. Neither the
+     * provided path nor ancestors are required to exist.
+     * @param path the path to generate an ancestor list.
+     * @return the list of ancestors (parent directories).
      **************************************************************************/
-    public static List<File> getAncestors( File file )
+    public static List<File> getAncestors( File path )
     {
         List<File> files = new ArrayList<>();
 
-        file = file.getAbsoluteFile();
+        path = path.getAbsoluteFile();
 
-        while( file != null )
+        while( path != null )
         {
-            files.add( 0, file );
-            file = file.getParentFile();
+            files.add( 0, path );
+            path = path.getParentFile();
         }
 
         return files;
     }
 
     /***************************************************************************
-     * @param dir
-     * @throws IOException
+     * Removes the entire contents of the provided directory including any
+     * sub-directories.
+     * @param dir the directory to be cleaned.
+     * @throws IOException if any path cannot be deleted or any I/O error
+     * occurs.
+     * @see File#delete()
      **************************************************************************/
-    public static void removeContents( File dir ) throws IOException
+    public static void deleteContents( File dir ) throws IOException
     {
         File [] files = dir.listFiles();
 
@@ -495,7 +498,7 @@ public final class IOUtils
             {
                 if( f.isDirectory() )
                 {
-                    removeContents( f );
+                    deleteContents( f );
                 }
 
                 Files.delete( f.toPath() );
@@ -504,9 +507,11 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param file
-     * @param name
-     * @throws ValidationException
+     * Checks to ensure that the provided file exists, is a file, and can be
+     * read.
+     * @param file the file to be checked.
+     * @param name the conceptual name of the file.
+     * @throws ValidationException if any check fails.
      **************************************************************************/
     public static void validateFileInput( File file, String name )
         throws ValidationException
@@ -529,9 +534,11 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param dir
-     * @param name
-     * @throws ValidationException
+     * Checks to ensure that the provided directory exists, is a directory and
+     * can be read.
+     * @param dir the directory to be checked.
+     * @param name the conceptual name of the directory.
+     * @throws ValidationException if any check fails.
      **************************************************************************/
     public static void validateDirInput( File dir, String name )
         throws ValidationException
@@ -554,24 +561,11 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param dir
-     * @param name
-     * @throws ValidationException
-     **************************************************************************/
-    public static void validateExistsInput( File dir, String name )
-        throws ValidationException
-    {
-        if( !dir.exists() )
-        {
-            throw new ValidationException( "The specified " + name +
-                " path does not exist: " + dir.getName() );
-        }
-    }
-
-    /***************************************************************************
-     * @param outputFile
-     * @param string
-     * @throws ValidationException
+     * Checks to ensure that the provided file can be created if it doesn't
+     * exist or is a file that can be written to if it does.
+     * @param file the file to be checked.
+     * @param name the conceptual name of the file.
+     * @throws ValidationException if any check fails.
      **************************************************************************/
     public static void validateFileOuput( File file, String name )
         throws ValidationException
@@ -605,9 +599,11 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param dir
-     * @param name
-     * @throws ValidationException
+     * Checks to ensure that the provided directory exists, is a directory, and
+     * can be written to.
+     * @param dir the directory to be checked.
+     * @param name the conceptual name of the directory.
+     * @throws ValidationException if any check fails.
      **************************************************************************/
     public static void validateDirOuput( File dir, String name )
         throws ValidationException
@@ -630,8 +626,11 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param file
-     * @return
+     * Creates all directories needed including the parent if the parent of the
+     * provided file is not a directory.
+     * @param file the file to be checked.
+     * @return {@code true} if the parent exists after this function call;
+     * {@code false} otherwise.
      **************************************************************************/
     public static boolean ensureParentExists( File file )
     {
@@ -649,9 +648,11 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param ancestor
-     * @param descendant
-     * @return
+     * Returns {@code true} if the provided descendant is a descendant of the
+     * provided ancestor.
+     * @param ancestor the notional ancestor.
+     * @param descendant the notional descendant.
+     * @return {@code true} if the file is a descendant.
      **************************************************************************/
     public static boolean isAncestorOf( File ancestor, File descendant )
     {
@@ -675,8 +676,10 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param paths
-     * @return
+     * Separates paths from the provided string using {@link File#pathSeparator}
+     * as a delimiter.
+     * @param paths the system specific string of paths.
+     * @return the files listed in the path string.
      **************************************************************************/
     public static File [] getFilesFromString( String paths )
     {
@@ -692,8 +695,10 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param files
-     * @return
+     * Concatenates the provided files using {@link File#pathSeparator} as a
+     * delimiter.
+     * @param files the paths to be concatenated.
+     * @return a system specific single string of paths.
      **************************************************************************/
     public static String getStringFromFiles( File [] files )
     {
@@ -717,9 +722,11 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param dir
-     * @param ext
-     * @return
+     * Returns all files in the provided directory that have the provided
+     * extension.
+     * @param dir the directory to be searched.
+     * @param ext the case insensitive extension to be matched sans dot.
+     * @return the files found.
      **************************************************************************/
     public static List<File> getAllFiles( File dir, String ext )
     {
@@ -734,10 +741,11 @@ public final class IOUtils
 
     /***************************************************************************
      * Checks for contents in the provided directory and asks the user if the
-     * contents should be deleted
-     * @param dir
-     * @param parent
-     * @return
+     * contents should be deleted or ignored/overwritten.
+     * @param dir the directory to be checked.
+     * @param parent the component used as the parent for any dialogs generated.
+     * @return {@code true} if the processing should continue; {@code false}
+     * otherwise.
      **************************************************************************/
     public static boolean checkForContents( File dir, Component parent )
     {
@@ -777,7 +785,7 @@ public final class IOUtils
         {
             try
             {
-                IOUtils.removeContents( outDir );
+                IOUtils.deleteContents( outDir );
                 return true;
             }
             catch( IOException ex )
@@ -799,10 +807,13 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param dir
-     * @param filePattern
-     * @return
-     * @throws IOException
+     * Returns the contents of the provided directory that match the provided
+     * pattern.
+     * @param dir the directory to be searched.
+     * @param filePattern the pattern to be matched.
+     * @return the list of files found.
+     * @throws IOException if an I/O exception occurs
+     * @see Files#newDirectoryStream
      **************************************************************************/
     public static List<File> listWithWildcard( File dir, String filePattern )
         throws IOException
@@ -819,5 +830,30 @@ public final class IOUtils
         }
 
         return files;
+    }
+
+    /***************************************************************************
+     * Converts a file to a URL.
+     * @param file the file to convert to a url.
+     * @return the URL representation of the provided file.
+     * @throws IllegalStateException if {@link URI#toURL()} throws a
+     * {@link MalformedURLException}
+     **************************************************************************/
+    public static URL fileToUrl( File file ) throws IllegalStateException
+    {
+        URL url = null;
+
+        try
+        {
+            url = file.toURI().toURL();
+        }
+        catch( MalformedURLException ex )
+        {
+            throw new IllegalStateException(
+                "It is not expected that a valid file cannot be converted to a URL.",
+                ex );
+        }
+
+        return url;
     }
 }

@@ -1,6 +1,7 @@
 package org.jutils;
 
 import java.awt.*;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.*;
 import java.io.IOException;
 
@@ -14,19 +15,21 @@ import org.jutils.ui.model.IDataView;
 import com.thoughtworks.xstream.XStreamException;
 
 /*******************************************************************************
- * 
+ * Utility class for AWT/Swing static functions.
  ******************************************************************************/
 public final class SwingUtils
 {
     /***************************************************************************
-     * 
+     * Declare the default and only constructor private to prevent instances.
      **************************************************************************/
     private SwingUtils()
     {
     }
 
     /***************************************************************************
-     * @param frame
+     * Installs a listener to close the provided frame with its default close
+     * operation when Escape is pressed.
+     * @param frame the frame to which the listener shall be installed.
      **************************************************************************/
     public static void installEscapeCloseOperation( JFrame frame )
     {
@@ -34,7 +37,9 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * @param dialog
+     * Installs a listener to close the provided dialog with its default close
+     * operation when Escape is pressed.
+     * @param dialog the dialog to which the listener shall be installed.
      **************************************************************************/
     public static void installEscapeCloseOperation( JDialog dialog )
     {
@@ -42,8 +47,10 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * @param win
-     * @param rootPane
+     * Installs a listener to close the provided window with its default close
+     * operation when Escape is pressed.
+     * @param win the window to be closed.
+     * @param rootPane the window's root pane.
      **************************************************************************/
     private static void installEscapeCloseOperation( Window win,
         JRootPane rootPane )
@@ -59,22 +66,24 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * @param parent
-     * @param message
-     * @param title
-     * @param list
-     * @param defaultChoice
-     * @return
+     * Displays an OK/Cancel option dialog with the provided message, title, and
+     * choices.
+     * @param parent the parent component of the dialog to be displayed.
+     * @param message the message to be displayed in the dialog.
+     * @param title the title of the dialog.
+     * @param choices the choices to be displayed in combo box.
+     * @param defaultChoice the choice to be selected by default.
+     * @return the user's choice or null if the user closes the dialog.
      **************************************************************************/
     public static <T> String showEditableMessage( Component parent,
-        String message, String title, T [] list, T defaultChoice )
+        String message, String title, T [] choices, T defaultChoice )
     {
         JPanel panel = new JPanel( new GridBagLayout() );
         JLabel msgLabel = new JLabel( message );
-        JComboBox<T> nameField = new JComboBox<>( list );
+        JComboBox<T> nameField = new JComboBox<>( choices );
         GridBagConstraints constraints;
 
-        int ans;
+        Object ans;
         String name;
 
         // ---------------------------------------------------------------------
@@ -96,13 +105,33 @@ public final class SwingUtils
         // ---------------------------------------------------------------------
         // Prompt user.
         // ---------------------------------------------------------------------
-        ans = JOptionPane.showOptionDialog( parent, panel, title,
-            JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-            null, null );
+        JOptionPane jop = new JOptionPane( panel, JOptionPane.QUESTION_MESSAGE,
+            JOptionPane.OK_CANCEL_OPTION, null, choices, defaultChoice );
+
+        JDialog dialog = jop.createDialog( parent, title );
+        dialog.setModalityType( ModalityType.DOCUMENT_MODAL );
+        dialog.setVisible( true );
+
+        ans = jop.getValue();
 
         name = nameField.getSelectedItem().toString();
 
-        if( ans != JOptionPane.OK_OPTION )
+        if( ans != null )
+        {
+            if( ans instanceof Integer )
+            {
+                int ians = ( Integer )ans;
+                if( ians != JOptionPane.OK_OPTION )
+                {
+                    name = null;
+                }
+            }
+            else
+            {
+                name = null;
+            }
+        }
+        else
         {
             name = null;
         }
@@ -111,22 +140,24 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * @param parent
-     * @param message
-     * @param title
-     * @param list
-     * @param defaultChoice
-     * @return
+     * Displays an question dialog with the provided message, title, and button
+     * choices.
+     * @param parent the parent component of the dialog to be displayed.
+     * @param message the String or JComponent to be displayed in the dialog.
+     * @param title the title of the dialog.
+     * @param choices the choices to be displayed in buttons.
+     * @param defaultChoice the choice to be selected by default.
+     * @return the user's choice or null if the user closes the dialog.
      **************************************************************************/
     public static <T> T showConfirmMessage( Component parent, Object message,
-        String title, T [] list, T defaultChoice )
+        String title, T [] choices, T defaultChoice )
     {
         JOptionPane jop = new JOptionPane( message,
             JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null,
-            list, defaultChoice );
+            choices, defaultChoice );
 
         JDialog dialog = jop.createDialog( parent, title );
-
+        dialog.setModalityType( ModalityType.DOCUMENT_MODAL );
         dialog.setVisible( true );
 
         // ---------------------------------------------------------------------
@@ -138,6 +169,16 @@ public final class SwingUtils
         return value;
     }
 
+    /***************************************************************************
+     * Displays an OK/Cancel dialog with the provided message, title, and data
+     * view.
+     * @param parent the parent component of the dialog to be displayed.
+     * @param message the message to be displayed above the data view.
+     * @param title the title of the dialog.
+     * @param view the data view to be displayed
+     * @return the edited data value or null if the dialog was cancelled or
+     * closed.
+     **************************************************************************/
     public static <T> T showQuestion( Component parent, String message,
         String title, IDataView<T> view )
     {
@@ -150,7 +191,7 @@ public final class SwingUtils
             JOptionPane.OK_CANCEL_OPTION, null, null, null );
 
         JDialog dialog = jop.createDialog( parent, title );
-
+        dialog.setModalityType( ModalityType.DOCUMENT_MODAL );
         dialog.setVisible( true );
 
         // ---------------------------------------------------------------------
@@ -168,27 +209,52 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * @param toolbar
-     * @param container
-     * @return
+     * Displays an OK/Cancel dialog with the provided message, title, and data
+     * view.
+     * @param parent the parent component of the dialog to be displayed.
+     * @param message the message to be displayed above the data view.
+     * @param title the title of the dialog.
+     * @param okText the text of the OK button.
+     * @param initialFocusSelector the callback to request focus for the
+     * message.
+     * @return {@code true} if the ok button was pressed; {@code false}
+     * otherwise.
+     **************************************************************************/
+    public static boolean showOkCancelDialog( Component parent, Object message,
+        String title, String okText, final Runnable initialFocusSelector )
+    {
+        String [] choices = new String[] { okText, "Cancel" };
+        JDialog dialog;
+
+        JOptionPane pane = new JOptionPane( message,
+            JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null,
+            choices, okText)
+        {
+            @Override
+            public void selectInitialValue()
+            {
+                initialFocusSelector.run( );
+            }
+        };
+
+        dialog = pane.createDialog( parent, title );
+        dialog.setModalityType( ModalityType.DOCUMENT_MODAL );
+        dialog.setSize( 500, dialog.getHeight() );
+        dialog.setVisible( true );
+
+        return okText == pane.getValue();
+    }
+
+    /***************************************************************************
+     * Creates a panel with the provided toolbar and content with a status bar.
+     * @param toolbar the toolbar to be added.
+     * @param container the container to be added.
+     * @return the panel built.
      **************************************************************************/
     public static JPanel createStandardConentPane( JToolBar toolbar,
         Container container )
     {
         StatusBarPanel statusbar = new StatusBarPanel();
-
-        return createStandardConentPane( toolbar, container, statusbar );
-    }
-
-    /***************************************************************************
-     * @param toolbar
-     * @param container
-     * @param statusbar
-     * @return
-     **************************************************************************/
-    private static JPanel createStandardConentPane( JToolBar toolbar,
-        Container container, StatusBarPanel statusbar )
-    {
         JPanel panel = new JPanel( new GridBagLayout() );
         GridBagConstraints constraints;
         int row = 0;
@@ -220,7 +286,9 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * @param toolbar
+     * Set the standard defaults for a toolbar: non-floatable, rollover enabled,
+     * and empty border.
+     * @param toolbar the toolbar on which to set defaults.
      **************************************************************************/
     public static void setToolbarDefaults( JToolBar toolbar )
     {
@@ -230,9 +298,10 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * @param toolbar
-     * @param action
-     * @return
+     * Adds the provided action to the toolbar and returns the created button.
+     * @param toolbar the toolbar to which the action is added.
+     * @param action the action to be performed.
+     * @return the created button.
      **************************************************************************/
     public static JButton addActionToToolbar( JToolBar toolbar, Action action )
     {
@@ -244,9 +313,11 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * @param toolbar
-     * @param action
-     * @param button
+     * Adds the provided button to the toolbar with the provided action set to
+     * the button.
+     * @param toolbar the toolbar to which the button is added.
+     * @param action the action to be performed.
+     * @param button the button to be added.
      **************************************************************************/
     public static void addActionToToolbar( JToolBar toolbar, Action action,
         JButton button )
@@ -313,76 +384,9 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * @param f
-     **************************************************************************/
-    private static void handleExtendedState( JFrame f )
-    {
-        if( f.isVisible() )
-        {
-            // -------------------------------------------------------------
-            // This stinks because it cannot retain the extended state.
-            // I've tried all sorts of ways and this is the only thing
-            // that doesn't pop the window up behind other things and still
-            // give it focus. So, don't remove it.
-            // -------------------------------------------------------------
-            f.setExtendedState( JFrame.NORMAL );
-            f.requestFocus();
-            f.toFront();
-        }
-    }
-
-    /***************************************************************************
-     * @param parent
-     * @param message
-     * @param title
-     * @param messageType
-     **************************************************************************/
-    public static JDialog createOkDialog( Component parent, Object message,
-        String title, int messageType )
-    {
-        JOptionPane jop = new JOptionPane( message, messageType,
-            JOptionPane.DEFAULT_OPTION );
-
-        JDialog dialog = jop.createDialog( parent, title );
-
-        return dialog;
-    }
-
-    /***************************************************************************
-     * @param parent
-     * @param msg
-     * @param title
-     * @param okText
-     * @param initialFocusSelector
-     * @return
-     **************************************************************************/
-    public static boolean showOkCancelDialog( Component parent, Object msg,
-        String title, String okText, final Runnable initialFocusSelector )
-    {
-        JDialog dialog;
-
-        JOptionPane pane = new JOptionPane( msg, JOptionPane.QUESTION_MESSAGE,
-            JOptionPane.OK_CANCEL_OPTION, null,
-            new String[] { okText, "Cancel" }, okText)
-        {
-            @Override
-            public void selectInitialValue()
-            {
-                initialFocusSelector.run( );
-            }
-        };
-
-        dialog = pane.createDialog( parent, title );
-
-        dialog.setSize( 500, dialog.getHeight() );
-        dialog.setVisible( true );
-
-        return okText == pane.getValue();
-    }
-
-    /***************************************************************************
-     * @param icon
-     * @param popup
+     * Adds the menu to the tray icon
+     * @param icon the tray icon to be displayed.
+     * @param popup the menu to be added.
      **************************************************************************/
     public static void addTrayMenu( TrayIcon icon, JPopupMenu popup )
     {
@@ -390,8 +394,9 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * @param size
-     * @return
+     * Return the default fixed font of the specified size.
+     * @param size the size of the font.
+     * @return the fixed font.
      **************************************************************************/
     public static Font getFixedFont( int size )
     {
@@ -399,8 +404,9 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * @param color
-     * @return
+     * Returns the inverse of the provided color.
+     * @param color the color to be inverted.
+     * @return the inverted color.
      **************************************************************************/
     public static Color inverseColor( Color color )
     {
@@ -413,7 +419,29 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * @param frame
+     * Ensures the provided frame does not pop under any other windows.
+     * @param frame the frame to be displayed.
+     **************************************************************************/
+    private static void handleExtendedState( JFrame frame )
+    {
+        if( frame.isVisible() )
+        {
+            // -------------------------------------------------------------
+            // This stinks because it cannot retain the extended state.
+            // I've tried all sorts of ways and this is the only thing
+            // that doesn't pop the window up behind other things and still
+            // give it focus. So, don't remove it.
+            // -------------------------------------------------------------
+            frame.setExtendedState( JFrame.NORMAL );
+            frame.requestFocus();
+            frame.toFront();
+        }
+    }
+
+    /***************************************************************************
+     * Displays the frame, restores the extended state, and ensures it does not
+     * pop under any other windows.
+     * @param frame the frame to be displayed.
      **************************************************************************/
     public static void toFrontRestoreState( JFrame frame )
     {
@@ -436,6 +464,7 @@ public final class SwingUtils
                 else if( ( extState &
                     JFrame.MAXIMIZED_VERT ) == JFrame.MAXIMIZED_VERT )
                 {
+                    frame.setExtendedState( JFrame.MAXIMIZED_VERT );
                 }
                 else
                 {
@@ -443,6 +472,7 @@ public final class SwingUtils
                 }
             }
 
+            frame.requestFocus();
             frame.toFront();
         }
         else
@@ -452,7 +482,9 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * @return
+     * Creates an action to copy data from the provided view to the system
+     * clipboard.
+     * @return the created action.
      **************************************************************************/
     public static <T> Action createCopyAction( IDataView<T> view )
     {
@@ -464,7 +496,9 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * @return
+     * Creates an action to paste data from the system clipboard to the provided
+     * listener.
+     * @return the created action.
      **************************************************************************/
     public static <T> Action createPasteAction(
         ItemActionListener<T> itemListener )
@@ -603,7 +637,8 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * 
+     * An action listener that copies data from a data view to the system
+     * clipboard using XStream.
      **************************************************************************/
     public static class CopyListener<T> implements ActionListener
     {
@@ -636,7 +671,8 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * 
+     * An action listener that copies data from the system clipboard to the item
+     * listener using XStream.
      **************************************************************************/
     public static class PasteListener<T> implements ActionListener
     {
@@ -665,7 +701,7 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * 
+     * An action listener to display a frame when run.
      **************************************************************************/
     public static class ShowFrameListener implements ActionListener
     {
@@ -692,7 +728,7 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * 
+     * An action listener to toggle a frames visiblity when run.
      **************************************************************************/
     protected static class MiniMaximizeListener implements ActionListener
     {
@@ -712,7 +748,7 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * 
+     * An action listener that sets a frame's visiblity to false when run.
      **************************************************************************/
     protected static class HideOnMinimizeListener extends WindowAdapter
     {
@@ -730,7 +766,7 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * 
+     * An action that invokes the window's default close operation when run.
      **************************************************************************/
     private static class CloseAction extends AbstractAction
     {
@@ -750,7 +786,7 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * 
+     * A mouse listener display the popup menu on right-click.
      **************************************************************************/
     private static class TrayMouseListener extends MouseAdapter
     {

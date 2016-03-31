@@ -2,12 +2,12 @@ package org.jutils.utils;
 
 import java.nio.ByteOrder;
 
-import org.jutils.INamedEnum;
+import org.jutils.INamedItem;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public enum ByteOrdering implements INamedEnum
+public enum ByteOrdering implements INamedItem
 {
     LITTLE_ENDIAN( "Little Endian", ByteOrder.LITTLE_ENDIAN ),
     BIG_ENDIAN( "Big Endian", ByteOrder.BIG_ENDIAN ),

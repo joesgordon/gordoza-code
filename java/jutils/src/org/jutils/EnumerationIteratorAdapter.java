@@ -6,6 +6,7 @@ import java.util.Iterator;
 /*******************************************************************************
  * Class that provides a way to iterate through an Enumeration via an iterator
  * (for each) block.
+ * @param <T> the type of objects to be iterated.
  ******************************************************************************/
 public class EnumerationIteratorAdapter<T> implements Iterator<T>, Iterable<T>
 {

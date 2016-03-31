@@ -42,7 +42,7 @@ public class JHexIconConstants
      **************************************************************************/
     public static List<Image> getAppImages()
     {
-        return loader.getImages( IconLoader.buildImageList( "app_" ) );
+        return loader.getImages( IconLoader.buildNameList( "app_" ) );
     }
 
     /***************************************************************************

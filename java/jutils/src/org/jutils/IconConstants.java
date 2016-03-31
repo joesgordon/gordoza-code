@@ -1,6 +1,7 @@
 package org.jutils;
 
 import java.awt.Image;
+import java.awt.Window;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -140,7 +141,9 @@ public final class IconConstants
     }
 
     /***************************************************************************
-     * @return
+     * Returns the page magnification images as a list for setting as a windows
+     * icons.
+     * @see Window#setIconImages(List)
      **************************************************************************/
     public static List<Image> getPageMagImages()
     {
@@ -149,7 +152,7 @@ public final class IconConstants
     }
 
     /***************************************************************************
-     * 
+     * Plays a notification sound.
      **************************************************************************/
     public static void playNotify()
     {
@@ -168,11 +171,12 @@ public final class IconConstants
     }
 
     /***************************************************************************
-     * @param str
-     * @return
+     * Returns an icon for the provided name.
+     * @param name the name of the icon to be loaded.
+     * @return the common icon.
      **************************************************************************/
-    public static Icon getIcon( String str )
+    public static Icon getIcon( String name )
     {
-        return loader.getIcon( str );
+        return loader.getIcon( name );
     }
 }

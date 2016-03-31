@@ -2,7 +2,6 @@ package org.jutils;
 
 import java.awt.Image;
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
@@ -26,7 +25,8 @@ public class IconLoader
     private final Map<String, ImageIcon> iconMap;
 
     /***************************************************************************
-     * @param basePath
+     * Creates an icon loader initialized to the provided base path.
+     * @param basePath the path containing icons.
      * @throws MalformedURLException
      **************************************************************************/
     public IconLoader( File basePath ) throws MalformedURLException
@@ -35,8 +35,10 @@ public class IconLoader
     }
 
     /***************************************************************************
-     * @param baseClass
-     * @param relative
+     * Creates an icon loader initialized to the provide path relative to the
+     * provided class.
+     * @param baseClass a class close to the icons.
+     * @param relativePath the path from the class to the icons.
      **************************************************************************/
     public IconLoader( Class<?> baseClass, String relativePath )
     {
@@ -44,7 +46,8 @@ public class IconLoader
     }
 
     /***************************************************************************
-     * @param url
+     * Creates a new icon loader initialized to the provided URL.
+     * @param url the location of the icons.
      **************************************************************************/
     public IconLoader( URL url )
     {
@@ -52,7 +55,8 @@ public class IconLoader
     }
 
     /***************************************************************************
-     * @param resourceLoader
+     * Creates a new icon loader initialized to the provided recourse loader.
+     * @param resourceLoader the loader initialized to the icons' location.
      **************************************************************************/
     public IconLoader( ResourceLoader resourceLoader )
     {
@@ -61,29 +65,31 @@ public class IconLoader
     }
 
     /***************************************************************************
-     * @param str String
-     * @return ImageIcon
+     * Returns the icon with the provided name.
+     * @param name the name/relative path to the icon.
+     * @return the icon loaded or {@code null} if none found.
      **************************************************************************/
-    public ImageIcon getIcon( String str )
+    public ImageIcon getIcon( String name )
     {
         ImageIcon icon = null;
 
-        if( iconMap.containsKey( str ) )
+        if( iconMap.containsKey( name ) )
         {
-            icon = iconMap.get( str );
+            icon = iconMap.get( name );
         }
         else
         {
-            icon = new ImageIcon( loader.getUrl( str ) );
-            iconMap.put( str, icon );
+            icon = new ImageIcon( loader.getUrl( name ) );
+            iconMap.put( name, icon );
         }
 
         return icon;
     }
 
     /***************************************************************************
-     * @param names
-     * @return
+     * Returns the icons with the provided names.
+     * @param name the names/relative paths to the icons.
+     * @return the list of icons loaded or an empty list if none found.
      **************************************************************************/
     public List<ImageIcon> getIcons( String... names )
     {
@@ -98,18 +104,20 @@ public class IconLoader
     }
 
     /***************************************************************************
-     * @param str
-     * @return
-     * @throws IOException
+     * Returns the image with the provided name.
+     * @param name the name/relative path to the image.
+     * @return the image loaded or {@code null} if not found.
      **************************************************************************/
-    public Image getImage( String str )
+    public Image getImage( String name )
     {
-        return getIcon( str ).getImage();
+        ImageIcon icon = getIcon( name );
+        return icon == null ? null : icon.getImage();
     }
 
     /***************************************************************************
-     * @param names
-     * @return
+     * Returns the images with the provided names.
+     * @param name the names/relative paths to the images.
+     * @return the list of images loaded or and empty list if none found.
      **************************************************************************/
     public List<Image> getImages( String... names )
     {
@@ -129,10 +137,12 @@ public class IconLoader
     }
 
     /***************************************************************************
-     * @param prefix
-     * @return
+     * Builds a list of PNGs with the provided prefix that end with 016, 024,
+     * 032, 048, 064, 128, and 256.
+     * @param prefix the characters prior to the standard sizes suffix.
+     * @return the names built.
      **************************************************************************/
-    public static String [] buildImageList( String prefix )
+    public static String [] buildNameList( String prefix )
     {
         final int [] sizes = new int[] { 16, 24, 32, 48, 64, 128, 256 };
         String [] list = new String[sizes.length];

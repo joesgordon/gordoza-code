@@ -6,20 +6,21 @@ import java.util.Map.Entry;
 import org.jutils.utils.Tuple2;
 
 /*******************************************************************************
- * 
+ * Utility class for list static functions.
  ******************************************************************************/
 public final class ListUtils
 {
     /***************************************************************************
-     * 
+     * Declare the default and only constructor private to prevent instances.
      **************************************************************************/
     private ListUtils()
     {
     }
 
     /***************************************************************************
-     * @param items
-     * @return
+     * Creates a list from the provided iterable.
+     * @param items the iteration of items to seed the list.
+     * @return the list of items.
      **************************************************************************/
     public static <T> List<T> asList( Iterable<T> items )
     {
@@ -34,9 +35,11 @@ public final class ListUtils
     }
 
     /***************************************************************************
-     * @param items
-     * @param kv
-     * @return
+     * Create a list of items from a type that contains both the key and the
+     * value.
+     * @param items the items to seed the map.
+     * @param kv the key/value accessor.
+     * @return the map of key/value pairs.
      **************************************************************************/
     public static <K, V, T> Map<K, V> createMap( List<T> items,
         IKeyValue<K, V, T> kv )
@@ -58,36 +61,48 @@ public final class ListUtils
     }
 
     /***************************************************************************
-     * @param <K>
-     * @param <V>
-     * @param <T>
+     * Defines methods to access a key and a value of a given object type.
+     * @param <K> the key type.
+     * @param <V> the value type.
+     * @param <T> the type of the object that contains the key/value.
      **************************************************************************/
     public static interface IKeyValue<K, V, T>
     {
+        /***********************************************************************
+         * Returns the key of the provided item.
+         * @param item the item containing a key.
+         **********************************************************************/
         public K getKey( T item );
 
+        /***********************************************************************
+         * Return
+         * @param item
+         * @param oldValue
+         * @return
+         **********************************************************************/
         public V getValue( T item, V oldValue );
     }
 
     /***************************************************************************
-     * @param map
-     * @return
+     * Finds the maximum found key in the provided map of key/count values.
+     * @param map the map of key/counts.
+     * @return the 2-tuple containing the key with the highest count.
      **************************************************************************/
-    public static <K> Tuple2<K, Integer> findMaxEntry( Map<K, Integer> map )
+    public static <K, V extends Number> Tuple2<K, V> findMaxEntry(
+        Map<K, V> map )
     {
-        Entry<K, Integer> maxEntry = null;
-        int max = -1;
+        Entry<K, V> max = null;
 
-        for( Entry<K, Integer> entry : map.entrySet() )
+        for( Entry<K, V> entry : map.entrySet() )
         {
-            if( entry.getValue() > max )
+            if( max == null ||
+                entry.getValue().longValue() > max.getValue().longValue() )
             {
-                max = entry.getValue();
-                maxEntry = entry;
+                max = entry;
             }
         }
 
-        return maxEntry == null ? null
-            : new Tuple2<K, Integer>( maxEntry.getKey(), maxEntry.getValue() );
+        return max == null ? null
+            : new Tuple2<K, V>( max.getKey(), max.getValue() );
     }
 }

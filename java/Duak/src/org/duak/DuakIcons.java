@@ -29,6 +29,6 @@ public final class DuakIcons
      **************************************************************************/
     public static List<Image> getAppImages()
     {
-        return loader.getImages( IconLoader.buildImageList( "duak_" ) );
+        return loader.getImages( IconLoader.buildNameList( "duak_" ) );
     }
 }
