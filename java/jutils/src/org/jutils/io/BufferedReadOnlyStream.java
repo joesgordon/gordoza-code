@@ -5,9 +5,9 @@ import java.io.IOException;
 
 import org.jutils.Utils;
 
-/***************************************************************************
+/*******************************************************************************
  * 
- **************************************************************************/
+ ******************************************************************************/
 public class BufferedReadOnlyStream implements IStream
 {
     /**  */
@@ -25,7 +25,7 @@ public class BufferedReadOnlyStream implements IStream
     /**  */
     private long position;
     /**  */
-    private Mutator<Long> length;
+    private Long length;
 
     /***************************************************************************
      * @param stream
@@ -246,12 +246,12 @@ public class BufferedReadOnlyStream implements IStream
 
         try
         {
-            len = this.length.item;
+            len = length.longValue();
         }
         catch( NullPointerException ex )
         {
             len = stream.getLength();
-            this.length = new Mutator<Long>( len );
+            this.length = len;
         }
 
         return len;
@@ -282,23 +282,5 @@ public class BufferedReadOnlyStream implements IStream
     public void write( byte [] buf, int off, int len ) throws IOException
     {
         throw new IOException( "Cannot write to a read only stream." );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class Mutator<T>
-    {
-        public T item;
-
-        // public Mutator()
-        // {
-        // this( null );
-        // }
-
-        public Mutator( T item )
-        {
-            this.item = item;
-        }
     }
 }

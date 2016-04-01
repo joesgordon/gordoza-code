@@ -1,7 +1,7 @@
 package org.jutils.io;
 
 /*******************************************************************************
- * 
+ * Creates a reader to return a bit flag from byte, short, int, or long values.
  ******************************************************************************/
 public class BitReader
 {
@@ -10,7 +10,7 @@ public class BitReader
 
     static
     {
-        MASKS = new int[32];
+        MASKS = new int[64];
 
         for( int m = 0; m < MASKS.length; m++ )
         {
@@ -22,11 +22,12 @@ public class BitReader
         }
     }
 
-    /**  */
+    /** The mask for the desired bit. */
     private final int mask;
 
     /***************************************************************************
-     * @param bit
+     * Creates a new reader with the provided bit.
+     * @param bit the bit to be read.
      **************************************************************************/
     public BitReader( int bit )
     {
@@ -40,10 +41,41 @@ public class BitReader
     }
 
     /***************************************************************************
-     * @param value
-     * @return
+     * Reads the bit from the provided value.
+     * @param value the field containing the bit flag.
+     * @return the boolean representation of the bit.
+     **************************************************************************/
+    public boolean read( byte value )
+    {
+        return ( value & mask ) == mask;
+    }
+
+    /***************************************************************************
+     * Reads the bit from the provided value.
+     * @param value the field containing the bit flag.
+     * @return the boolean representation of the bit.
+     **************************************************************************/
+    public boolean read( short value )
+    {
+        return ( value & mask ) == mask;
+    }
+
+    /***************************************************************************
+     * Reads the bit from the provided value.
+     * @param value the field containing the bit flag.
+     * @return the boolean representation of the bit.
      **************************************************************************/
     public boolean read( int value )
+    {
+        return ( value & mask ) == mask;
+    }
+
+    /***************************************************************************
+     * Reads the bit from the provided value.
+     * @param value the field containing the bit flag.
+     * @return the boolean representation of the bit.
+     **************************************************************************/
+    public boolean read( long value )
     {
         return ( value & mask ) == mask;
     }

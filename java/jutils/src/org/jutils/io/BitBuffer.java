@@ -280,24 +280,28 @@ public class BitBuffer
         BitPosition pos = new BitPosition( start );
         int bitInc = findFoward ? 1 : -1;
 
+        copy.setPosition( pos );
+
         while( copy.remainingBits() >= bitsToFind.size() && pos.getBit() > -1 )
         {
-            copy.setPosition( pos );
-
             if( copy.isNextEqual( bitsToFind ) )
             {
                 return pos;
             }
 
             pos.increment( bitInc );
+            copy.setPosition( pos );
         }
 
         return null;
     }
 
     /***************************************************************************
-     * @param bitsToFind
-     * @return
+     * Test the next bits against the provided array. The position of this
+     * buffer will be increment by the number of bits compared after this call.
+     * @param bitsToFind the array to be searched for.
+     * @return {@code true} if the next bits correspond to the provided bits;
+     * {@code false} otherwise.
      **************************************************************************/
     private boolean isNextEqual( BitArray bitsToFind )
     {

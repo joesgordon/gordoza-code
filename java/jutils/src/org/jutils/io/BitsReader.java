@@ -1,7 +1,8 @@
 package org.jutils.io;
 
 /*******************************************************************************
- * 
+ * Defines a reader to read a series of bits comprising a sub-field from a byte,
+ * short, int, or long.
  ******************************************************************************/
 public class BitsReader
 {
@@ -10,7 +11,7 @@ public class BitsReader
 
     static
     {
-        MASKS = new int[33];
+        MASKS = new int[65];
 
         for( int m = 0; m < MASKS.length; m++ )
         {
@@ -22,9 +23,9 @@ public class BitsReader
         }
     }
 
-    /**  */
+    /** The mask for the bits of the sub-field. */
     private final int mask;
-    /**  */
+    /** The number of bytes to shift the sub-field down to bit zero. */
     private final int shift;
 
     /***************************************************************************
@@ -58,11 +59,42 @@ public class BitsReader
     }
 
     /***************************************************************************
-     * @param value
-     * @return
+     * Reads the sub-field from the provided value.
+     * @param value the field containing the sub-field.
+     * @return the sub-field read.
+     **************************************************************************/
+    public byte read( byte value )
+    {
+        return ( byte )( ( value & mask ) >>> shift );
+    }
+
+    /***************************************************************************
+     * Reads the sub-field from the provided value.
+     * @param value the field containing the sub-field.
+     * @return the sub-field read.
+     **************************************************************************/
+    public short read( short value )
+    {
+        return ( short )( ( value & mask ) >>> shift );
+    }
+
+    /***************************************************************************
+     * Reads the sub-field from the provided value.
+     * @param value the field containing the sub-field.
+     * @return the sub-field read.
      **************************************************************************/
     public int read( int value )
     {
-        return ( value & mask ) >> shift;
+        return ( value & mask ) >>> shift;
+    }
+
+    /***************************************************************************
+     * Reads the sub-field from the provided value.
+     * @param value the field containing the sub-field.
+     * @return the sub-field read.
+     **************************************************************************/
+    public long read( long value )
+    {
+        return ( value & mask ) >>> shift;
     }
 }

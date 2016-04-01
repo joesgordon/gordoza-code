@@ -305,12 +305,14 @@ public class BufferedStreamTest
         byte [] expected = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
         byte [] buffer = new byte[expected.length];
 
-        try( ByteArrayStream byteStream = new ByteArrayStream( buffer );
+        try( ByteArrayStream byteStream = new ByteArrayStream( buffer,
+            buffer.length, 0, false );
              BufferedStream stream = new BufferedStream( byteStream ) )
         {
             stream.write( expected, 0, 4 );
             stream.write( expected[4] );
             stream.write( expected, 5, 6 );
+            stream.flush();
 
             byte [] actual = new byte[expected.length];
 

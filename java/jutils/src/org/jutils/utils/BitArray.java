@@ -6,15 +6,15 @@ import org.jutils.io.BitBuffer;
 import org.jutils.ui.hex.HexUtils;
 
 /*******************************************************************************
- * 
+ * Defines an object to hold an array of bits.
  ******************************************************************************/
 public class BitArray implements Iterable<Boolean>
 {
-    /**  */
+    /** The bits to be managed. */
     private final List<Boolean> bits;
 
     /***************************************************************************
-     * 
+     * Creates a new bit array.
      **************************************************************************/
     public BitArray()
     {
@@ -22,7 +22,8 @@ public class BitArray implements Iterable<Boolean>
     }
 
     /***************************************************************************
-     * @param bits
+     * Creates a new bit array that is a copy of the provided bit array.
+     * @param bits the array to be copied.
      **************************************************************************/
     public BitArray( BitArray bits )
     {
@@ -30,7 +31,8 @@ public class BitArray implements Iterable<Boolean>
     }
 
     /***************************************************************************
-     * @param hexString
+     * Creates a new bit array initialized to the provided hexadecimal string.
+     * @param hexString the hexadecimal digits to initialize the array to.
      **************************************************************************/
     public BitArray( String hexString ) throws NumberFormatException
     {
@@ -40,7 +42,8 @@ public class BitArray implements Iterable<Boolean>
     }
 
     /***************************************************************************
-     * @param bytes
+     * Sets the bits in this array to the provided bytes.
+     * @param bytes the bytes to set the array to.
      **************************************************************************/
     public void set( byte [] bytes )
     {
@@ -55,8 +58,10 @@ public class BitArray implements Iterable<Boolean>
     }
 
     /***************************************************************************
-     * @param binaryString
-     * @throws NumberFormatException
+     * Sets the array to the provided 1's and 0's ignoring spaces.
+     * @param binaryString the string of 1's and 0's.
+     * @throws NumberFormatException if anything beside a 1,0, or space is in
+     * the string.
      **************************************************************************/
     public void set( String binaryString ) throws NumberFormatException
     {
@@ -87,15 +92,9 @@ public class BitArray implements Iterable<Boolean>
     }
 
     /***************************************************************************
-     * @return
-     **************************************************************************/
-    public List<Boolean> toList()
-    {
-        return new ArrayList<>( bits );
-    }
-
-    /***************************************************************************
-     * @return
+     * Returns a byte array of the bits shifted to the left byte boundary and
+     * padding zeros on the right.
+     * @return the left-aligned byte array.
      **************************************************************************/
     public byte [] getLeftAligned()
     {
@@ -115,7 +114,9 @@ public class BitArray implements Iterable<Boolean>
     }
 
     /***************************************************************************
-     * @return
+     * Returns a byte array of the bits shifted to the right byte boundary and
+     * padding zeros on the left.
+     * @return the right-aligned byte array.
      **************************************************************************/
     public byte [] getRightAligned()
     {
@@ -139,7 +140,8 @@ public class BitArray implements Iterable<Boolean>
     }
 
     /***************************************************************************
-     * @return
+     * Returns the number of bits in this array.
+     * @return the number of bits in this array.
      **************************************************************************/
     public int size()
     {
@@ -147,7 +149,7 @@ public class BitArray implements Iterable<Boolean>
     }
 
     /***************************************************************************
-     * 
+     * Returns an iterator that returns each bit as a boolean.
      **************************************************************************/
     @Override
     public Iterator<Boolean> iterator()
@@ -156,9 +158,9 @@ public class BitArray implements Iterable<Boolean>
     }
 
     /***************************************************************************
-     * Returns the bit at the provided index.
-     * @param idx
-     * @return
+     * Returns the bit at the provided index as a boolean.
+     * @param idx the index of the bit.
+     * @return the bit.
      **************************************************************************/
     public boolean get( int idx )
     {
@@ -166,7 +168,8 @@ public class BitArray implements Iterable<Boolean>
     }
 
     /***************************************************************************
-     * @param bits2
+     * Sets this array to the bits in the provided array.
+     * @param bits the array to set this array to.
      **************************************************************************/
     public void set( BitArray bits )
     {
@@ -192,7 +195,8 @@ public class BitArray implements Iterable<Boolean>
     }
 
     /***************************************************************************
-     * @return
+     * Returns a hexadecimal string representation of the left-aligned bits.
+     * @return the left-aligned hexadecimal string.
      **************************************************************************/
     public String toHexLeft()
     {
@@ -200,7 +204,8 @@ public class BitArray implements Iterable<Boolean>
     }
 
     /***************************************************************************
-     * @return
+     * Returns a hexadecimal string representation of the right-aligned bits.
+     * @return the right-aligned hexadecimal string.
      **************************************************************************/
     public String toHexRight()
     {
@@ -208,7 +213,8 @@ public class BitArray implements Iterable<Boolean>
     }
 
     /***************************************************************************
-     * @return
+     * Returns a short description of the bits.
+     * @return the description of the bits.
      **************************************************************************/
     public String getDescription()
     {

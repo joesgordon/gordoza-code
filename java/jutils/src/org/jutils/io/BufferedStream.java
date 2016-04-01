@@ -137,6 +137,9 @@ public class BufferedStream implements IStream
 
         // printDebug( "read-pre" );
 
+        // ---------------------------------------------------------------------
+        // If the current position is cached and there is enough in the cache.
+        // ---------------------------------------------------------------------
         if( buffer.isReadCached( position ) && buffer.remainingRead() > 0 )
         {
             buffer.setPosition( position );
