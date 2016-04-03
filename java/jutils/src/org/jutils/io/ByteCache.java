@@ -41,7 +41,9 @@ public class ByteCache
     }
 
     /***************************************************************************
-     * @param bytes
+     * Creates a new cache using the provided bytes. This will not create a copy
+     * of the provided byte.
+     * @param bytes the bytes used to seed this cache.
      **************************************************************************/
     public ByteCache( byte [] bytes )
     {

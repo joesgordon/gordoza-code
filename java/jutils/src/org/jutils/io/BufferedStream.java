@@ -4,8 +4,7 @@ import java.io.EOFException;
 import java.io.IOException;
 
 /*******************************************************************************
- * {@code BufferedStream} is an {@link IStream} that buffers another
- * {@code IStream}.
+ * Defines an {@link IStream} that buffers another {@code IStream}.
  ******************************************************************************/
 public class BufferedStream implements IStream
 {

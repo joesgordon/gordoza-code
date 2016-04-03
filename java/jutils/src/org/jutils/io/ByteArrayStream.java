@@ -1,6 +1,7 @@
 package org.jutils.io;
 
 import java.io.EOFException;
+import java.io.IOException;
 import java.util.Arrays;
 
 import org.jutils.Utils;
@@ -42,12 +43,16 @@ public class ByteArrayStream implements IStream
     }
 
     /***************************************************************************
-     * @param size
-     * @param b
+     * Creates a new stream backed by the specified number of bytes that grows
+     * according to the provided flag. The stream will start with a length of 0.
+     * @param size the initial size of the buffer to back this buffer.
+     * @param grow the size of this buffer will grow if {@code true}; otherwise,
+     * attempts to write past the inital size will result in an
+     * {@link IOException}.
      **************************************************************************/
-    public ByteArrayStream( int size, boolean b )
+    public ByteArrayStream( int size, boolean grow )
     {
-        this( new byte[size], 0, 0, false );
+        this( new byte[size], 0, grow ? DEFAULT_SIZE : 0, false );
     }
 
     /***************************************************************************

@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.*;
 
 import org.jutils.ValidationException;
+import org.jutils.io.IDataSerializer;
 import org.jutils.io.IDataStream;
-import org.jutils.io.IStdSerializer;
 
 /*******************************************************************************
  * Provides random access to a group of constant-size items and serializes all
@@ -250,7 +250,7 @@ public class CachedList<T> implements List<T>
      * exceptions.
      * @param <T> the type of item to be serialized.
      **************************************************************************/
-    public static interface ICacher<T> extends IStdSerializer<T, IDataStream>
+    public static interface ICacher<T> extends IDataSerializer<T>
     {
         public int getItemSize();
     }

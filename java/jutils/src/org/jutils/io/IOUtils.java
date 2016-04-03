@@ -12,7 +12,7 @@ import org.jutils.Utils;
 import org.jutils.ValidationException;
 
 /*******************************************************************************
- *
+ * Utility class for general I/O functions.
  ******************************************************************************/
 public final class IOUtils
 {

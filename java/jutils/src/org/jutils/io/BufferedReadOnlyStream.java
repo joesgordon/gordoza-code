@@ -6,29 +6,31 @@ import java.io.IOException;
 import org.jutils.Utils;
 
 /*******************************************************************************
- * 
+ * Wraps an {@link IStream} to provide a buffered read-only stream.
  ******************************************************************************/
 public class BufferedReadOnlyStream implements IStream
 {
-    /**  */
+    /** The default buffer size. */
     public static int DEFAULT_BUFFER_SIZE = 8 * 1024 * 1024;
 
-    /**  */
+    /** The wrapped stream. */
     private final IStream stream;
-    /**  */
+    /** The stream buffer. */
     private final byte [] buffer;
 
-    /**  */
+    /** The current read index into the buffer. */
     private int index;
-    /**  */
+    /** The number of bytes used in the buffer. */
     private int fillCount;
-    /**  */
+    /** The position of the buffer in the underlying stream. */
     private long position;
-    /**  */
+    /** The cached length of the underlying stream. */
     private Long length;
 
     /***************************************************************************
-     * @param stream
+     * Creates a new buffered stream with the provided underlying stream using a
+     * buffer of {@link #DEFAULT_BUFFER_SIZE} size.
+     * @param stream the underlying stream.
      **************************************************************************/
     public BufferedReadOnlyStream( IStream stream )
     {
@@ -36,8 +38,10 @@ public class BufferedReadOnlyStream implements IStream
     }
 
     /***************************************************************************
-     * @param stream
-     * @param bufferSize
+     * Creates a new buffered stream with the provided underlying stream using a
+     * buffer of the provided size.
+     * @param stream the underlying stream.
+     * @param bufferSize the size of this stream's buffer.
      **************************************************************************/
     public BufferedReadOnlyStream( IStream stream, int bufferSize )
     {
@@ -189,27 +193,6 @@ public class BufferedReadOnlyStream implements IStream
     }
 
     /***************************************************************************
-     * @param pos
-     * @throws EOFException
-     * @throws IOException
-     **************************************************************************/
-    private void fillBuffer( long pos ) throws EOFException, IOException
-    {
-        stream.seek( pos );
-
-        // LogUtils.printDebug( "Filling buffer" );
-
-        this.position = pos;
-        this.index = 0;
-        this.fillCount = stream.read( buffer, 0, buffer.length );
-
-        if( fillCount < 1 )
-        {
-            throw new EOFException();
-        }
-    }
-
-    /***************************************************************************
      * 
      **************************************************************************/
     @Override
@@ -282,5 +265,29 @@ public class BufferedReadOnlyStream implements IStream
     public void write( byte [] buf, int off, int len ) throws IOException
     {
         throw new IOException( "Cannot write to a read only stream." );
+    }
+
+    /***************************************************************************
+     * Reads bytes from the underlying stream into the buffer starting at the
+     * provided position.
+     * @param position the position in the underlying stream at which the read
+     * will start.
+     * @throws EOFException if no bytes were read into the buffer.
+     * @throws IOException any I/O error that occurs.
+     **************************************************************************/
+    private void fillBuffer( long position ) throws EOFException, IOException
+    {
+        stream.seek( position );
+
+        // LogUtils.printDebug( "Filling buffer" );
+
+        this.position = position;
+        this.index = 0;
+        this.fillCount = stream.read( buffer, 0, buffer.length );
+
+        if( fillCount < 1 )
+        {
+            throw new EOFException();
+        }
     }
 }

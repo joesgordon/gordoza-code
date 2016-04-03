@@ -7,18 +7,18 @@ import java.nio.ByteBuffer;
 import org.jutils.utils.ByteOrdering;
 
 /*******************************************************************************
- * 
+ * Implements a stream that reads/writes intrinsic data types.
  ******************************************************************************/
 public class DataStream implements IDataStream
 {
-    /**  */
+    /** The underlying stream. */
     private IStream stream;
 
-    /**  */
+    /** Buffer to be used for intrinsic reading/writing. */
     private final ByteBuffer buffer;
-    /**  */
+    /** The bytes that seed the buffer. */
     private final byte [] bytes;
-    /**  */
+    /** The byte order used for reading/writing. */
     private final ByteOrdering order;
 
     /***************************************************************************

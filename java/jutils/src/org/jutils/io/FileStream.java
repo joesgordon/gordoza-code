@@ -3,18 +3,20 @@ package org.jutils.io;
 import java.io.*;
 
 /*******************************************************************************
- * 
+ * Defines a stream that performs I/O with a file.
  ******************************************************************************/
 public class FileStream implements IStream
 {
-    /**  */
+    /** The file to be accessed. */
     private final File file;
-    /**  */
+    /** The underlying I/O accessor. */
     private final RandomAccessFile raf;
 
     /***************************************************************************
-     * @param file
-     * @throws FileNotFoundException
+     * Creates a new stream to read/write to the provided file.
+     * @param file the file to be accessed.
+     * @throws FileNotFoundException if the given file does not exist or if some
+     * other error occurs while opening or creating the file.
      **************************************************************************/
     public FileStream( File file ) throws FileNotFoundException
     {
@@ -22,8 +24,13 @@ public class FileStream implements IStream
     }
 
     /***************************************************************************
-     * @param file
-     * @throws FileNotFoundException
+     * Creates a new stream to read/write to the provided file.
+     * @param file the file to be accessed.
+     * @param readOnly opens the file as read-only if {@code true}.
+     * @throws FileNotFoundException if the given file does not exist, or if the
+     * read only flag is false and the given file object does not denote an
+     * existing, writable file and a new file of that name cannot be created, or
+     * if some other error occurs while opening or creating the file.
      **************************************************************************/
     public FileStream( File file, boolean readOnly )
         throws FileNotFoundException
@@ -33,8 +40,10 @@ public class FileStream implements IStream
     }
 
     /***************************************************************************
-     * @param length
-     * @throws IOException
+     * Sets the length of the file to the provided value.
+     * @param length the new length of the file.
+     * @throws IOException if any I/O exception occurs.
+     * @see {@link RandomAccessFile#setLength(long)}
      **************************************************************************/
     public void setLength( long length ) throws IOException
     {
@@ -42,7 +51,7 @@ public class FileStream implements IStream
     }
 
     /***************************************************************************
-     * @return
+     * Returns the path to the file being accessed.
      **************************************************************************/
     public File getFile()
     {

@@ -533,7 +533,7 @@ public class BufferedStreamTest
      * 
      **************************************************************************/
     private static class MockObjectSerializer
-        implements IStdSerializer<MockObject, IDataStream>
+        implements IDataSerializer<MockObject>
     {
         @Override
         public MockObject read( IDataStream stream )
