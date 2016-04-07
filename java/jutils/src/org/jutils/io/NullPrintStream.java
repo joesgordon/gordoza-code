@@ -1,5 +1,9 @@
 package org.jutils.io;
 
+/*******************************************************************************
+ * Defines a print stream that prints to no resource. Used to prevent if checks
+ * in logging code.
+ ******************************************************************************/
 public class NullPrintStream implements IPrintStream
 {
     @Override

@@ -226,9 +226,12 @@ public final class NumberParsingUtils
         for( int i = 0; i < text.length(); i++ )
         {
             char c = text.charAt( i );
+
+            value <<= 1;
+
             if( c == '1' )
             {
-                value &= ( 1 << ( text.length() - i - 1 ) );
+                value |= 1;
             }
             else if( c != '0' )
             {

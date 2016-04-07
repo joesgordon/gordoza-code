@@ -26,41 +26,49 @@ import org.jutils.utils.ByteOrdering;
  ******************************************************************************/
 public class MappedStream implements IDataStream
 {
-    /**  */
+    /** The default number of bytes in the buffer. */
     public static int DEFAULT_BUFFER_SIZE = 8 * 1024 * 1024;
 
-    /**  */
+    /** The channel used for buffering. */
     private final FileChannel channel;
-    /**  */
+    /** The primary I/O device. */
     private final RandomAccessFile raf;
-    /**  */
+    /** The mapping mode used. */
     private final MapMode mode;
-    /**  */
+    /** The size of the buffer. */
     private final int bufferSize;
-    /**  */
+    /** The ordering of bytes in the stream. */
     private final ByteOrdering order;
 
-    /**  */
+    // TODO do not cache the length of the stream if this is to support writing.
+    /** The cached length of the stream. */
     private long length;
-    /**  */
+    /** The position of the buffer loaded. */
     private long bufferPos;
-    /**  */
+    /** The stream buffer. */
     private MappedByteBuffer buffer;
 
     /***************************************************************************
-     * @param file
-     * @throws FileNotFoundException
-     * @throws IOException
+     * Creates a new writable, big endian stream with the default buffer size.
+     * @param file the file to be accessed.
+     * @throws FileNotFoundException if the given file does not exist and cannot
+     * be created or if some other error occurs while opening or creating the
+     * file.
      **************************************************************************/
-    public MappedStream( File file ) throws FileNotFoundException, IOException
+    public MappedStream( File file ) throws FileNotFoundException
     {
         this( file, false );
     }
 
     /***************************************************************************
-     * @param file
-     * @param readOnly
-     * @throws FileNotFoundException
+     * Creates a new big endian stream with the default buffer size that is read
+     * only according the the provided parameter.
+     * @param file the file to be accessed.
+     * @param readOnly opens the file as read-only if {@code true}.
+     * @throws FileNotFoundException if the given file does not exist, or if the
+     * read only flag is false and the given file object does not denote an
+     * existing, writable file and a new file of that name cannot be created, or
+     * if some other error occurs while opening or creating the file.
      **************************************************************************/
     public MappedStream( File file, boolean readOnly )
         throws FileNotFoundException
@@ -69,10 +77,16 @@ public class MappedStream implements IDataStream
     }
 
     /***************************************************************************
-     * @param file
-     * @param readOnly
-     * @param order
-     * @throws FileNotFoundException
+     * Creates a new stream with the default buffer size that is read only
+     * according the the provided parameter and reads/writes data according to
+     * the provided ordering.
+     * @param file the file to be accessed.
+     * @param readOnly opens the file as read-only if {@code true}.
+     * @param order the byte order of data in the stream.
+     * @throws FileNotFoundException if the given file does not exist, or if the
+     * read only flag is false and the given file object does not denote an
+     * existing, writable file and a new file of that name cannot be created, or
+     * if some other error occurs while opening or creating the file.
      **************************************************************************/
     public MappedStream( File file, boolean readOnly, ByteOrdering order )
         throws FileNotFoundException
@@ -81,11 +95,17 @@ public class MappedStream implements IDataStream
     }
 
     /***************************************************************************
-     * @param file
-     * @param readOnly
-     * @param order
-     * @param bufferSize
-     * @throws FileNotFoundException
+     * Creates a new stream with the provided buffer size that is read only
+     * according the the provided parameter and reads/writes data according to
+     * the provided ordering.
+     * @param file the file to be accessed.
+     * @param readOnly opens the file as read-only if {@code true}.
+     * @param order the byte order of data in the stream.
+     * @param bufferSize the length of the buffer to be used in bytes.
+     * @throws FileNotFoundException if the given file does not exist, or if the
+     * read only flag is false and the given file object does not denote an
+     * existing, writable file and a new file of that name cannot be created, or
+     * if some other error occurs while opening or creating the file.
      **************************************************************************/
     public MappedStream( File file, boolean readOnly, ByteOrdering order,
         int bufferSize ) throws FileNotFoundException
@@ -109,11 +129,13 @@ public class MappedStream implements IDataStream
 
         this.buffer = null;
         this.length = -1;
+        this.bufferPos = -1;
     }
 
     /***************************************************************************
-     * @param position
-     * @throws IOException
+     * Loads the buffer with data from the provided position.
+     * @param position the location at which to load data.
+     * @throws IOException if any I/O error occurs.
      **************************************************************************/
     private void readBuffer( long position ) throws IOException
     {
@@ -139,7 +161,8 @@ public class MappedStream implements IDataStream
     }
 
     /***************************************************************************
-     * @throws IOException
+     * Loads the buffer if it has never been loaded or if no data is remaining.
+     * @throws IOException if any I/O error occurs.
      **************************************************************************/
     private void checkBuffer() throws IOException
     {
@@ -154,10 +177,14 @@ public class MappedStream implements IDataStream
     }
 
     /***************************************************************************
-     * @param smallSize
-     * @throws IOException
+     * Loads the buffer if it has never been loaded or if no data is remaining
+     * and ensures that the provided number of bytes are available.
+     * @param smallSize the number of bytes to be checked.
+     * @throws EOFException if there are fewer than the provided number of bytes
+     * remaining in the stream.
+     * @throws IOException if any I/O error occurs.
      **************************************************************************/
-    private void checkBuffer( int smallSize ) throws IOException
+    private void checkBuffer( int smallSize ) throws EOFException, IOException
     {
         if( buffer == null )
         {

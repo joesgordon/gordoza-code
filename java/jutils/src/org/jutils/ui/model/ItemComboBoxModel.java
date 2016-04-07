@@ -7,7 +7,7 @@ import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
 import org.jutils.ListUtils;
-import org.jutils.io.IStringSerializer;
+import org.jutils.io.IStringWriter;
 
 public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel<T>
 {
@@ -551,7 +551,7 @@ public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel<T>
      * @return
      **************************************************************************/
     public static <R> List<ItemWrapper<R>> createListWithNull( List<R> items,
-        IStringSerializer<R> serializer )
+        IStringWriter<R> serializer )
     {
         List<ItemWrapper<R>> wrappedItems = new ArrayList<ItemWrapper<R>>();
 
@@ -574,9 +574,9 @@ public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel<T>
     public static class ItemWrapper<R>
     {
         public final R item;
-        public final IStringSerializer<R> serializer;
+        public final IStringWriter<R> serializer;
 
-        public ItemWrapper( R item, IStringSerializer<R> serializer )
+        public ItemWrapper( R item, IStringWriter<R> serializer )
         {
             this.item = item;
             this.serializer = serializer;

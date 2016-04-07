@@ -6,7 +6,8 @@ import java.util.Date;
 import org.jutils.Utils;
 
 /*******************************************************************************
- * 
+ * Defines a set of standard utility functions to printing messages to the
+ * standard output.
  ******************************************************************************/
 public class LogUtils
 {
@@ -16,6 +17,13 @@ public class LogUtils
     static
     {
         dateFormatter = new SimpleDateFormat( "HH:mm:ss:SSSS" );
+    }
+
+    /***************************************************************************
+     * Declare the default and only constructor private to prevent instances.
+     **************************************************************************/
+    private LogUtils()
+    {
     }
 
     /***************************************************************************

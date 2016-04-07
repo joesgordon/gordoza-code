@@ -1,7 +1,7 @@
 package org.jutils.utils;
 
 import org.jutils.ValidationException;
-import org.jutils.io.IStringSerializer;
+import org.jutils.io.IStringWriter;
 
 /*******************************************************************************
  * 
@@ -89,7 +89,7 @@ public class Usable<T>
      * @param stringMarshaller
      * @return
      **************************************************************************/
-    public String toString( IStringSerializer<T> stringMarshaller )
+    public String toString( IStringWriter<T> stringMarshaller )
     {
         if( isUsed )
         {

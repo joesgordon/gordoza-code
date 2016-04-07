@@ -11,7 +11,7 @@ import javax.swing.*;
 
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
-import org.jutils.apps.jhex.JHexIconConstants;
+import org.jutils.apps.jhex.JHexIcons;
 import org.jutils.apps.jhex.JHexMain;
 import org.jutils.apps.jhex.data.HexBufferSize;
 import org.jutils.apps.jhex.data.JHexOptions;
@@ -147,7 +147,7 @@ public class JHexFrame implements IView<JFrame>
         frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         frame.setTitle( "JHex" );
 
-        frame.setIconImages( JHexIconConstants.getAppImages() );
+        frame.setIconImages( JHexIcons.getAppImages() );
 
         recentFiles.addSelectedListener( ( f, c ) -> openFile( f ) );
     }
@@ -184,8 +184,7 @@ public class JHexFrame implements IView<JFrame>
         dialog.setTitle( "Data View" );
         dialog.setContentPane( panel );
         dialog.setAlwaysOnTop( false );
-        dialog.setIconImages(
-            IconConstants.loader.getImages( IconConstants.BINARY_32 ) );
+        dialog.setIconImages( JHexIcons.getAppImages() );
 
         dialog.pack();
         dialog.setLocationRelativeTo( frame );
@@ -217,29 +216,27 @@ public class JHexFrame implements IView<JFrame>
 
         toolbar.addSeparator();
 
-        button = new JButton(
-            JHexIconConstants.loader.getIcon( JHexIconConstants.JUMP_LEFT ) );
+        button = new JButton( JHexIcons.loader.getIcon( JHexIcons.JUMP_LEFT ) );
         button.setToolTipText( "Previous Data Block" );
         button.setFocusable( false );
         button.addActionListener( new BackListener( this ) );
         toolbar.add( button );
 
-        button = new JButton(
-            JHexIconConstants.loader.getIcon( JHexIconConstants.INCH_LEFT ) );
+        button = new JButton( JHexIcons.loader.getIcon( JHexIcons.INCH_LEFT ) );
         button.setToolTipText( "Previous Data" );
         button.setFocusable( false );
         button.addActionListener( new BackListener( this ) );
         // toolbar.add( button );
         //
         button = new JButton(
-            JHexIconConstants.loader.getIcon( JHexIconConstants.INCH_RIGHT ) );
+            JHexIcons.loader.getIcon( JHexIcons.INCH_RIGHT ) );
         button.setToolTipText( "Next Data" );
         button.setFocusable( false );
         button.addActionListener( new NextListener( this ) );
         // toolbar.add( button );
 
         button = new JButton(
-            JHexIconConstants.loader.getIcon( JHexIconConstants.JUMP_RIGHT ) );
+            JHexIcons.loader.getIcon( JHexIcons.JUMP_RIGHT ) );
         button.setToolTipText( "Next Data Block" );
         button.setFocusable( false );
         button.addActionListener( new NextListener( this ) );
@@ -249,8 +246,7 @@ public class JHexFrame implements IView<JFrame>
 
         SwingUtils.addActionToToolbar( toolbar, searchAction );
 
-        button = new JButton(
-            JHexIconConstants.loader.getIcon( JHexIconConstants.GOTO ) );
+        button = new JButton( JHexIcons.loader.getIcon( JHexIcons.GOTO ) );
         button.setToolTipText( "Go To Byte" );
         button.setFocusable( false );
         button.addActionListener( new GoToListener( this ) );
@@ -264,8 +260,7 @@ public class JHexFrame implements IView<JFrame>
         toolbar.add( button );
 
         JToggleButton jtb = dataViewButton;
-        jtb.setIcon(
-            JHexIconConstants.loader.getIcon( JHexIconConstants.SHOW_DATA ) );
+        jtb.setIcon( JHexIcons.loader.getIcon( JHexIcons.SHOW_DATA ) );
         jtb.setToolTipText( "Show Data" );
         jtb.setFocusable( false );
         jtb.addActionListener( new ShowDataListener( this, jtb ) );
@@ -358,8 +353,7 @@ public class JHexFrame implements IView<JFrame>
         JMenuItem item;
 
         item = new JMenuItem( "Go To Offset" );
-        item.setIcon(
-            JHexIconConstants.loader.getIcon( JHexIconConstants.GOTO ) );
+        item.setIcon( JHexIcons.loader.getIcon( JHexIcons.GOTO ) );
         item.addActionListener( new GoToListener( this ) );
         menu.add( item );
 
@@ -437,7 +431,7 @@ public class JHexFrame implements IView<JFrame>
 
         dialogView.setOkButtonText( "Close" );
 
-        dialogView.show( "Data Plot", JHexIconConstants.getAppImages(),
+        dialogView.show( "Data Plot", JHexIcons.getAppImages(),
             new Dimension( 640, 480 ) );
     }
 

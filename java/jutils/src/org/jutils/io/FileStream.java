@@ -15,8 +15,9 @@ public class FileStream implements IStream
     /***************************************************************************
      * Creates a new stream to read/write to the provided file.
      * @param file the file to be accessed.
-     * @throws FileNotFoundException if the given file does not exist or if some
-     * other error occurs while opening or creating the file.
+     * @throws FileNotFoundException if the given file does not exist and cannot
+     * be created or if some other error occurs while opening or creating the
+     * file.
      **************************************************************************/
     public FileStream( File file ) throws FileNotFoundException
     {
