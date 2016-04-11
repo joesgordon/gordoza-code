@@ -27,7 +27,8 @@ public class LogUtils
     }
 
     /***************************************************************************
-     * @param message
+     * Prints the message to the log with the header "DEBUG: ".
+     * @param message the message to be written.
      **************************************************************************/
     public static void printDebug( String message )
     {
@@ -35,7 +36,9 @@ public class LogUtils
     }
 
     /***************************************************************************
-     * @param message
+     * Prints the formatted message to the log with the header "DEBUG: ".
+     * @param format
+     * @param args
      **************************************************************************/
     public static void printDebug( String format, Object... args )
     {
@@ -43,7 +46,8 @@ public class LogUtils
     }
 
     /***************************************************************************
-     * @param message
+     * Prints the message to the log with the header "WARNING: ".
+     * @param message the message to be written.
      **************************************************************************/
     public static void printWarning( String message )
     {
@@ -51,7 +55,8 @@ public class LogUtils
     }
 
     /***************************************************************************
-     * @param message
+     * @param format
+     * @param args
      **************************************************************************/
     public static void printWarning( String format, Object... args )
     {
@@ -59,6 +64,7 @@ public class LogUtils
     }
 
     /***************************************************************************
+     * Prints the message to the log with the header "ERROR: ".
      * @param message
      **************************************************************************/
     public static void printError( String message )
@@ -67,7 +73,8 @@ public class LogUtils
     }
 
     /***************************************************************************
-     * @param message
+     * @param format
+     * @param args
      **************************************************************************/
     public static void printError( String format, Object... args )
     {
@@ -85,6 +92,7 @@ public class LogUtils
     }
 
     /***************************************************************************
+     * Prints the message to the log with the header "INFO: ".
      * @param message
      **************************************************************************/
     public static void printInfo( String message )
@@ -93,7 +101,8 @@ public class LogUtils
     }
 
     /***************************************************************************
-     * @param message
+     * @param format
+     * @param args
      **************************************************************************/
     public static void printInfo( String format, Object... args )
     {

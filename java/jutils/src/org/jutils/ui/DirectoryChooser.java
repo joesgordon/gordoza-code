@@ -210,6 +210,14 @@ public class DirectoryChooser
     }
 
     /***************************************************************************
+     * @param iconImages
+     **************************************************************************/
+    public void setIconImages( List<Image> iconImages )
+    {
+        dialog.setIconImages( iconImages );
+    }
+
+    /***************************************************************************
      * @param args
      **************************************************************************/
     public static void main( String [] args )

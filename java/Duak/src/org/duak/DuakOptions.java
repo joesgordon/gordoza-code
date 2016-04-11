@@ -2,11 +2,34 @@ package org.duak;
 
 import java.io.File;
 
+import org.jutils.utils.MaxQueue;
+
 /*******************************************************************************
  * 
  ******************************************************************************/
 public class DuakOptions
 {
     /**  */
-    public File lastAnalyzed;
+    public final MaxQueue<File> recentDirs;
+
+    /*******************************************************************************
+     * 
+     ******************************************************************************/
+    public DuakOptions()
+    {
+        this.recentDirs = new MaxQueue<>( 20 );
+    }
+
+    /*******************************************************************************
+     * @param options
+     ******************************************************************************/
+    public DuakOptions( DuakOptions options )
+    {
+        this();
+
+        if( options.recentDirs != null )
+        {
+            recentDirs.addAll( options.recentDirs );
+        }
+    }
 }

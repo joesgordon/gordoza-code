@@ -62,7 +62,9 @@ public class FileValidator implements IDataValidator<File>
 
         if( type == ExistenceType.DO_NOT_CHECK )
         {
-            if( !f.getAbsoluteFile().getParentFile().exists() )
+            File parent = f.getAbsoluteFile().getParentFile();
+
+            if( parent != null && !parent.exists() )
             {
                 throw new ValidationException( "Parent Path does not exist" );
             }

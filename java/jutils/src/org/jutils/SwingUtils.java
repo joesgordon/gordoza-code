@@ -106,10 +106,11 @@ public final class SwingUtils
         // Prompt user.
         // ---------------------------------------------------------------------
         JOptionPane jop = new JOptionPane( panel, JOptionPane.QUESTION_MESSAGE,
-            JOptionPane.OK_CANCEL_OPTION, null, choices, defaultChoice );
+            JOptionPane.OK_CANCEL_OPTION, null, null, null );
 
         JDialog dialog = jop.createDialog( parent, title );
         dialog.setModalityType( ModalityType.DOCUMENT_MODAL );
+        dialog.setResizable( true );
         dialog.setVisible( true );
 
         ans = jop.getValue();
@@ -228,12 +229,12 @@ public final class SwingUtils
 
         JOptionPane pane = new JOptionPane( message,
             JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null,
-            choices, okText)
+            choices, okText )
         {
             @Override
             public void selectInitialValue()
             {
-                initialFocusSelector.run( );
+                initialFocusSelector.run();
             }
         };
 

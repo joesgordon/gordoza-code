@@ -6,16 +6,16 @@ import java.io.File;
 
 import javax.swing.*;
 
-import org.duak.DuakConstants;
-import org.duak.DuakIcons;
+import org.duak.*;
 import org.duak.data.FileInfo;
 import org.duak.model.Analyzer;
 import org.duak.utils.HistoryList;
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
 import org.jutils.concurrent.*;
-import org.jutils.ui.JGoodiesToolBar;
-import org.jutils.ui.StandardFrameView;
+import org.jutils.io.OptionsSerializer;
+import org.jutils.ui.*;
+import org.jutils.ui.RecentFilesMenuView.IRecentSelected;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
 import org.jutils.ui.model.IView;
@@ -28,6 +28,8 @@ public class DuakFrame implements IView<JFrame>
     /**  */
     private StandardFrameView frameView;
     /**  */
+    private RecentFilesMenuView recentMenu;
+    /**  */
     private JButton previousButton;
     /**  */
     private JButton nextButton;
@@ -36,6 +38,8 @@ public class DuakFrame implements IView<JFrame>
     private final DuakPanel duakPanel;
     /**  */
     private final HistoryList<FileInfo> history;
+    /**  */
+    private final OptionsSerializer<DuakOptions> options;
 
     /***************************************************************************
      * 
@@ -43,8 +47,10 @@ public class DuakFrame implements IView<JFrame>
     public DuakFrame()
     {
         this.frameView = new StandardFrameView();
+        this.recentMenu = new RecentFilesMenuView();
         this.history = new HistoryList<FileInfo>();
         this.duakPanel = new DuakPanel();
+        this.options = DuakConstants.getOptions();
 
         duakPanel.addFolderOpenedListener( new FolderOpenedListener() );
 
@@ -52,11 +58,27 @@ public class DuakFrame implements IView<JFrame>
 
         frame.setIconImages( DuakIcons.getAppImages() );
         frame.setTitle( "Disk Usage Analysis Kit" );
+        frame.setDropTarget( new FileDropTarget( new FileDropped( this ) ) );
 
+        createMenubar( frameView.getMenuBar(), frameView.getFileMenu() );
         frameView.setToolbar( createToolbar() );
         frameView.setContent( duakPanel );
 
-        frame.setDropTarget( new FileDropTarget( new FileDropped( this ) ) );
+        recentMenu.setData( options.getOptions().recentDirs.toList() );
+        recentMenu.addSelectedListener( new OpenListener( this ) );
+    }
+
+    /***************************************************************************
+     * @param menubar
+     * @param fileMenu
+     **************************************************************************/
+    private void createMenubar( JMenuBar menubar, JMenu fileMenu )
+    {
+        int i = 0;
+
+        fileMenu.add( recentMenu.getView(), i++ );
+
+        fileMenu.add( new JSeparator(), i++ );
     }
 
     /***************************************************************************
@@ -73,8 +95,10 @@ public class DuakFrame implements IView<JFrame>
      **************************************************************************/
     private void open( File file )
     {
-        DuakConstants.getOptions().getOptions().lastAnalyzed = file;
-        DuakConstants.getOptions().write();
+        options.getOptions().recentDirs.push( file );
+        options.write();
+
+        recentMenu.setData( options.getOptions().recentDirs.toList() );
 
         // TODO fix cancel
 
@@ -195,7 +219,8 @@ public class DuakFrame implements IView<JFrame>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class OpenListener implements IFileSelectionListener
+    private static class OpenListener
+        implements IFileSelectionListener, IRecentSelected
     {
         private final DuakFrame view;
 
@@ -207,13 +232,19 @@ public class DuakFrame implements IView<JFrame>
         @Override
         public File getDefaultFile()
         {
-            return DuakConstants.getOptions().getOptions().lastAnalyzed;
+            return view.options.getOptions().recentDirs.first();
         }
 
         @Override
         public void filesChosen( File [] files )
         {
             view.open( files[0] );
+        }
+
+        @Override
+        public void selected( File file, boolean ctrlPressed )
+        {
+            view.open( file );
         }
     }
 

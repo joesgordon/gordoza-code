@@ -1,12 +1,12 @@
 package org.jutils.ui.event;
 
 import java.awt.Component;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.SwingUtilities;
-
+import org.jutils.SwingUtils;
 import org.jutils.ui.DirectoryChooser;
 
 /*******************************************************************************
@@ -42,10 +42,14 @@ public class DirectoryChooserListener implements ActionListener
     public void actionPerformed( ActionEvent e )
     {
         File lastFile = dirListener.getDefaultFile();
-        DirectoryChooser chooser = new DirectoryChooser(
-            SwingUtilities.getWindowAncestor( parent ) );
+        Window w = SwingUtils.getComponentsWindow( parent );
+        DirectoryChooser chooser = new DirectoryChooser( w );
 
         chooser.setTitle( title );
+        if( w != null )
+        {
+            chooser.setIconImages( w.getIconImages() );
+        }
 
         if( lastFile != null )
         {
