@@ -3,19 +3,20 @@ package org.jutils.io;
 import java.io.IOException;
 
 /*******************************************************************************
- * @param <T>
+ * Deep clones objects, retaining the intermediate buffer from call to call.
+ * @param <T> the type of object to be cloned.
  ******************************************************************************/
 public class ItemCloner<T>
 {
-    /**  */
+    /** The underlying memory to serialize items to/from. */
     private final ByteArrayStream stream;
-    /**  */
+    /** The output stream wrapping the underlying memory. */
     private final StreamOutput outputStream;
-    /**  */
+    /** The input stream wrapping the underlying memory. */
     private final StreamInput inputStream;
 
     /***************************************************************************
-     * 
+     * Creates a new cloner.
      **************************************************************************/
     public ItemCloner()
     {
@@ -25,9 +26,10 @@ public class ItemCloner<T>
     }
 
     /***************************************************************************
-     * @param item
-     * @return
-     * @throws IllegalStateException
+     * Deep clones the provided item.
+     * @param item the item to be cloned.
+     * @return the clone item.
+     * @throws IllegalStateException any error that occurs during serialization.
      **************************************************************************/
     public T cloneItem( T item ) throws IllegalStateException
     {

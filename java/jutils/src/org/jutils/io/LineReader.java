@@ -3,19 +3,22 @@ package org.jutils.io;
 import java.io.*;
 
 /*******************************************************************************
- * 
+ * Defines an object to read lines from a file and keep up with the number of
+ * the line read.
  ******************************************************************************/
 public class LineReader implements Closeable
 {
-    /**  */
+    /** The underlying reader. */
     private final RandomAccessFile reader;
 
-    /**  */
+    /** The number of the last line read. */
     private long lineNumber;
 
     /***************************************************************************
-     * @param file
-     * @throws FileNotFoundException
+     * Creates a new reader of the provided file.
+     * @param file the file to be read.
+     * @throws FileNotFoundException if the given file does not exist or cannot
+     * be read.
      **************************************************************************/
     public LineReader( File file ) throws FileNotFoundException
     {
@@ -33,8 +36,9 @@ public class LineReader implements Closeable
     }
 
     /***************************************************************************
-     * @return
-     * @throws IOException
+     * Reads the next line of text.
+     * @return the line read.
+     * @throws IOException any I/O error that occurs.
      **************************************************************************/
     public String readLine() throws IOException
     {
@@ -43,7 +47,7 @@ public class LineReader implements Closeable
     }
 
     /***************************************************************************
-     * @return
+     * Returns the number of the last line read.
      **************************************************************************/
     public long getLastLineNumberRead()
     {
@@ -51,8 +55,9 @@ public class LineReader implements Closeable
     }
 
     /***************************************************************************
-     * @return
-     * @throws IOException
+     * Returns the current position of the reader.
+     * @return the position of pointer to the next read operation.
+     * @throws IOException any I/O error that occurs.
      **************************************************************************/
     public long getPosition() throws IOException
     {

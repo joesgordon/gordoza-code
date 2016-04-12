@@ -13,7 +13,8 @@ import org.jutils.IconConstants;
 import org.jutils.apps.filespy.FileSpyMain;
 import org.jutils.apps.filespy.data.FileSpyData;
 import org.jutils.apps.filespy.data.SearchParams;
-import org.jutils.io.OptionsSerializer;
+import org.jutils.io.XStreamUtils;
+import org.jutils.io.options.OptionsSerializer;
 import org.jutils.licensing.LicenseDialog;
 import org.jutils.ui.*;
 import org.jutils.ui.explorer.FileConfigurationDialog;
@@ -290,7 +291,7 @@ public class FileSpyFrameView implements IView<JFrame>
             {
                 try
                 {
-                    params = ( SearchParams )SearchParams.read( fileChosen );
+                    params = XStreamUtils.readObjectXStream( fileChosen );
                     params.name = fileChosen.getName().substring( 0,
                         fileChosen.getName().length() -
                             FileSpySearchFilter.FILESPY_SEARCH_EXT.length() );
@@ -337,7 +338,7 @@ public class FileSpyFrameView implements IView<JFrame>
 
             try
             {
-                params.write( fileChosen );
+                XStreamUtils.writeObjectXStream( params, fileChosen );
             }
             catch( IOException ex )
             {

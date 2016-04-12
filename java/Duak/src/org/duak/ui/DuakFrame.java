@@ -13,7 +13,7 @@ import org.duak.utils.HistoryList;
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
 import org.jutils.concurrent.*;
-import org.jutils.io.OptionsSerializer;
+import org.jutils.io.options.OptionsSerializer;
 import org.jutils.ui.*;
 import org.jutils.ui.RecentFilesMenuView.IRecentSelected;
 import org.jutils.ui.event.*;

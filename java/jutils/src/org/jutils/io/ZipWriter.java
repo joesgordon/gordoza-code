@@ -6,23 +6,39 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class ZipWriter implements Closeable
 {
+    /**  */
     private final ZipOutputStream stream;
+    /**  */
     private final byte [] buffer = new byte[4 * 1024 * 1024];
 
+    /***************************************************************************
+     * @param file
+     * @throws FileNotFoundException
+     **************************************************************************/
     public ZipWriter( File file ) throws FileNotFoundException
     {
         this.stream = new ZipOutputStream( new BufferedOutputStream(
             new FileOutputStream( file ), 4 * 1024 * 1024 ) );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void close() throws IOException
     {
         stream.close();
     }
 
+    /***************************************************************************
+     * @param file
+     * @throws IOException
+     **************************************************************************/
     public void addFile( File file ) throws IOException
     {
         if( file.isFile() )
@@ -35,6 +51,11 @@ public class ZipWriter implements Closeable
         }
     }
 
+    /***************************************************************************
+     * @param f
+     * @param path
+     * @throws IOException
+     **************************************************************************/
     public void addFile( File f, String path ) throws IOException
     {
         ZipEntry entry = new ZipEntry( path );
@@ -49,6 +70,11 @@ public class ZipWriter implements Closeable
         }
     }
 
+    /***************************************************************************
+     * @param file
+     * @param entry
+     * @throws IOException
+     **************************************************************************/
     private void writeFile( File file, ZipEntry entry ) throws IOException
     {
         stream.putNextEntry( entry );
@@ -64,6 +90,10 @@ public class ZipWriter implements Closeable
         }
     }
 
+    /***************************************************************************
+     * @param dir
+     * @throws IOException
+     **************************************************************************/
     private void writeDirectory( File dir ) throws IOException
     {
         DirContents contents = listContents( dir );
@@ -75,6 +105,11 @@ public class ZipWriter implements Closeable
         }
     }
 
+    /***************************************************************************
+     * @param dir
+     * @return
+     * @throws IOException
+     **************************************************************************/
     public static DirContents listContents( File dir ) throws IOException
     {
         DirContents contents = new DirContents();
@@ -86,6 +121,12 @@ public class ZipWriter implements Closeable
         return contents;
     }
 
+    /***************************************************************************
+     * @param dir
+     * @param path
+     * @param contents
+     * @throws IOException
+     **************************************************************************/
     private static void addContents( File dir, String path,
         DirContents contents ) throws IOException
     {
@@ -112,6 +153,9 @@ public class ZipWriter implements Closeable
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public static class DirContents
     {
         public File parent;

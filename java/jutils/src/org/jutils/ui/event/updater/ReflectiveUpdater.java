@@ -29,6 +29,11 @@ public class ReflectiveUpdater<T> implements IUpdater<T>
         }
     }
 
+    /***************************************************************************
+     * @param obj
+     * @param structureName
+     * @param dataName
+     **************************************************************************/
     public ReflectiveUpdater( Object obj, String structureName,
         String dataName )
     {

@@ -5,21 +5,24 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /*******************************************************************************
- * 
+ * Defines an output stream that writes data in a little-endian fashion.
  ******************************************************************************/
-public class LeOutputStream extends FilterOutputStream implements DataOutput
+public class LeOutputStream implements DataOutput
 {
     /**  */
+    private final OutputStream out;
+    /** The bytes to buffer data writes. */
     private final byte [] bytes;
-    /**  */
+    /** The byte wrapper to write/read data. */
     private final ByteBuffer buffer;
 
     /***************************************************************************
+     * Creates a
      * @param out
      **************************************************************************/
     public LeOutputStream( OutputStream out )
     {
-        super( out );
+        this.out = out;
 
         this.bytes = new byte[8];
         this.buffer = ByteBuffer.wrap( bytes );
@@ -33,7 +36,7 @@ public class LeOutputStream extends FilterOutputStream implements DataOutput
     @Override
     public void writeBoolean( boolean v ) throws IOException
     {
-        super.write( v ? 1 : 0 );
+        out.write( v ? 1 : 0 );
     }
 
     /***************************************************************************
@@ -42,7 +45,7 @@ public class LeOutputStream extends FilterOutputStream implements DataOutput
     @Override
     public void writeByte( int v ) throws IOException
     {
-        super.write( v );
+        out.write( v );
     }
 
     /***************************************************************************
@@ -54,7 +57,7 @@ public class LeOutputStream extends FilterOutputStream implements DataOutput
         buffer.rewind();
         buffer.putShort( ( short )v );
 
-        super.write( bytes, 0, 2 );
+        out.write( bytes, 0, 2 );
     }
 
     /***************************************************************************
@@ -66,7 +69,7 @@ public class LeOutputStream extends FilterOutputStream implements DataOutput
         buffer.rewind();
         buffer.putInt( v );
 
-        super.write( bytes, 0, 4 );
+        out.write( bytes, 0, 4 );
     }
 
     /***************************************************************************
@@ -79,7 +82,7 @@ public class LeOutputStream extends FilterOutputStream implements DataOutput
         buffer.putLong( v );
         buffer.get( bytes );
 
-        super.write( bytes, 0, 8 );
+        out.write( bytes, 0, 8 );
     }
 
     /***************************************************************************
@@ -91,7 +94,7 @@ public class LeOutputStream extends FilterOutputStream implements DataOutput
         buffer.rewind();
         buffer.putFloat( v );
 
-        super.write( bytes, 0, 4 );
+        out.write( bytes, 0, 4 );
     }
 
     /***************************************************************************
@@ -103,7 +106,7 @@ public class LeOutputStream extends FilterOutputStream implements DataOutput
         buffer.rewind();
         buffer.putDouble( v );
 
-        super.write( bytes, 0, 8 );
+        out.write( bytes, 0, 8 );
     }
 
     /***************************************************************************
@@ -112,7 +115,7 @@ public class LeOutputStream extends FilterOutputStream implements DataOutput
     @Override
     public void writeBytes( String s ) throws IOException
     {
-        super.write( s.getBytes() );
+        out.write( s.getBytes() );
     }
 
     /***************************************************************************
@@ -140,5 +143,32 @@ public class LeOutputStream extends FilterOutputStream implements DataOutput
     public void writeUTF( String s ) throws IOException
     {
         throw new RuntimeException( "Function not implemented" );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void write( int b ) throws IOException
+    {
+        out.write( b );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void write( byte [] b ) throws IOException
+    {
+        out.write( b );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void write( byte [] b, int off, int len ) throws IOException
+    {
+        out.write( b, off, len );
     }
 }

@@ -22,7 +22,7 @@ import org.jutils.chart.ui.event.ChartMouseListenter;
 import org.jutils.chart.ui.event.SaveSeriesDataListener;
 import org.jutils.chart.ui.objects.*;
 import org.jutils.io.IOUtils;
-import org.jutils.io.OptionsSerializer;
+import org.jutils.io.options.OptionsSerializer;
 import org.jutils.ui.JGoodiesToolBar;
 import org.jutils.ui.OkDialogView;
 import org.jutils.ui.OkDialogView.OkDialogButtons;

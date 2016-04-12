@@ -11,7 +11,7 @@ import org.jutils.chart.ChartUtils;
 import org.jutils.chart.model.ISeriesData;
 import org.jutils.chart.model.Series;
 import org.jutils.chart.ui.ChartView;
-import org.jutils.io.OptionsSerializer;
+import org.jutils.io.options.OptionsSerializer;
 import org.jutils.ui.RecentFilesMenuView;
 import org.jutils.ui.RecentFilesMenuView.IRecentSelected;
 import org.jutils.ui.StandardFrameView;

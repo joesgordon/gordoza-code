@@ -16,6 +16,7 @@ import org.jutils.*;
 import org.jutils.apps.filespy.data.*;
 import org.jutils.apps.filespy.search.Searcher;
 import org.jutils.io.*;
+import org.jutils.io.options.OptionsSerializer;
 import org.jutils.ui.*;
 import org.jutils.ui.calendar.CalendarField;
 import org.jutils.ui.event.ItemActionEvent;

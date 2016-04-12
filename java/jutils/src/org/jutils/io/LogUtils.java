@@ -2,6 +2,7 @@ package org.jutils.io;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Formatter;
 
 import org.jutils.Utils;
 
@@ -37,8 +38,8 @@ public class LogUtils
 
     /***************************************************************************
      * Prints the formatted message to the log with the header "DEBUG: ".
-     * @param format
-     * @param args
+     * @param format a string with a {@link Formatter}.
+     * @param args the referenced by the format specifiers in the format string.
      **************************************************************************/
     public static void printDebug( String format, Object... args )
     {
@@ -55,8 +56,9 @@ public class LogUtils
     }
 
     /***************************************************************************
-     * @param format
-     * @param args
+     * Prints the formatted message to the log with the header "WARNING: ".
+     * @param format a string with a {@link Formatter}.
+     * @param args the referenced by the format specifiers in the format string.
      **************************************************************************/
     public static void printWarning( String format, Object... args )
     {
@@ -65,7 +67,7 @@ public class LogUtils
 
     /***************************************************************************
      * Prints the message to the log with the header "ERROR: ".
-     * @param message
+     * @param message the message to be written.
      **************************************************************************/
     public static void printError( String message )
     {
@@ -73,8 +75,9 @@ public class LogUtils
     }
 
     /***************************************************************************
-     * @param format
-     * @param args
+     * Prints the formatted message to the log with the header "ERROR: ".
+     * @param format a string with a {@link Formatter}.
+     * @param args the referenced by the format specifiers in the format string.
      **************************************************************************/
     public static void printError( String format, Object... args )
     {
@@ -82,8 +85,9 @@ public class LogUtils
     }
 
     /***************************************************************************
-     * @param message
-     * @param ex
+     * Prints the formatted message to the log with the header "ERROR: ".
+     * @param message the message to be written.
+     * @param ex the exception that generated error.
      **************************************************************************/
     public static void printError( String message, Exception ex )
     {
@@ -93,7 +97,7 @@ public class LogUtils
 
     /***************************************************************************
      * Prints the message to the log with the header "INFO: ".
-     * @param message
+     * @param message the message to be written.
      **************************************************************************/
     public static void printInfo( String message )
     {
@@ -101,8 +105,9 @@ public class LogUtils
     }
 
     /***************************************************************************
-     * @param format
-     * @param args
+     * Prints the formatted message to the log with the header "INFO: ".
+     * @param format a string with a {@link Formatter}.
+     * @param args the referenced by the format specifiers in the format string.
      **************************************************************************/
     public static void printInfo( String format, Object... args )
     {
@@ -110,18 +115,9 @@ public class LogUtils
     }
 
     /***************************************************************************
-     * @param msgClass
-     * @param message
-     **************************************************************************/
-    private static void printMessage( String msgClass, String format,
-        Object... args )
-    {
-        printMessage( msgClass, String.format( format, args ) );
-    }
-
-    /***************************************************************************
-     * @param msgClass
-     * @param message
+     * Prints the message to the log with the provided header.
+     * @param msgClass the type of message to be written.
+     * @param message the message to be written.
      **************************************************************************/
     private static void printMessage( String msgClass, String message )
     {
@@ -130,5 +126,18 @@ public class LogUtils
         System.out.print( dateFormatter.format( new Date() ) );
         System.out.print( "]: " );
         System.out.println( message );
+    }
+
+    /***************************************************************************
+     * Prints the formatted message to the log with provided header.
+     * @param msgClass the type of message to be written.
+     * @param format a string with a {@link Formatter}.
+     * @param args the referenced by the format specifiers in the format string.
+     * @see String#format(String, Object...)
+     **************************************************************************/
+    private static void printMessage( String msgClass, String format,
+        Object... args )
+    {
+        printMessage( msgClass, String.format( format, args ) );
     }
 }

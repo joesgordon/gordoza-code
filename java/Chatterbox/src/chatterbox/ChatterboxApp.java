@@ -5,7 +5,7 @@ import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import org.jutils.io.OptionsSerializer;
+import org.jutils.io.options.OptionsSerializer;
 import org.jutils.ui.app.IFrameApp;
 
 import chatterbox.data.ChatterConfig;

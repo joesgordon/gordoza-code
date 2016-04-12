@@ -20,7 +20,7 @@ import org.jutils.apps.jhex.task.SearchTask;
 import org.jutils.chart.ChartIcons;
 import org.jutils.datadist.DataDistribution;
 import org.jutils.io.IStream;
-import org.jutils.io.OptionsSerializer;
+import org.jutils.io.options.OptionsSerializer;
 import org.jutils.task.TaskView;
 import org.jutils.ui.*;
 import org.jutils.ui.OkDialogView.OkDialogButtons;

@@ -6,12 +6,11 @@ import java.util.regex.Pattern;
 
 import org.jutils.Utils;
 import org.jutils.io.IOUtils;
-import org.jutils.io.XObject;
 
 /*******************************************************************************
  * This class defines the parameters of the files to find.
  ******************************************************************************/
-public class SearchParams extends XObject
+public class SearchParams
 {
     /** The filename pattern. */
     public String filename = null;

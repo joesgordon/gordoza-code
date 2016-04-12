@@ -4,8 +4,8 @@ import java.io.File;
 
 import org.budgey.data.BudgeyOptions;
 import org.jutils.io.IOUtils;
-import org.jutils.io.OptionsSerializer;
-import org.jutils.io.OptionsSerializer.IOptionsCreator;
+import org.jutils.io.options.IOptionsCreator;
+import org.jutils.io.options.OptionsSerializer;
 import org.jutils.ui.app.FrameApplication;
 
 /*******************************************************************************

@@ -5,7 +5,7 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 import org.jutils.io.IOUtils;
-import org.jutils.io.OptionsSerializer;
+import org.jutils.io.options.OptionsSerializer;
 
 import chatterbox.data.ChatterConfig;
 
