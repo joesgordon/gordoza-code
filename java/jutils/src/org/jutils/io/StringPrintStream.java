@@ -3,15 +3,15 @@ package org.jutils.io;
 import org.jutils.Utils;
 
 /*******************************************************************************
- * 
+ * Defines a print stream that writes to a string.
  ******************************************************************************/
 public class StringPrintStream implements IPrintStream
 {
-    /**  */
+    /** The buffer to hold the strings written. */
     private final StringBuilder buffer;
 
     /***************************************************************************
-     * 
+     * Creates a new print stream with an empty buffer.
      **************************************************************************/
     public StringPrintStream()
     {
@@ -47,7 +47,7 @@ public class StringPrintStream implements IPrintStream
     }
 
     /***************************************************************************
-     * @return
+     * Returns {@code true} if the stream has never been written to.
      **************************************************************************/
     public boolean isEmpty()
     {

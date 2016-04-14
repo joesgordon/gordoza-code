@@ -4,15 +4,16 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /*******************************************************************************
- * 
+ * Wraps an {@link IStream} as an {@link InputStream}.
  ******************************************************************************/
 public class StreamInput extends InputStream
 {
-    /**  */
+    /** The underlying stream. */
     private final IStream stream;
 
     /***************************************************************************
-     * @param stream
+     * Creates a new input stream with the provided stream.
+     * @param stream the stream to be wrapped.
      **************************************************************************/
     public StreamInput( IStream stream )
     {

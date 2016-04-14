@@ -8,8 +8,16 @@ import com.thoughtworks.xstream.XStreamException;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class XStreamUtils
+public final class XStreamUtils
 {
+    /***************************************************************************
+     * Declare the default and only constructor private to prevent instances.
+     **************************************************************************/
+    private XStreamUtils()
+    {
+        ;
+    }
+
     /***************************************************************************
      * @param obj Object
      * @param file File
