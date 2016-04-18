@@ -2,7 +2,6 @@ package org.jutils.io;
 
 import java.io.EOFException;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 import org.jutils.utils.ByteOrdering;
 
@@ -12,14 +11,9 @@ import org.jutils.utils.ByteOrdering;
 public class DataStream implements IDataStream
 {
     /** The underlying stream. */
-    private IStream stream;
-
-    /** Buffer to be used for intrinsic reading/writing. */
-    private final ByteBuffer buffer;
-    /** The bytes that seed the buffer. */
-    private final byte [] bytes;
-    /** The byte order used for reading/writing. */
-    private final ByteOrdering order;
+    private final IStream stream;
+    /** Buffer to convert data to bytes. */
+    private final DataBuffer buffer;
 
     /***************************************************************************
      * Creates a data stream that reads data with big endian byte ordering.
@@ -38,13 +32,7 @@ public class DataStream implements IDataStream
     public DataStream( IStream stream, ByteOrdering order )
     {
         this.stream = stream;
-
-        this.bytes = new byte[8];
-
-        this.order = order;
-
-        this.buffer = ByteBuffer.wrap( bytes );
-        this.buffer.order( order.order );
+        this.buffer = new DataBuffer( order );
     }
 
     // -------------------------------------------------------------------------
@@ -183,10 +171,8 @@ public class DataStream implements IDataStream
     @Override
     public short readShort() throws IOException
     {
-        readFully( bytes, 0, 2 );
-        buffer.rewind();
-
-        return buffer.getShort();
+        readFully( buffer.bytes, 0, 2 );
+        return buffer.readShort();
     }
 
     /***************************************************************************
@@ -195,10 +181,8 @@ public class DataStream implements IDataStream
     @Override
     public int readInt() throws IOException
     {
-        readFully( bytes, 0, 4 );
-        buffer.rewind();
-
-        return buffer.getInt();
+        readFully( buffer.bytes, 0, 4 );
+        return buffer.readInt();
     }
 
     /***************************************************************************
@@ -207,10 +191,8 @@ public class DataStream implements IDataStream
     @Override
     public long readLong() throws IOException
     {
-        readFully( bytes, 0, 8 );
-        buffer.rewind();
-
-        return buffer.getLong();
+        readFully( buffer.bytes, 0, 8 );
+        return buffer.readLong();
     }
 
     /***************************************************************************
@@ -219,10 +201,8 @@ public class DataStream implements IDataStream
     @Override
     public float readFloat() throws IOException
     {
-        readFully( bytes, 0, 4 );
-        buffer.rewind();
-
-        return buffer.getFloat();
+        readFully( buffer.bytes, 0, 4 );
+        return buffer.readFloat();
     }
 
     /***************************************************************************
@@ -231,10 +211,8 @@ public class DataStream implements IDataStream
     @Override
     public double readDouble() throws IOException
     {
-        readFully( bytes, 0, 8 );
-        buffer.rewind();
-
-        return buffer.getDouble();
+        readFully( buffer.bytes, 0, 8 );
+        return buffer.readDouble();
     }
 
     /***************************************************************************
@@ -252,10 +230,8 @@ public class DataStream implements IDataStream
     @Override
     public void writeShort( short v ) throws IOException
     {
-        buffer.rewind();
-        buffer.putShort( v );
-
-        write( bytes, 0, 2 );
+        buffer.writeShort( v );
+        write( buffer.bytes, 0, 2 );
     }
 
     /***************************************************************************
@@ -264,10 +240,8 @@ public class DataStream implements IDataStream
     @Override
     public void writeInt( int v ) throws IOException
     {
-        buffer.rewind();
-        buffer.putInt( v );
-
-        write( bytes, 0, 4 );
+        buffer.writeInt( v );
+        write( buffer.bytes, 0, 4 );
     }
 
     /***************************************************************************
@@ -276,10 +250,8 @@ public class DataStream implements IDataStream
     @Override
     public void writeLong( long v ) throws IOException
     {
-        buffer.rewind();
-        buffer.putLong( v );
-
-        write( bytes, 0, 8 );
+        buffer.writeLong( v );
+        write( buffer.bytes, 0, 8 );
     }
 
     /***************************************************************************
@@ -288,10 +260,8 @@ public class DataStream implements IDataStream
     @Override
     public void writeFloat( float v ) throws IOException
     {
-        buffer.rewind();
-        buffer.putFloat( v );
-
-        write( bytes, 0, 4 );
+        buffer.writeFloat( v );
+        write( buffer.bytes, 0, 4 );
     }
 
     /***************************************************************************
@@ -300,10 +270,8 @@ public class DataStream implements IDataStream
     @Override
     public void writeDouble( double v ) throws IOException
     {
-        buffer.rewind();
-        buffer.putDouble( v );
-
-        write( bytes, 0, 8 );
+        buffer.writeDouble( v );
+        write( buffer.bytes, 0, 8 );
     }
 
     /***************************************************************************
@@ -330,6 +298,6 @@ public class DataStream implements IDataStream
     @Override
     public ByteOrdering getOrder()
     {
-        return order;
+        return buffer.getOrder();
     }
 }

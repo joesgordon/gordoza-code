@@ -5,15 +5,25 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JCheckBox;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class CheckBoxUpdater implements ActionListener
 {
-    private final IUpdater<Boolean> updater;
+    /**  */
+    public final IUpdater<Boolean> updater;
 
+    /***************************************************************************
+     * @param updater
+     **************************************************************************/
     public CheckBoxUpdater( IUpdater<Boolean> updater )
     {
         this.updater = updater;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void actionPerformed( ActionEvent e )
     {

@@ -10,6 +10,7 @@ import org.jutils.ui.ListView.IItemListModel;
 import org.jutils.ui.ListView.ItemListCellRenderer;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
@@ -29,6 +30,9 @@ public class ItemListView<T> implements IDataView<List<T>>
     /** The component to be displayed when no item is selected. */
     private final JPanel nullSelectionPanel;
 
+    /** The item selection listeners to be called when an item is selected. */
+    private final List<IUpdater<T>> selectedListeners;
+
     /** The items to be displayed. */
     private List<T> items;
 
@@ -47,6 +51,10 @@ public class ItemListView<T> implements IDataView<List<T>>
         this.itempane = new JScrollPane( nullSelectionPanel );
 
         this.view = createView();
+
+        this.selectedListeners = new ArrayList<>();
+
+        itemsView.addSelectedListener( ( item ) -> itemSelected( item ) );
     }
 
     /***************************************************************************
@@ -129,6 +137,14 @@ public class ItemListView<T> implements IDataView<List<T>>
     }
 
     /***************************************************************************
+     * @param l
+     **************************************************************************/
+    public void addItemSelectedListener( IUpdater<T> l )
+    {
+        selectedListeners.add( l );
+    }
+
+    /***************************************************************************
      * @return
      **************************************************************************/
     public T getSelected()
@@ -143,6 +159,17 @@ public class ItemListView<T> implements IDataView<List<T>>
     public void setItemsSize( int width, int height )
     {
         itemsView.setItemsSize( width, height );
+    }
+
+    /***************************************************************************
+     * @param evt
+     **************************************************************************/
+    private void itemSelected( ItemActionEvent<T> evt )
+    {
+        for( IUpdater<T> u : selectedListeners )
+        {
+            u.update( evt.getItem() );
+        }
     }
 
     /***************************************************************************

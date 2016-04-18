@@ -573,6 +573,7 @@ public final class IOUtils
         if( !file.exists() )
         {
             File parent = file.getAbsoluteFile().getParentFile();
+
             if( !parent.exists() )
             {
                 throw new ValidationException( "The specified " + name +
