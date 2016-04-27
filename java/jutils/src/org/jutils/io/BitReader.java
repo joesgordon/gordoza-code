@@ -6,16 +6,16 @@ package org.jutils.io;
 public class BitReader
 {
     /** Masks needed to clear a particular bit. */
-    public static final int [] MASKS;
+    public static final long [] MASKS;
 
     static
     {
-        MASKS = new int[64];
+        MASKS = new long[64];
 
         for( int m = 0; m < MASKS.length; m++ )
         {
             MASKS[m] = 1;
-            for( int i = 1; i < m; i++ )
+            for( int i = 0; i < m; i++ )
             {
                 MASKS[m] <<= 1;
             }
@@ -23,7 +23,7 @@ public class BitReader
     }
 
     /** The mask for the desired bit. */
-    private final int mask;
+    private final long mask;
 
     /***************************************************************************
      * Creates a new reader with the provided bit.

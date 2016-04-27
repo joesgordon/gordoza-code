@@ -41,6 +41,8 @@ public class UsableFormField<T>
 
         field.setUpdater( new DataUpdater<T>( this,
             new ReflectiveUpdater<T>( this, "usable.data" ) ) );
+
+        setValue( new Usable<>() );
     }
 
     /***************************************************************************

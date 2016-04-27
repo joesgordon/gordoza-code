@@ -47,6 +47,10 @@ public class ChartView implements IView<JComponent>
     private final IPalette palette;
     /**  */
     public final PropertiesView propertiesView;
+    /**  */
+    private final JToolBar toolbar;
+    /**  */
+    private final JSeparator separator;
 
     /**  */
     public final Action openAction;
@@ -95,7 +99,9 @@ public class ChartView implements IView<JComponent>
         this.saveDataAction = createSaveDataAction();
         this.propertiesAction = createPropertiesAction();
 
-        this.view = createView( allowOpen, gradientToolbar );
+        this.toolbar = createToolbar( allowOpen, gradientToolbar );
+        this.separator = new JSeparator();
+        this.view = createView();
 
         this.fileLoadedListeners = new ItemActionList<>();
 
@@ -134,7 +140,7 @@ public class ChartView implements IView<JComponent>
      * @param gradientToolbar
      * @return
      **************************************************************************/
-    private JPanel createView( boolean allowOpen, boolean gradientToolbar )
+    private JPanel createView()
     {
         JPanel panel = new JPanel( new GridBagLayout() );
         GridBagConstraints constraints;
@@ -142,12 +148,12 @@ public class ChartView implements IView<JComponent>
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 0, 0, 0 ), 0, 0 );
-        panel.add( createToolbar( allowOpen, gradientToolbar ), constraints );
+        panel.add( toolbar, constraints );
 
         constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 0, 0, 0 ), 0, 0 );
-        panel.add( new JSeparator(), constraints );
+        panel.add( separator, constraints );
 
         constraints = new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -162,8 +168,7 @@ public class ChartView implements IView<JComponent>
      * @param gradientToolbar
      * @return
      **************************************************************************/
-    private Component createToolbar( boolean allowOpen,
-        boolean gradientToolbar )
+    private JToolBar createToolbar( boolean allowOpen, boolean gradientToolbar )
     {
         JToolBar toolbar;
 
@@ -488,6 +493,15 @@ public class ChartView implements IView<JComponent>
 
         chartWidget.plots.repaint();
         mainPanel.repaint();
+    }
+
+    /***************************************************************************
+     * @param visible
+     **************************************************************************/
+    public void setToolbarVisible( boolean visible )
+    {
+        toolbar.setVisible( visible );
+        separator.setVisible( visible );
     }
 
     /***************************************************************************
