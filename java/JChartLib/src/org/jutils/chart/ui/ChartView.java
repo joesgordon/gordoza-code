@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 
 import org.jutils.*;
 import org.jutils.chart.*;
@@ -105,6 +106,7 @@ public class ChartView implements IView<JComponent>
 
         this.fileLoadedListeners = new ItemActionList<>();
 
+        // mainPanel.setBorder( new LineBorder( Color.blue, 4 ) );
         mainPanel.setObject( chartWidget );
 
         ChartMouseListenter ml = new ChartMouseListenter( this, chartWidget,
@@ -473,12 +475,27 @@ public class ChartView implements IView<JComponent>
      **************************************************************************/
     public void clear()
     {
+        chart.title.text = "Title";
+        chart.title.visible = false;
+        chart.domainAxis.title.text = "Domain";
+        chart.domainAxis.title.visible = false;
+        chart.rangeAxis.title.text = "Range";
+        chart.rangeAxis.title.visible = false;
+        chart.secDomainAxis.title.text = "Secondary Domain";
+        chart.secDomainAxis.title.visible = false;
+        chart.secRangeAxis.title.text = "Secondary Range";
+        chart.secRangeAxis.title.visible = false;
+        chart.legend.visible = false;
+
         propertiesView.clear();
 
         chart.series.clear();
         chartWidget.clear();
 
-        restoreAndRepaintChart();
+        // restoreAndRepaintChart();
+        chartWidget.calculateAutoBounds();
+        chartWidget.latchBounds();
+        repaintChart();
     }
 
     /***************************************************************************

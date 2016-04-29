@@ -28,7 +28,7 @@
           <dia:boolean val="false"/>
         </dia:attribute>
         <dia:attribute name="scaling">
-          <dia:real val="1.0983784198760986"/>
+          <dia:real val="1.0176961421966553"/>
         </dia:attribute>
         <dia:attribute name="fitto">
           <dia:boolean val="true"/>
@@ -71,13 +71,13 @@
   <dia:layer name="Background" visible="true" active="true">
     <dia:object type="UML - Class" version="0" id="O0">
       <dia:attribute name="obj_pos">
-        <dia:point val="28.975,26.325"/>
+        <dia:point val="28.625,12.525"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="28.925,26.275;37.61,33.575"/>
+        <dia:rectangle val="28.575,12.475;37.26,19.775"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
-        <dia:point val="28.975,26.325"/>
+        <dia:point val="28.625,12.525"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
         <dia:real val="8.5849999999999991"/>
@@ -343,13 +343,13 @@
     </dia:object>
     <dia:object type="UML - Class" version="0" id="O1">
       <dia:attribute name="obj_pos">
-        <dia:point val="41.995,29.105"/>
+        <dia:point val="43.295,15.155"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="41.945,29.055;49.7375,33.955"/>
+        <dia:rectangle val="43.245,15.105;51.0375,20.005"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
-        <dia:point val="41.995,29.105"/>
+        <dia:point val="43.295,15.155"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
         <dia:real val="7.6924999999999999"/>

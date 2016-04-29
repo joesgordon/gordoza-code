@@ -38,6 +38,8 @@ public class Layer2d
      **************************************************************************/
     private void createImage()
     {
+        // img = new BufferedImage( size.width, size.height,
+        // BufferedImage.TYPE_INT_RGB );
         img = Utils.createTransparentImage( size.width, size.height );
 
         graphics = img.createGraphics();
@@ -94,20 +96,22 @@ public class Layer2d
     }
 
     /***************************************************************************
-     * @param graphics
+     * @param dst
      **************************************************************************/
-    public void paint( Graphics2D graphics )
+    public void paint( Graphics2D dst )
     {
-        paint( graphics, 0, 0 );
+        paint( dst, 0, 0 );
     }
 
     /***************************************************************************
-     * @param graphics
+     * @param dst
      * @param x
      * @param y
      **************************************************************************/
-    public void paint( Graphics2D graphics, int x, int y )
+    public void paint( Graphics2D dst, int x, int y )
     {
-        graphics.drawImage( img, x, y, null );
+        // dst.translate( -x, -y );
+        dst.drawImage( img, x, y, null );
+        // dst.translate( x, y );
     }
 }

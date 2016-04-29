@@ -1,7 +1,8 @@
 package org.jutils.chart.app;
 
 import java.awt.Color;
-import java.awt.event.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 
 import javax.swing.*;
@@ -164,7 +165,7 @@ public class JChartFrameView implements IView<JFrame>
         menu.add( recentFiles.getView(), i++ );
 
         item = new JMenuItem( "Clear" );
-        item.addActionListener( new ClearListener( this ) );
+        item.addActionListener( ( e ) -> chartView.clear() );
         menu.add( item, i++ );
 
         menu.add( new JSeparator(), i++ );
@@ -193,25 +194,6 @@ public class JChartFrameView implements IView<JFrame>
     public JFrame getView()
     {
         return frameView.getView();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class ClearListener implements ActionListener
-    {
-        private final JChartFrameView view;
-
-        public ClearListener( JChartFrameView view )
-        {
-            this.view = view;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            view.chartView.clear();
-        }
     }
 
     /***************************************************************************

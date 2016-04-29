@@ -48,6 +48,7 @@ public class WidgetPanel extends JComponent
     @Override
     public void paintComponent( Graphics g )
     {
+        Graphics2D graphics = ( Graphics2D )g;
         super.paintComponent( g );
 
         IChartWidget obj = null;
@@ -62,19 +63,38 @@ public class WidgetPanel extends JComponent
             return;
         }
 
-        Dimension size = new Dimension( getWidth(), getHeight() );
+        Insets borderSize = super.getInsets();
+        int width = super.getWidth() - borderSize.left - borderSize.right - 1;
+        int height = super.getHeight() - borderSize.top - borderSize.bottom - 1;
+        int x = borderSize.left;
+        int y = borderSize.top;
         Dimension min = getMinimumSize();
 
-        size.width = Math.max( size.width, min.width );
-        size.height = Math.max( size.height, min.height );
+        width = Math.max( width, min.width );
+        height = Math.max( height, min.height );
 
-        layer.setSize( size );
+        Dimension size = new Dimension( width, height );
 
+        // graphics.setColor( Color.red );
+        // graphics.drawRect( x + 1, y + 1, size.width - 2, size.height - 2 );
+        // graphics.setColor( Color.cyan );
+        // graphics.drawLine( x + 1, y + 5, x + size.width - 1, y + 5 );
+
+        layer.setSize( new Dimension( size.width + 1, size.height + 1 ) );
         obj.calculateSize( size );
         obj.draw( layer.getGraphics(), new Point(), size );
 
-        layer.paint( ( Graphics2D )g );
+        // Graphics2D g2 = layer.getGraphics();
+        // g2.setColor( Color.black );
+        // g2.drawRect( 0, 0, size.width, size.height );
+        // g2.setColor( Color.green );
+        // g2.drawLine( 1, 6, size.width - 1, 6 );
 
-        // obj.draw( ( Graphics2D )g, new Point(), size );
+        layer.paint( graphics, x, y );
+
+        // if( "".isEmpty() )
+        // {
+        // return;
+        // }
     }
 }
