@@ -35,7 +35,7 @@ public class ParserFormField<T> implements IDataFormField<T>
         IDataValidator<T> dataValidator;
         IUpdater<T> updater = ( d ) -> update( d );
 
-        dataValidator = new ParserValidator<>( parser );
+        dataValidator = new ParserDataValidator<>( parser );
         textValidator = new DataTextValidator<>( dataValidator, updater );
         textField.getField().setValidator( textValidator );
     }

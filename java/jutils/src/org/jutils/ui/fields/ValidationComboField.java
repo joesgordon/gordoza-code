@@ -2,11 +2,14 @@ package org.jutils.ui.fields;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.util.*;
 
 import javax.swing.*;
 
+import org.jutils.ValidationException;
+import org.jutils.io.IParser;
 import org.jutils.ui.event.updater.ComboBoxUpdater;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.model.ItemComboBoxModel;
@@ -65,7 +68,7 @@ public final class ValidationComboField<T> implements IValidationField
 
         field.setBackground( validBackground );
         field.addItemListener(
-            new ComboBoxUpdater<T>( new ValidationActionListener<T>( this ) ) );
+            new ComboBoxUpdater<T>( new ItemChangedListener<T>( this ) ) );
     }
 
     /***************************************************************************
@@ -176,9 +179,14 @@ public final class ValidationComboField<T> implements IValidationField
     /***************************************************************************
      * @param editable
      **************************************************************************/
-    public void setEditable( boolean editable )
+    public void setEditable( IParser<T> parser )
     {
-        field.setEditable( editable );
+        field.setEditable( parser != null );
+        ValidationComboEditor editor = new ValidationComboEditor( parser );
+
+        editor.field.addValidityChanged(
+            new EditorValidityChangedListener( listenerList ) );
+        field.setEditor( editor );
     }
 
     /***************************************************************************
@@ -216,11 +224,11 @@ public final class ValidationComboField<T> implements IValidationField
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class ValidationActionListener<T> implements IUpdater<T>
+    private static class ItemChangedListener<T> implements IUpdater<T>
     {
         private ValidationComboField<T> field;
 
-        public ValidationActionListener( ValidationComboField<T> field )
+        public ItemChangedListener( ValidationComboField<T> field )
         {
             this.field = field;
         }
@@ -313,6 +321,104 @@ public final class ValidationComboField<T> implements IValidationField
         {
             return renderer.getListCellRendererComponent( list, value, index,
                 isSelected, cellHasFocus );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private class ValidationComboEditor implements ComboBoxEditor
+    {
+        private final IParser<T> parser;
+        public final ValidationTextField field;
+
+        public ValidationComboEditor( IParser<T> parser )
+        {
+            this.parser = parser;
+            this.field = new ValidationTextField();
+            field.setValidator( ( t ) -> parser.parse( t ) );
+        }
+
+        @Override
+        public Component getEditorComponent()
+        {
+            return field.getView();
+        }
+
+        @Override
+        public void setItem( Object obj )
+        {
+            DescriptorObject doItem;
+            if( obj != null )
+            {
+                @SuppressWarnings( "unchecked")
+                DescriptorObject item = ( DescriptorObject )obj;
+                doItem = item;
+            }
+            else
+            {
+                doItem = new DescriptorObject( null );
+            }
+
+            field.setText( doItem.toString() );
+        }
+
+        @Override
+        public DescriptorObject getItem()
+        {
+            try
+            {
+                T item = parser.parse( field.getText() );
+                return new DescriptorObject( item );
+            }
+            catch( ValidationException e )
+            {
+                return null;
+            }
+        }
+
+        @Override
+        public void selectAll()
+        {
+            field.getView().selectAll();
+        }
+
+        @Override
+        public void addActionListener( ActionListener l )
+        {
+            field.getView().addActionListener( l );
+        }
+
+        @Override
+        public void removeActionListener( ActionListener l )
+        {
+            field.getView().removeActionListener( l );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class EditorValidityChangedListener
+        implements IValidityChangedListener
+    {
+        private ValidityListenerList list;
+
+        public EditorValidityChangedListener( ValidityListenerList list )
+        {
+            this.list = list;
+        }
+
+        @Override
+        public void signalValid()
+        {
+            list.signalValid();
+        }
+
+        @Override
+        public void signalInvalid( String reason )
+        {
+            list.signalInvalid( reason );
         }
     }
 }

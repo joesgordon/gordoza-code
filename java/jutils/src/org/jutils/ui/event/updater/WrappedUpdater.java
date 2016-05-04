@@ -1,30 +1,33 @@
-package org.jutils.ui.validators;
-
-import org.jutils.ValidationException;
-import org.jutils.io.IParser;
+package org.jutils.ui.event.updater;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ParserValidator<T> implements IDataValidator<T>
+public class WrappedUpdater<T> implements IUpdater<T>
 {
     /**  */
-    private final IParser<T> parser;
+    private final IUpdater<T> baseUpdater;
+    /**  */
+    private final IUpdater<T> secUpdater;
 
     /***************************************************************************
-     * 
+     * @param baseUpdater
+     * @param secUpdater
      **************************************************************************/
-    public ParserValidator( IParser<T> parser )
+    public WrappedUpdater( IUpdater<T> baseUpdater, IUpdater<T> secUpdater )
     {
-        this.parser = parser;
+        this.baseUpdater = baseUpdater;
+        this.secUpdater = secUpdater;
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public T validate( String text ) throws ValidationException
+    public void update( T data )
     {
-        return parser.parse( text );
+        this.baseUpdater.update( data );
+        this.secUpdater.update( data );
+
     }
 }

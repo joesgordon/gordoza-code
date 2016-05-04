@@ -6,6 +6,8 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.ListCellRenderer;
 
+import org.jutils.ValidationException;
+import org.jutils.io.IParser;
 import org.jutils.ui.event.updater.ComboBoxUpdater;
 import org.jutils.ui.event.updater.IUpdater;
 
@@ -158,9 +160,14 @@ public final class ComboFormField<T> implements IDataFormField<T>
     /***************************************************************************
      * @param editable
      **************************************************************************/
-    public void setUserEditable( boolean editable )
+    public void setUserEditable( IParser<T> parser )
     {
-        field.setEditable( editable );
+        if( parser != null )
+        {
+            parser = new ParserListener<T>( parser, this );
+        }
+
+        field.setEditable( parser );
     }
 
     /***************************************************************************
@@ -182,6 +189,34 @@ public final class ComboFormField<T> implements IDataFormField<T>
             {
                 field.updater.update( field.getValue() );
             }
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class ParserListener<T> implements IParser<T>
+    {
+        private final IParser<T> parser;
+        private final ComboFormField<T> field;
+
+        public ParserListener( IParser<T> parser, ComboFormField<T> field )
+        {
+            this.parser = parser;
+            this.field = field;
+        }
+
+        @Override
+        public T parse( String str ) throws ValidationException
+        {
+            T item = parser.parse( str );
+
+            if( field.updater != null )
+            {
+                field.updater.update( item );
+            }
+
+            return item;
         }
     }
 }

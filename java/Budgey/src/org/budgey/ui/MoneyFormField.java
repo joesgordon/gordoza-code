@@ -35,7 +35,7 @@ public class MoneyFormField implements IDataFormField<Money>
         ITextValidator textValidator;
 
         textValidator = new DataTextValidator<>(
-            new ParserValidator<>( new MoneyParser() ),
+            new ParserDataValidator<>( new MoneyParser() ),
             new ValueUpdater( this ) );
         field.getField().setValidator( textValidator );
     }
