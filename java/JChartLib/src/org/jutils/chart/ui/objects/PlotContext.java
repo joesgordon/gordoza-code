@@ -221,7 +221,8 @@ public class PlotContext
 
         if( min == null )
         {
-            return null;
+            min = -5.0;
+            max = 5.0;
         }
         else if( min.equals( max ) )
         {

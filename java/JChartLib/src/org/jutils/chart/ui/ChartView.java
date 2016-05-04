@@ -10,7 +10,6 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 
 import org.jutils.*;
 import org.jutils.chart.*;
