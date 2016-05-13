@@ -136,6 +136,9 @@ public class AxesWidget implements IChartWidget
         Ticks ticks;
         Insets textSpace;
 
+        // ---------------------------------------------------------------------
+        // Determine tick sizes.
+        // ---------------------------------------------------------------------s
         ticks = calculateTicks();
         textSpace = calculateLabelInsets( size, ticks );
 
@@ -153,6 +156,25 @@ public class AxesWidget implements IChartWidget
         context.height = Math.max( 0, context.height );
 
         context.latchCoords();
+
+        // ---------------------------------------------------------------------
+        // Determine tick sizes.
+        // ---------------------------------------------------------------------
+        ticks = calculateTicks();
+        textSpace = calculateLabelInsets( size, ticks );
+
+        // ---------------------------------------------------------------------
+        // Update plot size.
+        // ---------------------------------------------------------------------
+        context.x = p.x + textSpace.left;
+        context.y = p.y + textSpace.top;
+        context.width = d.width - ( textSpace.left + textSpace.right ) -
+            AXIS_WEIGHT / 2;
+        context.height = d.height - ( textSpace.top + textSpace.bottom ) -
+            AXIS_WEIGHT / 2;
+
+        context.width = Math.max( 0, context.width );
+        context.height = Math.max( 0, context.height );
 
         // graphics.setColor( Color.red );
         // graphics.drawRect( context.x, context.y, context.width,
@@ -163,27 +185,9 @@ public class AxesWidget implements IChartWidget
         // return;
         // }
 
-        // ---------------------------------------------------------------------
-        // Determine tick sizes.
-        // ---------------------------------------------------------------------
-        ticks = calculateTicks();
-        textSpace = calculateLabelInsets( size, ticks );
-        positionTicks( ticks, textSpace );
-
-        // ---------------------------------------------------------------------
-        // Update plot size.
-        // ---------------------------------------------------------------------
-        context.x = p.x + textSpace.left;
-        context.y = p.y + textSpace.top;
-        context.width = d.width - ( textSpace.left + textSpace.right ) -
-            AXIS_WEIGHT / 2;
-        context.height = d.height - ( textSpace.top + textSpace.bottom ) -
-            AXIS_WEIGHT / 2;
-
-        context.width = Math.max( 0, context.width );
-        context.height = Math.max( 0, context.height );
-
         context.latchCoords();
+
+        positionTicks( ticks, textSpace );
 
         // ---------------------------------------------------------------------
         // Draw the axis titles.
@@ -203,47 +207,11 @@ public class AxesWidget implements IChartWidget
     }
 
     /***************************************************************************
-     * @param size
-     * @return
-     **************************************************************************/
-    private Insets caculateTitleSpace( Dimension size )
-    {
-        Insets space = new Insets( 0, 0, 0, 0 );
-        Dimension d;
-
-        if( domainTitle.label.visible && chart.domainAxis.isUsed )
-        {
-            d = domainTitle.calculateSize( size );
-            space.bottom = d.height;
-        }
-
-        if( rangeTitle.label.visible && chart.rangeAxis.isUsed )
-        {
-            d = rangeTitle.calculateSize( size );
-            space.left = d.width;
-        }
-
-        if( secDomainTitle.label.visible && chart.secDomainAxis.isUsed )
-        {
-            d = secDomainTitle.calculateSize( size );
-            space.top = d.height;
-        }
-
-        if( secRangeTitle.label.visible && chart.secRangeAxis.isUsed )
-        {
-            d = secRangeTitle.calculateSize( size );
-            space.right = d.width;
-        }
-
-        return space;
-    }
-
-    /***************************************************************************
      * @param location
      * @param size
      **************************************************************************/
-    public void drawTitles( Graphics2D graphics, Point location, Dimension size,
-        Insets textSpace )
+    private void drawTitles( Graphics2D graphics, Point location,
+        Dimension size, Insets textSpace )
     {
         Point p = new Point( location );
         Dimension d = new Dimension( size );
@@ -269,7 +237,7 @@ public class AxesWidget implements IChartWidget
         // ---------------------------------------------------------------------
         // Draw primary domain title
         // ---------------------------------------------------------------------
-        if( chart.domainAxis.title.visible )
+        if( chart.domainAxis.title.visible && chart.domainAxis.isUsed )
         {
             d = domainTitle.calculateSize( size );
 
@@ -307,7 +275,7 @@ public class AxesWidget implements IChartWidget
         // ---------------------------------------------------------------------
         // Draw primary range title
         // ---------------------------------------------------------------------
-        if( chart.rangeAxis.title.visible )
+        if( chart.rangeAxis.title.visible && chart.rangeAxis.isUsed )
         {
             d = rangeTitle.calculateSize( size );
 
@@ -323,61 +291,6 @@ public class AxesWidget implements IChartWidget
             location.x += d.width;
             size.width -= d.width;
         }
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    private Ticks calculateTicks()
-    {
-        Ticks ts = new Ticks();
-        TickGen gen = new TickGen();
-
-        gen.genTicks( chart.domainAxis, context.width, ts.domainTicks );
-        gen.genTicks( chart.rangeAxis, context.height, ts.rangeTicks );
-        gen.genTicks( chart.secDomainAxis, context.width, ts.secDomainTicks );
-        gen.genTicks( chart.secRangeAxis, context.height, ts.secRangeTicks );
-
-        return ts;
-    }
-
-    /***************************************************************************
-     * @param ts
-     * @param textSpace
-     **************************************************************************/
-    private void positionTicks( Ticks ts, Insets textSpace )
-    {
-        positionTicks( ts.domainTicks, context.domainCoords, textSpace.left );
-        positionTicks( ts.rangeTicks, context.rangeCoords, textSpace.top );
-        positionTicks( ts.secDomainTicks, context.secDomainCoords,
-            textSpace.left );
-        positionTicks( ts.secRangeTicks, context.secRangeCoords,
-            textSpace.top );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private void positionTicks( List<Tick> ticks, IAxisCoords coords,
-        int offset )
-    {
-        for( Tick t : ticks )
-        {
-            t.offset = offset + coords.fromCoord( t.value );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public void repaint()
-    {
-        axesLayer.repaint = true;
-
-        domainTitle.repaint();
-        secDomainTitle.repaint();
-        rangeTitle.repaint();
-        secRangeTitle.repaint();
     }
 
     /***************************************************************************
@@ -407,7 +320,7 @@ public class AxesWidget implements IChartWidget
 
             // g2d.setColor( Color.red );
             // g2d.setStroke( new BasicStroke( 1.0f ) );
-            // g2d.drawRect( 0, 0, width - 1, height - 1 );
+            // g2d.drawRect( 0, 0, size.width - 1, size.height - 1 );
 
             // LogUtils.printDebug( "axes: w: " + w + ", h: " + h );
             // LogUtils.printDebug( "axes: xr: " + context.getXRange() );
@@ -483,6 +396,97 @@ public class AxesWidget implements IChartWidget
         }
 
         axesLayer.paint( graphics, x, y );
+    }
+
+    /***************************************************************************
+     * @param size
+     * @return
+     **************************************************************************/
+    private Insets caculateTitleSpace( Dimension size )
+    {
+        Insets space = new Insets( 0, 0, 0, 0 );
+        Dimension d;
+
+        if( domainTitle.label.visible && chart.domainAxis.isUsed )
+        {
+            d = domainTitle.calculateSize( size );
+            space.bottom = d.height;
+        }
+
+        if( rangeTitle.label.visible && chart.rangeAxis.isUsed )
+        {
+            d = rangeTitle.calculateSize( size );
+            space.left = d.width;
+        }
+
+        if( secDomainTitle.label.visible && chart.secDomainAxis.isUsed )
+        {
+            d = secDomainTitle.calculateSize( size );
+            space.top = d.height;
+        }
+
+        if( secRangeTitle.label.visible && chart.secRangeAxis.isUsed )
+        {
+            d = secRangeTitle.calculateSize( size );
+            space.right = d.width;
+        }
+
+        return space;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Ticks calculateTicks()
+    {
+        Ticks ts = new Ticks();
+        TickGen gen = new TickGen();
+
+        gen.genTicks( chart.domainAxis, context.width, ts.domainTicks );
+        gen.genTicks( chart.rangeAxis, context.height, ts.rangeTicks );
+        gen.genTicks( chart.secDomainAxis, context.width, ts.secDomainTicks );
+        gen.genTicks( chart.secRangeAxis, context.height, ts.secRangeTicks );
+
+        return ts;
+    }
+
+    /***************************************************************************
+     * @param ts
+     * @param textSpace
+     **************************************************************************/
+    private void positionTicks( Ticks ts, Insets textSpace )
+    {
+        positionTicks( ts.domainTicks, context.domainCoords, textSpace.left );
+        positionTicks( ts.rangeTicks, context.rangeCoords, textSpace.top );
+        positionTicks( ts.secDomainTicks, context.secDomainCoords,
+            textSpace.left );
+        positionTicks( ts.secRangeTicks, context.secRangeCoords,
+            textSpace.top );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private void positionTicks( List<Tick> ticks, IAxisCoords coords,
+        int offset )
+    {
+        for( Tick t : ticks )
+        {
+            t.offset = offset + coords.fromCoord( t.value );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public void repaint()
+    {
+        axesLayer.repaint = true;
+
+        domainTitle.repaint();
+        secDomainTitle.repaint();
+        rangeTitle.repaint();
+        secRangeTitle.repaint();
     }
 
     /***************************************************************************

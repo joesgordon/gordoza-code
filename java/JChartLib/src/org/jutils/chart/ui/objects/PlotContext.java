@@ -221,8 +221,15 @@ public class PlotContext
 
         if( min == null )
         {
-            min = -5.0;
-            max = 5.0;
+            if( isPrimary )
+            {
+                min = -5.0;
+                max = 5.0;
+            }
+            else
+            {
+                return null;
+            }
         }
         else if( min.equals( max ) )
         {

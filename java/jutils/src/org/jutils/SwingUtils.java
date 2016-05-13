@@ -638,6 +638,37 @@ public final class SwingUtils
     }
 
     /***************************************************************************
+     * @param frame
+     **************************************************************************/
+    public static void setFullScreen( JFrame frame )
+    {
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
+
+        setFullScreen( frame, defaultScreen );
+    }
+
+    /***************************************************************************
+     * @param frame
+     * @param device
+     **************************************************************************/
+    public static void setFullScreen( JFrame frame, GraphicsDevice device )
+    {
+        frame.setUndecorated( true );
+        frame.setAlwaysOnTop( true );
+        frame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
+
+        if( device.isFullScreenSupported() && !"".isEmpty() )
+        {
+            device.setFullScreenWindow( frame );
+        }
+        else
+        {
+            frame.setExtendedState( JFrame.MAXIMIZED_BOTH );
+        }
+    }
+
+    /***************************************************************************
      * An action listener that copies data from a data view to the system
      * clipboard using XStream.
      **************************************************************************/
