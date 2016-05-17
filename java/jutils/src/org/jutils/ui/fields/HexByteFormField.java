@@ -138,7 +138,10 @@ public class HexByteFormField implements IDataFormField<Byte>
     public void setValue( Byte value )
     {
         this.value = value;
-        textField.setText( HexUtils.toHexString( value ) );
+
+        String text = value == null ? "" : HexUtils.toHexString( value );
+
+        textField.setText( text );
     }
 
     /***************************************************************************

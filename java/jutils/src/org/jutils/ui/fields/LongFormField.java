@@ -137,7 +137,10 @@ public class LongFormField implements IDataFormField<Long>
     public void setValue( Long value )
     {
         this.value = value;
-        textField.setText( "" + value );
+
+        String text = value == null ? "" : "" + value;
+
+        textField.setText( text );
     }
 
     /***************************************************************************

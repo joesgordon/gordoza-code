@@ -133,9 +133,12 @@ public class DoubleFormField implements IDataFormField<Double>
     public void setValue( Double value )
     {
         this.value = value;
+
+        String text = value == null ? "" : "" + value;
         IUpdater<Double> updater = this.updater;
+
         this.updater = null;
-        textField.setText( "" + value );
+        textField.setText( text );
         this.updater = updater;
     }
 

@@ -98,6 +98,7 @@ public class HexBytesFormField implements IDataFormField<byte []>
         this.value = value;
 
         String text = value == null ? "" : HexUtils.toHexString( value );
+
         textField.setText( text );
     }
 

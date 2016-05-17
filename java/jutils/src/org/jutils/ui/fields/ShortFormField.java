@@ -114,7 +114,10 @@ public class ShortFormField implements IDataFormField<Short>
     public void setValue( Short value )
     {
         this.value = value;
-        textField.setText( "" + value );
+
+        String text = value == null ? "" : "" + value;
+
+        textField.setText( text );
     }
 
     /***************************************************************************

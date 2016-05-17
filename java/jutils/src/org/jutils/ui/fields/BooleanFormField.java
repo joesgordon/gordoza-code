@@ -66,7 +66,7 @@ public class BooleanFormField
     @Override
     public void setValue( Boolean value )
     {
-        flagField.setSelected( value );
+        flagField.setSelected( value == null ? false : value );
     }
 
     /***************************************************************************

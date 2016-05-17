@@ -9,10 +9,18 @@ import javax.swing.event.ListDataListener;
 import org.jutils.ListUtils;
 import org.jutils.io.IStringWriter;
 
+/*******************************************************************************
+ * @param T
+ ******************************************************************************/
 public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel<T>
 {
+    /**  */
     private final List<ListDataListener> ldListeners;
+    /**  */
+    private final boolean autoAdd;
+    /**  */
     private final List<T> items;
+    /**  */
     private int selectedIndex;
 
     /***************************************************************************
@@ -20,15 +28,25 @@ public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel<T>
      **************************************************************************/
     public ItemComboBoxModel()
     {
-        this( new ArrayList<T>() );
+        this( new ArrayList<T>(), true );
     }
 
     /***************************************************************************
-     * 
+     * @param items
      **************************************************************************/
     public ItemComboBoxModel( List<T> items )
     {
+        this( items, true );
+    }
+
+    /***************************************************************************
+     * @param items
+     * @param autoAdd
+     **************************************************************************/
+    public ItemComboBoxModel( List<T> items, boolean autoAdd )
+    {
         this.items = new ArrayList<T>( items );
+        this.autoAdd = autoAdd;
 
         this.ldListeners = new ArrayList<ListDataListener>();
         this.selectedIndex = -1;
@@ -136,7 +154,7 @@ public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel<T>
             {
                 selectedIndex = items.indexOf( item );
 
-                if( selectedIndex < 0 )
+                if( selectedIndex < 0 && autoAdd )
                 {
                     items.add( item );
                     selectedIndex = items.indexOf( item );

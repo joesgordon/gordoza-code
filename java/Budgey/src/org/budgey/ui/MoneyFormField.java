@@ -74,7 +74,10 @@ public class MoneyFormField implements IDataFormField<Money>
     public void setValue( Money value )
     {
         this.amount = value;
-        field.setText( value.toString() );
+
+        String text = value == null ? "" : value.toString();
+
+        field.setText( text );
     }
 
     /***************************************************************************

@@ -126,9 +126,12 @@ public class IntegerFormField implements IDataFormField<Integer>
     public void setValue( Integer value )
     {
         this.value = value;
+
+        String text = value == null ? "" : "" + value;
         IUpdater<Integer> updater = this.updater;
+
         this.updater = null;
-        textField.setText( "" + value );
+        textField.setText( text );
         this.updater = updater;
     }
 

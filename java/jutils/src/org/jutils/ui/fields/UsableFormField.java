@@ -52,7 +52,7 @@ public class UsableFormField<T>
     {
         JPanel panel = new JPanel( new BorderLayout() );
 
-        usedField.addActionListener( new UsedListener( this ) );
+        usedField.addActionListener( new CheckedListener<T>( this ) );
 
         panel.add( usedField, BorderLayout.WEST );
         panel.add( field.getField(), BorderLayout.CENTER );
@@ -95,14 +95,18 @@ public class UsableFormField<T>
     {
         this.usable = value;
 
-        usedField.setSelected( value.isUsed );
-
-        if( value.data != null )
+        if( value != null )
         {
+            usedField.setSelected( value.isUsed );
             field.setValue( value.data );
+            field.setEditable( value.isUsed );
         }
-
-        field.setEditable( value.isUsed );
+        else
+        {
+            usedField.setSelected( false );
+            field.setValue( null );
+            field.setEditable( false );
+        }
     }
 
     /***************************************************************************
@@ -219,11 +223,11 @@ public class UsableFormField<T>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class UsedListener implements ActionListener
+    private static class CheckedListener<T> implements ActionListener
     {
-        private final UsableFormField<?> field;
+        private final UsableFormField<T> field;
 
-        public UsedListener( UsableFormField<?> field )
+        public CheckedListener( UsableFormField<T> field )
         {
             this.field = field;
         }
@@ -233,11 +237,9 @@ public class UsableFormField<T>
         {
             field.usable.isUsed = field.usedField.isSelected();
             field.field.setEditable( field.usable.isUsed );
+            // field.field.setValue( field.field.getValue() );
 
-            if( field.updater != null )
-            {
-                field.callUpdater();
-            }
+            field.callUpdater();
         }
     }
 

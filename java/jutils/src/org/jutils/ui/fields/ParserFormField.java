@@ -74,7 +74,10 @@ public class ParserFormField<T> implements IDataFormField<T>
     public void setValue( T value )
     {
         this.value = value;
-        textField.setText( value == null ? "" : value.toString() );
+
+        String text = value == null ? "" : "" + value;
+
+        textField.setText( text );
     }
 
     /***************************************************************************

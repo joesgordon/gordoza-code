@@ -152,10 +152,19 @@ public class TextLabelField implements IDataFormField<TextLabel>
     {
         this.label = value;
 
-        visibleField.setSelected( value.visible );
-        textField.setText( value.text );
-        textField.getView().setFont( value.font );
-        colorView.setData( value.color );
+        if( value != null )
+        {
+            visibleField.setSelected( value.visible );
+            textField.setText( value.text );
+            textField.getView().setFont( value.font );
+            colorView.setData( value.color );
+        }
+        else
+        {
+            visibleField.setSelected( false );
+            textField.setText( "" );
+            colorView.setData( Color.black );
+        }
     }
 
     /***************************************************************************

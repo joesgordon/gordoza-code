@@ -19,9 +19,7 @@ import org.jutils.ui.validation.ValidationView;
 public class HexBytesField implements IDataFormField<byte []>
 {
     /**  */
-    private final ItemComboBoxModel<byte []> model;
-    /**  */
-    private final JComboBox<byte []> comboField;
+    private final JComboBox<HexBytesItem> comboField;
     /**  */
     private final HexBytesFormField bytesField;
     /**  */
@@ -40,16 +38,15 @@ public class HexBytesField implements IDataFormField<byte []>
      **************************************************************************/
     public HexBytesField( List<byte []> quickList )
     {
-        this.model = new ItemComboBoxModel<>( quickList );
-        this.comboField = new JComboBox<>( model );
+        this.comboField = new JComboBox<>( createModel( quickList ) );
         this.bytesField = new HexBytesFormField( "" );
         this.view = new ValidationView( getValidationField(), null,
             comboField );
 
-        comboField.setRenderer( new SyncRenderer() );
+        comboField.setRenderer( new HexBytesRenderer() );
 
         comboField.setEditable( true );
-        comboField.setEditor( new SyncComboEditor( bytesField ) );
+        comboField.setEditor( new HexBytesComboEditor( bytesField ) );
 
         Dimension dim;
 
@@ -60,6 +57,19 @@ public class HexBytesField implements IDataFormField<byte []>
         dim = comboField.getPreferredSize();
         dim.width = 50;
         comboField.setPreferredSize( dim );
+    }
+
+    private static ItemComboBoxModel<HexBytesItem> createModel(
+        List<byte []> quickList )
+    {
+        List<HexBytesItem> items = new ArrayList<>();
+
+        for( byte [] b : quickList )
+        {
+            items.add( new HexBytesItem( b ) );
+        }
+
+        return new ItemComboBoxModel<>( items, false );
     }
 
     /***************************************************************************
@@ -87,7 +97,7 @@ public class HexBytesField implements IDataFormField<byte []>
     public byte [] getValue()
     {
         int index = comboField.getSelectedIndex();
-        return index < 0 ? null : comboField.getItemAt( index );
+        return index < 0 ? null : comboField.getItemAt( index ).bytes;
     }
 
     /***************************************************************************
@@ -96,6 +106,7 @@ public class HexBytesField implements IDataFormField<byte []>
     @Override
     public void setValue( byte [] value )
     {
+        comboField.setSelectedItem( new HexBytesItem( value ) );
         bytesField.setValue( value );
     }
 
@@ -138,7 +149,55 @@ public class HexBytesField implements IDataFormField<byte []>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class SyncRenderer extends DefaultListCellRenderer
+    private static class HexBytesItem
+    {
+        public final byte [] bytes;
+
+        public HexBytesItem( byte [] bytes )
+        {
+            this.bytes = bytes;
+        }
+
+        @Override
+        public boolean equals( Object obj )
+        {
+            if( obj == null )
+            {
+                return false;
+            }
+
+            if( obj instanceof HexBytesItem )
+            {
+                HexBytesItem item = ( HexBytesItem )obj;
+
+                if( item.bytes.length != bytes.length )
+                {
+                    return false;
+                }
+
+                for( int i = 0; i < bytes.length; i++ )
+                {
+                    if( bytes[i] != item.bytes[i] )
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        @Override
+        public String toString()
+        {
+            return HexUtils.toHexString( bytes );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class HexBytesRenderer extends DefaultListCellRenderer
     {
         public Component getListCellRendererComponent( JList<?> list,
             Object value, int index, boolean isSelected, boolean cellHasFocus )
@@ -146,9 +205,9 @@ public class HexBytesField implements IDataFormField<byte []>
             super.getListCellRendererComponent( list, value, index, isSelected,
                 cellHasFocus );
 
-            byte [] bytes = ( byte [] )value;
+            HexBytesItem bytes = ( HexBytesItem )value;
 
-            super.setText( HexUtils.toHexString( bytes ) );
+            super.setText( bytes.toString() );
 
             return this;
         }
@@ -158,11 +217,11 @@ public class HexBytesField implements IDataFormField<byte []>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class SyncComboEditor implements ComboBoxEditor
+    private static class HexBytesComboEditor implements ComboBoxEditor
     {
         private final HexBytesFormField field;
 
-        public SyncComboEditor( HexBytesFormField bytesField )
+        public HexBytesComboEditor( HexBytesFormField bytesField )
         {
             this.field = bytesField;
         }
@@ -176,15 +235,18 @@ public class HexBytesField implements IDataFormField<byte []>
         @Override
         public void setItem( Object item )
         {
-            byte [] value = ( byte [] )item;
+            HexBytesItem value = ( HexBytesItem )item;
 
-            field.setValue( value );
+            byte [] b = value == null ? null : value.bytes;
+
+            field.setValue( b );
         }
 
         @Override
-        public byte [] getItem()
+        public HexBytesItem getItem()
         {
-            return field.getValue();
+            byte [] b = field.getValue();
+            return b == null ? null : new HexBytesItem( b );
         }
 
         @Override

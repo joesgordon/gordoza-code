@@ -71,14 +71,9 @@ public class BitsField implements IDataFormField<BitArray>
     {
         this.value = value;
 
-        if( value != null )
-        {
-            textField.setText( value.toString() );
-        }
-        else
-        {
-            textField.setText( "" );
-        }
+        String text = value == null ? "" : value.toString();
+
+        textField.setText( text );
     }
 
     /***************************************************************************

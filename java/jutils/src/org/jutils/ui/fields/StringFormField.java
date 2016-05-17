@@ -85,7 +85,10 @@ public class StringFormField implements IDataFormField<String>
     public void setValue( String value )
     {
         this.value = value;
-        textField.setText( "" + value );
+
+        String text = value == null ? "" : "" + value;
+
+        textField.setText( text );
     }
 
     /***************************************************************************
