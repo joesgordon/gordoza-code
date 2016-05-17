@@ -14,8 +14,10 @@ public interface ISignaler
 
     /***************************************************************************
      * @param percent
+     * @return {@code true} if the percent complete changed enough to issue the
+     * update; {@code false} otherwise.
      **************************************************************************/
-    public void signalPercent( int percent );
+    public boolean signalPercent( int percent );
 
     /***************************************************************************
      * @param error

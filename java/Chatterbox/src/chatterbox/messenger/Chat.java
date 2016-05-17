@@ -412,9 +412,10 @@ public class Chat extends AbstractChat
         }
 
         @Override
-        public void signalPercent( int percent )
+        public boolean signalPercent( int percent )
         {
             // TODO Auto-generated method stub
+            return true;
         }
 
         @Override

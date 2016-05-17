@@ -28,8 +28,9 @@ public class NullTaskHandler implements ITaskHandler
      * 
      **************************************************************************/
     @Override
-    public void signalPercent( int percent )
+    public boolean signalPercent( int percent )
     {
+        return true;
     }
 
     /***************************************************************************

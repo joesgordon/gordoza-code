@@ -32,17 +32,22 @@ public class TaskUpdater
 
     /***************************************************************************
      * @param position
+     * @return {@code true} if the percent complete changed enough to issue the
+     * update; {@code false} otherwise.
      **************************************************************************/
-    public void update( Number position )
+    public boolean update( Number position )
     {
         this.position = position;
         int percent = ( int )( position.doubleValue() * 100.0 /
             length.doubleValue() );
+
         if( percent != this.percent )
         {
             this.percent = percent;
-            handler.signalPercent( percent );
+            return handler.signalPercent( percent );
         }
+
+        return false;
     }
 
     /***************************************************************************

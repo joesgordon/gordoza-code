@@ -37,9 +37,9 @@ public class SignalerTaskHander implements ITaskHandler
      * 
      **************************************************************************/
     @Override
-    public void signalPercent( int percent )
+    public boolean signalPercent( int percent )
     {
-        signaler.signalPercent( percent );
+        return signaler.signalPercent( percent );
     }
 
     /***************************************************************************

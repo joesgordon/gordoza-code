@@ -276,9 +276,9 @@ public class TaskPool
         }
 
         @Override
-        public void signalPercent( int percent )
+        public boolean signalPercent( int percent )
         {
-            handler.signalPercent( percent );
+            return handler.signalPercent( percent );
         }
 
         @Override

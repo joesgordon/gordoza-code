@@ -45,9 +45,9 @@ public class TaskHandler implements ITaskHandler
      * 
      **************************************************************************/
     @Override
-    public void signalPercent( int percent )
+    public boolean signalPercent( int percent )
     {
-        view.signalPercent( percent );
+        return view.signalPercent( percent );
     }
 
     /***************************************************************************
