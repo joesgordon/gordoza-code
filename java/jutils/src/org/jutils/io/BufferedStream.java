@@ -63,21 +63,13 @@ public class BufferedStream implements IStream
     {
         if( writeOnNextFlush )
         {
-            boolean updateLength = false;
-
-            if( buffer.isReadCached( streamLen ) )
-            {
-                updateLength = true;
-            }
-
             buffer.writeToStream( stream );
             writeOnNextFlush = false;
 
-            if( updateLength )
-            {
-                streamLen = getLength();
-            }
+            streamLen = getLength();
         }
+
+        // LogUtils.printDebug( "Flushing Stream: Length: %016X", getLength() );
     }
 
     /***************************************************************************
@@ -191,9 +183,10 @@ public class BufferedStream implements IStream
 
         if( getAvailable() < len )
         {
-            throw new EOFException(
-                "Cannot read " + len + " bytes from the stream; only " +
-                    getAvailable() + " bytes available." );
+            throw new EOFException( "Cannot read " + len +
+                " bytes from the stream; only " + getAvailable() +
+                " bytes available @ position " + getPosition() +
+                " with stream length " + getLength() + "." );
         }
 
         while( totalRead < len )

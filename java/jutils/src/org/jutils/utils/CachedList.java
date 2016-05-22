@@ -177,8 +177,11 @@ public class CachedList<T> implements List<T>
             // -----------------------------------------------------------------
             if( unwritten )
             {
-                // LogUtils.printDebug( "writing @ " + index );
+                // LogUtils.printDebug( "writing @ position %016X, index %d",
+                // stream.getPosition(), index );
                 writeCache();
+                // LogUtils.printDebug( " post-write len: %016X",
+                // stream.getLength() );
 
                 unwritten = false;
             }
@@ -186,15 +189,18 @@ public class CachedList<T> implements List<T>
             // -----------------------------------------------------------------
             // Read cache if necessary
             // -----------------------------------------------------------------
-            // LogUtils.printDebug( "reading @ " + index );
+            // LogUtils.printDebug( "reading @ position %016X, index %d",
+            // stream.getPosition(), index );
             readCache( index );
         }
         catch( IOException ex )
         {
+            ex.printStackTrace();
             return false;
         }
         catch( ValidationException ex )
         {
+            ex.printStackTrace();
             return false;
         }
 
@@ -211,24 +217,24 @@ public class CachedList<T> implements List<T>
         int cacheIndex = index / cacheCount;
 
         long position = cacheIndex * cacheCount * cacher.getItemSize();
+        // LogUtils.printDebug( " reading from position: %d", position );
 
         cache.clear();
 
         cachedIndex = cacheIndex * cacheCount;
 
-        if( position == stream.getLength() )
+        if( position != stream.getLength() )
         {
-            return;
+            stream.seek( position );
+
+            for( int i = 0; i < cacheCount && stream.getAvailable() > 0; i++ )
+            {
+                cache.add( cacher.read( stream ) );
+            }
         }
 
-        stream.seek( position );
-
-        for( int i = 0; i < cacheCount && stream.getAvailable() > 0; i++ )
-        {
-            cache.add( cacher.read( stream ) );
-        }
-
-        // LogUtils.printDebug( " read: " + cache.size() );
+        // LogUtils.printDebug( " read: %d from %016X", cache.size(),
+        // position );
     }
 
     /***************************************************************************
@@ -236,13 +242,13 @@ public class CachedList<T> implements List<T>
      **************************************************************************/
     private void writeCache() throws IOException
     {
-        // LogUtils.printDebug( " wrote " +
-        // ( cache.size() * cacher.getItemSize() ) + " bytes" );
-
         for( int i = 0; i < cache.size(); i++ )
         {
             cacher.write( cache.get( i ), stream );
         }
+
+        // LogUtils.printDebug(
+        // " wrote " + ( cache.size() * cacher.getItemSize() ) + " bytes" );
     }
 
     /***************************************************************************

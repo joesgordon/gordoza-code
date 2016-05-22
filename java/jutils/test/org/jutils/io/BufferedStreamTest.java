@@ -429,6 +429,43 @@ public class BufferedStreamTest
      * 
      **************************************************************************/
     @Test
+    public void testWriteDataJustPastBufferThenCheckEndOfFile()
+    {
+        try( ByteArrayStream byteStream = new ByteArrayStream();
+             BufferedStream bufStream = new BufferedStream( byteStream, 8 ) )
+        {
+            byte count = 11;
+            long expectedLen = 3L * 11L;
+
+            for( byte i = 0; i < count; i++ )
+            {
+                bufStream.write( i );
+                bufStream.write( i );
+                bufStream.write( i );
+            }
+
+            bufStream.seek( 0L );
+
+            for( byte i = 0; i < count; i++ )
+            {
+                bufStream.read();
+                bufStream.read();
+                bufStream.read();
+            }
+
+            Assert.assertEquals( expectedLen, bufStream.getLength() );
+        }
+        catch( IOException ex )
+        {
+            ex.printStackTrace();
+            Assert.fail( ex.getMessage() );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Test
     public void testWriteMockDataToDataStream()
     {
         byte [] buffer = new byte[100];
@@ -556,8 +593,8 @@ public class BufferedStreamTest
             throws IOException
         {
             stream.writeInt( item.i );
-            // stream.writeBoolean( item.b );
-            stream.write( ( byte )1 );
+            stream.writeBoolean( item.b );
+            // stream.write( ( byte )1 );
             // stream.writeDouble( item.d );
             // stream.writeFloat( item.f );
             // stream.write( ( byte )item.c );

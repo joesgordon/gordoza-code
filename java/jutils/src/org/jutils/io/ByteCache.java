@@ -168,6 +168,9 @@ public class ByteCache
     {
         stream.seek( position );
         stream.write( cache, 0, cacheLen );
+        // LogUtils.printDebug( " wrote %d bytes @ %016X: %d", cacheLen,
+        // position,
+        // stream.getLength() );
     }
 
     /***************************************************************************

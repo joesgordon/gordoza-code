@@ -94,7 +94,8 @@ public class CachedListTest
         final int count = 8;
         final int testCount = 9;
 
-        try( ByteArrayStream bufStream = new ByteArrayStream();
+        try( ByteArrayStream byteStream = new ByteArrayStream();
+             BufferedStream bufStream = new BufferedStream( byteStream, 8 );
              DataStream stream = new DataStream( bufStream ) )
         {
             ICacher<Integer> cacher = createCacher();
