@@ -211,23 +211,23 @@ public class ByteArrayStream implements IStream
     }
 
     /***************************************************************************
-     * 
+     * @throws IOException
      **************************************************************************/
     @Override
-    public void readFully( byte [] buf )
+    public void readFully( byte [] buf ) throws EOFException
     {
         readFully( buf, 0, buf.length );
     }
 
     /***************************************************************************
-     * @throws ArrayIndexOutOfBoundsException
+     * @throws IOException
      **************************************************************************/
     @Override
-    public void readFully( byte [] buf, int off, int len )
+    public void readFully( byte [] buf, int off, int len ) throws EOFException
     {
         if( len > getAvailable() )
         {
-            throw new ArrayIndexOutOfBoundsException(
+            throw new EOFException(
                 "Cannot fill with " + len + " bytes as only " +
                     getAvailableByteCount() + " bytes are available." );
         }

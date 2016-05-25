@@ -113,15 +113,6 @@ public class BufferedStream implements IStream
      * 
      **************************************************************************/
     @Override
-    public void readFully( byte [] buf ) throws IOException
-    {
-        readFully( buf, 0, buf.length );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
     public int read( byte [] buf, int off, int len ) throws IOException
     {
         int bytesRead = 0;
@@ -141,6 +132,10 @@ public class BufferedStream implements IStream
 
             bytesRead = toRead;
             position += toRead;
+        }
+        else
+        {
+            flush();
         }
 
         if( bytesRead < len )
@@ -170,6 +165,15 @@ public class BufferedStream implements IStream
         // printDebug( "read-post: " + bytesRead );
 
         return bytesRead;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void readFully( byte [] buf ) throws IOException
+    {
+        readFully( buf, 0, buf.length );
     }
 
     /***************************************************************************
@@ -293,7 +297,6 @@ public class BufferedStream implements IStream
             // -----------------------------------------------------------------
             if( writeOnNextFlush )
             {
-                buffer.writeToStream( stream );
                 flush();
             }
 

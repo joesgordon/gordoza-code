@@ -18,15 +18,15 @@ public class CachedList<T> implements List<T>
     private final ICacher<T> cacher;
     /** The stream to be serialized to/from for this list. */
     private final IDataStream stream;
-    /** The number of item to store in each cache. */
-    private final int cacheCount;
     /** The current item cache. */
     private final ArrayList<T> cache;
 
     /** The index of the current cache. */
     private int cachedIndex;
-    /** The size of the entire list. */
+    /** The number of items in the entire list. */
     private int size;
+    /** The number of items to store in each cache. */
+    private int cacheSize;
     /**
      * {@code true} if the loaded cache needs to be written to disk;
      * {@code false} otherwise.
@@ -47,14 +47,14 @@ public class CachedList<T> implements List<T>
     /***************************************************************************
      * @param cacher
      * @param stream
-     * @param cacheCount
+     * @param cacheSize
      **************************************************************************/
-    public CachedList( ICacher<T> cacher, IDataStream stream, int cacheCount )
+    public CachedList( ICacher<T> cacher, IDataStream stream, int cacheSize )
     {
         this.cacher = cacher;
         this.stream = stream;
-        this.cacheCount = cacheCount;
-        this.cache = new ArrayList<>( cacheCount );
+        this.cacheSize = cacheSize;
+        this.cache = new ArrayList<>( cacheSize );
 
         this.cachedIndex = 0;
         this.unwritten = true;
@@ -62,12 +62,11 @@ public class CachedList<T> implements List<T>
     }
 
     /***************************************************************************
-     * 
+     * @return
      **************************************************************************/
-    @Override
-    public Iterator<T> iterator()
+    public T last()
     {
-        return new CacheIterator<>( this );
+        return isEmpty() ? null : get( size() - 1 );
     }
 
     /***************************************************************************
@@ -90,11 +89,40 @@ public class CachedList<T> implements List<T>
     }
 
     /***************************************************************************
-     * @return
+     * 
      **************************************************************************/
-    public boolean isEmpty()
+    @Override
+    public boolean add( T item )
     {
-        return size == 0;
+        if( !open )
+        {
+            return false;
+        }
+
+        ensureCached( size++ );
+
+        cache.add( item );
+
+        unwritten = true;
+
+        return true;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public boolean contains( Object o )
+    {
+        for( T t : this )
+        {
+            if( t.equals( o ) )
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /***************************************************************************
@@ -112,6 +140,32 @@ public class CachedList<T> implements List<T>
         ensureCached( index );
 
         return cache.get( index - cachedIndex );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public boolean isEmpty()
+    {
+        return size == 0;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Iterator<T> iterator()
+    {
+        return new CacheIterator<>( this );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    @Override
+    public int size()
+    {
+        return size;
     }
 
     /***************************************************************************
@@ -137,12 +191,43 @@ public class CachedList<T> implements List<T>
     }
 
     /***************************************************************************
-     * @return
+     * 
      **************************************************************************/
     @Override
-    public int size()
+    public Object [] toArray()
     {
-        return size;
+        Object [] items = new Object[size()];
+
+        for( int i = 0; i < size(); i++ )
+        {
+            items[i] = get( i );
+        }
+
+        return items;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public <K> K [] toArray( K [] a )
+    {
+        if( a.length < size )
+        {
+            for( int i = 0; i < size(); i++ )
+            {
+                @SuppressWarnings( "unchecked")
+                K k = ( K )get( i );
+                a[i] = k;
+            }
+        }
+        else
+        {
+            @SuppressWarnings( "unchecked")
+            K [] ks = ( K [] )toArray();
+            return ks;
+        }
+        return a;
     }
 
     /***************************************************************************
@@ -157,7 +242,7 @@ public class CachedList<T> implements List<T>
             return false;
         }
 
-        if( index >= cachedIndex && index < cachedIndex + cacheCount )
+        if( index >= cachedIndex && index < cachedIndex + cacheSize )
         {
             return true;
         }
@@ -214,20 +299,20 @@ public class CachedList<T> implements List<T>
      **************************************************************************/
     private void readCache( int index ) throws IOException, ValidationException
     {
-        int cacheIndex = index / cacheCount;
+        int cacheIndex = index / cacheSize;
 
-        long position = cacheIndex * cacheCount * cacher.getItemSize();
+        long position = cacheIndex * cacheSize * cacher.getItemSize();
         // LogUtils.printDebug( " reading from position: %d", position );
 
         cache.clear();
 
-        cachedIndex = cacheIndex * cacheCount;
+        cachedIndex = cacheIndex * cacheSize;
 
         if( position != stream.getLength() )
         {
             stream.seek( position );
 
-            for( int i = 0; i < cacheCount && stream.getAvailable() > 0; i++ )
+            for( int i = 0; i < cacheSize && stream.getAvailable() > 0; i++ )
             {
                 cache.add( cacher.read( stream ) );
             }
@@ -289,75 +374,8 @@ public class CachedList<T> implements List<T>
     }
 
     /***************************************************************************
-     * @return
+     * 
      **************************************************************************/
-    public T last()
-    {
-        return isEmpty() ? null : get( size() - 1 );
-    }
-
-    @Override
-    public boolean contains( Object o )
-    {
-        for( T t : this )
-        {
-            if( t.equals( o ) )
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    @Override
-    public Object [] toArray()
-    {
-        Object [] items = new Object[size()];
-
-        for( int i = 0; i < size(); i++ )
-        {
-            items[i] = get( i );
-        }
-
-        return items;
-    }
-
-    @SuppressWarnings( "unchecked")
-    @Override
-    public <K> K [] toArray( K [] a )
-    {
-        if( a.length < size )
-        {
-            for( int i = 0; i < size(); i++ )
-            {
-                a[i] = ( K )get( i );
-            }
-        }
-        else
-        {
-            return ( K [] )toArray();
-        }
-        return a;
-    }
-
-    @Override
-    public boolean add( T item )
-    {
-        if( !open )
-        {
-            return false;
-        }
-
-        ensureCached( size++ );
-
-        cache.add( item );
-
-        unwritten = true;
-
-        return true;
-    }
-
     @Override
     public boolean remove( Object o )
     {
@@ -365,6 +383,9 @@ public class CachedList<T> implements List<T>
             "Functionality is not yet supported" );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public boolean containsAll( Collection<?> c )
     {
@@ -372,6 +393,9 @@ public class CachedList<T> implements List<T>
             "Functionality is not yet supported" );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public boolean addAll( Collection<? extends T> c )
     {
@@ -379,6 +403,9 @@ public class CachedList<T> implements List<T>
             "Functionality is not yet supported" );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public boolean addAll( int index, Collection<? extends T> c )
     {
@@ -386,6 +413,9 @@ public class CachedList<T> implements List<T>
             "Functionality is not yet supported" );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public boolean removeAll( Collection<?> c )
     {
@@ -393,6 +423,9 @@ public class CachedList<T> implements List<T>
             "Functionality is not yet supported" );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public boolean retainAll( Collection<?> c )
     {
@@ -400,6 +433,9 @@ public class CachedList<T> implements List<T>
             "Functionality is not yet supported" );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void clear()
     {
@@ -407,13 +443,9 @@ public class CachedList<T> implements List<T>
             "Functionality is not yet supported" );
     }
 
-    @Override
-    public T set( int index, T element )
-    {
-        throw new UnsupportedOperationException(
-            "Functionality is not yet supported" );
-    }
-
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void add( int index, T element )
     {
@@ -421,6 +453,9 @@ public class CachedList<T> implements List<T>
             "Functionality is not yet supported" );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public T remove( int index )
     {
@@ -428,6 +463,9 @@ public class CachedList<T> implements List<T>
             "Functionality is not yet supported" );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public int indexOf( Object o )
     {
@@ -435,6 +473,9 @@ public class CachedList<T> implements List<T>
             "Functionality is not yet supported" );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public int lastIndexOf( Object o )
     {
@@ -442,6 +483,9 @@ public class CachedList<T> implements List<T>
             "Functionality is not yet supported" );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public ListIterator<T> listIterator()
     {
@@ -449,10 +493,32 @@ public class CachedList<T> implements List<T>
             "Functionality is not yet supported" );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public ListIterator<T> listIterator( int index )
     {
         throw new UnsupportedOperationException(
             "Functionality is not yet supported" );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public T set( int index, T element )
+    {
+        throw new UnsupportedOperationException(
+            "Functionality is not yet supported" );
+
+        // T existing = null;
+        //
+        // if( ensureCached( index ) )
+        // {
+        // existing = cache.set( index - cachedIndex, element );
+        // }
+        //
+        // return existing;
     }
 }

@@ -156,6 +156,10 @@ public class ByteCache
         index = 0;
 
         Arrays.fill( cache, cacheLen, cache.length, ( byte )0 );
+
+        // LogUtils.printDebug( " read %d bytes @ %016X: %d", cacheLen,
+        // position,
+        // stream.getLength() );
     }
 
     /***************************************************************************
@@ -171,6 +175,7 @@ public class ByteCache
         // LogUtils.printDebug( " wrote %d bytes @ %016X: %d", cacheLen,
         // position,
         // stream.getLength() );
+        // Utils.printStackTrace();
     }
 
     /***************************************************************************
