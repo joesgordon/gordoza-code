@@ -181,7 +181,9 @@ public class ItemsTableModel<T> extends AbstractTableModel
     @Override
     public boolean isCellEditable( int row, int col )
     {
-        return tableConfig.isCellEditable( col );
+        T item = getItem( row );
+
+        return tableConfig.isCellEditable( item, col );
     }
 
     /***************************************************************************

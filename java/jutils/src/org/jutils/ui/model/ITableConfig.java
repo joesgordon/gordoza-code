@@ -33,5 +33,5 @@ public interface ITableConfig<T>
      * @param col
      * @return
      **************************************************************************/
-    public boolean isCellEditable( int col );
+    public boolean isCellEditable( T item, int col );
 }
