@@ -132,7 +132,7 @@ public class DoubleFormField implements IDataFormField<Double>
     @Override
     public void setValue( Double value )
     {
-        this.value = value;
+        this.value = value == null ? this.value : value;
 
         String text = value == null ? "" : "" + value;
         IUpdater<Double> updater = this.updater;

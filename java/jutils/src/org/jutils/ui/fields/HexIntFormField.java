@@ -137,7 +137,7 @@ public class HexIntFormField implements IDataFormField<Integer>
     @Override
     public void setValue( Integer value )
     {
-        this.value = value;
+        this.value = value == null ? this.value : value;
         String text = value == null ? ""
             : Integer.toHexString( value ).toUpperCase();
         textField.setText( text );

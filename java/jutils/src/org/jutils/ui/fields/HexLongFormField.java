@@ -136,7 +136,7 @@ public class HexLongFormField implements IDataFormField<Long>
     @Override
     public void setValue( Long value )
     {
-        this.value = value;
+        this.value = value == null ? this.value : value;
 
         String text = value == null ? ""
             : Long.toHexString( value ).toUpperCase();

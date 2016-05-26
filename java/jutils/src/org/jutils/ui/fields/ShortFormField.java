@@ -113,11 +113,14 @@ public class ShortFormField implements IDataFormField<Short>
     @Override
     public void setValue( Short value )
     {
-        this.value = value;
+        this.value = value == null ? this.value : value;
 
         String text = value == null ? "" : "" + value;
+        IUpdater<Short> updater = this.updater;
 
+        this.updater = null;
         textField.setText( text );
+        this.updater = updater;
     }
 
     /***************************************************************************
