@@ -66,6 +66,7 @@ public class DefaultOptionsCreatorTest
         try
         {
             file = File.createTempFile( "test_file", ".xml" );
+            file.deleteOnExit();
             // LogUtils.printDebug( "file %s", file.getAbsolutePath() );
         }
         catch( IOException ex )
@@ -86,6 +87,8 @@ public class DefaultOptionsCreatorTest
         obj = serializer.getOptions();
 
         Assert.assertEquals( 50.0, obj.getData(), 0.000001 );
+
+        file.delete();
     }
 
     /***************************************************************************
