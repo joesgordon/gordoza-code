@@ -150,8 +150,8 @@ public final class SwingUtils
      * @param defaultChoice the choice to be selected by default.
      * @return the user's choice or null if the user closes the dialog.
      **************************************************************************/
-    public static <T> T showConfirmMessage( Component parent, Object message,
-        String title, T [] choices, T defaultChoice )
+    public static String showConfirmMessage( Component parent, Object message,
+        String title, String [] choices, String defaultChoice )
     {
         JOptionPane jop = new JOptionPane( message,
             JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null,
@@ -159,13 +159,16 @@ public final class SwingUtils
 
         JDialog dialog = jop.createDialog( parent, title );
         dialog.setModalityType( ModalityType.DOCUMENT_MODAL );
+
         dialog.setVisible( true );
 
-        // ---------------------------------------------------------------------
-        // Prompt user.
-        // ---------------------------------------------------------------------
-        @SuppressWarnings( "unchecked")
-        T value = ( T )jop.getValue();
+        Object valueObj = jop.getValue();
+        String value = null;
+
+        if( valueObj instanceof String )
+        {
+            value = valueObj.toString();
+        }
 
         return value;
     }
@@ -239,6 +242,7 @@ public final class SwingUtils
         };
 
         dialog = pane.createDialog( parent, title );
+        dialog.setResizable( true );
         dialog.setModalityType( ModalityType.DOCUMENT_MODAL );
         dialog.setSize( 500, dialog.getHeight() );
         dialog.setVisible( true );
