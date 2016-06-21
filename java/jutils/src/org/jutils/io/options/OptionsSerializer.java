@@ -107,8 +107,23 @@ public class OptionsSerializer<T>
             }
             catch( XStreamException ex )
             {
-                file.renameTo( new File( file.getAbsoluteFile().getParentFile(),
-                    file.getName() + ".broken" ) );
+                File brokenFile = new File(
+                    file.getAbsoluteFile().getParentFile(),
+                    file.getName() + ".broken" );
+
+                if( brokenFile.exists() && !brokenFile.delete() )
+                {
+                    creator.warn( "User options file backed up: " +
+                        file.getAbsolutePath() + " because: " +
+                        ex.getMessage() );
+                }
+                else if( !file.renameTo( brokenFile ) )
+                {
+                    creator.warn( "User options file backed up: " +
+                        file.getAbsolutePath() + " because: " +
+                        ex.getMessage() );
+                }
+
                 options = getDefault();
                 write();
                 creator.warn( "User options file is out of date: " +

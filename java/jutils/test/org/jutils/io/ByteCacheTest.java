@@ -16,9 +16,13 @@ public class ByteCacheTest
 
         try( InputStream stream = url.openStream() )
         {
-            bytes = new byte[stream.available()];
+            int cnt = stream.available();
+            bytes = new byte[cnt];
 
-            stream.read( bytes );
+            if( stream.read( bytes ) != cnt )
+            {
+                throw new IOException( "Could not load bytes" );
+            }
         }
 
         return bytes;

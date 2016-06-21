@@ -88,7 +88,10 @@ public class DefaultOptionsCreatorTest
 
         Assert.assertEquals( 50.0, obj.getData(), 0.000001 );
 
-        file.delete();
+        if( !file.delete() )
+        {
+            Assert.fail( "Unable to delete file: " + file.getAbsolutePath() );
+        }
     }
 
     /***************************************************************************

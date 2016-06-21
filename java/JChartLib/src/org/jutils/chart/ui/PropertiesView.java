@@ -190,18 +190,6 @@ public class PropertiesView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @param index
-     **************************************************************************/
-    public void remove( int index )
-    {
-        SeriesPropertiesView view = seriesViews.remove( index );
-
-        view.setData( null );
-
-        navModel.remove( index + FIRST_SERIES_INDEX );
-    }
-
-    /***************************************************************************
      * @param seriesIdx
      * @param pointIdx
      **************************************************************************/

@@ -87,7 +87,7 @@ public class JChartFrameView implements IView<JFrame>
 
         chartView.chart.title.text = "Example Data Sets";
 
-        int pointCount = 10000;
+        int pointCount = 1000000;
 
         data = ChartUtils.createLineSeries( pointCount, -1.0, 0.0, -5.0, 5.0 );
         s = new Series( data );

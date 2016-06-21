@@ -20,7 +20,7 @@ public class LongFormField implements IDataFormField<Long>
     /**  */
     private IUpdater<Long> updater;
     /**  */
-    private long value;
+    private Long value;
 
     /***************************************************************************
      * @param name

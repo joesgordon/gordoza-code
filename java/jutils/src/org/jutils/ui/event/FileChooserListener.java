@@ -177,13 +177,13 @@ public class FileChooserListener implements ActionListener
                 }
             }
 
-            for( int f = 0; f < selected.length; f++ )
-            {
-                selected[f] = selected[f].getAbsoluteFile();
-            }
-
             if( selected != null && selected.length > 0 )
             {
+                for( int f = 0; f < selected.length; f++ )
+                {
+                    selected[f] = selected[f].getAbsoluteFile();
+                }
+
                 if( isSave )
                 {
                     filter = chooser.getFileFilter();

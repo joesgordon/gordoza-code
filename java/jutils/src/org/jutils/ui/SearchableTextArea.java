@@ -219,7 +219,7 @@ class SearchableTextArea_keyAdapter implements KeyListener
         char keyTyped = e.getKeyChar();
         int modifiers = e.getModifiers();
 
-        if( ( modifiers & KeyEvent.CTRL_MASK ) > 0 )
+        if( ( modifiers & KeyEvent.CTRL_MASK ) != 0 )
         {
             if( keyTyped == 'f' - 'a' + 1 )
             {

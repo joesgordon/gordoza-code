@@ -19,7 +19,7 @@ public class HexBytesValidator implements IDataValidator<byte []>
         List<Byte> bytes;
         byte [] bytearray = null;
 
-        text.replaceAll( "\\s", "" );
+        text = text.replaceAll( "\\s", "" );
 
         try
         {

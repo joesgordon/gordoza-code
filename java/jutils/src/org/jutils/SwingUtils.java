@@ -247,7 +247,9 @@ public final class SwingUtils
         dialog.setSize( 500, dialog.getHeight() );
         dialog.setVisible( true );
 
-        return okText == pane.getValue();
+        // TODO because JOptionPane sometimes returns -1.
+
+        return okText.equals( pane.getValue() );
     }
 
     /***************************************************************************

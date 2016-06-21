@@ -129,7 +129,7 @@ public final class Utils
 
         for( int i = 1; i < values.length; i++ )
         {
-            Math.max( max, values[i] );
+            max = Math.max( max, values[i] );
         }
 
         return max;

@@ -369,6 +369,14 @@ public class CachedList<T> implements List<T>
         @Override
         public T next()
         {
+            int i = index + 1;
+
+            if( i > list.size() )
+            {
+                throw new NoSuchElementException(
+                    "No element exists at index " + i );
+            }
+
             return list.get( index++ );
         }
     }

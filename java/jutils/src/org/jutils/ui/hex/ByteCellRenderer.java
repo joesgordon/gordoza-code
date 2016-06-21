@@ -59,7 +59,7 @@ public class ByteCellRenderer implements TableCellRenderer
 
         int off = row * 16 + col;
         boolean isHighlighted = len > -1 && off >= offset && off < offset + len;
-        boolean isAltRow = row % 2 == 1;
+        boolean isAltRow = row % 2 != 0;
 
         if( value == null )
         {

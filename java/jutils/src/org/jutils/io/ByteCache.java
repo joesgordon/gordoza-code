@@ -242,6 +242,15 @@ public class ByteCache
     }
 
     /***************************************************************************
+     * Writes the provided buffer to the cache.
+     * @param buf the buffer of bytes to be written to the cache.
+     **************************************************************************/
+    public void write( byte [] buf )
+    {
+        write( buf, 0, buf.length );
+    }
+
+    /***************************************************************************
      * Writes the provided buffer to the cache starting at the provided offset
      * into the buffer for the provided length.
      * @param buf the buffer of bytes to be written to the cache.
