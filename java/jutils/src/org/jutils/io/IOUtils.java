@@ -401,8 +401,9 @@ public final class IOUtils
     /***************************************************************************
      * Returns a list of all files (in which {@code isDirectory() == false})
      * found in the provided directory.
-     * @param directory the directory to be searched.
-     * @return the list of all files found in the provided directory.
+     * @param dir the directory to be searched.
+     * @return the list of all files found in the provided directory guaranteed
+     * to be non-null. Will be empty on error.
      **************************************************************************/
     public static List<File> getAllFiles( File dir )
     {
@@ -416,12 +417,12 @@ public final class IOUtils
     /***************************************************************************
      * Recursively adds all paths within the provided directory that are not
      * themselves a directory.
-     * @param directory the directory to be searched.
+     * @param dir the directory to be searched.
      * @param files the list of files to be added to.
      **************************************************************************/
-    private static void getAllFiles( File directory, List<File> files )
+    private static void getAllFiles( File dir, List<File> files )
     {
-        File [] fs = directory.listFiles();
+        File [] fs = dir.listFiles();
 
         if( fs == null )
         {
@@ -608,7 +609,7 @@ public final class IOUtils
      * @param name the conceptual name of the directory.
      * @throws ValidationException if any check fails.
      **************************************************************************/
-    public static void validateDirOuput( File dir, String name )
+    public static void validateDirOutput( File dir, String name )
         throws ValidationException
     {
         if( !dir.exists() )
