@@ -22,6 +22,7 @@ public class AggregateValidityChangedManager
      * The list of listeners to be invoked when the aggregate validity changes.
      */
     private final ValidityListenerList validityListeners;
+    private boolean enabled;
 
     /***************************************************************************
      * Creates a new manager and uses the provided listener when the aggregate
@@ -130,6 +131,11 @@ public class AggregateValidityChangedManager
     {
         boolean newValidity = true;
 
+        if( !enabled )
+        {
+            return;
+        }
+
         for( IValidationField field : fields )
         {
             // LogUtils.printDebug( "Field " + field.getView().getName() +
@@ -144,6 +150,13 @@ public class AggregateValidityChangedManager
         }
 
         validityListeners.signalValid();
+    }
+
+    public void setEnabled( boolean enabled )
+    {
+        this.enabled = enabled;
+
+        testValidity();
     }
 
     /***************************************************************************

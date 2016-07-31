@@ -345,7 +345,7 @@ public class PositionIndicator extends JComponent
                 final PositionIndicator pi = new PositionIndicator();
 
                 final long len = 865716124;
-                final int size = 4 * 1024 * 1024;
+                final long size = 4 * 1024 * 1024;
 
                 pi.setLength( len );
                 pi.setUnitLength( size );

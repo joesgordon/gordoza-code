@@ -263,11 +263,13 @@ public final class ValidationComboField<T> implements IValidationField
             this.item = item;
         }
 
+        @Override
         public String toString()
         {
             return descriptor.getDescription( item );
         }
 
+        @Override
         public boolean equals( Object obj )
         {
             if( obj != null )
@@ -282,6 +284,12 @@ public final class ValidationComboField<T> implements IValidationField
             }
 
             return false;
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return item.hashCode();
         }
     }
 

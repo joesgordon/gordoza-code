@@ -10,9 +10,6 @@ import org.jutils.Utils;
  ******************************************************************************/
 public class BufferedReadOnlyStream implements IStream
 {
-    /** The default buffer size. */
-    public static int DEFAULT_BUFFER_SIZE = 8 * 1024 * 1024;
-
     /** The wrapped stream. */
     private final IStream stream;
     /** The stream buffer. */
@@ -34,7 +31,7 @@ public class BufferedReadOnlyStream implements IStream
      **************************************************************************/
     public BufferedReadOnlyStream( IStream stream )
     {
-        this( stream, DEFAULT_BUFFER_SIZE );
+        this( stream, IOUtils.DEFAULT_BUF_SIZE );
     }
 
     /***************************************************************************

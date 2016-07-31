@@ -136,7 +136,7 @@ public class AxisPropertiesView implements IDataView<Axis>
     /***************************************************************************
      * 
      **************************************************************************/
-    private class AutoTicksUpdater implements IUpdater<Boolean>
+    private static class AutoTicksUpdater implements IUpdater<Boolean>
     {
         private final AxisPropertiesView view;
         private final IUpdater<Boolean> updater;

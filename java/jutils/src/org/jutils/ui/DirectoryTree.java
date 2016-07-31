@@ -373,6 +373,7 @@ public class DirectoryTree implements IView<JTree>
     {
         File f = node.getFolder();
         File [] chillen = f.listFiles();
+        chillen = chillen == null ? new File[0] : chillen;
 
         java.util.Arrays.sort( chillen );
 

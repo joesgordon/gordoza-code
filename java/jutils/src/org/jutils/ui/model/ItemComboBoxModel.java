@@ -606,6 +606,7 @@ public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel<T>
             return item == null ? "" : serializer.toString( item );
         }
 
+        @Override
         public boolean equals( Object obj )
         {
             if( obj == null )
@@ -631,6 +632,12 @@ public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel<T>
             }
 
             return item.equals( obj );
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return item.hashCode();
         }
     }
 }

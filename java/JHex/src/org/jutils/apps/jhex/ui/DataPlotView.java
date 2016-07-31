@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import javax.swing.*;
 
@@ -235,7 +236,14 @@ public class DataPlotView implements IView<JComponent>
         @Override
         public IDataPoint next()
         {
-            return series.get( index++ );
+            try
+            {
+                return series.get( index++ );
+            }
+            catch( ArrayIndexOutOfBoundsException ex )
+            {
+                throw new NoSuchElementException( ex.getMessage() );
+            }
         }
     }
 }

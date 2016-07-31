@@ -3,6 +3,7 @@ package org.jutils.io;
 import java.awt.Component;
 import java.io.*;
 import java.net.*;
+import java.nio.charset.Charset;
 import java.nio.file.*;
 import java.util.*;
 
@@ -22,6 +23,8 @@ public final class IOUtils
     public static final File INSTALL_DIR;
     /**  */
     public static final int DEFAULT_BUF_SIZE = 8 * 1024 * 1024;
+    /**  */
+    public static final Charset US_ASCII = Charset.forName( "US-ASCII" );
 
     static
     {
@@ -355,8 +358,9 @@ public final class IOUtils
     {
         StringBuilder lines = new StringBuilder();
 
-        try( FileReader fr = new FileReader( file );
-             BufferedReader reader = new BufferedReader( fr ) )
+        try( InputStream is = new FileInputStream( file );
+             Reader r = new InputStreamReader( is, US_ASCII );
+             BufferedReader reader = new BufferedReader( r ) )
         {
             String line;
 
@@ -384,8 +388,9 @@ public final class IOUtils
     {
         List<String> lines = new ArrayList<String>();
 
-        try( FileReader fr = new FileReader( file );
-             BufferedReader reader = new BufferedReader( fr ) )
+        try( InputStream is = new FileInputStream( file );
+             Reader r = new InputStreamReader( is, US_ASCII );
+             BufferedReader reader = new BufferedReader( r ) )
         {
             String line;
 
@@ -736,6 +741,7 @@ public final class IOUtils
     {
         FileFilter filter = new ExtensionFilter( ext );
         File [] fa = dir.listFiles( filter );
+        fa = fa == null ? new File[0] : fa;
         List<File> files = new ArrayList<>( fa.length );
 
         Collections.addAll( files, fa );

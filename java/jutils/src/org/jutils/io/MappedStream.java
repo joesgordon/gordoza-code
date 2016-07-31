@@ -26,9 +26,6 @@ import org.jutils.utils.ByteOrdering;
  ******************************************************************************/
 public class MappedStream implements IDataStream
 {
-    /** The default number of bytes in the buffer. */
-    public static int DEFAULT_BUFFER_SIZE = 8 * 1024 * 1024;
-
     /** The channel used for buffering. */
     private final FileChannel channel;
     /** The primary I/O device. */
@@ -91,7 +88,7 @@ public class MappedStream implements IDataStream
     public MappedStream( File file, boolean readOnly, ByteOrdering order )
         throws FileNotFoundException
     {
-        this( file, readOnly, order, DEFAULT_BUFFER_SIZE );
+        this( file, readOnly, order, IOUtils.DEFAULT_BUF_SIZE );
     }
 
     /***************************************************************************

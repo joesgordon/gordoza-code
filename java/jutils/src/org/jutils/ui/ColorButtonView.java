@@ -113,7 +113,7 @@ public class ColorButtonView implements IDataView<Color>
     /***************************************************************************
      * 
      **************************************************************************/
-    private class ColorButtonListener implements ActionListener
+    private static class ColorButtonListener implements ActionListener
     {
         private final ColorButtonView view;
 

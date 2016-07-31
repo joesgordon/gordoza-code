@@ -106,7 +106,12 @@ public class ProgramData implements Comparable<Object>
     @Override
     public boolean equals( Object obj )
     {
-        return compareTo( obj ) == 0;
+        if( obj != null )
+        {
+            return compareTo( obj ) == 0;
+        }
+
+        return false;
     }
 
     /***************************************************************************

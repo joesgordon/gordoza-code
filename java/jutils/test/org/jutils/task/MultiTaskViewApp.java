@@ -43,6 +43,7 @@ public class MultiTaskViewApp implements IApplication
         message = "Set 6 of 120: 24 Parameters" + Utils.NEW_LINE;
         message += "GPS01, GPS02, GPS03, GPS04, GPS05, GPS06, GPS07, GPS08, GPS09, GPS10, GPS11, GPS12, GPS13, GPS14, GPS15, GPS16, GPS17, GPS18, GPS19, GPS20, GPS21";
         taskView = view.addTaskView( message );
+        taskView.signalPercent( 10 );
 
         view.setTitle( "Sets 5 of 120 completed" );
         view.setPercent( 500 / 120 );

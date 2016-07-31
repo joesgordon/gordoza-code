@@ -17,7 +17,13 @@ public class JHexMain
         ".jutils", "jhex", "options.xml" );
 
     /**  */
-    private static OptionsSerializer<JHexOptions> options;
+    private static final OptionsSerializer<JHexOptions> OPTIONS;
+
+    static
+    {
+        OPTIONS = OptionsSerializer.getOptions( JHexOptions.class,
+            USER_OPTIONS_FILE );
+    }
 
     /***************************************************************************
      * @param args Program arguments.
@@ -46,12 +52,6 @@ public class JHexMain
      **************************************************************************/
     public static OptionsSerializer<JHexOptions> getOptions()
     {
-        if( options == null )
-        {
-            options = OptionsSerializer.getOptions( JHexOptions.class,
-                USER_OPTIONS_FILE );
-        }
-
-        return options;
+        return OPTIONS;
     }
 }

@@ -62,6 +62,8 @@ public class SearchThread implements IStoppableTask
         {
             File [] files = searchFolder.listFiles();
 
+            files = files == null ? new File[0] : files;
+
             for( File file : files )
             {
                 findFiles( file, contentsConsumer, stopper );
@@ -178,8 +180,8 @@ public class SearchThread implements IStoppableTask
     /***********************************************************************
      * @param file
      **********************************************************************/
-    private void findFiles( File file, ConsumerTask<SearchRecord> contentsConsumer,
-        ITaskStopManager stopper )
+    private void findFiles( File file,
+        ConsumerTask<SearchRecord> contentsConsumer, ITaskStopManager stopper )
     {
         boolean isDir = file.isDirectory();
 
@@ -241,7 +243,7 @@ public class SearchThread implements IStoppableTask
     /***************************************************************************
      * 
      **************************************************************************/
-    private class StopListener implements ItemActionListener<Boolean>
+    private static class StopListener implements ItemActionListener<Boolean>
     {
         private final Stoppable searcher;
         /**  */

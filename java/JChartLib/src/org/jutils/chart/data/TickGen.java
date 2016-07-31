@@ -46,7 +46,7 @@ public class TickGen
             return;
         }
 
-        TickMetrics tickMets = new TickMetrics();
+        TickMetrics tickMets;
 
         if( axis.autoTicks )
         {
@@ -182,7 +182,7 @@ public class TickGen
     /***************************************************************************
      * 
      **************************************************************************/
-    class TickMetrics
+    static class TickMetrics
     {
         public double tickWidth;
         public double tickStart;

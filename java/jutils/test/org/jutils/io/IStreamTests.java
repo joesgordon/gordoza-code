@@ -2,6 +2,7 @@ package org.jutils.io;
 
 import java.io.*;
 import java.security.SecureRandom;
+import java.util.Objects;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -575,6 +576,12 @@ public abstract class IStreamTests
             }
 
             return false;
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return Objects.hash( i, b, d, f, c, l );
         }
 
         @Override

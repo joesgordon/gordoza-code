@@ -20,7 +20,13 @@ public class FileSpyMain
         ".jutils", "filespy", "options.xml" );
 
     /**  */
-    private static OptionsSerializer<FileSpyData> options;
+    private static final OptionsSerializer<FileSpyData> OPTIONS;
+
+    static
+    {
+        OPTIONS = OptionsSerializer.getOptions( new OptionsCreator(),
+            USER_OPTIONS_FILE );
+    }
 
     /***************************************************************************
      * Application entry point.
@@ -37,13 +43,7 @@ public class FileSpyMain
      **************************************************************************/
     public static OptionsSerializer<FileSpyData> getOptions()
     {
-        if( options == null )
-        {
-            options = OptionsSerializer.getOptions( new OptionsCreator(),
-                USER_OPTIONS_FILE );
-        }
-
-        return options;
+        return OPTIONS;
     }
 
     /***************************************************************************

@@ -18,7 +18,7 @@ import org.jutils.chart.ui.objects.PlotContext.IAxisCoords;
 public class AxesWidget implements IChartWidget
 {
     /**  */
-    private final int AXIS_WEIGHT = 2;
+    private static final int AXIS_WEIGHT = 2;
 
     /**  */
     public final Chart chart;

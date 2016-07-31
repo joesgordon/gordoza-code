@@ -6,6 +6,8 @@ import java.nio.file.StandardCopyOption;
 
 import org.jutils.chart.data.XYPoint;
 import org.jutils.chart.model.ISeriesData;
+import org.jutils.io.FilePrintStream;
+import org.jutils.io.IOUtils;
 
 /*******************************************************************************
  * 
@@ -32,10 +34,11 @@ public class FilteredWriter
                 StandardCopyOption.REPLACE_EXISTING );
         }
 
-        try( FileReader fr = new FileReader( temp );
-             BufferedReader reader = new BufferedReader( fr ) )
+        try( FileInputStream fis = new FileInputStream( temp );
+             Reader r = new InputStreamReader( fis, IOUtils.US_ASCII );
+             BufferedReader reader = new BufferedReader( r ) )
         {
-            try( PrintStream stream = new PrintStream( toFile ) )
+            try( FilePrintStream stream = new FilePrintStream( toFile ) )
             {
                 DataLineReader lineReader = new DataLineReader();
                 String line = null;
@@ -79,17 +82,15 @@ public class FilteredWriter
      * @throws FileNotFoundException
      **************************************************************************/
     public void write( File toFile, ISeriesData<?> data )
-        throws FileNotFoundException
+        throws FileNotFoundException, IOException
     {
-        try( PrintStream stream = new PrintStream( toFile ) )
+        try( FilePrintStream stream = new FilePrintStream( toFile ) )
         {
             for( int i = 0; i < data.getCount(); i++ )
             {
                 if( !data.isHidden( i ) )
                 {
-                    stream.print( data.getX( i ) );
-                    stream.print( '\t' );
-                    stream.println( data.getY( i ) );
+                    stream.println( data.getX( i ) + "\t" + data.getY( i ) );
                 }
             }
         }

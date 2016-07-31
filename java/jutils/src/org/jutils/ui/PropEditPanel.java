@@ -121,8 +121,7 @@ public class PropEditPanel
                 boolean nullKey;
 
                 keyText = key == null ? "null" : key.toString();
-                nullKey = key == null || keyText == null;
-                keyText = keyText == null ? "null text" : keyText;
+                nullKey = key == null;
 
                 JLabel keyField = new JLabel( keyText );
                 JComponent valField = getComponent( p, entry );

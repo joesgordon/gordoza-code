@@ -8,8 +8,16 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.jutils.IconConstants;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class ByteCacheTest
 {
+    /***************************************************************************
+     * @param url
+     * @return
+     * @throws IOException
+     **************************************************************************/
     private static byte [] loadBytes( URL url ) throws IOException
     {
         byte [] bytes;
@@ -28,6 +36,10 @@ public class ByteCacheTest
         return bytes;
     }
 
+    /***************************************************************************
+     * @return
+     * @throws IOException
+     **************************************************************************/
     private static byte [] loadTestBytes() throws IOException
     {
         URL url;
@@ -37,6 +49,9 @@ public class ByteCacheTest
         return loadBytes( url );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private byte [] getTestBytes()
     {
         try
@@ -50,6 +65,9 @@ public class ByteCacheTest
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testCreate()
     {
@@ -58,6 +76,9 @@ public class ByteCacheTest
         Assert.assertEquals( ByteCache.DEFAULT_SIZE, cache.getSize() );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testCreateInt()
     {
@@ -66,6 +87,9 @@ public class ByteCacheTest
         Assert.assertEquals( 2, cache.getSize() );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testCreateByteArray()
     {
@@ -75,6 +99,9 @@ public class ByteCacheTest
         Assert.assertEquals( bytes.length, cache.getSize() );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testRemainingRead()
     {

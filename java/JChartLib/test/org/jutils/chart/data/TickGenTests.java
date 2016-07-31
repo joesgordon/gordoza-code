@@ -35,7 +35,7 @@ public class TickGenTests
         // bounds = new Interval( 4.700843367370089E-4, 5.299156632624369E-4 );
         // bounds = new Interval( 7.499749815335413, 7.499750184664589 );
         // bounds = new Interval( 7.499749993160572, 7.49975000683943 );
-        bounds = new Interval( 7.99970999206626, 7.999710007933737 );
+        // bounds = new Interval( 7.99970999206626, 7.999710007933737 );
         // bounds = new Interval( 0, Math.nextUp( 0 ) );
         bounds = new Interval( -1.7016479925638157E308,
             1.7016479925638157E308 );

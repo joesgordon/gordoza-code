@@ -210,7 +210,7 @@ public class CalendarField implements IView<JPanel>
     /***************************************************************************
      * 
      **************************************************************************/
-    private class DateListener implements DocumentListener
+    private static class DateListener implements DocumentListener
     {
         private final CalendarField field;
         private final DataUpdaterList<Calendar> updaterList;

@@ -33,8 +33,10 @@ public class FontView implements IDataView<Font>
      **************************************************************************/
     public FontView()
     {
-        this.namesField = new JList<>( FontChooserDialog.FONT_NAMES );
-        this.sizesField = new JList<>( FontChooserDialog.FONT_SIZES );
+        this.namesField = new JList<>(
+            FontChooserDialog.FONT_NAMES.toArray( new String[] {} ) );
+        this.sizesField = new JList<>(
+            FontChooserDialog.FONT_SIZES.toArray( new Integer[] {} ) );
         this.view = createView();
 
         namesField.addListSelectionListener(

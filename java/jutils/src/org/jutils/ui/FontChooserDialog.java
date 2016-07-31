@@ -2,6 +2,9 @@ package org.jutils.ui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -19,9 +22,9 @@ import org.jutils.ui.event.ItemActionListener;
 public class FontChooserDialog extends JDialog
 {
     /**  */
-    public final static String [] FONT_NAMES;
+    public final static List<String> FONT_NAMES;
     /**  */
-    public final static Integer [] FONT_SIZES;
+    public final static List<Integer> FONT_SIZES;
 
     /**  */
     private final InputListPanel<String> fontNameInputList;
@@ -52,9 +55,11 @@ public class FontChooserDialog extends JDialog
     static
     {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        FONT_NAMES = ge.getAvailableFontFamilyNames();
-        FONT_SIZES = new Integer[] { 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24,
-            26, 28, 36, 48, 72 };
+        FONT_NAMES = Collections.unmodifiableList(
+            Arrays.asList( ge.getAvailableFontFamilyNames() ) );
+        FONT_SIZES = Collections.unmodifiableList(
+            Arrays.asList( new Integer[] { 8, 9, 10, 11, 12, 14, 16, 18, 20, 22,
+                24, 26, 28, 36, 48, 72 } ) );
     }
 
     /***************************************************************************

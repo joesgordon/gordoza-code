@@ -121,10 +121,16 @@ public final class TaskStopManager implements ITaskStopManager
     @Override
     public void signalFinished()
     {
-        stopLock.lock();
-        isFinished = true;
-        stopCondition.signalAll();
-        stopLock.unlock();
+        try
+        {
+            stopLock.lock();
+            isFinished = true;
+            stopCondition.signalAll();
+        }
+        finally
+        {
+            stopLock.unlock();
+        }
 
         finishedListeners.fireListeners( this, continueRunning );
 

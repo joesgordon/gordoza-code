@@ -7,6 +7,7 @@ import org.jutils.ValidationException;
 import org.jutils.chart.data.DefaultSeries;
 import org.jutils.chart.data.XYPoint;
 import org.jutils.chart.model.ISeriesData;
+import org.jutils.io.IOUtils;
 import org.jutils.io.IReader;
 
 /*******************************************************************************
@@ -37,7 +38,9 @@ public class DataFileReader implements IReader<ISeriesData<?>, File>
 
         // LogUtils.printDebug( "Reading " + f.getName() );
 
-        try( BufferedReader reader = new BufferedReader( new FileReader( f ) ) )
+        try( InputStream is = new FileInputStream( f );
+             Reader r = new InputStreamReader( is, IOUtils.US_ASCII );
+             BufferedReader reader = new BufferedReader( r ) )
         {
             while( ( line = reader.readLine() ) != null )
             {

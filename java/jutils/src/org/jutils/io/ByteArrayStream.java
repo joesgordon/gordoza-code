@@ -12,7 +12,7 @@ import org.jutils.Utils;
 public class ByteArrayStream implements IStream
 {
     /** The default size of the buffer. */
-    public static int DEFAULT_SIZE = 1024;
+    public static final int DEFAULT_SIZE = 1024;
 
     /** Current position in the buffer where data will be read or written. */
     private int position;

@@ -115,7 +115,7 @@ public class LeOutputStream implements DataOutput
     @Override
     public void writeBytes( String s ) throws IOException
     {
-        out.write( s.getBytes() );
+        out.write( s.getBytes( IOUtils.US_ASCII ) );
     }
 
     /***************************************************************************

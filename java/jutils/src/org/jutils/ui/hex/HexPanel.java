@@ -221,7 +221,7 @@ public class HexPanel implements IView<JComponent>
         {
             rowCount = count;
             int w = Long.toHexString(
-                startingAddress + count * 16 - 1 ).length();
+                startingAddress + count * 16L - 1 ).length();
 
             if( w > 0 )
             {
@@ -243,7 +243,7 @@ public class HexPanel implements IView<JComponent>
         @Override
         public String getElementAt( int index )
         {
-            return String.format( formatString, startingAddress + index * 16 );
+            return String.format( formatString, startingAddress + index * 16L );
         }
     }
 }

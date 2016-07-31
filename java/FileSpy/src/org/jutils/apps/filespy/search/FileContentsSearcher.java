@@ -9,6 +9,7 @@ import org.jutils.apps.filespy.data.LineMatch;
 import org.jutils.apps.filespy.data.SearchRecord;
 import org.jutils.concurrent.IConsumer;
 import org.jutils.concurrent.ITaskStopManager;
+import org.jutils.io.IOUtils;
 import org.jutils.io.LogUtils;
 
 /*******************************************************************************
@@ -42,7 +43,7 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
         int lineNumber )
     {
         boolean matched = false;
-        byte [] chars = str.getBytes();
+        byte [] chars = str.getBytes( IOUtils.US_ASCII );
         ByteCharSequence sequence = new ByteCharSequence( chars );
         Matcher matcher = contentsPattern.matcher( sequence );
 
@@ -86,10 +87,10 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
             lineEnd = end;
         }
 
-        String pre = new String( chars, lineStart, start );
-        String mat = new String( chars, start, length );
+        String pre = new String( chars, lineStart, start, IOUtils.US_ASCII );
+        String mat = new String( chars, start, length, IOUtils.US_ASCII );
         String pst = end == lineEnd ? ""
-            : new String( chars, end, lineEnd - end );
+            : new String( chars, end, lineEnd - end, IOUtils.US_ASCII );
 
         return new LineMatch( lineNum, pre, mat, pst );
     }
@@ -108,8 +109,9 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
 
         LogUtils.printDebug( "Searching file " + file.getAbsolutePath() );
 
-        try( FileReader reader = new FileReader( file );
-             LineNumberReader lineReader = new LineNumberReader( reader ) )
+        try( InputStream is = new FileInputStream( file );
+             Reader r = new InputStreamReader( is, IOUtils.US_ASCII );
+             LineNumberReader lineReader = new LineNumberReader( r ) )
         {
             while( ( line = lineReader.readLine() ) != null &&
                 stopper.continueProcessing() )

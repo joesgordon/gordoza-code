@@ -1,8 +1,9 @@
 package testbed;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.jutils.io.IOUtils;
 
 public class FinallyTester
 {
@@ -57,8 +58,7 @@ public class FinallyTester
 
         String str = "Algy met a bear. The bear was bulgy. The bulge was Algy";
 
-        String str2 = new String( str.getBytes(),
-            Charset.forName( "US-ASCII" ) );
+        String str2 = new String( str.getBytes(), IOUtils.US_ASCII );
 
         if( !str.equals( str2 ) )
         {

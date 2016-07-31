@@ -19,7 +19,13 @@ public class JChartAppConstants
         ".jutils", "jchart", "options.xml" );
 
     /**  */
-    private static OptionsSerializer<UserData> options;
+    private static final OptionsSerializer<UserData> OPTIONS;
+
+    static
+    {
+        OPTIONS = OptionsSerializer.getOptions( UserData.class,
+            USER_OPTIONS_FILE );
+    }
 
     /***************************************************************************
      * 
@@ -33,12 +39,6 @@ public class JChartAppConstants
      **************************************************************************/
     public static OptionsSerializer<UserData> getOptions()
     {
-        if( options == null )
-        {
-            options = OptionsSerializer.getOptions( UserData.class,
-                USER_OPTIONS_FILE );
-        }
-
-        return options;
+        return OPTIONS;
     }
 }

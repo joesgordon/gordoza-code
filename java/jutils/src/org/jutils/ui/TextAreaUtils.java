@@ -6,6 +6,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
 import org.jutils.Utils;
+import org.jutils.io.IOUtils;
 
 /***************************************************************************
  *
@@ -47,7 +48,8 @@ public final class TextAreaUtils
 
         while( ( bytesRead = buffer.read( byteBuffer ) ) > 0 )
         {
-            to.append( new String( byteBuffer, 0, bytesRead ) );
+            to.append(
+                new String( byteBuffer, 0, bytesRead, IOUtils.US_ASCII ) );
         }
     }
 

@@ -296,11 +296,21 @@ public class ArraySeries implements ISeriesData<IDataPoint>
         @Override
         public IDataPoint next()
         {
-            return new ArrayDataPoint( series, index++ );
+            try
+            {
+                return new ArrayDataPoint( series, index++ );
+            }
+            catch( ArrayIndexOutOfBoundsException ex )
+            {
+                throw new NoSuchElementException( ex.getMessage() );
+            }
         }
     }
 
-    private class DataSeries
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class DataSeries
     {
         public String name;
         public double [] data;

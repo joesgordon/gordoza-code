@@ -3,8 +3,7 @@ package org.jutils.ui.hex;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import javax.swing.*;
 
@@ -185,6 +184,12 @@ public class HexBytesField implements IDataFormField<byte []>
             }
 
             return true;
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return Arrays.hashCode( bytes );
         }
 
         @Override

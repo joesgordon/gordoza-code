@@ -1,5 +1,7 @@
 package org.jutils.apps.filespy;
 
+import org.jutils.io.IOUtils;
+
 public class ByteCharSequence implements CharSequence
 {
     private int offset = -1;
@@ -41,6 +43,6 @@ public class ByteCharSequence implements CharSequence
     @Override
     public String toString()
     {
-        return new String( buffer, offset, length );
+        return new String( buffer, offset, length, IOUtils.US_ASCII );
     }
 }
