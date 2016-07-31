@@ -24,10 +24,10 @@ public class FilePrintStream implements IPrintStream
      **************************************************************************/
     public FilePrintStream( File file ) throws IOException
     {
-        FileOutputStream fis = new FileOutputStream( file );
-        Writer r = new OutputStreamWriter( fis, IOUtils.US_ASCII );
+        FileOutputStream fos = new FileOutputStream( file );
+        Writer w = new OutputStreamWriter( fos, IOUtils.US_ASCII );
 
-        writer = new BufferedWriter( r, BUFFER_SIZE );
+        writer = new BufferedWriter( w, BUFFER_SIZE );
     }
 
     /***************************************************************************

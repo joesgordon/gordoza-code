@@ -352,7 +352,7 @@ public class DirectoryChooser
         {
             File [] selectedFiles = chooser.tree.getSelected();
 
-            if( selectedFiles != null && selectedFiles.length == 1 )
+            if( selectedFiles.length == 1 )
             {
                 String name = JOptionPane.showInputDialog( chooser.dialog,
                     "Enter the new directory name:", "New Directory Name",

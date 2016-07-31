@@ -126,7 +126,6 @@ public final class IOUtils
 
                 if( ansPath.isEmpty() )
                 {
-                    ansParts = null;
                     break;
                 }
 

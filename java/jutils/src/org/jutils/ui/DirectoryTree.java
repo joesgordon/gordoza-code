@@ -120,7 +120,7 @@ public class DirectoryTree implements IView<JTree>
         TreePath [] paths = tree.getSelectionPaths();
         if( paths == null )
         {
-            return null;
+            return new File[0];
         }
         File [] files = new File[paths.length];
 

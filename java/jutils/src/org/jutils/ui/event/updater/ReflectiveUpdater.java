@@ -1,6 +1,8 @@
 package org.jutils.ui.event.updater;
 
 import java.lang.reflect.Field;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
 /*******************************************************************************
  * @param <T>
@@ -62,7 +64,8 @@ public class ReflectiveUpdater<T> implements IUpdater<T>
 
                 field = clazz.getDeclaredField( name );
 
-                field.setAccessible( true );
+                AccessController.doPrivileged( new AccessibleAction( field ) );
+                // field.setAccessible( true );
 
                 if( i < dataPath.length - 1 )
                 {
@@ -98,6 +101,26 @@ public class ReflectiveUpdater<T> implements IUpdater<T>
         catch( IllegalAccessException ex )
         {
             throw new RuntimeException( ex );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class AccessibleAction implements PrivilegedAction<Object>
+    {
+        private final Field field;
+
+        public AccessibleAction( Field field )
+        {
+            this.field = field;
+        }
+
+        @Override
+        public Object run()
+        {
+            field.setAccessible( true );
+            return null;
         }
     }
 }

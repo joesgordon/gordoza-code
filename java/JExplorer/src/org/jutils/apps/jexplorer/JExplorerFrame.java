@@ -477,7 +477,7 @@ public class JExplorerFrame extends JFrame
     public void listener_dirTree_valueChanged( TreeSelectionEvent e )
     {
         File [] dirsSelected = dirTree.getSelected();
-        if( dirsSelected != null && dirsSelected.length == 1 )
+        if( dirsSelected.length == 1 )
         {
             File f = dirsSelected[dirsSelected.length - 1];
             setDirectory( f, false );
@@ -517,7 +517,7 @@ public class JExplorerFrame extends JFrame
     {
         File [] dirsSelected = dirTree.getSelected();
 
-        if( dirsSelected != null && dirsSelected.length > 0 )
+        if( dirsSelected.length > 0 )
         {
             addLastFile();
         }

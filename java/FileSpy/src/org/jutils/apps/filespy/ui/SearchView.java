@@ -15,7 +15,8 @@ import javax.swing.text.*;
 import org.jutils.*;
 import org.jutils.apps.filespy.data.*;
 import org.jutils.apps.filespy.search.Searcher;
-import org.jutils.io.*;
+import org.jutils.io.IOUtils;
+import org.jutils.io.LogUtils;
 import org.jutils.io.options.OptionsSerializer;
 import org.jutils.ui.*;
 import org.jutils.ui.calendar.CalendarField;
@@ -986,10 +987,7 @@ public class SearchView implements IDataView<SearchParams>
                 "Choose Directories",
                 "Choose one or more directories in which to search:" );
             String selectedItemStr = panel.searchInComboBox.getSelectedItem().toString();
-            File curFile = new File( selectedItemStr );
             String paths = "";
-
-            curFile = curFile.isDirectory() ? curFile : null;
 
             chooser.setSelectedPaths( selectedItemStr );
             chooser.setVisible( true );

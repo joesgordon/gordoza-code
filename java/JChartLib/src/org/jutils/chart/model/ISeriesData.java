@@ -25,8 +25,9 @@ public interface ISeriesData<T extends IDataPoint> extends Iterable<T>
     /***************************************************************************
      * @param index
      * @return
+     * @throws ArrayIndexOutOfBoundsException
      **************************************************************************/
-    public T get( int index );
+    public T get( int index ) throws ArrayIndexOutOfBoundsException;
 
     /***************************************************************************
      * @param index

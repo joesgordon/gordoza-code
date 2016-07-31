@@ -22,6 +22,7 @@ public class AggregateValidityChangedManager
      * The list of listeners to be invoked when the aggregate validity changes.
      */
     private final ValidityListenerList validityListeners;
+    /**  */
     private boolean enabled;
 
     /***************************************************************************
@@ -152,6 +153,9 @@ public class AggregateValidityChangedManager
         validityListeners.signalValid();
     }
 
+    /***************************************************************************
+     * @param enabled
+     **************************************************************************/
     public void setEnabled( boolean enabled )
     {
         this.enabled = enabled;

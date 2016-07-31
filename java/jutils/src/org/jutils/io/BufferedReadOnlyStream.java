@@ -222,7 +222,7 @@ public class BufferedReadOnlyStream implements IStream
     @Override
     public long getLength() throws IOException
     {
-        long len = -1;
+        long len;
 
         try
         {

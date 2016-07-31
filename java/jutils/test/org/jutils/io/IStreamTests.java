@@ -343,7 +343,7 @@ public abstract class IStreamTests
         {
             int len = 0;
 
-            int count = ( int )( ByteCache.DEFAULT_SIZE / bytes.length ) + 1;
+            int count;// = ( int )( ByteCache.DEFAULT_SIZE / bytes.length ) + 1;
 
             count = 1;
             Assert.assertEquals( 0, stream.getLength() );

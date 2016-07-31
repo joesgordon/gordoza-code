@@ -198,7 +198,7 @@ public class JHexFrame implements IView<JFrame>
     private JToolBar createToolbar()
     {
         JToolBar toolbar = new JGoodiesToolBar();
-        JButton button = new JButton();
+        JButton button;
 
         button = new JButton(
             IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
@@ -628,21 +628,17 @@ public class JHexFrame implements IView<JFrame>
             "Enter Offset in hexadecimal:", new Integer( 0 ) );
         if( ans != null )
         {
-            long offset = -1;
-
             try
             {
-                offset = Long.parseLong( ans.toString(), 16 );
+                long offset = Long.parseLong( ans.toString(), 16 );
+                editor.highlightOffset( offset, 1 );
             }
             catch( NumberFormatException ex )
             {
                 JOptionPane.showMessageDialog( frame,
                     "'" + ans.toString() + "' is not a hexadecimal string.",
                     "ERROR", JOptionPane.ERROR_MESSAGE );
-                return;
             }
-
-            editor.highlightOffset( offset, 1 );
         }
     }
 

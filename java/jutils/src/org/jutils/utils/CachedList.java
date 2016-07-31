@@ -358,6 +358,7 @@ public class CachedList<T> implements List<T>
         public CacheIterator( CachedList<T> list )
         {
             this.list = list;
+            this.index = 0;
         }
 
         @Override
@@ -369,12 +370,10 @@ public class CachedList<T> implements List<T>
         @Override
         public T next()
         {
-            int i = index + 1;
-
-            if( i > list.size() )
+            if( !hasNext() )
             {
                 throw new NoSuchElementException(
-                    "No element exists at index " + i );
+                    "No element exists at index " + index );
             }
 
             return list.get( index++ );

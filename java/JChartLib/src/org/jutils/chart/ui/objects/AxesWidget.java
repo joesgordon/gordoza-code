@@ -214,7 +214,7 @@ public class AxesWidget implements IChartWidget
         Dimension size, Insets textSpace )
     {
         Point p = new Point( location );
-        Dimension d = new Dimension( size );
+        Dimension d;
 
         // ---------------------------------------------------------------------
         // Draw secondary domain title
