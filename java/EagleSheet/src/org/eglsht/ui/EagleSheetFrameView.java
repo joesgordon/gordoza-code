@@ -15,12 +15,20 @@ import org.jutils.ui.*;
 import org.jutils.ui.model.IView;
 import org.jutils.ui.sheet.SpreadSheetView;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class EagleSheetFrameView implements IView<JFrame>
 {
+    /**  */
     private final JFrame frame;
 
+    /**  */
     private final SpreadSheetView sheetView;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public EagleSheetFrameView()
     {
         this.frame = new JFrame();
@@ -142,8 +150,8 @@ public class EagleSheetFrameView implements IView<JFrame>
         titlePanel.getView().setBorder( new ShadowBorder() );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 5,
-                5, 5, 5 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 5, 5, 5, 5 ), 0, 0 );
         panel.add( titlePanel.getView(), constraints );
 
         return panel;
@@ -203,12 +211,18 @@ public class EagleSheetFrameView implements IView<JFrame>
         return toolbar;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public JFrame getView()
     {
         return frame;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class NewDocumentListener implements ActionListener
     {
         private final EagleSheetFrameView view;
@@ -237,13 +251,16 @@ public class EagleSheetFrameView implements IView<JFrame>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class OpenDocumentListener implements ActionListener
     {
-        private final EagleSheetFrameView view;
+        // private final EagleSheetFrameView view;
 
         public OpenDocumentListener( EagleSheetFrameView view )
         {
-            this.view = view;
+            // this.view = view;
         }
 
         @Override
@@ -253,20 +270,23 @@ public class EagleSheetFrameView implements IView<JFrame>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class InsertRowListener implements ActionListener
     {
-        private final EagleSheetFrameView view;
-        private final int offset;
+        // private final EagleSheetFrameView view;
+        // private final int offset;
 
         public InsertRowListener( EagleSheetFrameView view )
         {
-            this( view, 0 );
+            // this( view, 0 );
         }
 
         public InsertRowListener( EagleSheetFrameView view, int offset )
         {
-            this.view = view;
-            this.offset = offset;
+            // this.view = view;
+            // this.offset = offset;
         }
 
         @Override
@@ -276,20 +296,23 @@ public class EagleSheetFrameView implements IView<JFrame>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class InsertColumnListener implements ActionListener
     {
-        private final EagleSheetFrameView view;
-        private final int offset;
+        // private final EagleSheetFrameView view;
+        // private final int offset;
 
         public InsertColumnListener( EagleSheetFrameView view )
         {
-            this( view, 0 );
+            // this( view, 0 );
         }
 
         public InsertColumnListener( EagleSheetFrameView view, int offset )
         {
-            this.view = view;
-            this.offset = offset;
+            // this.view = view;
+            // this.offset = offset;
         }
 
         @Override
@@ -299,13 +322,16 @@ public class EagleSheetFrameView implements IView<JFrame>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class DeleteColumnListener implements ActionListener
     {
-        private final EagleSheetFrameView view;
+        // private final EagleSheetFrameView view;
 
         public DeleteColumnListener( EagleSheetFrameView view )
         {
-            this.view = view;
+            // this.view = view;
         }
 
         @Override
@@ -315,13 +341,16 @@ public class EagleSheetFrameView implements IView<JFrame>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class DeleteRowListener implements ActionListener
     {
-        private final EagleSheetFrameView view;
+        // private final EagleSheetFrameView view;
 
         public DeleteRowListener( EagleSheetFrameView view )
         {
-            this.view = view;
+            // this.view = view;
         }
 
         @Override
@@ -331,13 +360,16 @@ public class EagleSheetFrameView implements IView<JFrame>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class EditTableListener implements ActionListener
     {
-        private final EagleSheetFrameView view;
+        // private final EagleSheetFrameView view;
 
         public EditTableListener( EagleSheetFrameView view )
         {
-            this.view = view;
+            // this.view = view;
         }
 
         @Override
@@ -347,13 +379,16 @@ public class EagleSheetFrameView implements IView<JFrame>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class FontEditListener implements ActionListener
     {
-        private final EagleSheetFrameView view;
+        // private final EagleSheetFrameView view;
 
         public FontEditListener( EagleSheetFrameView view )
         {
-            this.view = view;
+            // this.view = view;
         }
 
         @Override
@@ -363,6 +398,9 @@ public class EagleSheetFrameView implements IView<JFrame>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class AutoLayoutListener implements ActionListener
     {
         private final EagleSheetFrameView view;
@@ -379,13 +417,16 @@ public class EagleSheetFrameView implements IView<JFrame>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class HeaderListener implements ActionListener
     {
-        private final EagleSheetFrameView view;
+        // private final EagleSheetFrameView view;
 
         public HeaderListener( EagleSheetFrameView view )
         {
-            this.view = view;
+            // this.view = view;
         }
 
         @Override

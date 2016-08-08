@@ -603,11 +603,11 @@ public class ChartView implements IView<JComponent>
     /***************************************************************************
      * 
      **************************************************************************/
-    private void restoreAndRepaintChart()
-    {
-        chartWidget.restoreAutoBounds();
-        repaintChart();
-    }
+    // private void restoreAndRepaintChart()
+    // {
+    // chartWidget.restoreAutoBounds();
+    // repaintChart();
+    // }
 
     /***************************************************************************
      * 

@@ -7,11 +7,17 @@ import javax.swing.Icon;
 
 import org.jutils.IconLoader;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public final class EagleSheetIcons
 {
     public static final IconLoader loader = new IconLoader(
         EagleSheetIcons.class, "icons" );
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private EagleSheetIcons()
     {
     }

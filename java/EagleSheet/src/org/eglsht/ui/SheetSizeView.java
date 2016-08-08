@@ -8,6 +8,9 @@ import org.eglsht.data.SheetSize;
 import org.jutils.ui.SpinnerWheelListener;
 import org.jutils.ui.model.IDataView;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class SheetSizeView implements IDataView<SheetSize>
 {
     private final JPanel view;
@@ -16,13 +19,16 @@ public class SheetSizeView implements IDataView<SheetSize>
 
     private SheetSize size;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public SheetSizeView()
     {
         rowField = new JSpinner(
             new IntegerSpinnerModel( new RowUpdater( this ) ) );
 
-        colField = new JSpinner( new IntegerSpinnerModel( new ColumnUpdater(
-            this ) ) );
+        colField = new JSpinner(
+            new IntegerSpinnerModel( new ColumnUpdater( this ) ) );
 
         view = createView();
 
@@ -39,40 +45,49 @@ public class SheetSizeView implements IDataView<SheetSize>
         GridBagConstraints constraints;
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 10,
-                10, 5, 10 ), 0, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.NONE,
+            new Insets( 10, 10, 5, 10 ), 0, 0 );
         panel.add( new JLabel( "Columns:" ), constraints );
 
         constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                10, 10, 10 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 10, 10, 10 ), 0, 0 );
         panel.add( colField, constraints );
 
         constraints = new GridBagConstraints( 0, 2, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 10,
-                10, 5, 10 ), 0, 0 );
+            GridBagConstraints.WEST, GridBagConstraints.NONE,
+            new Insets( 10, 10, 5, 10 ), 0, 0 );
         panel.add( new JLabel( "Rows:" ), constraints );
 
         constraints = new GridBagConstraints( 0, 3, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets( 0,
-                10, 0, 10 ), 0, 0 );
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 10, 0, 10 ), 0, 0 );
         panel.add( rowField, constraints );
 
         return panel;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public Component getView()
     {
         return view;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public SheetSize getData()
     {
         return size;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void setData( SheetSize size )
     {
@@ -82,6 +97,9 @@ public class SheetSizeView implements IDataView<SheetSize>
         colField.setValue( size.cols );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class IntegerSpinnerModel extends SpinnerNumberModel
     {
         private final IUpdater<Integer> updater;
@@ -102,11 +120,17 @@ public class SheetSizeView implements IDataView<SheetSize>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static interface IUpdater<T>
     {
         public void update( T item );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public static class RowUpdater implements IUpdater<Integer>
     {
         private final SheetSizeView view;
@@ -123,6 +147,9 @@ public class SheetSizeView implements IDataView<SheetSize>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public static class ColumnUpdater implements IUpdater<Integer>
     {
         private final SheetSizeView view;
