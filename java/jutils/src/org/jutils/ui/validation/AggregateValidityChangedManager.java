@@ -35,6 +35,7 @@ public class AggregateValidityChangedManager
         this.fields = new ArrayList<IValidationField>();
         this.listener = new AggregateValidityChangedListener( this );
         this.validityListeners = new ValidityListenerList();
+        this.enabled = true;
     }
 
     /***************************************************************************
