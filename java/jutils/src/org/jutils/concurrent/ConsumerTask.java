@@ -1,6 +1,7 @@
 package org.jutils.concurrent;
 
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /*******************************************************************************
  * Used to process data that is collected by a separate thread. When this task
@@ -11,7 +12,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class ConsumerTask<T> implements IStoppableTask
 {
     /** {@code true} if input should be accepted, {@code false} otherwise. */
-    private volatile boolean acceptInput;
+    private final AtomicBoolean acceptInput;
     /** List of data to be consumed. */
     private final LinkedBlockingQueue<T> data;
     /** The callback to serially consume items. */
@@ -36,7 +37,7 @@ public class ConsumerTask<T> implements IStoppableTask
         this.consumer = consumer;
         this.finalizer = finalizer;
 
-        this.acceptInput = true;
+        this.acceptInput = new AtomicBoolean( true );
         this.data = new LinkedBlockingQueue<T>();
     }
 
@@ -51,7 +52,7 @@ public class ConsumerTask<T> implements IStoppableTask
 
         while( stopper.continueProcessing() )
         {
-            if( acceptInput )
+            if( acceptInput.get() )
             {
                 try
                 {
@@ -84,6 +85,8 @@ public class ConsumerTask<T> implements IStoppableTask
         {
             finalizer.run();
         }
+
+        stopper.signalFinished();
     }
 
     /***************************************************************************
@@ -92,7 +95,7 @@ public class ConsumerTask<T> implements IStoppableTask
      **************************************************************************/
     public boolean isAcceptingInput()
     {
-        return acceptInput;
+        return acceptInput.get();
     }
 
     /***************************************************************************
@@ -101,7 +104,7 @@ public class ConsumerTask<T> implements IStoppableTask
      **************************************************************************/
     public void stopAcceptingInput()
     {
-        acceptInput = false;
+        this.acceptInput.set( false );
     }
 
     /***************************************************************************
@@ -111,7 +114,7 @@ public class ConsumerTask<T> implements IStoppableTask
      **************************************************************************/
     public final void addData( T obj ) throws NullPointerException
     {
-        if( acceptInput )
+        if( acceptInput.get() )
         {
             try
             {

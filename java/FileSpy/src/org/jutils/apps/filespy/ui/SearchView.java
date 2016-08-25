@@ -20,8 +20,6 @@ import org.jutils.io.LogUtils;
 import org.jutils.io.options.OptionsSerializer;
 import org.jutils.ui.*;
 import org.jutils.ui.calendar.CalendarField;
-import org.jutils.ui.event.ItemActionEvent;
-import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.explorer.*;
 import org.jutils.ui.model.IDataView;
 import org.jutils.ui.model.ItemComboBoxModel;
@@ -849,7 +847,8 @@ public class SearchView implements IDataView<SearchParams>
 
         searcher = new Searcher( resultsTable, this, statusBar );
 
-        searcher.search( params, new FinishedListener( this ) );
+        searcher.search( params, ( e ) -> SwingUtilities.invokeLater(
+            () -> setSearchFinished( e.getItem() ) ) );
 
         setSearchStarted();
 
@@ -1134,45 +1133,6 @@ public class SearchView implements IDataView<SearchParams>
                 }
 
             }
-        }
-    }
-
-    /***************************************************************************
-     *
-     **************************************************************************/
-    private static class FinishedListener implements ItemActionListener<Long>
-    {
-        private final SearchView panel;
-
-        public FinishedListener( SearchView panel )
-        {
-            this.panel = panel;
-        }
-
-        @Override
-        public void actionPerformed( ItemActionEvent<Long> event )
-        {
-            SearchFinishedHandler runnable = new SearchFinishedHandler( panel,
-                event.getItem() );
-            SwingUtilities.invokeLater( runnable );
-        }
-    }
-
-    private static class SearchFinishedHandler implements Runnable
-    {
-        private final SearchView searchPanel;
-        private final long millis;
-
-        public SearchFinishedHandler( SearchView searchPanel,
-            long durationInMillis )
-        {
-            this.searchPanel = searchPanel;
-            this.millis = durationInMillis;
-        }
-
-        public void run()
-        {
-            searchPanel.setSearchFinished( millis );
         }
     }
 }

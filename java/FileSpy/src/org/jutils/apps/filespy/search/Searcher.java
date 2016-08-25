@@ -55,11 +55,10 @@ public class Searcher
         statusBar.setText( "" );
         resultsTable.clearTable();
 
-        SearchThread searchTask = new SearchThread( handler, params,
-            finalizer );
+        SearchTask searchTask = new SearchTask( handler, params, finalizer );
 
         stoppableTask = new Stoppable( searchTask );
-        searchThread = new Thread( stoppableTask );
+        searchThread = new Thread( stoppableTask, "FileSpy Search Thread" );
         searchThread.start();
     }
 
