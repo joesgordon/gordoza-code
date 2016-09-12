@@ -467,6 +467,19 @@ public final class IOUtils
     }
 
     /***************************************************************************
+     * @param file
+     * @param suffix
+     * @return
+     **************************************************************************/
+    public static File appendToName( File file, String suffix )
+    {
+        String ext = getFileExtension( file );
+        File f = removeExtension( file );
+
+        return new File( f.getAbsolutePath() + suffix + "." + ext );
+    }
+
+    /***************************************************************************
      * Returns a list of directories that contain the provided path. Neither the
      * provided path nor ancestors are required to exist.
      * @param path the path to generate an ancestor list.
