@@ -211,6 +211,11 @@ public class DataPlotView implements IView<JComponent>
         {
             return false;
         }
+
+        @Override
+        public void setSelected( int index, boolean selected )
+        {
+        }
     }
 
     /***************************************************************************

@@ -43,7 +43,7 @@ public class ArraySeries implements ISeriesData<IDataPoint>
     @Override
     public Iterator<IDataPoint> iterator()
     {
-        return new ArrayDataPointIterator( this );
+        return new DataSeriesPointIterator( this );
     }
 
     /***************************************************************************
@@ -79,7 +79,7 @@ public class ArraySeries implements ISeriesData<IDataPoint>
     @Override
     public IDataPoint get( int index )
     {
-        return new ArrayDataPoint( this, index );
+        return new DataSeriesPoint( this, index );
     }
 
     /***************************************************************************
@@ -107,6 +107,15 @@ public class ArraySeries implements ISeriesData<IDataPoint>
     public boolean isSelected( int index )
     {
         return this.selected[index];
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void setSelected( int index, boolean selected )
+    {
+        this.selected[index] = selected;
     }
 
     /***************************************************************************
@@ -219,91 +228,6 @@ public class ArraySeries implements ISeriesData<IDataPoint>
             }
 
             length = newLength;
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class ArrayDataPoint implements IDataPoint
-    {
-        private final ArraySeries series;
-        private final int index;
-
-        public ArrayDataPoint( ArraySeries series, int index )
-        {
-            this.series = series;
-            this.index = index;
-        }
-
-        @Override
-        public double getX()
-        {
-            return series.getX( index );
-        }
-
-        @Override
-        public double getY()
-        {
-            return series.getY( index );
-        }
-
-        @Override
-        public boolean isSelected()
-        {
-            return series.isSelected( index );
-        }
-
-        @Override
-        public boolean isHidden()
-        {
-            return series.isHidden( index );
-        }
-
-        @Override
-        public void setSelected( boolean selected )
-        {
-            series.selected[index] = selected;
-        }
-
-        @Override
-        public void setHidden( boolean hidden )
-        {
-            series.hidden[index] = hidden;
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class ArrayDataPointIterator implements Iterator<IDataPoint>
-    {
-        private final ArraySeries series;
-        private int index;
-
-        public ArrayDataPointIterator( ArraySeries series )
-        {
-            this.series = series;
-            this.index = 0;
-        }
-
-        @Override
-        public boolean hasNext()
-        {
-            return index < series.count;
-        }
-
-        @Override
-        public IDataPoint next()
-        {
-            try
-            {
-                return new ArrayDataPoint( series, index++ );
-            }
-            catch( ArrayIndexOutOfBoundsException ex )
-            {
-                throw new NoSuchElementException( ex.getMessage() );
-            }
         }
     }
 

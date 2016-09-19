@@ -46,4 +46,10 @@ public interface ISeriesData<T extends IDataPoint> extends Iterable<T>
      * @return
      **************************************************************************/
     public boolean isSelected( int index );
+
+    /***************************************************************************
+     * @param index
+     * @param selected
+     **************************************************************************/
+    public void setSelected( int index, boolean selected );
 }
