@@ -62,4 +62,35 @@ public class RunningStat
     {
         return Math.sqrt( calcVariance() );
     }
+
+    public Stats calcStats()
+    {
+        return new Stats( min, max, calcMean(), calcVariance() );
+    }
+
+    public static class Stats
+    {
+        public final double min;
+        public final double max;
+        public final double mean;
+        public final double variance;
+
+        public Stats( double min, double max, double mean, double variance )
+        {
+            this.min = min;
+            this.max = max;
+            this.mean = mean;
+            this.variance = variance;
+        }
+
+        public double getRange()
+        {
+            return max - min;
+        }
+
+        public double getStddev()
+        {
+            return Math.sqrt( variance );
+        }
+    }
 }
