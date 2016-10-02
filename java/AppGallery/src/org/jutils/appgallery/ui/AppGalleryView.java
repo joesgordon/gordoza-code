@@ -12,6 +12,8 @@ import javax.swing.border.EmptyBorder;
 import org.jutils.appgallery.ILibraryApp;
 import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.model.IComponentView;
+import org.jutils.ui.model.LabelListCellRenderer;
+import org.jutils.ui.model.LabelListCellRenderer.IListCellLabelDecorator;
 
 /*******************************************************************************
  * 
@@ -39,7 +41,8 @@ public class AppGalleryView implements IComponentView
         JList<ILibraryApp> list = new JList<>();
         JScrollPane pane = new JScrollPane( list );
 
-        list.setCellRenderer( new AppRenderer() );
+        list.setCellRenderer(
+            new LabelListCellRenderer( new AppCellDecorator() ) );
         list.setListData( apps.toArray( new ILibraryApp[apps.size()] ) );
         list.addMouseListener( new ListMouseListener( list ) );
 
@@ -95,22 +98,18 @@ public class AppGalleryView implements IComponentView
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class AppRenderer extends DefaultListCellRenderer
+    private static class AppCellDecorator implements IListCellLabelDecorator
     {
-        public Component getListCellRendererComponent( JList<?> list,
-            Object value, int index, boolean isSelected, boolean cellHasFocus )
+        @Override
+        public void decorate( JLabel label, JList<?> list, Object value,
+            int index, boolean isSelected, boolean cellHasFocus )
         {
-            Component comp = super.getListCellRendererComponent( list, value,
-                index, isSelected, cellHasFocus );
-
             if( value != null )
             {
                 ILibraryApp app = ( ILibraryApp )value;
-                setIcon( app.getIcon32() );
-                setText( app.getName() );
+                label.setIcon( app.getIcon32() );
+                label.setText( app.getName() );
             }
-
-            return comp;
         }
     }
 

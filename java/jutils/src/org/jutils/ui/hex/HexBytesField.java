@@ -10,6 +10,8 @@ import javax.swing.*;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.fields.*;
 import org.jutils.ui.model.ItemComboBoxModel;
+import org.jutils.ui.model.LabelListCellRenderer;
+import org.jutils.ui.model.LabelListCellRenderer.IListCellLabelDecorator;
 import org.jutils.ui.validation.ValidationView;
 
 /*******************************************************************************
@@ -42,7 +44,8 @@ public class HexBytesField implements IDataFormField<byte []>
         this.view = new ValidationView( getValidationField(), null,
             comboField );
 
-        comboField.setRenderer( new HexBytesRenderer() );
+        comboField.setRenderer(
+            new LabelListCellRenderer( new HexBytesCellDecorator() ) );
 
         comboField.setEditable( true );
         comboField.setEditor( new HexBytesComboEditor( bytesField ) );
@@ -202,21 +205,17 @@ public class HexBytesField implements IDataFormField<byte []>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class HexBytesRenderer extends DefaultListCellRenderer
+    private static class HexBytesCellDecorator
+        implements IListCellLabelDecorator
     {
-        public Component getListCellRendererComponent( JList<?> list,
-            Object value, int index, boolean isSelected, boolean cellHasFocus )
+        @Override
+        public void decorate( JLabel label, JList<?> list, Object value,
+            int index, boolean isSelected, boolean cellHasFocus )
         {
-            super.getListCellRendererComponent( list, value, index, isSelected,
-                cellHasFocus );
-
             HexBytesItem bytes = ( HexBytesItem )value;
 
-            super.setText( bytes.toString() );
-
-            return this;
+            label.setText( bytes.toString() );
         }
-
     }
 
     /***************************************************************************

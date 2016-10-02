@@ -102,6 +102,7 @@ public class SheetSizeView implements IDataView<SheetSize>
      **************************************************************************/
     private static class IntegerSpinnerModel extends SpinnerNumberModel
     {
+        private static final long serialVersionUID = 1L;
         private final IUpdater<Integer> updater;
 
         public IntegerSpinnerModel( IUpdater<Integer> updater )

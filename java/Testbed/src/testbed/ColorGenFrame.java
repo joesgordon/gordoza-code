@@ -13,6 +13,8 @@ import org.jutils.IconConstants;
 import org.jutils.Utils;
 import org.jutils.concurrent.*;
 import org.jutils.ui.ColorIcon;
+import org.jutils.ui.model.LabelListCellRenderer;
+import org.jutils.ui.model.LabelListCellRenderer.IListCellLabelDecorator;
 
 import com.jgoodies.looks.Options;
 
@@ -101,7 +103,8 @@ public class ColorGenFrame extends JFrame
         JScrollPane colorScrollPane = new JScrollPane( colorList );
 
         colorList.setFixedCellHeight( 30 );
-        colorList.setCellRenderer( new ColorListCellRenderer() );
+        colorList.setCellRenderer(
+            new LabelListCellRenderer( new ColorCellDecorator() ) );
 
         // ---------------------------------------------------------------------
         // Setup main panel.
@@ -416,45 +419,41 @@ class GcXyzComparator implements Comparator<GenericColor>
 /*******************************************************************************
  * 
  ******************************************************************************/
-class ColorListCellRenderer extends DefaultListCellRenderer
+class ColorCellDecorator implements IListCellLabelDecorator
 {
     /**  */
-    private Font boldFont;
+    private final Font boldFont;
     /**  */
     private ColorIcon icon;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public ColorListCellRenderer()
+    public ColorCellDecorator()
     {
-        icon = new ColorIcon( Color.white, 16 );
-        boldFont = getFont();
-        boldFont = boldFont.deriveFont( boldFont.getStyle() | Font.BOLD );
+        Font f = UIManager.getFont( "Label.font" );
+
+        this.icon = new ColorIcon( Color.white, 16 );
+        this.boldFont = f.deriveFont( f.getStyle() | Font.BOLD );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public Component getListCellRendererComponent( JList<?> list, Object value,
-        int index, boolean isSelected, boolean cellHasFocus )
+    public void decorate( JLabel label, JList<?> list, Object value, int index,
+        boolean isSelected, boolean cellHasFocus )
     {
-        Component comp = super.getListCellRendererComponent( list, value, index,
-            isSelected, cellHasFocus );
-
         if( value != null )
         {
-            setIcon( icon );
+            label.setIcon( icon );
             GenericColor c = ( GenericColor )value;
-            setText( "The quick brown fox jumped over the lazy dog. (" +
+            label.setText( "The quick brown fox jumped over the lazy dog. (" +
                 c.toString() + ")" );
-            setFont( boldFont );
-            setForeground( c.getColor() );
+            label.setFont( boldFont );
+            label.setForeground( c.getColor() );
             icon.setColor( c.getColor() );
         }
-
-        return comp;
     }
 }
 

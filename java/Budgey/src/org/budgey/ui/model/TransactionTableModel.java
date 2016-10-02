@@ -1,30 +1,33 @@
 package org.budgey.ui.model;
 
-import java.util.Arrays;
 import java.util.Date;
 
 import org.budgey.data.Money;
 import org.budgey.data.Transaction;
-import org.jutils.ui.model.ItemTableModel;
+import org.jutils.ui.model.ITableConfig;
 
-public class TransactionTableModel extends ItemTableModel<Transaction>
+public class TransactionTableModel implements ITableConfig<Transaction>
 {
     private static final String [] COLUMN_NAMES = { "Date", "Location",
         "Amount", "Balance", "Tags" };
     private static final Class<?> [] COLUMN_CLASSES = { Date.class,
         String.class, Money.class, Money.class, String.class };
 
-    public TransactionTableModel()
+    @Override
+    public String [] getColumnNames()
     {
-        setColumnClasses( Arrays.asList( COLUMN_CLASSES ) );
-        setColumnNames( Arrays.asList( COLUMN_NAMES ) );
+        return COLUMN_NAMES;
     }
 
     @Override
-    public Object getValueAt( int row, int col )
+    public Class<?> [] getColumnClasses()
     {
-        Transaction trans = getRow( row );
+        return COLUMN_CLASSES;
+    }
 
+    @Override
+    public Object getItemData( Transaction trans, int col )
+    {
         switch( col )
         {
             case 0:
@@ -41,5 +44,16 @@ public class TransactionTableModel extends ItemTableModel<Transaction>
 
         throw new IllegalArgumentException(
             "No information for column " + col );
+    }
+
+    @Override
+    public void setItemData( Transaction item, int col, Object data )
+    {
+    }
+
+    @Override
+    public boolean isCellEditable( Transaction item, int col )
+    {
+        return false;
     }
 }

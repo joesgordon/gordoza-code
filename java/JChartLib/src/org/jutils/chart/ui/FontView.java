@@ -11,6 +11,8 @@ import org.jutils.ui.StandardFormView;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.event.updater.ListUpdater;
 import org.jutils.ui.model.IDataView;
+import org.jutils.ui.model.LabelListCellRenderer;
+import org.jutils.ui.model.LabelListCellRenderer.IListCellLabelDecorator;
 
 /*******************************************************************************
  * 
@@ -53,7 +55,8 @@ public class FontView implements IDataView<Font>
         JScrollPane namesPane = new JScrollPane( namesField );
         JScrollPane sizesPane = new JScrollPane( sizesField );
 
-        namesField.setCellRenderer( new FontNameRenderer() );
+        namesField.setCellRenderer(
+            new LabelListCellRenderer( new FontCellDecorator() ) );
 
         form.addField( "Name", namesPane );
         form.addField( "Size", sizesPane );
@@ -97,22 +100,18 @@ public class FontView implements IDataView<Font>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class FontNameRenderer extends DefaultListCellRenderer
+    private static class FontCellDecorator implements IListCellLabelDecorator
     {
-        public Component getListCellRendererComponent( JList<?> list,
-            Object value, int index, boolean isSelected, boolean cellHasFocus )
+        @Override
+        public void decorate( JLabel label, JList<?> list, Object value,
+            int index, boolean isSelected, boolean cellHasFocus )
         {
-            super.getListCellRendererComponent( list, value, index, isSelected,
-                cellHasFocus );
-
             Font f = new Font( value.toString(), Font.PLAIN, 16 );
 
             if( f.canDisplay( 'a' ) )
             {
-                super.setFont( f );
+                label.setFont( f );
             }
-
-            return this;
         }
     }
 

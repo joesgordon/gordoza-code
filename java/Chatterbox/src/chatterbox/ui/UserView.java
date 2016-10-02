@@ -13,8 +13,7 @@ import javax.swing.border.EmptyBorder;
 import org.jutils.ui.TitleView;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
-import org.jutils.ui.model.CollectionListModel;
-import org.jutils.ui.model.IDataView;
+import org.jutils.ui.model.*;
 
 import chatterbox.model.IUser;
 
@@ -53,7 +52,8 @@ public class UserView implements IDataView<List<IUser>>
         userScrollPane.setPreferredSize( new Dimension( 175, 100 ) );
         userScrollPane.setMinimumSize( new Dimension( 100, 100 ) );
 
-        userList.setCellRenderer( new UserListCellRenderer() );
+        userList.setCellRenderer(
+            new LabelListCellRenderer( new UserListCellDecorator() ) );
         userList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
         userList.addMouseListener( new UsersMouseListener( this ) );
 

@@ -8,12 +8,12 @@ import javax.swing.*;
 
 import org.duak.*;
 import org.duak.data.FileInfo;
-import org.duak.model.Analyzer;
+import org.duak.task.DuakTask;
 import org.duak.utils.HistoryList;
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
-import org.jutils.concurrent.*;
 import org.jutils.io.options.OptionsSerializer;
+import org.jutils.task.TaskView;
 import org.jutils.ui.*;
 import org.jutils.ui.RecentFilesMenuView.IRecentSelected;
 import org.jutils.ui.event.*;
@@ -62,7 +62,7 @@ public class DuakFrame implements IView<JFrame>
 
         createMenubar( frameView.getMenuBar(), frameView.getFileMenu() );
         frameView.setToolbar( createToolbar() );
-        frameView.setContent( duakPanel );
+        frameView.setContent( duakPanel.getView() );
 
         recentMenu.setData( options.getOptions().recentDirs.toList() );
         recentMenu.addSelectedListener( new OpenListener( this ) );
@@ -100,19 +100,16 @@ public class DuakFrame implements IView<JFrame>
 
         recentMenu.setData( options.getOptions().recentDirs.toList() );
 
-        // TODO fix cancel
+        DuakTask task = new DuakTask( file );
 
-        ProgressDialog dialog = new ProgressDialog( getView(),
-            "Analysis Progress" );
-        AnalysisThread analysisThread = new AnalysisThread( this, file,
-            dialog );
-        Stoppable stoppable = new Stoppable( analysisThread );
-        Thread thread = new Thread( stoppable );
+        TaskView.startAndShow( getView(), task, "Analyzing Files" );
 
-        dialog.setLocationRelativeTo( getView() );
-        dialog.addCancelListener( new CancelListener( stoppable ) );
-        thread.start();
-        dialog.setVisible( true );
+        FileInfo results = task.getResults();
+
+        if( results != null )
+        {
+            SwingUtilities.invokeLater( new PanelUpdater( this, results ) );
+        }
     }
 
     /***************************************************************************
@@ -120,7 +117,7 @@ public class DuakFrame implements IView<JFrame>
      **************************************************************************/
     private void setResults( FileInfo results )
     {
-        duakPanel.setResults( results );
+        duakPanel.setData( results );
     }
 
     /***************************************************************************
@@ -251,81 +248,20 @@ public class DuakFrame implements IView<JFrame>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class CancelListener implements ActionListener
-    {
-        private Stoppable stoppable;
-
-        public CancelListener( Stoppable thread )
-        {
-            stoppable = thread;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            try
-            {
-                stoppable.stopAndWaitFor();
-            }
-            catch( InterruptedException ex )
-            {
-            }
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class AnalysisThread implements IStoppableTask
-    {
-        private final File dir;
-        private final ProgressDialog dialog;
-        private final DuakFrame view;
-
-        public AnalysisThread( DuakFrame view, File directory,
-            ProgressDialog progressDialog )
-        {
-            this.view = view;
-            this.dir = directory;
-            this.dialog = progressDialog;
-        }
-
-        @Override
-        public void run( ITaskStopManager stopper )
-        {
-            Analyzer analyzer = new Analyzer();
-            FileInfo results = analyzer.analyze( dir,
-                dialog.getProgressReporter(), stopper );
-
-            if( results != null )
-            {
-                SwingUtilities.invokeLater(
-                    new PanelUpdater( view, results, dialog ) );
-            }
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
     private static class PanelUpdater implements Runnable
     {
-        private FileInfo results;
-        private ProgressDialog dialog;
+        private final FileInfo results;
         private final DuakFrame view;
 
-        public PanelUpdater( DuakFrame view, FileInfo results,
-            ProgressDialog dialog )
+        public PanelUpdater( DuakFrame view, FileInfo results )
         {
             this.view = view;
             this.results = results;
-            this.dialog = dialog;
         }
 
         @Override
         public void run()
         {
-            dialog.dispose();
             view.history.clear();
             view.history.add( results );
             view.setResults( results );

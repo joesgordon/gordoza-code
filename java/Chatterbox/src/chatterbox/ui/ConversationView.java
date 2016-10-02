@@ -323,6 +323,8 @@ public class ConversationView implements IDataView<IConversation>
      **************************************************************************/
     private static class AppendableTextPane extends JTextPane
     {
+        private static final long serialVersionUID = 1L;
+
         public AppendableTextPane()
         {
             super();

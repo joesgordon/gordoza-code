@@ -15,46 +15,59 @@ import org.duak.data.FileInfo;
 import org.duak.utils.FileSize;
 import org.jutils.IconConstants;
 import org.jutils.ui.MessageExceptionView;
-import org.jutils.ui.ResizingTable;
 import org.jutils.ui.event.*;
+import org.jutils.ui.model.IDataView;
+import org.jutils.ui.model.ItemsTableModel;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class DuakPanel extends JPanel
+public class DuakPanel implements IDataView<FileInfo>
 {
     /**  */
-    private JLabel locationLabel;
+    private final JPanel view;
     /**  */
-    private JLabel totalLabel;
+    private final JLabel locationLabel;
     /**  */
-    private FileResultsTableModel tableModel;
+    private final JLabel totalLabel;
     /**  */
-    private ResizingTable<FileResultsTableModel> table;
+    private final FileResultsTableConfig tableConfig;
     /**  */
-    private ItemActionList<FileInfo> folderOpenedListeners;
+    private final ItemsTableModel<FileInfo> tableModel;
+    /**  */
+    private final JTable table;
+    /**  */
+    private final ItemActionList<FileInfo> folderOpenedListeners;
+
+    /**  */
+    private FileInfo info;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public DuakPanel()
     {
-        super( new GridBagLayout() );
+        this.view = new JPanel( new GridBagLayout() );
 
-        folderOpenedListeners = new ItemActionList<FileInfo>();
+        this.folderOpenedListeners = new ItemActionList<FileInfo>();
 
-        locationLabel = new JLabel();
-        totalLabel = new JLabel();
-        tableModel = new FileResultsTableModel();
+        this.locationLabel = new JLabel();
+        this.totalLabel = new JLabel();
+        this.tableConfig = new FileResultsTableConfig();
 
-        table = new ResizingTable<FileResultsTableModel>( tableModel );
+        this.tableModel = new ItemsTableModel<>( tableConfig );
+
+        this.table = new JTable( tableModel );
+
+        ResizingTableModelListener.addToTable( table );
+
         JScrollPane tableScrollPane = new JScrollPane( table );
 
         tableScrollPane.getViewport().setBackground( Color.white );
 
-        TableRowSorter<FileResultsTableModel> sorter;
+        TableRowSorter<ItemsTableModel<FileInfo>> sorter;
 
-        sorter = new TableRowSorter<FileResultsTableModel>( tableModel );
+        sorter = new TableRowSorter<>( tableModel );
         // sorter.setComparator( 1, new FileResultsComparer() );
         RowSorter.SortKey [] keys = new RowSorter.SortKey[] {
             new RowSorter.SortKey( 1, SortOrder.DESCENDING ) };
@@ -70,17 +83,17 @@ public class DuakPanel extends JPanel
             new FileResultTableCellRenderer() );
         table.addMouseListener( new FolderOpenedListener() );
 
-        add( locationLabel,
+        view.add( locationLabel,
             new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
                 new Insets( 4, 4, 2, 4 ), 0, 0 ) );
 
-        add( totalLabel,
+        view.add( totalLabel,
             new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
                 new Insets( 4, 4, 2, 4 ), 0, 0 ) );
 
-        add( tableScrollPane,
+        view.add( tableScrollPane,
             new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
                 GridBagConstraints.WEST, GridBagConstraints.BOTH,
                 new Insets( 2, 4, 4, 4 ), 0, 0 ) );
@@ -107,23 +120,44 @@ public class DuakPanel extends JPanel
     }
 
     /***************************************************************************
-     * @param results
-     **************************************************************************/
-    public void setResults( FileInfo results )
-    {
-        locationLabel.setText( results.getFile().getAbsolutePath() );
-
-        totalLabel.setText( new FileSize( results.getSize() ).toString() );
-
-        tableModel.setItems( results.getChildren() );
-    }
-
-    /***************************************************************************
      * @param l
      **************************************************************************/
     public void addFolderOpenedListener( ItemActionListener<FileInfo> l )
     {
         folderOpenedListeners.addListener( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public JPanel getView()
+    {
+        return view;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public FileInfo getData()
+    {
+        return info;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void setData( FileInfo results )
+    {
+        this.info = results;
+
+        locationLabel.setText( results.getFile().getAbsolutePath() );
+
+        totalLabel.setText( new FileSize( results.getSize() ).toString() );
+
+        tableModel.setItems( results.getChildren() );
     }
 
     /***************************************************************************
@@ -186,7 +220,7 @@ public class DuakPanel extends JPanel
                 if( row > -1 )
                 {
                     row = table.convertRowIndexToModel( row );
-                    FileInfo fi = tableModel.getRow( row );
+                    FileInfo fi = tableModel.getItem( row );
                     File f = fi.getFile();
 
                     if( f.isFile() )
@@ -217,23 +251,23 @@ public class DuakPanel extends JPanel
      **************************************************************************/
     private static class OpenFileListener implements ActionListener
     {
-        private final DuakPanel panel;
+        private final DuakPanel view;
         private final Desktop desktop;
 
         public OpenFileListener( DuakPanel panel )
         {
-            this.panel = panel;
+            this.view = panel;
             this.desktop = Desktop.getDesktop();
         }
 
         @Override
         public void actionPerformed( ActionEvent event )
         {
-            int row = panel.table.getSelectedRow();
+            int row = view.table.getSelectedRow();
 
             if( row > -1 )
             {
-                FileInfo fi = panel.tableModel.getRow( row );
+                FileInfo fi = view.tableModel.getItem( row );
 
                 try
                 {
@@ -241,7 +275,7 @@ public class DuakPanel extends JPanel
                 }
                 catch( IOException ex )
                 {
-                    MessageExceptionView.showExceptionDialog( panel,
+                    MessageExceptionView.showExceptionDialog( view.getView(),
                         "Cannot open file " + fi.getFile().getName(),
                         "I/O Error", ex );
                 }
@@ -270,7 +304,7 @@ public class DuakPanel extends JPanel
 
             if( row > -1 )
             {
-                FileInfo fi = panel.tableModel.getRow( row );
+                FileInfo fi = panel.tableModel.getItem( row );
 
                 try
                 {
@@ -279,7 +313,7 @@ public class DuakPanel extends JPanel
                 }
                 catch( IOException ex )
                 {
-                    MessageExceptionView.showExceptionDialog( panel,
+                    MessageExceptionView.showExceptionDialog( panel.getView(),
                         "Cannot open file " + fi.getFile().getName(),
                         "I/O Error", ex );
                 }
@@ -293,7 +327,8 @@ public class DuakPanel extends JPanel
     private static class FileResultTableCellRenderer
         extends DefaultTableCellRenderer
     {
-        private FileIconLoader iconLoader;
+        private static final long serialVersionUID = 1L;
+        private final FileIconLoader iconLoader;
 
         public FileResultTableCellRenderer()
         {
@@ -329,9 +364,9 @@ public class DuakPanel extends JPanel
      **************************************************************************/
     private static class FileIconLoader
     {
-        private FileSystemView fsv;
-        private Map<File, Icon> iconMap;
-        private Icon defaultIcon;
+        private final FileSystemView fsv;
+        private final Map<File, Icon> iconMap;
+        private final Icon defaultIcon;
 
         public FileIconLoader()
         {

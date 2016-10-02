@@ -13,6 +13,7 @@ import org.budgey.ui.model.TransactionTableModel;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.model.IView;
+import org.jutils.ui.model.ItemsTableModel;
 
 /*******************************************************************************
  * 
@@ -22,7 +23,7 @@ public class TransactionListView implements IView<Component>
     /**  */
     private final JPanel transactionPanel;
     /**  */
-    private final TransactionTableModel transactionModel;
+    private final ItemsTableModel<Transaction> transactionModel;
     /**  */
     private final ItemActionList<Transaction> editTransListeners;
 
@@ -33,7 +34,8 @@ public class TransactionListView implements IView<Component>
     {
         editTransListeners = new ItemActionList<Transaction>();
         transactionPanel = new JPanel( new BorderLayout() );
-        transactionModel = new TransactionTableModel();
+        transactionModel = new ItemsTableModel<Transaction>(
+            new TransactionTableModel() );
         JTable table = new JTable( transactionModel );
         JScrollPane pane = new JScrollPane( table );
 
@@ -67,7 +69,7 @@ public class TransactionListView implements IView<Component>
      **************************************************************************/
     public void addTransaction( Transaction transaction )
     {
-        transactionModel.addRow( transaction );
+        transactionModel.addItem( transaction );
     }
 
     /***************************************************************************
@@ -92,12 +94,12 @@ public class TransactionListView implements IView<Component>
     private static class TableMouseListener extends MouseAdapter
     {
         private final ItemActionList<Transaction> editTransListeners;
-        private final TransactionTableModel model;
+        private final ItemsTableModel<Transaction> model;
         private final Object source;
 
         public TableMouseListener( Object source,
             ItemActionList<Transaction> editTransListeners,
-            TransactionTableModel model )
+            ItemsTableModel<Transaction> model )
         {
             this.source = source;
             this.editTransListeners = editTransListeners;
@@ -112,7 +114,7 @@ public class TransactionListView implements IView<Component>
                 int row = table.getSelectedRow();
                 if( row > -1 )
                 {
-                    Transaction trans = model.getRow( row );
+                    Transaction trans = model.getItem( row );
 
                     editTransListeners.fireListeners( source, trans );
                 }

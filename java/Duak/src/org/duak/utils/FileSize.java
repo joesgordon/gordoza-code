@@ -1,6 +1,5 @@
 package org.duak.utils;
 
-import org.duak.model.LongComparer;
 import org.jutils.io.IOUtils;
 
 /*******************************************************************************

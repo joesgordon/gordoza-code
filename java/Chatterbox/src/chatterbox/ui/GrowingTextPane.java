@@ -10,6 +10,8 @@ import javax.swing.event.DocumentListener;
 
 public class GrowingTextPane extends JTextPane
 {
+    private static final long serialVersionUID = 1L;
+
     public GrowingTextPane()
     {
         super();

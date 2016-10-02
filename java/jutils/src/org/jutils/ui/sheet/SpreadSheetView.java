@@ -10,8 +10,8 @@ import javax.swing.table.TableCellRenderer;
 
 import org.jutils.PropConstants;
 import org.jutils.Utils;
-import org.jutils.ui.ResizingTable;
 import org.jutils.ui.RowHeaderRenderer;
+import org.jutils.ui.event.ResizingTableModelListener;
 import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
@@ -97,26 +97,41 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
         table.getColumnModel().getColumn( col ).setPreferredWidth( width );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public void autoLayout()
     {
-        ResizingTable.resizeTable( table );
+        ResizingTableModelListener.resizeTable( table );
     }
 
+    /***************************************************************************
+     * @param popup
+     **************************************************************************/
     public void setPopup( JPopupMenu popup )
     {
         this.popup = popup;
     }
 
+    /***************************************************************************
+     * @param renderer
+     **************************************************************************/
     public void setRenderer( TableCellRenderer renderer )
     {
         table.setDefaultRenderer( Object.class, renderer );
     }
 
+    /***************************************************************************
+     * @param handler
+     **************************************************************************/
     public void setTransferHandler( TransferHandler handler )
     {
         table.setTransferHandler( handler );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public int getSelectedIndex()
     {
         int row = table.getSelectedRow();
@@ -158,6 +173,9 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
         return view;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public JTable getTable()
     {
         return table;

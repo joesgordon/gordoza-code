@@ -10,6 +10,8 @@ import javax.swing.JScrollPane;
  **************************************************************************/
 public class GrowingScrollPane extends JScrollPane
 {
+    private static final long serialVersionUID = 1L;
+
     /***************************************************************************
      * @param view
      **************************************************************************/

@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jutils.concurrent.ITaskStopManager;
+import org.jutils.task.ITaskHandler;
 
 public class FileInfo implements Comparable<FileInfo>
 {
@@ -58,9 +58,9 @@ public class FileInfo implements Comparable<FileInfo>
         this.size = size;
     }
 
-    public void refresh( ITaskStopManager stopper )
+    public void refresh( ITaskHandler handler )
     {
-        if( dir.isDirectory() && stopper.continueProcessing() )
+        if( dir.isDirectory() && handler.canContinue() )
         {
             File [] fs = dir.listFiles();
 
@@ -76,7 +76,7 @@ public class FileInfo implements Comparable<FileInfo>
                 FileInfo fr = new FileInfo( f );
                 if( f.isDirectory() )
                 {
-                    fr.refresh( stopper );
+                    fr.refresh( handler );
                 }
                 children.add( fr );
             }
