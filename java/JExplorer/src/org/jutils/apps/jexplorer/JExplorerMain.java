@@ -20,10 +20,10 @@ public class JExplorerMain implements IFrameApp
     public JFrame createFrame()
     {
         JExplorerFrame frame = new JExplorerFrame();
-        frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+
         frame.setDirectory( new File( "/" ) );
 
-        return frame;
+        return frame.getView();
     }
 
     /***************************************************************************

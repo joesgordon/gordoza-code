@@ -19,6 +19,8 @@ public class StandardFrameView implements IView<JFrame>
     private final ComponentView contentView;
     /**  */
     private final JMenu fileMenu;
+    /**  */
+    private final StatusBarPanel statusBar;
 
     /***************************************************************************
      * 
@@ -29,6 +31,7 @@ public class StandardFrameView implements IView<JFrame>
         this.toolbarView = new ComponentView();
         this.contentView = new ComponentView();
         this.fileMenu = new JMenu( "File" );
+        this.statusBar = new StatusBarPanel();
 
         frame.setJMenuBar( createMenuBar() );
         frame.setContentPane( createContentPane() );
@@ -40,7 +43,6 @@ public class StandardFrameView implements IView<JFrame>
     private JPanel createContentPane()
     {
         JPanel panel = new JPanel( new GridBagLayout() );
-        StatusBarPanel statusbar = new StatusBarPanel();
         GridBagConstraints constraints;
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
@@ -61,7 +63,7 @@ public class StandardFrameView implements IView<JFrame>
         constraints = new GridBagConstraints( 0, 3, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 0, 0, 0 ), 0, 0 );
-        panel.add( statusbar.getView(), constraints );
+        panel.add( statusBar.getView(), constraints );
 
         return panel;
     }
@@ -129,5 +131,13 @@ public class StandardFrameView implements IView<JFrame>
     public Container getContent()
     {
         return frame.getContentPane();
+    }
+
+    /***************************************************************************
+     * @param text
+     **************************************************************************/
+    public void setStatusText( String text )
+    {
+        statusBar.setText( text );
     }
 }

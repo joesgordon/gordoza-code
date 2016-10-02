@@ -57,6 +57,6 @@ public class LabelTableCellRenderer extends DefaultTableCellRenderer
          * @param col the column of the cell to be rendered.
          **********************************************************************/
         public void decorate( JLabel label, JTable table, Object value,
-            boolean isSelected, boolean cellHasFocus, int row, int col );
+            boolean isSelected, boolean hasFocus, int row, int col );
     }
 }

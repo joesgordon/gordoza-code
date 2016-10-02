@@ -10,109 +10,58 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeSelectionModel;
 
-import org.jutils.IconConstants;
-import org.jutils.Utils;
+import org.jutils.*;
 import org.jutils.io.FileComparator;
 import org.jutils.ui.*;
+import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.explorer.*;
-
-// TODO Remove inheritance from JFrame.
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * Frame that displays the contents of the file system in a explorer like
  * interface.
  ******************************************************************************/
-public class JExplorerFrame extends JFrame
+public class JExplorerFrame implements IView<JFrame>
 {
     /**  */
-    private static final String FORWARD_TIP = "You must go back before going forward";
+    private static final String NEXT_TIP = "You must go back before going forward";
+    /**  */
+    private static final String PREVIOUS_TIP = "You must go somewhere in order to go back";
+    /**  */
+    private static final String UP_TIP = "Go to parent directory";
 
     /**  */
-    private static final String BACKWARD_TIP = "You must go somewhere in order to go back";
-
-    // -------------------------------------------------------------------------
-    // Menu bar widgets
-    // -------------------------------------------------------------------------
-    /** The main menu bar for this frame. */
-    private JMenuBar menubar = new JGoodiesMenuBar();
-
-    /** Menus containing items normally found under the name 'File'. */
-    private JMenu fileMenu = new JMenu();
-
-    /** Allows the user to exit this application. */
-    private JMenuItem exitMenuItem = new JMenuItem();
-
-    /** Menu that displays the tools of this application. */
-    private JMenu toolsMenu = new JMenu();
-
-    /** Allows the user to view and edit the options of this application. */
-    private JMenuItem optionsMenuItem = new JMenuItem();
-
-    // -------------------------------------------------------------------------
-    // Toolbar widgets
-    // -------------------------------------------------------------------------
-    /** The main toolbar for this frame. */
-    private JToolBar toolbar = new JGoodiesToolBar();
-
-    /** Allows the user to navigate to past shown directories. */
-    private JButton backButton = new JButton();
-
-    /**
-     * Allows the user to navigate to future shown directories (only works if
-     * the user has previously navigated backwards).
-     */
-    private JButton nextButton = new JButton();
-
-    /** Allows the user to navigate to the current directories parent. */
-    private JButton upButton = new JButton();
-
-    /**
-     * Allows the user to refresh the current directory in both the file table
-     * and file tree.
-     */
-    private JButton refreshButton = new JButton();
-
-    // -------------------------------------------------------------------------
-    // Address panel.
-    // -------------------------------------------------------------------------
-    /** The address panel. */
-    private JPanel addressPanel = new JPanel();
-
-    /** The label for the address field. */
-    private JLabel addressLabel = new JLabel();
+    private final StandardFrameView view;
 
     /** The text field containing the path of the current directory. */
-    private JTextField addressField = new JTextField();
-
-    // -------------------------------------------------------------------------
-    // Main panel widgets
-    // -------------------------------------------------------------------------
-    /** The main panel of this frame. */
-    private JPanel mainPanel = new JPanel();
-
+    private final JTextField addressField = new JTextField();
     /** The file tree displaying the directories in the given file system. */
-    private DirectoryTree dirTree = new DirectoryTree();
-
+    private final DirectoryTree dirTree = new DirectoryTree();
     /** The scroll pane for the file tree. */
-    private JScrollPane treeScrollPane = new JScrollPane( dirTree.getView() );
+    private final JScrollPane treeScrollPane = new JScrollPane(
+        dirTree.getView() );
 
     /**
      * The file table displaying all the files and folder for the current
      * directory.
      */
-    private ExplorerTable fileTable = new ExplorerTable();
+    private final ExplorerTable fileTable = new ExplorerTable();
 
     /** The scrollpane for the file table. */
-    private JScrollPane tableScrollPane = new JScrollPane( fileTable );
+    private final JScrollPane tableScrollPane = new JScrollPane( fileTable );
 
     /**
      * The split pane containing the file tree on the left and the file table on
      * the right.
      */
-    private JSplitPane splitPane = new JSplitPane();
+    private final JSplitPane splitPane = new JSplitPane();
 
-    /** The panel at the bottom of the frame. */
-    private StatusBarPanel statusPanel = new StatusBarPanel();
+    /**  */
+    private final ActionAdapter prevAction;
+    /**  */
+    private final ActionAdapter nextAction;
+    /**  */
+    private final ActionAdapter upAction;
 
     // -------------------------------------------------------------------------
     // Supporting data.
@@ -138,114 +87,36 @@ public class JExplorerFrame extends JFrame
      **************************************************************************/
     public JExplorerFrame()
     {
-        ActionListener upButtonListener = new JExplorer_upButton_actionAdapter(
-            this );
-        ActionListener nextButtonListener = new JExplorer_nextButton_actionAdapter(
-            this );
-        ActionListener backButtonListener = new JExplorer_backButton_actionAdapter(
-            this );
-        ActionListener optionsMenuItemListener = new JExplorer_optionsMenuItem_actionAdapter(
-            this );
-        ActionListener addressFieldListener = new JExplorer_addressField_actionAdapter(
-            this );
-        TreeSelectionListener dirTreeSelListener = new JExplorer_dirTree_SelectionAdapter(
-            this );
-        MouseListener dirTreeMouseListener = new JExplorer_dirTree_mouseAdapter(
-            this );
-        MouseListener fileTableMouseListener = new JExplorer_fileTable_mouseAdapter(
-            this );
-
-        // ----------------------------------------------------------------------
-        // Setup menu bar
-        // ----------------------------------------------------------------------
-        fileMenu.setText( "File" );
-
-        exitMenuItem.setText( "Exit" );
-        exitMenuItem.addActionListener( new ExitListener( this ) );
-        exitMenuItem.setIcon(
-            IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
-        fileMenu.add( exitMenuItem );
-
-        toolsMenu.setText( "Tools" );
-        optionsMenuItem.setText( "Options" );
-        optionsMenuItem.setIcon(
-            IconConstants.loader.getIcon( IconConstants.CONFIG_16 ) );
-        // optionsMenuItem.setIcon( IconLoader.getIcon( IconLoader.EDIT_16 ) );
-        optionsMenuItem.addActionListener( optionsMenuItemListener );
-        toolsMenu.add( optionsMenuItem );
-
-        menubar.add( fileMenu );
-        menubar.add( toolsMenu );
-
-        this.setJMenuBar( menubar );
-
-        // ---------------------------------------------------------------------
-        // Setup tool bar
-        // ---------------------------------------------------------------------
-        toolbar.setFloatable( false );
-        toolbar.setRollover( true );
-        toolbar.setBorderPainted( false );
-
-        backButton.setText( "" );
-        backButton.setToolTipText( BACKWARD_TIP );
-        backButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.BACK_24 ) );
-        backButton.setFocusable( false );
-        backButton.setEnabled( false );
-        backButton.addActionListener( backButtonListener );
-
-        nextButton.setText( "" );
-        nextButton.setToolTipText( FORWARD_TIP );
-        nextButton.setIcon(
+        this.view = new StandardFrameView();
+        this.prevAction = new ActionAdapter( ( e ) -> goPreviousDirectory(),
+            "Previous", IconConstants.loader.getIcon( IconConstants.BACK_24 ) );
+        this.nextAction = new ActionAdapter( ( e ) -> goNextDirectory(), "Next",
             IconConstants.loader.getIcon( IconConstants.FORWARD_24 ) );
-        nextButton.setFocusable( false );
-        nextButton.setEnabled( false );
-        nextButton.addActionListener( nextButtonListener );
+        this.upAction = new ActionAdapter( ( e ) -> goDirectoryUp(),
+            "Up a Directory",
+            IconConstants.loader.getIcon( IconConstants.UP_24 ) );
 
-        upButton.setText( "" );
-        upButton.setToolTipText( "Go to parent directory" );
-        upButton.setIcon( IconConstants.loader.getIcon( IconConstants.UP_24 ) );
-        upButton.setFocusable( false );
-        upButton.addActionListener( upButtonListener );
+        TreeSelectionListener dirTreeSelListener = ( e ) -> dirTreeChanged( e );
+        MouseListener dirTreeMouseListener = new DirTreeMouseListener( this );
+        MouseListener fileTableMouseListener = new FileTableMouseListener(
+            this );
 
-        refreshButton.setText( "" );
-        refreshButton.setToolTipText( "Refresh the current directory" );
-        refreshButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.REFRESH_24 ) );
-        refreshButton.setFocusable( false );
+        JFrame frame = view.getView();
 
-        toolbar.add( backButton );
-        toolbar.add( nextButton );
-        toolbar.addSeparator();
-        toolbar.add( upButton );
-        toolbar.addSeparator();
-        toolbar.add( refreshButton );
+        frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        frame.setTitle( "JExplorer" );
+        frame.setIconImages( IconConstants.loader.getImages(
+            IconConstants.OPEN_FOLDER_16, IconConstants.OPEN_FOLDER_32 ) );
+        frame.setSize( new Dimension( 600, 450 ) );
 
-        // ---------------------------------------------------------------------
-        // Setup address panel.
-        // ---------------------------------------------------------------------
-        addressPanel.setLayout( new GridBagLayout() );
+        createMenubar( view.getMenuBar(), view.getFileMenu() );
+        view.setToolbar( createToolbar() );
 
-        addressLabel.setText( "Address: " );
-        addressField.setText( "" );
-        addressField.addActionListener( addressFieldListener );
-
-        addressPanel.add( addressLabel,
-            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
-        addressPanel.add( addressField,
-            new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+        view.setContent( createContent() );
 
         // ---------------------------------------------------------------------
         // Setup main panel.
         // ---------------------------------------------------------------------
-        mainPanel.setLayout( new GridBagLayout() );
-
-        this.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-        this.setTitle( "JExplorer" );
 
         dirTree.getView().getSelectionModel().setSelectionMode(
             TreeSelectionModel.SINGLE_TREE_SELECTION );
@@ -260,30 +131,114 @@ public class JExplorerFrame extends JFrame
         splitPane.setLeftComponent( treeScrollPane );
         splitPane.setRightComponent( tableScrollPane );
 
-        mainPanel.add( addressPanel,
+        // ---------------------------------------------------------------------
+        // Setup frame
+        // ---------------------------------------------------------------------
+
+        splitPane.setDividerLocation( 150 );
+    }
+
+    /***************************************************************************
+     * @param menuBar
+     * @param fileMenus
+     **************************************************************************/
+    private void createMenubar( JMenuBar menubar, JMenu fileMenus )
+    {
+        menubar.add( createToolsMenu() );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private JMenu createToolsMenu()
+    {
+        ActionListener optionsMenuItemListener = ( e ) -> showOptions();
+        JMenu toolsMenu = new JMenu();
+        JMenuItem optionsMenuItem = new JMenuItem();
+
+        toolsMenu.setText( "Tools" );
+        optionsMenuItem.setText( "Options" );
+        optionsMenuItem.setIcon(
+            IconConstants.loader.getIcon( IconConstants.CONFIG_16 ) );
+        // optionsMenuItem.setIcon( IconLoader.getIcon( IconLoader.EDIT_16 ) );
+        optionsMenuItem.addActionListener( optionsMenuItemListener );
+        toolsMenu.add( optionsMenuItem );
+
+        return toolsMenu;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private JToolBar createToolbar()
+    {
+        JToolBar toolbar = new JGoodiesToolBar();
+
+        SwingUtils.addActionToToolbar( toolbar, prevAction );
+        SwingUtils.setActionToolTip( prevAction, PREVIOUS_TIP );
+
+        SwingUtils.addActionToToolbar( toolbar, nextAction );
+        SwingUtils.setActionToolTip( nextAction, NEXT_TIP );
+
+        toolbar.addSeparator();
+
+        SwingUtils.addActionToToolbar( toolbar, upAction );
+        SwingUtils.setActionToolTip( upAction, UP_TIP );
+
+        toolbar.addSeparator();
+
+        Action refreshAction = new ActionAdapter( ( e ) -> refreshDirectory(),
+            "Refresh",
+            IconConstants.loader.getIcon( IconConstants.REFRESH_24 ) );
+        SwingUtils.addActionToToolbar( toolbar, refreshAction );
+        SwingUtils.setActionToolTip( upAction,
+            "Refresh the current directory" );
+
+        return toolbar;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Container createContent()
+    {
+        JPanel panel = new JPanel( new GridBagLayout() );
+
+        panel.add( createAddressPanel(),
             new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
-        mainPanel.add( splitPane,
+        panel.add( splitPane,
             new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 new Insets( 4, 4, 4, 4 ), 0, 0 ) );
 
-        // ---------------------------------------------------------------------
-        // Setup frame
-        // ---------------------------------------------------------------------
-        this.getContentPane().setLayout( new BorderLayout() );
+        return panel;
+    }
 
-        this.getContentPane().add( toolbar, BorderLayout.NORTH );
-        this.getContentPane().add( mainPanel, BorderLayout.CENTER );
-        this.getContentPane().add( statusPanel.getView(), BorderLayout.SOUTH );
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Component createAddressPanel()
+    {
+        ActionListener addressFieldListener = ( e ) -> doAddress();
+        JPanel panel = new JPanel( new GridBagLayout() );
 
-        setIconImages( IconConstants.loader.getImages(
-            IconConstants.OPEN_FOLDER_16, IconConstants.OPEN_FOLDER_32 ) );
+        JLabel addressLabel = new JLabel( "Address: " );
+        addressField.setText( "" );
+        addressField.addActionListener( addressFieldListener );
 
-        setSize( new Dimension( 600, 450 ) );
-        splitPane.setDividerLocation( 150 );
+        panel.add( addressLabel,
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+        panel.add( addressField,
+            new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+
+        return panel;
     }
 
     /***************************************************************************
@@ -323,12 +278,12 @@ public class JExplorerFrame extends JFrame
                 showDirInTable( dir );
             }
             addressField.setText( dir.getAbsolutePath() );
-            statusPanel.setText(
+            view.setStatusText(
                 this.fileTable.getExplorerTableModel().getRowCount() +
                     " items." );
         }
 
-        upButton.setEnabled( parent != null );
+        upAction.setEnabled( parent != null );
     }
 
     /***************************************************************************
@@ -358,7 +313,7 @@ public class JExplorerFrame extends JFrame
         ArrayList<DefaultExplorerItem> list = new ArrayList<DefaultExplorerItem>();
         File [] children = dir.listFiles();
 
-        this.setTitle( dir.getName() + " - JExplorer" );
+        getView().setTitle( dir.getName() + " - JExplorer" );
 
         if( children != null )
         {
@@ -375,7 +330,7 @@ public class JExplorerFrame extends JFrame
         else
         {
             JOptionPane.showMessageDialog(
-                this, "User does not have permissions to view: " +
+                getView(), "User does not have permissions to view: " +
                     Utils.NEW_LINE + dir.getAbsolutePath(),
                 "ERROR", JOptionPane.ERROR_MESSAGE );
         }
@@ -399,42 +354,10 @@ public class JExplorerFrame extends JFrame
             }
             nextDirs.clear();
 
-            nextButton.setEnabled( false );
-            backButton.setEnabled( true );
-            backButton.setToolTipText( lastDirectory.getAbsolutePath() );
-        }
-    }
-
-    /***************************************************************************
-     * Callback listener invoked when the mouse has clicked on the file table.
-     * @param e The MouseEvent (may NOT be null) that occurred.
-     **************************************************************************/
-    public void listener_fileTable_mouseClicked( MouseEvent e )
-    {
-        if( e.getClickCount() == 2 )
-        {
-            File file = fileTable.getSelectedFile();
-            if( file != null )
-            {
-                if( file.isDirectory() )
-                {
-                    // showFile( file );
-                    setDirectory( file );
-                    addLastFile();
-                }
-                else
-                {
-                    try
-                    {
-                        Desktop.getDesktop().open( file );
-                    }
-                    catch( Exception ex )
-                    {
-                        JOptionPane.showMessageDialog( this, ex.getMessage(),
-                            "ERROR", JOptionPane.ERROR_MESSAGE );
-                    }
-                }
-            }
+            nextAction.setEnabled( false );
+            prevAction.setEnabled( true );
+            SwingUtils.setActionToolTip( prevAction,
+                lastDirectory.getAbsolutePath() );
         }
     }
 
@@ -442,30 +365,83 @@ public class JExplorerFrame extends JFrame
      * Callback listener invoked when the next button is clicked.
      * @param e The ignored (can be null) ActionEvent that occurred.
      **************************************************************************/
-    public void listener_nextButton_actionPerformed( ActionEvent e )
+    public void goNextDirectory()
     {
         File file = ( File )nextDirs.pollFirst();
         if( file != null )
         {
             lastDirs.push( currentDirectory );
 
-            backButton.setEnabled( true );
-            backButton.setToolTipText( currentDirectory.getAbsolutePath() );
-            nextButton.setEnabled( !nextDirs.isEmpty() );
-            backButton.setToolTipText( currentDirectory.getAbsolutePath() );
+            prevAction.setEnabled( true );
+            SwingUtils.setActionToolTip( prevAction,
+                currentDirectory.getAbsolutePath() );
+            nextAction.setEnabled( !nextDirs.isEmpty() );
+            SwingUtils.setActionToolTip( nextAction,
+                currentDirectory.getAbsolutePath() );
 
             setDirectory( file );
 
             file = ( File )nextDirs.peekFirst();
             if( file != null )
             {
-                nextButton.setToolTipText( file.getAbsolutePath() );
+                SwingUtils.setActionToolTip( nextAction,
+                    file.getAbsolutePath() );
             }
             else
             {
-                nextButton.setToolTipText( FORWARD_TIP );
-
+                SwingUtils.setActionToolTip( nextAction, NEXT_TIP );
             }
+        }
+    }
+
+    public void goPreviousDirectory()
+    {
+        File file = ( File )lastDirs.pollFirst();
+        if( file != null )
+        {
+            nextDirs.push( currentDirectory );
+
+            prevAction.setEnabled( !lastDirs.isEmpty() );
+            nextAction.setEnabled( true );
+            SwingUtils.setActionToolTip( nextAction,
+                currentDirectory.getAbsolutePath() );
+
+            setDirectory( file );
+
+            file = ( File )lastDirs.peekFirst();
+            if( file != null )
+            {
+                SwingUtils.setActionToolTip( prevAction,
+                    file.getAbsolutePath() );
+            }
+            else
+            {
+                SwingUtils.setActionToolTip( prevAction, PREVIOUS_TIP );
+            }
+        }
+    }
+
+    public void showOptions()
+    {
+        FileConfigurationDialog dialog = FileConfigurationDialog.showDialog(
+            getView() );
+        dialog.getClass();
+    }
+
+    private void doAddress()
+    {
+        String addy = getAddress();
+        File file = new File( addy );
+
+        if( file.isDirectory() )
+        {
+            setDirectory( file );
+        }
+        else
+        {
+            JOptionPane.showMessageDialog( getView(),
+                file.getAbsolutePath() + " is not a directory!", "ERROR",
+                JOptionPane.ERROR_MESSAGE );
         }
     }
 
@@ -474,7 +450,7 @@ public class JExplorerFrame extends JFrame
      * deselected by either the user or programatically.
      * @param e The ignored (can be null) TreeSelectionEvent that occurred.
      **************************************************************************/
-    public void listener_dirTree_valueChanged( TreeSelectionEvent e )
+    private void dirTreeChanged( TreeSelectionEvent e )
     {
         File [] dirsSelected = dirTree.getSelected();
         if( dirsSelected.length == 1 )
@@ -488,7 +464,7 @@ public class JExplorerFrame extends JFrame
      * Callback listener invoked when the up button is pressed.
      * @param e The ignored (can be null) ActionEvent that occurred.
      **************************************************************************/
-    public void listener_upButton_actionPerformed( ActionEvent e )
+    public void goDirectoryUp()
     {
         File parent = getDirectory().getParentFile();
         if( parent != null )
@@ -502,7 +478,7 @@ public class JExplorerFrame extends JFrame
      * Callback listener invoked when the refresh button is pressed.
      * @param e The ignored (can be null) ActionEvent that occurred.
      **************************************************************************/
-    public void listener_refreshButton_actionPerformed( ActionEvent e )
+    public void refreshDirectory()
     {
         // TODO Refresh the view.
         ;
@@ -513,7 +489,7 @@ public class JExplorerFrame extends JFrame
      * the cursor is above the directory tree.
      * @param e The ignored (can be null) ActionEvent that occurred.
      **************************************************************************/
-    public void listener_dirTree_mouseClicked( MouseEvent e )
+    public void doTreeDirClicked( MouseEvent e )
     {
         File [] dirsSelected = dirTree.getSelected();
 
@@ -523,177 +499,71 @@ public class JExplorerFrame extends JFrame
         }
     }
 
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class JExplorer_backButton_actionAdapter
-        implements ActionListener
+    @Override
+    public JFrame getView()
     {
-        private JExplorerFrame adaptee;
+        return view.getView();
+    }
 
-        public JExplorer_backButton_actionAdapter( JExplorerFrame adaptee )
+    private static class DirTreeMouseListener extends MouseAdapter
+    {
+        private final JExplorerFrame view;
+
+        public DirTreeMouseListener( JExplorerFrame adaptee )
         {
-            this.adaptee = adaptee;
+            this.view = adaptee;
         }
 
-        public void actionPerformed( ActionEvent e )
+        public void mouseClicked( MouseEvent e )
         {
-            File file = ( File )adaptee.lastDirs.pollFirst();
-            if( file != null )
+            if( e.getClickCount() == 1 )
             {
-                adaptee.nextDirs.push( adaptee.currentDirectory );
-
-                adaptee.backButton.setEnabled( !adaptee.lastDirs.isEmpty() );
-                adaptee.nextButton.setEnabled( true );
-                adaptee.nextButton.setToolTipText(
-                    adaptee.currentDirectory.getAbsolutePath() );
-
-                adaptee.setDirectory( file );
-
-                file = ( File )adaptee.lastDirs.peekFirst();
-                if( file != null )
-                {
-                    adaptee.backButton.setToolTipText( file.getAbsolutePath() );
-                }
-                else
-                {
-                    adaptee.backButton.setToolTipText( BACKWARD_TIP );
-                }
+                view.doTreeDirClicked( e );
             }
         }
     }
-}
 
-class JExplorer_nextButton_actionAdapter implements ActionListener
-{
-    private JExplorerFrame adaptee;
-
-    public JExplorer_nextButton_actionAdapter( JExplorerFrame adaptee )
+    private static class FileTableMouseListener extends MouseAdapter
     {
-        this.adaptee = adaptee;
-    }
+        private final JExplorerFrame view;
 
-    public void actionPerformed( ActionEvent e )
-    {
-        adaptee.listener_nextButton_actionPerformed( e );
-    }
-}
-
-class JExplorer_optionsMenuItem_actionAdapter implements ActionListener
-{
-    private JExplorerFrame adaptee;
-
-    public JExplorer_optionsMenuItem_actionAdapter( JExplorerFrame adaptee )
-    {
-        this.adaptee = adaptee;
-    }
-
-    public void actionPerformed( ActionEvent e )
-    {
-        FileConfigurationDialog dialog = FileConfigurationDialog.showDialog(
-            adaptee );
-        dialog.getClass();
-    }
-}
-
-class JExplorer_addressField_actionAdapter implements ActionListener
-{
-    private JExplorerFrame adaptee;
-
-    public JExplorer_addressField_actionAdapter( JExplorerFrame adaptee )
-    {
-        this.adaptee = adaptee;
-    }
-
-    public void actionPerformed( ActionEvent e )
-    {
-        String addy = adaptee.getAddress();
-        File file = new File( addy );
-
-        if( file.isDirectory() )
+        public FileTableMouseListener( JExplorerFrame adaptee )
         {
-            adaptee.setDirectory( file );
+            this.view = adaptee;
         }
-        else
+
+        public void mouseClicked( MouseEvent e )
         {
-            JOptionPane.showMessageDialog( adaptee,
-                file.getAbsolutePath() + " is not a directory!", "ERROR",
-                JOptionPane.ERROR_MESSAGE );
+            if( e.getClickCount() == 2 )
+            {
+                view.doFileDoubleClick();
+            }
         }
     }
-}
 
-class JExplorer_upButton_actionAdapter implements ActionListener
-{
-    private JExplorerFrame adaptee;
-
-    public JExplorer_upButton_actionAdapter( JExplorerFrame adaptee )
+    public void doFileDoubleClick()
     {
-        this.adaptee = adaptee;
-    }
-
-    public void actionPerformed( ActionEvent e )
-    {
-        adaptee.listener_upButton_actionPerformed( e );
-    }
-}
-
-class JExplorer_refreshButton_actionAdapter implements ActionListener
-{
-    private JExplorerFrame adaptee;
-
-    public JExplorer_refreshButton_actionAdapter( JExplorerFrame adaptee )
-    {
-        this.adaptee = adaptee;
-    }
-
-    public void actionPerformed( ActionEvent e )
-    {
-        adaptee.listener_refreshButton_actionPerformed( e );
-    }
-}
-
-class JExplorer_dirTree_SelectionAdapter implements TreeSelectionListener
-{
-    private JExplorerFrame adaptee;
-
-    public JExplorer_dirTree_SelectionAdapter( JExplorerFrame adaptee )
-    {
-        this.adaptee = adaptee;
-    }
-
-    public void valueChanged( TreeSelectionEvent e )
-    {
-        adaptee.listener_dirTree_valueChanged( e );
-    }
-}
-
-class JExplorer_dirTree_mouseAdapter extends MouseAdapter
-{
-    private JExplorerFrame adaptee;
-
-    public JExplorer_dirTree_mouseAdapter( JExplorerFrame adaptee )
-    {
-        this.adaptee = adaptee;
-    }
-
-    public void mouseClicked( MouseEvent e )
-    {
-        adaptee.listener_dirTree_mouseClicked( e );
-    }
-}
-
-class JExplorer_fileTable_mouseAdapter extends MouseAdapter
-{
-    private JExplorerFrame adaptee;
-
-    public JExplorer_fileTable_mouseAdapter( JExplorerFrame adaptee )
-    {
-        this.adaptee = adaptee;
-    }
-
-    public void mouseClicked( MouseEvent e )
-    {
-        adaptee.listener_fileTable_mouseClicked( e );
+        File file = fileTable.getSelectedFile();
+        if( file != null )
+        {
+            if( file.isDirectory() )
+            {
+                // showFile( file );
+                setDirectory( file );
+                addLastFile();
+            }
+            else
+            {
+                try
+                {
+                    Desktop.getDesktop().open( file );
+                }
+                catch( Exception ex )
+                {
+                    JOptionPane.showMessageDialog( getView(), ex.getMessage(),
+                        "ERROR", JOptionPane.ERROR_MESSAGE );
+                }
+            }
+        }
     }
 }

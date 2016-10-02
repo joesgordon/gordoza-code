@@ -4,11 +4,12 @@ import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
 
 import org.jutils.Utils;
 import org.jutils.chart.model.ISeriesData;
 import org.jutils.ui.model.IDataView;
+import org.jutils.ui.model.LabelTableCellRenderer;
+import org.jutils.ui.model.LabelTableCellRenderer.ITableCellLabelDecorator;
 
 /*******************************************************************************
  * 
@@ -52,7 +53,8 @@ public class SeriesDataView implements IDataView<ISeriesData<?>>
         scrollPane.setPreferredSize( new Dimension( 300, 200 ) );
         scrollPane.setMinimumSize( new Dimension( 300, 200 ) );
 
-        table.setDefaultRenderer( Double.class, this.cellRenderer );
+        table.setDefaultRenderer( Double.class,
+            new LabelTableCellRenderer( this.cellRenderer ) );
 
         panel.add( scrollPane, BorderLayout.CENTER );
 
@@ -103,6 +105,8 @@ public class SeriesDataView implements IDataView<ISeriesData<?>>
      **************************************************************************/
     private static class SeriesTableModel extends AbstractTableModel
     {
+        private static final long serialVersionUID = 1L;
+
         private ISeriesData<?> series;
 
         public SeriesTableModel()
@@ -175,7 +179,7 @@ public class SeriesDataView implements IDataView<ISeriesData<?>>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class DataCellRenderer extends DefaultTableCellRenderer
+    private static class DataCellRenderer implements ITableCellLabelDecorator
     {
         private final Color defaultBackground;
 
@@ -183,7 +187,7 @@ public class SeriesDataView implements IDataView<ISeriesData<?>>
 
         public DataCellRenderer()
         {
-            this.defaultBackground = super.getBackground();
+            this.defaultBackground = UIManager.getColor( "Label.background" );
         }
 
         public void setSeries( ISeriesData<?> series )
@@ -191,25 +195,20 @@ public class SeriesDataView implements IDataView<ISeriesData<?>>
             this.series = series;
         }
 
-        public Component getTableCellRendererComponent( JTable table,
-            Object value, boolean isSelected, boolean hasFocus, int row,
-            int col )
+        @Override
+        public void decorate( JLabel label, JTable table, Object value,
+            boolean isSelected, boolean hasFocus, int row, int col )
         {
-            super.getTableCellRendererComponent( table, value, isSelected,
-                hasFocus, row, col );
-
             if( !isSelected )
             {
                 Color bg = defaultBackground;
                 if( series.isHidden( row ) )
                 {
                     bg = Color.LIGHT_GRAY;
-                    setBackground( bg );
+                    label.setBackground( bg );
                 }
-                setBackground( bg );
+                label.setBackground( bg );
             }
-
-            return this;
         }
     }
 }
