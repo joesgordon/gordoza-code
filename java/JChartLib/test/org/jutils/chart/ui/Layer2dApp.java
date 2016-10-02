@@ -305,6 +305,7 @@ public class Layer2dApp implements IFrameApp
      **************************************************************************/
     private static class TestComp extends JPanel
     {
+        private static final long serialVersionUID = 1L;
         private final Layer2d layer;
 
         public TestComp( boolean layered )

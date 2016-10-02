@@ -25,23 +25,7 @@ public class CalendarFrame extends JFrame
      **************************************************************************/
     public CalendarFrame()
     {
-        try
-        {
-            setDefaultCloseOperation( EXIT_ON_CLOSE );
-            jbInit();
-        }
-        catch( Exception exception )
-        {
-            exception.printStackTrace();
-        }
-    }
-
-    /***************************************************************************
-     * Component initialization.
-     * @throws java.lang.Exception
-     **************************************************************************/
-    private void jbInit() throws Exception
-    {
+        setDefaultCloseOperation( EXIT_ON_CLOSE );
         contentPane = ( JPanel )getContentPane();
         contentPane.setLayout( gridBagLayout1 );
         setSize( new Dimension( 400, 300 ) );

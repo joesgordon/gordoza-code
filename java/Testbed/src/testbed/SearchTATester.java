@@ -23,22 +23,7 @@ public class SearchTATester extends JFrame
      **************************************************************************/
     public SearchTATester()
     {
-        try
-        {
-            setDefaultCloseOperation( EXIT_ON_CLOSE );
-            jbInit();
-        }
-        catch( Exception exception )
-        {
-            exception.printStackTrace();
-        }
-    }
-
-    /***************************************************************************
-     * @throws java.lang.Exception
-     **************************************************************************/
-    private void jbInit() throws Exception
-    {
+        setDefaultCloseOperation( EXIT_ON_CLOSE );
         contentPane = ( JPanel )getContentPane();
         contentPane.setLayout( new GridBagLayout() );
         setSize( new Dimension( 400, 300 ) );

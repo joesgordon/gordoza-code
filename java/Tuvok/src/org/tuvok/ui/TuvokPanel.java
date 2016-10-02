@@ -38,22 +38,6 @@ public class TuvokPanel extends JPanel
      **************************************************************************/
     public TuvokPanel()
     {
-        try
-        {
-            jbInit();
-        }
-        catch( Exception exception )
-        {
-            exception.printStackTrace();
-        }
-    }
-
-    /***************************************************************************
-     * Initializes the graphics for this panel.
-     * @throws Exception
-     **************************************************************************/
-    private void jbInit() throws Exception
-    {
         this.setLayout( mainLayout );
 
         addressTextField.setText( "" );

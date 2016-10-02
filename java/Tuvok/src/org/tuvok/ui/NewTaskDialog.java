@@ -20,28 +20,15 @@ public class NewTaskDialog extends JDialog
     private JButton jButton1 = new JButton();
     private JButton jButton2 = new JButton();
 
-    public NewTaskDialog( Frame owner, String title, boolean modal )
-    {
-        super( owner, title, modal );
-        try
-        {
-            setDefaultCloseOperation( DISPOSE_ON_CLOSE );
-            jbInit();
-            pack();
-        }
-        catch( Exception exception )
-        {
-            exception.printStackTrace();
-        }
-    }
-
     public NewTaskDialog()
     {
         this( new Frame(), "NewTaskDialog", false );
     }
 
-    private void jbInit() throws Exception
+    public NewTaskDialog( Frame owner, String title, boolean modal )
     {
+        super( owner, title, modal );
+        setDefaultCloseOperation( DISPOSE_ON_CLOSE );
         panel1.setLayout( gridBagLayout1 );
         nameLabel.setText( "Name :" );
         jTextField1.setText( "" );
@@ -71,6 +58,7 @@ public class NewTaskDialog extends JDialog
                 new Insets( 0, 0, 0, 0 ), 0, 0 ) );
         jPanel2.add( jButton1 );
         jPanel2.add( jButton2 );
+        pack();
     }
 
     public void jButton2_actionPerformed( ActionEvent e )

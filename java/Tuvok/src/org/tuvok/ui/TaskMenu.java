@@ -1,31 +1,42 @@
 package org.tuvok.ui;
 
-import java.awt.Menu;
-import java.awt.MenuItem;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  *
  ******************************************************************************/
-public class TaskMenu extends Menu
+public class TaskMenu implements IView<JMenu>
 {
     /**  */
-    private MenuItem addUpdateMenuItem = new MenuItem();
-    /**  */
-    private MenuItem addNoteMenuItem = new MenuItem();
-    /**  */
-    private MenuItem editTaskMenuItem = new MenuItem();
+    private final JMenu menu;
 
     /***************************************************************************
      *
      **************************************************************************/
     public TaskMenu()
     {
-        addUpdateMenuItem.setLabel( "Add Update" );
-        addNoteMenuItem.setLabel( "Add Note" );
-        editTaskMenuItem.setLabel( "Edit" );
+        this.menu = new JMenu();
 
-        this.add( addUpdateMenuItem );
-        this.add( addNoteMenuItem );
-        this.add( editTaskMenuItem );
+        JMenuItem addUpdateMenuItem = new JMenuItem();
+        JMenuItem addNoteMenuItem = new JMenuItem();
+        JMenuItem editTaskMenuItem = new JMenuItem();
+
+        addUpdateMenuItem.setText( "Add Update" );
+        addNoteMenuItem.setText( "Add Note" );
+        editTaskMenuItem.setText( "Edit" );
+
+        menu.add( addUpdateMenuItem );
+        menu.add( addNoteMenuItem );
+        menu.add( editTaskMenuItem );
+    }
+
+    @Override
+    public JMenu getView()
+    {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

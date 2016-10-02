@@ -10,6 +10,8 @@ import javax.swing.JComponent;
 public class WidgetPanel extends JComponent
 {
     /**  */
+    private static final long serialVersionUID = 529206677064587630L;
+    /**  */
     private IChartWidget object;
     /**  */
     private final Object lock;
