@@ -24,7 +24,7 @@ public class ChatterboxMain
         }
         else
         {
-            user = new ChatUser( System.getProperty( "user.name" ) );
+            user = ChatterboxConstants.createDefaultUser();
         }
 
         FrameApplication.invokeLater( new ChatterboxApp( new Chat( user ) ) );

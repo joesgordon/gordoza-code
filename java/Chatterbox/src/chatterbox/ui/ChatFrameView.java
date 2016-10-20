@@ -43,9 +43,7 @@ public class ChatFrameView implements IView<JFrame>
 
         frame.addWindowListener( new FrameListener( this ) );
 
-        frame.setIconImages( IconConstants.loader.getImages(
-            IconConstants.CHAT_16, IconConstants.CHAT_32, IconConstants.CHAT_48,
-            IconConstants.CHAT_64 ) );
+        frame.setIconImages( ChatterboxConstants.getIcons() );
 
         frame.setTitle( "Chatterbox" );
     }

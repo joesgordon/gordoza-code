@@ -15,8 +15,6 @@ public class TuvokPanel extends JPanel
     // --------------------------------------------------------------------------
     // GUI Components.
     // --------------------------------------------------------------------------
-    /** The main layout for this panel. */
-    private GridBagLayout mainLayout = new GridBagLayout();
     /** The split pane used to divide the tree view from the content pane. */
     private JSplitPane mainSplitPane = new JSplitPane();
     /** Scroll pane used to allow the tree to scroll. */
@@ -24,7 +22,7 @@ public class TuvokPanel extends JPanel
     /** Scroll pane used to allow the content pane to scroll. */
     private JScrollPane rightScrollPane = new JScrollPane();
     /** The tree contains all the open projects. */
-    private TuvokList tree = new TuvokList();
+    private JList<String> tree = new JList<>();
     /** Displays the context of the currently viewed item. */
     private JTextField addressTextField = new JTextField();
     // --------------------------------------------------------------------------
@@ -38,7 +36,7 @@ public class TuvokPanel extends JPanel
      **************************************************************************/
     public TuvokPanel()
     {
-        this.setLayout( mainLayout );
+        this.setLayout( new GridBagLayout() );
 
         addressTextField.setText( "" );
         addressTextField.setBorder( BorderFactory.createLoweredBevelBorder() );

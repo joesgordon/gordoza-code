@@ -179,4 +179,13 @@ public final class IconConstants
     {
         return loader.getIcon( name );
     }
+
+    /***************************************************************************
+     * @param names
+     * @return
+     **************************************************************************/
+    public static List<? extends Image> getImages( String... names )
+    {
+        return loader.getImages( names );
+    }
 }

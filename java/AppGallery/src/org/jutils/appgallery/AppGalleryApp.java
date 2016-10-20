@@ -32,6 +32,7 @@ public class AppGalleryApp implements IFrameApp
         apps.add( new FileSpyApp() );
         apps.add( new JHexApp() );
         apps.add( new JExplorerApp() );
+        apps.add( new ChatterboxApp() );
         apps.add( new BudgeyApp() );
         apps.add( new DuakApp() );
         apps.add( new SheetApp() );

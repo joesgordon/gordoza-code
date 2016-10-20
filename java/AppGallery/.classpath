@@ -11,5 +11,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/EagleSheet"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JChartLib"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Tuvok"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Chatterbox"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/MulticastConnect"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
