@@ -4,8 +4,8 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jutils"/>
 	<classpathentry kind="lib" path="/libs/jgoodies.jar"/>
-	<classpathentry kind="lib" path="/libs/junit-4.9.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/libs"/>
 	<classpathentry kind="lib" path="/libs/xstream_min.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

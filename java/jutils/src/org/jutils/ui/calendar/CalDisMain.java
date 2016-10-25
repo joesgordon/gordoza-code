@@ -3,7 +3,6 @@ package org.jutils.ui.calendar;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import org.junit.runner.Runner;
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
 import org.jutils.ui.app.FrameApplication;
@@ -24,8 +23,8 @@ public class CalDisMain
     }
 
     /***************************************************************************
-     * Defines the {@link Runner} used to create and display this applications
-     * UI.
+     * Defines the {@link IFrameApp} used to create and display this
+     * applications UI.
      **************************************************************************/
     public static class CalDisApp implements IFrameApp
     {

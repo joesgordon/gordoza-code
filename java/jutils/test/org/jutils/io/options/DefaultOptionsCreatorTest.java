@@ -3,9 +3,8 @@ package org.jutils.io.options;
 import java.io.File;
 import java.io.IOException;
 
+import org.junit.Assert;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 /*******************************************************************************
  *
