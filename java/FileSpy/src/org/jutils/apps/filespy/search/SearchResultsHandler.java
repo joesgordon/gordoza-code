@@ -50,7 +50,7 @@ public class SearchResultsHandler
     /***************************************************************************
      * @param messge
      **************************************************************************/
-    public void addErrorMessage( String message )
+    public static void addErrorMessage( String message )
     {
         SwingUtilities.invokeLater( new UiErrorHandler( message ) );
     }

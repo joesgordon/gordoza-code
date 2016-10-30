@@ -57,7 +57,7 @@ public class CollapsibleViewMain implements IFrameApp
         return frame;
     }
 
-    private Component createInnerPanel()
+    private static Component createInnerPanel()
     {
         JPanel panel = new JPanel( new GridBagLayout() );
         GridBagConstraints constraints;

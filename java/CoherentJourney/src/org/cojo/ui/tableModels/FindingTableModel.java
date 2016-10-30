@@ -1,29 +1,46 @@
 package org.cojo.ui.tableModels;
 
-import java.util.Arrays;
 import java.util.Date;
 
 import org.cojo.model.IFinding;
-import org.jutils.ui.model.ItemTableModel;
+import org.jutils.ui.model.ITableConfig;
 
-public class FindingTableModel extends ItemTableModel<IFinding>
+/*******************************************************************************
+ * 
+ ******************************************************************************/
+public class FindingTableModel implements ITableConfig<IFinding>
 {
-    public static final String [] COLUMN_HEADING = { "#", "User", "Date",
+    /**  */
+    private static final String [] COLUMN_HEADING = { "#", "User", "Date",
         "Accepted" };
-    public static final Class<?> [] COLUMN_CLASSES = { Integer.class,
+    /**  */
+    private static final Class<?> [] COLUMN_CLASSES = { Integer.class,
         String.class, Date.class, Boolean.class };
 
-    public FindingTableModel()
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public String [] getColumnNames()
     {
-        setColumnNames( Arrays.asList( COLUMN_HEADING ) );
-        setColumnClasses( Arrays.asList( COLUMN_CLASSES ) );
+        return COLUMN_HEADING;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
-    public Object getValueAt( int row, int col )
+    public Class<?> [] getColumnClasses()
     {
-        IFinding finding = getRow( row );
+        return COLUMN_CLASSES;
+    }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Object getItemData( IFinding finding, int col )
+    {
         switch( col )
         {
             case 0:
@@ -37,5 +54,22 @@ public class FindingTableModel extends ItemTableModel<IFinding>
         }
 
         throw new IllegalArgumentException( "Unknown column: " + col );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void setItemData( IFinding item, int col, Object data )
+    {
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public boolean isCellEditable( IFinding item, int col )
+    {
+        return false;
     }
 }

@@ -1,8 +1,6 @@
 package org.cojo.ui;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -11,150 +9,139 @@ import org.cojo.model.IChangeRequest;
 import org.jutils.IconConstants;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class CrDefinitionPanel extends JPanel
+public class CrDefinitionPanel implements IView<JPanel>
 {
     /**  */
-    private JTextField originatorField;
+    private final JPanel view;
     /**  */
-    private JTextField dateCreatedField;
+    private final JTextField originatorField;
     /**  */
-    private JTextField priorityField;
+    private final JTextField dateCreatedField;
     /**  */
-    private JTextField areaField;
+    private final JTextField priorityField;
     /**  */
-    private JCheckBox thirdPartyField;
+    private final JTextField areaField;
     /**  */
-    private JCheckBox requirementsImpactField;
+    private final JCheckBox thirdPartyField;
     /**  */
-    private JCheckBox designField;
+    private final JCheckBox requirementsImpactField;
     /**  */
-    private JTextField hwciField;
+    private final JCheckBox designField;
     /**  */
-    private JTextField crTypeField;
+    private final JTextField hwciField;
     /**  */
-    private JTextField phaseDiscoveredField;
+    private final JTextField crTypeField;
     /**  */
-    private JTextField phaseOriginatedField;
+    private final JTextField phaseDiscoveredField;
     /**  */
-    private JTextField estHoursField;
+    private final JTextField phaseOriginatedField;
+    /**  */
+    private final JTextField estHoursField;
 
     /**  */
-    private JTextField versionDiscoveredField;
+    private final JTextField versionDiscoveredField;
     /**  */
-    private JTextField versionOriginatedField;
+    private final JTextField versionOriginatedField;
 
     /**  */
-    private JTextArea descriptionField;
+    private final JTextArea descriptionField;
     /**  */
-    private JTextArea rationaleField;
+    private final JTextArea rationaleField;
     /**  */
-    private JTextArea impactField;
+    private final JTextArea impactField;
     /**  */
-    private IccbPanel iccbPanel;
+    private final IccbPanel iccbPanel;
 
     /**  */
-    private ItemActionList<Boolean> thirdPartyListeners;
+    private final ItemActionList<Boolean> thirdPartyListeners;
     /**  */
-    private ItemActionList<Boolean> requirementsImpactListeners;
+    private final ItemActionList<Boolean> requirementsImpactListeners;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public CrDefinitionPanel()
     {
-        super( new GridBagLayout() );
-
-        ActionListener thirdParyListener = new ActionListener()
-        {
-            @Override
-            public void actionPerformed( ActionEvent e )
-            {
-                thirdPartyListeners.fireListeners( this,
-                    thirdPartyField.isSelected() );
-            }
-        };
-
-        ActionListener requirementImpactListener = new ActionListener()
-        {
-            @Override
-            public void actionPerformed( ActionEvent e )
-            {
-                requirementsImpactListeners.fireListeners( this,
-                    requirementsImpactField.isSelected() );
-            }
-        };
+        this.view = new JPanel( new GridBagLayout() );
 
         thirdPartyListeners = new ItemActionList<Boolean>();
         requirementsImpactListeners = new ItemActionList<Boolean>();
 
         originatorField = new JTextField( "Kristine Kochanski", 25 );
-        addFields( this, "Originator :", originatorField, 0, 0 );
+        addFields( view, "Originator :", originatorField, 0, 0 );
 
         dateCreatedField = new JTextField( "8/22/10", 5 );
         dateCreatedField.setEditable( false );
-        addFields( this, "Date Created :", dateCreatedField, 1, 0 );
+        addFields( view, "Date Created :", dateCreatedField, 1, 0 );
 
         areaField = new JTextField( "Software", 5 );
-        addFields( this, "Area :", areaField, 2, 0 );
+        addFields( view, "Area :", areaField, 2, 0 );
 
         crTypeField = new JTextField( "Enhancement", 5 );
-        addFields( this, "CR Type :", crTypeField, 3, 0 );
+        addFields( view, "CR Type :", crTypeField, 3, 0 );
 
         priorityField = new JTextField( "Critical", 5 );
-        addFields( this, "Priority :", priorityField, 4, 0 );
+        addFields( view, "Priority :", priorityField, 4, 0 );
 
         designField = new JCheckBox( "" );
-        addFields( this, "Design Required :", designField, 5, 0 );
+        addFields( view, "Design Required :", designField, 5, 0 );
 
         requirementsImpactField = new JCheckBox( "" );
-        requirementsImpactField.addActionListener( requirementImpactListener );
-        addFields( this, "Requirements Impact :", requirementsImpactField, 6, 0 );
+        requirementsImpactField.addActionListener(
+            ( e ) -> requirementsImpactListeners.fireListeners( this,
+                requirementsImpactField.isSelected() ) );
+        addFields( view, "Requirements Impact :", requirementsImpactField, 6,
+            0 );
 
         thirdPartyField = new JCheckBox( "" );
-        thirdPartyField.addActionListener( thirdParyListener );
-        addFields( this, "3rd Party IP :", thirdPartyField, 7, 0 );
+        thirdPartyField.addActionListener(
+            ( e ) -> thirdPartyListeners.fireListeners( this,
+                thirdPartyField.isSelected() ) );
+        addFields( view, "3rd Party IP :", thirdPartyField, 7, 0 );
 
         hwciField = new JTextField( "N/A", 5 );
-        addFields( this, "HWCI :", hwciField, 8, 0 );
+        addFields( view, "HWCI :", hwciField, 8, 0 );
 
         estHoursField = new JTextField( "7", 5 );
-        addFields( this, "Estimated Hours :", estHoursField, 9, 0 );
+        addFields( view, "Estimated Hours :", estHoursField, 9, 0 );
 
         descriptionField = new JTextArea();
         descriptionField.setText( "Doesn't work right" );
-        addArea( this, "Description", descriptionField, 10 );
+        addArea( view, "Description", descriptionField, 10 );
 
         rationaleField = new JTextArea();
         rationaleField.setText( "Because it doesn't work right" );
-        addArea( this, "Rationale", rationaleField, 11 );
+        addArea( view, "Rationale", rationaleField, 11 );
 
         impactField = new JTextArea();
         impactField.setText( "The bit that's supposed to work" );
-        addArea( this, "Impact", impactField, 12 );
+        addArea( view, "Impact", impactField, 12 );
 
         // ---------------------------------------------------------------------
         // Column 2
         // ---------------------------------------------------------------------
 
         phaseDiscoveredField = new JTextField( "Implementation", 25 );
-        addFields( this, "Phase Discovered :", phaseDiscoveredField, 0, 2 );
+        addFields( view, "Phase Discovered :", phaseDiscoveredField, 0, 2 );
 
         phaseOriginatedField = new JTextField( "Requirements", 5 );
-        addFields( this, "Phase Originated :", phaseOriginatedField, 1, 2 );
+        addFields( view, "Phase Originated :", phaseOriginatedField, 1, 2 );
 
         versionDiscoveredField = new JTextField( "1.1.3", 5 );
-        addFields( this, "Version Discovered :", versionDiscoveredField, 2, 2 );
+        addFields( view, "Version Discovered :", versionDiscoveredField, 2, 2 );
 
         versionOriginatedField = new JTextField( "1.1.0", 5 );
-        addFields( this, "Version Originated :", versionOriginatedField, 3, 2 );
+        addFields( view, "Version Originated :", versionOriginatedField, 3, 2 );
 
-        add( createListPanel( "Section :" ), new GridBagConstraints( 2, 4, 2,
-            6, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.BOTH,
-            new Insets( 4, 2, 2, 4 ), 0, 0 ) );
+        view.add( createListPanel( "Section :" ),
+            new GridBagConstraints( 2, 4, 2, 6, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 4, 2, 2, 4 ), 0, 0 ) );
 
         // ---------------------------------------------------------------------
         // Filler
@@ -162,13 +149,15 @@ public class CrDefinitionPanel extends JPanel
 
         iccbPanel = new IccbPanel();
 
-        add( iccbPanel, new GridBagConstraints( 0, 13, 4, 1, 0.0, 1.0,
-            GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets( 2, 4,
-                4, 4 ), 0, 0 ) );
+        view.add( iccbPanel.getView(),
+            new GridBagConstraints( 0, 13, 4, 1, 0.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 2, 4, 4, 4 ), 0, 0 ) );
 
-        add( Box.createVerticalStrut( 0 ), new GridBagConstraints( 0, 50, 6, 6,
-            1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        view.add( Box.createVerticalStrut( 0 ),
+            new GridBagConstraints( 0, 50, 6, 6, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
     }
 
     /***************************************************************************
@@ -213,13 +202,15 @@ public class CrDefinitionPanel extends JPanel
 
         scrollPane.setPreferredSize( new Dimension( 150, 300 ) );
 
-        titlePanel.add( scrollPane, new GridBagConstraints( 0, 0, 1, 1, 1.0,
-            1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(
-                0, 6, 6, 6 ), 0, 0 ) );
+        titlePanel.add( scrollPane,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 0, 6, 6, 6 ), 0, 0 ) );
 
-        panel.add( titlePanel, new GridBagConstraints( 0, row, 4, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets( 4, 4,
-                4, 4 ), 0, 0 ) );
+        panel.add( titlePanel,
+            new GridBagConstraints( 0, row, 4, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
     }
 
     /***************************************************************************
@@ -234,12 +225,14 @@ public class CrDefinitionPanel extends JPanel
     {
         JLabel label = new JLabel( text );
 
-        panel.add( label, new GridBagConstraints( col, row, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets( 0, 4,
-                0, 0 ), 0, 0 ) );
-        panel.add( field, new GridBagConstraints( col + 1, row, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
-                4, 2, 2, 4 ), 0, 0 ) );
+        panel.add( label,
+            new GridBagConstraints( col, row, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 0, 4, 0, 0 ), 0, 0 ) );
+        panel.add( field,
+            new GridBagConstraints( col + 1, row, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 4, 2, 2, 4 ), 0, 0 ) );
     }
 
     /***************************************************************************
@@ -257,19 +250,32 @@ public class CrDefinitionPanel extends JPanel
         list.setPreferredSize( new Dimension( 90, 90 ) );
         scrollPane.setPreferredSize( new Dimension( 150, 100 ) );
 
-        openButton.setIcon( IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+        openButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
 
-        panel.add( label, new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets( 0, 0,
-                0, 4 ), 0, 0 ) );
-        panel.add( openButton, new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets( 0, 4,
-                4, 0 ), 0, 0 ) );
+        panel.add( label,
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 0, 0, 0, 4 ), 0, 0 ) );
+        panel.add( openButton,
+            new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 0, 4, 4, 0 ), 0, 0 ) );
 
-        panel.add( scrollPane, new GridBagConstraints( 0, 1, 2, 1, 1.0, 1.0,
-            GridBagConstraints.SOUTHWEST, GridBagConstraints.BOTH, new Insets(
-                2, 0, 0, 0 ), 0, 0 ) );
+        panel.add( scrollPane,
+            new GridBagConstraints( 0, 1, 2, 1, 1.0, 1.0,
+                GridBagConstraints.SOUTHWEST, GridBagConstraints.BOTH,
+                new Insets( 2, 0, 0, 0 ), 0, 0 ) );
 
         return panel;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public JPanel getView()
+    {
+        return view;
     }
 }

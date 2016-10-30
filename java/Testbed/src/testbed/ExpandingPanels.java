@@ -117,7 +117,7 @@ public class ExpandingPanels extends MouseAdapter
         panels = new JPanel[] { p1, p2, p3, p4 };
     }
 
-    private void addComponents( Component c1, Component c2, Container c,
+    private static void addComponents( Component c1, Component c2, Container c,
         GridBagConstraints gbc )
     {
         gbc.anchor = GridBagConstraints.EAST;

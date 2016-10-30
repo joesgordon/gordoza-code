@@ -76,13 +76,13 @@ public class FileSystemModel extends AbstractTreeTableModel
     // Some convenience methods.
     //
 
-    protected File getFile( Object node )
+    protected static File getFile( Object node )
     {
         FileNode fileNode = ( ( FileNode )node );
         return fileNode.getFile();
     }
 
-    protected Object[] getChildren( Object node )
+    protected static Object[] getChildren( Object node )
     {
         FileNode fileNode = ( ( FileNode )node );
         return fileNode.getChildren();

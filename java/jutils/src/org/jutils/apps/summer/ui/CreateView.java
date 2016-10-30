@@ -447,9 +447,8 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
      **************************************************************************/
     private void displayChecksums( ChecksumResult input, TaskMetrics metrics )
     {
-        ChecksumFileSerializer serializer = new ChecksumFileSerializer();
         TextView textView = new TextView();
-        String text = serializer.write( input );
+        String text = ChecksumFileSerializer.write( input );
         ChecksumType type = ( ChecksumType )checksumTypeField.getSelectedItem();
         String ext = type.toString().toLowerCase();
         String desc = type.toString() + " checksum file (*." + ext + ")";

@@ -119,7 +119,8 @@ public class BusyFrameTest extends BusyFrame
      * @param f
      * @param name
      **************************************************************************/
-    private void printFileInfo( StringBuffer buffer, File f, String name )
+    private static void printFileInfo( StringBuffer buffer, File f,
+        String name )
     {
         if( name != null && name.length() > 0 )
         {

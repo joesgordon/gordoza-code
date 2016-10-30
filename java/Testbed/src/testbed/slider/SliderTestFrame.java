@@ -90,14 +90,14 @@ public class SliderTestFrame extends JFrame
         return sliderPanel;
     }
 
-    private JPanel createPanel1()
+    private static JPanel createPanel1()
     {
         JPanel panel = new GradientPanel();
         panel.setBackground( Color.red );
         return panel;
     }
 
-    private JPanel createPanel2()
+    private static JPanel createPanel2()
     {
         JPanel panel = new JPanel( new BorderLayout() );
         DirectoryTree dirTree = new DirectoryTree();
@@ -109,7 +109,7 @@ public class SliderTestFrame extends JFrame
         return panel;
     }
 
-    private JPanel createPanel3( StatusBarPanel statusBar )
+    private static JPanel createPanel3( StatusBarPanel statusBar )
     {
         SearchView panel = new SearchView( statusBar,
             FileSpyMain.getOptions() );
@@ -117,7 +117,7 @@ public class SliderTestFrame extends JFrame
         return panel.getView();
     }
 
-    private JPanel createPanel4()
+    private static JPanel createPanel4()
     {
         return new RegexPanel().getView();
     }

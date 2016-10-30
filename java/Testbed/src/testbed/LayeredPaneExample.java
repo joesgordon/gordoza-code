@@ -28,7 +28,7 @@ public class LayeredPaneExample implements IFrameApp
         return frame;
     }
 
-    private Container createContentPane()
+    private static Container createContentPane()
     {
         JPanel panel = new JPanel( new BorderLayout() );
         StatusBarPanel statusBar = new StatusBarPanel();
@@ -39,7 +39,7 @@ public class LayeredPaneExample implements IFrameApp
         return panel;
     }
 
-    private JLayeredPane createLayers( StatusBarPanel statusBar )
+    private static JLayeredPane createLayers( StatusBarPanel statusBar )
     {
         JLayeredPane layeredPane = new JLayeredPane();
         JPanel pane = new SearchView( statusBar,

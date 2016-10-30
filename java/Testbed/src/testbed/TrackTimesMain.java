@@ -145,7 +145,8 @@ public class TrackTimesMain
             return getNumMatches( theseNames, thoseNames ) > 1;
         }
 
-        private int getNumMatches( String[] theseNames, String[] thoseNames )
+        private static int getNumMatches( String[] theseNames,
+            String[] thoseNames )
         {
             int numMatches = 0;
 

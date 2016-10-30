@@ -1,60 +1,56 @@
 package org.tuvok.ui;
 
-import java.awt.MenuItem;
-import java.awt.PopupMenu;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
 import org.jutils.ui.ExitListener;
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  *
  ******************************************************************************/
-public class TuvokMenu extends PopupMenu
+public class TuvokMenu implements IView<JPopupMenu>
 {
     /**  */
-    private MenuItem openMenuItem = new MenuItem();
+    private final JPopupMenu menu;
     /**  */
-    private MenuItem loadTaskMenuItem = new MenuItem();
+    private final JMenuItem openMenuItem = new JMenuItem();
     /**  */
-    private MenuItem exitMenuItem = new MenuItem();
-
+    private final JMenuItem loadTaskMenuItem = new JMenuItem();
     /**  */
-    private TuvokFrameView frame = null;
+    private final JMenuItem exitMenuItem = new JMenuItem();
 
     /***************************************************************************
      * @param frame ToDLsFrame
      **************************************************************************/
     public TuvokMenu( TuvokFrameView frame )
     {
-        this.frame = frame;
+        this.menu = new JPopupMenu();
 
-        openMenuItem.setLabel( "Open" );
+        openMenuItem.setText( "Open" );
         openMenuItem.addActionListener(
-            new ToDLsMenu_openMenuItem_actionAdapter() );
+            ( e ) -> frame.getView().setVisible( true ) );
 
-        loadTaskMenuItem.setLabel( "Load Task" );
+        loadTaskMenuItem.setText( "Load Task" );
 
-        exitMenuItem.setLabel( "Quit" );
+        exitMenuItem.setText( "Quit" );
         exitMenuItem.addActionListener( new ExitListener( frame.getView() ) );
 
-        this.add( openMenuItem );
-        this.add( loadTaskMenuItem );
+        menu.add( openMenuItem );
+        menu.add( loadTaskMenuItem );
 
         // ---------------------------------------------------------------------
 
-        this.addSeparator();
-        this.add( exitMenuItem );
+        menu.addSeparator();
+        menu.add( exitMenuItem );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private class ToDLsMenu_openMenuItem_actionAdapter implements ActionListener
+    @Override
+    public JPopupMenu getView()
     {
-        public void actionPerformed( ActionEvent e )
-        {
-            frame.getView().setVisible( true );
-        }
+        return menu;
     }
 }

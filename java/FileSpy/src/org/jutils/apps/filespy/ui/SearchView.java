@@ -553,7 +553,8 @@ public class SearchView implements IDataView<SearchParams>
      * @param right JComponent
      * @return JPanel
      **************************************************************************/
-    private JPanel createRightSidedPanel( JComponent left, JComponent right )
+    private static JPanel createRightSidedPanel( JComponent left,
+        JComponent right )
     {
         JPanel panel = new JPanel();
         GridBagLayout layout = new GridBagLayout();
@@ -920,7 +921,7 @@ public class SearchView implements IDataView<SearchParams>
 
                 for( int i = 0; i < lines.size(); i++ )
                 {
-                    LineMatch line = ( LineMatch )lines.get( i );
+                    LineMatch line = lines.get( i );
                     // LogUtils.printDebug( "\tWriting line:" + i );
 
                     rightResultsPane.appendText( line.lineNumber + ": \t",

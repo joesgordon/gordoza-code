@@ -8,28 +8,32 @@ import javax.swing.*;
 import org.cojo.model.IChangeRequest;
 import org.cojo.ui.tableModels.CrTableModel;
 import org.jutils.IconConstants;
+import org.jutils.ui.model.IView;
+import org.jutils.ui.model.ItemsTableModel;
 
-/***************************************************************************
+/*******************************************************************************
  * 
  ******************************************************************************/
-public class CrsPanel extends JPanel
+public class CrsPanel implements IView<JPanel>
 {
     /**  */
-    private CrTableModel crTableModel;
+    private final JPanel view;
     /**  */
-    private JTable crTable;
+    private final ItemsTableModel<IChangeRequest> crTableModel;
+    /**  */
+    private final JTable crTable;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public CrsPanel()
     {
-        super( new BorderLayout() );
+        this.view = new JPanel( new BorderLayout() );
+        this.crTableModel = new ItemsTableModel<>( new CrTableModel() );
+        this.crTable = new JTable( crTableModel );
 
-        crTableModel = new CrTableModel();
-
-        add( createToolbar(), BorderLayout.NORTH );
-        add( createMainPanel(), BorderLayout.CENTER );
+        view.add( createToolbar(), BorderLayout.NORTH );
+        view.add( createMainPanel(), BorderLayout.CENTER );
     }
 
     /***************************************************************************
@@ -51,7 +55,6 @@ public class CrsPanel extends JPanel
     private JPanel createMainPanel()
     {
         JPanel mainPanel = new JPanel( new BorderLayout() );
-        crTable = new JTable( crTableModel );
         JScrollPane crsScrollPane = new JScrollPane( crTable );
 
         crTable.setAutoResizeMode( JTable.AUTO_RESIZE_LAST_COLUMN );
@@ -73,7 +76,8 @@ public class CrsPanel extends JPanel
 
         JButton addButton = new JButton();
 
-        addButton.setIcon( IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 ) );
+        addButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 ) );
         addButton.setToolTipText( "Add a CR" );
         addButton.setFocusable( false );
 
@@ -84,5 +88,14 @@ public class CrsPanel extends JPanel
         toolbar.setBorderPainted( false );
 
         return toolbar;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public JPanel getView()
+    {
+        return view;
     }
 }

@@ -74,7 +74,7 @@ public class CheckTreeSelectionModel extends DefaultTreeSelectionModel
      * @param path2 TreePath
      * @return boolean
      **************************************************************************/
-    private boolean isDescendant( TreePath path1, TreePath path2 )
+    private static boolean isDescendant( TreePath path1, TreePath path2 )
     {
         Object obj1[] = path1.getPath();
         Object obj2[] = path2.getPath();

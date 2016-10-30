@@ -278,7 +278,7 @@ public class CalendarPanel implements IDataView<Long>
      * @param label JLabel
      * @param text String
      **************************************************************************/
-    private void initHeaderLabel( JLabel label )
+    private static void initHeaderLabel( JLabel label )
     {
         label.setForeground( HEADER_FOREGROUND );
         label.setBackground( HEADER_BACKGROUND );
@@ -305,7 +305,7 @@ public class CalendarPanel implements IDataView<Long>
      * @param label JLabel
      * @param text String
      **************************************************************************/
-    private void initLabel( JLabel label )
+    private static void initLabel( JLabel label )
     {
         label.setOpaque( true );
         label.setPreferredSize( new Dimension( 20, 20 ) );
@@ -468,37 +468,37 @@ public class CalendarPanel implements IDataView<Long>
 
         public void keyPressed( KeyEvent e )
         {
+            Calendar cal = null;
+
             if( e.getKeyCode() == KeyEvent.VK_UP )
             {
-                Calendar cal = calPanel.getDate();
+                cal = calPanel.getDate();
                 cal.add( Calendar.DATE, -7 );
-                calPanel.setDate( cal );
-                calPanel.currentSelection.requestFocus();
             }
             else if( e.getKeyCode() == KeyEvent.VK_DOWN )
             {
-                Calendar cal = calPanel.getDate();
+                cal = calPanel.getDate();
                 cal.add( Calendar.DATE, 7 );
-                calPanel.setDate( cal );
-                calPanel.currentSelection.requestFocus();
             }
             else if( e.getKeyCode() == KeyEvent.VK_LEFT )
             {
-                Calendar cal = calPanel.getDate();
+                cal = calPanel.getDate();
                 cal.add( Calendar.DATE, -1 );
-                calPanel.setDate( cal );
-                calPanel.currentSelection.requestFocus();
             }
             else if( e.getKeyCode() == KeyEvent.VK_RIGHT )
             {
-                Calendar cal = calPanel.getDate();
+                cal = calPanel.getDate();
                 cal.add( Calendar.DATE, 1 );
+            }
+
+            if( cal != null )
+            {
                 calPanel.setDate( cal );
                 calPanel.currentSelection.requestFocus();
+                calPanel.dateChangedListeners.fireListeners( calPanel,
+                    cal.getTimeInMillis() );
             }
         }
-
-        // TODO call listeners.
     }
 
     /***************************************************************************
@@ -556,6 +556,7 @@ public class CalendarPanel implements IDataView<Long>
             if( newCurrent != adaptee.currentSelection )
             {
                 adaptee.currentSelection.setSelected( false );
+
                 if( newCurrent.isNonDay() )
                 {
                     Calendar cal = newCurrent.getDate();
@@ -578,7 +579,8 @@ public class CalendarPanel implements IDataView<Long>
 
             newCurrent.requestFocus();
 
-            // TODO call listeners.
+            adaptee.dateChangedListeners.fireListeners( adaptee,
+                adaptee.getData() );
         }
     }
 }

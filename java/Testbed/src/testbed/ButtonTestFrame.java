@@ -26,7 +26,7 @@ public class ButtonTestFrame implements IFrameApp
         return frame;
     }
 
-    private JComponent createToolbar()
+    private static JComponent createToolbar()
     {
         JPanel panel = new JPanel();
         JButton showButton = new JButton( "Show Message Dialog" );
@@ -44,7 +44,7 @@ public class ButtonTestFrame implements IFrameApp
         return panel;
     }
 
-    private JComponent createContentPane()
+    private static JComponent createContentPane()
     {
         JPanel panel = new JPanel( new BorderLayout() );
 

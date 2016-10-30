@@ -83,7 +83,7 @@ public class ChecksumFileSerializer implements IReader<ChecksumResult, File>
      * @param input
      * @return
      **************************************************************************/
-    public String write( ChecksumResult input )
+    public static String write( ChecksumResult input )
     {
         StringBuilder str = new StringBuilder();
 
@@ -110,7 +110,7 @@ public class ChecksumFileSerializer implements IReader<ChecksumResult, File>
      * @param input
      * @return
      **************************************************************************/
-    public void write( ChecksumResult input, File outputFile )
+    public static void write( ChecksumResult input, File outputFile )
         throws FileNotFoundException
     {
         try( PrintStream stream = new PrintStream( outputFile ) )
@@ -158,7 +158,7 @@ public class ChecksumFileSerializer implements IReader<ChecksumResult, File>
      * @param replace
      * @return
      **************************************************************************/
-    private ChecksumResult merge( ChecksumResult results,
+    private static ChecksumResult merge( ChecksumResult results,
         ChecksumResult existing, boolean replace )
     {
         ChecksumResult merged = new ChecksumResult();

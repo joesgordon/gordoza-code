@@ -34,7 +34,7 @@ public class Layer2dApp implements IFrameApp
         FrameApplication.invokeLater( new Layer2dApp(), true, laf );
     }
 
-    public static void main2( String [] args )
+    public static void main2( @SuppressWarnings( "unused") String [] args )
     {
         BufferedImage img = new BufferedImage( 200, 200,
             BufferedImage.TYPE_INT_RGB );
@@ -141,7 +141,7 @@ public class Layer2dApp implements IFrameApp
      * @param size
      * @return
      **************************************************************************/
-    private Icon takeSnapshot( Point p, Dimension size )
+    private static Icon takeSnapshot( Point p, Dimension size )
     {
         Robot bot;
 
@@ -166,7 +166,7 @@ public class Layer2dApp implements IFrameApp
      * @param img
      * @return
      **************************************************************************/
-    private BufferedImage getCorners( BufferedImage img )
+    private static BufferedImage getCorners( BufferedImage img )
     {
         Dimension imgSize = new Dimension( img.getWidth(), img.getHeight() );
         Dimension regionSize = new Dimension( 15, 15 );
@@ -223,7 +223,7 @@ public class Layer2dApp implements IFrameApp
      * @param size
      * @param dstPnt
      **************************************************************************/
-    private void copyRegion( BufferedImage srcImg, BufferedImage dstImg,
+    private static void copyRegion( BufferedImage srcImg, BufferedImage dstImg,
         Point srcPnt, Dimension size, Point dstPnt )
     {
         BufferedImage subImg = srcImg.getSubimage( srcPnt.x, srcPnt.y,
@@ -236,7 +236,7 @@ public class Layer2dApp implements IFrameApp
      * @param factor
      * @return
      **************************************************************************/
-    private BufferedImage resizeImage( BufferedImage img, int factor )
+    private static BufferedImage resizeImage( BufferedImage img, int factor )
     {
         Dimension size = new Dimension( img.getWidth(), img.getHeight() );
         Dimension resize = new Dimension( size.width * factor,
@@ -267,7 +267,7 @@ public class Layer2dApp implements IFrameApp
     /***************************************************************************
      * @return
      **************************************************************************/
-    private JPanel createItems()
+    private static JPanel createItems()
     {
         JPanel panel = new JPanel( new GridBagLayout() );
         GridBagConstraints constraints;
@@ -359,8 +359,8 @@ public class Layer2dApp implements IFrameApp
             }
         }
 
-        private void drawGraphics( Graphics2D graphics, Dimension size, int x,
-            int y )
+        private static void drawGraphics( Graphics2D graphics, Dimension size,
+            int x, int y )
         {
             // graphics.setStroke( new BasicStroke( 2, BasicStroke.CAP_ROUND,
             // BasicStroke.JOIN_ROUND ) );

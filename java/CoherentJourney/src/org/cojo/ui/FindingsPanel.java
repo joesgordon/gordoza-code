@@ -11,21 +11,26 @@ import org.cojo.model.IFinding;
 import org.cojo.ui.tableModels.FindingTableModel;
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
+import org.jutils.ui.model.IView;
+import org.jutils.ui.model.ItemsTableModel;
 
-public class FindingsPanel extends JPanel
+public class FindingsPanel implements IView<JPanel>
 {
     /**  */
-    private FindingTableModel findingTableModel;
+    private final JPanel view;
     /**  */
-    private JTable findingTable;
+    private final ItemsTableModel<IFinding> findingTableModel;
+    /**  */
+    private final JTable findingTable;
 
     public FindingsPanel()
     {
-        super( new GridBagLayout() );
+        this.view = new JPanel( new GridBagLayout() );
+
         JButton addButton = new JButton();
         JButton editButton = new JButton();
         JButton deleteButton = new JButton();
-        findingTableModel = new FindingTableModel();
+        findingTableModel = new ItemsTableModel<>( new FindingTableModel() );
         findingTable = new JTable( findingTableModel );
         JScrollPane findingScrollPane = new JScrollPane( findingTable );
 
@@ -47,20 +52,20 @@ public class FindingsPanel extends JPanel
             }
         } );
 
-        add( addButton,
+        view.add( addButton,
             new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets( 4, 0, 2, 2 ), 0, 0 ) );
-        add( editButton,
+        view.add( editButton,
             new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets( 4, 0, 2, 2 ), 0, 0 ) );
-        add( deleteButton,
+        view.add( deleteButton,
             new GridBagConstraints( 2, 0, 1, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets( 4, 0, 2, 2 ), 0, 0 ) );
 
-        add( findingScrollPane,
+        view.add( findingScrollPane,
             new GridBagConstraints( 0, 1, 4, 1, 1.0, 1.0,
                 GridBagConstraints.WEST, GridBagConstraints.BOTH,
                 new Insets( 4, 0, 2, 2 ), 0, 0 ) );
@@ -79,15 +84,15 @@ public class FindingsPanel extends JPanel
      **************************************************************************/
     private void showFindingDialog()
     {
-        Frame frame = SwingUtils.getComponentsFrame( this );
+        Frame frame = SwingUtils.getComponentsFrame( view );
         FindingPanel findingPanel = new FindingPanel();
-        JEditDialog dialog = new JEditDialog( frame, findingPanel );
+        JEditDialog dialog = new JEditDialog( frame, findingPanel.getView() );
 
         int row = findingTable.getSelectedRow();
         row = findingTable.convertRowIndexToModel( row );
         if( row > -1 )
         {
-            IFinding finding = findingTableModel.getRow( row );
+            IFinding finding = findingTableModel.getItem( row );
 
             findingPanel.setData( finding );
 
@@ -96,5 +101,14 @@ public class FindingsPanel extends JPanel
             dialog.setLocationRelativeTo( frame );
             dialog.setVisible( true );
         }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public JPanel getView()
+    {
+        return view;
     }
 }

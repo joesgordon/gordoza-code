@@ -57,7 +57,7 @@ public class GradientPanel extends JPanel
      * standard internal frame background.
      * @return the color of the header's background
      **************************************************************************/
-    protected Color getDefaultBackground()
+    private static Color getDefaultBackground()
     {
         Color c = UIManager.getColor( "ProgressBar.foreground" );
         return c != null ? c

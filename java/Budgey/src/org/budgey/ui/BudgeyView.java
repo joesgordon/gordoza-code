@@ -47,9 +47,6 @@ public class BudgeyView implements IDataView<Budget>
     private final TransactionView transactionView;
 
     /**  */
-    private final BalanceCalculator calc;
-
-    /**  */
     private Budget budget;
     /**  */
     private Account account;
@@ -62,8 +59,6 @@ public class BudgeyView implements IDataView<Budget>
         this.view = new JPanel( new GridBagLayout() );
 
         ShowTransactionListListener doneListener = new ShowTransactionListListener();
-
-        calc = new BalanceCalculator();
 
         transactionListView = new TransactionListView();
         transactionListView.addEditTransactionListener(
@@ -290,7 +285,7 @@ public class BudgeyView implements IDataView<Budget>
         this.account = account;
 
         accountField.setText( account.getName() );
-        summaryPanel.setData( calc.calculateBalance( account ),
+        summaryPanel.setData( BalanceCalculator.calculateBalance( account ),
             account.getAvailable() );
     }
 
@@ -305,7 +300,7 @@ public class BudgeyView implements IDataView<Budget>
             Transaction trans = transactionView.getData();
             account.addTransaction( trans );
             transactionListView.addTransaction( trans );
-            summaryPanel.setData( calc.calculateBalance( account ),
+            summaryPanel.setData( BalanceCalculator.calculateBalance( account ),
                 account.getAvailable() );
             showTransactionListScreen();
         }

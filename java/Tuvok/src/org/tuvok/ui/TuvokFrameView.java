@@ -35,7 +35,7 @@ public class TuvokFrameView implements IView<JFrame>
         createMenuBar( frameView.getMenuBar() );
 
         frameView.setToolbar( createToolBar() );
-        frameView.setContent( mainPanel );
+        frameView.setContent( mainPanel.getView() );
 
         frame.setTitle( "Tuvok" );
 

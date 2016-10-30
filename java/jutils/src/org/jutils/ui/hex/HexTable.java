@@ -277,7 +277,7 @@ public class HexTable extends JTable
             comp = c;
         }
 
-        private boolean isByte( String str )
+        private static boolean isByte( String str )
         {
             try
             {
@@ -386,7 +386,7 @@ public class HexTable extends JTable
             label.setFont( loadFont() );
         }
 
-        private Font loadFont()
+        private static Font loadFont()
         {
             Font f;
 

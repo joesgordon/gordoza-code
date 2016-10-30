@@ -22,15 +22,15 @@ public class XStreamUtilsTests
         {
             XStreamUtils.writeObjectXStream( new Double( 42.0 ) );
         }
-        catch( XStreamException e )
+        catch( XStreamException ex )
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            ex.printStackTrace();
+            Assert.fail( ex.getMessage() );
         }
-        catch( IOException e )
+        catch( IOException ex )
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            ex.printStackTrace();
+            Assert.fail( ex.getMessage() );
         }
     }
 
@@ -48,15 +48,15 @@ public class XStreamUtilsTests
 
             Assert.assertEquals( expected, d );
         }
-        catch( XStreamException e )
+        catch( XStreamException ex )
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            ex.printStackTrace();
+            Assert.fail( ex.getMessage() );
         }
-        catch( IOException e )
+        catch( IOException ex )
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            ex.printStackTrace();
+            Assert.fail( ex.getMessage() );
         }
     }
 
@@ -75,15 +75,15 @@ public class XStreamUtilsTests
             String xml = XStreamUtils.writeObjectXStream( expected );
             XStreamUtils.readObjectXStream( xml );
         }
-        catch( XStreamException e )
+        catch( XStreamException ex )
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            ex.printStackTrace();
+            Assert.fail( ex.getMessage() );
         }
-        catch( IOException e )
+        catch( IOException ex )
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            ex.printStackTrace();
+            Assert.fail( ex.getMessage() );
         }
     }
 }

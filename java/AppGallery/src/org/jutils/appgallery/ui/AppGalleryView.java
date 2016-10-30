@@ -35,7 +35,7 @@ public class AppGalleryView implements IComponentView
      * @param apps
      * @return
      **************************************************************************/
-    private JPanel createView( List<ILibraryApp> apps )
+    private static JPanel createView( List<ILibraryApp> apps )
     {
         JPanel panel = new JPanel( new BorderLayout() );
         JList<ILibraryApp> list = new JList<>();

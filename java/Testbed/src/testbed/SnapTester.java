@@ -28,7 +28,7 @@ public class SnapTester implements IFrameApp
         snapView.setBackground( Color.white );
     }
 
-    public String promptForFolder( Component parent )
+    public static String promptForFolder( Component parent )
     {
         JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
@@ -41,7 +41,7 @@ public class SnapTester implements IFrameApp
         return null;
     }
 
-    private JPanel createTestPanel( String text, Color bg )
+    private static JPanel createTestPanel( String text, Color bg )
     {
         JPanel panel = new JPanel();
 

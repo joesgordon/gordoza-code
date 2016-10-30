@@ -77,8 +77,7 @@ public class MappedBenchmarkMain
         }
         catch( IOException ex )
         {
-            // TODO Auto-generated catch block
-            ex.printStackTrace();
+            LogUtils.printError( "I/O Error", ex );
         }
     }
 

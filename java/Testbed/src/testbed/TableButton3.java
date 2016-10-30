@@ -25,13 +25,13 @@ public class TableButton3 extends JFrame
                 "Delete3" } };
 
         DefaultTableModel model = new DefaultTableModel( data, columnNames );
-        JTable table = new JTable( model)
+        JTable table = new JTable( model )
         {
             // Returning the Class of each column will allow different
             // renderers to be used based on Class
             public Class<?> getColumnClass( int column )
             {
-                return getValueAt( 0, column ).getClass( );
+                return getValueAt( 0, column ).getClass();
             }
         };
         table.setRowHeight( 30 );
@@ -40,7 +40,8 @@ public class TableButton3 extends JFrame
         getContentPane().add( scrollPane );
 
         // Create button column
-        new ButtonColumn( table, 4 );
+        @SuppressWarnings( "unused")
+        ButtonColumn bc = new ButtonColumn( table, 4 );
     }
 
     public static void main( String[] args )

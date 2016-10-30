@@ -292,7 +292,7 @@ class ColorGenerator implements IStoppableTask
     /***************************************************************************
      * @return
      **************************************************************************/
-    private List<GenericColor> getColors()
+    private static List<GenericColor> getColors()
     {
         int max = 256;
         int dist = 64;

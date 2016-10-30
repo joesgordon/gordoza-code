@@ -12,7 +12,7 @@ public class GenericsTest
         void doStuff( X x );
     }
 
-    public <T extends A<?>> void foo( T t )
+    public static <T extends A<?>> void foo( T t )
     {
         // ---------------------------------------------------------------------
         // Doesn't compile:
@@ -23,7 +23,7 @@ public class GenericsTest
         bar( ( A<?> )t );
     }
 
-    public <T extends A<?>> void foo2( T t )
+    public static <T extends A<?>> void foo2( T t )
     {
         // ---------------------------------------------------------------------
         // No explicit cast required, no "unchecked" warning!
@@ -33,7 +33,7 @@ public class GenericsTest
         bar( u );
     }
 
-    public <X, T extends A<X>> void foo3( T t )
+    public static <X, T extends A<X>> void foo3( T t )
     {
         bar( t );
     }
@@ -50,7 +50,7 @@ public class GenericsTest
         // bar( u );
     }
 
-    private <X> void bar( A<X> t )
+    private static <X> void bar( A<X> t )
     {
         X x = t.get();
         t.doStuff( x );

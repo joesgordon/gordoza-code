@@ -42,7 +42,7 @@ public class PathView implements IDataView<File>
         this.view = createView();
     }
 
-    private JPanel createView()
+    private static JPanel createView()
     {
         JPanel panel = new JPanel();
         JTextField field = new JTextField();

@@ -8,30 +8,33 @@ import javax.swing.*;
 import org.cojo.data.*;
 import org.cojo.model.*;
 import org.jutils.IconConstants;
-import org.jutils.ui.*;
+import org.jutils.ui.JGoodiesToolBar;
+import org.jutils.ui.StandardFrameView;
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class CojoFrame extends JFrame
+public class CojoFrame implements IView<JFrame>
 {
-    private CrsPanel crsPanel;
-    private CrPanel crPanel;
+    private final StandardFrameView frameView;
+    private final CrsPanel crsPanel;
+    private final CrPanel crPanel;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public CojoFrame()
     {
-        JPanel contentPanel = new JPanel( new BorderLayout() );
+        this.frameView = new StandardFrameView();
+        this.crsPanel = new CrsPanel();
+        this.crPanel = new CrPanel();
 
-        contentPanel.add( createToolBar(), BorderLayout.NORTH );
-        contentPanel.add( createMainPanel(), BorderLayout.CENTER );
+        frameView.setToolbar( createToolBar() );
+        frameView.setContent( createMainPanel() );
 
-        setContentPane( contentPanel );
-        setTitle( "CoherentJourney v1.0" );
-
-        setJMenuBar( createMenuBar() );
+        frameView.setTitle( "CoherentJourney v1.0" );
+        frameView.setSize( 800, 600 );
 
         setDefaultData();
     }
@@ -43,11 +46,9 @@ public class CojoFrame extends JFrame
     {
         JPanel mainPanel = new JPanel( new BorderLayout() );
         JSplitPane mainSplitPane = new JSplitPane( JSplitPane.VERTICAL_SPLIT );
-        crsPanel = new CrsPanel();
-        crPanel = new CrPanel();
 
-        mainSplitPane.setTopComponent( crsPanel );
-        mainSplitPane.setBottomComponent( crPanel );
+        mainSplitPane.setTopComponent( crsPanel.getView() );
+        mainSplitPane.setBottomComponent( crPanel.getView() );
         mainSplitPane.validate();
         mainSplitPane.setDividerLocation( 100 );
 
@@ -72,7 +73,7 @@ public class CojoFrame extends JFrame
     /***************************************************************************
      * @return
      **************************************************************************/
-    private ChangeRequest createDefaultCr()
+    private static ChangeRequest createDefaultCr()
     {
         ChangeRequest cr = new ChangeRequest( 154 );
         List<ISoftwareTask> tasks = new ArrayList<ISoftwareTask>();
@@ -93,8 +94,9 @@ public class CojoFrame extends JFrame
         cr.setState( CrState.InWork );
         cr.setDesignReviews( findings );
 
-        tasks.add( new SoftwareTask( 1, "Make stuff work", ajRimmer, 1, 6,
-            false, "Do the quick fix", "Push the button", "Get banana", null ) );
+        tasks.add(
+            new SoftwareTask( 1, "Make stuff work", ajRimmer, 1, 6, false,
+                "Do the quick fix", "Push the button", "Get banana", null ) );
         tasks.add( new SoftwareTask( 2, "Make Arnold's stuff work correctly",
             dmLister, 200, 66, true, "Fix Rimmer's \"quick\" fix",
             "Push the button", "watch it work", null ) );
@@ -107,27 +109,7 @@ public class CojoFrame extends JFrame
     /***************************************************************************
      * @return
      **************************************************************************/
-    private JMenuBar createMenuBar()
-    {
-        JMenuBar menubar = new JGoodiesMenuBar();
-
-        JMenu fileMenu = new JMenu( "File" );
-        JMenuItem exitMenuItem = new JMenuItem( "Exit",
-            IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
-
-        exitMenuItem.addActionListener( new ExitListener( this ) );
-
-        fileMenu.add( exitMenuItem );
-
-        menubar.add( fileMenu );
-
-        return menubar;
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    private JToolBar createToolBar()
+    private static JToolBar createToolBar()
     {
         JToolBar toolbar = new JGoodiesToolBar();
 
@@ -135,13 +117,16 @@ public class CojoFrame extends JFrame
         JButton openButton = new JButton();
         JButton saveButton = new JButton();
 
-        newButton.setIcon( IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
+        newButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
         newButton.setFocusable( false );
 
-        openButton.setIcon( IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+        openButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
         openButton.setFocusable( false );
 
-        saveButton.setIcon( IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
+        saveButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
         saveButton.setFocusable( false );
 
         toolbar.add( newButton );
@@ -153,5 +138,11 @@ public class CojoFrame extends JFrame
         toolbar.setBorderPainted( false );
 
         return toolbar;
+    }
+
+    @Override
+    public JFrame getView()
+    {
+        return frameView.getView();
     }
 }

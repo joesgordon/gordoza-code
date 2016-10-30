@@ -4,7 +4,7 @@ import org.budgey.data.*;
 
 public class BalanceCalculator
 {
-    public Money calculateBalance( Account account )
+    public static Money calculateBalance( Account account )
     {
         Money balance = account.getStartingBalance();
 
@@ -20,7 +20,7 @@ public class BalanceCalculator
     /***************************************************************************
      * @return
      **************************************************************************/
-    public Money calculateBalance( LedgerMonth m, Money startingBalance )
+    public static Money calculateBalance( LedgerMonth m, Money startingBalance )
     {
         Money balance = startingBalance;
 

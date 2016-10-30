@@ -116,7 +116,7 @@ public class SearchableTextArea extends JTextArea
      * @param options FindOptions
      * @return boolean
      **************************************************************************/
-    private boolean buildOptions( FindOptions options )
+    private static boolean buildOptions( FindOptions options )
     {
         boolean found = false;
         int flags = Pattern.MULTILINE | Pattern.DOTALL;

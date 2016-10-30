@@ -317,7 +317,8 @@ public class DirectoryTree implements IView<JTree>
      * @param dir
      * @return
      **************************************************************************/
-    private FolderNode getNodeWithFile( DefaultMutableTreeNode node, File dir )
+    private static FolderNode getNodeWithFile( DefaultMutableTreeNode node,
+        File dir )
     {
         if( dir == null )
         {
@@ -358,7 +359,7 @@ public class DirectoryTree implements IView<JTree>
      * @param node DefaultMutableTreeNode
      * @param recurse boolean
      **************************************************************************/
-    private void addFile( File f, DefaultMutableTreeNode node )
+    private static void addFile( File f, DefaultMutableTreeNode node )
     {
         FolderNode newNode = new FolderNode( f );
         node.add( newNode );
@@ -369,7 +370,7 @@ public class DirectoryTree implements IView<JTree>
     /***************************************************************************
      * @param node FolderNode
      **************************************************************************/
-    private void addChildren( FolderNode node )
+    private static void addChildren( FolderNode node )
     {
         File f = node.getFolder();
         File [] chillen = f.listFiles();
@@ -391,7 +392,7 @@ public class DirectoryTree implements IView<JTree>
      * @param event TreeExpansionEvent
      * @throws ExpandVetoException
      **************************************************************************/
-    private void expandFolderPath( TreePath path )
+    private static void expandFolderPath( TreePath path )
     {
         Object lastComp = path.getLastPathComponent();
         FolderNode node = ( FolderNode )lastComp;

@@ -15,17 +15,6 @@ import org.jutils.io.IReader;
  ******************************************************************************/
 public class DataFileReader implements IReader<ISeriesData<?>, File>
 {
-    /**  */
-    private final DataLineReader lineReader;
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public DataFileReader()
-    {
-        this.lineReader = new DataLineReader();
-    }
-
     /***************************************************************************
      * 
      **************************************************************************/
@@ -44,7 +33,7 @@ public class DataFileReader implements IReader<ISeriesData<?>, File>
         {
             while( ( line = reader.readLine() ) != null )
             {
-                point = lineReader.read( line );
+                point = DataLineReader.read( line );
 
                 if( point != null )
                 {

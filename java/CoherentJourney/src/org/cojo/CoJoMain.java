@@ -16,10 +16,11 @@ public class CoJoMain implements IFrameApp
     @Override
     public JFrame createFrame()
     {
-        CojoFrame frame = new CojoFrame();
+        CojoFrame frameView = new CojoFrame();
+        JFrame frame = frameView.getView();
 
         frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-        frame.setSize( 800, 600 );
+
         return frame;
     }
 

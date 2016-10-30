@@ -140,4 +140,21 @@ public class StandardFrameView implements IView<JFrame>
     {
         statusBar.setText( text );
     }
+
+    /***************************************************************************
+     * @param title
+     **************************************************************************/
+    public void setTitle( String title )
+    {
+        frame.setTitle( title );
+    }
+
+    /***************************************************************************
+     * @param width
+     * @param height
+     **************************************************************************/
+    public void setSize( int width, int height )
+    {
+        frame.setSize( width, height );
+    }
 }

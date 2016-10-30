@@ -70,7 +70,7 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
      * @param lineNum
      * @return
      **************************************************************************/
-    private LineMatch createLineMatch( byte [] chars, Matcher matcher,
+    private static LineMatch createLineMatch( byte [] chars, Matcher matcher,
         int lineNum )
     {
         int lineStart = 0;
@@ -147,7 +147,7 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
         }
         catch( IOException ex )
         {
-            searchHandler.addErrorMessage( ex.getMessage() );
+            SearchResultsHandler.addErrorMessage( ex.getMessage() );
         }
     }
 }
