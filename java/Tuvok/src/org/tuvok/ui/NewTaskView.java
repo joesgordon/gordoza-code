@@ -11,13 +11,20 @@ import org.jutils.ui.model.IView;
  ******************************************************************************/
 public class NewTaskView implements IView<JPanel>
 {
+    /**  */
     private final JPanel view;
 
+    /***************************************************************************
+     *
+     **************************************************************************/
     public NewTaskView()
     {
         this.view = createMainPanel();
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private JPanel createMainPanel()
     {
         JTextField jTextField1 = new JTextField();
@@ -43,6 +50,9 @@ public class NewTaskView implements IView<JPanel>
         return panel1;
     }
 
+    /***************************************************************************
+     *
+     **************************************************************************/
     @Override
     public JPanel getView()
     {

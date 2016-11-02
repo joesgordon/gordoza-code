@@ -33,6 +33,9 @@ public class TaskMenu implements IView<JMenu>
         menu.add( editTaskMenuItem );
     }
 
+    /***************************************************************************
+     *
+     **************************************************************************/
     @Override
     public JMenu getView()
     {

@@ -13,33 +13,42 @@ import org.jutils.IconConstants;
 import org.jutils.Utils;
 import org.jutils.concurrent.*;
 import org.jutils.ui.ColorIcon;
+import org.jutils.ui.StandardFrameView;
+import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.IFrameApp;
+import org.jutils.ui.model.IView;
 import org.jutils.ui.model.LabelListCellRenderer;
 import org.jutils.ui.model.LabelListCellRenderer.IListCellLabelDecorator;
-
-import com.jgoodies.looks.Options;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ColorGenFrame extends JFrame
+public class ColorGenFrame implements IView<JFrame>
 {
     /**  */
-    private JButton goButton;
+    private final StandardFrameView frameView;
     /**  */
-    private JProgressBar progressBar;
+    private final JButton goButton;
     /**  */
-    private DefaultListModel<GenericColor> colorModel;
+    private final JProgressBar progressBar;
+    /**  */
+    private final DefaultListModel<GenericColor> colorModel;
+    /**  */
+    private final JComboBox<Comparator<GenericColor>> comparatorComboBox;
+
     /**  */
     private List<GenericColor> colors;
-    /**  */
-    private JComboBox<Comparator<GenericColor>> comparatorComboBox;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public ColorGenFrame()
     {
-        super( "Color Generation Frame" );
+        this.frameView = new StandardFrameView();
+
+        frameView.setTitle( "Color Generation Frame" );
+        frameView.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        frameView.setSize( 500, 400 );
 
         ActionListener comparatorSelectedListener = new ActionListener()
         {
@@ -114,7 +123,6 @@ public class ColorGenFrame extends JFrame
         comparatorComboBox = new JComboBox<Comparator<GenericColor>>();
         progressBar = new JProgressBar();
 
-        comparatorComboBox.setEnabled( false );
         comparatorComboBox.addActionListener( comparatorSelectedListener );
         comparatorComboBox.addItem( new GcRadiusComparator() );
         comparatorComboBox.addItem( new GcReverseRadiusComparator() );
@@ -154,7 +162,7 @@ public class ColorGenFrame extends JFrame
         contentPanel.add( toolbar, BorderLayout.NORTH );
         contentPanel.add( mainPanel, BorderLayout.CENTER );
 
-        setContentPane( contentPanel );
+        frameView.setContent( contentPanel );
     }
 
     /***************************************************************************
@@ -164,7 +172,7 @@ public class ColorGenFrame extends JFrame
     {
         JFileChooser saveChooser = new JFileChooser();
 
-        int choice = saveChooser.showSaveDialog( this );
+        int choice = saveChooser.showSaveDialog( getView() );
 
         if( choice == JFileChooser.APPROVE_OPTION )
         {
@@ -184,7 +192,7 @@ public class ColorGenFrame extends JFrame
             }
             catch( FileNotFoundException ex )
             {
-                JOptionPane.showMessageDialog( this,
+                JOptionPane.showMessageDialog( getView(),
                     "Error writing file: " + ex, "ERROR",
                     JOptionPane.ERROR_MESSAGE );
             }
@@ -218,7 +226,6 @@ public class ColorGenFrame extends JFrame
         {
             colorModel.addElement( c );
         }
-        comparatorComboBox.setEnabled( colors != null );
     }
 
     /***************************************************************************
@@ -226,406 +233,311 @@ public class ColorGenFrame extends JFrame
      **************************************************************************/
     public static final void main( String[] args )
     {
-        SwingUtilities.invokeLater( new Runnable()
+        FrameApplication.invokeLater( new IFrameApp()
         {
             @Override
-            public void run()
+            public void finalizeGui()
             {
-                try
-                {
-                    UIManager.setLookAndFeel( Options.PLASTICXP_NAME );
-                }
-                catch( Exception exception )
-                {
-                    exception.printStackTrace();
-                }
+            }
 
-                ColorGenFrame frame = new ColorGenFrame();
+            @Override
+            public JFrame createFrame()
+            {
+                ColorGenFrame frameView = new ColorGenFrame();
+                JFrame frame = frameView.getView();
 
-                frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-                frame.setSize( 500, 400 );
-                frame.validate();
                 // frame.pack();
-                frame.setLocationRelativeTo( null );
-                frame.setVisible( true );
+                frame.validate();
+
+                return frame;
             }
         } );
-    }
-}
-
-/*******************************************************************************
- * 
- ******************************************************************************/
-class ColorGenerator implements IStoppableTask
-{
-    /**  */
-    private List<GenericColor> colors;
-    /**  */
-    private ColorGenFrame frame;
-
-    /***************************************************************************
-     * @param frame
-     **************************************************************************/
-    public ColorGenerator( ColorGenFrame frame )
-    {
-        this.frame = frame;
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void run( ITaskStopManager stopper )
+    public JFrame getView()
     {
-        colors = getColors();
-
-        SwingUtilities.invokeLater( new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                frame.setData( colors );
-            }
-        } );
+        return frameView.getView();
     }
 
     /***************************************************************************
-     * @return
+     * 
      **************************************************************************/
-    private static List<GenericColor> getColors()
+    private static class ColorGenerator implements IStoppableTask
     {
-        int max = 256;
-        int dist = 64;
-        List<GenericColor> gcList = new ArrayList<GenericColor>();
+        /**  */
+        private List<GenericColor> colors;
+        /**  */
+        private ColorGenFrame frame;
 
-        for( int x = 0; x < max; x += dist )
+        /***********************************************************************
+         * @param frame
+         **********************************************************************/
+        public ColorGenerator( ColorGenFrame frame )
         {
-            for( int y = 0; y < max; y += dist )
+            this.frame = frame;
+        }
+
+        /***********************************************************************
+         * 
+         **********************************************************************/
+        @Override
+        public void run( ITaskStopManager stopper )
+        {
+            colors = getColors();
+
+            SwingUtilities.invokeLater( new Runnable()
             {
-                for( int z = 0; z < max; z += dist )
+                @Override
+                public void run()
                 {
-                    gcList.add( new GenericColor( x, y, z ) );
+                    frame.setData( colors );
+                }
+            } );
+        }
+
+        /***********************************************************************
+         * @return
+         **********************************************************************/
+        private static List<GenericColor> getColors()
+        {
+            int max = 256;
+            int dist = 64;
+            List<GenericColor> gcList = new ArrayList<GenericColor>();
+
+            for( int x = 0; x < max; x += dist )
+            {
+                for( int y = 0; y < max; y += dist )
+                {
+                    for( int z = 0; z < max; z += dist )
+                    {
+                        gcList.add( new GenericColor( x, y, z ) );
+                    }
                 }
             }
-        }
 
-        List<GenericColor> colors = new ArrayList<GenericColor>();
+            List<GenericColor> colors = new ArrayList<GenericColor>();
 
-        for( GenericColor gc : gcList )
-        {
-            if( gc.x + gc.y + gc.z <= 384 )
+            for( GenericColor gc : gcList )
             {
-                colors.add( gc );
+                if( gc.x + gc.y + gc.z <= 384 )
+                {
+                    colors.add( gc );
+                }
             }
+
+            return colors;
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class GcLogComparator implements Comparator<GenericColor>
+    {
+        @Override
+        public int compare( GenericColor gcThis, GenericColor gcThat )
+        {
+            double fact = 64.0;
+
+            double xlThis = Math.pow( 10, gcThis.x / fact );
+            double ylThis = Math.pow( 11, gcThis.y / fact );
+            double zlThis = Math.pow( 12, gcThis.z / fact );
+            double sumThis = xlThis + ylThis + zlThis;
+
+            double xlThat = Math.pow( 10, gcThat.x / fact );
+            double ylThat = Math.pow( 11, gcThat.y / fact );
+            double zlThat = Math.pow( 12, gcThat.z / fact );
+            double sumThat = xlThat + ylThat + zlThat;
+
+            return Double.compare( sumThis, sumThat );
         }
 
-        return colors;
-    }
-}
-
-/*******************************************************************************
- * 
- ******************************************************************************/
-class GcLogComparator implements Comparator<GenericColor>
-{
-    @Override
-    public int compare( GenericColor gcThis, GenericColor gcThat )
-    {
-        double fact = 64.0;
-
-        double xlThis = Math.pow( 10, gcThis.x / fact );
-        double ylThis = Math.pow( 11, gcThis.y / fact );
-        double zlThis = Math.pow( 12, gcThis.z / fact );
-        double sumThis = xlThis + ylThis + zlThis;
-
-        double xlThat = Math.pow( 10, gcThat.x / fact );
-        double ylThat = Math.pow( 11, gcThat.y / fact );
-        double zlThat = Math.pow( 12, gcThat.z / fact );
-        double sumThat = xlThat + ylThat + zlThat;
-
-        return Double.compare( sumThis, sumThat );
-    }
-
-    public String toString()
-    {
-        return "RGB Log";
-    }
-}
-
-/*******************************************************************************
- * 
- ******************************************************************************/
-class GcRadiusComparator implements Comparator<GenericColor>
-{
-    @Override
-    public int compare( GenericColor gcThis, GenericColor gcThat )
-    {
-        return Double.compare( gcThis.getRadius(), gcThat.getRadius() );
-    }
-
-    public String toString()
-    {
-        return "3D Distance";
-    }
-}
-
-/*******************************************************************************
- * 
- ******************************************************************************/
-class GcReverseRadiusComparator implements Comparator<GenericColor>
-{
-    @Override
-    public int compare( GenericColor gcThis, GenericColor gcThat )
-    {
-        GenericColor thisR = new GenericColor( 255 - gcThis.x, 255 - gcThis.y,
-            255 - gcThis.z );
-        GenericColor thatR = new GenericColor( 255 - gcThat.x, 255 - gcThat.y,
-            255 - gcThat.z );
-        return Double.compare( thisR.getRadius(), thatR.getRadius() );
-    }
-
-    public String toString()
-    {
-        return "Reverse 3D Distance";
-    }
-}
-
-/*******************************************************************************
- * 
- ******************************************************************************/
-class GcXyzComparator implements Comparator<GenericColor>
-{
-    @Override
-    public int compare( GenericColor gcThis, GenericColor gcThat )
-    {
-        int val = gcThis.x - gcThat.x;
-        if( val == 0 )
+        public String toString()
         {
-            val = gcThis.y - gcThat.y;
+            return "RGB Log";
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class GcRadiusComparator implements Comparator<GenericColor>
+    {
+        @Override
+        public int compare( GenericColor gcThis, GenericColor gcThat )
+        {
+            return Double.compare( gcThis.getRadius(), gcThat.getRadius() );
+        }
+
+        public String toString()
+        {
+            return "3D Distance";
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class GcReverseRadiusComparator
+        implements Comparator<GenericColor>
+    {
+        @Override
+        public int compare( GenericColor gcThis, GenericColor gcThat )
+        {
+            GenericColor thisR = new GenericColor( 255 - gcThis.x,
+                255 - gcThis.y, 255 - gcThis.z );
+            GenericColor thatR = new GenericColor( 255 - gcThat.x,
+                255 - gcThat.y, 255 - gcThat.z );
+            return Double.compare( thisR.getRadius(), thatR.getRadius() );
+        }
+
+        public String toString()
+        {
+            return "Reverse 3D Distance";
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class GcXyzComparator implements Comparator<GenericColor>
+    {
+        @Override
+        public int compare( GenericColor gcThis, GenericColor gcThat )
+        {
+            int val = gcThis.x - gcThat.x;
             if( val == 0 )
             {
-                val = gcThis.z - gcThat.z;
+                val = gcThis.y - gcThat.y;
+                if( val == 0 )
+                {
+                    val = gcThis.z - gcThat.z;
+                }
+            }
+            return val;
+        }
+
+        public String toString()
+        {
+            return "R->G->B";
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class ColorCellDecorator implements IListCellLabelDecorator
+    {
+        /**  */
+        private final Font boldFont;
+        /**  */
+        private ColorIcon icon;
+
+        /***********************************************************************
+         *
+         **********************************************************************/
+        public ColorCellDecorator()
+        {
+            Font f = UIManager.getFont( "Label.font" );
+
+            this.icon = new ColorIcon( Color.white, 16 );
+            this.boldFont = f.deriveFont( f.getStyle() | Font.BOLD );
+        }
+
+        /***********************************************************************
+         * 
+         **********************************************************************/
+        @Override
+        public void decorate( JLabel label, JList<?> list, Object value,
+            int index, boolean isSelected, boolean cellHasFocus )
+        {
+            if( value != null )
+            {
+                label.setIcon( icon );
+                GenericColor c = ( GenericColor )value;
+                label.setText(
+                    "The quick brown fox jumped over the lazy dog. (" +
+                        c.toString() + ")" );
+                label.setFont( boldFont );
+                label.setForeground( c.getColor() );
+                icon.setColor( c.getColor() );
             }
         }
-        return val;
-    }
-
-    public String toString()
-    {
-        return "R->G->B";
-    }
-}
-
-/*******************************************************************************
- * 
- ******************************************************************************/
-class ColorCellDecorator implements IListCellLabelDecorator
-{
-    /**  */
-    private final Font boldFont;
-    /**  */
-    private ColorIcon icon;
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public ColorCellDecorator()
-    {
-        Font f = UIManager.getFont( "Label.font" );
-
-        this.icon = new ColorIcon( Color.white, 16 );
-        this.boldFont = f.deriveFont( f.getStyle() | Font.BOLD );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
-    public void decorate( JLabel label, JList<?> list, Object value, int index,
-        boolean isSelected, boolean cellHasFocus )
+    private static class GenericColor
     {
-        if( value != null )
+        /**  */
+        protected int x;
+        /**  */
+        protected int y;
+        /**  */
+        protected int z;
+        /**  */
+        private double radius;
+
+        /***********************************************************************
+         * @param x
+         * @param y
+         * @param z
+         **********************************************************************/
+        public GenericColor( int x, int y, int z )
         {
-            label.setIcon( icon );
-            GenericColor c = ( GenericColor )value;
-            label.setText( "The quick brown fox jumped over the lazy dog. (" +
-                c.toString() + ")" );
-            label.setFont( boldFont );
-            label.setForeground( c.getColor() );
-            icon.setColor( c.getColor() );
-        }
-    }
-}
-
-/*******************************************************************************
- * 
- ******************************************************************************/
-class GenericColor
-{
-    /**  */
-    protected int x;
-    /**  */
-    protected int y;
-    /**  */
-    protected int z;
-    /**  */
-    private double radius;
-
-    /***************************************************************************
-     * @param x
-     * @param y
-     * @param z
-     **************************************************************************/
-    public GenericColor( int x, int y, int z )
-    {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        radius = -1.0;
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public Color getColor()
-    {
-        return new Color( x, y, z );
-    }
-
-    /***************************************************************************
-     * @param c
-     * @return
-     **************************************************************************/
-    public double getDistance( GenericColor c )
-    {
-        return calcRadius( c.x - x, c.y - y, c.z - z );
-    }
-
-    /***************************************************************************
-     * @param x
-     * @param y
-     * @param z
-     * @return
-     **************************************************************************/
-    public static double calcRadius( int x, int y, int z )
-    {
-        double radius = x * x + y * y + z * z;
-
-        radius = Math.sqrt( radius );
-
-        return radius;
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public double getRadius()
-    {
-        if( radius < 0.0 )
-        {
-            radius = calcRadius( x, y, z );
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            radius = -1.0;
         }
 
-        return radius;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public String toString()
-    {
-        return Utils.argsToString( x, y, z );
-    }
-}
-
-/*******************************************************************************
- * 
- ******************************************************************************/
-class SmartColor extends GenericColor
-{
-    /**  */
-    public static final int NUM_COLORS = 6;
-
-    /***************************************************************************
-     * @param x
-     * @param y
-     * @param z
-     **************************************************************************/
-    public SmartColor( int x, int y, int z )
-    {
-        super( x, y, z );
-    }
-
-    /***************************************************************************
-     * @param idx
-     * @return
-     **************************************************************************/
-    public static GenericColor getColor( SmartColor c, int idx )
-    {
-        int x = c.x;
-        int y = c.y;
-        int z = c.z;
-
-        switch( idx )
+        /***********************************************************************
+         * @return
+         **********************************************************************/
+        public Color getColor()
         {
-            case 0:
-                return new GenericColor( x, y, z );
-            case 1:
-                return new GenericColor( x, z, y );
-            case 2:
-                return new GenericColor( y, x, z );
-            case 3:
-                return new GenericColor( y, z, x );
-            case 4:
-                return new GenericColor( z, x, y );
-            case 5:
-                return new GenericColor( z, y, x );
+            return new Color( x, y, z );
         }
 
-        throw new ArrayIndexOutOfBoundsException(
-            idx + " < 0 or >= " + NUM_COLORS );
-    }
+        /***********************************************************************
+         * @param x
+         * @param y
+         * @param z
+         * @return
+         **********************************************************************/
+        public static double calcRadius( int x, int y, int z )
+        {
+            double radius = x * x + y * y + z * z;
 
-    /****************************************************************************
-     * @param colorList
-     * @param c
-     ***************************************************************************/
-    public static void addColors( List<GenericColor> colorList, SmartColor c )
-    {
-        boolean m1 = Math.abs( c.x - c.y ) <= 20;
-        boolean m2 = Math.abs( c.x - c.z ) <= 20;
-        boolean m3 = Math.abs( c.y - c.z ) <= 20;
+            radius = Math.sqrt( radius );
 
-        if( m1 && m2 && m3 )
-        {
-            colorList.add( getColor( c, 0 ) );
+            return radius;
         }
-        else if( m1 && m2 && !m3 )
+
+        /***********************************************************************
+         * @return
+         **********************************************************************/
+        public double getRadius()
         {
-            colorList.add( getColor( c, 0 ) );
-            colorList.add( getColor( c, 1 ) );
-            colorList.add( getColor( c, 4 ) );
+            if( radius < 0.0 )
+            {
+                radius = calcRadius( x, y, z );
+            }
+
+            return radius;
         }
-        else if( m1 && !m2 && m3 )
+
+        /***********************************************************************
+         *
+         **********************************************************************/
+        public String toString()
         {
-            colorList.add( getColor( c, 3 ) );
-            colorList.add( getColor( c, 4 ) );
-            colorList.add( getColor( c, 5 ) );
-        }
-        else if( !m1 && m2 && m3 )
-        {
-            colorList.add( getColor( c, 1 ) );
-            colorList.add( getColor( c, 2 ) );
-            colorList.add( getColor( c, 3 ) );
-        }
-        else
-        {
-            colorList.add( getColor( c, 0 ) );
-            colorList.add( getColor( c, 1 ) );
-            colorList.add( getColor( c, 2 ) );
-            colorList.add( getColor( c, 3 ) );
-            colorList.add( getColor( c, 4 ) );
-            colorList.add( getColor( c, 5 ) );
+            return Utils.argsToString( x, y, z );
         }
     }
 }

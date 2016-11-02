@@ -2,12 +2,12 @@ package org.cojo.ui.tableModels;
 
 import org.cojo.model.CrState;
 import org.cojo.model.IChangeRequest;
-import org.jutils.ui.model.ITableConfig;
+import org.jutils.ui.model.ITableItemsConfig;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class CrTableModel implements ITableConfig<IChangeRequest>
+public class CrTableModel implements ITableItemsConfig<IChangeRequest>
 {
     /**  */
     private static final String [] COLUMN_HEADING = { "#", "Title", "State" };

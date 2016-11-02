@@ -1,12 +1,12 @@
 package org.cojo.ui.tableModels;
 
 import org.cojo.model.ISoftwareTask;
-import org.jutils.ui.model.ITableConfig;
+import org.jutils.ui.model.ITableItemsConfig;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class StfTableModel implements ITableConfig<ISoftwareTask>
+public class StfTableModel implements ITableItemsConfig<ISoftwareTask>
 {
     /**  */
     private static final String [] COLUMN_HEADING = { "#", "Title", "Lead",

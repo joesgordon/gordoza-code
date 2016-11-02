@@ -11,6 +11,9 @@ import javax.swing.ListModel;
 public class CollectionListModel<T> extends AbstractListModel<T>
     implements Iterable<T>
 {
+    /**  */
+    private static final long serialVersionUID = 3561040955359760505L;
+
     /** The items contained within the list. */
     private List<T> items;
 

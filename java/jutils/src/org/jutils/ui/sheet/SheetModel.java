@@ -4,6 +4,8 @@ import javax.swing.table.AbstractTableModel;
 
 public class SheetModel extends AbstractTableModel
 {
+    /**  */
+    private static final long serialVersionUID = 191109670865335200L;
     private ISpreadSheet sheet;
 
     public SheetModel()
@@ -75,7 +77,7 @@ public class SheetModel extends AbstractTableModel
         do
         {
             val = col % 26;
-            c = ( char )( ( int )'A' + val );
+            c = ( char )( 'A' + val );
             name = c + name;
 
             col /= 26;

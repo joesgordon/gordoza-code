@@ -23,12 +23,17 @@ public class PathView implements IDataView<File>
     /**  */
     private static final FileSystemView FILE_SYSTEM = FileSystemView.getFileSystemView();
 
+    /**  */
     private final JPanel view;
+    /**  */
     private final List<FileButton> buttons;
 
+    /**  */
     private final ItemActionList<File> selectedListeners;
 
+    /**  */
     private File file;
+    /**  */
     private File selectedFile;
 
     /***************************************************************************
@@ -42,6 +47,9 @@ public class PathView implements IDataView<File>
         this.view = createView();
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private static JPanel createView()
     {
         JPanel panel = new JPanel();
@@ -63,6 +71,9 @@ public class PathView implements IDataView<File>
         return panel;
     }
 
+    /***************************************************************************
+     * @param l
+     **************************************************************************/
     public void addSelectedListener( ItemActionListener<File> l )
     {
         selectedListeners.addListener( l );
@@ -131,9 +142,9 @@ public class PathView implements IDataView<File>
         view.repaint();
     }
 
-    /**
+    /***************************************************************************
      * @param file
-     */
+     **************************************************************************/
     public void setSelected( File file )
     {
         boolean found = false;
@@ -157,9 +168,9 @@ public class PathView implements IDataView<File>
         }
     }
 
-    /**
+    /***************************************************************************
      * @return
-     */
+     **************************************************************************/
     public File getSelected()
     {
         return selectedFile;
@@ -170,6 +181,7 @@ public class PathView implements IDataView<File>
      **************************************************************************/
     private static class FileButton extends JButton
     {
+        private static final long serialVersionUID = -8910465157344216503L;
         private final Color pressedLight;
         private final Color pressedDark;
         public final File file;

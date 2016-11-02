@@ -185,9 +185,18 @@ public class SummerView implements IView<JFrame>
                 field = view.verifyView;
             }
 
-            view.createAction.setEnabled( field.isValid() );
-
-            // TODO update tool tip with reason if invalid.
+            if( field.isValid() )
+            {
+                view.createAction.setEnabled( true );
+                SwingUtils.setActionToolTip( view.createAction,
+                    "Create Checksums" );
+            }
+            else
+            {
+                view.createAction.setEnabled( false );
+                SwingUtils.setActionToolTip( view.createAction,
+                    field.getInvalidationReason() );
+            }
         }
     }
 
@@ -210,8 +219,11 @@ public class SummerView implements IView<JFrame>
         {
             if( view.tabField.getSelectedIndex() == index )
             {
-                // LogUtils.printDebug( "Valid: " + index );
                 view.createAction.setEnabled( true );
+                SwingUtils.setActionToolTip( view.createAction,
+                    "Create Checksums" );
+
+                // LogUtils.printDebug( "Valid: " + index );
             }
         }
 
@@ -221,8 +233,8 @@ public class SummerView implements IView<JFrame>
             if( view.tabField.getSelectedIndex() == index )
             {
                 view.createAction.setEnabled( false );
+                SwingUtils.setActionToolTip( view.createAction, reason );
 
-                // TODO update tool tip with reason.
                 // LogUtils.printDebug( "Invalid: " + index + " - " + reason );
             }
         }

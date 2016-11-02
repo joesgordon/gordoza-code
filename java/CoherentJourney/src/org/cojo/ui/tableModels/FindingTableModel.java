@@ -3,12 +3,12 @@ package org.cojo.ui.tableModels;
 import java.util.Date;
 
 import org.cojo.model.IFinding;
-import org.jutils.ui.model.ITableConfig;
+import org.jutils.ui.model.ITableItemsConfig;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class FindingTableModel implements ITableConfig<IFinding>
+public class FindingTableModel implements ITableItemsConfig<IFinding>
 {
     /**  */
     private static final String [] COLUMN_HEADING = { "#", "User", "Date",

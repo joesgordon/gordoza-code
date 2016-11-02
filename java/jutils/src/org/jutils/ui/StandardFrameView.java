@@ -157,4 +157,12 @@ public class StandardFrameView implements IView<JFrame>
     {
         frame.setSize( width, height );
     }
+
+    /***************************************************************************
+     * @param operation
+     **************************************************************************/
+    public void setDefaultCloseOperation( int operation )
+    {
+        frame.setDefaultCloseOperation( operation );
+    }
 }

@@ -11,6 +11,8 @@ import javax.swing.plaf.basic.BasicSplitPaneUI;
 public class AltSplitPane extends JSplitPane
 {
     /**  */
+    private static final long serialVersionUID = -7212927759119569622L;
+    /**  */
     public static final String PROPERTYNAME_DIVIDER_BORDER_VISIBLE = "dividerBorderVisible";
     /**  */
     public boolean borderless = false;
@@ -97,10 +99,8 @@ public class AltSplitPane extends JSplitPane
         {
             return BorderFactory.createEmptyBorder();
         }
-        else
-        {
-            return super.getBorder();
-        }
+
+        return super.getBorder();
     }
 
     /***************************************************************************

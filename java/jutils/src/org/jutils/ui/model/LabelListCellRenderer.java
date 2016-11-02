@@ -10,6 +10,8 @@ import javax.swing.*;
  ******************************************************************************/
 public class LabelListCellRenderer extends DefaultListCellRenderer
 {
+    /**  */
+    private static final long serialVersionUID = 5590004130642461784L;
     /** The decorator to be used to render cells. */
     private final IListCellLabelDecorator decorator;
 

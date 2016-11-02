@@ -523,10 +523,9 @@ public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel<T>
      * 
      **************************************************************************/
     @Override
-    @SuppressWarnings( "unchecked")
     public void removeElement( Object obj )
     {
-        boolean result = remove( ( T )obj );
+        boolean result = remove( obj );
 
         if( !result )
         {
@@ -622,10 +621,8 @@ public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel<T>
                     {
                         return true;
                     }
-                    else
-                    {
-                        return false;
-                    }
+
+                    return false;
                 }
 
                 return item.equals( wrapper.item );

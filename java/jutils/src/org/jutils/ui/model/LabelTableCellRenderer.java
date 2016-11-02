@@ -13,6 +13,8 @@ import javax.swing.table.TableCellRenderer;
  ******************************************************************************/
 public class LabelTableCellRenderer extends DefaultTableCellRenderer
 {
+    /**  */
+    private static final long serialVersionUID = -2822514015162778807L;
     /** The decorator to be used to render cells. */
     private final ITableCellLabelDecorator decorator;
 
