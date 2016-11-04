@@ -18,6 +18,7 @@ public enum HexBufferSize
         this.desc = desc;
     }
 
+    @Override
     public String toString()
     {
         return desc;

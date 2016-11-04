@@ -10,6 +10,7 @@ import javax.swing.event.*;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.tree.*;
 
+import org.jutils.SwingUtils;
 import org.jutils.io.IOUtils;
 import org.jutils.io.LogUtils;
 import org.jutils.ui.event.*;
@@ -126,8 +127,8 @@ public class DirectoryTree implements IView<JTree>
 
         for( int i = 0; i < paths.length; i++ )
         {
-            FolderNode node = ( FolderNode )paths[i].getLastPathComponent();
-            files[i] = node.getFolder();
+            DirectoryNode node = ( DirectoryNode )paths[i].getLastPathComponent();
+            files[i] = node.getDirectory();
         }
 
         return files;
@@ -163,7 +164,8 @@ public class DirectoryTree implements IView<JTree>
 
         TreePath [] treePaths = getTreePaths( dirs );
 
-        // LogUtils.printDebug( "DEBUG: Selecting " + dirs.length + " folders"
+        // LogUtils.printDebug( "DEBUG: Selecting " + dirs.length + "
+        // directories"
         // );
 
         if( treePaths.length > 0 )
@@ -195,10 +197,10 @@ public class DirectoryTree implements IView<JTree>
             for( TreePath path : paths )
             {
                 Object lastComp = path.getLastPathComponent();
-                FolderNode node = ( FolderNode )lastComp;
+                DirectoryNode node = ( DirectoryNode )lastComp;
 
                 node.removeAllChildren();
-                expandFolderPath( path );
+                expandDirectoryPath( path );
                 treeModel.reload( node );
             }
         }
@@ -244,7 +246,7 @@ public class DirectoryTree implements IView<JTree>
     {
         TreePath path = null;
         File [] filesPath = getParentage( dir );
-        DefaultMutableTreeNode dmtr = root;
+        MutableTreeNode dmtr = root;
 
         // LogUtils.printDebug( "Dir: " + dir.getAbsolutePath() );
         // for( int i = 0; i < filesPath.length; i++ )
@@ -254,18 +256,19 @@ public class DirectoryTree implements IView<JTree>
 
         for( int i = 0; i < filesPath.length; i++ )
         {
-            tree.expandPath( new TreePath( dmtr.getPath() ) );
+            tree.expandPath( SwingUtils.getPath( dmtr ) );
 
-            FolderNode node = getNodeWithFile( dmtr, filesPath[i] );
+            DirectoryNode node = getNodeWithFile( dmtr, filesPath[i] );
 
             if( node == null )
             {
                 System.err.println(
                     "Could not find path " + dir.getAbsolutePath() + ":" +
                         filesPath[i].getName() + " in " + dmtr.toString() );
-                path = new TreePath( dmtr.getPath() );
+                path = SwingUtils.getPath( dmtr );
                 break;
             }
+
             dmtr = node;
 
             if( i == filesPath.length - 1 )
@@ -317,7 +320,7 @@ public class DirectoryTree implements IView<JTree>
      * @param dir
      * @return
      **************************************************************************/
-    private static FolderNode getNodeWithFile( DefaultMutableTreeNode node,
+    private static DirectoryNode getNodeWithFile( MutableTreeNode node,
         File dir )
     {
         if( dir == null )
@@ -327,8 +330,8 @@ public class DirectoryTree implements IView<JTree>
 
         for( int i = 0; i < node.getChildCount(); i++ )
         {
-            FolderNode fn = ( FolderNode )node.getChildAt( i );
-            File file = fn.getFolder();
+            DirectoryNode fn = ( DirectoryNode )node.getChildAt( i );
+            File file = fn.getDirectory();
 
             if( file.equals( dir ) )
             {
@@ -359,20 +362,20 @@ public class DirectoryTree implements IView<JTree>
      * @param node DefaultMutableTreeNode
      * @param recurse boolean
      **************************************************************************/
-    private static void addFile( File f, DefaultMutableTreeNode node )
+    private static void addFile( File f, MutableTreeNode node )
     {
-        FolderNode newNode = new FolderNode( f );
-        node.add( newNode );
+        DirectoryNode newNode = new DirectoryNode( f );
+        node.insert( newNode, node.getChildCount() );
 
-        // LogUtils.printDebug( "DEBUG: Adding folder: " + newNode );
+        // LogUtils.printDebug( "DEBUG: Adding directory: " + newNode );
     }
 
     /***************************************************************************
-     * @param node FolderNode
+     * @param node DirectoryNode
      **************************************************************************/
-    private static void addChildren( FolderNode node )
+    private static void addChildren( DirectoryNode node )
     {
-        File f = node.getFolder();
+        File f = node.getDirectory();
         File [] chillen = f.listFiles();
         chillen = chillen == null ? new File[0] : chillen;
 
@@ -392,10 +395,10 @@ public class DirectoryTree implements IView<JTree>
      * @param event TreeExpansionEvent
      * @throws ExpandVetoException
      **************************************************************************/
-    private static void expandFolderPath( TreePath path )
+    private static void expandDirectoryPath( TreePath path )
     {
         Object lastComp = path.getLastPathComponent();
-        FolderNode node = ( FolderNode )lastComp;
+        DirectoryNode node = ( DirectoryNode )lastComp;
 
         if( node.getChildCount() == 0 )
         {
@@ -413,7 +416,7 @@ public class DirectoryTree implements IView<JTree>
             throws ExpandVetoException
         {
             TreePath path = event.getPath();
-            expandFolderPath( path );
+            expandDirectoryPath( path );
         }
 
         @Override
@@ -427,72 +430,162 @@ public class DirectoryTree implements IView<JTree>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class FolderNode extends DefaultMutableTreeNode
+    private static class DirectoryNode implements MutableTreeNode
     {
-        private String desc = null;
+        private final DefaultMutableTreeNode node;
 
+        private String desc = null;
         private Icon icon = null;
 
-        public FolderNode( File dir )
+        public DirectoryNode( File dir )
         {
-            super( dir );
+            this.node = new DefaultMutableTreeNode( dir );
         }
 
-        public String toString()
+        public TreeNode [] getPath()
         {
-            if( desc == null )
-            {
-                desc = DirectoryTree.FILE_SYSTEM.getSystemDisplayName(
-                    getFolder() );
-            }
-
-            return desc;
+            return node.getPath();
         }
 
-        public boolean isLeaf()
+        public void removeAllChildren()
         {
-            return !getFolder().isDirectory();
+            node.removeAllChildren();
         }
 
-        public File getFolder()
+        public File getDirectory()
         {
-            return ( File )super.getUserObject();
+            return ( File )node.getUserObject();
         }
 
         public Icon getIcon()
         {
             if( icon == null )
             {
-                icon = DirectoryTree.FILE_SYSTEM.getSystemIcon( getFolder() );
+                icon = DirectoryTree.FILE_SYSTEM.getSystemIcon(
+                    getDirectory() );
             }
             return icon;
+        }
+
+        @Override
+        public String toString()
+        {
+            if( desc == null )
+            {
+                desc = DirectoryTree.FILE_SYSTEM.getSystemDisplayName(
+                    getDirectory() );
+            }
+
+            return desc;
+        }
+
+        @Override
+        public boolean isLeaf()
+        {
+            return !getDirectory().isDirectory();
+        }
+
+        @Override
+        public TreeNode getChildAt( int childIndex )
+        {
+            return node.getChildAt( childIndex );
+        }
+
+        @Override
+        public int getChildCount()
+        {
+            return node.getChildCount();
+        }
+
+        @Override
+        public TreeNode getParent()
+        {
+            return node.getParent();
+        }
+
+        @Override
+        public int getIndex( TreeNode node )
+        {
+            return node.getIndex( node );
+        }
+
+        @Override
+        public boolean getAllowsChildren()
+        {
+            return node.getAllowsChildren();
+        }
+
+        @Override
+        public Enumeration<?> children()
+        {
+            return node.children();
+        }
+
+        @Override
+        public void insert( MutableTreeNode newChild, int childIndex )
+        {
+            node.insert( newChild, childIndex );
+        }
+
+        @Override
+        public void remove( int index )
+        {
+            node.remove( index );
+        }
+
+        @Override
+        public void remove( MutableTreeNode node )
+        {
+            node.remove( node );
+        }
+
+        @Override
+        public void setUserObject( Object object )
+        {
+            node.setUserObject( object );
+        }
+
+        @Override
+        public void removeFromParent()
+        {
+            node.removeFromParent();
+        }
+
+        @Override
+        public void setParent( MutableTreeNode newParent )
+        {
+            node.setParent( newParent );
         }
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class Renderer extends DefaultTreeCellRenderer
+    private static class Renderer implements TreeCellRenderer
     {
+        private final DefaultTreeCellRenderer renderer;
+
         public Renderer()
         {
+            this.renderer = new DefaultTreeCellRenderer();
         }
 
+        @Override
         public Component getTreeCellRendererComponent( JTree tree, Object value,
             boolean sel, boolean expanded, boolean leaf, int row,
             boolean hasFocus )
         {
-            super.getTreeCellRendererComponent( tree, value, sel, expanded,
+            renderer.getTreeCellRendererComponent( tree, value, sel, expanded,
                 leaf, row, hasFocus );
 
-            if( value instanceof FolderNode )
+            if( value instanceof DirectoryNode )
             {
-                FolderNode node = ( FolderNode )value;
+                DirectoryNode node = ( DirectoryNode )value;
 
-                setIcon( node.getIcon() );
+                renderer.setIcon( node.getIcon() );
             }
 
-            return this;
+            return renderer;
         }
     }
 
@@ -529,6 +622,9 @@ public class DirectoryTree implements IView<JTree>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class SelectionListener implements TreeSelectionListener
     {
         private final DirectoryTree dirTree;
@@ -559,9 +655,9 @@ public class DirectoryTree implements IView<JTree>
 
             for( TreePath path : paths )
             {
-                FolderNode node = ( FolderNode )path.getLastPathComponent();
+                DirectoryNode node = ( DirectoryNode )path.getLastPathComponent();
 
-                files.add( node.getFolder() );
+                files.add( node.getDirectory() );
             }
 
             dirTree.selectedListeners.fireListeners( dirTree, files );

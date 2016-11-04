@@ -23,6 +23,7 @@ public class GrowingScrollPane extends JScrollPane
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public Dimension getPreferredSize()
     {
         Dimension size = super.getPreferredSize();

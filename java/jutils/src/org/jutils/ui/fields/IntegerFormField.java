@@ -156,6 +156,7 @@ public class IntegerFormField implements IDataFormField<Integer>
     /***************************************************************************
      * @return
      **************************************************************************/
+    @Override
     public IValidationField getValidationField()
     {
         return textField.getField();
@@ -172,6 +173,7 @@ public class IntegerFormField implements IDataFormField<Integer>
     /***************************************************************************
      * @param editable
      **************************************************************************/
+    @Override
     public void setEditable( boolean editable )
     {
         textField.getField().setEditable( editable );

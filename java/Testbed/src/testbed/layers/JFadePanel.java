@@ -12,7 +12,7 @@ import javax.swing.*;
 import javax.swing.Timer;
 
 import org.jutils.ui.JGoodiesToolBar;
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
 /*******************************************************************************
@@ -255,6 +255,6 @@ public class JFadePanel extends JPanel
             }
         }
 
-        FrameApplication.invokeLater( new DemoRunner() );
+        FrameRunner.invokeLater( new DemoRunner() );
     }
 }

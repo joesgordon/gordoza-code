@@ -123,6 +123,7 @@ public class HexBytesFormField implements IDataFormField<byte []>
     /***************************************************************************
      * @return
      **************************************************************************/
+    @Override
     public IValidationField getValidationField()
     {
         return textField.getField();
@@ -139,6 +140,7 @@ public class HexBytesFormField implements IDataFormField<byte []>
     /***************************************************************************
      * @param editable
      **************************************************************************/
+    @Override
     public void setEditable( boolean editable )
     {
         textField.getField().setEditable( editable );

@@ -44,7 +44,6 @@ public class NotesPanel implements IView<JPanel>
     public void setData( IChangeRequest changeRequest )
     {
         // TODO Auto-generated method stub
-
     }
 
     /***************************************************************************

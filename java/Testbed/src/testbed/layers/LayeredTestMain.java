@@ -2,7 +2,7 @@ package testbed.layers;
 
 import javax.swing.JFrame;
 
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
 public class LayeredTestMain implements IFrameApp
@@ -26,6 +26,6 @@ public class LayeredTestMain implements IFrameApp
 
     public static void main( String[] args )
     {
-        FrameApplication.invokeLater( new LayeredTestMain() );
+        FrameRunner.invokeLater( new LayeredTestMain() );
     }
 }

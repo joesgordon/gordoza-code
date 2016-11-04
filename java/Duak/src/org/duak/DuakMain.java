@@ -1,11 +1,11 @@
 package org.duak;
 
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 
 public class DuakMain
 {
     public static void main( String [] args )
     {
-        FrameApplication.invokeLater( new DuakApp() );
+        FrameRunner.invokeLater( new DuakApp() );
     }
 }

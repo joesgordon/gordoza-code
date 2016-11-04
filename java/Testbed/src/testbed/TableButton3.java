@@ -29,6 +29,7 @@ public class TableButton3 extends JFrame
         {
             // Returning the Class of each column will allow different
             // renderers to be used based on Class
+            @Override
             public Class<?> getColumnClass( int column )
             {
                 return getValueAt( 0, column ).getClass();
@@ -48,6 +49,7 @@ public class TableButton3 extends JFrame
     {
         SwingUtilities.invokeLater( new Runnable()
         {
+            @Override
             public void run()
             {
                 try
@@ -94,6 +96,7 @@ public class TableButton3 extends JFrame
             columnModel.getColumn( column ).setCellEditor( this );
         }
 
+        @Override
         public Component getTableCellRendererComponent( JTable table,
             Object value, boolean isSelected, boolean hasFocus, int row,
             int column )
@@ -120,6 +123,7 @@ public class TableButton3 extends JFrame
             return renderButton;
         }
 
+        @Override
         public Component getTableCellEditorComponent( JTable table,
             Object value, boolean isSelected, int row, int column )
         {
@@ -128,11 +132,13 @@ public class TableButton3 extends JFrame
             return editButton;
         }
 
+        @Override
         public Object getCellEditorValue()
         {
             return text;
         }
 
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             fireEditingStopped();

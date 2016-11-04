@@ -202,6 +202,7 @@ public class McFrame extends JFrame
 
     private class BindListener implements ActionListener
     {
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             connect();
@@ -210,6 +211,7 @@ public class McFrame extends JFrame
 
     private class ClosingListener extends WindowAdapter
     {
+        @Override
         public void windowClosing( WindowEvent e )
         {
             if( commModel != null )

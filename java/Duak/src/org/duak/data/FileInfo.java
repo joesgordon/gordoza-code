@@ -133,6 +133,7 @@ public class FileInfo implements Comparable<FileInfo>
         return dirs;
     }
 
+    @Override
     public String toString()
     {
         return dir.getAbsolutePath();

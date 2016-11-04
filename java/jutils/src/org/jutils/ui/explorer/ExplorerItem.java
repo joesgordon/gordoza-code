@@ -18,5 +18,6 @@ public interface ExplorerItem
 
     public String getLastModified();
 
+    @Override
     public String toString();
 }

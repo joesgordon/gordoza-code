@@ -8,7 +8,7 @@ import javax.swing.*;
 
 import org.jutils.io.LogUtils;
 import org.jutils.ui.GradientButtonUI;
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
 public class ButtonTestFrame implements IFrameApp
@@ -80,7 +80,7 @@ public class ButtonTestFrame implements IFrameApp
         LogUtils.printDebug(
             "ButtonUI = " + UIManager.getDefaults().getString( "ButtonUI" ) );
 
-        FrameApplication.invokeLater( new ButtonTestFrame(), true,
+        FrameRunner.invokeLater( new ButtonTestFrame(), true,
             UIManager.getCrossPlatformLookAndFeelClassName() );
     }
 

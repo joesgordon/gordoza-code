@@ -207,6 +207,7 @@ public class PropertiesView implements IView<JPanel>
     {
         public IView<?> getView();
 
+        @Override
         public String toString();
     }
 
@@ -226,6 +227,7 @@ public class PropertiesView implements IView<JPanel>
             this.view = view;
         }
 
+        @Override
         public IView<?> getView()
         {
             if( view != null )

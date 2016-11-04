@@ -1,6 +1,6 @@
 package org.jutils.chart.app;
 
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 
 /*******************************************************************************
  * 
@@ -21,6 +21,6 @@ public class JChartAppMain
     {
         JChartApp runnable = new JChartApp();
 
-        FrameApplication.invokeLater( runnable );
+        FrameRunner.invokeLater( runnable );
     }
 }

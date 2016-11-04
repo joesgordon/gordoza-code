@@ -2,7 +2,7 @@ package testbed.slider;
 
 import javax.swing.JFrame;
 
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
 public class SliderTestMain implements IFrameApp
@@ -26,6 +26,6 @@ public class SliderTestMain implements IFrameApp
 
     public static void main( String[] args )
     {
-        FrameApplication.invokeLater( new SliderTestMain() );
+        FrameRunner.invokeLater( new SliderTestMain() );
     }
 }

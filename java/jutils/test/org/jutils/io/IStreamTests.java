@@ -558,21 +558,17 @@ public abstract class IStreamTests
                 {
                     return true;
                 }
-                else
+
+                if( obj instanceof MockObject )
                 {
-                    if( obj instanceof MockObject )
-                    {
-                        MockObject that = ( MockObject )obj;
-                        return i == that.i && b == that.b &&
-                            Math.abs( d - that.d ) < 0.00001 &&
-                            Math.abs( f - that.f ) < 0.00001f && c == that.c &&
-                            l == that.l;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    MockObject that = ( MockObject )obj;
+                    return i == that.i && b == that.b &&
+                        Math.abs( d - that.d ) < 0.00001 &&
+                        Math.abs( f - that.f ) < 0.00001f && c == that.c &&
+                        l == that.l;
                 }
+
+                return false;
             }
 
             return false;

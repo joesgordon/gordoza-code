@@ -156,6 +156,7 @@ public class McMessagesPanel extends JPanel
             vScrollBar = vert;
         }
 
+        @Override
         public void adjustmentValueChanged( AdjustmentEvent e )
         {
             if( vScrollBar.getMaximum() > lastMaxScrollPos )
@@ -168,6 +169,7 @@ public class McMessagesPanel extends JPanel
 
     private class MessageMouseListener extends MouseAdapter
     {
+        @Override
         public void mouseClicked( MouseEvent e )
         {
             if( e.getClickCount() == 2 )

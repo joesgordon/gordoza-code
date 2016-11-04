@@ -9,7 +9,7 @@ import javax.swing.*;
 
 import org.jutils.SwingUtils;
 import org.jutils.ui.PropEditPanel;
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
 public class PropEditUiMain implements IFrameApp
@@ -85,7 +85,7 @@ public class PropEditUiMain implements IFrameApp
         // UIManager.put( "ToolBar.background", stadBg );
         // UIManager.put( "OptionPane.background", stadBg );
 
-        FrameApplication.invokeLater( new PropEditUiMain(), true );
+        FrameRunner.invokeLater( new PropEditUiMain(), true );
     }
 
     private static class ShowMsgListener implements ActionListener

@@ -2,7 +2,7 @@ package chatterbox.messenger;
 
 import javax.swing.JFrame;
 
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
 import chatterbox.data.ChatConfig;
@@ -25,7 +25,7 @@ public class ChatterboxTestMain implements IFrameApp
      **************************************************************************/
     public static void main( String[] args )
     {
-        FrameApplication.invokeLater( new ChatterboxTestMain() );
+        FrameRunner.invokeLater( new ChatterboxTestMain() );
     }
 
     @Override

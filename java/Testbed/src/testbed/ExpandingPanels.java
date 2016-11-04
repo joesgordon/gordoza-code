@@ -20,6 +20,7 @@ public class ExpandingPanels extends MouseAdapter
         assemblePanels();
     }
 
+    @Override
     public void mousePressed( MouseEvent e )
     {
         ActionPanel ap = ( ActionPanel )e.getSource();
@@ -195,6 +196,7 @@ class ActionPanel extends JPanel
         repaint();
     }
 
+    @Override
     protected void paintComponent( Graphics g )
     {
         super.paintComponent( g );

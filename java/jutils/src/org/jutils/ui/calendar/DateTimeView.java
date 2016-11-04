@@ -8,7 +8,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.jutils.ui.SpinnerWheelListener;
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.event.updater.DataUpdaterList;
 import org.jutils.ui.event.updater.IUpdater;
@@ -191,6 +191,6 @@ public class DateTimeView implements IDataView<Calendar>
      **************************************************************************/
     public static void main( String [] args )
     {
-        FrameApplication.invokeLater( new DateTimeViewApp() );
+        FrameRunner.invokeLater( new DateTimeViewApp() );
     }
 }

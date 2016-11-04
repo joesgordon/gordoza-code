@@ -130,6 +130,7 @@ public class CalendarDialog extends JDialog
             okp = ok;
         }
 
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             okPressed = okp;

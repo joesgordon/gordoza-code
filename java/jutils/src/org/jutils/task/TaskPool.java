@@ -130,12 +130,9 @@ public class TaskPool
                     {
                         return;
                     }
-                    else
-                    {
-                        throw new RuntimeException(
-                            "Pool not excepting a task, but still running",
-                            ex );
-                    }
+
+                    throw new RuntimeException(
+                        "Pool not excepting a task, but still running", ex );
                 }
             }
             else

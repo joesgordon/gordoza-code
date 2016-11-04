@@ -92,6 +92,7 @@ public class StandardUncaughtExceptionHandler
      **************************************************************************/
     private static class QuitListener implements ActionListener
     {
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             System.exit( 1 );
@@ -110,6 +111,7 @@ public class StandardUncaughtExceptionHandler
             this.dialog = dialog;
         }
 
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             dialog.dispose();

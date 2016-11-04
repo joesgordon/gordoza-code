@@ -5,6 +5,9 @@ package org.jutils;
  ******************************************************************************/
 public class ValidationException extends Exception
 {
+    /**  */
+    private static final long serialVersionUID = 7317348765245800006L;
+
     /***************************************************************************
      * Creates a new exception with the provided message.
      * @param message the reason for the error.

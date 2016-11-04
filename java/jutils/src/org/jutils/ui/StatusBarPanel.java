@@ -241,6 +241,7 @@ public class StatusBarPanel
      **************************************************************************/
     private class ProgressFlasher extends Thread
     {
+        @Override
         public void run()
         {
             for( int i = 1; i < 101; i += 5 )
@@ -284,6 +285,7 @@ public class StatusBarPanel
      **************************************************************************/
     private class GarbageCollectionRunner extends GcThread
     {
+        @Override
         public void run()
         {
             super.run();
@@ -310,6 +312,7 @@ public class StatusBarPanel
             // }
         }
 
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             // robot.keyPress( KeyEvent.VK_PAUSE );
@@ -323,6 +326,7 @@ public class StatusBarPanel
      **************************************************************************/
     private class RefreshButtonListener implements ActionListener
     {
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             refreshStatus( true );
@@ -343,6 +347,7 @@ public class StatusBarPanel
      **************************************************************************/
     private class PromptForDelayListener implements ActionListener
     {
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             Frame frame = SwingUtils.getComponentsFrame(
@@ -372,6 +377,7 @@ public class StatusBarPanel
      **************************************************************************/
     private class RightClickMenuListener extends MouseAdapter
     {
+        @Override
         public void mouseClicked( MouseEvent e )
         {
             if( e.getButton() == MouseEvent.BUTTON3 )

@@ -106,6 +106,7 @@ public class HexPanel implements IView<JComponent>
     /***************************************************************************
      * @return
      **************************************************************************/
+    @Override
     public JComponent getView()
     {
         return panel;

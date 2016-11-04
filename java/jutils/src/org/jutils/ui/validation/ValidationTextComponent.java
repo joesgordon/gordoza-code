@@ -221,16 +221,19 @@ public class ValidationTextComponent<T extends JTextComponent>
             this.field = field;
         }
 
+        @Override
         public void removeUpdate( DocumentEvent e )
         {
             field.validateText();
         }
 
+        @Override
         public void insertUpdate( DocumentEvent e )
         {
             field.validateText();
         }
 
+        @Override
         public void changedUpdate( DocumentEvent e )
         {
             field.validateText();

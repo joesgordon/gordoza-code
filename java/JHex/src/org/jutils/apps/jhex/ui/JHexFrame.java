@@ -783,6 +783,7 @@ public class JHexFrame implements IView<JFrame>
             this.frame = view;
         }
 
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             frame.editor.jumpPrevious();
@@ -801,6 +802,7 @@ public class JHexFrame implements IView<JFrame>
             this.frame = view;
         }
 
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             frame.editor.jumpForward();
@@ -821,6 +823,7 @@ public class JHexFrame implements IView<JFrame>
             this.button = jtb;
         }
 
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             view.dataDialog.setVisible( button.isSelected() );
@@ -849,6 +852,7 @@ public class JHexFrame implements IView<JFrame>
             this.frame = view;
         }
 
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             frame.dataDialog.setVisible( false );

@@ -93,6 +93,7 @@ public class AltSplitPane extends JSplitPane
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public Border getBorder()
     {
         if( isBorderless() )
@@ -106,6 +107,7 @@ public class AltSplitPane extends JSplitPane
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public void updateUI()
     {
         super.updateUI();

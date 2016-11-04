@@ -5,7 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import org.jutils.ui.CollapsibleView;
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
 public class CollapsibleViewMain implements IFrameApp
@@ -82,6 +82,6 @@ public class CollapsibleViewMain implements IFrameApp
 
     public static void main( String[] args )
     {
-        FrameApplication.invokeLater( new CollapsibleViewMain() );
+        FrameRunner.invokeLater( new CollapsibleViewMain() );
     }
 }

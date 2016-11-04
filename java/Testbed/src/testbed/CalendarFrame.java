@@ -46,6 +46,7 @@ public class CalendarFrame extends JFrame
     {
         SwingUtilities.invokeLater( new Runnable()
         {
+            @Override
             public void run()
             {
                 try

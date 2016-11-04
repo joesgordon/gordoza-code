@@ -8,7 +8,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileSystemView;
-import javax.swing.table.DefaultTableCellRenderer;
 
 import org.jutils.*;
 import org.jutils.apps.summer.data.*;
@@ -22,6 +21,7 @@ import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
 import org.jutils.ui.fields.FileField;
 import org.jutils.ui.fields.IValidationField;
 import org.jutils.ui.model.*;
+import org.jutils.ui.model.LabelTableCellRenderer.ITableCellLabelDecorator;
 import org.jutils.ui.validation.IValidityChangedListener;
 import org.jutils.ui.validation.ValidityListenerList;
 import org.jutils.ui.validators.ExistenceType;
@@ -108,7 +108,8 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
         JScrollPane pane = new JScrollPane( table );
 
         table.getTableHeader().setReorderingAllowed( false );
-        table.setDefaultRenderer( String.class, new ChecksumRenderer( this ) );
+        table.setDefaultRenderer( String.class,
+            new LabelTableCellRenderer( new ChecksumRenderer( this ) ) );
         table.getSelectionModel().setSelectionMode(
             ListSelectionModel.SINGLE_SELECTION );
 
@@ -365,7 +366,8 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class ChecksumsTableModel implements ITableItemsConfig<SumFile>
+    private static class ChecksumsTableModel
+        implements ITableItemsConfig<SumFile>
     {
         private static final Class<?> [] CLASSES = { String.class,
             String.class };
@@ -468,7 +470,7 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class ChecksumRenderer extends DefaultTableCellRenderer
+    private static class ChecksumRenderer implements ITableCellLabelDecorator
     {
         private static final FileSystemView FILE_SYSTEM = FileSystemView.getFileSystemView();
 
@@ -483,34 +485,32 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
 
             this.view = view;
 
-            this.defaultFont = super.getFont();
+            this.defaultFont = UIManager.getFont( "label.font" );
             this.fixedFont = new Font( Font.MONOSPACED, Font.PLAIN, 12 );
-            this.defaultBackground = super.getBackground();
+            this.defaultBackground = UIManager.getColor( "label.background" );
         }
 
-        public Component getTableCellRendererComponent( JTable table,
-            Object value, boolean isSelected, boolean hasFocus, int row,
-            int column )
+        @Override
+        public void decorate( JLabel label, JTable table, Object value,
+            boolean isSelected, boolean hasFocus, int row, int col )
         {
-            Component comp = super.getTableCellRendererComponent( table, value,
-                isSelected, hasFocus, row, column );
 
             SumFile sum = view.tableModel.getItem( row );
             File commonPath = view.commonDirField.getData();
 
             Icon icon = null;
 
-            if( column == 0 )
+            if( col == 0 )
             {
-                setFont( fixedFont );
+                label.setFont( fixedFont );
             }
             else
             {
                 icon = FILE_SYSTEM.getSystemIcon( sum.file );
-                setFont( defaultFont );
+                label.setFont( defaultFont );
             }
 
-            setIcon( icon );
+            label.setIcon( icon );
 
             if( !isSelected )
             {
@@ -527,10 +527,8 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
                     }
                 }
 
-                setBackground( bg );
+                label.setBackground( bg );
             }
-
-            return comp;
         }
     }
 

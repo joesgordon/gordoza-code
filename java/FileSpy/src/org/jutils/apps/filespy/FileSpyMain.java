@@ -7,7 +7,7 @@ import org.jutils.io.IOUtils;
 import org.jutils.io.LogUtils;
 import org.jutils.io.options.IOptionsCreator;
 import org.jutils.io.options.OptionsSerializer;
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
 /*******************************************************************************
@@ -35,7 +35,7 @@ public class FileSpyMain
     public static void main( String [] args )
     {
         IFrameApp app = new FileSpyApp();
-        FrameApplication.invokeLater( app );
+        FrameRunner.invokeLater( app );
     }
 
     /***************************************************************************

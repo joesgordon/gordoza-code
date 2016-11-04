@@ -12,7 +12,7 @@ import javax.swing.*;
 import org.jutils.*;
 import org.jutils.io.IOUtils;
 import org.jutils.io.LogUtils;
-import org.jutils.ui.app.AppRunner;
+import org.jutils.ui.app.AppRunnable;
 import org.jutils.ui.app.IApplication;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
@@ -245,7 +245,7 @@ public class DirectoryChooser
             }
         };
 
-        SwingUtilities.invokeLater( new AppRunner( app ) );
+        SwingUtilities.invokeLater( new AppRunnable( app ) );
     }
 
     /***************************************************************************
@@ -310,6 +310,7 @@ public class DirectoryChooser
             this.chooser = dialog;
         }
 
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             chooser.dialog.dispose();
@@ -328,6 +329,7 @@ public class DirectoryChooser
             this.chooser = dialog;
         }
 
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             chooser.selected = chooser.tree.getSelected();

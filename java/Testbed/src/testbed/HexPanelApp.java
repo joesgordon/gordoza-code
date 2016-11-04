@@ -2,7 +2,7 @@ package testbed;
 
 import javax.swing.JFrame;
 
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.hex.ByteBuffer;
 import org.jutils.ui.hex.HexPanel;
@@ -53,6 +53,6 @@ public class HexPanelApp implements IFrameApp
      **************************************************************************/
     public static void main( String[] args )
     {
-        FrameApplication.invokeLater( new HexPanelApp() );
+        FrameRunner.invokeLater( new HexPanelApp() );
     }
 }

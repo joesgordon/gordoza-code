@@ -40,6 +40,7 @@ public class SearchTATester extends JFrame
     /***************************************************************************
      * @param vis boolean
      **************************************************************************/
+    @Override
     public void setVisible( boolean vis )
     {
         super.setVisible( vis );
@@ -63,6 +64,7 @@ public class SearchTATester extends JFrame
     {
         SwingUtilities.invokeLater( new Runnable()
         {
+            @Override
             public void run()
             {
                 try

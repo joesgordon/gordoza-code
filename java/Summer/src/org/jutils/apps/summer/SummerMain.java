@@ -25,7 +25,7 @@ public class SummerMain
         if( args.length == 0 )
         {
             IFrameApp app = new SummerApp();
-            FrameApplication.invokeLater( app );
+            FrameRunner.invokeLater( app );
         }
         else
         {

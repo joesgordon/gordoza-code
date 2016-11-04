@@ -10,7 +10,7 @@ import javax.swing.*;
 
 import org.jutils.*;
 import org.jutils.ui.*;
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.event.ActionAdapter;
 
@@ -27,7 +27,7 @@ public class ReverserView implements IFrameApp
         StandardFrameView frameView = new StandardFrameView();
         JToolBar toolbar = new JGoodiesToolBar();
         JFrame frame = frameView.getView();
-        JEditorPane textField = new AltEditorPane();
+        JEditorPane textField = new ScrollableEditorPaneView().getView();
         JScrollPane textPane = new JScrollPane( textField );
         Action reverseAction = new ActionAdapter(
             new ReverseAction( textField ), "Reverse",
@@ -53,7 +53,7 @@ public class ReverserView implements IFrameApp
 
     public static void main( String[] args )
     {
-        FrameApplication.invokeLater( new ReverserView() );
+        FrameRunner.invokeLater( new ReverserView() );
     }
 
     public class ReverseAction implements ActionListener

@@ -145,6 +145,7 @@ public class DoubleFormField implements IDataFormField<Double>
     /***************************************************************************
      * @return
      **************************************************************************/
+    @Override
     public IValidationField getValidationField()
     {
         return textField.getField();
@@ -153,6 +154,7 @@ public class DoubleFormField implements IDataFormField<Double>
     /***************************************************************************
      * @param editable
      **************************************************************************/
+    @Override
     public void setEditable( boolean editable )
     {
         textField.getField().setEditable( editable );
@@ -161,6 +163,7 @@ public class DoubleFormField implements IDataFormField<Double>
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public void setUpdater( IUpdater<Double> updater )
     {
         this.updater = updater;

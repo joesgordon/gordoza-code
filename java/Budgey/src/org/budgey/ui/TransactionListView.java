@@ -106,6 +106,7 @@ public class TransactionListView implements IView<Component>
             this.model = model;
         }
 
+        @Override
         public void mouseClicked( MouseEvent e )
         {
             if( !e.isPopupTrigger() && e.getClickCount() == 2 )

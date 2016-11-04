@@ -511,6 +511,7 @@ public class JExplorerFrame implements IView<JFrame>
             this.view = adaptee;
         }
 
+        @Override
         public void mouseClicked( MouseEvent e )
         {
             if( e.getClickCount() == 1 )
@@ -529,6 +530,7 @@ public class JExplorerFrame implements IView<JFrame>
             this.view = adaptee;
         }
 
+        @Override
         public void mouseClicked( MouseEvent e )
         {
             if( e.getClickCount() == 2 )

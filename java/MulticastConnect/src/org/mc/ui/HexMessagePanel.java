@@ -5,41 +5,52 @@ import java.util.Arrays;
 
 import javax.swing.*;
 
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.hex.ByteBuffer;
 import org.jutils.ui.hex.HexTable;
+import org.jutils.ui.model.IView;
 import org.mc.McMessage;
 
-public class HexMessagePanel extends JPanel
-    implements ListCellRenderer<McMessage>
+/*******************************************************************************
+ * 
+ ******************************************************************************/
+public class HexMessagePanel
+    implements IView<JPanel>, ListCellRenderer<McMessage>
 {
-    private JLabel addressLabel;
+    /**  */
+    private final JPanel view;
+    /**  */
+    private final JLabel addressLabel;
+    /**  */
+    private final JLabel addressField;
+    /**  */
+    private final HexTable contentsField;
+    /**  */
+    private final JLabel timeLabel;
+    /**  */
+    private final JLabel timeField;
+    /**  */
+    private final Color backgroundColor;
+    /**  */
+    private final Color foregroundColor;
+    /**  */
+    private final Color altBgColor;
 
-    private JLabel addressField;
-
-    private HexTable contentsField;
-
-    private JLabel timeLabel;
-
-    private JLabel timeField;
-
-    private Color backgroundColor;
-
-    private Color foregroundColor;
-
-    private Color altBgColor;
-
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public HexMessagePanel()
     {
-        timeLabel = new JLabel( "Date/Time:" );
-        timeField = new JLabel();
-        addressLabel = new JLabel( "Address:" );
-        addressField = new JLabel();
-        contentsField = new HexTable();
-        altBgColor = new Color( 0xeeeeee );
+        this.view = new JPanel();
+        this.timeLabel = new JLabel( "Date/Time:" );
+        this.timeField = new JLabel();
+        this.addressLabel = new JLabel( "Address:" );
+        this.addressField = new JLabel();
+        this.contentsField = new HexTable();
+        this.altBgColor = new Color( 0xeeeeee );
 
-        setLayout( new GridBagLayout() );
+        view.setLayout( new GridBagLayout() );
 
         // contentsField.setBorder( BorderFactory.createLineBorder( Color.red )
         // );
@@ -47,25 +58,25 @@ public class HexMessagePanel extends JPanel
         contentsField.setFocusable( false );
         contentsField.setCellSelectionEnabled( false );
 
-        add( addressLabel,
+        view.add( addressLabel,
             new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
                 GridBagConstraints.EAST, GridBagConstraints.NONE,
                 new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        add( addressField,
+        view.add( addressField,
             new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-        add( timeLabel,
+        view.add( timeLabel,
             new GridBagConstraints( 2, 1, 1, 1, 0.0, 0.0,
                 GridBagConstraints.EAST, GridBagConstraints.NONE,
                 new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        add( timeField,
+        view.add( timeField,
             new GridBagConstraints( 3, 1, 1, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-        add( contentsField,
+        view.add( contentsField,
             new GridBagConstraints( 0, 2, 4, 1, 1.0, 1.0,
                 GridBagConstraints.WEST, GridBagConstraints.BOTH,
                 new Insets( 2, 2, 2, 2 ), 0, 0 ) );
@@ -78,7 +89,7 @@ public class HexMessagePanel extends JPanel
         backgroundColor = Color.white;
         foregroundColor = contentsField.getForeground();
 
-        this.setOpaque( true );
+        view.setOpaque( true );
     }
 
     @Override
@@ -98,10 +109,10 @@ public class HexMessagePanel extends JPanel
         timeLabel.setForeground( fg );
         timeField.setForeground( fg );
 
-        this.setBackground( bg );
+        view.setBackground( bg );
         contentsField.setBackground( bg );
 
-        return this;
+        return view;
     }
 
     public void setMessage( McMessage msg )
@@ -118,7 +129,13 @@ public class HexMessagePanel extends JPanel
 
     public static void main( String[] args )
     {
-        FrameApplication.invokeLater( new HexMessageApp() );
+        FrameRunner.invokeLater( new HexMessageApp() );
+    }
+
+    @Override
+    public JPanel getView()
+    {
+        return view;
     }
 }
 
@@ -131,7 +148,7 @@ class HexMessageApp implements IFrameApp
 
         HexMessagePanel panel = new HexMessagePanel();
 
-        frame.setContentPane( panel );
+        frame.setContentPane( panel.getView() );
 
         frame.setSize( 600, 200 );
         frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );

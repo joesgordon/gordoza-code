@@ -7,7 +7,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.event.*;
 
@@ -171,7 +171,7 @@ public class PositionIndicator extends JComponent
 
         int unitCount = getUnitCount();
         int unitIdx = ( int )( posPc * unitCount );
-        long position = ( long )( unitIdx * unitLength );
+        long position = unitIdx * unitLength;
 
         return position;
     }
@@ -208,7 +208,7 @@ public class PositionIndicator extends JComponent
 
         long off = dragOffset == null ? offset : dragOffset;
         int unitCount = getUnitCount();
-        int unitIndex = ( int )( ( double )unitCount * off / ( double )length );
+        int unitIndex = ( int )( ( double )unitCount * off / length );
 
         int x = 0;
         int y = 1;
@@ -323,7 +323,7 @@ public class PositionIndicator extends JComponent
 
     public static void main( String [] args )
     {
-        FrameApplication.invokeLater( new IFrameApp()
+        FrameRunner.invokeLater( new IFrameApp()
         {
             @Override
             public void finalizeGui()

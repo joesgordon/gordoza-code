@@ -126,11 +126,13 @@ public class SeriesDataView implements IDataView<ISeriesData<?>>
             return 3;
         }
 
+        @Override
         public Class<?> getColumnClass( int columnIndex )
         {
             return Double.class;
         }
 
+        @Override
         public String getColumnName( int col )
         {
             switch( col )

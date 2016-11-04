@@ -32,6 +32,7 @@ public class DefaultExplorerItem implements ExplorerItem
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public String getFilename()
     {
         return file.getName();
@@ -40,6 +41,7 @@ public class DefaultExplorerItem implements ExplorerItem
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public String getLastModified()
     {
         Date d = new Date( file.lastModified() );
@@ -49,6 +51,7 @@ public class DefaultExplorerItem implements ExplorerItem
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public String getParentPath()
     {
         File parent = file.getParentFile();
@@ -58,6 +61,7 @@ public class DefaultExplorerItem implements ExplorerItem
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public long getSizeInKb()
     {
         long len = file.length() / 1024;
@@ -67,6 +71,7 @@ public class DefaultExplorerItem implements ExplorerItem
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public String getType()
     {
         String desc = FILE_SYSTEM_VIEW.getSystemTypeDescription( file );
@@ -115,6 +120,7 @@ public class DefaultExplorerItem implements ExplorerItem
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public String getSystemName()
     {
         if( systemName == null )
@@ -127,6 +133,7 @@ public class DefaultExplorerItem implements ExplorerItem
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public File getFile()
     {
         return file;
@@ -135,6 +142,7 @@ public class DefaultExplorerItem implements ExplorerItem
     /***************************************************************************
      * @return String
      **************************************************************************/
+    @Override
     public String toString()
     {
         return getSystemName();

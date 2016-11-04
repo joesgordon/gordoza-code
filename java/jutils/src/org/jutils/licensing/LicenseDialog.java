@@ -6,48 +6,46 @@ import java.io.IOException;
 import java.net.URL;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicTabbedPaneUI;
 
 import org.jutils.ResourceLoader;
-import org.jutils.ui.AltEditorPane;
-
-import com.jgoodies.looks.Options;
+import org.jutils.ui.ScrollableEditorPaneView;
+import org.jutils.ui.app.AppRunner;
+import org.jutils.ui.app.IApplication;
+import org.jutils.ui.model.IView;
 
 /***************************************************************************
- * @author jgordon
+ * 
  **************************************************************************/
-public class LicenseDialog extends JDialog
+public class LicenseDialog implements IView<JDialog>
 {
     /**  */
     private static final String LICENSE_FORMS = "jgoodiesFormsLicense.html";
-
     /**  */
     private static final String LICENSE_LOOKS = "jgoodiesLooksLicense.html";
-
     /**  */
     private static final String LICENSE_XPP3 = "xpp3License.html";
-
     /**  */
     private static final String LICENSE_XSTREAM = "xstreamLicense.html";
-
     /**  */
     private static final String LICENSE_OPENICON = "openIconLibraryLicense.html";
-
     /**  */
     private static final String LICENSE_FARMFRESH = "farmFreshWebIconsLicense.html";
-
     /**  */
     private static final String LICENSE_CRYSTALCLEAR = "crystalClearLicense.html";
 
     /**  */
-    private JTabbedPane tabbedPane = new JTabbedPane();
+    private final JDialog dialog;
+    /**  */
+    private final JTabbedPane tabbedPane;
 
     /***************************************************************************
      * @param owner
      **************************************************************************/
     public LicenseDialog( Frame owner )
     {
-        super( owner, true );
+        this.dialog = new JDialog( owner, true );
+        this.tabbedPane = new JTabbedPane();
+
         ResourceLoader loader = new ResourceLoader( getClass(), "./" );
 
         LicensePanel jgFormsPanel = new LicensePanel(
@@ -65,20 +63,20 @@ public class LicenseDialog extends JDialog
         LicensePanel openIconPanel = new LicensePanel(
             loader.getUrl( LICENSE_OPENICON ) );
 
-        this.setLayout( new BorderLayout() );
+        dialog.setLayout( new BorderLayout() );
 
-        this.add( tabbedPane, BorderLayout.CENTER );
+        dialog.add( tabbedPane, BorderLayout.CENTER );
 
-        tabbedPane.addTab( "JGoodies Forms", jgFormsPanel );
-        tabbedPane.addTab( "JGoodies Looks", jgLooksPanel );
-        tabbedPane.addTab( "XPP3", xpp3Panel );
-        tabbedPane.addTab( "XStream", xstreamPanel );
-        tabbedPane.addTab( "Crystal Clear Icons", crystalClearPanel );
-        tabbedPane.addTab( "Farm-Fresh Web Icons", farmFreshPanel );
-        tabbedPane.addTab( "Open Icon Library", openIconPanel );
+        tabbedPane.addTab( "JGoodies Forms", jgFormsPanel.getView() );
+        tabbedPane.addTab( "JGoodies Looks", jgLooksPanel.getView() );
+        tabbedPane.addTab( "XPP3", xpp3Panel.getView() );
+        tabbedPane.addTab( "XStream", xstreamPanel.getView() );
+        tabbedPane.addTab( "Crystal Clear Icons", crystalClearPanel.getView() );
+        tabbedPane.addTab( "Farm-Fresh Web Icons", farmFreshPanel.getView() );
+        tabbedPane.addTab( "Open Icon Library", openIconPanel.getView() );
 
-        this.setTitle( "License Information" );
-        this.setSize( 400, 400 );
+        dialog.setTitle( "License Information" );
+        dialog.setSize( 400, 400 );
     }
 
     /***************************************************************************
@@ -86,61 +84,77 @@ public class LicenseDialog extends JDialog
      **************************************************************************/
     public static void main( String [] args )
     {
-        SwingUtilities.invokeLater( new Runnable()
+        AppRunner.invokeLater( new IApplication()
         {
-            public void run()
+            @Override
+            public String getLookAndFeelName()
             {
-                try
-                {
-                    UIManager.setLookAndFeel( Options.PLASTICXP_NAME );
-                    UIManager.put( "TabbedPaneUI",
-                        BasicTabbedPaneUI.class.getCanonicalName() );
-                }
-                catch( Exception e )
-                {
-                    e.printStackTrace();
-                }
+                return null;
+            }
 
+            @Override
+            public void createAndShowUi()
+            {
                 LicenseDialog d = new LicenseDialog( null );
 
-                d.setDefaultCloseOperation( JDialog.EXIT_ON_CLOSE );
+                d.dialog.setDefaultCloseOperation( JDialog.EXIT_ON_CLOSE );
 
-                d.validate();
-                d.setLocationRelativeTo( null );
-                d.setVisible( true );
+                d.dialog.validate();
+                d.dialog.setLocationRelativeTo( null );
+                d.dialog.setVisible( true );
             }
         } );
     }
-}
 
-class LicensePanel extends JPanel
-{
-    private AltEditorPane editorPane = new AltEditorPane();
-
-    private JScrollPane scrollPane = new JScrollPane( editorPane );
-
-    public LicensePanel( URL pageUrl )
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public JDialog getView()
     {
-        this.setLayout( new BorderLayout() );
+        return dialog;
+    }
 
-        editorPane.setContentType( "text/html" );
-        if( pageUrl != null )
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static final class LicensePanel implements IView<JPanel>
+    {
+        private final JPanel panel;
+        private final ScrollableEditorPaneView editorPane;
+        private final JScrollPane scrollPane;
+
+        public LicensePanel( URL pageUrl )
         {
-            try
+            this.panel = new JPanel( new BorderLayout() );
+            this.editorPane = new ScrollableEditorPaneView();
+            this.scrollPane = new JScrollPane( editorPane.getView() );
+
+            editorPane.setContentType( "text/html" );
+            if( pageUrl != null )
             {
-                editorPane.setPage( pageUrl );
+                try
+                {
+                    editorPane.setPage( pageUrl );
+                }
+                catch( IOException e )
+                {
+                    throw new IllegalArgumentException(
+                        pageUrl.getFile() + " not found!" );
+                }
             }
-            catch( IOException e )
+            else
             {
-                throw new IllegalArgumentException(
-                    pageUrl.getFile() + " not found!" );
+                editorPane.setText( "<html>null url</html>" );
             }
-        }
-        else
-        {
-            editorPane.setText( "<html>null url</html>" );
+
+            panel.add( scrollPane, BorderLayout.CENTER );
         }
 
-        this.add( scrollPane, BorderLayout.CENTER );
+        @Override
+        public JPanel getView()
+        {
+            return panel;
+        }
     }
 }

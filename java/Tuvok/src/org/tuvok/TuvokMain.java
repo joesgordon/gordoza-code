@@ -1,6 +1,6 @@
 package org.tuvok;
 
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 
 /*******************************************************************************
  *
@@ -19,6 +19,6 @@ public final class TuvokMain
      **************************************************************************/
     public static void main( String [] args )
     {
-        FrameApplication.invokeLater( new TuvokApp() );
+        FrameRunner.invokeLater( new TuvokApp() );
     }
 }

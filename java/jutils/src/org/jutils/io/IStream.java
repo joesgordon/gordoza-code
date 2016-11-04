@@ -76,6 +76,7 @@ public interface IStream extends Closeable
      * cannot be reopened.
      * @throws IOException If an I/O error occurs.
      **************************************************************************/
+    @Override
     public void close() throws IOException;
 
     /***************************************************************************

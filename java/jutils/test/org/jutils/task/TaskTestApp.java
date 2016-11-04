@@ -10,7 +10,7 @@ import org.jutils.SwingUtils;
 import org.jutils.io.LogUtils;
 import org.jutils.ui.JGoodiesToolBar;
 import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.event.ActionAdapter;
 
@@ -62,7 +62,7 @@ public class TaskTestApp implements IFrameApp
 
     public static void main( String [] args )
     {
-        FrameApplication.invokeLater( new TaskTestApp() );
+        FrameRunner.invokeLater( new TaskTestApp() );
     }
 
     private static class GoListener implements ActionListener

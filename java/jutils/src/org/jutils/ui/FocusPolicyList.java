@@ -2,6 +2,8 @@ package org.jutils.ui;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /*******************************************************************************
  *
@@ -9,20 +11,29 @@ import java.util.ArrayList;
 public class FocusPolicyList extends FocusTraversalPolicy
 {
     /**  */
-    private final ArrayList<Component> order;
+    private final List<Component> order;
 
     /***************************************************************************
      * @param order
      **************************************************************************/
-    public FocusPolicyList( ArrayList<? extends Component> order )
+    public FocusPolicyList( List<? extends Component> order )
     {
         this.order = new ArrayList<Component>( order.size() );
         this.order.addAll( order );
     }
 
     /***************************************************************************
+     * @param order
+     **************************************************************************/
+    public FocusPolicyList( Component... order )
+    {
+        this( Arrays.asList( order ) );
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public Component getComponentAfter( Container focusCycleRoot,
         Component aComponent )
     {
@@ -33,6 +44,7 @@ public class FocusPolicyList extends FocusTraversalPolicy
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public Component getComponentBefore( Container focusCycleRoot,
         Component aComponent )
     {
@@ -47,6 +59,7 @@ public class FocusPolicyList extends FocusTraversalPolicy
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public Component getDefaultComponent( Container focusCycleRoot )
     {
         return order.get( 0 );
@@ -55,6 +68,7 @@ public class FocusPolicyList extends FocusTraversalPolicy
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public Component getLastComponent( Container focusCycleRoot )
     {
         return order.get( order.size() - 1 );
@@ -63,6 +77,7 @@ public class FocusPolicyList extends FocusTraversalPolicy
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public Component getFirstComponent( Container focusCycleRoot )
     {
         return order.get( 0 );

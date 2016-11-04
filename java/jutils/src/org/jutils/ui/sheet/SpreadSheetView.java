@@ -256,6 +256,7 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
             super.fireContentsChanged( this, 0, count );
         }
 
+        @Override
         public String getElementAt( int index )
         {
             return view.model.getData().getRowHeader( index );

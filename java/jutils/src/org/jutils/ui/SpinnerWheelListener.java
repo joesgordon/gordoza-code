@@ -25,6 +25,7 @@ public class SpinnerWheelListener implements MouseWheelListener
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public void mouseWheelMoved( MouseWheelEvent e )
     {
         SpinnerModel model = spinner.getModel();

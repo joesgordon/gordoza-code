@@ -125,6 +125,7 @@ public class AppGalleryView implements IComponentView
             this.list = list;
         }
 
+        @Override
         public void mouseClicked( MouseEvent e )
         {
             if( !SwingUtilities.isRightMouseButton( e ) &&

@@ -260,6 +260,7 @@ public class McConfigurationPanel extends JPanel
             return nic;
         }
 
+        @Override
         public String toString()
         {
             return nic.getDisplayName();

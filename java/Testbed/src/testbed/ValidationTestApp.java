@@ -9,7 +9,7 @@ import org.jutils.SwingUtils;
 import org.jutils.ValidationException;
 import org.jutils.ui.ExitListener;
 import org.jutils.ui.StandardFormView;
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.fields.ValidationTextField;
 import org.jutils.ui.validation.AggregateValidityChangedManager;
@@ -23,7 +23,7 @@ public class ValidationTestApp implements IFrameApp
      **************************************************************************/
     public static void main( String[] args )
     {
-        FrameApplication.invokeLater( new ValidationTestApp() );
+        FrameRunner.invokeLater( new ValidationTestApp() );
     }
 
     /***************************************************************************
@@ -182,6 +182,7 @@ public class ValidationTestApp implements IFrameApp
             this.max = max;
         }
 
+        @Override
         public void validateText( String text ) throws ValidationException
         {
             int i = 0;

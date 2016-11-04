@@ -10,7 +10,7 @@ import org.jutils.*;
 import org.jutils.io.LogUtils;
 import org.jutils.ui.JGoodiesToolBar;
 import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.event.ActionAdapter;
 
@@ -31,7 +31,7 @@ public class Layer2dApp implements IFrameApp
         // laf = javax.swing.plaf.nimbus.NimbusLookAndFeel.class.getName();
         // laf = javax.swing.plaf.metal.MetalLookAndFeel.class.getName();
 
-        FrameApplication.invokeLater( new Layer2dApp(), true, laf );
+        FrameRunner.invokeLater( new Layer2dApp(), true, laf );
     }
 
     public static void main2( @SuppressWarnings( "unused") String [] args )

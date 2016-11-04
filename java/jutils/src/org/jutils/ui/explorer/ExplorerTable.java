@@ -129,11 +129,13 @@ class ExplorerTable_FocusLostAdapter implements FocusListener
         this.table = table;
     }
 
+    @Override
     public void focusGained( FocusEvent e )
     {
         ;
     }
 
+    @Override
     public void focusLost( FocusEvent e )
     {
         table.getSelectionModel().clearSelection();
@@ -150,6 +152,7 @@ class FilenameRenderer extends DefaultTableCellRenderer
         super();
     }
 
+    @Override
     public void setValue( Object value )
     {
         super.setValue( value );

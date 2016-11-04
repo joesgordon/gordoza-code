@@ -100,6 +100,7 @@ public class SearchResultsHandler
             this.list = list;
         }
 
+        @Override
         public void run()
         {
             searchPanel.addRecords( list );
@@ -124,6 +125,7 @@ public class SearchResultsHandler
             this.record = record;
         }
 
+        @Override
         public void run()
         {
             searchPanel.addRecord( record );

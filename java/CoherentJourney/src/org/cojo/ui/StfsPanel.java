@@ -87,6 +87,7 @@ public class StfsPanel implements IView<JPanel>
         stfTable.getColumnModel().getColumn( 2 ).setPreferredWidth( 100 );
         stfTable.addMouseListener( new MouseAdapter()
         {
+            @Override
             public void mouseClicked( MouseEvent e )
             {
                 if( e.getClickCount() == 2 )

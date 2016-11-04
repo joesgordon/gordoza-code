@@ -46,7 +46,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
 /**
@@ -60,7 +60,7 @@ public class TreeTableMain implements IFrameApp
 {
     public static void main( String[] args )
     {
-        FrameApplication.invokeLater( new TreeTableMain() );
+        FrameRunner.invokeLater( new TreeTableMain() );
     }
 
     @Override
@@ -71,6 +71,7 @@ public class TreeTableMain implements IFrameApp
 
         frame.addWindowListener( new WindowAdapter()
         {
+            @Override
             public void windowClosing( WindowEvent we )
             {
                 System.exit( 0 );

@@ -10,11 +10,13 @@ public class ShadowBorder extends AbstractBorder
 
     private static final Insets INSETS = new Insets( 1, 1, 3, 3 );
 
+    @Override
     public Insets getBorderInsets( Component c )
     {
         return INSETS;
     }
 
+    @Override
     public void paintBorder( Component c, Graphics g, int x, int y, int w,
         int h )
     {

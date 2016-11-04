@@ -466,6 +466,7 @@ public class CalendarPanel implements IDataView<Long>
             this.calPanel = adaptee;
         }
 
+        @Override
         public void keyPressed( KeyEvent e )
         {
             Calendar cal = null;
@@ -513,6 +514,7 @@ public class CalendarPanel implements IDataView<Long>
             this.calPanel = adaptee;
         }
 
+        @Override
         public void stateChanged( ChangeEvent e )
         {
             calPanel.updateFromSpinners();
@@ -531,6 +533,7 @@ public class CalendarPanel implements IDataView<Long>
             this.calPanel = adaptee;
         }
 
+        @Override
         public void stateChanged( ChangeEvent e )
         {
             calPanel.updateFromSpinners();
@@ -549,6 +552,7 @@ public class CalendarPanel implements IDataView<Long>
             this.adaptee = adaptee;
         }
 
+        @Override
         public void mouseClicked( MouseEvent e )
         {
             DayLabel newCurrent = ( DayLabel )e.getComponent();

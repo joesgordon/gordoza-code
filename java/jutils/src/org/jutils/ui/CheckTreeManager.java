@@ -15,13 +15,13 @@ import javax.swing.tree.TreePath;
 public class CheckTreeManager implements TreeSelectionListener
 {
     /**  */
-    private CheckTreeSelectionModel selectionModel;
+    private final CheckTreeSelectionModel selectionModel;
 
     /**  */
-    private JTree tree = new JTree();
+    private final JTree tree;
 
     /**  */
-    int hotspot = new JCheckBox().getPreferredSize().width;
+    private static final int HOTSPOT = new JCheckBox().getPreferredSize().width;
 
     /***************************************************************************
      * @param tree JTree
@@ -70,6 +70,7 @@ public class CheckTreeManager implements TreeSelectionListener
     /***************************************************************************
      * @param e TreeSelectionEvent
      **************************************************************************/
+    @Override
     public void valueChanged( TreeSelectionEvent e )
     {
         tree.treeDidChange();
@@ -88,7 +89,7 @@ public class CheckTreeManager implements TreeSelectionListener
             return null;
         }
 
-        if( e.getX() > tree.getPathBounds( path ).x + hotspot )
+        if( e.getX() > tree.getPathBounds( path ).x + HOTSPOT )
         {
             return null;
         }
@@ -111,6 +112,7 @@ class CheckTreeManager_mouseAdapter extends MouseAdapter
     /***************************************************************************
      * @param me MouseEvent
      **************************************************************************/
+    @Override
     public void mousePressed( MouseEvent e )
     {
         pressedPath = manager.getPath( e );
@@ -119,6 +121,7 @@ class CheckTreeManager_mouseAdapter extends MouseAdapter
     /***************************************************************************
      * @param me MouseEvent
      **************************************************************************/
+    @Override
     public void mouseReleased( MouseEvent e )
     {
         TreePath releasedPath = manager.getPath( e );

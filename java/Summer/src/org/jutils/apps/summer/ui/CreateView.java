@@ -12,7 +12,6 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileSystemView;
-import javax.swing.table.DefaultTableCellRenderer;
 
 import org.jutils.*;
 import org.jutils.apps.summer.data.*;
@@ -30,6 +29,7 @@ import org.jutils.ui.event.FileDropTarget.DropActionType;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
 import org.jutils.ui.fields.IValidationField;
 import org.jutils.ui.model.*;
+import org.jutils.ui.model.LabelTableCellRenderer.ITableCellLabelDecorator;
 import org.jutils.ui.validation.IValidityChangedListener;
 import org.jutils.ui.validation.ValidityListenerList;
 
@@ -201,7 +201,8 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
         table.getActionMap().put( "removeNode", deleteAction );
 
         table.getTableHeader().setReorderingAllowed( false );
-        table.setDefaultRenderer( String.class, new PathRenderer( this ) );
+        table.setDefaultRenderer( String.class,
+            new LabelTableCellRenderer( new PathRenderer( this ) ) );
         table.getSelectionModel().setSelectionMode(
             ListSelectionModel.SINGLE_SELECTION );
         table.setAutoResizeMode( JTable.AUTO_RESIZE_LAST_COLUMN );
@@ -588,7 +589,7 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class PathRenderer extends DefaultTableCellRenderer
+    private static class PathRenderer implements ITableCellLabelDecorator
     {
         private static final FileSystemView FILE_SYSTEM = FileSystemView.getFileSystemView();
 
@@ -599,29 +600,24 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
             this.view = view;
         }
 
-        public Component getTableCellRendererComponent( JTable table,
-            Object value, boolean isSelected, boolean hasFocus, int row,
-            int column )
+        @Override
+        public void decorate( JLabel label, JTable table, Object value,
+            boolean isSelected, boolean hasFocus, int row, int col )
         {
-            Component comp = super.getTableCellRendererComponent( table, value,
-                isSelected, hasFocus, row, column );
-
             Icon icon = null;
 
-            if( column == 0 )
+            if( col == 0 )
             {
                 SumFile sf = view.pathsModel.getItem( row );
                 icon = FILE_SYSTEM.getSystemIcon( sf.file );
-                setHorizontalAlignment( SwingConstants.LEFT );
+                label.setHorizontalAlignment( SwingConstants.LEFT );
             }
             else
             {
-                setHorizontalAlignment( SwingConstants.RIGHT );
+                label.setHorizontalAlignment( SwingConstants.RIGHT );
             }
 
-            setIcon( icon );
-
-            return comp;
+            label.setIcon( icon );
         }
     }
 

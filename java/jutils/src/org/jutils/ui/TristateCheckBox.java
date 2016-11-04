@@ -36,6 +36,7 @@ public class TristateCheckBox extends JCheckBox
         // Add a listener for when the mouse is pressed
         super.addMouseListener( new MouseAdapter()
         {
+            @Override
             public void mousePressed( MouseEvent e )
             {
                 grabFocus();
@@ -46,6 +47,7 @@ public class TristateCheckBox extends JCheckBox
         ActionMap map = new ActionMapUIResource();
         map.put( "pressed", new AbstractAction()
         {
+            @Override
             public void actionPerformed( ActionEvent e )
             {
                 grabFocus();
@@ -126,6 +128,7 @@ public class TristateCheckBox extends JCheckBox
     {
         SwingUtilities.invokeLater( new Runnable()
         {
+            @Override
             public void run()
             {
                 try
@@ -149,6 +152,7 @@ public class TristateCheckBox extends JCheckBox
                 trueButton.setText( "True" );
                 trueButton.addActionListener( new ActionListener()
                 {
+                    @Override
                     public void actionPerformed( ActionEvent e )
                     {
                         swingBox.setState( Boolean.TRUE );
@@ -159,6 +163,7 @@ public class TristateCheckBox extends JCheckBox
                 falseButton.setText( "False" );
                 falseButton.addActionListener( new ActionListener()
                 {
+                    @Override
                     public void actionPerformed( ActionEvent e )
                     {
                         swingBox.setState( Boolean.FALSE );
@@ -169,6 +174,7 @@ public class TristateCheckBox extends JCheckBox
                 kindaButton.setText( "Kinda" );
                 kindaButton.addActionListener( new ActionListener()
                 {
+                    @Override
                     public void actionPerformed( ActionEvent e )
                     {
                         swingBox.setState( null );

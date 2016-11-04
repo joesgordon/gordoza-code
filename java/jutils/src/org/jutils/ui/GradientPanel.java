@@ -39,6 +39,7 @@ public class GradientPanel extends JPanel
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public void setBackground( Color bg )
     {
         if( bg != null )

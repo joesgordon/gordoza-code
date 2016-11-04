@@ -19,6 +19,7 @@ public class JGoodiesMenuBar extends JMenuBar
             BorderStyle.SEPARATOR );
     }
 
+    @Override
     public JMenu add( JMenu m )
     {
         m.setMargin( new Insets( 0, 2, 0, 2 ) );

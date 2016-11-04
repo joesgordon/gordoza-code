@@ -14,7 +14,7 @@ import org.jutils.Utils;
 import org.jutils.concurrent.*;
 import org.jutils.ui.ColorIcon;
 import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.model.IView;
 import org.jutils.ui.model.LabelListCellRenderer;
@@ -233,7 +233,7 @@ public class ColorGenFrame implements IView<JFrame>
      **************************************************************************/
     public static final void main( String[] args )
     {
-        FrameApplication.invokeLater( new IFrameApp()
+        FrameRunner.invokeLater( new IFrameApp()
         {
             @Override
             public void finalizeGui()
@@ -356,6 +356,7 @@ public class ColorGenFrame implements IView<JFrame>
             return Double.compare( sumThis, sumThat );
         }
 
+        @Override
         public String toString()
         {
             return "RGB Log";
@@ -373,6 +374,7 @@ public class ColorGenFrame implements IView<JFrame>
             return Double.compare( gcThis.getRadius(), gcThat.getRadius() );
         }
 
+        @Override
         public String toString()
         {
             return "3D Distance";
@@ -395,6 +397,7 @@ public class ColorGenFrame implements IView<JFrame>
             return Double.compare( thisR.getRadius(), thatR.getRadius() );
         }
 
+        @Override
         public String toString()
         {
             return "Reverse 3D Distance";
@@ -421,6 +424,7 @@ public class ColorGenFrame implements IView<JFrame>
             return val;
         }
 
+        @Override
         public String toString()
         {
             return "R->G->B";
@@ -535,6 +539,7 @@ public class ColorGenFrame implements IView<JFrame>
         /***********************************************************************
          *
          **********************************************************************/
+        @Override
         public String toString()
         {
             return Utils.argsToString( x, y, z );

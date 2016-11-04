@@ -69,11 +69,13 @@ public class TreeTableModelAdapter extends AbstractTableModel
         {
             // Don't use fireTableRowsInserted() here;
             // the selection model would get updated twice.
+            @Override
             public void treeExpanded( TreeExpansionEvent event )
             {
                 fireTableDataChanged();
             }
 
+            @Override
             public void treeCollapsed( TreeExpansionEvent event )
             {
                 fireTableDataChanged();
@@ -83,21 +85,25 @@ public class TreeTableModelAdapter extends AbstractTableModel
 
     // Wrappers, implementing TableModel interface.
 
+    @Override
     public int getColumnCount()
     {
         return treeTableModel.getColumnCount();
     }
 
+    @Override
     public String getColumnName( int column )
     {
         return treeTableModel.getColumnName( column );
     }
 
+    @Override
     public Class<?> getColumnClass( int column )
     {
         return treeTableModel.getColumnClass( column );
     }
 
+    @Override
     public int getRowCount()
     {
         return tree.getRowCount();
@@ -109,16 +115,19 @@ public class TreeTableModelAdapter extends AbstractTableModel
         return treePath.getLastPathComponent();
     }
 
+    @Override
     public Object getValueAt( int row, int column )
     {
         return treeTableModel.getValueAt( nodeForRow( row ), column );
     }
 
+    @Override
     public boolean isCellEditable( int row, int column )
     {
         return treeTableModel.isCellEditable( nodeForRow( row ), column );
     }
 
+    @Override
     public void setValueAt( Object value, int row, int column )
     {
         treeTableModel.setValueAt( value, nodeForRow( row ), column );

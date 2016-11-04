@@ -8,7 +8,7 @@ import javax.swing.*;
 import org.jutils.apps.filespy.FileSpyMain;
 import org.jutils.apps.filespy.ui.SearchView;
 import org.jutils.ui.StatusBarPanel;
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
 public class LayeredPaneExample implements IFrameApp
@@ -59,6 +59,6 @@ public class LayeredPaneExample implements IFrameApp
 
     public static void main( String[] args )
     {
-        FrameApplication.invokeLater( new LayeredPaneExample() );
+        FrameRunner.invokeLater( new LayeredPaneExample() );
     }
 }
