@@ -165,4 +165,12 @@ public class StandardFrameView implements IView<JFrame>
     {
         frame.setDefaultCloseOperation( operation );
     }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public StatusBarPanel getStatusBar()
+    {
+        return statusBar;
+    }
 }

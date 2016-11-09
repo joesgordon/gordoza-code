@@ -10,7 +10,8 @@ public class SliderTestMain implements IFrameApp
     @Override
     public JFrame createFrame()
     {
-        SliderTestFrame frame = new SliderTestFrame();
+        SliderTestFrame view = new SliderTestFrame();
+        JFrame frame = view.getView();
 
         frame.setSize( 500, 500 );
         frame.setTitle( "Slider Tester" );

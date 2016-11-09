@@ -16,14 +16,14 @@ import org.jutils.io.LogUtils;
 public class SearchableTextArea extends JTextArea
 {
     /**  */
-    private GapContent content = new GapContent();
+    private static final long serialVersionUID = 6740337808674917935L;
 
+    /**  */
+    private GapContent content = new GapContent();
     /**  */
     private Document doc = new PlainDocument( content );
-
     /**  */
     private FindDialog findDialog = new FindDialog();
-
     /**  */
     private FindOptions lastOptions = null;
 

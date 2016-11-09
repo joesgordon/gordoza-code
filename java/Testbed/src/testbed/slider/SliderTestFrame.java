@@ -11,52 +11,57 @@ import org.jutils.apps.filespy.FileSpyMain;
 import org.jutils.apps.filespy.ui.RegexPanel;
 import org.jutils.apps.filespy.ui.SearchView;
 import org.jutils.ui.*;
+import org.jutils.ui.model.IView;
 
-public class SliderTestFrame extends JFrame
+/*******************************************************************************
+ * 
+ ******************************************************************************/
+public class SliderTestFrame implements IView<JFrame>
 {
-    private SliderPanel sliderPanel;
-    private JComboBox<Integer> comboBox;
-    private JButton lastButton;
-    private JButton nextButton;
+    /**  */
+    private final StandardFrameView view;
+    /**  */
+    private final SliderPanel sliderPanel;
+    /**  */
+    private final JComboBox<Integer> comboBox;
+    /**  */
+    private final JButton lastButton;
+    /**  */
+    private final JButton nextButton;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public SliderTestFrame()
     {
-        super();
+        this.view = new StandardFrameView();
+        this.sliderPanel = new SliderPanel();
+        this.comboBox = new JComboBox<>();
+        this.lastButton = new JButton();
+        this.nextButton = new JButton();
 
-        super.setContentPane( createContentPane() );
+        view.setToolbar( createToolBar() );
+        view.setContent( createSliderPanel( view.getStatusBar() ) );
         resetButtonStates();
-    }
-
-    private Container createContentPane()
-    {
-        JPanel contentPane = new JPanel( new BorderLayout() );
-        StatusBarPanel statusBar = new StatusBarPanel();
-
-        contentPane.add( createToolBar(), BorderLayout.NORTH );
-        contentPane.add( createSliderPanel( statusBar ), BorderLayout.CENTER );
-        contentPane.add( statusBar.getView(), BorderLayout.SOUTH );
-
-        return contentPane;
     }
 
     private JToolBar createToolBar()
     {
         JGoodiesToolBar toolbar = new JGoodiesToolBar();
 
-        lastButton = new JButton(
+        lastButton.setIcon(
             IconConstants.loader.getIcon( IconConstants.BACK_24 ) );
         lastButton.setFocusable( false );
         lastButton.addActionListener( new LastListener() );
         toolbar.add( lastButton );
 
-        nextButton = new JButton(
+        nextButton.setIcon(
             IconConstants.loader.getIcon( IconConstants.FORWARD_24 ) );
         nextButton.setFocusable( false );
         nextButton.addActionListener( new NextListener() );
         toolbar.add( nextButton );
 
         JComponent comboPanel = new JPanel( new GridBagLayout() );
-        comboBox = new JComboBox<Integer>();
         comboBox.addItem( new Integer( 0 ) );
         comboBox.addItem( new Integer( 1 ) );
         comboBox.addItem( new Integer( 2 ) );
@@ -78,10 +83,8 @@ public class SliderTestFrame extends JFrame
         return toolbar;
     }
 
-    private Component createSliderPanel( StatusBarPanel statusBar )
+    private JComponent createSliderPanel( StatusBarPanel statusBar )
     {
-        sliderPanel = new SliderPanel();
-
         sliderPanel.addPanel( createPanel1() );
         sliderPanel.addPanel( createPanel2() );
         sliderPanel.addPanel( createPanel3( statusBar ) );
@@ -122,6 +125,9 @@ public class SliderTestFrame extends JFrame
         return new RegexPanel().getView();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private void resetButtonStates()
     {
         lastButton.setEnabled( sliderPanel.canMoveBackward() );
@@ -129,6 +135,18 @@ public class SliderTestFrame extends JFrame
         comboBox.setSelectedIndex( sliderPanel.getCurrentPanel() );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public JFrame getView()
+    {
+        return view.getView();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private class ComboListener implements ActionListener
     {
         @Override
@@ -142,6 +160,9 @@ public class SliderTestFrame extends JFrame
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private class LastListener implements ActionListener
     {
         @Override
@@ -152,6 +173,9 @@ public class SliderTestFrame extends JFrame
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private class NextListener implements ActionListener
     {
         @Override

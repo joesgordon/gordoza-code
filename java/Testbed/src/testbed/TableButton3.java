@@ -9,8 +9,8 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 import org.jutils.io.LogUtils;
-
-import com.jgoodies.looks.Options;
+import org.jutils.ui.app.FrameRunner;
+import org.jutils.ui.app.IFrameApp;
 
 public class TableButton3 extends JFrame
 {
@@ -47,25 +47,20 @@ public class TableButton3 extends JFrame
 
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new Runnable()
+        FrameRunner.invokeLater( new IFrameApp()
         {
             @Override
-            public void run()
+            public void finalizeGui()
             {
-                try
-                {
-                    UIManager.setLookAndFeel(
-                        "com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel" );
-                    Options.setSelectOnFocusGainEnabled( true );
-                }
-                catch( Exception ex )
-                {
-                    ex.printStackTrace();
-                }
+            }
+
+            @Override
+            public JFrame createFrame()
+            {
                 TableButton3 frame = new TableButton3();
                 frame.setDefaultCloseOperation( EXIT_ON_CLOSE );
-                frame.pack();
-                frame.setVisible( true );
+
+                return frame;
             }
         } );
     }

@@ -8,8 +8,17 @@ import javax.swing.JMenuBar;
 import com.jgoodies.looks.*;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class JGoodiesMenuBar extends JMenuBar
 {
+    /**  */
+    private static final long serialVersionUID = 8189054776662737860L;
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public JGoodiesMenuBar()
     {
         super();
@@ -19,6 +28,9 @@ public class JGoodiesMenuBar extends JMenuBar
             BorderStyle.SEPARATOR );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public JMenu add( JMenu m )
     {

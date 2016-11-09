@@ -241,6 +241,15 @@ public class FindDialog implements IView<JDialog>
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
+    public JDialog getView()
+    {
+        return dialog;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class CancelListener implements ActionListener
     {
         private FindDialog adaptee;
@@ -274,12 +283,5 @@ public class FindDialog implements IView<JDialog>
         {
             adaptee.findText();
         }
-    }
-
-    @Override
-    public JDialog getView()
-    {
-        // TODO Auto-generated method stub
-        return null;
     }
 }
