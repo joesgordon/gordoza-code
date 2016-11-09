@@ -37,7 +37,9 @@ public class DefaultOptionsCreatorTest
     {
         try
         {
-            new DefaultOptionsCreator<>( ObjectWithCopyConstructor.class );
+            @SuppressWarnings( "unused")
+            DefaultOptionsCreator<ObjectWithCopyConstructor> doc = new DefaultOptionsCreator<>(
+                ObjectWithCopyConstructor.class );
             Assert.fail(
                 "An object with no default constructor should not be supported." );
         }

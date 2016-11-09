@@ -1,6 +1,6 @@
 package chatterbox;
 
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 
 import chatterbox.data.ChatUser;
 import chatterbox.messenger.Chat;
@@ -27,6 +27,6 @@ public class ChatterboxMain
             user = ChatterboxConstants.createDefaultUser();
         }
 
-        FrameApplication.invokeLater( new ChatterboxApp( new Chat( user ) ) );
+        FrameRunner.invokeLater( new ChatterboxApp( new Chat( user ) ) );
     }
 }

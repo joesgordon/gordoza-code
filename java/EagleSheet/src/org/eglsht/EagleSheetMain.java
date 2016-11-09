@@ -1,6 +1,6 @@
 package org.eglsht;
 
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 
 /*******************************************************************************
  * 
@@ -12,6 +12,6 @@ public class EagleSheetMain
      **************************************************************************/
     public static void main( String [] args )
     {
-        FrameApplication.invokeLater( new EagleSheetApp() );
+        FrameRunner.invokeLater( new EagleSheetApp() );
     }
 }

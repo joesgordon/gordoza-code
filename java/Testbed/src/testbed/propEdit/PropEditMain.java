@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 import javax.swing.*;
 
 import org.jutils.io.LogUtils;
-import org.jutils.ui.app.AppRunner;
+import org.jutils.ui.app.AppRunnable;
 import org.jutils.ui.app.IApplication;
 
 public class PropEditMain
@@ -30,7 +30,7 @@ public class PropEditMain
             }
         };
 
-        AppRunner appr = new AppRunner( app );
+        AppRunnable appr = new AppRunnable( app );
         SwingUtilities.invokeLater( appr );
     }
 

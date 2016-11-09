@@ -72,6 +72,7 @@ public class SearchRecord implements ExplorerItem
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public File getFile()
     {
         return file.getAbsoluteFile();
@@ -96,6 +97,7 @@ public class SearchRecord implements ExplorerItem
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public String getFilename()
     {
         return filename;
@@ -104,6 +106,7 @@ public class SearchRecord implements ExplorerItem
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public String getLastModified()
     {
         return lastModified;
@@ -112,6 +115,7 @@ public class SearchRecord implements ExplorerItem
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public String getParentPath()
     {
         return parentPath;
@@ -120,6 +124,7 @@ public class SearchRecord implements ExplorerItem
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public long getSizeInKb()
     {
         return size;
@@ -128,6 +133,7 @@ public class SearchRecord implements ExplorerItem
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public String getType()
     {
         return type != null ? type : "?";
@@ -136,6 +142,7 @@ public class SearchRecord implements ExplorerItem
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public String getSystemName()
     {
         return systemName;
@@ -144,6 +151,7 @@ public class SearchRecord implements ExplorerItem
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public String toString()
     {
         return getSystemName();

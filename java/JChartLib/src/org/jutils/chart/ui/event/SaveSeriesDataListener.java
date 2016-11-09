@@ -112,18 +112,17 @@ public class SaveSeriesDataListener implements IFileSelectionListener
     public static void saveFile( Series s, File fromFile, File toFile )
         throws FileNotFoundException, IOException
     {
-        FilteredWriter fw = new FilteredWriter();
         OptionsSerializer<UserData> options = JChartAppConstants.getOptions();
 
         options.getOptions().lastDataFile = toFile;
 
         if( fromFile == null )
         {
-            fw.write( toFile, s.data );
+            FilteredWriter.write( toFile, s.data );
         }
         else
         {
-            fw.write( fromFile, toFile, s.data );
+            FilteredWriter.write( fromFile, toFile, s.data );
         }
     }
 }

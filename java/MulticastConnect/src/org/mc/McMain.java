@@ -2,7 +2,7 @@ package org.mc;
 
 import javax.swing.JFrame;
 
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 import org.mc.ui.McFrame;
 
@@ -16,7 +16,7 @@ public class McMain implements IFrameApp
      **************************************************************************/
     public static void main( String[] args )
     {
-        FrameApplication.invokeLater( new McMain() );
+        FrameRunner.invokeLater( new McMain() );
     }
 
     /***************************************************************************

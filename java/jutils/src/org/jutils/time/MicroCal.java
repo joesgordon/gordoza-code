@@ -371,7 +371,7 @@ public class MicroCal
         gc.set( 1980, Calendar.JANUARY, 6 );
 
         long ms = calendar.getTimeInMillis() - gc.getTimeInMillis();
-        long week = ( long )( ms / TimeUtils.MILLIS_IN_WEEK );
+        long week = ms / TimeUtils.MILLIS_IN_WEEK;
 
         return ( int )( week );
     }

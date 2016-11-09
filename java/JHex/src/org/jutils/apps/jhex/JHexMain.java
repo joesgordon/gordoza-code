@@ -5,7 +5,7 @@ import java.io.File;
 import org.jutils.apps.jhex.data.JHexOptions;
 import org.jutils.io.IOUtils;
 import org.jutils.io.options.OptionsSerializer;
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 
 /*******************************************************************************
  * 
@@ -44,7 +44,7 @@ public class JHexMain
         }
 
         JHexApp hexApp = new JHexApp( file );
-        FrameApplication.invokeLater( hexApp );
+        FrameRunner.invokeLater( hexApp );
     }
 
     /***************************************************************************

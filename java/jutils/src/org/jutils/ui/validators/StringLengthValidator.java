@@ -66,11 +66,9 @@ public class StringLengthValidator implements IDataValidator<String>
                 throw new ValidationException( "Must be between " + min +
                     " and " + maxLength + " characters." );
             }
-            else
-            {
-                throw new ValidationException(
-                    "Must be at least " + minLength + " characters." );
-            }
+
+            throw new ValidationException(
+                "Must be at least " + minLength + " characters." );
         }
 
         return text;

@@ -4,9 +4,9 @@ import java.util.Date;
 
 import org.budgey.data.Money;
 import org.budgey.data.Transaction;
-import org.jutils.ui.model.ITableConfig;
+import org.jutils.ui.model.ITableItemsConfig;
 
-public class TransactionTableModel implements ITableConfig<Transaction>
+public class TransactionTableModel implements ITableItemsConfig<Transaction>
 {
     private static final String [] COLUMN_NAMES = { "Date", "Location",
         "Amount", "Balance", "Tags" };

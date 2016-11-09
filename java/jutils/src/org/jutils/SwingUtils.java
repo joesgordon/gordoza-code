@@ -4,8 +4,12 @@ import java.awt.*;
 import java.awt.Dialog.ModalityType;
 import java.awt.event.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.*;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import org.jutils.io.XStreamUtils;
 import org.jutils.ui.StatusBarPanel;
@@ -55,14 +59,16 @@ public final class SwingUtils
     private static void installEscapeCloseOperation( Window win,
         JRootPane rootPane )
     {
-        CloseAction dispatchClosing = new CloseAction( win );
+        CloseActionListener closeListener = new CloseActionListener( win );
+        Action closeAction = new ActionAdapter( closeListener, "Close Action",
+            null );
         String mapKey = "com.spodding.tackline.dispatch:WINDOW_CLOSING";
         KeyStroke escapeStroke = KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE,
             0 );
 
         rootPane.getInputMap( JComponent.WHEN_IN_FOCUSED_WINDOW ).put(
             escapeStroke, mapKey );
-        rootPane.getActionMap().put( mapKey, dispatchClosing );
+        rootPane.getActionMap().put( mapKey, closeAction );
     }
 
     /***************************************************************************
@@ -234,6 +240,8 @@ public final class SwingUtils
             JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null,
             choices, okText )
         {
+            private static final long serialVersionUID = -2554071173382615212L;
+
             @Override
             public void selectInitialValue()
             {
@@ -797,6 +805,7 @@ public final class SwingUtils
             frame = f;
         }
 
+        @Override
         public void windowIconified( WindowEvent e )
         {
             frame.setVisible( false );
@@ -806,11 +815,11 @@ public final class SwingUtils
     /***************************************************************************
      * An action that invokes the window's default close operation when run.
      **************************************************************************/
-    private static class CloseAction extends AbstractAction
+    private static class CloseActionListener implements ActionListener
     {
         private final Window win;
 
-        public CloseAction( Window win )
+        public CloseActionListener( Window win )
         {
             this.win = win;
         }
@@ -897,5 +906,24 @@ public final class SwingUtils
 
             return p;
         }
+    }
+
+    public static TreePath getPath( TreeNode treeNode )
+    {
+        List<Object> nodes = new ArrayList<Object>();
+
+        if( treeNode != null )
+        {
+            nodes.add( treeNode );
+            treeNode = treeNode.getParent();
+            while( treeNode != null )
+            {
+                nodes.add( 0, treeNode );
+                treeNode = treeNode.getParent();
+            }
+        }
+
+        return nodes.isEmpty() ? null : new TreePath( nodes.toArray() );
+
     }
 }

@@ -1,6 +1,5 @@
 package org.jutils.io;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import org.jutils.utils.ByteOrdering;
@@ -82,7 +81,7 @@ public class DataBuffer
     /***************************************************************************
      * @return
      **************************************************************************/
-    public short readShort() throws IOException
+    public short readShort()
     {
         buffer.rewind();
         return buffer.getShort();

@@ -68,6 +68,7 @@ public class ComponentFlasher
     {
         private boolean trigger = false;
 
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             trigger ^= true;

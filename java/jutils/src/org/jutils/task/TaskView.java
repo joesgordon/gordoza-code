@@ -166,6 +166,7 @@ public class TaskView implements ITaskView
     /***************************************************************************
      * @param l
      **************************************************************************/
+    @Override
     public void addCancelListener( ActionListener l )
     {
         cancelListeners.addListener( l );

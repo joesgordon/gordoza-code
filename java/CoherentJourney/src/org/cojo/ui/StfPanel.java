@@ -7,32 +7,43 @@ import javax.swing.border.TitledBorder;
 
 import org.cojo.model.ISoftwareTask;
 import org.cojo.model.IUser;
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class StfPanel extends JPanel
+public class StfPanel implements IView<JPanel>
 {
-    private JTabbedPane tabbedPane;
+    private final JPanel view;
+    private final JTabbedPane tabbedPane;
 
-    private JTextField numberField;
-    private JTextField titleField;
-    private JComboBox<IUser> leadField;
-    private JCheckBox codeReviewField;
-    private JTextField estimatedHoursField;
-    private JTextField actualHoursField;
-    private JTextArea descriptionField;
-    private JTextArea unitTestDescField;
-    private JTextArea unitTestResultsField;
+    private final JTextField numberField;
+    private final JTextField titleField;
+    private final JComboBox<IUser> leadField;
+    private final JCheckBox codeReviewField;
+    private final JTextField estimatedHoursField;
+    private final JTextField actualHoursField;
+    private final JTextArea descriptionField;
+    private final JTextArea unitTestDescField;
+    private final JTextArea unitTestResultsField;
 
-    private FindingsPanel codeReviewPanel;
+    private final FindingsPanel codeReviewPanel;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public StfPanel()
     {
-        super( new BorderLayout() );
+        this.view = new JPanel( new BorderLayout() );
+        this.numberField = new JTextField( 25 );
+        this.titleField = new JTextField();
+        this.leadField = new JComboBox<IUser>();
+        this.codeReviewField = new JCheckBox();
+        this.estimatedHoursField = new JTextField();
+        this.actualHoursField = new JTextField();
+        this.descriptionField = new JTextArea();
+        this.unitTestDescField = new JTextArea();
+        this.unitTestResultsField = new JTextArea();
 
         JPanel stfPanel = createStfPanel();
         JScrollPane stfScrollPane = new JScrollPane( stfPanel );
@@ -43,11 +54,11 @@ public class StfPanel extends JPanel
         codeReviewPanel = new FindingsPanel();
 
         tabbedPane.addTab( "STF", stfScrollPane );
-        tabbedPane.addTab( "Code Review", codeReviewPanel );
+        tabbedPane.addTab( "Code Review", codeReviewPanel.getView() );
 
         numberField.setEditable( false );
 
-        add( tabbedPane, BorderLayout.CENTER );
+        view.add( tabbedPane, BorderLayout.CENTER );
     }
 
     /***************************************************************************
@@ -73,16 +84,6 @@ public class StfPanel extends JPanel
     {
         JPanel panel = new JPanel( new GridBagLayout() );
 
-        numberField = new JTextField( 25 );
-        titleField = new JTextField();
-        leadField = new JComboBox<IUser>();
-        codeReviewField = new JCheckBox();
-        estimatedHoursField = new JTextField();
-        actualHoursField = new JTextField();
-        descriptionField = new JTextArea();
-        unitTestDescField = new JTextArea();
-        unitTestResultsField = new JTextArea();
-
         addFields( panel, "Task # :", numberField, 0, 0 );
         addFields( panel, "Title :", titleField, 1, 0 );
         addFields( panel, "Lead :", leadField, 2, 0 );
@@ -94,9 +95,10 @@ public class StfPanel extends JPanel
         addArea( panel, "Unit Test Description", unitTestDescField, 7 );
         addArea( panel, "Unit Test Results", unitTestResultsField, 8 );
 
-        panel.add( Box.createVerticalStrut( 0 ), new GridBagConstraints( 0, 50,
-            2, 6, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        panel.add( Box.createVerticalStrut( 0 ),
+            new GridBagConstraints( 0, 50, 2, 6, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
         return panel;
     }
@@ -117,13 +119,15 @@ public class StfPanel extends JPanel
 
         scrollPane.setPreferredSize( new Dimension( 150, 300 ) );
 
-        titlePanel.add( scrollPane, new GridBagConstraints( 0, 0, 1, 1, 1.0,
-            1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(
-                0, 6, 6, 6 ), 0, 0 ) );
+        titlePanel.add( scrollPane,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 0, 6, 6, 6 ), 0, 0 ) );
 
-        panel.add( titlePanel, new GridBagConstraints( 0, row, 2, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets( 4, 4,
-                4, 4 ), 0, 0 ) );
+        panel.add( titlePanel,
+            new GridBagConstraints( 0, row, 2, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
     }
 
     /***************************************************************************
@@ -138,11 +142,22 @@ public class StfPanel extends JPanel
     {
         JLabel label = new JLabel( text );
 
-        panel.add( label, new GridBagConstraints( col, row, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets( 0, 4,
-                0, 0 ), 0, 0 ) );
-        panel.add( field, new GridBagConstraints( col + 1, row, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
-                4, 2, 2, 4 ), 0, 0 ) );
+        panel.add( label,
+            new GridBagConstraints( col, row, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 0, 4, 0, 0 ), 0, 0 ) );
+        panel.add( field,
+            new GridBagConstraints( col + 1, row, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 4, 2, 2, 4 ), 0, 0 ) );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public JPanel getView()
+    {
+        return view;
     }
 }

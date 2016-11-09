@@ -8,7 +8,7 @@ import javax.swing.*;
 import org.jutils.apps.filespy.FileSpyMain;
 import org.jutils.apps.filespy.ui.SearchView;
 import org.jutils.ui.StatusBarPanel;
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
 public class LayeredPaneExample implements IFrameApp
@@ -28,7 +28,7 @@ public class LayeredPaneExample implements IFrameApp
         return frame;
     }
 
-    private Container createContentPane()
+    private static Container createContentPane()
     {
         JPanel panel = new JPanel( new BorderLayout() );
         StatusBarPanel statusBar = new StatusBarPanel();
@@ -39,7 +39,7 @@ public class LayeredPaneExample implements IFrameApp
         return panel;
     }
 
-    private JLayeredPane createLayers( StatusBarPanel statusBar )
+    private static JLayeredPane createLayers( StatusBarPanel statusBar )
     {
         JLayeredPane layeredPane = new JLayeredPane();
         JPanel pane = new SearchView( statusBar,
@@ -59,6 +59,6 @@ public class LayeredPaneExample implements IFrameApp
 
     public static void main( String[] args )
     {
-        FrameApplication.invokeLater( new LayeredPaneExample() );
+        FrameRunner.invokeLater( new LayeredPaneExample() );
     }
 }

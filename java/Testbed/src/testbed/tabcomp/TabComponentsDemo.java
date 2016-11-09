@@ -58,6 +58,7 @@ public class TabComponentsDemo extends JFrame
         // creating and showing this application's GUI.
         SwingUtilities.invokeLater( new Runnable()
         {
+            @Override
             public void run()
             {
                 // Turn off metal's use of bold fonts
@@ -108,6 +109,7 @@ public class TabComponentsDemo extends JFrame
             KeyStroke.getKeyStroke( KeyEvent.VK_T, InputEvent.ALT_MASK ) );
         tabComponentsItem.addActionListener( new ActionListener()
         {
+            @Override
             public void actionPerformed( ActionEvent e )
             {
                 for( int i = 0; i < pane.getTabCount(); i++ )
@@ -128,6 +130,7 @@ public class TabComponentsDemo extends JFrame
             KeyStroke.getKeyStroke( KeyEvent.VK_S, InputEvent.ALT_MASK ) );
         scrollLayoutItem.addActionListener( new ActionListener()
         {
+            @Override
             public void actionPerformed( ActionEvent e )
             {
                 if( pane.getTabLayoutPolicy() == JTabbedPane.WRAP_TAB_LAYOUT )
@@ -145,6 +148,7 @@ public class TabComponentsDemo extends JFrame
             KeyStroke.getKeyStroke( KeyEvent.VK_R, InputEvent.ALT_MASK ) );
         resetItem.addActionListener( new ActionListener()
         {
+            @Override
             public void actionPerformed( ActionEvent e )
             {
                 runTest();

@@ -2,15 +2,19 @@ package org.jutils.ui.model;
 
 import javax.swing.SpinnerListModel;
 import javax.swing.SpinnerModel;
+import javax.swing.event.ChangeListener;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class CyclingSpinnerListModel extends SpinnerListModel
+public class CyclingSpinnerListModel implements SpinnerModel
 {
     /**  */
-    private Object firstValue, lastValue;
+    private final SpinnerListModel baseModel;
+    /**  */
+    private final Object firstValue, lastValue;
 
+    /**  */
     private SpinnerModel linkedModel = null;
 
     /***************************************************************************
@@ -18,9 +22,9 @@ public class CyclingSpinnerListModel extends SpinnerListModel
      **************************************************************************/
     public CyclingSpinnerListModel( Object [] values )
     {
-        super( values );
-        firstValue = values[0];
-        lastValue = values[values.length - 1];
+        this.baseModel = new SpinnerListModel( values );
+        this.firstValue = values[0];
+        this.lastValue = values[values.length - 1];
     }
 
     /***************************************************************************
@@ -34,9 +38,10 @@ public class CyclingSpinnerListModel extends SpinnerListModel
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public Object getNextValue()
     {
-        Object value = super.getNextValue();
+        Object value = baseModel.getNextValue();
         if( value == null )
         {
             value = firstValue;
@@ -51,9 +56,10 @@ public class CyclingSpinnerListModel extends SpinnerListModel
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public Object getPreviousValue()
     {
-        Object value = super.getPreviousValue();
+        Object value = baseModel.getPreviousValue();
         if( value == null )
         {
             value = lastValue;
@@ -63,5 +69,41 @@ public class CyclingSpinnerListModel extends SpinnerListModel
             }
         }
         return value;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Object getValue()
+    {
+        return baseModel.getValue();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void setValue( Object value )
+    {
+        baseModel.setValue( value );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void addChangeListener( ChangeListener l )
+    {
+        baseModel.addChangeListener( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void removeChangeListener( ChangeListener l )
+    {
+        baseModel.removeChangeListener( l );
     }
 }

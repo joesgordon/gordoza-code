@@ -1,44 +1,75 @@
 package org.cojo.ui.tableModels;
 
-import java.util.Arrays;
-
 import org.cojo.model.ISoftwareTask;
-import org.jutils.ui.model.ItemTableModel;
+import org.jutils.ui.model.ITableItemsConfig;
 
-public class StfTableModel extends ItemTableModel<ISoftwareTask>
+/*******************************************************************************
+ * 
+ ******************************************************************************/
+public class StfTableModel implements ITableItemsConfig<ISoftwareTask>
 {
-    public static final String [] COLUMN_HEADING = { "#", "Title", "Lead",
+    /**  */
+    private static final String [] COLUMN_HEADING = { "#", "Title", "Lead",
         "Est Hours", "Act Hours" };
-    public static final Class<?> [] COLUMN_CLASSES = { Integer.class,
+    /**  */
+    private static final Class<?> [] COLUMN_CLASSES = { Integer.class,
         String.class, String.class, Integer.class, Integer.class };
 
-    public StfTableModel()
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public String [] getColumnNames()
     {
-        super();
-
-        setColumnNames( Arrays.asList( COLUMN_HEADING ) );
-        setColumnClasses( Arrays.asList( COLUMN_CLASSES ) );
+        return COLUMN_HEADING;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
-    public Object getValueAt( int row, int col )
+    public Class<?> [] getColumnClasses()
     {
-        ISoftwareTask cr = getRow( row );
+        return COLUMN_CLASSES;
+    }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Object getItemData( ISoftwareTask item, int col )
+    {
         switch( col )
         {
             case 0:
-                return cr.getNumber();
+                return item.getNumber();
             case 1:
-                return cr.getTitle();
+                return item.getTitle();
             case 2:
-                return cr.getLead().getName();
+                return item.getLead().getName();
             case 3:
-                return cr.getEstimatedHours();
+                return item.getEstimatedHours();
             case 4:
-                return cr.getActualHours();
+                return item.getActualHours();
         }
 
         throw new IllegalArgumentException( "Unknown column: " + col );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void setItemData( ISoftwareTask item, int col, Object data )
+    {
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public boolean isCellEditable( ISoftwareTask item, int col )
+    {
+        return false;
     }
 }

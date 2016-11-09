@@ -8,7 +8,7 @@ import javax.swing.*;
 
 import org.jutils.io.LogUtils;
 import org.jutils.ui.JGoodiesToolBar;
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
 public class SnapTester implements IFrameApp
@@ -28,7 +28,7 @@ public class SnapTester implements IFrameApp
         snapView.setBackground( Color.white );
     }
 
-    public String promptForFolder( Component parent )
+    public static String promptForFolder( Component parent )
     {
         JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
@@ -41,7 +41,7 @@ public class SnapTester implements IFrameApp
         return null;
     }
 
-    private JPanel createTestPanel( String text, Color bg )
+    private static JPanel createTestPanel( String text, Color bg )
     {
         JPanel panel = new JPanel();
 
@@ -110,7 +110,7 @@ public class SnapTester implements IFrameApp
 
     public static void main( String[] args )
     {
-        FrameApplication.invokeLater( new SnapTester() );
+        FrameRunner.invokeLater( new SnapTester() );
     }
 
     private abstract class ToggleAction implements ActionListener

@@ -1,7 +1,6 @@
 package org.tuvok;
 
-import java.awt.Dimension;
-import java.awt.Image;
+import java.awt.*;
 
 import javax.swing.JFrame;
 
@@ -27,7 +26,8 @@ public class TuvokApp implements IFrameApp
         TuvokMenu popup = new TuvokMenu( frameView );
         Image img = IconConstants.loader.getImage( IconConstants.CALENDAR_16 );
 
-        SwingUtils.createTrayIcon( img, "Tuvok", frame, popup );
+        TrayIcon icon = SwingUtils.createTrayIcon( img, "Tuvok", frame, null );
+        SwingUtils.addTrayMenu( icon, popup.getView() );
 
         frame.setSize( new Dimension( 640, 480 ) );
         frame.setMinimumSize( new Dimension( 300, 300 ) );

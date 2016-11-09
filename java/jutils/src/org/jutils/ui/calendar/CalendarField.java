@@ -246,6 +246,7 @@ public class CalendarField implements IView<JPanel>
      **************************************************************************/
     private class DialogListener extends WindowAdapter
     {
+        @Override
         public void windowClosed( WindowEvent e )
         {
             CalendarDialog dialog = ( CalendarDialog )e.getComponent();
@@ -258,6 +259,7 @@ public class CalendarField implements IView<JPanel>
      **************************************************************************/
     private class CalendarButtonListener implements ActionListener
     {
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             displayDialog();

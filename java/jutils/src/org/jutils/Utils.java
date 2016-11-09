@@ -473,7 +473,7 @@ public final class Utils
      * negative, or (b) a position + length is greater than the length of the
      * buffer.
      **************************************************************************/
-    public static <T> void byteArrayCopy( byte [] src, int srcPos, byte [] dest,
+    public static void byteArrayCopy( byte [] src, int srcPos, byte [] dest,
         int destPos, int length ) throws ArrayIndexOutOfBoundsException
     {
         try

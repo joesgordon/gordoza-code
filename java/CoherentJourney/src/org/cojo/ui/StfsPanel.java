@@ -12,27 +12,32 @@ import org.cojo.model.ISoftwareTask;
 import org.cojo.ui.tableModels.StfTableModel;
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
+import org.jutils.ui.model.IView;
+import org.jutils.ui.model.ItemsTableModel;
 
 /***************************************************************************
  * 
  **************************************************************************/
-public class StfsPanel extends JPanel
+public class StfsPanel implements IView<JPanel>
 {
     /**  */
-    private StfTableModel stfTableModel;
-    private JTable stfTable;
+    private final JPanel view;
+    /**  */
+    private final ItemsTableModel<ISoftwareTask> stfTableModel;
+    /**  */
+    private final JTable stfTable;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public StfsPanel()
     {
-        super( new BorderLayout() );
+        this.view = new JPanel( new BorderLayout() );
+        this.stfTableModel = new ItemsTableModel<>( new StfTableModel() );
+        this.stfTable = new JTable( stfTableModel );
 
-        stfTableModel = new StfTableModel();
-
-        add( createToolbar(), BorderLayout.NORTH );
-        add( createMainPanel( stfTableModel ), BorderLayout.CENTER );
+        view.add( createToolbar(), BorderLayout.NORTH );
+        view.add( createMainPanel(), BorderLayout.CENTER );
     }
 
     /***************************************************************************
@@ -48,15 +53,15 @@ public class StfsPanel extends JPanel
      **************************************************************************/
     private void showStfDialog()
     {
-        Frame frame = SwingUtils.getComponentsFrame( this );
+        Frame frame = SwingUtils.getComponentsFrame( view );
         StfPanel stfPanel = new StfPanel();
-        JEditDialog stfDialog = new JEditDialog( frame, stfPanel );
+        JEditDialog stfDialog = new JEditDialog( frame, stfPanel.getView() );
 
         int row = stfTable.getSelectedRow();
         row = stfTable.convertRowIndexToModel( row );
         if( row > -1 )
         {
-            ISoftwareTask task = stfTableModel.getRow( row );
+            ISoftwareTask task = stfTableModel.getItem( row );
 
             stfPanel.setData( task );
 
@@ -71,10 +76,9 @@ public class StfsPanel extends JPanel
      * @param tableModel
      * @return
      **************************************************************************/
-    private JPanel createMainPanel( StfTableModel tableModel )
+    private JPanel createMainPanel()
     {
         JPanel mainPanel = new JPanel( new BorderLayout() );
-        stfTable = new JTable( tableModel );
         JScrollPane scrollPane = new JScrollPane( stfTable );
 
         stfTable.setAutoResizeMode( JTable.AUTO_RESIZE_LAST_COLUMN );
@@ -83,6 +87,7 @@ public class StfsPanel extends JPanel
         stfTable.getColumnModel().getColumn( 2 ).setPreferredWidth( 100 );
         stfTable.addMouseListener( new MouseAdapter()
         {
+            @Override
             public void mouseClicked( MouseEvent e )
             {
                 if( e.getClickCount() == 2 )
@@ -125,5 +130,11 @@ public class StfsPanel extends JPanel
         toolbar.setBorderPainted( false );
 
         return toolbar;
+    }
+
+    @Override
+    public JPanel getView()
+    {
+        return view;
     }
 }

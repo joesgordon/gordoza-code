@@ -76,13 +76,13 @@ public class FileSystemModel extends AbstractTreeTableModel
     // Some convenience methods.
     //
 
-    protected File getFile( Object node )
+    protected static File getFile( Object node )
     {
         FileNode fileNode = ( ( FileNode )node );
         return fileNode.getFile();
     }
 
-    protected Object[] getChildren( Object node )
+    protected static Object[] getChildren( Object node )
     {
         FileNode fileNode = ( ( FileNode )node );
         return fileNode.getChildren();
@@ -92,18 +92,21 @@ public class FileSystemModel extends AbstractTreeTableModel
     // The TreeModel interface
     //
 
+    @Override
     public int getChildCount( Object node )
     {
         Object[] children = getChildren( node );
         return ( children == null ) ? 0 : children.length;
     }
 
+    @Override
     public Object getChild( Object node, int i )
     {
         return getChildren( node )[i];
     }
 
     // The superclass's implementation would work, but this is more efficient.
+    @Override
     public boolean isLeaf( Object node )
     {
         return getFile( node ).isFile();
@@ -113,21 +116,25 @@ public class FileSystemModel extends AbstractTreeTableModel
     // The TreeTableNode interface.
     //
 
+    @Override
     public int getColumnCount()
     {
         return cNames.length;
     }
 
+    @Override
     public String getColumnName( int column )
     {
         return cNames[column];
     }
 
+    @Override
     public Class<?> getColumnClass( int column )
     {
         return cTypes[column];
     }
 
+    @Override
     public Object getValueAt( Object node, int column )
     {
         File file = getFile( node );
@@ -173,6 +180,7 @@ class FileNode
     // Used to sort the file names.
     static private MergeSort fileMS = new MergeSort()
     {
+        @Override
         public int compareElementsAt( int a, int b )
         {
             return ( ( String )toSort[a] ).compareTo( ( String )toSort[b] );
@@ -182,6 +190,7 @@ class FileNode
     /**
      * Returns the the string to be used to display this leaf in the JTree.
      */
+    @Override
     public String toString()
     {
         return file.getName();

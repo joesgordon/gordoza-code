@@ -48,6 +48,7 @@ public class ColorIcon implements Icon
         this.height = height;
     }
 
+    @Override
     public int getIconHeight()
     {
         return height;
@@ -58,11 +59,13 @@ public class ColorIcon implements Icon
         this.width = width;
     }
 
+    @Override
     public int getIconWidth()
     {
         return width;
     }
 
+    @Override
     public void paintIcon( Component c, Graphics g, int x, int y )
     {
         Graphics2D g2 = ( Graphics2D )g;

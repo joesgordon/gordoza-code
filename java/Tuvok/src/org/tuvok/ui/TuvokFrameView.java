@@ -35,7 +35,7 @@ public class TuvokFrameView implements IView<JFrame>
         createMenuBar( frameView.getMenuBar() );
 
         frameView.setToolbar( createToolBar() );
-        frameView.setContent( mainPanel );
+        frameView.setContent( mainPanel.getView() );
 
         frame.setTitle( "Tuvok" );
 
@@ -188,6 +188,7 @@ public class TuvokFrameView implements IView<JFrame>
             this.view = view;
         }
 
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             JFileChooser jfc = new JFileChooser();
@@ -208,6 +209,7 @@ public class TuvokFrameView implements IView<JFrame>
             this.view = view;
         }
 
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             JFileChooser jfc = new JFileChooser();
@@ -221,6 +223,7 @@ public class TuvokFrameView implements IView<JFrame>
      **************************************************************************/
     private static class NewListener implements ActionListener
     {
+        @Override
         public void actionPerformed( ActionEvent e )
         {
         }

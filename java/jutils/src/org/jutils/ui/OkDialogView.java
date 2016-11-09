@@ -412,6 +412,7 @@ public class OkDialogView implements IView<JDialog>
      **************************************************************************/
     private static class DialogListener extends WindowAdapter
     {
+        @Override
         public void windowClosed( WindowEvent e )
         {
             System.gc();

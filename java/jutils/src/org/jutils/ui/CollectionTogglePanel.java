@@ -1,7 +1,6 @@
 package org.jutils.ui;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
@@ -9,45 +8,61 @@ import java.util.List;
 import javax.swing.*;
 
 import org.jutils.io.LogUtils;
-
-import com.jgoodies.looks.Options;
+import org.jutils.ui.app.FrameRunner;
+import org.jutils.ui.app.IFrameApp;
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * This is a panel that will display a list of toggle or radio buttons to the
  * user that come from a selection of type T
  * @param <T> The type of data to be displayed.
  ******************************************************************************/
-public class CollectionTogglePanel<T> extends JPanel
+public class CollectionTogglePanel<T> implements IView<JPanel>
 {
+    /**  */
+    private final JPanel panel;
+
     /** Map of types to their corresponding buttons. */
-    private HashMap<T, UserValueStorage<T>> buttonMap;
+    private final HashMap<T, UserValueStorage<T>> buttonMap;
 
     /** List of values that are displayed. */
-    private List<T> values;
+    private final List<T> values;
 
-    /** The group preventing more than one choice at a time. */
-    private ButtonGroup group;
-
-    /** Indicates whether to use toggle or radio buttons. */
-    private boolean useToggles = true;
+    /**  */
+    private final boolean useToggles;
 
     /***************************************************************************
      * Creates an empty panel.
      **************************************************************************/
-    public CollectionTogglePanel()
+    public CollectionTogglePanel( boolean useToggles )
     {
-        this( new ArrayList<T>() );
+        this( new ArrayList<T>(), useToggles );
     }
 
     /***************************************************************************
      * Creates a panel which displays the list of values as choices to the user.
      * @param vals The choices from which the user may choose only one.
      **************************************************************************/
-    public CollectionTogglePanel( List<T> vals )
+    public CollectionTogglePanel( List<T> vals, boolean useToggles )
     {
-        group = new ButtonGroup();
-        buttonMap = new HashMap<T, UserValueStorage<T>>();
+        this.useToggles = useToggles;
+
+        this.panel = new JPanel();
+        this.buttonMap = new HashMap<T, UserValueStorage<T>>();
+        this.values = new ArrayList<>();
+
+        createGui();
+
         setValues( vals );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public JPanel getView()
+    {
+        return panel;
     }
 
     /***************************************************************************
@@ -79,29 +94,14 @@ public class CollectionTogglePanel<T> extends JPanel
     }
 
     /***************************************************************************
-     * Sets the toggle property. If <code>false</code> then radio buttons will
-     * be generated instead of toggle buttons. If the value passed is different
-     * than the current value, the buttons will be regenerated.
-     * @param toggle
-     **************************************************************************/
-    public void setToggles( boolean toggle )
-    {
-        boolean changed = !( toggle ^ useToggles );
-
-        useToggles = toggle;
-        if( changed )
-        {
-            createGui();
-        }
-    }
-
-    /***************************************************************************
      * Sets the choices to be displayed.
      * @param vals The choices to be displayed.
      **************************************************************************/
     public void setValues( List<T> vals )
     {
-        values = new ArrayList<T>( vals );
+        values.clear();
+        values.addAll( vals );
+
         createGui();
     }
 
@@ -135,25 +135,25 @@ public class CollectionTogglePanel<T> extends JPanel
 
     /***************************************************************************
      * Removes the old buttons, if appropriate, and generates the new buttons.
+     * @param useToggles
      **************************************************************************/
     private void createGui()
     {
-        this.removeAll();
-        this.setLayout( new GridBagLayout() );
-        group = new ButtonGroup();
-        buttonMap.clear();
+        ButtonGroup group = new ButtonGroup();
+        panel.removeAll();
+        panel.setLayout( new GridBagLayout() );
 
         for( int i = 0; i < values.size(); i++ )
         {
             T val = values.get( i );
-            AbstractButton button = createButton( val );
+            AbstractButton button = createButton( val, group );
 
             if( i == 0 )
             {
                 button.setSelected( true );
             }
 
-            add( button,
+            panel.add( button,
                 new GridBagConstraints( 0, i, 1, 1, 1.0, 1.0,
                     GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
                     new Insets( 2, 0, 2, 0 ), 0, 0 ) );
@@ -163,24 +163,25 @@ public class CollectionTogglePanel<T> extends JPanel
     /***************************************************************************
      * Creates a button with the given value.
      * @param val The choice to appear as a button.
+     * @param group
      * @return The choice button.
      **************************************************************************/
-    private AbstractButton createButton( T val )
+    private AbstractButton createButton( T val, ButtonGroup group )
     {
-        AbstractButton button = null;
+        JToggleButton button = null;
         UserValueStorage<T> uvs = null;
 
         if( useToggles )
         {
-            uvs = new ValueToggleButton<T>();
+            uvs = new ValueButton<T>( new JToggleButton() );
         }
         else
         {
-            uvs = new ValueRadioButton<T>();
+            uvs = new ValueButton<T>( new JRadioButton() );
         }
 
         uvs.setValue( val );
-        button = ( AbstractButton )uvs;
+        button = uvs.getView();
         button.setText( val.toString() );
         group.add( button );
         buttonMap.put( val, uvs );
@@ -195,79 +196,105 @@ public class CollectionTogglePanel<T> extends JPanel
      **************************************************************************/
     public static void main( String [] args )
     {
-        SwingUtilities.invokeLater( new Runnable()
+        FrameRunner.invokeLater( new CollectionTogglePanelApp(), false );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static final class CollectionTogglePanelApp implements IFrameApp
+    {
+        @Override
+        public JFrame createFrame()
         {
-            public void run()
-            {
-                try
-                {
-                    UIManager.setLookAndFeel( Options.PLASTICXP_NAME );
-                }
-                catch( Exception exception )
-                {
-                    exception.printStackTrace();
-                }
+            CollectionToggleFrameView view = new CollectionToggleFrameView();
 
-                JFrame frame = new JFrame();
-                JPanel panel = new JPanel();
-                final JLabel label = new JLabel();
-                final CollectionTogglePanel<TestEnum> cp0;
-                final CollectionTogglePanel<TestEnum> cp1;
+            return view.getView();
+        }
 
-                cp0 = new CollectionTogglePanel<TestEnum>();
-                cp1 = new CollectionTogglePanel<TestEnum>();
+        @Override
+        public void finalizeGui()
+        {
+        }
+    }
 
-                cp0.setToggles( false );
-                cp0.setValues( Arrays.asList( TestEnum.values() ) );
-                cp0.setBorder(
-                    BorderFactory.createTitledBorder( "Collection Panel 0" ) );
-                cp0.addActionListener( new ActionListener()
-                {
-                    public void actionPerformed( ActionEvent e )
-                    {
-                        TestEnum te = cp0.getValue();
-                        String str = te != null ? te.toString() : "NULL";
-                        String cls = te != null ? te.getClass().getName() : "";
-                        label.setText( str );
-                        LogUtils.printDebug( "Clicked [" + cls + "]: " + str );
-                        cp1.setValue( te );
-                    }
-                } );
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static final class CollectionToggleFrameView
+        implements IView<JFrame>
+    {
+        private final StandardFrameView frame;
+        private final JLabel label;
 
-                cp1.setValues( Arrays.asList( TestEnum.values() ) );
-                cp1.setBorder(
-                    BorderFactory.createTitledBorder( "Collection Panel 1" ) );
+        public CollectionToggleFrameView()
+        {
+            this.frame = new StandardFrameView();
 
-                label.setText( cp0.getValue() != null
-                    ? cp0.getValue().toString() : "NULL" );
+            JPanel panel = new JPanel();
+            label = new JLabel();
 
-                panel.setLayout( new GridBagLayout() );
-                panel.add( cp0,
-                    new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-                        GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
-                        new Insets( 4, 4, 4, 4 ), 0, 0 ) );
-                panel.add( cp1,
-                    new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
-                        GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
-                        new Insets( 4, 4, 4, 4 ), 0, 0 ) );
-                panel.add( label,
-                    new GridBagConstraints( 0, 1, 2, 1, 0.0, 0.0,
-                        GridBagConstraints.CENTER, GridBagConstraints.NONE,
-                        new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+            CollectionTogglePanel<TestEnum> radioPanel;
+            CollectionTogglePanel<TestEnum> togglePanel;
 
-                frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-                frame.setContentPane( panel );
-                frame.pack();
-                frame.setLocationRelativeTo( null );
-                frame.setVisible( true );
-            }
-        } );
+            radioPanel = new CollectionTogglePanel<TestEnum>( false );
+            togglePanel = new CollectionTogglePanel<TestEnum>( true );
+
+            radioPanel.setValues( Arrays.asList( TestEnum.values() ) );
+            radioPanel.getView().setBorder(
+                BorderFactory.createTitledBorder( "Collection Panel 0" ) );
+            radioPanel.addActionListener(
+                ( e ) -> toggleOtherPanel( togglePanel, radioPanel ) );
+
+            togglePanel.setValues( Arrays.asList( TestEnum.values() ) );
+            togglePanel.getView().setBorder(
+                BorderFactory.createTitledBorder( "Collection Panel 1" ) );
+            togglePanel.addActionListener(
+                ( e ) -> toggleOtherPanel( radioPanel, togglePanel ) );
+
+            label.setText( radioPanel.getValue() != null
+                ? radioPanel.getValue().toString() : "NULL" );
+
+            panel.setLayout( new GridBagLayout() );
+            panel.add( radioPanel.getView(),
+                new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                    GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
+                    new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+            panel.add( togglePanel.getView(),
+                new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
+                    GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
+                    new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+            panel.add( label,
+                new GridBagConstraints( 0, 1, 2, 1, 0.0, 0.0,
+                    GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                    new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+
+            frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+            frame.setContent( panel );
+        }
+
+        private void toggleOtherPanel( CollectionTogglePanel<TestEnum> dst,
+            CollectionTogglePanel<TestEnum> src )
+        {
+            TestEnum te = src.getValue();
+            String str = te != null ? te.toString() : "NULL";
+            String cls = te != null ? te.getClass().getName() : "";
+            label.setText( str );
+            LogUtils.printDebug( "Clicked [" + cls + "]: " + str );
+            dst.setValue( te );
+        }
+
+        @Override
+        public JFrame getView()
+        {
+            return frame.getView();
+        }
     }
 
     /***************************************************************************
      * An enumeration for use with the test application.
      **************************************************************************/
-    private enum TestEnum
+    private static enum TestEnum
     {
         FIRST,
         SECOND,
@@ -275,6 +302,7 @@ public class CollectionTogglePanel<T> extends JPanel
         FORTH,
         FIFTH_SIXTH_SEVENTH;
 
+        @Override
         public String toString()
         {
             switch( this )
@@ -294,70 +322,82 @@ public class CollectionTogglePanel<T> extends JPanel
             }
         }
     }
-}
 
-/***************************************************************************
- * @param <T>
- **************************************************************************/
-interface UserValueStorage<T>
-{
-    public void setValue( T value );
-
-    public T getValue();
-
-    public boolean isSelected();
-
-    public void setSelected( boolean selected );
-
-    public void addActionListener( ActionListener l );
-
-    public void removeActionListener( ActionListener l );
-}
-
-/***************************************************************************
- * @param <T>
- **************************************************************************/
-class ValueRadioButton<T> extends JRadioButton implements UserValueStorage<T>
-{
-    private T userValue;
-
-    public ValueRadioButton()
+    /***************************************************************************
+     * @param <T>
+     **************************************************************************/
+    private static interface UserValueStorage<T> extends IView<JToggleButton>
     {
-        super();
-        userValue = null;
+
+        public void setValue( T value );
+
+        public T getValue();
+
+        public boolean isSelected();
+
+        public void setSelected( boolean selected );
+
+        public void addActionListener( ActionListener l );
+
+        public void removeActionListener( ActionListener l );
     }
 
-    public void setValue( T value )
+    /***************************************************************************
+     * @param <T>
+     * @param <B>
+     **************************************************************************/
+    private static final class ValueButton<T> implements UserValueStorage<T>
     {
-        userValue = value;
-    }
+        private final JToggleButton button;
+        private T userValue;
 
-    public T getValue()
-    {
-        return userValue;
-    }
-}
+        public ValueButton( JToggleButton button )
+        {
+            this.button = button;
 
-/***************************************************************************
- * @param <T>
- **************************************************************************/
-class ValueToggleButton<T> extends JToggleButton implements UserValueStorage<T>
-{
-    private T userValue;
+            this.userValue = null;
+        }
 
-    public ValueToggleButton()
-    {
-        super();
-        userValue = null;
-    }
+        @Override
+        public void setValue( T value )
+        {
+            userValue = value;
+        }
 
-    public void setValue( T value )
-    {
-        userValue = value;
-    }
+        @Override
+        public T getValue()
+        {
+            return userValue;
+        }
 
-    public T getValue()
-    {
-        return userValue;
+        @Override
+        public JToggleButton getView()
+        {
+            return button;
+        }
+
+        @Override
+        public boolean isSelected()
+        {
+            return button.isSelected();
+        }
+
+        @Override
+        public void setSelected( boolean selected )
+        {
+            button.setSelected( selected );
+        }
+
+        @Override
+        public void addActionListener( ActionListener l )
+        {
+            button.addActionListener( l );
+        }
+
+        @Override
+        public void removeActionListener( ActionListener l )
+        {
+            button.removeActionListener( l );
+        }
     }
 }

@@ -96,7 +96,7 @@ public class McMessagePanel extends JPanel
         JList<? extends McMessage> list, McMessage value, int index,
         boolean isSelected, boolean cellHasFocus )
     {
-        setMessage( ( McMessage )value );
+        setMessage( value );
 
         Color fg = isSelected ? list.getSelectionForeground() : foregroundColor;
         Color bg = index % 2 == 1 ? altBgColor : backgroundColor;

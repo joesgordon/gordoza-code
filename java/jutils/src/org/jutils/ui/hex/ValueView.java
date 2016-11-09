@@ -343,7 +343,7 @@ public class ValueView implements IView<JPanel>
      * @param b
      * @return
      **************************************************************************/
-    private String toUint08( byte b )
+    private static String toUint08( byte b )
     {
         int i = b;
 
@@ -359,7 +359,7 @@ public class ValueView implements IView<JPanel>
      * @param s
      * @return
      **************************************************************************/
-    private String toUint16( short s )
+    private static String toUint16( short s )
     {
         int i = s;
 
@@ -375,7 +375,7 @@ public class ValueView implements IView<JPanel>
      * @param i
      * @return
      **************************************************************************/
-    private String toUint32( int i )
+    private static String toUint32( int i )
     {
         long l = i;
 
@@ -391,7 +391,7 @@ public class ValueView implements IView<JPanel>
      * @param l
      * @return
      **************************************************************************/
-    private String toUint64( long l )
+    private static String toUint64( long l )
     {
         ByteBuffer buf;
         BigInteger unsigned;

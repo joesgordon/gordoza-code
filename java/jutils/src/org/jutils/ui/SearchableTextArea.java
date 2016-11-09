@@ -49,8 +49,8 @@ public class SearchableTextArea extends JTextArea
         this.addKeyListener( new SearchableTextArea_keyAdapter( this ) );
         findDialog.addFindListener(
             new SearchableTextArea_findAdapter( this ) );
-        findDialog.setTitle( "Find" );
-        findDialog.pack();
+        findDialog.getView().setTitle( "Find" );
+        findDialog.getView().pack();
     }
 
     /***************************************************************************
@@ -116,7 +116,7 @@ public class SearchableTextArea extends JTextArea
      * @param options FindOptions
      * @return boolean
      **************************************************************************/
-    private boolean buildOptions( FindOptions options )
+    private static boolean buildOptions( FindOptions options )
     {
         boolean found = false;
         int flags = Pattern.MULTILINE | Pattern.DOTALL;
@@ -162,9 +162,9 @@ public class SearchableTextArea extends JTextArea
         }
 
         findDialog.setOptions( lastOptions );
-        findDialog.setLocationRelativeTo( null );
-        findDialog.setVisible( true );
-        findDialog.requestFocus();
+        findDialog.getView().setLocationRelativeTo( null );
+        findDialog.getView().setVisible( true );
+        findDialog.getView().requestFocus();
     }
 
     /***************************************************************************
@@ -185,6 +185,7 @@ class SearchableTextArea_findAdapter implements FindListener
         textArea = ta;
     }
 
+    @Override
     public void findText( FindOptions findData )
     {
         textArea.searchAndHighlight( findData );
@@ -200,11 +201,13 @@ class SearchableTextArea_keyAdapter implements KeyListener
         textArea = ta;
     }
 
+    @Override
     public void keyPressed( KeyEvent e )
     {
         // LogUtils.printDebug( "keyPressed" );
     }
 
+    @Override
     public void keyReleased( KeyEvent e )
     {
         if( e.getKeyCode() == KeyEvent.VK_F3 )
@@ -214,6 +217,7 @@ class SearchableTextArea_keyAdapter implements KeyListener
         }
     }
 
+    @Override
     public void keyTyped( KeyEvent e )
     {
         char keyTyped = e.getKeyChar();

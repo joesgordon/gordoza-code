@@ -52,10 +52,8 @@ public class FileValidator implements IDataValidator<File>
             {
                 throw new ValidationException( "Empty path string" );
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
 
         File f = new File( text );

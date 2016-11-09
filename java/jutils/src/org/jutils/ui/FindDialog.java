@@ -4,64 +4,34 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.PatternSyntaxException;
 
 import javax.swing.*;
 
 import org.jutils.SwingUtils;
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  *
  ******************************************************************************/
-public class FindDialog extends JDialog
+public class FindDialog implements IView<JDialog>
 {
-    // -------------------------------------------------------------------------
-    // Main panel widgets.
-    // -------------------------------------------------------------------------
     /**  */
-    private JPanel contentPane = new JPanel();
+    private final JDialog dialog;
+    /**  */
+    private final JTextField findTextField = new JTextField();
+    /**  */
+    private final JTextArea errorLabel = new JTextArea();
+    /**  */
+    private final JCheckBox matchCheckBox = new JCheckBox();
+    /**  */
+    private final JCheckBox regexCheckBox = new JCheckBox();
+    /**  */
+    private final JCheckBox wrapCheckBox = new JCheckBox();
 
     /**  */
-    private GridBagLayout contentLayout = new GridBagLayout();
-
-    /**  */
-    private JLabel findLable = new JLabel();
-
-    /**  */
-    private JTextField findTextField = new JTextField();
-
-    /**  */
-    private JButton findButton = new JButton();
-
-    /**  */
-    private JButton cancelButton = new JButton();
-
-    /**  */
-    private JTextArea errorLabel = new JTextArea();
-
-    // --------------------------------------------------------------------------
-    // Options panel widgets.
-    // --------------------------------------------------------------------------
-    /**  */
-    private JPanel optionsPanel = new JPanel();
-
-    /**  */
-    private GridBagLayout optionsLayout = new GridBagLayout();
-
-    /**  */
-    private JCheckBox matchCheckBox = new JCheckBox();
-
-    /**  */
-    private JCheckBox regexCheckBox = new JCheckBox();
-
-    /**  */
-    private JCheckBox wrapCheckBox = new JCheckBox();
-
-    // --------------------------------------------------------------------------
-    //
-    // --------------------------------------------------------------------------
-    /**  */
-    private ArrayList<FindListener> findListeners = new ArrayList<FindListener>();
+    private final ArrayList<FindListener> findListeners = new ArrayList<FindListener>();
 
     /***************************************************************************
      *
@@ -78,17 +48,98 @@ public class FindDialog extends JDialog
      **************************************************************************/
     public FindDialog( Frame owner, String title, boolean modal )
     {
-        super( owner, title, modal );
+        this.dialog = new JDialog( owner, title, modal );
 
-        setDefaultCloseOperation( DISPOSE_ON_CLOSE );
-        pack();
+        // ---------------------------------------------------------------------
+        // Set tab-order.
+        // ---------------------------------------------------------------------
+        List<JComponent> focusList = new ArrayList<JComponent>();
 
-        SwingUtils.installEscapeCloseOperation( this );
+        focusList.add( this.findTextField );
+
+        focusList.add( this.matchCheckBox );
+        focusList.add( this.regexCheckBox );
+        focusList.add( this.wrapCheckBox );
+
+        // ---------------------------------------------------------------------
+        // Setup dialog.
+        // ---------------------------------------------------------------------
+        dialog.setDefaultCloseOperation( JDialog.DISPOSE_ON_CLOSE );
+
+        SwingUtils.installEscapeCloseOperation( dialog );
+
+        dialog.setContentPane( createContent( focusList ) );
+        dialog.pack();
+
+        setOptions( null );
 
         // ----------------------------------------------------------------------
-        // Setup Options Panel
+        // Set tab-order.
         // ----------------------------------------------------------------------
-        optionsPanel.setLayout( optionsLayout );
+
+        dialog.setFocusTraversalPolicy( new FocusPolicyList( focusList ) );
+    }
+
+    private Container createContent( List<JComponent> focusList )
+    {
+        JPanel contentPane = new JPanel( new GridBagLayout() );
+        JButton findButton = new JButton();
+        JLabel findLabel = new JLabel();
+        JButton cancelButton = new JButton();
+
+        focusList.add( findButton );
+        focusList.add( cancelButton );
+
+        findLabel.setText( "Find What:" );
+        findTextField.setColumns( 25 );
+
+        dialog.getRootPane().setDefaultButton( findButton );
+        findButton.setText( "Find" );
+        findButton.addActionListener( new FindTextListener( this ) );
+        findButton.setDefaultCapable( true );
+
+        cancelButton.setText( "Cancel" );
+        cancelButton.addActionListener( new CancelListener( this ) );
+
+        errorLabel.setText( "" );
+        errorLabel.setEditable( false );
+        errorLabel.setBackground( dialog.getBackground() );
+        errorLabel.setBorder( BorderFactory.createLineBorder( Color.red ) );
+        errorLabel.setVisible( false );
+
+        contentPane.add( findLabel,
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 5, 5, 5, 5 ), 0, 0 ) );
+        contentPane.add( findTextField,
+            new GridBagConstraints( 1, 0, 2, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 5, 5, 5, 5 ), 0, 0 ) );
+        contentPane.add( findButton,
+            new GridBagConstraints( 3, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets( 5, 5, 5, 5 ), 0, 0 ) );
+
+        contentPane.add( createOptionsPanel(),
+            new GridBagConstraints( 0, 1, 2, 2, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        contentPane.add( cancelButton,
+            new GridBagConstraints( 3, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
+                new Insets( 5, 5, 5, 5 ), 0, 0 ) );
+
+        contentPane.add( errorLabel,
+            new GridBagConstraints( 2, 2, 2, 1, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+
+        return contentPane;
+    }
+
+    private Component createOptionsPanel()
+    {
+        JPanel optionsPanel = new JPanel( new GridBagLayout() );
         optionsPanel.setBorder( BorderFactory.createTitledBorder(
             BorderFactory.createEtchedBorder(), "Options" ) );
 
@@ -110,98 +161,7 @@ public class FindDialog extends JDialog
             new GridBagConstraints( 0, 2, 2, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-
-        // ---------------------------------------------------------------------
-        // Setup Main Panel
-        // ---------------------------------------------------------------------
-
-        contentPane.setLayout( contentLayout );
-
-        findLable.setText( "Find What:" );
-        findTextField.setColumns( 25 );
-
-        this.getRootPane().setDefaultButton( findButton );
-        findButton.setText( "Find" );
-        findButton.addActionListener( new FindTextListener( this ) );
-        findButton.setDefaultCapable( true );
-
-        cancelButton.setText( "Cancel" );
-        cancelButton.addActionListener( new CancelListener( this ) );
-
-        errorLabel.setText( "" );
-        errorLabel.setEditable( false );
-        errorLabel.setBackground( this.getBackground() );
-        errorLabel.setBorder( BorderFactory.createLineBorder( Color.red ) );
-        errorLabel.setVisible( false );
-
-        contentPane.add( findLable,
-            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-                GridBagConstraints.WEST, GridBagConstraints.NONE,
-                new Insets( 5, 5, 5, 5 ), 0, 0 ) );
-        contentPane.add( findTextField,
-            new GridBagConstraints( 1, 0, 2, 1, 0.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-                new Insets( 5, 5, 5, 5 ), 0, 0 ) );
-        contentPane.add( findButton,
-            new GridBagConstraints( 3, 0, 1, 1, 0.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-                new Insets( 5, 5, 5, 5 ), 0, 0 ) );
-
-        contentPane.add( optionsPanel,
-            new GridBagConstraints( 0, 1, 2, 2, 1.0, 1.0,
-                GridBagConstraints.WEST, GridBagConstraints.NONE,
-                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
-        contentPane.add( cancelButton,
-            new GridBagConstraints( 3, 1, 1, 1, 0.0, 0.0,
-                GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
-                new Insets( 5, 5, 5, 5 ), 0, 0 ) );
-
-        contentPane.add( errorLabel,
-            new GridBagConstraints( 2, 2, 2, 1, 1.0, 1.0,
-                GridBagConstraints.WEST, GridBagConstraints.BOTH,
-                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
-
-        getContentPane().add( contentPane );
-        pack();
-
-        setOptions( null );
-
-        // ----------------------------------------------------------------------
-        // Set tab-order.
-        // ----------------------------------------------------------------------
-        ArrayList<JComponent> list = new ArrayList<JComponent>();
-        list.add( this.findTextField );
-
-        list.add( this.matchCheckBox );
-        list.add( this.regexCheckBox );
-        list.add( this.wrapCheckBox );
-
-        list.add( this.findButton );
-        list.add( this.cancelButton );
-
-        this.setFocusTraversalPolicy( new FocusPolicyList( list ) );
-    }
-
-    /***************************************************************************
-     *
-     **************************************************************************/
-    public void requestFocus()
-    {
-        super.requestFocus();
-
-        findTextField.requestFocus();
-    }
-
-    /***************************************************************************
-     * @param visible boolean
-     **************************************************************************/
-    public void setVisible( boolean visible )
-    {
-        super.setVisible( visible );
-        if( visible )
-        {
-            findTextField.requestFocus();
-        }
+        return optionsPanel;
     }
 
     /***************************************************************************
@@ -230,7 +190,7 @@ public class FindDialog extends JDialog
         {
             for( int i = findListeners.size() - 1; i > -1; i-- )
             {
-                FindListener fl = ( FindListener )findListeners.get( i );
+                FindListener fl = findListeners.get( i );
                 try
                 {
                     fl.findText( options );
@@ -243,7 +203,8 @@ public class FindDialog extends JDialog
                 }
             }
         }
-        this.setVisible( errorLabel.isVisible() );
+
+        dialog.setVisible( errorLabel.isVisible() );
     }
 
     /***************************************************************************
@@ -289,9 +250,10 @@ public class FindDialog extends JDialog
             this.adaptee = adaptee;
         }
 
+        @Override
         public void actionPerformed( ActionEvent e )
         {
-            ExitListener.doDefaultCloseOperation( adaptee );
+            ExitListener.doDefaultCloseOperation( adaptee.dialog );
         }
     }
 
@@ -307,9 +269,17 @@ public class FindDialog extends JDialog
             this.adaptee = adaptee;
         }
 
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             adaptee.findText();
         }
+    }
+
+    @Override
+    public JDialog getView()
+    {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

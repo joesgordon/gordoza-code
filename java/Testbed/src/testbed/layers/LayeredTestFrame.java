@@ -17,7 +17,7 @@ public class LayeredTestFrame extends JFrame
         setContentPane( createContentPane() );
     }
 
-    private Container createContentPane()
+    private static Container createContentPane()
     {
         JPanel contentPane = new JPanel( new BorderLayout() );
         TransitionPanel xpanel = new TransitionPanel();
@@ -33,14 +33,14 @@ public class LayeredTestFrame extends JFrame
     }
 
     @SuppressWarnings( "unused")
-    private JPanel createPanel1()
+    private static JPanel createPanel1()
     {
         JPanel panel = new GradientPanel();
         panel.setBackground( Color.red );
         return panel;
     }
 
-    private JPanel createPanel2()
+    private static JPanel createPanel2()
     {
         JPanel panel = new JPanel( new BorderLayout() );
         DirectoryTree dirTree = new DirectoryTree();
@@ -53,7 +53,7 @@ public class LayeredTestFrame extends JFrame
     }
 
     @SuppressWarnings( "unused")
-    private JPanel createPanel4()
+    private static JPanel createPanel4()
     {
         return new RegexPanel().getView();
     }

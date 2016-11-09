@@ -1,28 +1,44 @@
 package org.cojo.ui.tableModels;
 
-import java.util.Arrays;
-
 import org.cojo.model.CrState;
 import org.cojo.model.IChangeRequest;
-import org.jutils.ui.model.ItemTableModel;
+import org.jutils.ui.model.ITableItemsConfig;
 
-public class CrTableModel extends ItemTableModel<IChangeRequest>
+/*******************************************************************************
+ * 
+ ******************************************************************************/
+public class CrTableModel implements ITableItemsConfig<IChangeRequest>
 {
-    public static final String [] COLUMN_HEADING = { "#", "Title", "State" };
-    public static final Class<?> [] COLUMN_CLASSES = { Integer.class,
+    /**  */
+    private static final String [] COLUMN_HEADING = { "#", "Title", "State" };
+    /**  */
+    private static final Class<?> [] COLUMN_CLASSES = { Integer.class,
         String.class, CrState.class };
 
-    public CrTableModel()
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public String [] getColumnNames()
     {
-        setColumnNames( Arrays.asList( COLUMN_HEADING ) );
-        setColumnClasses( Arrays.asList( COLUMN_CLASSES ) );
+        return COLUMN_HEADING;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
-    public Object getValueAt( int row, int col )
+    public Class<?> [] getColumnClasses()
     {
-        IChangeRequest cr = getRow( row );
+        return COLUMN_CLASSES;
+    }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Object getItemData( IChangeRequest cr, int col )
+    {
         switch( col )
         {
             case 0:
@@ -34,5 +50,22 @@ public class CrTableModel extends ItemTableModel<IChangeRequest>
         }
 
         throw new IllegalArgumentException( "Unknown column: " + col );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void setItemData( IChangeRequest item, int col, Object data )
+    {
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public boolean isCellEditable( IChangeRequest item, int col )
+    {
+        return false;
     }
 }

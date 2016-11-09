@@ -7,34 +7,49 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 import org.cojo.model.IFinding;
+import org.jutils.ui.model.IView;
 
-/**
+/*******************************************************************************
  * 
- */
-public class FindingPanel extends JPanel
+ ******************************************************************************/
+public class FindingPanel implements IView<JPanel>
 {
-    private JTextField numberField;
-    private JTextField userField;
-    private JTextField dateField;
-    private JCheckBox acceptedField;
-    private JTextArea descriptionField;
-    private JTextArea commentsField;
+    /**  */
+    private final JPanel view;
+    /**  */
+    private final JTextField numberField;
+    /**  */
+    private final JTextField userField;
+    /**  */
+    private final JTextField dateField;
+    /**  */
+    private final JCheckBox acceptedField;
+    /**  */
+    private final JTextArea descriptionField;
+    /**  */
+    private final JTextArea commentsField;
 
-    /**
+    /***************************************************************************
      * 
-     */
+     **************************************************************************/
     public FindingPanel()
     {
-        super( new BorderLayout() );
+        this.view = new JPanel( new BorderLayout() );
+        this.numberField = new JTextField();
+        this.userField = new JTextField();
+        this.dateField = new JTextField();
+        this.acceptedField = new JCheckBox();
+        this.descriptionField = new JTextArea();
+        this.commentsField = new JTextArea();
 
         JScrollPane scrollPane = new JScrollPane( createMainPanel() );
 
-        add( scrollPane, BorderLayout.CENTER );
+        view.add( scrollPane, BorderLayout.CENTER );
     }
 
-    /**
+    /***************************************************************************
      * @param finding
-     */
+     **************************************************************************/
     public void setData( IFinding finding )
     {
         Date d = new Date( finding.getDate() );
@@ -47,19 +62,12 @@ public class FindingPanel extends JPanel
         commentsField.setText( finding.getComments() );
     }
 
-    /**
+    /***************************************************************************
      * @return
-     */
+     **************************************************************************/
     private JPanel createMainPanel()
     {
         JPanel mainPanel = new JPanel( new GridBagLayout() );
-
-        numberField = new JTextField();
-        userField = new JTextField();
-        dateField = new JTextField();
-        acceptedField = new JCheckBox();
-        descriptionField = new JTextArea();
-        commentsField = new JTextArea();
 
         numberField.setEditable( false );
         userField.setEditable( false );
@@ -73,9 +81,10 @@ public class FindingPanel extends JPanel
         addArea( mainPanel, "Description", descriptionField, 4 );
         addArea( mainPanel, "Comments", commentsField, 5 );
 
-        mainPanel.add( Box.createVerticalStrut( 0 ), new GridBagConstraints( 0,
-            50, 2, 6, 1.0, 1.0, GridBagConstraints.WEST,
-            GridBagConstraints.BOTH, new Insets( 0, 0, 0, 0 ), 0, 0 ) );
+        mainPanel.add( Box.createVerticalStrut( 0 ),
+            new GridBagConstraints( 0, 50, 2, 6, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
         return mainPanel;
     }
@@ -96,13 +105,15 @@ public class FindingPanel extends JPanel
 
         scrollPane.setPreferredSize( new Dimension( 150, 300 ) );
 
-        titlePanel.add( scrollPane, new GridBagConstraints( 0, 0, 1, 1, 1.0,
-            1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(
-                0, 6, 6, 6 ), 0, 0 ) );
+        titlePanel.add( scrollPane,
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 0, 6, 6, 6 ), 0, 0 ) );
 
-        panel.add( titlePanel, new GridBagConstraints( 0, row, 2, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets( 4, 4,
-                4, 4 ), 0, 0 ) );
+        panel.add( titlePanel,
+            new GridBagConstraints( 0, row, 2, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
     }
 
     /***************************************************************************
@@ -117,11 +128,22 @@ public class FindingPanel extends JPanel
     {
         JLabel label = new JLabel( text );
 
-        panel.add( label, new GridBagConstraints( col, row, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets( 0, 4,
-                0, 0 ), 0, 0 ) );
-        panel.add( field, new GridBagConstraints( col + 1, row, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
-                4, 2, 2, 4 ), 0, 0 ) );
+        panel.add( label,
+            new GridBagConstraints( col, row, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets( 0, 4, 0, 0 ), 0, 0 ) );
+        panel.add( field,
+            new GridBagConstraints( col + 1, row, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 4, 2, 2, 4 ), 0, 0 ) );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public JPanel getView()
+    {
+        return view;
     }
 }

@@ -60,7 +60,7 @@ public class DuakFrame implements IView<JFrame>
         frame.setTitle( "Disk Usage Analysis Kit" );
         frame.setDropTarget( new FileDropTarget( new FileDropped( this ) ) );
 
-        createMenubar( frameView.getMenuBar(), frameView.getFileMenu() );
+        createMenubar( frameView.getFileMenu() );
         frameView.setToolbar( createToolbar() );
         frameView.setContent( duakPanel.getView() );
 
@@ -72,7 +72,7 @@ public class DuakFrame implements IView<JFrame>
      * @param menubar
      * @param fileMenu
      **************************************************************************/
-    private void createMenubar( JMenuBar menubar, JMenu fileMenu )
+    private void createMenubar( JMenu fileMenu )
     {
         int i = 0;
 

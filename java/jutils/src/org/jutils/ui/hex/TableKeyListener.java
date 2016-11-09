@@ -59,7 +59,7 @@ public class TableKeyListener extends KeyAdapter
      * @param col
      * @param extend
      **************************************************************************/
-    private void moveUp( JTable t, int row, int col, boolean extend )
+    private static void moveUp( JTable t, int row, int col, boolean extend )
     {
         row--;
         if( row < 0 )
@@ -76,7 +76,7 @@ public class TableKeyListener extends KeyAdapter
      * @param col
      * @param extend
      **************************************************************************/
-    private void moveLeft( JTable t, int row, int col, boolean extend )
+    private static void moveLeft( JTable t, int row, int col, boolean extend )
     {
         col--;
         if( col - 1 < 0 )
@@ -97,7 +97,7 @@ public class TableKeyListener extends KeyAdapter
      * @param col
      * @param extend
      **************************************************************************/
-    private void moveRight( JTable t, int row, int col, boolean extend )
+    private static void moveRight( JTable t, int row, int col, boolean extend )
     {
         col++;
 
@@ -119,7 +119,7 @@ public class TableKeyListener extends KeyAdapter
      * @param col
      * @param extend
      **************************************************************************/
-    private void moveDown( JTable t, int row, int col, boolean extend )
+    private static void moveDown( JTable t, int row, int col, boolean extend )
     {
         row++;
         if( row >= t.getRowCount() )

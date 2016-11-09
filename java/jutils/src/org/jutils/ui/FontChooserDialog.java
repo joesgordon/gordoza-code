@@ -11,13 +11,13 @@ import javax.swing.border.LineBorder;
 import javax.swing.text.*;
 
 import org.jutils.SwingUtils;
-import org.jutils.ui.app.AppRunner;
+import org.jutils.ui.app.AppRunnable;
 import org.jutils.ui.app.IApplication;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
 
 /*******************************************************************************
- * 
+ * TODO use auto combo boxes
  ******************************************************************************/
 public class FontChooserDialog extends JDialog
 {
@@ -187,6 +187,7 @@ public class FontChooserDialog extends JDialog
         JButton btCancel = new JButton( "Cancel" );
         ActionListener okActionListener = new ActionListener()
         {
+            @Override
             public void actionPerformed( ActionEvent e )
             {
                 closedOption = JOptionPane.OK_OPTION;
@@ -195,6 +196,7 @@ public class FontChooserDialog extends JDialog
         };
         ActionListener cancelActionListener = new ActionListener()
         {
+            @Override
             public void actionPerformed( ActionEvent e )
             {
                 closedOption = JOptionPane.CANCEL_OPTION;
@@ -266,6 +268,7 @@ public class FontChooserDialog extends JDialog
 
         ActionListener actionListener = new ActionListener()
         {
+            @Override
             public void actionPerformed( ActionEvent e )
             {
                 updatePreview();
@@ -360,6 +363,7 @@ public class FontChooserDialog extends JDialog
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public void setVisible( boolean b )
     {
         if( b )
@@ -392,6 +396,7 @@ public class FontChooserDialog extends JDialog
                 FontChooserDialog dlg = new FontChooserDialog( new JFrame() );
                 dlg.addWindowListener( new WindowAdapter()
                 {
+                    @Override
                     public void windowClosing( WindowEvent e )
                     {
                         System.exit( 0 );
@@ -408,7 +413,7 @@ public class FontChooserDialog extends JDialog
                 return null;
             }
         };
-        SwingUtilities.invokeLater( new AppRunner( app ) );
+        SwingUtilities.invokeLater( new AppRunnable( app ) );
     }
 
     /***************************************************************************
@@ -518,6 +523,7 @@ public class FontChooserDialog extends JDialog
             return this;
         }
 
+        @Override
         public void paint( Graphics g )
         {
             icon.setIconWidth( this.getWidth() - 2 * margin );

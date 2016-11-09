@@ -26,6 +26,7 @@ public class Record
     /**
      * @return String
      */
+    @Override
     public String toString()
     {
         return title;

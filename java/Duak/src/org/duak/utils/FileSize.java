@@ -24,6 +24,7 @@ public class FileSize implements Comparable<FileSize>
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public String toString()
     {
         return str;

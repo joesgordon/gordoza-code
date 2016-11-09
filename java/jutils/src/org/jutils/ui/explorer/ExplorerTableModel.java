@@ -1,8 +1,8 @@
 package org.jutils.ui.explorer;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -16,7 +16,7 @@ public class ExplorerTableModel extends AbstractTableModel
         "Size (kB)", "Type", "Modified" };
 
     /**  */
-    private Vector<ExplorerItem> contents = new Vector<ExplorerItem>( 1024 );
+    private List<ExplorerItem> contents = new ArrayList<ExplorerItem>( 1024 );
 
     /***************************************************************************
      * 
@@ -31,6 +31,7 @@ public class ExplorerTableModel extends AbstractTableModel
      * @param col int
      * @return boolean
      **************************************************************************/
+    @Override
     public boolean isCellEditable( int row, int col )
     {
         return false;
@@ -39,6 +40,7 @@ public class ExplorerTableModel extends AbstractTableModel
     /***************************************************************************
      * @return int
      **************************************************************************/
+    @Override
     public int getColumnCount()
     {
         return HEADERS.length;
@@ -47,6 +49,7 @@ public class ExplorerTableModel extends AbstractTableModel
     /***************************************************************************
      * @return int
      **************************************************************************/
+    @Override
     public int getRowCount()
     {
         return contents.size();
@@ -56,6 +59,7 @@ public class ExplorerTableModel extends AbstractTableModel
      * @param col int
      * @return String
      **************************************************************************/
+    @Override
     public String getColumnName( int col )
     {
         String name = null;
@@ -78,7 +82,7 @@ public class ExplorerTableModel extends AbstractTableModel
 
         if( rowIndex > -1 && rowIndex < contents.size() )
         {
-            item = ( ExplorerItem )contents.get( rowIndex );
+            item = contents.get( rowIndex );
         }
 
         return item;
@@ -89,9 +93,10 @@ public class ExplorerTableModel extends AbstractTableModel
      * @param columnIndex int
      * @return Object
      **************************************************************************/
+    @Override
     public Object getValueAt( int rowIndex, int columnIndex )
     {
-        ExplorerItem item = ( ExplorerItem )contents.get( rowIndex );
+        ExplorerItem item = contents.get( rowIndex );
         Object value = null;
 
         switch( columnIndex )
@@ -182,7 +187,7 @@ public class ExplorerTableModel extends AbstractTableModel
      **************************************************************************/
     public void insertFile( int row, ExplorerItem item )
     {
-        contents.insertElementAt( item, row );
+        contents.add( row, item );
         fireTableRowsInserted( row, row );
     }
 

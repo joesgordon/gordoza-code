@@ -24,6 +24,7 @@ public class FileComparator implements Comparator<File>
      * @return a negative integer, zero, or a positive integer as the first
      * argument is less than, equal to, or greater than the second.
      */
+    @Override
     public int compare( File file1, File file2 )
     {
         if( file1.isDirectory() && file2.isFile() )

@@ -3,7 +3,6 @@ package org.jutils.ui.app;
 import java.lang.Thread.UncaughtExceptionHandler;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 import org.jutils.ui.StandardUncaughtExceptionHandler;
 
@@ -19,16 +18,28 @@ public class FrameApplication implements IApplication
     /**  */
     private final String lookAndFeel;
 
+    /***************************************************************************
+     * @param frameApp
+     **************************************************************************/
     public FrameApplication( IFrameApp frameApp )
     {
         this( frameApp, true );
     }
 
+    /***************************************************************************
+     * @param frameApp
+     * @param validate
+     **************************************************************************/
     public FrameApplication( IFrameApp frameApp, boolean validate )
     {
         this( frameApp, validate, null );
     }
 
+    /***************************************************************************
+     * @param frameApp
+     * @param validate
+     * @param lookAndFeel
+     **************************************************************************/
     public FrameApplication( IFrameApp frameApp, boolean validate,
         String lookAndFeel )
     {
@@ -37,18 +48,27 @@ public class FrameApplication implements IApplication
         this.lookAndFeel = lookAndFeel;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public String getLookAndFeelName()
     {
         return lookAndFeel;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void createAndShowUi()
     {
         createAndShowFrame();
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public JFrame createAndShowFrame()
     {
         JFrame frame = frameApp.createFrame();
@@ -76,25 +96,5 @@ public class FrameApplication implements IApplication
         frameApp.finalizeGui();
 
         return frame;
-    }
-
-    public static void invokeLater( IFrameApp app )
-    {
-        invokeLater( app, true, null );
-    }
-
-    public static void invokeLater( IFrameApp app, boolean validate )
-    {
-        invokeLater( app, validate, null );
-    }
-
-    public static void invokeLater( IFrameApp app, boolean validate,
-        String lookAndFeel )
-    {
-        FrameApplication fApp = new FrameApplication( app, validate,
-            lookAndFeel );
-        AppRunner runner = new AppRunner( fApp );
-
-        SwingUtilities.invokeLater( runner );
     }
 }

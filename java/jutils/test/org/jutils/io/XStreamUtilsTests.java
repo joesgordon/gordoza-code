@@ -2,11 +2,10 @@ package org.jutils.io;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.jutils.apps.summer.data.ChecksumResult;
-import org.jutils.apps.summer.data.SumFile;
 
 import com.thoughtworks.xstream.XStreamException;
 
@@ -22,15 +21,15 @@ public class XStreamUtilsTests
         {
             XStreamUtils.writeObjectXStream( new Double( 42.0 ) );
         }
-        catch( XStreamException e )
+        catch( XStreamException ex )
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            ex.printStackTrace();
+            Assert.fail( ex.getMessage() );
         }
-        catch( IOException e )
+        catch( IOException ex )
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            ex.printStackTrace();
+            Assert.fail( ex.getMessage() );
         }
     }
 
@@ -48,15 +47,15 @@ public class XStreamUtilsTests
 
             Assert.assertEquals( expected, d );
         }
-        catch( XStreamException e )
+        catch( XStreamException ex )
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            ex.printStackTrace();
+            Assert.fail( ex.getMessage() );
         }
-        catch( IOException e )
+        catch( IOException ex )
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            ex.printStackTrace();
+            Assert.fail( ex.getMessage() );
         }
     }
 
@@ -68,22 +67,68 @@ public class XStreamUtilsTests
     {
         try
         {
-            ChecksumResult expected = new ChecksumResult();
-            expected.commonDir = new File( "\\" );
-            expected.files.add(
-                new SumFile( new File( "C:\\Windows\\System32\\Calc.exe" ) ) );
+            File file = new File( "C:\\Windows\\System32\\Calc.exe" );
+            FileState expected = new FileState( file );
             String xml = XStreamUtils.writeObjectXStream( expected );
-            XStreamUtils.readObjectXStream( xml );
+            FileState actual = XStreamUtils.readObjectXStream( xml );
+
+            Assert.assertEquals( expected, actual );
         }
-        catch( XStreamException e )
+        catch( XStreamException ex )
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            ex.printStackTrace();
+            Assert.fail( ex.getMessage() );
         }
-        catch( IOException e )
+        catch( IOException ex )
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            ex.printStackTrace();
+            Assert.fail( ex.getMessage() );
+        }
+    }
+
+    private static class FileState
+    {
+        public final String path;
+        public final long length;
+
+        public FileState( File file )
+        {
+            this.path = file.getAbsolutePath();
+            this.length = file.length();
+        }
+
+        @Override
+        public boolean equals( Object obj )
+        {
+            if( obj == null )
+            {
+                return false;
+            }
+            else if( obj instanceof FileState )
+            {
+                FileState fs = ( FileState )obj;
+
+                if( !path.equals( fs.path ) )
+                {
+                    return false;
+                }
+                else if( length != fs.length )
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return Objects.hash( path, length );
         }
     }
 }

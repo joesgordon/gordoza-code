@@ -194,7 +194,7 @@ public class SearchTask implements IStoppableTask
 
             if( children == null )
             {
-                searchHandler.addErrorMessage(
+                SearchResultsHandler.addErrorMessage(
                     "Do not have permission to list " +
                         file.getAbsolutePath() );
             }
@@ -258,7 +258,7 @@ public class SearchTask implements IStoppableTask
             }
             else
             {
-                searchHandler.addErrorMessage(
+                SearchResultsHandler.addErrorMessage(
                     "Cannot read file" + file.getAbsolutePath() );
             }
         }

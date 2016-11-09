@@ -29,6 +29,7 @@ public class RowHeaderRenderer implements ListCellRenderer<Object>
         return f;
     }
 
+    @Override
     public Component getListCellRendererComponent( JList<? extends Object> list,
         Object value, int index, boolean isSelected, boolean cellHasFocus )
     {

@@ -16,6 +16,7 @@ public class AutoComplete<T> extends JComboBox<T>
 
     public class CBDocument extends PlainDocument
     {
+        @Override
         public void insertString( int offset, String str, AttributeSet a )
             throws BadLocationException
         {

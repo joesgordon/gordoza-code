@@ -13,7 +13,7 @@ import org.jutils.chart.model.*;
 import org.jutils.chart.ui.WidgetPanel;
 import org.jutils.ui.JGoodiesToolBar;
 import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
 public class LegendWidgetApp
@@ -23,7 +23,7 @@ public class LegendWidgetApp
      **************************************************************************/
     public static void main( String [] args )
     {
-        FrameApplication.invokeLater( new IFrameApp()
+        FrameRunner.invokeLater( new IFrameApp()
         {
             @Override
             public void finalizeGui()

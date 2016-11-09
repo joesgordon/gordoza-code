@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import javax.swing.*;
 
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.model.ItemComboBoxModel;
 
@@ -21,7 +21,7 @@ public class BusyBar2App implements IFrameApp
      **************************************************************************/
     public static void main( String[] args )
     {
-        FrameApplication.invokeLater( new BusyBar2App() );
+        FrameRunner.invokeLater( new BusyBar2App() );
     }
 
     @Override

@@ -31,6 +31,7 @@ public class StyleTest extends JFrame
         boldButton.setText( "Bold It" );
         boldButton.addActionListener( new ActionListener()
         {
+            @Override
             public void actionPerformed( ActionEvent e )
             {
                 AttributeSet current = textPane.getCharacterAttributes();
@@ -66,6 +67,7 @@ public class StyleTest extends JFrame
         textPane.setDocument( styledDocument );
         textPane.addCaretListener( new CaretListener()
         {
+            @Override
             public void caretUpdate( CaretEvent e )
             {
                 int dot = e.getDot();
@@ -122,6 +124,7 @@ public class StyleTest extends JFrame
     {
         SwingUtilities.invokeLater( new Runnable()
         {
+            @Override
             public void run()
             {
                 StyleTest st = new StyleTest();

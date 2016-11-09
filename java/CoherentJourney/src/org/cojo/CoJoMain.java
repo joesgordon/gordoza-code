@@ -3,23 +3,24 @@ package org.cojo;
 import javax.swing.JFrame;
 
 import org.cojo.ui.CojoFrame;
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
 public class CoJoMain implements IFrameApp
 {
     public static void main( String [] args )
     {
-        FrameApplication.invokeLater( new CoJoMain() );
+        FrameRunner.invokeLater( new CoJoMain() );
     }
 
     @Override
     public JFrame createFrame()
     {
-        CojoFrame frame = new CojoFrame();
+        CojoFrame frameView = new CojoFrame();
+        JFrame frame = frameView.getView();
 
         frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-        frame.setSize( 800, 600 );
+
         return frame;
     }
 

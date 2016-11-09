@@ -5,7 +5,7 @@ import javax.swing.JPanel;
 
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
 /*******************************************************************************
@@ -19,7 +19,7 @@ public class CalDisMain
      **************************************************************************/
     public static void main( String [] args )
     {
-        FrameApplication.invokeLater( new CalDisApp() );
+        FrameRunner.invokeLater( new CalDisApp() );
     }
 
     /***************************************************************************

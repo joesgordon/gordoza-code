@@ -78,7 +78,7 @@ public class SearchView implements IDataView<SearchParams>
     /**  */
     private final JScrollPane rightResultsScroll;
     /**  */
-    private final AltEditorPane rightResultsPane;
+    private final ScrollableEditorPaneView rightResultsPane;
     /**  */
     private final DefaultStyledDocument defStyledDocument;
     /**  */
@@ -137,7 +137,7 @@ public class SearchView implements IDataView<SearchParams>
         leftResultsScroll = new JScrollPane();
         resultsTable = new ExplorerTable();
         rightResultsScroll = new JScrollPane();
-        rightResultsPane = new AltEditorPane();
+        rightResultsPane = new ScrollableEditorPaneView();
         defStyledDocument = new DefaultStyledDocument();
         startIcon = IconConstants.loader.getIcon( IconConstants.FIND_32 );
         browseListener = new BrowseButtonListener( this );
@@ -172,7 +172,7 @@ public class SearchView implements IDataView<SearchParams>
         leftResultsScroll.getViewport().setBackground( Color.white );
         leftResultsScroll.setMinimumSize( new Dimension( 150, 150 ) );
 
-        rightResultsScroll.setViewportView( rightResultsPane );
+        rightResultsScroll.setViewportView( rightResultsPane.getView() );
         rightResultsScroll.setMinimumSize( new Dimension( 150, 150 ) );
 
         rightResultsPane.setDocument( defStyledDocument );
@@ -553,7 +553,8 @@ public class SearchView implements IDataView<SearchParams>
      * @param right JComponent
      * @return JPanel
      **************************************************************************/
-    private JPanel createRightSidedPanel( JComponent left, JComponent right )
+    private static JPanel createRightSidedPanel( JComponent left,
+        JComponent right )
     {
         JPanel panel = new JPanel();
         GridBagLayout layout = new GridBagLayout();
@@ -920,7 +921,7 @@ public class SearchView implements IDataView<SearchParams>
 
                 for( int i = 0; i < lines.size(); i++ )
                 {
-                    LineMatch line = ( LineMatch )lines.get( i );
+                    LineMatch line = lines.get( i );
                     // LogUtils.printDebug( "\tWriting line:" + i );
 
                     rightResultsPane.appendText( line.lineNumber + ": \t",
@@ -979,6 +980,7 @@ public class SearchView implements IDataView<SearchParams>
             this.panel = panel;
         }
 
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             DirectoryChooser chooser = new DirectoryChooser(
@@ -1005,6 +1007,7 @@ public class SearchView implements IDataView<SearchParams>
      **************************************************************************/
     private class StartButtonListener implements ActionListener
     {
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             String str = e.getActionCommand();
@@ -1025,6 +1028,7 @@ public class SearchView implements IDataView<SearchParams>
      **************************************************************************/
     private class StartKeyListener extends KeyAdapter
     {
+        @Override
         public void keyReleased( KeyEvent e )
         {
             if( e.getKeyCode() == KeyEvent.VK_ENTER )
@@ -1047,6 +1051,7 @@ public class SearchView implements IDataView<SearchParams>
             this.adaptee = adaptee;
         }
 
+        @Override
         public void valueChanged( ListSelectionEvent e )
         {
             adaptee.listener_resultsTable_valueChanged( e );
@@ -1070,6 +1075,7 @@ public class SearchView implements IDataView<SearchParams>
             this.components = components;
         }
 
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             JCheckBox box = ( JCheckBox )e.getSource();
@@ -1095,6 +1101,7 @@ public class SearchView implements IDataView<SearchParams>
             // this.explorer = new JExplorerFrame();
         }
 
+        @Override
         public void mouseClicked( MouseEvent e )
         {
             if( e.getClickCount() == 2 && !e.isPopupTrigger() )

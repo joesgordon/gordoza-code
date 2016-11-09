@@ -14,5 +14,6 @@ public interface IDataWriter<T> extends IWriter<T, IDataStream>
      * @param stream the stream to be written to.
      * @throws IOException if any I/O error occurs.
      **************************************************************************/
+    @Override
     public void write( T data, IDataStream stream ) throws IOException;
 }

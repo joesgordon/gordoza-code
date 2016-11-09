@@ -29,7 +29,7 @@ public class TimeOfDayPrinter
      * @param microseconds
      * @return
      **************************************************************************/
-    public String toString( long microsIntoDay )
+    public static String toString( long microsIntoDay )
     {
         long us = microsIntoDay;
         long h;

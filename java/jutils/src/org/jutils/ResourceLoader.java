@@ -62,13 +62,13 @@ public class ResourceLoader
     public URL getUrl( String name )
     {
         URL url = null;
+
         try
         {
             url = new URL( baseUrl.toString() + name );
         }
         catch( MalformedURLException ex )
         {
-            url = null;
         }
 
         return url;

@@ -4,7 +4,7 @@ import java.io.File;
 
 import javax.swing.JFrame;
 
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
 /*******************************************************************************
@@ -17,6 +17,7 @@ public class JExplorerMain implements IFrameApp
      * Create the AppGalley frame.
      * @return
      **************************************************************************/
+    @Override
     public JFrame createFrame()
     {
         JExplorerFrame frame = new JExplorerFrame();
@@ -40,6 +41,6 @@ public class JExplorerMain implements IFrameApp
      **************************************************************************/
     public static void main( String [] args )
     {
-        FrameApplication.invokeLater( new JExplorerMain() );
+        FrameRunner.invokeLater( new JExplorerMain() );
     }
 }

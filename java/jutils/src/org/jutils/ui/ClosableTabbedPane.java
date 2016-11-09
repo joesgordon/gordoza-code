@@ -15,6 +15,9 @@ import org.jutils.ui.event.TabRemovedListener;
  ******************************************************************************/
 public class ClosableTabbedPane extends JTabbedPane
 {
+    /**  */
+    private static final long serialVersionUID = 7373834511145425414L;
+
     /***************************************************************************
      *
      **************************************************************************/
@@ -29,6 +32,7 @@ public class ClosableTabbedPane extends JTabbedPane
      * @param title String
      * @param component Component
      **************************************************************************/
+    @Override
     public void addTab( String title, Component component )
     {
         this.addTab( title, component, null );
@@ -55,6 +59,7 @@ public class ClosableTabbedPane extends JTabbedPane
     /***************************************************************************
      * @param comp Component
      **************************************************************************/
+    @Override
     public void remove( Component comp )
     {
         int index = this.indexOfComponent( comp );
@@ -65,6 +70,7 @@ public class ClosableTabbedPane extends JTabbedPane
     /***************************************************************************
      * @param index int
      **************************************************************************/
+    @Override
     public void removeTabAt( int index )
     {
         Component comp = getComponentAt( index );
@@ -75,6 +81,7 @@ public class ClosableTabbedPane extends JTabbedPane
     /***************************************************************************
      *
      **************************************************************************/
+    @Override
     public void removeAll()
     {
         super.removeAll();
@@ -105,6 +112,7 @@ public class ClosableTabbedPane extends JTabbedPane
      **************************************************************************/
     class TabHoverListener extends MouseMotionAdapter
     {
+        @Override
         public void mouseMoved( MouseEvent e )
         {
             int tabNumber = getUI().tabForCoordinate( ClosableTabbedPane.this,
@@ -133,6 +141,7 @@ public class ClosableTabbedPane extends JTabbedPane
      **************************************************************************/
     class TabClickedListener extends MouseAdapter
     {
+        @Override
         public void mouseClicked( MouseEvent e )
         {
             int tabNumber = getUI().tabForCoordinate( ClosableTabbedPane.this,
@@ -195,6 +204,7 @@ class CloseTabIcon implements Icon
         // LogUtils.printDebug( "Class: " + c.getClass().toString() );
     }
 
+    @Override
     public void paintIcon( Component c, Graphics g, int x, int y )
     {
         this.x_pos = x;
@@ -242,11 +252,13 @@ class CloseTabIcon implements Icon
         }
     }
 
+    @Override
     public int getIconWidth()
     {
         return width + ( fileIcon != null ? fileIcon.getIconWidth() : 0 );
     }
 
+    @Override
     public int getIconHeight()
     {
         return height;

@@ -165,6 +165,7 @@ public class HexLongFormField implements IDataFormField<Long>
     /***************************************************************************
      * @return
      **************************************************************************/
+    @Override
     public IValidationField getValidationField()
     {
         return textField.getField();
@@ -181,6 +182,7 @@ public class HexLongFormField implements IDataFormField<Long>
     /***************************************************************************
      * @param editable
      **************************************************************************/
+    @Override
     public void setEditable( boolean editable )
     {
         textField.getField().setEditable( editable );

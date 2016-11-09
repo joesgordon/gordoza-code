@@ -23,8 +23,8 @@ public class LedgerMonth
      **************************************************************************/
     public LedgerMonth()
     {
-        startingBalance = new Money( 0 );
-        transactions = new ArrayList<Transaction>();
+        this.startingBalance = new Money( 0 );
+        this.transactions = new ArrayList<Transaction>();
     }
 
     /***************************************************************************
@@ -44,15 +44,13 @@ public class LedgerMonth
         {
             return -1;
         }
-        else
-        {
-            c.add( Calendar.MONTH, 1 );
-            diff = c.getTime().getTime() - date;
 
-            if( diff > 0 )
-            {
-                return 1;
-            }
+        c.add( Calendar.MONTH, 1 );
+        diff = c.getTime().getTime() - date;
+
+        if( diff > 0 )
+        {
+            return 1;
         }
 
         return 0;

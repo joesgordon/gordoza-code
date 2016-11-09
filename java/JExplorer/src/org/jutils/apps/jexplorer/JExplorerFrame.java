@@ -6,7 +6,6 @@ import java.io.File;
 import java.util.*;
 
 import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -96,7 +95,7 @@ public class JExplorerFrame implements IView<JFrame>
             "Up a Directory",
             IconConstants.loader.getIcon( IconConstants.UP_24 ) );
 
-        TreeSelectionListener dirTreeSelListener = ( e ) -> dirTreeChanged( e );
+        TreeSelectionListener dirTreeSelListener = ( e ) -> dirTreeChanged();
         MouseListener dirTreeMouseListener = new DirTreeMouseListener( this );
         MouseListener fileTableMouseListener = new FileTableMouseListener(
             this );
@@ -109,7 +108,7 @@ public class JExplorerFrame implements IView<JFrame>
             IconConstants.OPEN_FOLDER_16, IconConstants.OPEN_FOLDER_32 ) );
         frame.setSize( new Dimension( 600, 450 ) );
 
-        createMenubar( view.getMenuBar(), view.getFileMenu() );
+        createMenubar( view.getMenuBar() );
         view.setToolbar( createToolbar() );
 
         view.setContent( createContent() );
@@ -142,7 +141,7 @@ public class JExplorerFrame implements IView<JFrame>
      * @param menuBar
      * @param fileMenus
      **************************************************************************/
-    private void createMenubar( JMenuBar menubar, JMenu fileMenus )
+    private void createMenubar( JMenuBar menubar )
     {
         menubar.add( createToolsMenu() );
     }
@@ -344,7 +343,7 @@ public class JExplorerFrame implements IView<JFrame>
      **************************************************************************/
     private void addLastFile()
     {
-        File lastFile = ( File )lastDirs.peekFirst();
+        File lastFile = lastDirs.peekFirst();
 
         if( lastDirectory != null )
         {
@@ -367,7 +366,7 @@ public class JExplorerFrame implements IView<JFrame>
      **************************************************************************/
     public void goNextDirectory()
     {
-        File file = ( File )nextDirs.pollFirst();
+        File file = nextDirs.pollFirst();
         if( file != null )
         {
             lastDirs.push( currentDirectory );
@@ -381,7 +380,7 @@ public class JExplorerFrame implements IView<JFrame>
 
             setDirectory( file );
 
-            file = ( File )nextDirs.peekFirst();
+            file = nextDirs.peekFirst();
             if( file != null )
             {
                 SwingUtils.setActionToolTip( nextAction,
@@ -396,7 +395,7 @@ public class JExplorerFrame implements IView<JFrame>
 
     public void goPreviousDirectory()
     {
-        File file = ( File )lastDirs.pollFirst();
+        File file = lastDirs.pollFirst();
         if( file != null )
         {
             nextDirs.push( currentDirectory );
@@ -408,7 +407,7 @@ public class JExplorerFrame implements IView<JFrame>
 
             setDirectory( file );
 
-            file = ( File )lastDirs.peekFirst();
+            file = lastDirs.peekFirst();
             if( file != null )
             {
                 SwingUtils.setActionToolTip( prevAction,
@@ -447,10 +446,9 @@ public class JExplorerFrame implements IView<JFrame>
 
     /***************************************************************************
      * Callback listener invoked when the file tree has been selected or
-     * deselected by either the user or programatically.
-     * @param e The ignored (can be null) TreeSelectionEvent that occurred.
+     * deselected by either the user or programmatically.
      **************************************************************************/
-    private void dirTreeChanged( TreeSelectionEvent e )
+    private void dirTreeChanged()
     {
         File [] dirsSelected = dirTree.getSelected();
         if( dirsSelected.length == 1 )
@@ -487,9 +485,8 @@ public class JExplorerFrame implements IView<JFrame>
     /***************************************************************************
      * Callback listener invoked when any button of the mouse is clicked while
      * the cursor is above the directory tree.
-     * @param e The ignored (can be null) ActionEvent that occurred.
      **************************************************************************/
-    public void doTreeDirClicked( MouseEvent e )
+    public void doTreeDirClicked()
     {
         File [] dirsSelected = dirTree.getSelected();
 
@@ -514,11 +511,12 @@ public class JExplorerFrame implements IView<JFrame>
             this.view = adaptee;
         }
 
+        @Override
         public void mouseClicked( MouseEvent e )
         {
             if( e.getClickCount() == 1 )
             {
-                view.doTreeDirClicked( e );
+                view.doTreeDirClicked();
             }
         }
     }
@@ -532,6 +530,7 @@ public class JExplorerFrame implements IView<JFrame>
             this.view = adaptee;
         }
 
+        @Override
         public void mouseClicked( MouseEvent e )
         {
             if( e.getClickCount() == 2 )

@@ -10,7 +10,7 @@ import javax.swing.*;
 import org.jutils.SwingUtils;
 import org.jutils.Utils;
 import org.jutils.ui.*;
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.model.IView;
 
@@ -257,7 +257,7 @@ public class RegexPanel implements IView<JPanel>
             }
         };
 
-        FrameApplication.invokeLater( app );
+        FrameRunner.invokeLater( app );
     }
 
     /***************************************************************************
@@ -272,6 +272,7 @@ public class RegexPanel implements IView<JPanel>
             this.view = adaptee;
         }
 
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             Window win = SwingUtils.getComponentsWindow( view.view );
@@ -292,6 +293,7 @@ public class RegexPanel implements IView<JPanel>
             this.view = adaptee;
         }
 
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             view.testRegex();

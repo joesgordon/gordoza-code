@@ -20,6 +20,7 @@ public class ExpandingPanels extends MouseAdapter
         assemblePanels();
     }
 
+    @Override
     public void mousePressed( MouseEvent e )
     {
         ActionPanel ap = ( ActionPanel )e.getSource();
@@ -117,7 +118,7 @@ public class ExpandingPanels extends MouseAdapter
         panels = new JPanel[] { p1, p2, p3, p4 };
     }
 
-    private void addComponents( Component c1, Component c2, Container c,
+    private static void addComponents( Component c1, Component c2, Container c,
         GridBagConstraints gbc )
     {
         gbc.anchor = GridBagConstraints.EAST;
@@ -195,6 +196,7 @@ class ActionPanel extends JPanel
         repaint();
     }
 
+    @Override
     protected void paintComponent( Graphics g )
     {
         super.paintComponent( g );

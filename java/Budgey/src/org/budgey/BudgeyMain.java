@@ -6,7 +6,7 @@ import org.budgey.data.BudgeyOptions;
 import org.jutils.io.IOUtils;
 import org.jutils.io.options.IOptionsCreator;
 import org.jutils.io.options.OptionsSerializer;
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 
 /*******************************************************************************
  * 
@@ -27,7 +27,7 @@ public class BudgeyMain
      **************************************************************************/
     public static void main( String [] args )
     {
-        FrameApplication.invokeLater( new BudgeyApp() );
+        FrameRunner.invokeLater( new BudgeyApp() );
     }
 
     /***************************************************************************

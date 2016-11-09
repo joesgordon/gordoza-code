@@ -80,7 +80,7 @@ public class TickGen
     /***************************************************************************
      * @return
      **************************************************************************/
-    private TickMetrics calculateMetrics( Axis axis )
+    private static TickMetrics calculateMetrics( Axis axis )
     {
         TickMetrics metrics = new TickMetrics();
 

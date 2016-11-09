@@ -75,6 +75,7 @@ public final class TextAreaUtils
             this.text = txt;
         }
 
+        @Override
         public void run()
         {
             area.append( text );

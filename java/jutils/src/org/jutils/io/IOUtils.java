@@ -337,7 +337,6 @@ public final class IOUtils
         }
         catch( URISyntaxException ex )
         {
-            file = null;
         }
 
         return file;

@@ -277,7 +277,7 @@ public class HexTable extends JTable
             comp = c;
         }
 
-        private boolean isByte( String str )
+        private static boolean isByte( String str )
         {
             try
             {
@@ -294,6 +294,7 @@ public class HexTable extends JTable
             return true;
         }
 
+        @Override
         public void insertString( FilterBypass fb, int offs, String text,
             AttributeSet attr ) throws BadLocationException
         {
@@ -311,6 +312,7 @@ public class HexTable extends JTable
             }
         }
 
+        @Override
         public void replace( FilterBypass fb, int offs, int len, String text,
             AttributeSet attrs ) throws BadLocationException
         {
@@ -352,6 +354,7 @@ public class HexTable extends JTable
             doc.setDocumentFilter( new EditorDocumentFilter( field ) );
         }
 
+        @Override
         public boolean stopCellEditing()
         {
             // Prevent the user from entering empty string as a value.
@@ -386,7 +389,7 @@ public class HexTable extends JTable
             label.setFont( loadFont() );
         }
 
-        private Font loadFont()
+        private static Font loadFont()
         {
             Font f;
 

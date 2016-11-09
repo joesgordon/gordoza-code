@@ -9,35 +9,47 @@ import org.cojo.model.IChangeRequest;
 import org.jutils.IconConstants;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class CrPanel extends JPanel
+public class CrPanel implements IView<JPanel>
 {
-    private JTabbedPane mainTabbedPane;
+    private final JPanel view;
+    private final JTabbedPane mainTabbedPane;
 
-    private JLabel numberLabel;
-    private JTextField titleField;
-    private JTextField stateField;
+    private final JLabel numberLabel;
+    private final JTextField titleField;
+    private final JTextField stateField;
 
-    private CrDefinitionPanel crDefinitionPanel;
-    private StfsPanel stfsPanel;
-    private NotesPanel notesPanel;
+    private final CrDefinitionPanel crDefinitionPanel;
+    private final StfsPanel stfsPanel;
+    private final NotesPanel notesPanel;
 
-    private JPanel thirdPartyPanel;
-    private JPanel systemEngineeringPanel;
-    private FindingsPanel designPanel;
+    private final JPanel thirdPartyPanel;
+    private final JPanel systemEngineeringPanel;
+    private final FindingsPanel designPanel;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public CrPanel()
     {
-        super( new BorderLayout() );
+        this.view = new JPanel( new BorderLayout() );
+        this.numberLabel = new JLabel( "CR # " );
+        this.titleField = new JTextField( "CR Title" );
+        this.stateField = new JTextField( "State", 20 );
+        this.crDefinitionPanel = new CrDefinitionPanel();
+        this.stfsPanel = new StfsPanel();
+        this.notesPanel = new NotesPanel();
+        this.designPanel = new FindingsPanel();
+        this.systemEngineeringPanel = new JPanel();
+        this.thirdPartyPanel = new JPanel();
+        this.mainTabbedPane = new JTabbedPane();
 
-        add( createToolbar(), BorderLayout.NORTH );
-        add( createMainPanel(), BorderLayout.CENTER );
+        view.add( createToolbar(), BorderLayout.NORTH );
+        view.add( createMainPanel(), BorderLayout.CENTER );
     }
 
     /***************************************************************************
@@ -67,22 +79,23 @@ public class CrPanel extends JPanel
         JButton stateButton = new JButton();
         JButton helpButton = new JButton();
 
-        saveButton.setIcon( IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
+        saveButton.setIcon(
+            IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
         saveButton.setToolTipText( "Save CR" );
         saveButton.setFocusable( false );
 
-        printButton.setIcon( CojoIconLoader.getloader().getIcon(
-            CojoIconLoader.PRINT_16 ) );
+        printButton.setIcon(
+            CojoIconLoader.getloader().getIcon( CojoIconLoader.PRINT_16 ) );
         printButton.setToolTipText( "Print CR" );
         printButton.setFocusable( false );
 
-        stateButton.setIcon( CojoIconLoader.getloader().getIcon(
-            CojoIconLoader.SWITCH_16 ) );
+        stateButton.setIcon(
+            CojoIconLoader.getloader().getIcon( CojoIconLoader.SWITCH_16 ) );
         stateButton.setToolTipText( "Change State" );
         stateButton.setFocusable( false );
 
-        helpButton.setIcon( CojoIconLoader.getloader().getIcon(
-            CojoIconLoader.HELP_16 ) );
+        helpButton.setIcon(
+            CojoIconLoader.getloader().getIcon( CojoIconLoader.HELP_16 ) );
         helpButton.setToolTipText( "Get help" );
         helpButton.setFocusable( false );
 
@@ -124,26 +137,20 @@ public class CrPanel extends JPanel
             }
         };
 
-        crDefinitionPanel = new CrDefinitionPanel();
-        stfsPanel = new StfsPanel();
-        notesPanel = new NotesPanel();
-        designPanel = new FindingsPanel();
-        systemEngineeringPanel = new JPanel();
-        thirdPartyPanel = new JPanel();
-
-        mainTabbedPane = new JTabbedPane();
-        JScrollPane crScrollPane = new JScrollPane( crDefinitionPanel );
+        JScrollPane crScrollPane = new JScrollPane(
+            crDefinitionPanel.getView() );
 
         crScrollPane.setBorder( null );
         crScrollPane.getVerticalScrollBar().setUnitIncrement( 9 );
 
         crDefinitionPanel.addThirdPartyIpListener( thirdPartyListener );
-        crDefinitionPanel.addRequirementImpactListener( requirementsImpactListener );
+        crDefinitionPanel.addRequirementImpactListener(
+            requirementsImpactListener );
 
         mainTabbedPane.addTab( "Change Request", crScrollPane );
-        mainTabbedPane.addTab( "STFs", stfsPanel );
-        mainTabbedPane.addTab( "Notes", notesPanel );
-        mainTabbedPane.addTab( "Design", designPanel );
+        mainTabbedPane.addTab( "STFs", stfsPanel.getView() );
+        mainTabbedPane.addTab( "Notes", notesPanel.getView() );
+        mainTabbedPane.addTab( "Design", designPanel.getView() );
 
         systemEngineeringPanel.setVisible( false );
 
@@ -194,25 +201,34 @@ public class CrPanel extends JPanel
     private JPanel createTopPanel()
     {
         JPanel topPanel = new JPanel( new GridBagLayout() );
-        numberLabel = new JLabel( "CR # " );
-        titleField = new JTextField( "CR Title" );
-        stateField = new JTextField( "State", 20 );
 
         titleField.setToolTipText( "CR Title" );
         stateField.setEditable( false );
         stateField.setHorizontalAlignment( JTextField.CENTER );
         stateField.setToolTipText( "CR State" );
 
-        topPanel.add( numberLabel, new GridBagConstraints( 0, 0, 1, 1, 0.0,
-            0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(
-                4, 4, 2, 2 ), 0, 0 ) );
-        topPanel.add( titleField, new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(
-                4, 2, 4, 2 ), 0, 0 ) );
-        topPanel.add( stateField, new GridBagConstraints( 2, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets( 4, 2,
-                4, 4 ), 0, 0 ) );
+        topPanel.add( numberLabel,
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 4, 4, 2, 2 ), 0, 0 ) );
+        topPanel.add( titleField,
+            new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                new Insets( 4, 2, 4, 2 ), 0, 0 ) );
+        topPanel.add( stateField,
+            new GridBagConstraints( 2, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                new Insets( 4, 2, 4, 4 ), 0, 0 ) );
 
         return topPanel;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public JPanel getView()
+    {
+        return view;
     }
 }

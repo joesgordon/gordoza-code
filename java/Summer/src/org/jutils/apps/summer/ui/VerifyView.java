@@ -2,14 +2,12 @@ package org.jutils.apps.summer.ui;
 
 import java.awt.*;
 import java.io.*;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileSystemView;
-import javax.swing.table.DefaultTableCellRenderer;
 
 import org.jutils.*;
 import org.jutils.apps.summer.data.*;
@@ -22,8 +20,8 @@ import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
 import org.jutils.ui.fields.FileField;
 import org.jutils.ui.fields.IValidationField;
-import org.jutils.ui.model.IDataView;
-import org.jutils.ui.model.ItemTableModel;
+import org.jutils.ui.model.*;
+import org.jutils.ui.model.LabelTableCellRenderer.ITableCellLabelDecorator;
 import org.jutils.ui.validation.IValidityChangedListener;
 import org.jutils.ui.validation.ValidityListenerList;
 import org.jutils.ui.validators.ExistenceType;
@@ -36,7 +34,7 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
     /**  */
     private final FileField commonDirField;
     /**  */
-    private final ChecksumsTableModel tableModel;
+    private final ItemsTableModel<SumFile> tableModel;
     /**  */
     private final JTable table;
     /**  */
@@ -54,7 +52,7 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
     public VerifyView()
     {
         this.commonDirField = new FileField( ExistenceType.DIRECTORY_ONLY );
-        this.tableModel = new ChecksumsTableModel();
+        this.tableModel = new ItemsTableModel<>( new ChecksumsTableModel() );
         this.table = new JTable( tableModel );
 
         this.view = createView();
@@ -110,7 +108,8 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
         JScrollPane pane = new JScrollPane( table );
 
         table.getTableHeader().setReorderingAllowed( false );
-        table.setDefaultRenderer( String.class, new ChecksumRenderer( this ) );
+        table.setDefaultRenderer( String.class,
+            new LabelTableCellRenderer( new ChecksumRenderer( this ) ) );
         table.getSelectionModel().setSelectionMode(
             ListSelectionModel.SINGLE_SELECTION );
 
@@ -169,28 +168,26 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
             validityListeners.signalInvalid( "No input loaded" );
             return;
         }
-        else
+
+        if( input.type == null )
         {
-            if( input.type == null )
-            {
-                validityListeners.signalInvalid( "No file loaded" );
-                return;
-            }
+            validityListeners.signalInvalid( "No file loaded" );
+            return;
+        }
 
-            if( input.files.isEmpty() )
-            {
-                validityListeners.signalInvalid( "No files in checksum file" );
-                return;
-            }
+        if( input.files.isEmpty() )
+        {
+            validityListeners.signalInvalid( "No files in checksum file" );
+            return;
+        }
 
-            for( SumFile sf : input.files )
+        for( SumFile sf : input.files )
+        {
+            if( !sf.file.isFile() )
             {
-                if( !sf.file.isFile() )
-                {
-                    validityListeners.signalInvalid(
-                        "File does not exist: " + sf.file.getAbsolutePath() );
-                    return;
-                }
+                validityListeners.signalInvalid(
+                    "File does not exist: " + sf.file.getAbsolutePath() );
+                return;
             }
         }
 
@@ -369,23 +366,28 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class ChecksumsTableModel extends ItemTableModel<SumFile>
+    private static class ChecksumsTableModel
+        implements ITableItemsConfig<SumFile>
     {
         private static final Class<?> [] CLASSES = { String.class,
             String.class };
         private static final String [] NAMES = { "Checksum", "File" };
 
-        public ChecksumsTableModel()
+        @Override
+        public String [] getColumnNames()
         {
-            super.setColumnClasses( Arrays.asList( CLASSES ) );
-            super.setColumnNames( Arrays.asList( NAMES ) );
+            return NAMES;
         }
 
         @Override
-        public Object getValueAt( int row, int col )
+        public Class<?> [] getColumnClasses()
         {
-            SumFile checksum = getRow( row );
+            return CLASSES;
+        }
 
+        @Override
+        public Object getItemData( SumFile checksum, int col )
+        {
             switch( col )
             {
                 case 0:
@@ -398,6 +400,17 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
                     throw new IllegalArgumentException(
                         "Invalid column: " + col );
             }
+        }
+
+        @Override
+        public void setItemData( SumFile item, int col, Object data )
+        {
+        }
+
+        @Override
+        public boolean isCellEditable( SumFile item, int col )
+        {
+            return false;
         }
     }
 
@@ -457,7 +470,7 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class ChecksumRenderer extends DefaultTableCellRenderer
+    private static class ChecksumRenderer implements ITableCellLabelDecorator
     {
         private static final FileSystemView FILE_SYSTEM = FileSystemView.getFileSystemView();
 
@@ -472,34 +485,32 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
 
             this.view = view;
 
-            this.defaultFont = super.getFont();
+            this.defaultFont = UIManager.getFont( "label.font" );
             this.fixedFont = new Font( Font.MONOSPACED, Font.PLAIN, 12 );
-            this.defaultBackground = super.getBackground();
+            this.defaultBackground = UIManager.getColor( "label.background" );
         }
 
-        public Component getTableCellRendererComponent( JTable table,
-            Object value, boolean isSelected, boolean hasFocus, int row,
-            int column )
+        @Override
+        public void decorate( JLabel label, JTable table, Object value,
+            boolean isSelected, boolean hasFocus, int row, int col )
         {
-            Component comp = super.getTableCellRendererComponent( table, value,
-                isSelected, hasFocus, row, column );
 
-            SumFile sum = view.tableModel.getRow( row );
+            SumFile sum = view.tableModel.getItem( row );
             File commonPath = view.commonDirField.getData();
 
             Icon icon = null;
 
-            if( column == 0 )
+            if( col == 0 )
             {
-                setFont( fixedFont );
+                label.setFont( fixedFont );
             }
             else
             {
                 icon = FILE_SYSTEM.getSystemIcon( sum.file );
-                setFont( defaultFont );
+                label.setFont( defaultFont );
             }
 
-            setIcon( icon );
+            label.setIcon( icon );
 
             if( !isSelected )
             {
@@ -516,10 +527,8 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
                     }
                 }
 
-                setBackground( bg );
+                label.setBackground( bg );
             }
-
-            return comp;
         }
     }
 

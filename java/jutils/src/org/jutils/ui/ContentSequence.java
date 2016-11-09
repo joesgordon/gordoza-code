@@ -61,6 +61,7 @@ public class ContentSequence implements CharSequence
      * @param index int
      * @return char
      **************************************************************************/
+    @Override
     public char charAt( int index )
     {
         if( ( start + index - 1 ) > end )
@@ -90,6 +91,7 @@ public class ContentSequence implements CharSequence
      * @param newEnd int
      * @return CharSequence
      **************************************************************************/
+    @Override
     public CharSequence subSequence( int newStart, int newEnd )
     {
         // LogUtils.printDebug( "subSequence( " + newStart + ", " + newEnd +
@@ -101,6 +103,7 @@ public class ContentSequence implements CharSequence
     /***************************************************************************
      * @return String
      **************************************************************************/
+    @Override
     public String toString()
     {
         Segment seg = new Segment();
@@ -122,6 +125,7 @@ public class ContentSequence implements CharSequence
     /***************************************************************************
      * @return int
      **************************************************************************/
+    @Override
     public int length()
     {
         // LogUtils.printDebug( "length() = " + ( end - start) );

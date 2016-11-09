@@ -1,6 +1,6 @@
 package org.jutils.appgallery;
 
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 
 /*******************************************************************************
  * This class defines the application that will display the main applications
@@ -14,6 +14,6 @@ public class AppGalleryMain
      **************************************************************************/
     public static void main( String [] args )
     {
-        FrameApplication.invokeLater( new AppGalleryApp() );
+        FrameRunner.invokeLater( new AppGalleryApp() );
     }
 }

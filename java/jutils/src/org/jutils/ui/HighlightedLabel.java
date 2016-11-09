@@ -4,7 +4,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
 /*******************************************************************************
@@ -208,6 +208,6 @@ public class HighlightedLabel extends JLabel
             }
         }
 
-        FrameApplication.invokeLater( new DemoRunner() );
+        FrameRunner.invokeLater( new DemoRunner() );
     }
 }

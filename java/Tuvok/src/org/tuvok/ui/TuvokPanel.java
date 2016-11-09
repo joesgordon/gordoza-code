@@ -5,26 +5,29 @@ import java.util.Vector;
 
 import javax.swing.*;
 
+import org.jutils.ui.model.IView;
 import org.tuvok.data.Project;
 
 /*******************************************************************************
  * Displays all the main components of the 2DLs interface.
  ******************************************************************************/
-public class TuvokPanel extends JPanel
+public class TuvokPanel implements IView<JPanel>
 {
-    // --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // GUI Components.
-    // --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    /**  */
+    private final JPanel view;
     /** The split pane used to divide the tree view from the content pane. */
-    private JSplitPane mainSplitPane = new JSplitPane();
+    private final JSplitPane mainSplitPane = new JSplitPane();
     /** Scroll pane used to allow the tree to scroll. */
-    private JScrollPane treeScrollPane = new JScrollPane();
+    private final JScrollPane treeScrollPane = new JScrollPane();
     /** Scroll pane used to allow the content pane to scroll. */
-    private JScrollPane rightScrollPane = new JScrollPane();
+    private final JScrollPane rightScrollPane = new JScrollPane();
     /** The tree contains all the open projects. */
-    private JList<String> tree = new JList<>();
+    private final JList<String> tree = new JList<>();
     /** Displays the context of the currently viewed item. */
-    private JTextField addressTextField = new JTextField();
+    private final JTextField addressTextField = new JTextField();
     // --------------------------------------------------------------------------
     // Supporting data shown in components.
     // --------------------------------------------------------------------------
@@ -36,7 +39,7 @@ public class TuvokPanel extends JPanel
      **************************************************************************/
     public TuvokPanel()
     {
-        this.setLayout( new GridBagLayout() );
+        this.view = new JPanel( new GridBagLayout() );
 
         addressTextField.setText( "" );
         addressTextField.setBorder( BorderFactory.createLoweredBevelBorder() );
@@ -52,12 +55,12 @@ public class TuvokPanel extends JPanel
         mainSplitPane.setOneTouchExpandable( true );
         // mainSplitPane.setDividerLocation( 200 );
 
-        this.add( addressTextField,
+        view.add( addressTextField,
             new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
                 new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
-        this.add( mainSplitPane,
+        view.add( mainSplitPane,
             new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 new Insets( 0, 0, 0, 0 ), 0, 0 ) );
@@ -108,5 +111,14 @@ public class TuvokPanel extends JPanel
     public void removeAllProjects()
     {
         projects.removeAllElements();
+    }
+
+    /***************************************************************************
+     *
+     **************************************************************************/
+    @Override
+    public JPanel getView()
+    {
+        return view;
     }
 }

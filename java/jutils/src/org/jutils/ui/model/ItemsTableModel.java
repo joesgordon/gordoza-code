@@ -10,11 +10,13 @@ import javax.swing.table.AbstractTableModel;
 public class ItemsTableModel<T> extends AbstractTableModel
 {
     /**  */
+    private static final long serialVersionUID = 3014843258014872862L;
+    /**  */
     private final List<String> columnNames;
     /**  */
     private final List<Class<?>> columnClasses;
     /**  */
-    private final ITableConfig<T> tableConfig;
+    private final ITableItemsConfig<T> tableConfig;
 
     /**  */
     private List<T> items;
@@ -22,7 +24,7 @@ public class ItemsTableModel<T> extends AbstractTableModel
     /***************************************************************************
      * 
      **************************************************************************/
-    public ItemsTableModel( ITableConfig<T> tableConfig )
+    public ItemsTableModel( ITableItemsConfig<T> tableConfig )
     {
         super();
 

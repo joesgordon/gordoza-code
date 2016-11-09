@@ -18,5 +18,6 @@ public interface IDataReader<T> extends IReader<T, IDataStream>
      * @throws ValidationException if the data is improperly formatted or
      * otherwise out of specification.
      **************************************************************************/
+    @Override
     public T read( IDataStream stream ) throws IOException, ValidationException;
 }

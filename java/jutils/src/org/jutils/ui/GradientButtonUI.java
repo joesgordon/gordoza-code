@@ -65,6 +65,7 @@ public class GradientButtonUI extends BasicButtonUI
         paint( g, c );
     }
 
+    @Override
     protected void paintFocus( Graphics g, AbstractButton b, Rectangle viewRect,
         Rectangle textRect, Rectangle iconRect )
     {

@@ -94,6 +94,8 @@ public class ViewList implements IView<JComponent>
     private static class OnlyVerticalScrollPanel extends JPanel
         implements Scrollable
     {
+        private static final long serialVersionUID = 9210703649026002790L;
+
         public OnlyVerticalScrollPanel( LayoutManager lm )
         {
             super( lm );

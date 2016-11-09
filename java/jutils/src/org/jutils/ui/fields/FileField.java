@@ -183,10 +183,8 @@ public class FileField implements IDataView<File>, IValidationField
                         "Error Opening File", JOptionPane.ERROR_MESSAGE );
                     return;
                 }
-                else
-                {
-                    file = parent;
-                }
+
+                file = parent;
             }
             else
             {

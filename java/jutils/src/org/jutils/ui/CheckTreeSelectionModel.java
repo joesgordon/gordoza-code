@@ -1,17 +1,21 @@
 package org.jutils.ui;
 
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.*;
 
 /*******************************************************************************
  *
  ******************************************************************************/
-public class CheckTreeSelectionModel extends DefaultTreeSelectionModel
+public class CheckTreeSelectionModel implements TreeSelectionModel
 {
     /**  */
-    private TreeModel model;
+    private final TreeModel model;
+    /**  */
+    private final DefaultTreeSelectionModel selectionModel;
 
     /***************************************************************************
      * @param model TreeModel
@@ -19,7 +23,10 @@ public class CheckTreeSelectionModel extends DefaultTreeSelectionModel
     public CheckTreeSelectionModel( TreeModel model )
     {
         this.model = model;
-        setSelectionMode( TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION );
+        this.selectionModel = new DefaultTreeSelectionModel();
+
+        selectionModel.setSelectionMode(
+            TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION );
     }
 
     /***************************************************************************
@@ -33,11 +40,14 @@ public class CheckTreeSelectionModel extends DefaultTreeSelectionModel
         {
             return false;
         }
+
         TreePath [] selectionPaths = getSelectionPaths();
+
         if( selectionPaths == null )
         {
             return false;
         }
+
         for( int j = 0; j < selectionPaths.length; j++ )
         {
             if( isDescendant( selectionPaths[j], path ) )
@@ -45,6 +55,7 @@ public class CheckTreeSelectionModel extends DefaultTreeSelectionModel
                 return true;
             }
         }
+
         return false;
     }
 
@@ -59,9 +70,9 @@ public class CheckTreeSelectionModel extends DefaultTreeSelectionModel
     {
         if( !dig )
         {
-            return super.isPathSelected( path );
+            return selectionModel.isPathSelected( path );
         }
-        while( path != null && !super.isPathSelected( path ) )
+        while( path != null && !selectionModel.isPathSelected( path ) )
         {
             path = path.getParentPath();
         }
@@ -74,7 +85,7 @@ public class CheckTreeSelectionModel extends DefaultTreeSelectionModel
      * @param path2 TreePath
      * @return boolean
      **************************************************************************/
-    private boolean isDescendant( TreePath path1, TreePath path2 )
+    private static boolean isDescendant( TreePath path1, TreePath path2 )
     {
         Object obj1[] = path1.getPath();
         Object obj2[] = path2.getPath();
@@ -91,6 +102,7 @@ public class CheckTreeSelectionModel extends DefaultTreeSelectionModel
     /***************************************************************************
      * @param pPaths TreePath[]
      **************************************************************************/
+    @Override
     public void setSelectionPaths( TreePath [] paths )
     {
         this.clearSelection();
@@ -100,6 +112,7 @@ public class CheckTreeSelectionModel extends DefaultTreeSelectionModel
     /***************************************************************************
      * @param paths TreePath[]
      **************************************************************************/
+    @Override
     public void addSelectionPaths( TreePath [] paths )
     {
         // unselect all descendants of paths[]
@@ -119,8 +132,8 @@ public class CheckTreeSelectionModel extends DefaultTreeSelectionModel
                     toBeRemoved.add( selectionPaths[j] );
                 }
             }
-            super.removeSelectionPaths(
-                ( TreePath [] )toBeRemoved.toArray( new TreePath[0] ) );
+            selectionModel.removeSelectionPaths(
+                toBeRemoved.toArray( new TreePath[0] ) );
         }
 
         // if all siblings are selected then unselect them and select parent
@@ -150,12 +163,12 @@ public class CheckTreeSelectionModel extends DefaultTreeSelectionModel
                     {
                         removeSelectionPaths( getSelectionPaths() );
                     }
-                    super.addSelectionPaths( new TreePath[] { temp } );
+                    selectionModel.addSelectionPaths( new TreePath[] { temp } );
                 }
             }
             else
             {
-                super.addSelectionPaths( new TreePath[] { path } );
+                selectionModel.addSelectionPaths( new TreePath[] { path } );
             }
         }
     }
@@ -194,6 +207,7 @@ public class CheckTreeSelectionModel extends DefaultTreeSelectionModel
     /***************************************************************************
      * @param paths TreePath[]
      **************************************************************************/
+    @Override
     public void removeSelectionPaths( TreePath [] paths )
     {
         for( int i = 0; i < paths.length; i++ )
@@ -201,7 +215,7 @@ public class CheckTreeSelectionModel extends DefaultTreeSelectionModel
             TreePath path = paths[i];
             if( path.getPathCount() == 1 )
             {
-                super.removeSelectionPaths( new TreePath[] { path } );
+                selectionModel.removeSelectionPaths( new TreePath[] { path } );
             }
             else
             {
@@ -231,13 +245,13 @@ public class CheckTreeSelectionModel extends DefaultTreeSelectionModel
         }
         else
         {
-            super.removeSelectionPaths( new TreePath[] { path } );
+            selectionModel.removeSelectionPaths( new TreePath[] { path } );
             return;
         }
 
         while( !stack.isEmpty() )
         {
-            TreePath temp = ( TreePath )stack.pop();
+            TreePath temp = stack.pop();
             TreePath peekPath = stack.isEmpty() ? path
                 : ( TreePath )stack.peek();
             Object node = temp.getLastPathComponent();
@@ -248,11 +262,155 @@ public class CheckTreeSelectionModel extends DefaultTreeSelectionModel
                 Object childNode = model.getChild( node, i );
                 if( childNode != peekNode )
                 {
-                    super.addSelectionPaths( new TreePath[] {
+                    selectionModel.addSelectionPaths( new TreePath[] {
                         temp.pathByAddingChild( childNode ) } );
                 }
             }
         }
-        super.removeSelectionPaths( new TreePath[] { parent } );
+        selectionModel.removeSelectionPaths( new TreePath[] { parent } );
+    }
+
+    @Override
+    public void setSelectionMode( int mode )
+    {
+        selectionModel.setSelectionMode( mode );
+    }
+
+    @Override
+    public int getSelectionMode()
+    {
+        return selectionModel.getSelectionMode();
+    }
+
+    @Override
+    public void setSelectionPath( TreePath path )
+    {
+        selectionModel.setSelectionPath( path );
+    }
+
+    @Override
+    public void addSelectionPath( TreePath path )
+    {
+        selectionModel.addSelectionPath( path );
+    }
+
+    @Override
+    public void removeSelectionPath( TreePath path )
+    {
+        selectionModel.removeSelectionPath( path );
+    }
+
+    @Override
+    public TreePath getSelectionPath()
+    {
+        return selectionModel.getSelectionPath();
+    }
+
+    @Override
+    public TreePath [] getSelectionPaths()
+    {
+        return selectionModel.getSelectionPaths();
+    }
+
+    @Override
+    public int getSelectionCount()
+    {
+        return selectionModel.getSelectionCount();
+    }
+
+    @Override
+    public boolean isPathSelected( TreePath path )
+    {
+        return selectionModel.isPathSelected( path );
+    }
+
+    @Override
+    public boolean isSelectionEmpty()
+    {
+        return selectionModel.isSelectionEmpty();
+    }
+
+    @Override
+    public void clearSelection()
+    {
+        selectionModel.clearSelection();
+    }
+
+    @Override
+    public void setRowMapper( RowMapper newMapper )
+    {
+        selectionModel.setRowMapper( newMapper );
+    }
+
+    @Override
+    public RowMapper getRowMapper()
+    {
+        return selectionModel.getRowMapper();
+    }
+
+    @Override
+    public int [] getSelectionRows()
+    {
+        return selectionModel.getSelectionRows();
+    }
+
+    @Override
+    public int getMinSelectionRow()
+    {
+        return selectionModel.getMinSelectionRow();
+    }
+
+    @Override
+    public int getMaxSelectionRow()
+    {
+        return selectionModel.getMaxSelectionRow();
+    }
+
+    @Override
+    public boolean isRowSelected( int row )
+    {
+        return selectionModel.isRowSelected( row );
+    }
+
+    @Override
+    public void resetRowSelection()
+    {
+        selectionModel.resetRowSelection();
+    }
+
+    @Override
+    public int getLeadSelectionRow()
+    {
+        return selectionModel.getLeadSelectionRow();
+    }
+
+    @Override
+    public TreePath getLeadSelectionPath()
+    {
+        return selectionModel.getLeadSelectionPath();
+    }
+
+    @Override
+    public void addPropertyChangeListener( PropertyChangeListener listener )
+    {
+        selectionModel.addPropertyChangeListener( listener );
+    }
+
+    @Override
+    public void removePropertyChangeListener( PropertyChangeListener listener )
+    {
+        selectionModel.removePropertyChangeListener( listener );
+    }
+
+    @Override
+    public void addTreeSelectionListener( TreeSelectionListener x )
+    {
+        selectionModel.addTreeSelectionListener( x );
+    }
+
+    @Override
+    public void removeTreeSelectionListener( TreeSelectionListener x )
+    {
+        selectionModel.removeTreeSelectionListener( x );
     }
 }

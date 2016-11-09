@@ -117,6 +117,7 @@ public class UserView implements IDataView<List<IUser>>
             this.view = view;
         }
 
+        @Override
         public void mouseClicked( MouseEvent e )
         {
             if( !"".isEmpty() && e.getClickCount() == 2 )

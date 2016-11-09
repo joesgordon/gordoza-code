@@ -231,7 +231,7 @@ public class ChartMouseListenter extends MouseAdapter
      * @param max
      * @return
      **************************************************************************/
-    private Interval getBounds( IAxisCoords coords, int min, int max )
+    private static Interval getBounds( IAxisCoords coords, int min, int max )
     {
         double dmin = coords.fromScreen( min );
         double dmax = coords.fromScreen( max );

@@ -11,16 +11,16 @@ import javax.swing.tree.TreePath;
 /***************************************************************************
  *
  **************************************************************************/
-public class CheckTreeCellRenderer extends JPanel implements TreeCellRenderer
+public class CheckTreeCellRenderer implements TreeCellRenderer
 {
     /**  */
-    private CheckTreeSelectionModel selectionModel;
-
+    private final JPanel panel;
     /**  */
-    private TreeCellRenderer delegate;
-
+    private final CheckTreeSelectionModel selectionModel;
     /**  */
-    private TristateCheckBox checkBox = new TristateCheckBox();
+    private final TreeCellRenderer delegate;
+    /**  */
+    private final TristateCheckBox checkBox = new TristateCheckBox();
 
     /***************************************************************************
      * @param delegate TreeCellRenderer
@@ -29,10 +29,11 @@ public class CheckTreeCellRenderer extends JPanel implements TreeCellRenderer
     public CheckTreeCellRenderer( TreeCellRenderer delegate,
         CheckTreeSelectionModel selectionModel )
     {
+        this.panel = new JPanel();
         this.delegate = delegate;
         this.selectionModel = selectionModel;
-        setLayout( new BorderLayout() );
-        setOpaque( false );
+        panel.setLayout( new BorderLayout() );
+        panel.setOpaque( false );
         checkBox.setOpaque( false );
     }
 
@@ -46,6 +47,7 @@ public class CheckTreeCellRenderer extends JPanel implements TreeCellRenderer
      * @param hasFocus boolean
      * @return Component
      **************************************************************************/
+    @Override
     public Component getTreeCellRendererComponent( JTree tree, Object value,
         boolean selected, boolean expanded, boolean leaf, int row,
         boolean hasFocus )
@@ -66,9 +68,11 @@ public class CheckTreeCellRenderer extends JPanel implements TreeCellRenderer
                     ? null : Boolean.FALSE );
             }
         }
-        removeAll();
-        add( checkBox, BorderLayout.WEST );
-        add( renderer, BorderLayout.CENTER );
-        return this;
+
+        panel.removeAll();
+        panel.add( checkBox, BorderLayout.WEST );
+        panel.add( renderer, BorderLayout.CENTER );
+
+        return panel;
     }
 }

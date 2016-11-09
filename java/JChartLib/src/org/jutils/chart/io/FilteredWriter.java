@@ -21,7 +21,7 @@ public class FilteredWriter
      * @throws FileNotFoundException
      * @throws IOException
      **************************************************************************/
-    public void write( File fromFile, File toFile, ISeriesData<?> data )
+    public static void write( File fromFile, File toFile, ISeriesData<?> data )
         throws FileNotFoundException, IOException
     {
         File temp = fromFile;
@@ -40,14 +40,13 @@ public class FilteredWriter
         {
             try( FilePrintStream stream = new FilePrintStream( toFile ) )
             {
-                DataLineReader lineReader = new DataLineReader();
                 String line = null;
                 int idx = 0;
                 XYPoint point = null;
 
                 while( ( line = reader.readLine() ) != null )
                 {
-                    point = lineReader.read( line );
+                    point = DataLineReader.read( line );
 
                     if( point != null )
                     {
@@ -81,7 +80,7 @@ public class FilteredWriter
      * @param data
      * @throws FileNotFoundException
      **************************************************************************/
-    public void write( File toFile, ISeriesData<?> data )
+    public static void write( File toFile, ISeriesData<?> data )
         throws FileNotFoundException, IOException
     {
         try( FilePrintStream stream = new FilePrintStream( toFile ) )

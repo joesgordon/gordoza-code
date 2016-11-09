@@ -5,13 +5,13 @@ import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileSystemView;
-import javax.swing.table.DefaultTableCellRenderer;
 
 import org.jutils.*;
 import org.jutils.apps.summer.data.*;
@@ -28,8 +28,8 @@ import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.DropActionType;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
 import org.jutils.ui.fields.IValidationField;
-import org.jutils.ui.model.IDataView;
-import org.jutils.ui.model.ItemTableModel;
+import org.jutils.ui.model.*;
+import org.jutils.ui.model.LabelTableCellRenderer.ITableCellLabelDecorator;
 import org.jutils.ui.validation.IValidityChangedListener;
 import org.jutils.ui.validation.ValidityListenerList;
 
@@ -49,7 +49,7 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
     /**  */
     private final JTextField totalSizeField;
     /**  */
-    private final PathModel pathsModel;
+    private final ItemsTableModel<SumFile> pathsModel;
     /**  */
     private final JTable table;
 
@@ -69,7 +69,7 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
         this.commonField = new PathView();
         this.fileCountField = new JTextField();
         this.totalSizeField = new JTextField();
-        this.pathsModel = new PathModel();
+        this.pathsModel = new ItemsTableModel<>( new PathModel() );
         this.table = new JTable( pathsModel );
 
         this.view = createView();
@@ -201,7 +201,8 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
         table.getActionMap().put( "removeNode", deleteAction );
 
         table.getTableHeader().setReorderingAllowed( false );
-        table.setDefaultRenderer( String.class, new PathRenderer( this ) );
+        table.setDefaultRenderer( String.class,
+            new LabelTableCellRenderer( new PathRenderer( this ) ) );
         table.getSelectionModel().setSelectionMode(
             ListSelectionModel.SINGLE_SELECTION );
         table.setAutoResizeMode( JTable.AUTO_RESIZE_LAST_COLUMN );
@@ -259,19 +260,17 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
             validityListeners.signalInvalid( "No input loaded" );
             return;
         }
-        else
-        {
-            if( input.type == null )
-            {
-                validityListeners.signalInvalid( "No checksum type selected" );
-                return;
-            }
 
-            if( input.files.isEmpty() )
-            {
-                validityListeners.signalInvalid( "No files loaded" );
-                return;
-            }
+        if( input.type == null )
+        {
+            validityListeners.signalInvalid( "No checksum type selected" );
+            return;
+        }
+
+        if( input.files.isEmpty() )
+        {
+            validityListeners.signalInvalid( "No files loaded" );
+            return;
         }
 
         validityListeners.signalValid();
@@ -447,9 +446,8 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
      **************************************************************************/
     private void displayChecksums( ChecksumResult input, TaskMetrics metrics )
     {
-        ChecksumFileSerializer serializer = new ChecksumFileSerializer();
         TextView textView = new TextView();
-        String text = serializer.write( input );
+        String text = ChecksumFileSerializer.write( input );
         ChecksumType type = ( ChecksumType )checksumTypeField.getSelectedItem();
         String ext = type.toString().toLowerCase();
         String desc = type.toString() + " checksum file (*." + ext + ")";
@@ -541,23 +539,27 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class PathModel extends ItemTableModel<SumFile>
+    private static class PathModel implements ITableItemsConfig<SumFile>
     {
         private static final Class<?> [] CLASSES = { String.class,
             String.class };
         private static final String [] NAMES = { "Path", "Size" };
 
-        public PathModel()
+        @Override
+        public String [] getColumnNames()
         {
-            super.setColumnClasses( Arrays.asList( CLASSES ) );
-            super.setColumnNames( Arrays.asList( NAMES ) );
+            return NAMES;
         }
 
         @Override
-        public Object getValueAt( int row, int col )
+        public Class<?> [] getColumnClasses()
         {
-            SumFile sf = getRow( row );
+            return CLASSES;
+        }
 
+        @Override
+        public Object getItemData( SumFile sf, int col )
+        {
             switch( col )
             {
                 case 0:
@@ -571,12 +573,23 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
                         "Invalid column: " + col );
             }
         }
+
+        @Override
+        public void setItemData( SumFile item, int col, Object data )
+        {
+        }
+
+        @Override
+        public boolean isCellEditable( SumFile item, int col )
+        {
+            return false;
+        }
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class PathRenderer extends DefaultTableCellRenderer
+    private static class PathRenderer implements ITableCellLabelDecorator
     {
         private static final FileSystemView FILE_SYSTEM = FileSystemView.getFileSystemView();
 
@@ -587,29 +600,24 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
             this.view = view;
         }
 
-        public Component getTableCellRendererComponent( JTable table,
-            Object value, boolean isSelected, boolean hasFocus, int row,
-            int column )
+        @Override
+        public void decorate( JLabel label, JTable table, Object value,
+            boolean isSelected, boolean hasFocus, int row, int col )
         {
-            Component comp = super.getTableCellRendererComponent( table, value,
-                isSelected, hasFocus, row, column );
-
             Icon icon = null;
 
-            if( column == 0 )
+            if( col == 0 )
             {
-                SumFile sf = view.pathsModel.getRow( row );
+                SumFile sf = view.pathsModel.getItem( row );
                 icon = FILE_SYSTEM.getSystemIcon( sf.file );
-                setHorizontalAlignment( SwingConstants.LEFT );
+                label.setHorizontalAlignment( SwingConstants.LEFT );
             }
             else
             {
-                setHorizontalAlignment( SwingConstants.RIGHT );
+                label.setHorizontalAlignment( SwingConstants.RIGHT );
             }
 
-            setIcon( icon );
-
-            return comp;
+            label.setIcon( icon );
         }
     }
 

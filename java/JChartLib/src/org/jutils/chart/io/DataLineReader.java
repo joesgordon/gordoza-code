@@ -14,7 +14,7 @@ public class DataLineReader
      * @param line
      * @return
      **************************************************************************/
-    public XYPoint read( String line )
+    public static XYPoint read( String line )
     {
         double x;
         double y;

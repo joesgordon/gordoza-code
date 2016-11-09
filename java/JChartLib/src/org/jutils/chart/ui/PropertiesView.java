@@ -27,9 +27,9 @@ public class PropertiesView implements IView<JPanel>
     private final JPanel view;
 
     /**  */
-    private final DefaultListModel<IListNode<?>> navModel;
+    private final DefaultListModel<IListNode> navModel;
     /**  */
-    private final JList<IListNode<?>> list;
+    private final JList<IListNode> list;
 
     /**  */
     private final TitleView rightView;
@@ -183,8 +183,8 @@ public class PropertiesView implements IView<JPanel>
 
         view.setData( series );
 
-        IListNode<?> node = new SeriesNode( series, view );
-        navModel.addElement( node );
+        IListNode node = new SeriesNode( series, view );
+        navModel.add( index, node );
 
         seriesViews.add( view );
     }
@@ -203,17 +203,18 @@ public class PropertiesView implements IView<JPanel>
     /***************************************************************************
      * @param T
      **************************************************************************/
-    private static interface IListNode<T>
+    private static interface IListNode
     {
         public IView<?> getView();
 
+        @Override
         public String toString();
     }
 
     /***************************************************************************
      * @param T
      **************************************************************************/
-    private static class ListNode<T> implements IListNode<T>
+    private static class ListNode<T> implements IListNode
     {
         private final String name;
         private final T data;
@@ -226,6 +227,7 @@ public class PropertiesView implements IView<JPanel>
             this.view = view;
         }
 
+        @Override
         public IView<?> getView()
         {
             if( view != null )
@@ -243,7 +245,7 @@ public class PropertiesView implements IView<JPanel>
         }
     }
 
-    private static class SeriesNode implements IListNode<Series>
+    private static class SeriesNode implements IListNode
     {
         private final Series s;
         private final IDataView<Series> view;
@@ -289,7 +291,7 @@ public class PropertiesView implements IView<JPanel>
 
                 if( !view.list.getSelectionModel().isSelectionEmpty() )
                 {
-                    IListNode<?> node = view.list.getSelectedValue();
+                    IListNode node = view.list.getSelectedValue();
 
                     IView<?> view = node.getView();
 

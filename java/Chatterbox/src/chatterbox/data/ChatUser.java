@@ -63,6 +63,7 @@ public class ChatUser implements IUser
     /***************************************************************************
      * @param available
      **************************************************************************/
+    @Override
     public void setAvailable( boolean available )
     {
         this.available = available;
@@ -71,6 +72,7 @@ public class ChatUser implements IUser
     /***************************************************************************
      * @return
      **************************************************************************/
+    @Override
     public boolean isAvailable()
     {
         return available;
@@ -79,6 +81,7 @@ public class ChatUser implements IUser
     /***************************************************************************
      * 
      **************************************************************************/
+    @Override
     public String toString()
     {
         return getDisplayName();

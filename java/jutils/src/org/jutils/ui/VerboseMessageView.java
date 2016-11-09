@@ -19,7 +19,7 @@ public class VerboseMessageView implements IView<JPanel>
     /**  */
     private final JLabel shortMessageField;
     /**  */
-    private final AltEditorPane verboseMessageField;
+    private final ScrollableEditorPaneView verboseMessageField;
 
     /***************************************************************************
      * 
@@ -27,7 +27,7 @@ public class VerboseMessageView implements IView<JPanel>
     public VerboseMessageView()
     {
         this.shortMessageField = new JLabel();
-        this.verboseMessageField = new AltEditorPane();
+        this.verboseMessageField = new ScrollableEditorPaneView();
 
         view = createView();
 
@@ -41,7 +41,8 @@ public class VerboseMessageView implements IView<JPanel>
     private JPanel createView()
     {
         JPanel panel = new JPanel( new GridBagLayout() );
-        JScrollPane errorsPane = new JScrollPane( verboseMessageField );
+        JScrollPane errorsPane = new JScrollPane(
+            verboseMessageField.getView() );
         GridBagConstraints constraints;
 
         Dimension dim = new Dimension( 600, 200 );

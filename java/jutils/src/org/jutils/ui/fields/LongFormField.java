@@ -164,6 +164,7 @@ public class LongFormField implements IDataFormField<Long>
     /***************************************************************************
      * @return
      **************************************************************************/
+    @Override
     public IValidationField getValidationField()
     {
         return textField.getField();
@@ -180,6 +181,7 @@ public class LongFormField implements IDataFormField<Long>
     /***************************************************************************
      * @param editable
      **************************************************************************/
+    @Override
     public void setEditable( boolean editable )
     {
         textField.getField().setEditable( editable );

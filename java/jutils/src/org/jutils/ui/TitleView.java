@@ -127,6 +127,7 @@ public class TitleView implements IView<JPanel>
     /***************************************************************************
      * @return
      **************************************************************************/
+    @Override
     public JPanel getView()
     {
         return view;

@@ -165,6 +165,7 @@ public class SliderPanel extends JPanel
 
     private class ResizeListener extends ComponentAdapter
     {
+        @Override
         public void componentResized( ComponentEvent e )
         {
             if( !panels.isEmpty() )

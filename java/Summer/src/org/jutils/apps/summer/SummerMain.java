@@ -25,7 +25,7 @@ public class SummerMain
         if( args.length == 0 )
         {
             IFrameApp app = new SummerApp();
-            FrameApplication.invokeLater( app );
+            FrameRunner.invokeLater( app );
         }
         else
         {
@@ -93,74 +93,72 @@ public class SummerMain
                 "Incorrect # of arguments for create command; Expected 3, found " +
                     argCount );
         }
-        else
+
+        boolean append = false;
+        boolean replace = false;
+        File baseDir;
+        File outputFile;
+        List<File> relPaths = new ArrayList<>();
+
+        for( int i = 0; i < 2; i++ )
         {
-            boolean append = false;
-            boolean replace = false;
-            File baseDir;
-            File outputFile;
-            List<File> relPaths = new ArrayList<>();
-
-            for( int i = 0; i < 2; i++ )
+            if( args.get( 0 ).startsWith( "-" ) )
             {
-                if( args.get( 0 ).startsWith( "-" ) )
+                String arg = args.remove( 0 );
+                if( arg.toLowerCase().equals( "-a" ) )
                 {
-                    String arg = args.remove( 0 );
-                    if( arg.toLowerCase().equals( "-a" ) )
-                    {
-                        append = true;
-                    }
-                    else if( arg.toLowerCase().equals( "-r" ) )
-                    {
-                        replace = true;
-                    }
+                    append = true;
+                }
+                else if( arg.toLowerCase().equals( "-r" ) )
+                {
+                    replace = true;
                 }
             }
+        }
 
-            baseDir = new File( args.remove( 0 ) );
-            outputFile = new File( args.remove( 0 ) );
+        baseDir = new File( args.remove( 0 ) );
+        outputFile = new File( args.remove( 0 ) );
 
-            for( String path : args )
+        for( String path : args )
+        {
+            File relFile = new File( baseDir, path );
+            relPaths.add( relFile );
+        }
+
+        IOUtils.validateDirInput( baseDir, "Base Directory" );
+        IOUtils.validateFileOuput( outputFile, "Checksum" );
+
+        for( File relFile : relPaths )
+        {
+            if( !relFile.exists() )
             {
-                File relFile = new File( baseDir, path );
-                relPaths.add( relFile );
+                throw new ValidationException(
+                    "Relative Path does not exist: " +
+                        relFile.getAbsolutePath() );
             }
+        }
 
-            IOUtils.validateDirInput( baseDir, "Base Directory" );
-            IOUtils.validateFileOuput( outputFile, "Checksum" );
+        ChecksumResult input = createInputs( baseDir, relPaths );
 
-            for( File relFile : relPaths )
-            {
-                if( !relFile.exists() )
-                {
-                    throw new ValidationException(
-                        "Relative Path does not exist: " +
-                            relFile.getAbsolutePath() );
-                }
-            }
+        ChecksumCreator sumCreator = new ChecksumCreator( input );
 
-            ChecksumResult input = createInputs( baseDir, relPaths );
+        AppRunner.invokeAndWait( sumCreator );
 
-            ChecksumCreator sumCreator = new ChecksumCreator( input );
+        if( !sumCreator.isSuccessful() )
+        {
+            return -2;
+        }
 
-            AppRunner.invokeAndWait( sumCreator );
+        ChecksumFileSerializer cfs = new ChecksumFileSerializer();
 
-            if( !sumCreator.isSuccessful() )
-            {
-                return -2;
-            }
-
-            ChecksumFileSerializer cfs = new ChecksumFileSerializer();
-
-            try
-            {
-                cfs.write( input, outputFile, append, replace );
-            }
-            catch( IOException ex )
-            {
-                ex.printStackTrace();
-                return -1;
-            }
+        try
+        {
+            cfs.write( input, outputFile, append, replace );
+        }
+        catch( IOException ex )
+        {
+            ex.printStackTrace();
+            return -1;
         }
 
         return 0;

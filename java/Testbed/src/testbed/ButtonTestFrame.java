@@ -8,7 +8,7 @@ import javax.swing.*;
 
 import org.jutils.io.LogUtils;
 import org.jutils.ui.GradientButtonUI;
-import org.jutils.ui.app.FrameApplication;
+import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
 public class ButtonTestFrame implements IFrameApp
@@ -26,7 +26,7 @@ public class ButtonTestFrame implements IFrameApp
         return frame;
     }
 
-    private JComponent createToolbar()
+    private static JComponent createToolbar()
     {
         JPanel panel = new JPanel();
         JButton showButton = new JButton( "Show Message Dialog" );
@@ -44,7 +44,7 @@ public class ButtonTestFrame implements IFrameApp
         return panel;
     }
 
-    private JComponent createContentPane()
+    private static JComponent createContentPane()
     {
         JPanel panel = new JPanel( new BorderLayout() );
 
@@ -80,7 +80,7 @@ public class ButtonTestFrame implements IFrameApp
         LogUtils.printDebug(
             "ButtonUI = " + UIManager.getDefaults().getString( "ButtonUI" ) );
 
-        FrameApplication.invokeLater( new ButtonTestFrame(), true,
+        FrameRunner.invokeLater( new ButtonTestFrame(), true,
             UIManager.getCrossPlatformLookAndFeelClassName() );
     }
 

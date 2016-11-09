@@ -15,43 +15,27 @@ import com.jgoodies.looks.plastic.theme.DesertBluer;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class AppRunner implements Runnable
+public final class AppRunner
 {
-    /**  */
-    private final IApplication app;
-
     /***************************************************************************
-     * @param app
+     * Declare the default and only constructor private to prevent instances.
      **************************************************************************/
-    public AppRunner( IApplication app )
+    private AppRunner()
     {
-        this.app = app;
     }
 
     /***************************************************************************
-     * 
+     * @throws IllegalStateException
      **************************************************************************/
-    @Override
-    public void run()
-    {
-        try
-        {
-            setDefaultLaf( app.getLookAndFeelName() );
-
-            app.createAndShowUi();
-        }
-        catch( IllegalStateException ex )
-        {
-            ex.printStackTrace();
-            System.exit( 1 );
-        }
-    }
-
     public static void setDefaultLaf() throws IllegalStateException
     {
         setDefaultLaf( null );
     }
 
+    /***************************************************************************
+     * @param lafName
+     * @throws IllegalStateException
+     **************************************************************************/
     public static void setDefaultLaf( String lafName )
         throws IllegalStateException
     {
@@ -207,7 +191,7 @@ public class AppRunner implements Runnable
      **************************************************************************/
     public static void invokeLater( IApplication app )
     {
-        SwingUtilities.invokeLater( new AppRunner( app ) );
+        SwingUtilities.invokeLater( new AppRunnable( app ) );
     }
 
     /***************************************************************************
@@ -217,7 +201,7 @@ public class AppRunner implements Runnable
     {
         try
         {
-            SwingUtilities.invokeAndWait( new AppRunner( app ) );
+            SwingUtilities.invokeAndWait( new AppRunnable( app ) );
         }
         catch( InvocationTargetException ex )
         {

@@ -384,6 +384,7 @@ public class FileSpyFrameView implements IView<JFrame>
      **************************************************************************/
     private class OpenListener implements ActionListener
     {
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             openSearchParams();
@@ -402,9 +403,12 @@ public class FileSpyFrameView implements IView<JFrame>
             this.frame = frame;
         }
 
+        @Override
         public void actionPerformed( ActionEvent e )
         {
-            LicenseDialog d = new LicenseDialog( frame );
+            LicenseDialog ld = new LicenseDialog( frame );
+            JDialog d = ld.getView();
+
             d.setLocationRelativeTo( frame );
             d.setVisible( true );
         }
@@ -422,6 +426,7 @@ public class FileSpyFrameView implements IView<JFrame>
             laf = lookAndFeel;
         }
 
+        @Override
         public void actionPerformed( ActionEvent e )
         {
             resetLaf( laf );
@@ -444,6 +449,7 @@ public class FileSpyFrameView implements IView<JFrame>
             ;
         }
 
+        @Override
         public boolean accept( File file )
         {
             String name = file.getName();
@@ -454,6 +460,7 @@ public class FileSpyFrameView implements IView<JFrame>
             return false;
         }
 
+        @Override
         public String getDescription()
         {
             return FILESPY_SEARCH_DESC;
