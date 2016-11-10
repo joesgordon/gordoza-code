@@ -34,6 +34,14 @@ public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel<T>
     /***************************************************************************
      * @param items
      **************************************************************************/
+    public ItemComboBoxModel( T [] items )
+    {
+        this( Collections.unmodifiableList( Arrays.asList( items ) ) );
+    }
+
+    /***************************************************************************
+     * @param items
+     **************************************************************************/
     public ItemComboBoxModel( List<T> items )
     {
         this( items, true );
