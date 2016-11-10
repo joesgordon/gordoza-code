@@ -37,7 +37,7 @@ public class AppGalleryApp implements IFrameApp
         apps.add( new DuakApp() );
         apps.add( new SheetApp() );
         apps.add( new ChartApp() );
-        apps.add( new TuvokLibApp() );
+        apps.add( new TaskflowLibApp() );
     }
 
     /***************************************************************************

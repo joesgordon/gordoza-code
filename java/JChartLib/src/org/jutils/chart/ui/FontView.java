@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.swing.*;
 
-import org.jutils.ui.FontChooserDialog;
+import org.jutils.ui.FontChooserView;
 import org.jutils.ui.StandardFormView;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.event.updater.ListUpdater;
@@ -36,9 +36,9 @@ public class FontView implements IDataView<Font>
     public FontView()
     {
         this.namesField = new JList<>(
-            FontChooserDialog.FONT_NAMES.toArray( new String[] {} ) );
+            FontChooserView.FONT_NAMES.toArray( new String[] {} ) );
         this.sizesField = new JList<>(
-            FontChooserDialog.FONT_SIZES.toArray( new Integer[] {} ) );
+            FontChooserView.FONT_SIZES.toArray( new Integer[] {} ) );
         this.view = createView();
 
         namesField.addListSelectionListener(

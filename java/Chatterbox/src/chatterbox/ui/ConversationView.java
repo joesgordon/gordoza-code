@@ -1,6 +1,7 @@
 package chatterbox.ui;
 
 import java.awt.*;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,7 +13,9 @@ import javax.swing.text.*;
 import org.jutils.IconConstants;
 import org.jutils.Utils;
 import org.jutils.io.LogUtils;
-import org.jutils.ui.FontChooserDialog;
+import org.jutils.ui.FontChooserView;
+import org.jutils.ui.FontChooserView.FontDescription;
+import org.jutils.ui.OkDialogView;
 import org.jutils.ui.event.*;
 import org.jutils.ui.model.IDataView;
 
@@ -403,18 +406,20 @@ public class ConversationView implements IDataView<IConversation>
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            FontChooserDialog fontChooser = new FontChooserDialog(
-                ( JFrame )SwingUtilities.getWindowAncestor( view.getView() ) );
+            FontChooserView fontChooser = new FontChooserView();
+            OkDialogView dialogView = new OkDialogView( view.getView(),
+                fontChooser.getView(), ModalityType.DOCUMENT_MODAL );
 
-            fontChooser.setAttributes(
-                view.msgEditorPane.getCharacterAttributes() );
-            fontChooser.pack();
-            fontChooser.setLocationRelativeTo( view.getView() );
-            fontChooser.setVisible( true );
+            FontDescription desc = new FontDescription();
 
-            if( fontChooser.getOption() == JOptionPane.OK_OPTION )
+            desc.setAttributes( view.msgEditorPane.getCharacterAttributes() );
+            fontChooser.setData( desc );
+            dialogView.pack();
+
+            if( dialogView.show() )
             {
-                AttributeSet s = fontChooser.getAttributes();
+                SimpleAttributeSet s = new SimpleAttributeSet();
+                fontChooser.getData().getAttributes( s );
 
                 if( s != null )
                 {

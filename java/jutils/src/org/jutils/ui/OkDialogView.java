@@ -346,6 +346,11 @@ public class OkDialogView implements IView<JDialog>
         return panel;
     }
 
+    public void pack()
+    {
+        dialog.pack();
+    }
+
     /***************************************************************************
      * Listener added to the ok button to programmatically close the dialog and
      * call the close listeners.

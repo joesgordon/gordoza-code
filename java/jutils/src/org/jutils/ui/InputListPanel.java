@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -76,18 +77,27 @@ public class InputListPanel<T> implements IDataView<List<T>>
         return panel;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public JPanel getView()
     {
         return view;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public List<T> getData()
     {
         return items;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void setData( List<T> data )
     {
@@ -95,6 +105,9 @@ public class InputListPanel<T> implements IDataView<List<T>>
         itemsListModel.setData( data );
     }
 
+    /***************************************************************************
+     * @param data
+     **************************************************************************/
     public void setData( T [] data )
     {
         setData( Arrays.asList( data ) );
@@ -110,11 +123,14 @@ public class InputListPanel<T> implements IDataView<List<T>>
         list.setToolTipText( text );
     }
 
-    public void setSelected( String sel )
+    /***************************************************************************
+     * @param sel
+     **************************************************************************/
+    public void setSelected( T sel )
     {
         list.setSelectedValue( sel, true );
         list.ensureIndexIsVisible( list.getSelectedIndex() );
-        textfield.setText( sel );
+        textfield.setText( sel.toString() );
     }
 
     /***************************************************************************
@@ -123,14 +139,6 @@ public class InputListPanel<T> implements IDataView<List<T>>
     public T getSelected()
     {
         return list.getSelectedValue();
-    }
-
-    /***************************************************************************
-     * @param value
-     **************************************************************************/
-    public void setSelectedInt( int value )
-    {
-        setSelected( Integer.toString( value ) );
     }
 
     /***************************************************************************
@@ -160,8 +168,10 @@ public class InputListPanel<T> implements IDataView<List<T>>
             String key = view.textfield.getText().toLowerCase();
             for( int k = 0; k < model.getSize(); k++ )
             {
-                String data = ( String )model.getElementAt( k );
-                if( data.toLowerCase().startsWith( key ) )
+                T data = model.getElementAt( k );
+                String str = data.toString().toLowerCase( Locale.ENGLISH );
+
+                if( str.startsWith( key ) )
                 {
                     view.list.setSelectedValue( data, true );
                     break;
