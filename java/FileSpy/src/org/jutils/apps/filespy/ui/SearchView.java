@@ -72,7 +72,7 @@ public class SearchView implements IDataView<SearchParams>
     /**  */
     private final JScrollPane leftResultsScroll;
     /**  */
-    private final ExplorerTable resultsTable;
+    private final ExplorerTable resultsTableView;
     /**  */
     private final ExplorerTableModel resultsTableModel;
     /**  */
@@ -135,7 +135,7 @@ public class SearchView implements IDataView<SearchParams>
         contentRegexCheckBox = new JCheckBox();
         contentMatchCheckBox = new JCheckBox();
         leftResultsScroll = new JScrollPane();
-        resultsTable = new ExplorerTable();
+        resultsTableView = new ExplorerTable();
         rightResultsScroll = new JScrollPane();
         rightResultsPane = new ScrollableEditorPaneView();
         defStyledDocument = new DefaultStyledDocument();
@@ -157,7 +157,10 @@ public class SearchView implements IDataView<SearchParams>
         // ---------------------------------------------------------------------
         // Setup main panel.
         // ---------------------------------------------------------------------
-        resultsTableModel = resultsTable.getExplorerTableModel();
+        resultsTableModel = resultsTableView.getExplorerTableModel();
+
+        JTable resultsTable = resultsTableView.getView();
+
         // resultsTable.setAutoCreateRowSorter( true );
         resultsTable.getSelectionModel().addListSelectionListener(
             new SearchPanel_listSelectionAdapter( this ) );
@@ -846,7 +849,7 @@ public class SearchView implements IDataView<SearchParams>
             return;
         }
 
-        searcher = new Searcher( resultsTable, this, statusBar );
+        searcher = new Searcher( resultsTableView, this, statusBar );
 
         searcher.search( params, ( e ) -> SwingUtilities.invokeLater(
             () -> setSearchFinished( e.getItem() ) ) );
@@ -886,11 +889,11 @@ public class SearchView implements IDataView<SearchParams>
      **************************************************************************/
     private void listener_resultsTable_valueChanged( ListSelectionEvent e )
     {
-        int index = resultsTable.getSelectedRow();
+        int index = resultsTableView.getView().getSelectedRow();
 
         if( !e.getValueIsAdjusting() && index > -1 )
         {
-            SearchRecord record = ( SearchRecord )resultsTable.getSelectedItem();
+            SearchRecord record = ( SearchRecord )resultsTableView.getSelectedItem();
             java.util.List<LineMatch> lines = record.getLinesFound();
             Style plain = StyleContext.getDefaultStyleContext().getStyle(
                 StyleContext.DEFAULT_STYLE );
@@ -1106,7 +1109,7 @@ public class SearchView implements IDataView<SearchParams>
         {
             if( e.getClickCount() == 2 && !e.isPopupTrigger() )
             {
-                File file = panel.resultsTable.getSelectedFile();
+                File file = panel.resultsTableView.getSelectedFile();
 
                 if( file != null )
                 {

@@ -7,7 +7,6 @@ import javax.swing.border.AbstractBorder;
 
 public class ShadowBorder extends AbstractBorder
 {
-
     private static final Insets INSETS = new Insets( 1, 1, 3, 3 );
 
     @Override
@@ -20,7 +19,6 @@ public class ShadowBorder extends AbstractBorder
     public void paintBorder( Component c, Graphics g, int x, int y, int w,
         int h )
     {
-
         Color shadow = UIManager.getColor( "controlShadow" );
         if( shadow == null )
         {

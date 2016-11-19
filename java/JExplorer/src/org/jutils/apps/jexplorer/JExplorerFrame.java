@@ -33,27 +33,26 @@ public class JExplorerFrame implements IView<JFrame>
     private final StandardFrameView view;
 
     /** The text field containing the path of the current directory. */
-    private final JTextField addressField = new JTextField();
+    private final JTextField addressField;
     /** The file tree displaying the directories in the given file system. */
-    private final DirectoryTree dirTree = new DirectoryTree();
+    private final DirectoryTree dirTree;
     /** The scroll pane for the file tree. */
-    private final JScrollPane treeScrollPane = new JScrollPane(
-        dirTree.getView() );
+    private final JScrollPane treeScrollPane;
 
     /**
      * The file table displaying all the files and folder for the current
      * directory.
      */
-    private final ExplorerTable fileTable = new ExplorerTable();
+    private final ExplorerTable fileTableView;
 
     /** The scrollpane for the file table. */
-    private final JScrollPane tableScrollPane = new JScrollPane( fileTable );
+    private final JScrollPane tableScrollPane;
 
     /**
      * The split pane containing the file tree on the left and the file table on
      * the right.
      */
-    private final JSplitPane splitPane = new JSplitPane();
+    private final JSplitPane splitPane;
 
     /**  */
     private final ActionAdapter prevAction;
@@ -87,6 +86,14 @@ public class JExplorerFrame implements IView<JFrame>
     public JExplorerFrame()
     {
         this.view = new StandardFrameView();
+        this.addressField = new JTextField();
+        this.dirTree = new DirectoryTree();
+        this.treeScrollPane = new JScrollPane( dirTree.getView() );
+        this.fileTableView = new ExplorerTable();
+        this.tableScrollPane = new JScrollPane( fileTableView.getView() );
+        this.splitPane = new JSplitPane( JSplitPane.HORIZONTAL_SPLIT,
+            treeScrollPane, tableScrollPane );
+
         this.prevAction = new ActionAdapter( ( e ) -> goPreviousDirectory(),
             "Previous", IconConstants.loader.getIcon( IconConstants.BACK_24 ) );
         this.nextAction = new ActionAdapter( ( e ) -> goNextDirectory(), "Next",
@@ -122,13 +129,12 @@ public class JExplorerFrame implements IView<JFrame>
         dirTree.getView().addTreeSelectionListener( dirTreeSelListener );
         dirTree.getView().addMouseListener( dirTreeMouseListener );
 
+        JTable fileTable = fileTableView.getView();
+
         fileTable.setAutoCreateRowSorter( true );
         fileTable.setBackground( Color.white );
         fileTable.addMouseListener( fileTableMouseListener );
         tableScrollPane.getViewport().setBackground( Color.white );
-
-        splitPane.setLeftComponent( treeScrollPane );
-        splitPane.setRightComponent( tableScrollPane );
 
         // ---------------------------------------------------------------------
         // Setup frame
@@ -278,7 +284,7 @@ public class JExplorerFrame implements IView<JFrame>
             }
             addressField.setText( dir.getAbsolutePath() );
             view.setStatusText(
-                this.fileTable.getExplorerTableModel().getRowCount() +
+                this.fileTableView.getExplorerTableModel().getRowCount() +
                     " items." );
         }
 
@@ -323,8 +329,8 @@ public class JExplorerFrame implements IView<JFrame>
                 list.add( new DefaultExplorerItem( children[i] ) );
             }
 
-            fileTable.clearTable();
-            fileTable.addFiles( list );
+            fileTableView.clearTable();
+            fileTableView.addFiles( list );
         }
         else
         {
@@ -542,7 +548,7 @@ public class JExplorerFrame implements IView<JFrame>
 
     public void doFileDoubleClick()
     {
-        File file = fileTable.getSelectedFile();
+        File file = fileTableView.getSelectedFile();
         if( file != null )
         {
             if( file.isDirectory() )

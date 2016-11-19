@@ -13,6 +13,8 @@ import org.jutils.apps.filespy.ui.SearchView;
 import org.jutils.ui.*;
 import org.jutils.ui.model.IView;
 
+import testbed.SliderPanel;
+
 /*******************************************************************************
  * 
  ******************************************************************************/

@@ -1,13 +1,9 @@
 package testbed;
 
 import java.awt.Container;
-import java.awt.event.KeyEvent;
 import java.util.Locale;
 
 import javax.swing.*;
-import javax.swing.JComboBox.KeySelectionManager;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
 
 import org.jutils.ui.app.FrameRunner;
@@ -20,7 +16,7 @@ import org.jutils.ui.model.IView;
 public class AutoCompleteBox<T> implements IView<JComboBox<T>>
 {
     /**  */
-    private final FireableComboBox<T> field;
+    private final JComboBox<T> field;
     /**  */
     private final DefaultComboBoxModel<T> model;
 
@@ -30,7 +26,7 @@ public class AutoCompleteBox<T> implements IView<JComboBox<T>>
     public AutoCompleteBox( T[] items )
     {
         this.model = new DefaultComboBoxModel<>( items );
-        this.field = new FireableComboBox<>( model );
+        this.field = new JComboBox<>( model );
 
         // field.setKeySelectionManager( new AutoKeySelectionManager() );
         field.addActionListener( ( e ) -> findAndSelect() );
@@ -145,118 +141,6 @@ public class AutoCompleteBox<T> implements IView<JComboBox<T>>
             // {
             // comboBox.fireSuperActionEvent();
             // }
-        }
-    }
-
-    private static final class TextUpdate implements DocumentListener
-    {
-        private final AutoCompleteBox<?> field;
-
-        public TextUpdate( AutoCompleteBox<?> field )
-        {
-            this.field = field;
-        }
-
-        @Override
-        public void insertUpdate( DocumentEvent e )
-        {
-            update( e );
-        }
-
-        @Override
-        public void removeUpdate( DocumentEvent e )
-        {
-            update( e );
-        }
-
-        @Override
-        public void changedUpdate( DocumentEvent e )
-        {
-            update( e );
-        }
-
-        private void update( DocumentEvent e )
-        {
-            field.findAndSelect();
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class AutoKeySelectionManager implements KeySelectionManager
-    {
-        private String searchFor;
-        private long lap;
-
-        public AutoKeySelectionManager()
-        {
-            lap = new java.util.Date().getTime();
-        }
-
-        @Override
-        public int selectionForKey( char aKey,
-            @SuppressWarnings( "rawtypes") ComboBoxModel aModel )
-        {
-            long now = new java.util.Date().getTime();
-
-            if( searchFor != null && aKey == KeyEvent.VK_BACK_SPACE &&
-                searchFor.length() > 0 )
-            {
-                searchFor = searchFor.substring( 0, searchFor.length() - 1 );
-            }
-            else
-            {
-                // LogUtils.printDebug(lap);
-                if( lap + 1000 < now )
-                {
-                    searchFor = "" + aKey;
-                }
-                else
-                {
-                    searchFor = searchFor + aKey;
-                }
-            }
-
-            String searchStr = searchFor.toLowerCase( Locale.ENGLISH );
-
-            lap = now;
-
-            for( int i = 0; i < aModel.getSize(); i++ )
-            {
-                Object obj = aModel.getElementAt( i );
-                String current = obj.toString().toLowerCase( Locale.ENGLISH );
-
-                if( current.startsWith( searchStr ) )
-                {
-                    return i;
-                }
-            }
-
-            return -1;
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static final class FireableComboBox<T> extends JComboBox<T>
-    {
-        private static final long serialVersionUID = 1445722791528115948L;
-
-        // public FireableComboBox( T[] items )
-        // {
-        // super( items );
-        // }
-
-        public FireableComboBox( ComboBoxModel<T> model )
-        {
-            super( model );
-        }
-
-        public void fireSuperActionEvent()
-        {
-            super.fireActionEvent();
         }
     }
 }

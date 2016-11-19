@@ -42,7 +42,7 @@ public class GeneralPopup extends JPopupMenu
         newFileItem.setText( "File" );
 
         // super.show( new JLabel(), 0, 0 );
-        super.show( this.table, 0, 0 );
+        super.show( this.table.getView(), 0, 0 );
     }
 
     /**
