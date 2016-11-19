@@ -5,25 +5,23 @@ import java.awt.event.KeyListener;
 import java.util.regex.Pattern;
 
 import javax.swing.JTextArea;
-import javax.swing.text.*;
+import javax.swing.text.Document;
+import javax.swing.text.JTextComponent;
 
 import org.jutils.Utils;
 import org.jutils.io.LogUtils;
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  *
  ******************************************************************************/
-public class SearchableTextArea extends JTextArea
+public class SearchableTextArea implements IView<JTextComponent>
 {
     /**  */
-    private static final long serialVersionUID = 6740337808674917935L;
+    private final JTextArea textArea;
+    /**  */
+    private final FindDialog findDialog;
 
-    /**  */
-    private GapContent content = new GapContent();
-    /**  */
-    private Document doc = new PlainDocument( content );
-    /**  */
-    private FindDialog findDialog = new FindDialog();
     /**  */
     private FindOptions lastOptions = null;
 
@@ -33,7 +31,6 @@ public class SearchableTextArea extends JTextArea
     public SearchableTextArea()
     {
         this( null, null, 0, 0 );
-        this.setDocument( doc );
     }
 
     /***************************************************************************
@@ -45,12 +42,49 @@ public class SearchableTextArea extends JTextArea
     public SearchableTextArea( Document doc, String text, int rows,
         int columns )
     {
-        super( doc, text, rows, columns );
-        this.addKeyListener( new SearchableTextArea_keyAdapter( this ) );
-        findDialog.addFindListener(
-            new SearchableTextArea_findAdapter( this ) );
+        this.textArea = new JTextArea( doc, text, rows, columns );
+        this.findDialog = new FindDialog();
+        this.findDialog.addFindListener( new TextAreaFindListener( this ) );
+
+        textArea.setToolTipText( "Press CTRL+F to find text" );
+        textArea.addKeyListener( new TextAreaKeyListener( this ) );
+
         findDialog.getView().setTitle( "Find" );
         findDialog.getView().pack();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public JTextComponent getView()
+    {
+        return textArea;
+    }
+
+    /***************************************************************************
+     * @param text
+     **************************************************************************/
+    public void setText( String text )
+    {
+        textArea.setText( text );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public String getText()
+    {
+        return textArea.getText();
+    }
+
+    /***************************************************************************
+     * @param selectionStart
+     * @param selectionEnd
+     **************************************************************************/
+    public void select( int selectionStart, int selectionEnd )
+    {
+        textArea.select( selectionStart, selectionEnd );
     }
 
     /***************************************************************************
@@ -72,7 +106,7 @@ public class SearchableTextArea extends JTextArea
     {
         boolean found = false;
         CharSequence seq = getSequence();
-        int position = this.getCaretPosition();
+        int position = textArea.getCaretPosition();
 
         if( options.pattern == null )
         {
@@ -100,7 +134,7 @@ public class SearchableTextArea extends JTextArea
 
         if( found )
         {
-            select( options.matcher.start(), options.matcher.end() );
+            textArea.select( options.matcher.start(), options.matcher.end() );
         }
 
         // LogUtils.printDebug( "****************************************" );
@@ -145,9 +179,9 @@ public class SearchableTextArea extends JTextArea
     /***************************************************************************
      * @return ContentSequence
      **************************************************************************/
-    public ContentSequence getSequence()
+    public CharSequence getSequence()
     {
-        return new ContentSequence( content );
+        return textArea.getText();
     }
 
     /***************************************************************************
@@ -155,7 +189,7 @@ public class SearchableTextArea extends JTextArea
      **************************************************************************/
     public void showFind()
     {
-        String str = this.getSelectedText();
+        String str = textArea.getSelectedText();
         if( str != null && lastOptions != null )
         {
             lastOptions.textToFind = str;
@@ -174,61 +208,67 @@ public class SearchableTextArea extends JTextArea
     {
         this.lastOptions = options;
     }
-}
 
-class SearchableTextArea_findAdapter implements FindListener
-{
-    SearchableTextArea textArea = null;
-
-    public SearchableTextArea_findAdapter( SearchableTextArea ta )
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static final class TextAreaFindListener implements FindListener
     {
-        textArea = ta;
-    }
+        SearchableTextArea textArea = null;
 
-    @Override
-    public void findText( FindOptions findData )
-    {
-        textArea.searchAndHighlight( findData );
-    }
-}
-
-class SearchableTextArea_keyAdapter implements KeyListener
-{
-    SearchableTextArea textArea = null;
-
-    public SearchableTextArea_keyAdapter( SearchableTextArea ta )
-    {
-        textArea = ta;
-    }
-
-    @Override
-    public void keyPressed( KeyEvent e )
-    {
-        // LogUtils.printDebug( "keyPressed" );
-    }
-
-    @Override
-    public void keyReleased( KeyEvent e )
-    {
-        if( e.getKeyCode() == KeyEvent.VK_F3 )
+        public TextAreaFindListener( SearchableTextArea ta )
         {
-            // LogUtils.printDebug( "F3 Released" );
-            textArea.reFind();
+            textArea = ta;
+        }
+
+        @Override
+        public void findText( FindOptions findData )
+        {
+            textArea.searchAndHighlight( findData );
         }
     }
 
-    @Override
-    public void keyTyped( KeyEvent e )
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static final class TextAreaKeyListener implements KeyListener
     {
-        char keyTyped = e.getKeyChar();
-        int modifiers = e.getModifiers();
+        SearchableTextArea textArea = null;
 
-        if( ( modifiers & KeyEvent.CTRL_MASK ) != 0 )
+        public TextAreaKeyListener( SearchableTextArea ta )
         {
-            if( keyTyped == 'f' - 'a' + 1 )
+            textArea = ta;
+        }
+
+        @Override
+        public void keyPressed( KeyEvent e )
+        {
+            // LogUtils.printDebug( "keyPressed" );
+        }
+
+        @Override
+        public void keyReleased( KeyEvent e )
+        {
+            if( e.getKeyCode() == KeyEvent.VK_F3 )
             {
-                // LogUtils.printDebug( "CTRL+F Typed" );
-                textArea.showFind();
+                // LogUtils.printDebug( "F3 Released" );
+                textArea.reFind();
+            }
+        }
+
+        @Override
+        public void keyTyped( KeyEvent e )
+        {
+            char keyTyped = e.getKeyChar();
+            int modifiers = e.getModifiers();
+
+            if( ( modifiers & KeyEvent.CTRL_MASK ) != 0 )
+            {
+                if( keyTyped == 'f' - 'a' + 1 )
+                {
+                    // LogUtils.printDebug( "CTRL+F Typed" );
+                    textArea.showFind();
+                }
             }
         }
     }

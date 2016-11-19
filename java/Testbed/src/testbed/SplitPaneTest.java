@@ -53,8 +53,8 @@ public class SplitPaneTest
 
     private static class MyPanel extends JPanel
     {
-
-        Color color;
+        private static final long serialVersionUID = 1L;
+        private final Color color;
 
         public MyPanel( Color color )
         {

@@ -4,32 +4,34 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import org.jutils.ui.FindOptions;
-import org.jutils.ui.SearchableTextArea;
+import org.jutils.ui.*;
+import org.jutils.ui.app.FrameRunner;
+import org.jutils.ui.app.IFrameApp;
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  *
  ******************************************************************************/
-public class SearchTATester extends JFrame
+public class SearchTATester implements IView<JComponent>
 {
-    private JPanel contentPane;
-
-    private JScrollPane textAreaPane = new JScrollPane();
-
-    private SearchableTextArea textArea = new SearchableTextArea();
+    /**  */
+    private final JPanel contentPane;
+    /**  */
+    private final JScrollPane textAreaPane;
+    /**  */
+    private final SearchableTextArea textArea;
 
     /***************************************************************************
      *
      **************************************************************************/
     public SearchTATester()
     {
-        setDefaultCloseOperation( EXIT_ON_CLOSE );
-        contentPane = ( JPanel )getContentPane();
+        this.contentPane = new JPanel();
+        this.textAreaPane = new JScrollPane();
+        this.textArea = new SearchableTextArea();
+
         contentPane.setLayout( new GridBagLayout() );
-        setSize( new Dimension( 400, 300 ) );
-        setTitle( "Searchable Text Frame" );
-        textArea.setToolTipText( "Press CTRL+F to find text" );
-        textAreaPane.setViewportView( textArea );
+        textAreaPane.setViewportView( textArea.getView() );
 
         contentPane.add( textAreaPane,
             new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
@@ -38,58 +40,45 @@ public class SearchTATester extends JFrame
     }
 
     /***************************************************************************
-     * @param vis boolean
-     **************************************************************************/
-    @Override
-    public void setVisible( boolean vis )
-    {
-        super.setVisible( vis );
-        if( vis )
-        {
-            FindOptions o = new FindOptions();
-            o.textToFind = "\\w.{6}\\s\\whe\\sp\\w\\S\\Sured";
-            o.useRegex = true;
-            o.matchCase = false;
-            o.wrapAround = true;
-            // textArea.searchAndHighlight( o );
-            textArea.setOptions( o );
-        }
-
-    }
-
-    /***************************************************************************
      * @param args String[]
      **************************************************************************/
     public static void main( String[] args )
     {
-        SwingUtilities.invokeLater( new Runnable()
+        FrameRunner.invokeLater( new IFrameApp()
         {
+            private SearchTATester taTester;
+
             @Override
-            public void run()
+            public void finalizeGui()
             {
-                try
-                {
-                    UIManager.setLookAndFeel(
-                        com.jgoodies.looks.Options.getCrossPlatformLookAndFeelClassName() );
+                FindOptions o = new FindOptions();
+                o.textToFind = "\\w.{6}\\s\\whe\\sp\\w\\S\\Sured";
+                o.useRegex = true;
+                o.matchCase = false;
+                o.wrapAround = true;
+                // textArea.searchAndHighlight( o );
+                taTester.textArea.setOptions( o );
+            }
 
-                    // UIManager.setLookAndFeel( UIManager.
-                    // getCrossPlatformLookAndFeelClassName() );
-                }
-                catch( Exception exception )
-                {
-                    exception.printStackTrace();
-                }
+            @Override
+            public JFrame createFrame()
+            {
+                StandardFrameView view = new StandardFrameView();
+                taTester = new SearchTATester();
 
-                SearchTATester frame = new SearchTATester();
-                // -------------------------------------------------------------
-                // Validate frames that have preset sizes. Pack frames that have
-                // useful preferred size info, e.g. from their layout.
-                // -------------------------------------------------------------
-                frame.validate();
-                frame.setLocationRelativeTo( null );
+                view.setContent( taTester.getView() );
+                view.setSize( 400, 300 );
+                view.setTitle( "Searchable Text Frame" );
+                view.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 
-                frame.setVisible( true );
+                return view.getView();
             }
         } );
+    }
+
+    @Override
+    public JComponent getView()
+    {
+        return contentPane;
     }
 }

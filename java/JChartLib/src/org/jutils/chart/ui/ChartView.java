@@ -108,32 +108,34 @@ public class ChartView implements IView<JComponent>
         // mainPanel.setBorder( new LineBorder( Color.blue, 4 ) );
         mainPanel.setObject( chartWidget );
 
-        ChartMouseListenter ml = new ChartMouseListenter( this, chartWidget,
-            mainPanel );
+        JComponent mainComp = mainPanel.getView();
 
-        mainPanel.addComponentListener( new ChartComponentListener( this ) );
-        mainPanel.addMouseListener( ml );
-        mainPanel.addMouseMotionListener( ml );
-        mainPanel.addMouseWheelListener( ml );
+        ChartMouseListenter ml = new ChartMouseListenter( this, chartWidget,
+            mainComp );
+
+        mainComp.addComponentListener( new ChartComponentListener( this ) );
+        mainComp.addMouseListener( ml );
+        mainComp.addMouseMotionListener( ml );
+        mainComp.addMouseWheelListener( ml );
 
         if( allowOpen )
         {
-            mainPanel.setDropTarget(
+            mainComp.setDropTarget(
                 new FileDropTarget( new ChartDropTarget( this ) ) );
         }
 
-        mainPanel.setFocusable( true );
+        mainComp.setFocusable( true );
 
         String actionMapKey = "delete_point";
         KeyStroke deleteKey = KeyStroke.getKeyStroke( KeyEvent.VK_DELETE, 0 );
-        ActionMap amap = mainPanel.getActionMap();
-        InputMap imap = mainPanel.getInputMap( JTable.WHEN_FOCUSED );
+        ActionMap amap = mainComp.getActionMap();
+        InputMap imap = mainComp.getInputMap( JTable.WHEN_FOCUSED );
 
         imap.put( deleteKey, actionMapKey );
         amap.put( actionMapKey, new ActionAdapter(
             new DeletePointListener( this ), actionMapKey, null ) );
 
-        mainPanel.setMinimumSize( new Dimension( 150, 150 ) );
+        mainComp.setMinimumSize( new Dimension( 150, 150 ) );
     }
 
     /***************************************************************************
@@ -159,7 +161,7 @@ public class ChartView implements IView<JComponent>
         constraints = new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets( 0, 0, 0, 0 ), 0, 0 );
-        panel.add( mainPanel, constraints );
+        panel.add( mainPanel.getView(), constraints );
 
         return panel;
     }
@@ -441,21 +443,21 @@ public class ChartView implements IView<JComponent>
         }
         catch( FileNotFoundException ex )
         {
-            JOptionPane.showMessageDialog( mainPanel,
+            JOptionPane.showMessageDialog( mainPanel.getView(),
                 "The file was not found: " + file.getAbsolutePath(),
                 "File Not Found", JOptionPane.ERROR_MESSAGE );
             return;
         }
         catch( IOException ex )
         {
-            JOptionPane.showMessageDialog( mainPanel,
+            JOptionPane.showMessageDialog( mainPanel.getView(),
                 "I/O Exception: " + ex.getMessage(), "I/O Exception",
                 JOptionPane.ERROR_MESSAGE );
             return;
         }
         catch( ValidationException ex )
         {
-            JOptionPane.showMessageDialog( mainPanel,
+            JOptionPane.showMessageDialog( mainPanel.getView(),
                 "Format Error: " + ex.getMessage(), "Format Error",
                 JOptionPane.ERROR_MESSAGE );
             return;
@@ -682,7 +684,7 @@ public class ChartView implements IView<JComponent>
         }
         catch( IOException ex )
         {
-            JOptionPane.showMessageDialog( mainPanel,
+            JOptionPane.showMessageDialog( mainPanel.getView(),
                 "I/O Error: " + ex.getMessage(), "I/O Error",
                 JOptionPane.ERROR_MESSAGE );
         }
@@ -784,8 +786,8 @@ public class ChartView implements IView<JComponent>
             JDialog dialog = okView.getView();
 
             options.file = getDefaultFile();
-            options.size.width = view.mainPanel.getWidth();
-            options.size.height = view.mainPanel.getHeight();
+            options.size.width = view.mainPanel.getView().getWidth();
+            options.size.height = view.mainPanel.getView().getHeight();
 
             saveView.setData( options );
 

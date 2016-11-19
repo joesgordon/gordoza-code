@@ -3,12 +3,14 @@ package org.jutils.chart.ui.event;
 import java.awt.Point;
 import java.awt.event.*;
 
+import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 import org.jutils.chart.ChartUtils;
 import org.jutils.chart.data.XYPoint;
 import org.jutils.chart.model.Interval;
-import org.jutils.chart.ui.*;
+import org.jutils.chart.ui.ChartView;
+import org.jutils.chart.ui.ZoomDirection;
 import org.jutils.chart.ui.objects.*;
 import org.jutils.chart.ui.objects.PlotContext.IAxisCoords;
 
@@ -22,7 +24,7 @@ public class ChartMouseListenter extends MouseAdapter
     /**  */
     private final ChartWidget chartWidget;
     /**  */
-    private final WidgetPanel panel;
+    private final JComponent panel;
 
     /***************************************************************************
      * @param view
@@ -30,7 +32,7 @@ public class ChartMouseListenter extends MouseAdapter
      * @param panel
      **************************************************************************/
     public ChartMouseListenter( ChartView view, ChartWidget chartWidget,
-        WidgetPanel panel )
+        JComponent panel )
     {
         this.view = view;
         this.chartWidget = chartWidget;

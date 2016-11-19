@@ -4,13 +4,17 @@ import java.awt.*;
 
 import javax.swing.JComponent;
 
+import org.jutils.ui.IPaintable;
+import org.jutils.ui.PaintingComponent;
+import org.jutils.ui.model.IView;
+
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class WidgetPanel extends JComponent
+public class WidgetPanel implements IView<JComponent>
 {
     /**  */
-    private static final long serialVersionUID = 529206677064587630L;
+    private final PaintingComponent comp;
     /**  */
     private IChartWidget object;
     /**  */
@@ -34,6 +38,16 @@ public class WidgetPanel extends JComponent
         this.lock = new Object();
         this.object = object;
         this.layer = new Layer2d();
+        this.comp = new PaintingComponent( new WidgetPainter( this ) );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public JComponent getView()
+    {
+        return comp;
     }
 
     /***************************************************************************
@@ -44,59 +58,72 @@ public class WidgetPanel extends JComponent
         this.object = obj;
     }
 
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void paintComponent( Graphics g )
+    private static final class WidgetPainter implements IPaintable
     {
-        Graphics2D graphics = ( Graphics2D )g;
-        super.paintComponent( g );
+        private final WidgetPanel panel;
 
-        IChartWidget obj = null;
-
-        synchronized( lock )
+        public WidgetPainter( WidgetPanel panel )
         {
-            obj = object;
+            this.panel = panel;
         }
 
-        if( obj == null )
+        @Override
+        public void paint( JComponent c, Graphics2D g )
         {
-            return;
+            IChartWidget obj = null;
+
+            synchronized( panel.lock )
+            {
+                obj = panel.object;
+            }
+
+            if( obj == null )
+            {
+                return;
+            }
+
+            Insets borderSize = panel.comp.getInsets();
+            int width = panel.comp.getWidth() - borderSize.left -
+                borderSize.right - 1;
+            int height = panel.comp.getHeight() - borderSize.top -
+                borderSize.bottom - 1;
+            int x = borderSize.left;
+            int y = borderSize.top;
+            Dimension min = panel.comp.getMinimumSize();
+
+            width = Math.max( width, min.width );
+            height = Math.max( height, min.height );
+
+            Dimension size = new Dimension( width, height );
+
+            // graphics.setColor( Color.red );
+            // graphics.drawRect( x + 1, y + 1, size.width - 2, size.height - 2
+            // );
+            // graphics.setColor( Color.cyan );
+            // graphics.drawLine( x + 1, y + 5, x + size.width - 1, y + 5 );
+
+            panel.layer.setSize(
+                new Dimension( size.width + 1, size.height + 1 ) );
+            obj.calculateSize( size );
+            obj.draw( panel.layer.getGraphics(), new Point(), size );
+
+            // Graphics2D g2 = layer.getGraphics();
+            // g2.setColor( Color.black );
+            // g2.drawRect( 0, 0, size.width, size.height );
+            // g2.setColor( Color.green );
+            // g2.drawLine( 1, 6, size.width - 1, 6 );
+
+            panel.layer.paint( g, x, y );
+
+            // if( "".isEmpty() )
+            // {
+            // return;
+            // }
         }
+    }
 
-        Insets borderSize = super.getInsets();
-        int width = super.getWidth() - borderSize.left - borderSize.right - 1;
-        int height = super.getHeight() - borderSize.top - borderSize.bottom - 1;
-        int x = borderSize.left;
-        int y = borderSize.top;
-        Dimension min = getMinimumSize();
-
-        width = Math.max( width, min.width );
-        height = Math.max( height, min.height );
-
-        Dimension size = new Dimension( width, height );
-
-        // graphics.setColor( Color.red );
-        // graphics.drawRect( x + 1, y + 1, size.width - 2, size.height - 2 );
-        // graphics.setColor( Color.cyan );
-        // graphics.drawLine( x + 1, y + 5, x + size.width - 1, y + 5 );
-
-        layer.setSize( new Dimension( size.width + 1, size.height + 1 ) );
-        obj.calculateSize( size );
-        obj.draw( layer.getGraphics(), new Point(), size );
-
-        // Graphics2D g2 = layer.getGraphics();
-        // g2.setColor( Color.black );
-        // g2.drawRect( 0, 0, size.width, size.height );
-        // g2.setColor( Color.green );
-        // g2.drawLine( 1, 6, size.width - 1, 6 );
-
-        layer.paint( graphics, x, y );
-
-        // if( "".isEmpty() )
-        // {
-        // return;
-        // }
+    public void repaint()
+    {
+        comp.repaint();
     }
 }

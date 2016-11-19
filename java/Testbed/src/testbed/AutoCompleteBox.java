@@ -6,50 +6,74 @@ import java.util.Locale;
 
 import javax.swing.*;
 import javax.swing.JComboBox.KeySelectionManager;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
 
 import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.model.IView;
 
-/***************************************************************************
+/*******************************************************************************
  * 
- **************************************************************************/
+ ******************************************************************************/
 public class AutoCompleteBox<T> implements IView<JComboBox<T>>
 {
+    /**  */
     private final FireableComboBox<T> field;
+    /**  */
     private final DefaultComboBoxModel<T> model;
 
+    /***************************************************************************
+     * @param items
+     **************************************************************************/
     public AutoCompleteBox( T[] items )
     {
         this.model = new DefaultComboBoxModel<>( items );
         this.field = new FireableComboBox<>( model );
 
-        field.setKeySelectionManager( new AutoKeySelectionManager() );
+        // field.setKeySelectionManager( new AutoKeySelectionManager() );
         field.addActionListener( ( e ) -> findAndSelect() );
+
         JTextField tf = ( JTextField )field.getEditor().getEditorComponent();
-        tf.setDocument( new CBDocument2( field ) );
+        tf.setDocument( new CBDocument2() );
+        // tf.getDocument().addDocumentListener( new TextUpdate( this ) );
+
+        model.setSelectedItem( null );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private void findAndSelect()
     {
         JTextField tf = ( JTextField )field.getEditor().getEditorComponent();
         String text = tf.getText();
         ComboBoxModel<T> aModel = field.getModel();
-        String current;
+
+        text = text.toLowerCase( Locale.ENGLISH );
+
         for( int i = 0; i < aModel.getSize(); i++ )
         {
-            current = aModel.getElementAt( i ).toString();
-            if( current.toLowerCase().startsWith( text.toLowerCase() ) )
+            T item = aModel.getElementAt( i );
+            String current = item.toString().toLowerCase( Locale.ENGLISH );
+
+            if( current.startsWith( text ) )
             {
                 tf.setText( current );
                 tf.setSelectionStart( text.length() );
                 tf.setSelectionEnd( current.length() );
+
+                model.setSelectedItem( item );
+
                 break;
             }
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public JComboBox<T> getView()
     {
@@ -80,10 +104,12 @@ public class AutoCompleteBox<T> implements IView<JComboBox<T>>
                 AutoCompleteBox<Locale> abox = new AutoCompleteBox<Locale>(
                     locales );
                 JComboBox<Locale> cBox = abox.getView();
+
                 // JComboBox<Locale> cBox = abox;
                 cBox.setBounds( 50, 50, 100, 21 );
                 cBox.setEditable( true );
                 cp.add( cBox );
+
                 return f;
             }
         } );
@@ -95,24 +121,63 @@ public class AutoCompleteBox<T> implements IView<JComboBox<T>>
     private class CBDocument2 extends PlainDocument
     {
         private static final long serialVersionUID = 8461393629310010285L;
-        private final FireableComboBox<T> comboBox;
+        // private final FireableComboBox<T> comboBox;
 
-        public CBDocument2( FireableComboBox<T> comboBox )
-        {
-            this.comboBox = comboBox;
-        }
+        // public CBDocument2( FireableComboBox<T> comboBox )
+        // {
+        // this.comboBox = comboBox;
+        // }
 
         @Override
         public void insertString( int offset, String str, AttributeSet a )
             throws BadLocationException
         {
             if( str == null )
-                return;
-            super.insertString( offset, str, a );
-            if( !comboBox.isPopupVisible() && str.length() != 0 )
             {
-                comboBox.fireSuperActionEvent();
+                return;
             }
+
+            super.insertString( offset, str, a );
+
+            findAndSelect();
+
+            // if( !comboBox.isPopupVisible() && str.length() != 0 )
+            // {
+            // comboBox.fireSuperActionEvent();
+            // }
+        }
+    }
+
+    private static final class TextUpdate implements DocumentListener
+    {
+        private final AutoCompleteBox<?> field;
+
+        public TextUpdate( AutoCompleteBox<?> field )
+        {
+            this.field = field;
+        }
+
+        @Override
+        public void insertUpdate( DocumentEvent e )
+        {
+            update( e );
+        }
+
+        @Override
+        public void removeUpdate( DocumentEvent e )
+        {
+            update( e );
+        }
+
+        @Override
+        public void changedUpdate( DocumentEvent e )
+        {
+            update( e );
+        }
+
+        private void update( DocumentEvent e )
+        {
+            field.findAndSelect();
         }
     }
 

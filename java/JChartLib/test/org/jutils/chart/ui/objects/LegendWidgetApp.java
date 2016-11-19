@@ -53,7 +53,7 @@ public class LegendWidgetApp
                 constraints = new GridBagConstraints( 1, 2, 1, 1, 1.0, 1.0,
                     GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                     new Insets( 0, 0, 0, 0 ), 0, 0 );
-                panel.add( wp, constraints );
+                panel.add( wp.getView(), constraints );
 
                 frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
                 frame.setSize( 500, 500 );

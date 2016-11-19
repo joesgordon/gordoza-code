@@ -6,14 +6,14 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import org.jutils.io.LogUtils;
 import org.jutils.ui.JGoodiesToolBar;
+import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
 public class SnapTester implements IFrameApp
 {
-    private USnapPanel snapPanel;
+    private SnapPanel snapPanel;
 
     private JPanel mainView;
 
@@ -56,22 +56,23 @@ public class SnapTester implements IFrameApp
     @Override
     public JFrame createFrame()
     {
-        JFrame frame = new JFrame( "SnapTest" );
+        StandardFrameView frameView = new StandardFrameView();
 
-        frame.setContentPane( createContentPanel() );
-        frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-        frame.setSize( 500, 500 );
+        frameView.setTitle( "SnapTest" );
+        frameView.setContent( createContentPanel() );
+        frameView.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        frameView.setSize( 500, 500 );
 
-        return frame;
+        return frameView.getView();
     }
 
     private JPanel createContentPanel()
     {
         JPanel panel = new JPanel( new BorderLayout() );
-        snapPanel = new USnapPanel( mainView, snapView );
+        snapPanel = new SnapPanel( mainView, snapView );
 
         panel.add( createToolBar(), BorderLayout.NORTH );
-        panel.add( snapPanel, BorderLayout.CENTER );
+        panel.add( snapPanel.getView(), BorderLayout.CENTER );
 
         return panel;
     }
@@ -133,63 +134,11 @@ public class SnapTester implements IFrameApp
             {
                 doDeselectedAction();
             }
-
-            LogUtils.printDebug(
-                "Selected dir " + promptForFolder( snapPanel ) );
         }
 
         protected abstract void doSelectedAction();
 
         protected abstract void doDeselectedAction();
-    }
-
-    @SuppressWarnings( "unused")
-    private class MainToggleAction extends ToggleAction
-    {
-        public MainToggleAction( JToggleButton button )
-        {
-            super( button );
-        }
-
-        @Override
-        protected void doDeselectedAction()
-        {
-            snapPanel.setMainView( null );
-        }
-
-        @Override
-        protected void doSelectedAction()
-        {
-            snapPanel.setMainView( mainView );
-        }
-    }
-
-    @SuppressWarnings( "unused")
-    private class SnapToggleAction extends ToggleAction
-    {
-        private JToggleButton otherButton;
-
-        public SnapToggleAction( JToggleButton button,
-            JToggleButton otherButton )
-        {
-            super( button );
-            this.otherButton = otherButton;
-        }
-
-        @Override
-        protected void doDeselectedAction()
-        {
-            otherButton.setSelected( false );
-            snapPanel.setSnapView( null );
-            otherButton.setEnabled( false );
-        }
-
-        @Override
-        protected void doSelectedAction()
-        {
-            snapPanel.setSnapView( snapView );
-            otherButton.setEnabled( true );
-        }
     }
 
     private class ShowToggleAction extends ToggleAction

@@ -5,7 +5,8 @@ import java.awt.*;
 import javax.swing.*;
 
 import org.jutils.IconConstants;
-import org.jutils.chart.model.*;
+import org.jutils.chart.model.HorizontalAlignment;
+import org.jutils.chart.model.TextLabel;
 import org.jutils.chart.ui.IChartWidget;
 import org.jutils.chart.ui.WidgetPanel;
 import org.jutils.ui.JGoodiesToolBar;
@@ -85,7 +86,7 @@ public class TextWidgetApp
                 constraints = new GridBagConstraints( 1, 2, 1, 1, 1.0, 1.0,
                     GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                     new Insets( 0, 0, 0, 0 ), 0, 0 );
-                panel.add( wp, constraints );
+                panel.add( wp.getView(), constraints );
 
                 label.alignment = HorizontalAlignment.CENTER;
 

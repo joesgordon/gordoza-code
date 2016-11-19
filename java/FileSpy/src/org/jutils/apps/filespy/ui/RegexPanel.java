@@ -54,8 +54,9 @@ public class RegexPanel implements IView<JPanel>
     private JPanel createView()
     {
         StandardFormView form = new StandardFormView();
-        JScrollPane resultScrollPane = new JScrollPane( resultTextArea );
-        JScrollPane testScrollPane = new JScrollPane( testTextArea );
+        JScrollPane resultScrollPane = new JScrollPane(
+            resultTextArea.getView() );
+        JScrollPane testScrollPane = new JScrollPane( testTextArea.getView() );
 
         testTextArea.setText( "Here is" + Utils.NEW_LINE + "some text with" +
             Utils.NEW_LINE + "the word blah in it" + Utils.NEW_LINE +
@@ -77,7 +78,7 @@ public class RegexPanel implements IView<JPanel>
         JPanel regexPanel = new JPanel( new GridBagLayout() );
 
         regexTextArea.setText( "blah" );
-        regexScrollPane.setViewportView( regexTextArea );
+        regexScrollPane.setViewportView( regexTextArea.getView() );
 
         Dimension dim = regexScrollPane.getPreferredSize();
         dim.height = 100;
@@ -224,7 +225,7 @@ public class RegexPanel implements IView<JPanel>
             JOptionPane.showMessageDialog(
                 SwingUtils.getComponentsWindow( view ), ex.getMessage(),
                 "ERROR", JOptionPane.ERROR_MESSAGE );
-            regexTextArea.requestFocus();
+            regexTextArea.getView().requestFocus();
             regexTextArea.select( ex.getIndex() - 1, ex.getIndex() );
         }
     }
