@@ -4,11 +4,12 @@ import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
+import java.util.EventObject;
 import java.util.List;
 
 import javax.swing.*;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
+import javax.swing.event.CellEditorListener;
+import javax.swing.table.*;
 import javax.swing.text.*;
 
 import org.jutils.ui.HighlightedLabel;
@@ -18,6 +19,9 @@ import org.jutils.ui.HighlightedLabel;
  ******************************************************************************/
 public class HexTable extends JTable
 {
+    /**  */
+    private static final long serialVersionUID = 1569560679743570898L;
+
     /**  */
     private final HexTableModel model;
     /**  */
@@ -335,15 +339,15 @@ public class HexTable extends JTable
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class ByteCellEditor extends DefaultCellEditor
+    private static class ByteCellEditor implements TableCellEditor
     {
+        private final DefaultCellEditor editor;
         private final JTextField field;
 
         public ByteCellEditor()
         {
-            super( new JTextField() );
-
-            field = ( JTextField )getComponent();
+            this.field = new JTextField();
+            this.editor = new DefaultCellEditor( field );
 
             field.setFont( new Font( "Monospaced", Font.PLAIN, 12 ) );
             field.setHorizontalAlignment( SwingConstants.CENTER );
@@ -366,7 +370,51 @@ public class HexTable extends JTable
                 return false;
             }
 
-            return super.stopCellEditing();
+            return editor.stopCellEditing();
+        }
+
+        @Override
+        public Object getCellEditorValue()
+        {
+            return editor.getCellEditorValue();
+        }
+
+        @Override
+        public boolean isCellEditable( EventObject anEvent )
+        {
+            return editor.isCellEditable( anEvent );
+        }
+
+        @Override
+        public boolean shouldSelectCell( EventObject anEvent )
+        {
+            return editor.shouldSelectCell( anEvent );
+        }
+
+        @Override
+        public void cancelCellEditing()
+        {
+            editor.cancelCellEditing();
+        }
+
+        @Override
+        public void addCellEditorListener( CellEditorListener l )
+        {
+            editor.addCellEditorListener( l );
+        }
+
+        @Override
+        public void removeCellEditorListener( CellEditorListener l )
+        {
+            editor.removeCellEditorListener( l );
+        }
+
+        @Override
+        public Component getTableCellEditorComponent( JTable table,
+            Object value, boolean isSelected, int row, int column )
+        {
+            return editor.getTableCellEditorComponent( table, value, isSelected,
+                row, column );
         }
     }
 

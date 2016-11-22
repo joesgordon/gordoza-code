@@ -12,6 +12,9 @@ import javax.swing.table.AbstractTableModel;
 public class ExplorerTableModel extends AbstractTableModel
 {
     /**  */
+    private static final long serialVersionUID = -8775953721896711927L;
+
+    /**  */
     public static final String [] HEADERS = new String[] { "Name", "Location",
         "Size (kB)", "Type", "Modified" };
 

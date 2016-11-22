@@ -12,6 +12,8 @@ import javax.swing.*;
 public class ActionAdapter extends AbstractAction
 {
     /**  */
+    private static final long serialVersionUID = -6419344487512692565L;
+    /**  */
     private final ActionListener listener;
 
     /***************************************************************************

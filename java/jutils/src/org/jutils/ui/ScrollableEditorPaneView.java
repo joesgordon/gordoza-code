@@ -80,7 +80,7 @@ public class ScrollableEditorPaneView implements IView<JTextPane>
 
     public void setCaretPosition( int i )
     {
-        pane.setCaretPosition( 0 );
+        pane.setCaretPosition( i );
     }
 
     public Style addStyle( String styleName, Style parent )

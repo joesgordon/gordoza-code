@@ -6,22 +6,27 @@ import java.util.GregorianCalendar;
 import javax.swing.JLabel;
 import javax.swing.UIManager;
 
+import org.jutils.ui.model.IView;
+
 /*******************************************************************************
  *
  ******************************************************************************/
-class DayLabel extends JLabel
+class DayLabel implements IView<JLabel>
 {
     /**  */
-    private final Color dayBG = new Color( 0xFF, 0xFF, 0xFF );
+    private static final Color dayBG = new Color( 0xFF, 0xFF, 0xFF );
     /**  */
-    private final Color dayFG = new Color( 0x00, 0x00, 0x00 );
+    private static final Color dayFG = new Color( 0x00, 0x00, 0x00 );
     /**  */
-    private final Color daySelectedBG = UIManager.getColor(
+    private static final Color daySelectedBG = UIManager.getColor(
         "TextArea.selectionBackground" );
     /**  */
-    private final Color daySelectedFG = new Color( 0xFF, 0xFF, 0xFF );
+    private static final Color daySelectedFG = new Color( 0xFF, 0xFF, 0xFF );
     /**  */
-    private final Color nonDayFG = Color.gray;
+    private static final Color nonDayFG = Color.gray;
+
+    /**  */
+    private final JLabel label;
 
     /**  */
     private int year = 0;
@@ -37,10 +42,19 @@ class DayLabel extends JLabel
      **************************************************************************/
     public DayLabel()
     {
-        super();
+        this.label = new JLabel();
 
-        this.setForeground( dayFG );
-        this.setBackground( dayBG );
+        label.setForeground( dayFG );
+        label.setBackground( dayBG );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public JLabel getView()
+    {
+        return label;
     }
 
     /***************************************************************************
@@ -48,7 +62,7 @@ class DayLabel extends JLabel
      **************************************************************************/
     public int getDay()
     {
-        return Integer.parseInt( this.getText() );
+        return Integer.parseInt( label.getText() );
     }
 
     /***************************************************************************
@@ -82,24 +96,24 @@ class DayLabel extends JLabel
     {
         isSelected = selected;
 
-        this.setFocusable( isSelected );
+        label.setFocusable( isSelected );
         if( isSelected )
         {
-            this.setForeground( daySelectedFG );
-            this.setBackground( daySelectedBG );
+            label.setForeground( daySelectedFG );
+            label.setBackground( daySelectedBG );
         }
         else
         {
             if( isNonDay )
             {
-                this.setForeground( nonDayFG );
+                label.setForeground( nonDayFG );
             }
             else
             {
-                this.setForeground( dayFG );
+                label.setForeground( dayFG );
             }
 
-            this.setBackground( dayBG );
+            label.setBackground( dayBG );
         }
     }
 
@@ -122,11 +136,11 @@ class DayLabel extends JLabel
         {
             if( isNonDay )
             {
-                this.setForeground( nonDayFG );
+                label.setForeground( nonDayFG );
             }
             else
             {
-                this.setForeground( dayFG );
+                label.setForeground( dayFG );
             }
         }
     }
@@ -137,5 +151,13 @@ class DayLabel extends JLabel
     public boolean isNonDay()
     {
         return isNonDay;
+    }
+
+    /***************************************************************************
+     * @param text
+     **************************************************************************/
+    public void setText( String text )
+    {
+        label.setText( text );
     }
 }

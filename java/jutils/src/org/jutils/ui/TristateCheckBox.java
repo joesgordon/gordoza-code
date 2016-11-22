@@ -7,6 +7,8 @@ import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ActionMapUIResource;
 
+import org.jutils.ui.event.ActionAdapter;
+
 import com.jgoodies.looks.Options;
 
 /*******************************************************************************
@@ -23,6 +25,8 @@ import com.jgoodies.looks.Options;
 public class TristateCheckBox extends JCheckBox
 {
     /**  */
+    private static final long serialVersionUID = -7151843638250343722L;
+    /**  */
     private final TristateDecorator model;
 
     /***************************************************************************
@@ -33,6 +37,8 @@ public class TristateCheckBox extends JCheckBox
     public TristateCheckBox( String text, Icon icon, Boolean initial )
     {
         super( text, icon );
+        this.model = new TristateDecorator( getModel() );
+
         // Add a listener for when the mouse is pressed
         super.addMouseListener( new MouseAdapter()
         {
@@ -43,21 +49,17 @@ public class TristateCheckBox extends JCheckBox
                 model.nextState();
             }
         } );
+
         // Reset the keyboard action map
         ActionMap map = new ActionMapUIResource();
-        map.put( "pressed", new AbstractAction()
-        {
-            @Override
-            public void actionPerformed( ActionEvent e )
-            {
-                grabFocus();
-                model.nextState();
-            }
-        } );
+        map.put( "pressed", new ActionAdapter( ( e ) -> {
+            grabFocus();
+            model.nextState();
+        }, "pressed", null ) );
         map.put( "released", null );
         SwingUtilities.replaceUIActionMap( this, map );
+
         // set the model to the adapted model
-        model = new TristateDecorator( getModel() );
         setModel( model );
         setState( initial );
 

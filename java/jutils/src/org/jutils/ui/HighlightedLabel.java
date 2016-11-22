@@ -12,9 +12,15 @@ import org.jutils.ui.app.IFrameApp;
  ******************************************************************************/
 public class HighlightedLabel extends JLabel
 {
+    /**  */
+    private static final long serialVersionUID = 2460200518187514263L;
+    /**  */
     private Color highlightColor = Color.cyan;
+    /**  */
     private int highlightOffset;
+    /**  */
     private int highlightLength;
+    /**  */
     private FontMetrics fontMetrics;
 
     /***************************************************************************

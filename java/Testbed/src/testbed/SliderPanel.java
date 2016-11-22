@@ -11,6 +11,7 @@ import org.jutils.io.LogUtils;
 
 public class SliderPanel extends JPanel
 {
+    private static final long serialVersionUID = 1L;
     private GridLayout gl;
     private List<JComponent> panels;
     private JScrollPane scrollPane;
@@ -181,6 +182,8 @@ public class SliderPanel extends JPanel
 
     private class MultiPanel extends JPanel
     {
+        private static final long serialVersionUID = 1L;
+
         public MultiPanel( LayoutManager layout )
         {
             super( layout );

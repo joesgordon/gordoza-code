@@ -265,7 +265,7 @@ public class CalendarPanel implements IDataView<Long>
             int btm = row == 6 ? 5 : 0;
             int rht = col == 6 ? 5 : 0;
 
-            monthPanel.add( dayLabels[i],
+            monthPanel.add( dayLabels[i].getView(),
                 new GridBagConstraints( col, row, 1, 1, 0.0, 0.0,
                     GridBagConstraints.CENTER, GridBagConstraints.NONE,
                     new Insets( top, lft, btm, rht ), 0, 0 ) );
@@ -292,10 +292,11 @@ public class CalendarPanel implements IDataView<Long>
      * @param label JLabel
      * @param text String
      **************************************************************************/
-    private void initDayLabel( DayLabel label )
+    private void initDayLabel( DayLabel dl )
     {
+        JLabel label = dl.getView();
         label.setHorizontalAlignment( JLabel.CENTER );
-        label.addMouseListener( new DayLabelMouseListener( this ) );
+        label.addMouseListener( new DayLabelMouseListener( this, dl ) );
         label.addKeyListener( new DayLabelKeyListener( this ) );
 
         initLabel( label );
@@ -495,7 +496,7 @@ public class CalendarPanel implements IDataView<Long>
             if( cal != null )
             {
                 calPanel.setDate( cal );
-                calPanel.currentSelection.requestFocus();
+                calPanel.currentSelection.getView().requestFocus();
                 calPanel.dateChangedListeners.fireListeners( calPanel,
                     cal.getTimeInMillis() );
             }
@@ -546,24 +547,24 @@ public class CalendarPanel implements IDataView<Long>
     private static class DayLabelMouseListener extends MouseAdapter
     {
         private final CalendarPanel adaptee;
+        private final DayLabel labelClicked;
 
-        public DayLabelMouseListener( CalendarPanel adaptee )
+        public DayLabelMouseListener( CalendarPanel adaptee, DayLabel label )
         {
             this.adaptee = adaptee;
+            this.labelClicked = label;
         }
 
         @Override
         public void mouseClicked( MouseEvent e )
         {
-            DayLabel newCurrent = ( DayLabel )e.getComponent();
-
-            if( newCurrent != adaptee.currentSelection )
+            if( labelClicked != adaptee.currentSelection )
             {
                 adaptee.currentSelection.setSelected( false );
 
-                if( newCurrent.isNonDay() )
+                if( labelClicked.isNonDay() )
                 {
-                    Calendar cal = newCurrent.getDate();
+                    Calendar cal = labelClicked.getDate();
                     Date dateTime = ( Date )adaptee.timeSpinner.getValue();
                     Calendar time = new GregorianCalendar();
                     time.setTime( dateTime );
@@ -575,13 +576,13 @@ public class CalendarPanel implements IDataView<Long>
                 }
                 else
                 {
-                    newCurrent.setSelected( true );
+                    labelClicked.setSelected( true );
 
-                    adaptee.currentSelection = newCurrent;
+                    adaptee.currentSelection = labelClicked;
                 }
             }
 
-            newCurrent.requestFocus();
+            labelClicked.getView().requestFocus();
 
             adaptee.dateChangedListeners.fireListeners( adaptee,
                 adaptee.getData() );

@@ -5,16 +5,28 @@ import java.awt.*;
 import javax.swing.UIManager;
 import javax.swing.border.AbstractBorder;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class ShadowBorder extends AbstractBorder
 {
+    /**  */
+    private static final long serialVersionUID = -1173639052349237937L;
+    /**  */
     private static final Insets INSETS = new Insets( 1, 1, 3, 3 );
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public Insets getBorderInsets( Component c )
     {
         return INSETS;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void paintBorder( Component c, Graphics g, int x, int y, int w,
         int h )

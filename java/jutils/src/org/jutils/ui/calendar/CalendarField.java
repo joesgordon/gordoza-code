@@ -1,7 +1,9 @@
 package org.jutils.ui.calendar;
 
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.Dialog.ModalityType;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -14,6 +16,7 @@ import javax.swing.text.DefaultFormatterFactory;
 
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
+import org.jutils.ui.OkDialogView;
 import org.jutils.ui.event.updater.DataUpdaterList;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.model.IView;
@@ -174,10 +177,14 @@ public class CalendarField implements IView<JPanel>
     /***************************************************************************
      * @param e ActionEvent
      **************************************************************************/
-    public void displayDialog()
+    private void displayDialog()
     {
-        CalendarDialog dialog = new CalendarDialog(
-            SwingUtils.getComponentsFrame( view ), "Select Date", true );
+        Frame parent = SwingUtils.getComponentsFrame( view );
+        CalendarPanel calendarPanel = new CalendarPanel();
+        OkDialogView dialogView = new OkDialogView( parent,
+            calendarPanel.getView(), ModalityType.DOCUMENT_MODAL );
+
+        dialogView.setTitle( "Select Date" );
 
         try
         {
@@ -189,21 +196,11 @@ public class CalendarField implements IView<JPanel>
         }
         curDate = getDate();
 
-        dialog.addWindowListener( new DialogListener() );
-        dialog.setDate( curDate );
-        dialog.setLocationRelativeTo( null );
-        dialog.setVisible( true );
-    }
+        calendarPanel.setDate( curDate );
 
-    /***************************************************************************
-     * @param e WindowEvent
-     **************************************************************************/
-    private void dialogClosed( CalendarDialog dialog )
-    {
-        Calendar cal = dialog.getDate();
-        if( cal != null )
+        if( dialogView.show() )
         {
-            setDate( cal );
+            setDate( calendarPanel.getDate() );
         }
     }
 
@@ -238,19 +235,6 @@ public class CalendarField implements IView<JPanel>
         public void changedUpdate( DocumentEvent e )
         {
             updaterList.fireListeners( field.getDate() );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private class DialogListener extends WindowAdapter
-    {
-        @Override
-        public void windowClosed( WindowEvent e )
-        {
-            CalendarDialog dialog = ( CalendarDialog )e.getComponent();
-            dialogClosed( dialog );
         }
     }
 

@@ -16,6 +16,8 @@ import org.jutils.ui.validators.ExistenceType;
  ******************************************************************************/
 public class FileDropTarget extends DropTarget
 {
+    /**  */
+    private static final long serialVersionUID = 4549799315841069147L;
     /** List of listeners to be called when the file is dropped. */
     private final ItemActionListener<IFileDropEvent> droppedListener;
 
@@ -170,17 +172,17 @@ public class FileDropTarget extends DropTarget
         implements ItemActionListener<IFileDropEvent>
     {
         private final JTextField field;
-        // private final ExistenceType existence;
+        private final ExistenceType existence;
 
         public JTextFieldFilesListener( JTextField field )
         {
-            this( field, ExistenceType.FILE_ONLY );
+            this( field, ExistenceType.FILE_OR_DIRECTORY );
         }
 
         public JTextFieldFilesListener( JTextField field,
             ExistenceType existence )
         {
-            // this.existence = existence;
+            this.existence = existence;
             this.field = field;
         }
 
@@ -194,21 +196,21 @@ public class FileDropTarget extends DropTarget
             {
                 File file = files.get( i );
 
-                // if( existence == ExistenceType.DIRECTORY_ONLY &&
-                // !file.isDirectory() )
-                // {
-                // continue;
-                // }
-                // else if( existence == ExistenceType.FILE_ONLY &&
-                // !file.isFile() )
-                // {
-                // continue;
-                // }
-                // else if( existence == ExistenceType.FILE_OR_DIRECTORY &&
-                // !file.exists() )
-                // {
-                // continue;
-                // }
+                if( existence == ExistenceType.DIRECTORY_ONLY &&
+                    !file.isDirectory() )
+                {
+                    continue;
+                }
+                else if( existence == ExistenceType.FILE_ONLY &&
+                    !file.isFile() )
+                {
+                    continue;
+                }
+                else if( existence == ExistenceType.FILE_OR_DIRECTORY &&
+                    !file.exists() )
+                {
+                    continue;
+                }
 
                 if( paths.length() > 0 )
                 {

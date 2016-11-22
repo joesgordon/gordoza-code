@@ -12,7 +12,8 @@ public class GenericsTest
         void doStuff( X x );
     }
 
-    public static <T extends A<?>> void foo( T t )
+    @SuppressWarnings( "unused")
+    private static <T extends A<?>> void foo( T t )
     {
         // ---------------------------------------------------------------------
         // Doesn't compile:
@@ -23,7 +24,8 @@ public class GenericsTest
         bar( ( A<?> )t );
     }
 
-    public static <T extends A<?>> void foo2( T t )
+    @SuppressWarnings( "unused")
+    private static <T extends A<?>> void foo2( T t )
     {
         // ---------------------------------------------------------------------
         // No explicit cast required, no "unchecked" warning!
@@ -33,12 +35,14 @@ public class GenericsTest
         bar( u );
     }
 
-    public static <X, T extends A<X>> void foo3( T t )
+    @SuppressWarnings( "unused")
+    private static <X, T extends A<X>> void foo3( T t )
     {
         bar( t );
     }
 
-    public <T extends A<?>> void foo4( T t )
+    @SuppressWarnings( "unused")
+    private <T extends A<?>> void foo4( /* T t */ )
     {
         // ---------------------------------------------------------------------
         // Doesn't compile:

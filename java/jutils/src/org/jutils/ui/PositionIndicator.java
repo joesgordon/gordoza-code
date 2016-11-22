@@ -17,6 +17,8 @@ import org.jutils.ui.event.*;
 public class PositionIndicator extends JComponent
 {
     /**  */
+    private static final long serialVersionUID = 3185302681799744337L;
+    /**  */
     private final JWindow posWin;
     /**  */
     private final JLabel posLabel;
