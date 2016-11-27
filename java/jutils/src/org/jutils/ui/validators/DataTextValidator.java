@@ -1,6 +1,7 @@
 package org.jutils.ui.validators;
 
 import org.jutils.ValidationException;
+import org.jutils.io.IParser;
 import org.jutils.ui.event.updater.IUpdater;
 
 /*******************************************************************************
@@ -10,7 +11,7 @@ import org.jutils.ui.event.updater.IUpdater;
 public class DataTextValidator<T> implements ITextValidator
 {
     /** The validator to be used. */
-    private final IDataValidator<T> validator;
+    private final IParser<T> validator;
     /** The updator to be called when data is valid. */
     private final IUpdater<T> updater;
 
@@ -20,7 +21,7 @@ public class DataTextValidator<T> implements ITextValidator
      * data.
      * @param updater the updater to be called when the data is valid.
      **************************************************************************/
-    public DataTextValidator( IDataValidator<T> validator, IUpdater<T> updater )
+    public DataTextValidator( IParser<T> validator, IUpdater<T> updater )
     {
         this.validator = validator;
         this.updater = updater;
@@ -32,7 +33,7 @@ public class DataTextValidator<T> implements ITextValidator
     @Override
     public void validateText( String text ) throws ValidationException
     {
-        T data = validator.validate( text );
+        T data = validator.parse( text );
 
         updater.update( data );
     }

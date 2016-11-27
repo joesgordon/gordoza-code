@@ -13,6 +13,7 @@ import org.jutils.*;
 import org.jutils.apps.summer.data.*;
 import org.jutils.apps.summer.io.ChecksumFileSerializer;
 import org.jutils.apps.summer.tasks.ChecksumVerificationTask;
+import org.jutils.io.parsers.ExistenceType;
 import org.jutils.task.TaskView;
 import org.jutils.ui.StandardFormView;
 import org.jutils.ui.TitleView;
@@ -24,7 +25,6 @@ import org.jutils.ui.model.*;
 import org.jutils.ui.model.LabelTableCellRenderer.ITableCellLabelDecorator;
 import org.jutils.ui.validation.IValidityChangedListener;
 import org.jutils.ui.validation.ValidityListenerList;
-import org.jutils.ui.validators.ExistenceType;
 
 /*******************************************************************************
  * 

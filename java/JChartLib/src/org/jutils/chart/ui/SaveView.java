@@ -4,13 +4,13 @@ import java.awt.Component;
 import java.io.File;
 
 import org.jutils.chart.data.SaveOptions;
+import org.jutils.io.parsers.ExistenceType;
 import org.jutils.ui.StandardFormView;
 import org.jutils.ui.event.updater.ItemActionUpdater;
 import org.jutils.ui.event.updater.ReflectiveUpdater;
 import org.jutils.ui.fields.FileField;
 import org.jutils.ui.fields.IntegerFormField;
 import org.jutils.ui.model.IDataView;
-import org.jutils.ui.validators.ExistenceType;
 
 public class SaveView implements IDataView<SaveOptions>
 {

@@ -3,6 +3,7 @@ package org.jutils.ui.fields;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 
+import org.jutils.io.parsers.ShortParser;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.validation.ValidationTextView;
 import org.jutils.ui.validators.*;
@@ -75,7 +76,7 @@ public class ShortFormField implements IDataFormField<Short>
 
         ITextValidator textValidator;
 
-        textValidator = new DataTextValidator<>( new ShortValidator(),
+        textValidator = new DataTextValidator<>( new ShortParser(),
             new ValueUpdater( this ) );
         textField.getField().setValidator( textValidator );
     }

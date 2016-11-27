@@ -2,6 +2,7 @@ package org.jutils.ui.fields;
 
 import javax.swing.JComponent;
 
+import org.jutils.io.parsers.BinaryParser;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.validation.ValidationTextView;
 import org.jutils.ui.validators.*;
@@ -31,7 +32,7 @@ public class BitsField implements IDataFormField<BitArray>
 
         ITextValidator textValidator;
 
-        textValidator = new DataTextValidator<>( new BinaryValidator(),
+        textValidator = new DataTextValidator<>( new BinaryParser(),
             new ValueUpdater( this ) );
         textField.getField().setValidator( textValidator );
     }

@@ -8,20 +8,32 @@ import javax.swing.SwingUtilities;
 
 import org.jutils.concurrent.IStoppableTask;
 import org.jutils.concurrent.ITaskStopManager;
+import org.mc.io.MulticastConnection;
 import org.mc.ui.McFrame;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class McRxThread implements IStoppableTask
 {
-    private McFrame frame;
+    /**  */
+    private final McFrame frame;
+    /**  */
+    private final MulticastConnection commModel;
 
-    private McComm commModel;
-
-    public McRxThread( McFrame frame, McComm commModel )
+    /***************************************************************************
+     * @param frame
+     * @param commModel
+     **************************************************************************/
+    public McRxThread( McFrame frame, MulticastConnection commModel )
     {
         this.frame = frame;
         this.commModel = commModel;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void run( ITaskStopManager stopper )
     {
@@ -30,14 +42,7 @@ public class McRxThread implements IStoppableTask
             try
             {
                 final McMessage msg = commModel.rxMessage();
-                SwingUtilities.invokeLater( new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        frame.addMessage( msg );
-                    }
-                } );
+                SwingUtilities.invokeLater( () -> frame.addMessage( msg ) );
             }
             catch( SocketTimeoutException ex )
             {
@@ -45,7 +50,7 @@ public class McRxThread implements IStoppableTask
             }
             catch( IOException ex )
             {
-                JOptionPane.showMessageDialog( frame,
+                JOptionPane.showMessageDialog( frame.getView(),
                     "Error receiving packet: " + ex.getMessage() );
             }
             catch( Exception ex )

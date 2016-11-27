@@ -27,10 +27,7 @@ public class McMain implements IFrameApp
     {
         McFrame frame = new McFrame();
 
-        frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-        frame.setSize( 500, 500 );
-
-        return frame;
+        return frame.getView();
     }
 
     /***************************************************************************

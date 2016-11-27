@@ -1,21 +1,21 @@
 package org.jutils.time;
 
 import org.jutils.ValidationException;
-import org.jutils.ui.validators.IDataValidator;
-import org.jutils.ui.validators.LongValidator;
+import org.jutils.io.IParser;
+import org.jutils.io.parsers.LongParser;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class MicrosecondsValidator implements IDataValidator<Long>
+public class MicrosecondsParser implements IParser<Long>
 {
     /**  */
-    private final LongValidator lv;
+    private final LongParser lv;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public MicrosecondsValidator()
+    public MicrosecondsParser()
     {
         this( null, null );
     }
@@ -24,16 +24,16 @@ public class MicrosecondsValidator implements IDataValidator<Long>
      * @param min
      * @param max
      **************************************************************************/
-    public MicrosecondsValidator( Long min, Long max )
+    public MicrosecondsParser( Long min, Long max )
     {
-        this.lv = new LongValidator( min, max );
+        this.lv = new LongParser( min, max );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public Long validate( String text ) throws ValidationException
+    public Long parse( String text ) throws ValidationException
     {
         int dot = text.indexOf( '.' );
         String seconds = text;
@@ -66,7 +66,7 @@ public class MicrosecondsValidator implements IDataValidator<Long>
             seconds += "000000";
         }
 
-        long micros = lv.validate( seconds );
+        long micros = lv.parse( seconds );
 
         // LogUtils.printDebug( "parsed Long: " + micros );
 

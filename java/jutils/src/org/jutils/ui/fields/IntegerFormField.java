@@ -3,6 +3,7 @@ package org.jutils.ui.fields;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 
+import org.jutils.io.parsers.IntegerParser;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.validation.ValidationTextView;
 import org.jutils.ui.validators.*;
@@ -88,7 +89,7 @@ public class IntegerFormField implements IDataFormField<Integer>
         ITextValidator textValidator;
 
         textValidator = new DataTextValidator<>(
-            new IntegerValidator( min, max ), new ValueUpdater( this ) );
+            new IntegerParser( min, max ), new ValueUpdater( this ) );
         textField.getField().setValidator( textValidator );
     }
 

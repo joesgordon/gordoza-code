@@ -5,7 +5,8 @@ import javax.swing.JComponent;
 import org.jutils.io.IParser;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.validation.ValidationTextView;
-import org.jutils.ui.validators.*;
+import org.jutils.ui.validators.DataTextValidator;
+import org.jutils.ui.validators.ITextValidator;
 
 /*******************************************************************************
  * Defines an {@link IFormField} that allows the user to define an object that
@@ -32,11 +33,9 @@ public class ParserFormField<T> implements IDataFormField<T>
         this.textField = new ValidationTextView( null, 20 );
 
         ITextValidator textValidator;
-        IDataValidator<T> dataValidator;
         IUpdater<T> updater = ( d ) -> update( d );
 
-        dataValidator = new ParserDataValidator<>( parser );
-        textValidator = new DataTextValidator<>( dataValidator, updater );
+        textValidator = new DataTextValidator<>( parser, updater );
         textField.getField().setValidator( textValidator );
     }
 

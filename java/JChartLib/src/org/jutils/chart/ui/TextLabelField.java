@@ -9,6 +9,7 @@ import javax.swing.*;
 
 import org.jutils.IconConstants;
 import org.jutils.chart.model.TextLabel;
+import org.jutils.io.parsers.StringLengthParser;
 import org.jutils.ui.ColorButtonView;
 import org.jutils.ui.OkDialogView;
 import org.jutils.ui.event.*;
@@ -60,7 +61,7 @@ public class TextLabelField implements IDataFormField<TextLabel>
         visibleField.addActionListener( new CheckBoxUpdater(
             new ReflectiveUpdater<Boolean>( this, "label.visible" ) ) );
 
-        itv = new DataTextValidator<>( new StringLengthValidator( 0, null ),
+        itv = new DataTextValidator<>( new StringLengthParser( 0, null ),
             new ReflectiveUpdater<String>( this, "label.text" ) );
         textField.setValidator( itv );
 

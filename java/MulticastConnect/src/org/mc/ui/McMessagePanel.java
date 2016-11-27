@@ -9,38 +9,33 @@ import org.mc.McMessage;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class McMessagePanel extends JPanel
-    implements ListCellRenderer<McMessage>
+public class McMessagePanel implements ListCellRenderer<McMessage>
 {
     /**  */
-    private JLabel addressLabel;
-
+    private final JPanel view;
     /**  */
-    private JLabel addressField;
-
+    private final JLabel addressLabel;
     /**  */
-    private JTextArea contentsField;
-
+    private final JLabel addressField;
     /**  */
-    private JLabel timeLabel;
-
+    private final JTextArea contentsField;
     /**  */
-    private JLabel timeField;
-
+    private final JLabel timeLabel;
     /**  */
-    private Color backgroundColor;
-
+    private final JLabel timeField;
     /**  */
-    private Color foregroundColor;
-
+    private final Color backgroundColor;
     /**  */
-    private Color altBgColor;
+    private final Color foregroundColor;
+    /**  */
+    private final Color altBgColor;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public McMessagePanel()
     {
+        this.view = new JPanel( new GridBagLayout() );
         timeLabel = new JLabel( "Date/Time:" );
         timeField = new JLabel();
         addressLabel = new JLabel( "Address:" );
@@ -48,36 +43,34 @@ public class McMessagePanel extends JPanel
         contentsField = new JTextArea();
         altBgColor = new Color( 0xeeeeee );
 
-        setLayout( new GridBagLayout() );
-
         contentsField.setBorder( null );
         contentsField.setOpaque( false );
         contentsField.setEditable( false );
 
-        add( addressLabel,
+        view.add( addressLabel,
             new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
                 GridBagConstraints.EAST, GridBagConstraints.NONE,
                 new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        add( addressField,
+        view.add( addressField,
             new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-        add( timeLabel,
+        view.add( timeLabel,
             new GridBagConstraints( 2, 1, 1, 1, 0.0, 0.0,
                 GridBagConstraints.EAST, GridBagConstraints.NONE,
                 new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        add( timeField,
+        view.add( timeField,
             new GridBagConstraints( 3, 1, 1, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-        add( contentsField,
+        view.add( contentsField,
             new GridBagConstraints( 0, 2, 4, 1, 1.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
-        add( Box.createVerticalStrut( 0 ),
+        view.add( Box.createVerticalStrut( 0 ),
             new GridBagConstraints( 1, 10, 4, 1, 1.0, 1.0,
                 GridBagConstraints.CENTER, GridBagConstraints.NONE,
                 new Insets( 0, 0, 0, 0 ), 0, 0 ) );
@@ -85,7 +78,7 @@ public class McMessagePanel extends JPanel
         backgroundColor = Color.white;
         foregroundColor = contentsField.getForeground();
 
-        this.setOpaque( true );
+        view.setOpaque( true );
     }
 
     /***************************************************************************
@@ -108,10 +101,10 @@ public class McMessagePanel extends JPanel
         timeLabel.setForeground( fg );
         timeField.setForeground( fg );
 
-        this.setBackground( bg );
+        view.setBackground( bg );
         contentsField.setBackground( bg );
 
-        return this;
+        return view;
     }
 
     /***************************************************************************

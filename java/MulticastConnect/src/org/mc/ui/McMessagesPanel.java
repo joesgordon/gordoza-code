@@ -10,28 +10,31 @@ import javax.swing.*;
 import org.jutils.SwingUtils;
 import org.jutils.ui.hex.ByteBuffer;
 import org.jutils.ui.hex.HexPanel;
+import org.jutils.ui.model.IView;
 import org.mc.McMessage;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class McMessagesPanel extends JPanel
+public class McMessagesPanel implements IView<JPanel>
 {
     /**  */
-    private JCheckBox filterCheckBox;
+    private final JPanel view;
     /**  */
-    private JList<McMessage> displayList;
+    private final JCheckBox filterCheckBox;
     /**  */
-    private DefaultListModel<McMessage> msgModel;
+    private final JList<McMessage> displayList;
     /**  */
-    private List<McMessage> allMessages;
+    private final DefaultListModel<McMessage> msgModel;
+    /**  */
+    private final List<McMessage> allMessages;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public McMessagesPanel()
     {
-        super( new GridBagLayout() );
+        this.view = new JPanel( new GridBagLayout() );
 
         JButton clearButton = new JButton( "Clear" );
         GridBagConstraints constraints;
@@ -51,25 +54,34 @@ public class McMessagesPanel extends JPanel
         vScrollBar.addAdjustmentListener( new EndScroller( vScrollBar ) );
         filterCheckBox.addActionListener( new FilterCheckListener() );
 
-        setBorder(
+        view.setBorder(
             BorderFactory.createTitledBorder( "Sent/Received Messages" ) );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
             GridBagConstraints.WEST, GridBagConstraints.NONE,
             new Insets( 6, 6, 6, 6 ), 0, 0 );
-        add( filterCheckBox, constraints );
+        view.add( filterCheckBox, constraints );
 
         constraints = new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
             GridBagConstraints.EAST, GridBagConstraints.CENTER,
             new Insets( 6, 0, 6, 6 ), 20, 10 );
-        add( clearButton, constraints );
+        view.add( clearButton, constraints );
 
         constraints = new GridBagConstraints( 0, 1, 2, 1, 1.0, 1.0,
             GridBagConstraints.WEST, GridBagConstraints.BOTH,
             new Insets( 0, 6, 6, 6 ), 0, 0 );
-        add( displayScrollPane, constraints );
+        view.add( displayScrollPane, constraints );
 
-        setMinimumSize( new Dimension( 200, 200 ) );
+        view.setMinimumSize( new Dimension( 200, 200 ) );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public JPanel getView()
+    {
+        return view;
     }
 
     /***************************************************************************

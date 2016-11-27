@@ -2,6 +2,7 @@ package org.jutils.ui.fields;
 
 import javax.swing.JComponent;
 
+import org.jutils.io.parsers.DoubleParser;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.validation.ValidationTextView;
 import org.jutils.ui.validators.*;
@@ -95,7 +96,7 @@ public class DoubleFormField implements IDataFormField<Double>
         ITextValidator textValidator;
 
         textValidator = new DataTextValidator<>(
-            new DoubleValidator( min, max ), new ValueUpdater( this ) );
+            new DoubleParser( min, max ), new ValueUpdater( this ) );
         textField.getField().setValidator( textValidator );
     }
 

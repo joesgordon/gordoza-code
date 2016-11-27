@@ -1,4 +1,4 @@
-package org.jutils.ui.validators;
+package org.jutils.io.parsers;
 
 /*******************************************************************************
  * The type of existence to be checked (e.g. file/dir/either/none).

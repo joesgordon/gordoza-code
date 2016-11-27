@@ -14,7 +14,7 @@ import org.jutils.ui.validators.ITextValidator;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ValidationTextComponent<T extends JTextComponent>
+public class ValidationTextComponentField<T extends JTextComponent>
     implements IValidationField
 {
     private final T field;
@@ -31,7 +31,7 @@ public class ValidationTextComponent<T extends JTextComponent>
     /***************************************************************************
      * 
      **************************************************************************/
-    public ValidationTextComponent( T comp )
+    public ValidationTextComponentField( T comp )
     {
         this.field = comp;
         this.listenerList = new ValidityListenerList();
@@ -214,9 +214,9 @@ public class ValidationTextComponent<T extends JTextComponent>
      **************************************************************************/
     private static class ValidationDocumentListener implements DocumentListener
     {
-        private ValidationTextComponent<?> field;
+        private ValidationTextComponentField<?> field;
 
-        public ValidationDocumentListener( ValidationTextComponent<?> field )
+        public ValidationDocumentListener( ValidationTextComponentField<?> field )
         {
             this.field = field;
         }

@@ -9,6 +9,8 @@ import javax.swing.*;
 
 import org.jutils.*;
 import org.jutils.io.IOUtils;
+import org.jutils.io.parsers.ExistenceType;
+import org.jutils.io.parsers.FileParser;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.JTextFieldFilesListener;
 import org.jutils.ui.event.updater.IUpdater;
@@ -250,7 +252,7 @@ public class FileField implements IDataView<File>, IValidationField
         }
 
         ITextValidator validator = new DataTextValidator<File>(
-            new FileValidator( existence, required ), new FileUpdater( this ) );
+            new FileParser( existence, required ), new FileUpdater( this ) );
 
         // LogUtils.printDebug( "Setting validator" );
         fileField.setValidator( validator );

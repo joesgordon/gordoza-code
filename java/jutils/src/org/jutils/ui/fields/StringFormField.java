@@ -3,6 +3,8 @@ package org.jutils.ui.fields;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 
+import org.jutils.io.IParser;
+import org.jutils.io.parsers.StringLengthParser;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.validation.ValidationTextView;
 import org.jutils.ui.validators.*;
@@ -43,10 +45,10 @@ public class StringFormField implements IDataFormField<String>
         this.updater = null;
 
         ITextValidator textValidator;
-        IDataValidator<String> dataValidator;
+        IParser<String> dataValidator;
         IUpdater<String> updater = new ValueUpdater( this );
 
-        dataValidator = new StringLengthValidator( minLen, maxLen );
+        dataValidator = new StringLengthParser( minLen, maxLen );
         textValidator = new DataTextValidator<>( dataValidator, updater );
         textField.getField().setValidator( textValidator );
     }

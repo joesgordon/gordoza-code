@@ -8,7 +8,7 @@ import java.util.List;
 import javax.swing.*;
 
 import org.jutils.io.LogUtils;
-import org.jutils.ui.validators.ExistenceType;
+import org.jutils.io.parsers.ExistenceType;
 
 /*******************************************************************************
  * Class be added to a {@link JComponent} when the user drags a file onto the

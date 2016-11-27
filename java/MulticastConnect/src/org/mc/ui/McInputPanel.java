@@ -7,38 +7,38 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import org.jutils.IconConstants;
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class McInputPanel extends JPanel
+public class McInputPanel implements IView<JPanel>
 {
     /**  */
-    private JEditorPane sendTextArea;
-
+    private final JPanel view;
     /**  */
-    private JButton sendButton;
-
+    private final JEditorPane sendTextArea;
     /**  */
-    private JCheckBox scheduleCheckBox;
-
+    private final JButton sendButton;
     /**  */
-    private JTextField msgCountTextField;
-
+    private final JCheckBox scheduleCheckBox;
     /**  */
-    private JTextField msgDelayTextField;
+    private final JTextField msgCountTextField;
+    /**  */
+    private final JTextField msgDelayTextField;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public McInputPanel()
     {
-        sendTextArea = new JEditorPane();
+        this.view = new JPanel( new GridBagLayout() );
+        this.sendTextArea = new JEditorPane();
         JScrollPane sendScrollPane = new JScrollPane( sendTextArea );
-        scheduleCheckBox = new JCheckBox( "Schedule Messages" );
-        msgCountTextField = new JTextField( 5 );
-        msgDelayTextField = new JTextField( 5 );
-        sendButton = new JButton();
+        this.scheduleCheckBox = new JCheckBox( "Schedule Messages" );
+        this.msgCountTextField = new JTextField( 5 );
+        this.msgDelayTextField = new JTextField( 5 );
+        this.sendButton = new JButton();
 
         msgCountTextField.setEnabled( false );
         msgDelayTextField.setEnabled( false );
@@ -46,37 +46,36 @@ public class McInputPanel extends JPanel
             IconConstants.loader.getIcon( IconConstants.FORWARD_24 ) );
         sendButton.setText( "Send" );
 
-        setLayout( new GridBagLayout() );
-        setBorder( BorderFactory.createTitledBorder( "" ) );
+        view.setBorder( BorderFactory.createTitledBorder( "" ) );
 
         scheduleCheckBox.addActionListener( new ScheduleCheckListener() );
 
-        add( sendScrollPane,
+        view.add( sendScrollPane,
             new GridBagConstraints( 0, 0, 5, 1, 1.0, 1.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 new Insets( 6, 6, 6, 6 ), 0, 0 ) );
-        add( sendButton,
+        view.add( sendButton,
             new GridBagConstraints( 5, 0, 1, 2, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
                 new Insets( 6, 0, 6, 6 ), 0, 10 ) );
 
-        add( scheduleCheckBox,
+        view.add( scheduleCheckBox,
             new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
                 new Insets( 0, 6, 6, 6 ), 0, 10 ) );
-        add( new JLabel( "#" ),
+        view.add( new JLabel( "#" ),
             new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.NONE,
                 new Insets( 0, 0, 6, 6 ), 0, 10 ) );
-        add( msgCountTextField,
+        view.add( msgCountTextField,
             new GridBagConstraints( 2, 1, 1, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.NONE,
                 new Insets( 0, 0, 6, 6 ), 0, 10 ) );
-        add( new JLabel( "Delay" ),
+        view.add( new JLabel( "Delay" ),
             new GridBagConstraints( 3, 1, 1, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.NONE,
                 new Insets( 0, 0, 6, 6 ), 0, 10 ) );
-        add( msgDelayTextField,
+        view.add( msgDelayTextField,
             new GridBagConstraints( 4, 1, 1, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets( 0, 0, 6, 6 ), 0, 10 ) );
@@ -87,7 +86,7 @@ public class McInputPanel extends JPanel
             msgDelayTextField.getPreferredSize() );
 
         sendScrollPane.setMinimumSize( new Dimension( 200, 100 ) );
-        sendScrollPane.setPreferredSize( getMinimumSize() );
+        sendScrollPane.setPreferredSize( view.getMinimumSize() );
 
         sendTextArea.setEnabled( false );
         msgCountTextField.setEnabled( false );
@@ -96,36 +95,66 @@ public class McInputPanel extends JPanel
         sendButton.setEnabled( false );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public JPanel getView()
+    {
+        return view;
+    }
+
+    /***************************************************************************
+     * @param l
+     **************************************************************************/
     public void addSendActionListener( ActionListener l )
     {
         sendButton.addActionListener( l );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public String getMessageText()
     {
         return sendTextArea.getText();
     }
 
+    /***************************************************************************
+     * @param text
+     **************************************************************************/
     public void setMessageText( String text )
     {
         sendTextArea.setText( text );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public boolean isScheduling()
     {
         return scheduleCheckBox.isSelected();
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public int getMessageCount()
     {
         return Integer.parseInt( msgCountTextField.getText() );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public int getSendDelay()
     {
         return Integer.parseInt( msgDelayTextField.getText() );
     }
 
+    /***************************************************************************
+     * @param bound
+     **************************************************************************/
     public void setBound( boolean bound )
     {
         sendButton.setEnabled( bound );
@@ -138,6 +167,9 @@ public class McInputPanel extends JPanel
         msgDelayTextField.setEnabled( scheduleCheckBox.isSelected() );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private class ScheduleCheckListener implements ActionListener
     {
         @Override

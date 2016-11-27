@@ -1,43 +1,59 @@
-package org.budgey.ui;
+package org.mc.ui;
+
+import java.net.*;
+import java.util.*;
 
 import javax.swing.JComponent;
 
-import org.budgey.data.Money;
 import org.jutils.ui.event.updater.IUpdater;
-import org.jutils.ui.fields.IDataFormField;
-import org.jutils.ui.fields.IValidationField;
-import org.jutils.ui.validation.ValidationTextView;
-import org.jutils.ui.validators.DataTextValidator;
-import org.jutils.ui.validators.ITextValidator;
+import org.jutils.ui.fields.*;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class MoneyFormField implements IDataFormField<Money>
+public class NetworkInterfaceField implements IDataFormField<NetworkInterface>
 {
     /**  */
-    private final ValidationTextView field;
-    /**  */
-    private final String fieldName;
-
-    /**  */
-    private Money amount;
-    /**  */
-    private IUpdater<Money> updater;
+    private final ComboFormField<NetworkInterface> nicField;
 
     /***************************************************************************
-     * @param fieldName
+     * @param name
      **************************************************************************/
-    public MoneyFormField( String fieldName )
+    public NetworkInterfaceField( String name )
     {
-        this.fieldName = fieldName;
-        this.field = new ValidationTextView();
+        this.nicField = new ComboFormField<>( name, buildNicList(),
+            new NicDescriptor() );
+    }
 
-        ITextValidator textValidator;
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private List<NetworkInterface> buildNicList()
+    {
+        List<NetworkInterface> nics = new ArrayList<>();
+        Enumeration<NetworkInterface> nets;
 
-        textValidator = new DataTextValidator<>( new MoneyParser(),
-            new ValueUpdater( this ) );
-        field.getField().setValidator( textValidator );
+        nics.add( null );
+
+        try
+        {
+            nets = NetworkInterface.getNetworkInterfaces();
+
+            for( NetworkInterface nic : Collections.list( nets ) )
+            {
+                Enumeration<InetAddress> inetAddresses = nic.getInetAddresses();
+                if( inetAddresses.hasMoreElements() )
+                {
+                    nics.add( nic );
+                }
+            }
+        }
+        catch( SocketException ex )
+        {
+            ;
+        }
+
+        return nics;
     }
 
     /***************************************************************************
@@ -46,7 +62,7 @@ public class MoneyFormField implements IDataFormField<Money>
     @Override
     public String getFieldName()
     {
-        return fieldName;
+        return nicField.getFieldName();
     }
 
     /***************************************************************************
@@ -55,47 +71,43 @@ public class MoneyFormField implements IDataFormField<Money>
     @Override
     public JComponent getField()
     {
-        return field.getView();
+        return nicField.getField();
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public Money getValue()
+    public NetworkInterface getValue()
     {
-        return amount;
+        return nicField.getValue();
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void setValue( Money value )
+    public void setValue( NetworkInterface value )
     {
-        this.amount = value;
-
-        String text = value == null ? "" : value.toString();
-
-        field.setText( text );
+        nicField.setValue( value );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void setUpdater( IUpdater<Money> updater )
+    public void setUpdater( IUpdater<NetworkInterface> updater )
     {
-        this.updater = updater;
+        nicField.setUpdater( updater );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public IUpdater<Money> getUpdater()
+    public IUpdater<NetworkInterface> getUpdater()
     {
-        return updater;
+        return nicField.getUpdater();
     }
 
     /***************************************************************************
@@ -104,7 +116,7 @@ public class MoneyFormField implements IDataFormField<Money>
     @Override
     public IValidationField getValidationField()
     {
-        return field.getField();
+        return nicField.getValidationField();
     }
 
     /***************************************************************************
@@ -113,29 +125,23 @@ public class MoneyFormField implements IDataFormField<Money>
     @Override
     public void setEditable( boolean editable )
     {
-        field.getField().setEditable( editable );
+        nicField.setEditable( editable );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class ValueUpdater implements IUpdater<Money>
+    private static class NicDescriptor implements IDescriptor<NetworkInterface>
     {
-        private final MoneyFormField view;
-
-        public ValueUpdater( MoneyFormField view )
-        {
-            this.view = view;
-        }
-
         @Override
-        public void update( Money data )
+        public String getDescription( NetworkInterface nic )
         {
-            view.amount = data;
-            if( view.updater != null )
+            if( nic == null )
             {
-                view.updater.update( data );
+                return "<< Use Routing Table >>";
             }
+
+            return nic.getDisplayName();
         }
     }
 }

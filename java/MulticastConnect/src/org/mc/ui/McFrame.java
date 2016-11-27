@@ -9,23 +9,29 @@ import java.util.Arrays;
 import javax.swing.*;
 
 import org.jutils.concurrent.Stoppable;
+import org.jutils.ui.StandardFrameView;
+import org.jutils.ui.model.IView;
 import org.mc.*;
+import org.mc.io.MulticastConnection;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class McFrame extends JFrame
+public class McFrame implements IView<JFrame>
 {
     /**  */
-    private McConfigurationPanel confPanel;
+    private final StandardFrameView frameView;
     /**  */
-    private McMessagesPanel messagesPanel;
+    private final McConfigurationPanel confPanel;
     /**  */
-    private McInputPanel inputPanel;
+    private final McMessagesPanel messagesPanel;
     /**  */
-    private McComm commModel;
+    private final McInputPanel inputPanel;
+    /**  */
+    private MulticastConnection commModel;
     /**  */
     private McRxThread receiver;
+    /**  */
     private Stoppable rxThread;
 
     /***************************************************************************
@@ -33,6 +39,8 @@ public class McFrame extends JFrame
      **************************************************************************/
     public McFrame()
     {
+        this.frameView = new StandardFrameView();
+
         commModel = null;
 
         // ---------------------------------------------------------------------
@@ -60,22 +68,39 @@ public class McFrame extends JFrame
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout( new GridBagLayout() );
 
-        mainPanel.add( confPanel,
+        mainPanel.add( confPanel.getView(),
             new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 new Insets( 6, 6, 6, 6 ), 0, 0 ) );
-        mainPanel.add( messagesPanel,
-            new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
+        mainPanel.add( new MulticastSocketDefView().getView(),
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets( 6, 6, 6, 6 ), 0, 0 ) );
+        mainPanel.add( messagesPanel.getView(),
+            new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 new Insets( 0, 6, 6, 6 ), 0, 0 ) );
-        mainPanel.add( inputPanel,
-            new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.0,
+        mainPanel.add( inputPanel.getView(),
+            new GridBagConstraints( 0, 3, 1, 1, 1.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 new Insets( 0, 6, 6, 6 ), 0, 0 ) );
 
-        setTitle( "MulticastConnect" );
-        setContentPane( mainPanel );
-        addWindowListener( new ClosingListener() );
+        frameView.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        frameView.setSize( 500, 500 );
+        frameView.setTitle( "MulticastConnect" );
+        frameView.setContent( mainPanel );
+
+        frameView.getView().addWindowListener(
+            new ClosingListener( getView() ) );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public JFrame getView()
+    {
+        return frameView.getView();
     }
 
     /***************************************************************************
@@ -97,8 +122,8 @@ public class McFrame extends JFrame
 
         if( msgStr.length() < 1 )
         {
-            JOptionPane.showMessageDialog( this, "Nothing to send", "ERROR",
-                JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog( getView(), "Nothing to send",
+                "ERROR", JOptionPane.ERROR_MESSAGE );
             return;
         }
 
@@ -113,7 +138,7 @@ public class McFrame extends JFrame
                 int msgDelay = inputPanel.getSendDelay();
 
                 McTxThread txThread = new McTxThread( msgCount, msgDelay,
-                    msgBytes, commModel, this );
+                    msgBytes, commModel, getView() );
                 Stoppable stoppable = new Stoppable( txThread );
                 Thread thread = new Thread( stoppable );
                 thread.start();
@@ -125,7 +150,8 @@ public class McFrame extends JFrame
         }
         catch( IOException ex )
         {
-            JOptionPane.showMessageDialog( this, "ERROR: " + ex.getMessage() );
+            JOptionPane.showMessageDialog( getView(),
+                "ERROR: " + ex.getMessage() );
         }
         inputPanel.setMessageText( "" );
     }
@@ -146,10 +172,9 @@ public class McFrame extends JFrame
                 String addressString = confPanel.getAddress();
                 int port = confPanel.getPort();
                 int ttl = confPanel.getTTL();
-                int msgSize = confPanel.getMessageSize();
                 NetworkInterface nic = confPanel.getNic();
 
-                commModel = new McComm( addressString, port, ttl, msgSize,
+                commModel = new MulticastConnection( addressString, port, ttl,
                     nic );
                 receiver = new McRxThread( this, commModel );
                 rxThread = new Stoppable( receiver );
@@ -163,7 +188,8 @@ public class McFrame extends JFrame
         }
         catch( IOException ex )
         {
-            JOptionPane.showMessageDialog( this, "ERROR: " + ex.getMessage() );
+            JOptionPane.showMessageDialog( getView(),
+                "ERROR: " + ex.getMessage() );
             bound = false;
         }
 
@@ -209,8 +235,15 @@ public class McFrame extends JFrame
         }
     }
 
-    private class ClosingListener extends WindowAdapter
+    private final class ClosingListener extends WindowAdapter
     {
+        private final Component parent;
+
+        public ClosingListener( Component parent )
+        {
+            this.parent = parent;
+        }
+
         @Override
         public void windowClosing( WindowEvent e )
         {
@@ -222,7 +255,7 @@ public class McFrame extends JFrame
                 }
                 catch( IOException ex )
                 {
-                    JOptionPane.showMessageDialog( McFrame.this,
+                    JOptionPane.showMessageDialog( parent,
                         "ERROR: " + ex.getMessage() );
                 }
             }

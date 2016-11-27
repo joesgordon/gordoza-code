@@ -3,6 +3,7 @@ package org.jutils.ui.fields;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 
+import org.jutils.io.parsers.HexBytesParser;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.hex.HexUtils;
 import org.jutils.ui.validation.ValidationTextView;
@@ -57,7 +58,7 @@ public class HexBytesFormField implements IDataFormField<byte []>
 
         ITextValidator textValidator;
 
-        textValidator = new DataTextValidator<>( new HexBytesValidator(),
+        textValidator = new DataTextValidator<>( new HexBytesParser(),
             new ValueUpdater( this ) );
         textField.getField().setValidator( textValidator );
     }

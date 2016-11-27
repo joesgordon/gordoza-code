@@ -9,17 +9,20 @@ import java.util.Enumeration;
 import javax.swing.*;
 
 import org.jutils.IconConstants;
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class McConfigurationPanel extends JPanel
+public class McConfigurationPanel implements IView<JPanel>
 {
     /**  */
     public static final String bindText = "Bind";
     /**  */
     public static final String unbindText = "Unbind";
 
+    /**  */
+    private final JPanel view;
     /**  */
     private final JButton bindButton;
     /**  */
@@ -33,8 +36,6 @@ public class McConfigurationPanel extends JPanel
     /**  */
     private final JTextField ttlField;
     /**  */
-    private final JTextField msgSizeField;
-    /**  */
     private final JComboBox<NicComboItem> nicComboBox;
 
     /***************************************************************************
@@ -42,27 +43,23 @@ public class McConfigurationPanel extends JPanel
      **************************************************************************/
     public McConfigurationPanel()
     {
-        checkIcon = IconConstants.loader.getIcon( IconConstants.CHECK_16 );
-        deleteIcon = IconConstants.loader.getIcon( IconConstants.STOP_16 );
+        this.view = new JPanel( new GridBagLayout() );
 
-        addressField = new JTextField( "224.69.69.69" );
-        portField = new JTextField( "6969" );
-        ttlField = new JTextField( "10" );
-        msgSizeField = new JTextField( "65535" );
-        bindButton = new JButton();
+        this.bindButton = new JButton();
+        this.checkIcon = IconConstants.loader.getIcon( IconConstants.CHECK_16 );
+        this.deleteIcon = IconConstants.loader.getIcon( IconConstants.STOP_16 );
 
-        setLayout( new GridBagLayout() );
-        setBorder( BorderFactory.createTitledBorder( "Configuration" ) );
+        this.addressField = new JTextField( "224.69.69.69" );
+        this.portField = new JTextField( "6969" );
+        this.ttlField = new JTextField( "10" );
 
         addressField.setColumns( 10 );
         portField.setColumns( 10 );
         ttlField.setColumns( 10 );
-        msgSizeField.setColumns( 10 );
 
         addressField.setMinimumSize( addressField.getPreferredSize() );
         portField.setMinimumSize( portField.getPreferredSize() );
         ttlField.setMinimumSize( ttlField.getPreferredSize() );
-        msgSizeField.setMinimumSize( msgSizeField.getPreferredSize() );
 
         bindButton.setIcon( checkIcon );
         bindButton.setText( bindText );
@@ -106,53 +103,57 @@ public class McConfigurationPanel extends JPanel
             ;
         }
 
-        add( new JLabel( "Address:" ),
+        view.setBorder( BorderFactory.createTitledBorder( "Configuration" ) );
+
+        view.add( new JLabel( "Address:" ),
             new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
                 GridBagConstraints.EAST, GridBagConstraints.NONE,
                 new Insets( 6, 6, 6, 6 ), 0, 0 ) );
-        add( addressField,
+        view.add( addressField,
             new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets( 6, 0, 6, 6 ), 0, 0 ) );
-        add( new JLabel( "TTL:" ),
+        view.add( new JLabel( "TTL:" ),
             new GridBagConstraints( 2, 0, 1, 1, 0.0, 0.0,
                 GridBagConstraints.EAST, GridBagConstraints.NONE,
                 new Insets( 6, 0, 6, 6 ), 0, 0 ) );
-        add( ttlField,
+        view.add( ttlField,
             new GridBagConstraints( 3, 0, 1, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets( 6, 0, 6, 6 ), 0, 0 ) );
 
-        add( new JLabel( "Port:" ),
+        view.add( new JLabel( "Port:" ),
             new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
                 GridBagConstraints.EAST, GridBagConstraints.NONE,
                 new Insets( 0, 6, 6, 6 ), 0, 0 ) );
-        add( portField,
+        view.add( portField,
             new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets( 0, 0, 6, 6 ), 0, 0 ) );
-        add( new JLabel( "Message Size:" ),
+        view.add( new JLabel( "Message Size:" ),
             new GridBagConstraints( 2, 1, 1, 1, 0.0, 0.0,
                 GridBagConstraints.EAST, GridBagConstraints.NONE,
                 new Insets( 0, 0, 6, 6 ), 0, 0 ) );
-        add( msgSizeField,
-            new GridBagConstraints( 3, 1, 1, 1, 0.0, 0.0,
-                GridBagConstraints.WEST, GridBagConstraints.NONE,
-                new Insets( 0, 0, 6, 6 ), 0, 0 ) );
 
-        add( new JLabel( "NIC:" ),
+        view.add( new JLabel( "NIC:" ),
             new GridBagConstraints( 0, 2, 1, 1, 0.0, 0.0,
                 GridBagConstraints.EAST, GridBagConstraints.NONE,
                 new Insets( 0, 6, 6, 6 ), 0, 0 ) );
-        add( nicComboBox,
+        view.add( nicComboBox,
             new GridBagConstraints( 1, 2, 4, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
                 new Insets( 0, 0, 6, 6 ), 0, 0 ) );
 
-        add( bindButton,
+        view.add( bindButton,
             new GridBagConstraints( 4, 0, 1, 2, 1.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.NONE,
                 new Insets( 6, 0, 6, 6 ), 0, 10 ) );
+    }
+
+    @Override
+    public JPanel getView()
+    {
+        return view;
     }
 
     public NetworkInterface getNic()
@@ -200,14 +201,6 @@ public class McConfigurationPanel extends JPanel
     }
 
     /***************************************************************************
-     * @return
-     **************************************************************************/
-    public int getMessageSize()
-    {
-        return Integer.parseInt( msgSizeField.getText() );
-    }
-
-    /***************************************************************************
      * @param l
      **************************************************************************/
     public void addBindActionListener( ActionListener l )
@@ -242,7 +235,6 @@ public class McConfigurationPanel extends JPanel
         addressField.setEnabled( !bound );
         portField.setEnabled( !bound );
         ttlField.setEnabled( !bound );
-        msgSizeField.setEnabled( !bound );
         nicComboBox.setEnabled( !bound );
     }
 
