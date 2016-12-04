@@ -60,7 +60,35 @@ public class IntegerParser implements IParser<Integer>
         }
         catch( NumberFormatException ex )
         {
-            throw new ValidationException( ex.getMessage() );
+            int idx = 0;
+            char c;
+
+            if( !text.isEmpty() )
+            {
+                c = text.charAt( idx );
+
+                if( c == '+' || c == '-' )
+                {
+                    idx++;
+                }
+            }
+            else
+            {
+                throw new ValidationException( "No input" );
+            }
+
+            for( ; idx < text.length(); idx++ )
+            {
+                c = text.charAt( idx );
+                if( !Character.isDigit( c ) )
+                {
+                    String msg = String.format(
+                        "Invalid integer character '%c' at index %d", c, idx );
+                    throw new ValidationException( msg );
+                }
+            }
+
+            throw new ValidationException( ex.getLocalizedMessage() );
         }
     }
 }

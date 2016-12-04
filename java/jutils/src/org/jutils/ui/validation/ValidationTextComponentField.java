@@ -17,6 +17,7 @@ import org.jutils.ui.validators.ITextValidator;
 public class ValidationTextComponentField<T extends JTextComponent>
     implements IValidationField
 {
+    /**  */
     private final T field;
     /**  */
     private final ValidityListenerList listenerList;
@@ -71,44 +72,47 @@ public class ValidationTextComponentField<T extends JTextComponent>
      **************************************************************************/
     private void validateText()
     {
-        validateText( false );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private void validateText( boolean ignorePreviousValidity )
-    {
         if( validator != null )
         {
-            boolean newValidity = true;
-            String reason = null;
+            Validity v;
 
             try
             {
                 validator.validateText( field.getText() );
-                newValidity = true;
+                v = new Validity();
             }
             catch( ValidationException ex )
             {
-                newValidity = false;
-                reason = ex.getMessage();
+                v = new Validity( ex.getMessage() );
             }
 
-            if( ignorePreviousValidity ||
-                listenerList.getValidity().isValid != newValidity )
-            {
-                setComponentValid( newValidity );
-            }
+            setComponentValid( v.isValid );
 
-            if( newValidity )
-            {
-                listenerList.signalValidity();
-            }
-            else
-            {
-                listenerList.signalValidity( reason );
-            }
+            // LogUtils.printDebug(
+            // ">>> Validating text \"%s\", old validity: %s, new validity: %s",
+            // field.getText(), listenerList.getValidity(), v );
+            // Utils.printStackTrace();
+
+            listenerList.signalValidity( v );
+        }
+    }
+
+    /***************************************************************************
+     * @param editable
+     **************************************************************************/
+    public void setEditable( boolean editable )
+    {
+        field.setBackground( null );
+        field.setEditable( editable );
+
+        if( editable )
+        {
+            setComponentValid( getValidity().isValid );
+        }
+        else
+        {
+            setComponentValid( true );
+            listenerList.signalValidity();
         }
     }
 
@@ -117,13 +121,20 @@ public class ValidationTextComponentField<T extends JTextComponent>
      **************************************************************************/
     private void setComponentValid( boolean valid )
     {
-        if( valid )
+        if( field.isEditable() && field.isEnabled() )
         {
-            field.setBackground( validBackground );
+            if( valid )
+            {
+                field.setBackground( validBackground );
+            }
+            else
+            {
+                field.setBackground( invalidBackground );
+            }
         }
         else
         {
-            field.setBackground( invalidBackground );
+            field.setBackground( null );
         }
     }
 
@@ -172,7 +183,7 @@ public class ValidationTextComponentField<T extends JTextComponent>
     {
         this.validator = validator;
 
-        validateText( true );
+        validateText();
     }
 
     /***************************************************************************
@@ -216,18 +227,21 @@ public class ValidationTextComponentField<T extends JTextComponent>
         @Override
         public void removeUpdate( DocumentEvent e )
         {
+            // LogUtils.printDebug( "Updating text" );
             field.validateText();
         }
 
         @Override
         public void insertUpdate( DocumentEvent e )
         {
+            // LogUtils.printDebug( "Inserting text" );
             field.validateText();
         }
 
         @Override
         public void changedUpdate( DocumentEvent e )
         {
+            // LogUtils.printDebug( "Changing text" );
             field.validateText();
         }
     }
