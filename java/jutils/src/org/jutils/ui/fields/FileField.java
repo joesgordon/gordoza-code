@@ -16,6 +16,7 @@ import org.jutils.ui.event.FileDropTarget.JTextFieldFilesListener;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.model.IDataView;
 import org.jutils.ui.validation.IValidityChangedListener;
+import org.jutils.ui.validation.ValidationTextField;
 import org.jutils.ui.validators.*;
 
 /*******************************************************************************

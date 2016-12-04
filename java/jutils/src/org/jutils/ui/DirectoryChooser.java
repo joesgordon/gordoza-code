@@ -16,9 +16,7 @@ import org.jutils.ui.app.AppRunnable;
 import org.jutils.ui.app.IApplication;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
-import org.jutils.ui.fields.ValidationTextField;
-import org.jutils.ui.validation.IValidityChangedListener;
-import org.jutils.ui.validation.ValidationView;
+import org.jutils.ui.validation.*;
 import org.jutils.ui.validators.ITextValidator;
 
 /*******************************************************************************

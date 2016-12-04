@@ -11,9 +11,7 @@ import org.jutils.ui.ExitListener;
 import org.jutils.ui.StandardFormView;
 import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
-import org.jutils.ui.fields.ValidationTextField;
-import org.jutils.ui.validation.AggregateValidityChangedManager;
-import org.jutils.ui.validation.IValidityChangedListener;
+import org.jutils.ui.validation.*;
 import org.jutils.ui.validators.ITextValidator;
 
 public class ValidationTestApp implements IFrameApp

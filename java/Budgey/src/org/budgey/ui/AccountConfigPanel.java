@@ -11,9 +11,9 @@ import org.jutils.ValidationException;
 import org.jutils.ui.StandardFormView;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
-import org.jutils.ui.fields.ValidationTextField;
 import org.jutils.ui.model.IDataView;
 import org.jutils.ui.validation.IValidityChangedListener;
+import org.jutils.ui.validation.ValidationTextField;
 import org.jutils.ui.validators.ITextValidator;
 
 /*******************************************************************************

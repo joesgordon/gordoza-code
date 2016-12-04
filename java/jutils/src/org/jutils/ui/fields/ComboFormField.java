@@ -10,6 +10,7 @@ import org.jutils.ValidationException;
 import org.jutils.io.IParser;
 import org.jutils.ui.event.updater.ComboBoxUpdater;
 import org.jutils.ui.event.updater.IUpdater;
+import org.jutils.ui.validation.ValidationComboField;
 
 /*******************************************************************************
  * 
