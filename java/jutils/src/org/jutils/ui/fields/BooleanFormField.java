@@ -8,6 +8,7 @@ import javax.swing.JComponent;
 import org.jutils.ui.event.updater.CheckBoxUpdater;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.validation.IValidityChangedListener;
+import org.jutils.ui.validation.Validity;
 
 /*******************************************************************************
  * 
@@ -132,18 +133,9 @@ public class BooleanFormField
      * 
      **************************************************************************/
     @Override
-    public boolean isValid()
+    public Validity getValidity()
     {
-        return true;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public String getInvalidationReason()
-    {
-        return "";
+        return new Validity();
     }
 
     /***************************************************************************

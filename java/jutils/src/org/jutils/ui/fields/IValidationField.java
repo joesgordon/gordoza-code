@@ -6,6 +6,7 @@ import javax.swing.JComponent;
 
 import org.jutils.ui.model.IComponentView;
 import org.jutils.ui.validation.IValidityChangedListener;
+import org.jutils.ui.validation.Validity;
 
 /*******************************************************************************
  * Defines an {@link IComponentView} that supports validation.
@@ -26,17 +27,10 @@ public interface IValidationField extends IComponentView
     public void removeValidityChanged( IValidityChangedListener l );
 
     /***************************************************************************
-     * Returns {@code true} if the component is currently valid.
-     * @return the validity of the component.
-     **************************************************************************/
-    public boolean isValid();
-
-    /***************************************************************************
-     * Returns the reason for invalidation or {@code null} if the field is
-     * valid.
+     * Returns the current validity state for the field
      * @return the reason for invalidation.
      **************************************************************************/
-    public String getInvalidationReason();
+    public Validity getValidity();
 
     /***************************************************************************
      * Sets the background color of the component when it is valid.

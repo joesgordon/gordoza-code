@@ -45,14 +45,7 @@ public class AggregateValidityChangedManager
     {
         validityListeners.addListener( l );
 
-        if( validityListeners.isValid() )
-        {
-            l.signalValid();
-        }
-        else
-        {
-            l.signalInvalid( validityListeners.getInvalidationReason() );
-        }
+        l.signalValidity( validityListeners.getValidity() );
     }
 
     /***************************************************************************
@@ -64,19 +57,11 @@ public class AggregateValidityChangedManager
     }
 
     /***************************************************************************
-     * @see IValidationField#isValid()
+     * @see IValidationField#getValidity()
      **************************************************************************/
-    public boolean isValid()
+    public Validity getValidity()
     {
-        return validityListeners.isValid();
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public String getInvalidationReason()
-    {
-        return validityListeners.getInvalidationReason();
+        return validityListeners.getValidity();
     }
 
     /***************************************************************************
@@ -89,14 +74,7 @@ public class AggregateValidityChangedManager
 
         fields.add( field );
 
-        if( isValid() && field.isValid() )
-        {
-            validityListeners.signalValid();
-        }
-        else if( !field.isValid() )
-        {
-            validityListeners.signalInvalid( field.getInvalidationReason() );
-        }
+        validityListeners.signalValidity( field.getValidity() );
     }
 
     /***************************************************************************
@@ -142,16 +120,15 @@ public class AggregateValidityChangedManager
         {
             // LogUtils.printDebug( "Field " + field.getView().getName() +
             // ", validity: " + field.isValid() );
-            newValidity &= field.isValid();
+            newValidity &= field.getValidity().isValid;
             if( !newValidity )
             {
-                validityListeners.signalInvalid(
-                    field.getInvalidationReason() );
+                validityListeners.signalValidity( field.getValidity() );
                 return;
             }
         }
 
-        validityListeners.signalValid();
+        validityListeners.signalValidity( new Validity() );
     }
 
     /***************************************************************************
@@ -180,15 +157,9 @@ public class AggregateValidityChangedManager
         }
 
         @Override
-        public void signalValid()
+        public void signalValidity( Validity validity )
         {
             manager.testValidity();
-        }
-
-        @Override
-        public void signalInvalid( String reason )
-        {
-            manager.validityListeners.signalInvalid( reason );
         }
     }
 }

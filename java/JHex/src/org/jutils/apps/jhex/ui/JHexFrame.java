@@ -562,10 +562,10 @@ public class JHexFrame implements IView<JFrame>
 
         if( ans == JOptionPane.OK_OPTION )
         {
-            if( !hexField.getValidationField().isValid() )
+            if( !hexField.getValidationField().getValidity().isValid )
             {
                 JOptionPane.showMessageDialog( frame,
-                    hexField.getValidationField().getInvalidationReason(),
+                    hexField.getValidationField().getValidity().reason,
                     "Invalid Hexadecimal Entry", JOptionPane.ERROR_MESSAGE );
                 return;
             }

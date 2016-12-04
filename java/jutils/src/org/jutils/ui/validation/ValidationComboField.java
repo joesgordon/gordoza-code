@@ -109,18 +109,9 @@ public final class ValidationComboField<T> implements IValidationField
      * 
      **************************************************************************/
     @Override
-    public boolean isValid()
+    public Validity getValidity()
     {
-        return listenerList.isValid();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public String getInvalidationReason()
-    {
-        return listenerList.getInvalidationReason();
+        return listenerList.getValidity();
     }
 
     /***************************************************************************
@@ -163,7 +154,7 @@ public final class ValidationComboField<T> implements IValidationField
     public void setValidBackground( Color bg )
     {
         validBackground = bg;
-        setComponentValid( listenerList.isValid() );
+        setComponentValid( listenerList.getValidity().isValid );
     }
 
     /***************************************************************************
@@ -173,7 +164,7 @@ public final class ValidationComboField<T> implements IValidationField
     public void setInvalidBackground( Color bg )
     {
         invalidBackground = bg;
-        setComponentValid( listenerList.isValid() );
+        setComponentValid( listenerList.getValidity().isValid );
     }
 
     /***************************************************************************
@@ -241,12 +232,12 @@ public final class ValidationComboField<T> implements IValidationField
             if( item == null )
             {
                 field.field.setBackground( field.invalidBackground );
-                field.listenerList.signalInvalid( "No item chosen" );
+                field.listenerList.signalValidity( "No item chosen" );
             }
             else
             {
                 field.field.setBackground( field.validBackground );
-                field.listenerList.signalValid();
+                field.listenerList.signalValidity();
             }
         }
     }
@@ -427,15 +418,9 @@ public final class ValidationComboField<T> implements IValidationField
         }
 
         @Override
-        public void signalValid()
+        public void signalValidity( Validity validity )
         {
-            list.signalValid();
-        }
-
-        @Override
-        public void signalInvalid( String reason )
-        {
-            list.signalInvalid( reason );
+            list.signalValidity( validity );
         }
     }
 }

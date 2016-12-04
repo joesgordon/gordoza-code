@@ -63,7 +63,7 @@ public final class ValidationTextField implements IValidationField
             new ValidationDocumentListener( this ) );
         textfield.setBackground( validBackground );
 
-        setComponentValid( listenerList.isValid() );
+        setComponentValid( listenerList.getValidity().isValid );
     }
 
     /***************************************************************************
@@ -79,18 +79,9 @@ public final class ValidationTextField implements IValidationField
      * 
      **************************************************************************/
     @Override
-    public boolean isValid()
+    public Validity getValidity()
     {
-        return listenerList.isValid();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public String getInvalidationReason()
-    {
-        return listenerList.getInvalidationReason();
+        return listenerList.getValidity();
     }
 
     /***************************************************************************
@@ -122,24 +113,25 @@ public final class ValidationTextField implements IValidationField
                 reason = ex.getMessage();
             }
 
-            if( ignorePreviousValidity || listenerList.isValid() != validity )
+            if( ignorePreviousValidity ||
+                listenerList.getValidity().isValid != validity )
             {
                 setComponentValid( validity );
             }
 
             // LogUtils.printDebug( ">>>Validating text \"" +
             // textfield.getText() +
-            // "\", old validity: " + listenerList.isValid() +
+            // "\", old validity: " + listenerList.getValidity().isValid +
             // ", new validity: " + validity );
             // Utils.printStackTrace();
 
             if( validity )
             {
-                listenerList.signalValid();
+                listenerList.signalValidity();
             }
             else
             {
-                listenerList.signalInvalid( reason );
+                listenerList.signalValidity( reason );
             }
         }
     }
@@ -154,12 +146,12 @@ public final class ValidationTextField implements IValidationField
 
         if( editable )
         {
-            setComponentValid( isValid() );
+            setComponentValid( getValidity().isValid );
         }
         else
         {
             setComponentValid( true );
-            listenerList.signalValid();
+            listenerList.signalValidity();
         }
     }
 
@@ -210,7 +202,7 @@ public final class ValidationTextField implements IValidationField
     public void setValidBackground( Color bg )
     {
         validBackground = bg;
-        setComponentValid( listenerList.isValid() );
+        setComponentValid( listenerList.getValidity().isValid );
     }
 
     /***************************************************************************
@@ -220,7 +212,7 @@ public final class ValidationTextField implements IValidationField
     public void setInvalidBackground( Color bg )
     {
         invalidBackground = bg;
-        setComponentValid( listenerList.isValid() );
+        setComponentValid( listenerList.getValidity().isValid );
     }
 
     /***************************************************************************

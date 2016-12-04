@@ -15,9 +15,9 @@ import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.JTextFieldFilesListener;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.model.IDataView;
-import org.jutils.ui.validation.IValidityChangedListener;
-import org.jutils.ui.validation.ValidationTextField;
-import org.jutils.ui.validators.*;
+import org.jutils.ui.validation.*;
+import org.jutils.ui.validators.DataTextValidator;
+import org.jutils.ui.validators.ITextValidator;
 
 /*******************************************************************************
  * 
@@ -27,7 +27,7 @@ public class FileField implements IDataView<File>, IValidationField
     /**  */
     private final JPanel view;
     /**  */
-    private final ValidationTextField fileField;
+    private final ValidationTextField field;
     /**  */
     private final JPopupMenu openMenu;
     /**  */
@@ -91,14 +91,14 @@ public class FileField implements IDataView<File>, IValidationField
     {
         this.changeListeners = new ItemActionList<>();
 
-        this.fileField = new ValidationTextField();
+        this.field = new ValidationTextField();
         this.fileListener = createFileListener( existence, isSave );
         this.openMenu = createMenu();
         this.view = createView( existence, required, isSave, showButton );
 
-        fileField.getView().setColumns( 20 );
+        field.getView().setColumns( 20 );
 
-        fileField.setText( "" );
+        field.setText( "" );
     }
 
     /***************************************************************************
@@ -220,7 +220,7 @@ public class FileField implements IDataView<File>, IValidationField
 
         if( existence != ExistenceType.DIRECTORY_ONLY )
         {
-            fcl = new FileChooserListener( fileField.getView(), "Choose File",
+            fcl = new FileChooserListener( field.getView(), "Choose File",
                 new FileBrowseListener( this ), isSave );
         }
 
@@ -256,14 +256,14 @@ public class FileField implements IDataView<File>, IValidationField
             new FileParser( existence, required ), new FileUpdater( this ) );
 
         // LogUtils.printDebug( "Setting validator" );
-        fileField.setValidator( validator );
-        fileField.getView().setDropTarget( new FileDropTarget(
-            new JTextFieldFilesListener( fileField.getView(), existence ) ) );
+        field.setValidator( validator );
+        field.getView().setDropTarget( new FileDropTarget(
+            new JTextFieldFilesListener( field.getView(), existence ) ) );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
             GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 0, 0, 0 ), 0, 0 );
-        panel.add( fileField.getView(), constraints );
+        panel.add( field.getView(), constraints );
 
         if( showButton )
         {
@@ -298,7 +298,7 @@ public class FileField implements IDataView<File>, IValidationField
     public File getData()
     {
         File file;
-        String path = fileField.getText();
+        String path = field.getText();
 
         if( path.isEmpty() )
         {
@@ -327,7 +327,7 @@ public class FileField implements IDataView<File>, IValidationField
 
         // LogUtils.printDebug( "Setting data to: \"" + text + "\"" );
 
-        fileField.setText( text );
+        field.setText( text );
     }
 
     /***************************************************************************
@@ -336,7 +336,7 @@ public class FileField implements IDataView<File>, IValidationField
     @Override
     public void addValidityChanged( IValidityChangedListener l )
     {
-        fileField.addValidityChanged( l );
+        field.addValidityChanged( l );
     }
 
     /***************************************************************************
@@ -345,25 +345,16 @@ public class FileField implements IDataView<File>, IValidationField
     @Override
     public void removeValidityChanged( IValidityChangedListener l )
     {
-        fileField.removeValidityChanged( l );
+        field.removeValidityChanged( l );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public boolean isValid()
+    public Validity getValidity()
     {
-        return fileField.isValid();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public String getInvalidationReason()
-    {
-        return fileField.getInvalidationReason();
+        return field.getValidity();
     }
 
     /***************************************************************************
@@ -372,7 +363,7 @@ public class FileField implements IDataView<File>, IValidationField
     @Override
     public void setValidBackground( Color bg )
     {
-        fileField.setValidBackground( bg );
+        field.setValidBackground( bg );
     }
 
     /***************************************************************************
@@ -381,7 +372,7 @@ public class FileField implements IDataView<File>, IValidationField
     @Override
     public void setInvalidBackground( Color bg )
     {
-        fileField.setInvalidBackground( bg );
+        field.setInvalidBackground( bg );
     }
 
     /***************************************************************************
@@ -389,7 +380,7 @@ public class FileField implements IDataView<File>, IValidationField
      **************************************************************************/
     public void setEditable( boolean editable )
     {
-        fileField.setEditable( editable );
+        field.setEditable( editable );
     }
 
     /***************************************************************************

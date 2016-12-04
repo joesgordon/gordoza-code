@@ -23,8 +23,7 @@ import org.jutils.ui.fields.FileField;
 import org.jutils.ui.fields.IValidationField;
 import org.jutils.ui.model.*;
 import org.jutils.ui.model.LabelTableCellRenderer.ITableCellLabelDecorator;
-import org.jutils.ui.validation.IValidityChangedListener;
-import org.jutils.ui.validation.ValidityListenerList;
+import org.jutils.ui.validation.*;
 
 /*******************************************************************************
  * 
@@ -165,19 +164,19 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
     {
         if( input == null )
         {
-            validityListeners.signalInvalid( "No input loaded" );
+            validityListeners.signalValidity( "No input loaded" );
             return;
         }
 
         if( input.type == null )
         {
-            validityListeners.signalInvalid( "No file loaded" );
+            validityListeners.signalValidity( "No file loaded" );
             return;
         }
 
         if( input.files.isEmpty() )
         {
-            validityListeners.signalInvalid( "No files in checksum file" );
+            validityListeners.signalValidity( "No files in checksum file" );
             return;
         }
 
@@ -185,13 +184,13 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
         {
             if( !sf.file.isFile() )
             {
-                validityListeners.signalInvalid(
+                validityListeners.signalValidity(
                     "File does not exist: " + sf.file.getAbsolutePath() );
                 return;
             }
         }
 
-        validityListeners.signalValid();
+        validityListeners.signalValidity();
     }
 
     /***************************************************************************
@@ -248,18 +247,9 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
      * 
      **************************************************************************/
     @Override
-    public boolean isValid()
+    public Validity getValidity()
     {
-        return validityListeners.isValid();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public String getInvalidationReason()
-    {
-        return validityListeners.getInvalidationReason();
+        return validityListeners.getValidity();
     }
 
     /***************************************************************************
@@ -293,9 +283,9 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
             return;
         }
 
-        if( !isValid() )
+        if( !getValidity().isValid )
         {
-            JOptionPane.showMessageDialog( view, getInvalidationReason(),
+            JOptionPane.showMessageDialog( view, getValidity().reason,
                 "Invalid Configuration", JOptionPane.ERROR_MESSAGE );
             return;
         }

@@ -18,6 +18,7 @@ import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.fields.IValidationField;
 import org.jutils.ui.model.IView;
 import org.jutils.ui.validation.IValidityChangedListener;
+import org.jutils.ui.validation.Validity;
 
 /*******************************************************************************
  * 
@@ -185,7 +186,7 @@ public class SummerView implements IView<JFrame>
                 field = view.verifyView;
             }
 
-            if( field.isValid() )
+            if( field.getValidity().isValid )
             {
                 view.createAction.setEnabled( true );
                 SwingUtils.setActionToolTip( view.createAction,
@@ -195,7 +196,7 @@ public class SummerView implements IView<JFrame>
             {
                 view.createAction.setEnabled( false );
                 SwingUtils.setActionToolTip( view.createAction,
-                    field.getInvalidationReason() );
+                    field.getValidity().reason );
             }
         }
     }
@@ -215,27 +216,18 @@ public class SummerView implements IView<JFrame>
         }
 
         @Override
-        public void signalValid()
+        public void signalValidity( Validity validity )
         {
             if( view.tabField.getSelectedIndex() == index )
             {
-                view.createAction.setEnabled( true );
-                SwingUtils.setActionToolTip( view.createAction,
-                    "Create Checksums" );
+                String tooltip = validity.isValid ? "Create Checksums"
+                    : validity.reason;
+                view.createAction.setEnabled( validity.isValid );
 
-                // LogUtils.printDebug( "Valid: " + index );
-            }
-        }
+                SwingUtils.setActionToolTip( view.createAction, tooltip );
 
-        @Override
-        public void signalInvalid( String reason )
-        {
-            if( view.tabField.getSelectedIndex() == index )
-            {
-                view.createAction.setEnabled( false );
-                SwingUtils.setActionToolTip( view.createAction, reason );
-
-                // LogUtils.printDebug( "Invalid: " + index + " - " + reason );
+                // LogUtils.printDebug( "Validity @ index[%d]: %s", index,
+                // validity.toString() );
             }
         }
     }

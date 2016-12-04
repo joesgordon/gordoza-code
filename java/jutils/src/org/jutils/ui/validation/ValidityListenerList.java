@@ -12,9 +12,7 @@ public class ValidityListenerList
     private final List<IValidityChangedListener> validityChangedListeners;
 
     /** The last evaluated validity; {@code true} by default. */
-    private boolean lastValidity;
-    /**  */
-    private String lastReason;
+    private Validity validity;
 
     /***************************************************************************
      * 
@@ -23,8 +21,7 @@ public class ValidityListenerList
     {
         this.validityChangedListeners = new LinkedList<IValidityChangedListener>();
 
-        this.lastValidity = false;
-        this.lastReason = "Uninitialized validity";
+        this.validity = new Validity( "Uninitialized validity" );
     }
 
     /***************************************************************************
@@ -47,47 +44,35 @@ public class ValidityListenerList
      * Updates the last known validity and calls listeners if it changed.
      * @param newValidity the latest validity.
      **************************************************************************/
-    public void signalValid()
+    public void signalValidity()
     {
-        if( !lastValidity )
-        {
-            lastValidity = true;
-            lastReason = "VALID";
-
-            for( IValidityChangedListener vcl : validityChangedListeners )
-            {
-                vcl.signalValid();
-            }
-        }
+        signalValidity( new Validity() );
     }
 
     /***************************************************************************
      * @param reason
      **************************************************************************/
-    public void signalInvalid( String reason )
+    public void signalValidity( String reason )
     {
-        lastValidity = false;
-        lastReason = reason;
+        signalValidity( new Validity( reason ) );
+    }
 
+    /***************************************************************************
+     * @param validity
+     **************************************************************************/
+    public void signalValidity( Validity validity )
+    {
         for( IValidityChangedListener vcl : validityChangedListeners )
         {
-            vcl.signalInvalid( reason );
+            vcl.signalValidity( validity );
         }
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    public boolean isValid()
+    public Validity getValidity()
     {
-        return lastValidity;
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public String getInvalidationReason()
-    {
-        return lastReason;
+        return validity;
     }
 }

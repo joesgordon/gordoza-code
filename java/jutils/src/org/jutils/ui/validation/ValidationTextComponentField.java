@@ -45,7 +45,7 @@ public class ValidationTextComponentField<T extends JTextComponent>
             new ValidationDocumentListener( this ) );
         field.setBackground( validBackground );
 
-        setComponentValid( listenerList.isValid() );
+        setComponentValid( listenerList.getValidity().isValid );
     }
 
     /***************************************************************************
@@ -61,18 +61,9 @@ public class ValidationTextComponentField<T extends JTextComponent>
      * 
      **************************************************************************/
     @Override
-    public boolean isValid()
+    public Validity getValidity()
     {
-        return listenerList.isValid();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public String getInvalidationReason()
-    {
-        return listenerList.getInvalidationReason();
+        return listenerList.getValidity();
     }
 
     /***************************************************************************
@@ -105,18 +96,18 @@ public class ValidationTextComponentField<T extends JTextComponent>
             }
 
             if( ignorePreviousValidity ||
-                listenerList.isValid() != newValidity )
+                listenerList.getValidity().isValid != newValidity )
             {
                 setComponentValid( newValidity );
             }
 
             if( newValidity )
             {
-                listenerList.signalValid();
+                listenerList.signalValidity();
             }
             else
             {
-                listenerList.signalInvalid( reason );
+                listenerList.signalValidity( reason );
             }
         }
     }
@@ -161,7 +152,7 @@ public class ValidationTextComponentField<T extends JTextComponent>
     public void setValidBackground( Color bg )
     {
         validBackground = bg;
-        setComponentValid( listenerList.isValid() );
+        setComponentValid( listenerList.getValidity().isValid );
     }
 
     /***************************************************************************
@@ -171,7 +162,7 @@ public class ValidationTextComponentField<T extends JTextComponent>
     public void setInvalidBackground( Color bg )
     {
         invalidBackground = bg;
-        setComponentValid( listenerList.isValid() );
+        setComponentValid( listenerList.getValidity().isValid );
     }
 
     /***************************************************************************
@@ -216,7 +207,8 @@ public class ValidationTextComponentField<T extends JTextComponent>
     {
         private ValidationTextComponentField<?> field;
 
-        public ValidationDocumentListener( ValidationTextComponentField<?> field )
+        public ValidationDocumentListener(
+            ValidationTextComponentField<?> field )
         {
             this.field = field;
         }

@@ -10,6 +10,7 @@ import javax.swing.*;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.event.updater.ReflectiveUpdater;
 import org.jutils.ui.validation.IValidityChangedListener;
+import org.jutils.ui.validation.Validity;
 import org.jutils.utils.Usable;
 
 /*******************************************************************************
@@ -187,19 +188,10 @@ public class UsableFormField<T>
      * 
      **************************************************************************/
     @Override
-    public boolean isValid()
+    public Validity getValidity()
     {
-        return usedField.isSelected() ? field.getValidationField().isValid()
-            : true;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public String getInvalidationReason()
-    {
-        return field.getValidationField().getInvalidationReason();
+        return usedField.isSelected() ? field.getValidationField().getValidity()
+            : new Validity();
     }
 
     /***************************************************************************

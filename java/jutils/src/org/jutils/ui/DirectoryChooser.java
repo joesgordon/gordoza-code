@@ -409,14 +409,16 @@ public class DirectoryChooser
         }
 
         @Override
-        public void signalValid()
+        public void signalValidity( Validity validity )
         {
-            chooser.tree.setSelectedPaths( chooser.dirsField.getText() );
-        }
-
-        @Override
-        public void signalInvalid( String reason )
-        {
+            if( validity.isValid )
+            {
+                chooser.tree.setSelectedPaths( chooser.dirsField.getText() );
+            }
+            else
+            {
+                chooser.tree.clearSelection();
+            }
         }
     }
 

@@ -12,8 +12,7 @@ import org.jutils.ui.StandardFormView;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.model.IDataView;
-import org.jutils.ui.validation.IValidityChangedListener;
-import org.jutils.ui.validation.ValidationTextField;
+import org.jutils.ui.validation.*;
 import org.jutils.ui.validators.ITextValidator;
 
 /*******************************************************************************
@@ -148,20 +147,11 @@ public class AccountConfigPanel implements IDataView<Account>
         }
 
         @Override
-        public void signalValid()
+        public void signalValidity( Validity validity )
         {
             if( panel.itemView != null )
             {
-                panel.itemView.setOkEnabled( true );
-            }
-        }
-
-        @Override
-        public void signalInvalid( String reason )
-        {
-            if( panel.itemView != null )
-            {
-                panel.itemView.setOkEnabled( false );
+                panel.itemView.setOkEnabled( validity.isValid );
             }
         }
     }

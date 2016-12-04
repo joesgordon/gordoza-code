@@ -9,8 +9,7 @@ import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.fields.BitsField;
 import org.jutils.ui.fields.IValidationField;
 import org.jutils.ui.model.IDataView;
-import org.jutils.ui.validation.AggregateValidityChangedManager;
-import org.jutils.ui.validation.IValidityChangedListener;
+import org.jutils.ui.validation.*;
 import org.jutils.utils.BitArray;
 
 /*******************************************************************************
@@ -161,18 +160,9 @@ public class BitArrayView implements IDataView<BitArray>, IValidationField
      * 
      **************************************************************************/
     @Override
-    public boolean isValid()
+    public Validity getValidity()
     {
-        return validityManager.isValid();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public String getInvalidationReason()
-    {
-        return validityManager.getInvalidationReason();
+        return validityManager.getValidity();
     }
 
     /***************************************************************************

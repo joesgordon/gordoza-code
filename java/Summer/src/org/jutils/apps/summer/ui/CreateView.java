@@ -30,8 +30,7 @@ import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
 import org.jutils.ui.fields.IValidationField;
 import org.jutils.ui.model.*;
 import org.jutils.ui.model.LabelTableCellRenderer.ITableCellLabelDecorator;
-import org.jutils.ui.validation.IValidityChangedListener;
-import org.jutils.ui.validation.ValidityListenerList;
+import org.jutils.ui.validation.*;
 
 /*******************************************************************************
  * 
@@ -257,23 +256,23 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
     {
         if( input == null )
         {
-            validityListeners.signalInvalid( "No input loaded" );
+            validityListeners.signalValidity( "No input loaded" );
             return;
         }
 
         if( input.type == null )
         {
-            validityListeners.signalInvalid( "No checksum type selected" );
+            validityListeners.signalValidity( "No checksum type selected" );
             return;
         }
 
         if( input.files.isEmpty() )
         {
-            validityListeners.signalInvalid( "No files loaded" );
+            validityListeners.signalValidity( "No files loaded" );
             return;
         }
 
-        validityListeners.signalValid();
+        validityListeners.signalValidity();
     }
 
     /***************************************************************************
@@ -362,18 +361,9 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
      * 
      **************************************************************************/
     @Override
-    public boolean isValid()
+    public Validity getValidity()
     {
-        return validityListeners.isValid();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public String getInvalidationReason()
-    {
-        return validityListeners.getInvalidationReason();
+        return validityListeners.getValidity();
     }
 
     /***************************************************************************

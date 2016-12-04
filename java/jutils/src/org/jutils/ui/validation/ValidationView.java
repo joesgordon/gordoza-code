@@ -68,7 +68,7 @@ public class ValidationView implements IView<JPanel>
         Dimension dim = errorField.getPreferredSize();
         dim.width = field.getView().getPreferredSize().width;
 
-        errorField.setText( "ERROR: " + field.getInvalidationReason() );
+        errorField.setText( "ERROR: " + field.getValidity().reason );
         errorField.setPreferredSize( dim );
         errorField.setEditable( false );
 
@@ -77,7 +77,7 @@ public class ValidationView implements IView<JPanel>
         // LogUtils.printDebug( "Adding validity changed listner" );
         field.addValidityChanged( new FieldValidityChangedListener( this ) );
 
-        setErrorFieldVisible( !field.isValid() );
+        setErrorFieldVisible( !field.getValidity().isValid );
     }
 
     /***************************************************************************
@@ -155,19 +155,14 @@ public class ValidationView implements IView<JPanel>
         }
 
         @Override
-        public void signalValid()
+        public void signalValidity( Validity validity )
         {
-            // LogUtils.printDebug( "Valid" );
-            view.setErrorFieldVisible( false );
-            view.errorField.setText( "" );
-        }
+            // LogUtils.printDebug( "Validity: " + validity.toString() );
+            String errText = validity.isValid ? ""
+                : "ERROR: " + validity.reason;
 
-        @Override
-        public void signalInvalid( String reason )
-        {
-            // LogUtils.printDebug( "Invalid: " + reason );
-            view.setErrorFieldVisible( true );
-            view.errorField.setText( "ERROR: " + reason );
+            view.setErrorFieldVisible( !validity.isValid );
+            view.errorField.setText( errText );
         }
     }
 }

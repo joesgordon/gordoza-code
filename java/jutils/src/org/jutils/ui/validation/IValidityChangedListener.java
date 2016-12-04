@@ -8,10 +8,5 @@ public interface IValidityChangedListener
     /***************************************************************************
      * 
      **************************************************************************/
-    public void signalValid();
-
-    /***************************************************************************
-     * @param reason
-     **************************************************************************/
-    public void signalInvalid( String reason );
+    public void signalValidity( Validity validity );
 }
