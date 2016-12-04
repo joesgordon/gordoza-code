@@ -1,7 +1,6 @@
 package org.jutils.ui.fields;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -191,24 +190,6 @@ public class UsableFormField<T>
     {
         return usedField.isSelected() ? field.getValidationField().getValidity()
             : new Validity();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setValidBackground( Color bg )
-    {
-        field.getValidationField().setValidBackground( bg );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setInvalidBackground( Color bg )
-    {
-        field.getValidationField().setInvalidBackground( bg );
     }
 
     /***************************************************************************

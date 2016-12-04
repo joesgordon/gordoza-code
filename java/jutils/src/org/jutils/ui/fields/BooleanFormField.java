@@ -1,7 +1,5 @@
 package org.jutils.ui.fields;
 
-import java.awt.Color;
-
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 
@@ -135,23 +133,6 @@ public class BooleanFormField
     public Validity getValidity()
     {
         return new Validity();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setValidBackground( Color bg )
-    {
-        flagField.setBackground( bg );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setInvalidBackground( Color bg )
-    {
     }
 
     /***************************************************************************

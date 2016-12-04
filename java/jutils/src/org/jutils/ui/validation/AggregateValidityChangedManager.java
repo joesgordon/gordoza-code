@@ -1,6 +1,5 @@
 package org.jutils.ui.validation;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,28 +72,6 @@ public class AggregateValidityChangedManager
         fields.add( field );
 
         validityListeners.signalValidity( field.getValidity() );
-    }
-
-    /***************************************************************************
-     * @see IValidationField#setValidBackground(Color)
-     **************************************************************************/
-    public void setValidBackground( Color bg )
-    {
-        for( IValidationField field : fields )
-        {
-            field.setValidBackground( bg );
-        }
-    }
-
-    /***************************************************************************
-     * @see IValidationField#setInvalidBackground(Color)
-     **************************************************************************/
-    public void setInvalidBackground( Color bg )
-    {
-        for( IValidationField field : fields )
-        {
-            field.setInvalidBackground( bg );
-        }
     }
 
     /***************************************************************************

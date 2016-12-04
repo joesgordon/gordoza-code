@@ -167,24 +167,6 @@ public class BitArrayView implements IDataView<BitArray>, IValidationField
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
-    public void setValidBackground( Color bg )
-    {
-        validityManager.setValidBackground( bg );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setInvalidBackground( Color bg )
-    {
-        validityManager.setInvalidBackground( bg );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
     private static abstract class AbstractUpdater<T> implements IUpdater<T>
     {
         private boolean enabled = true;

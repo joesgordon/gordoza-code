@@ -114,21 +114,6 @@ public final class ValidationComboField<T> implements IValidationField
     }
 
     /***************************************************************************
-     * 
-     **************************************************************************/
-    private void setComponentValid( boolean valid )
-    {
-        if( valid )
-        {
-            field.setBackground( validBackground );
-        }
-        else
-        {
-            field.setBackground( invalidBackground );
-        }
-    }
-
-    /***************************************************************************
      * @param vcl
      **************************************************************************/
     @Override
@@ -144,26 +129,6 @@ public final class ValidationComboField<T> implements IValidationField
     public void removeValidityChanged( IValidityChangedListener vcl )
     {
         listenerList.removeListener( vcl );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setValidBackground( Color bg )
-    {
-        validBackground = bg;
-        setComponentValid( listenerList.getValidity().isValid );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setInvalidBackground( Color bg )
-    {
-        invalidBackground = bg;
-        setComponentValid( listenerList.getValidity().isValid );
     }
 
     /***************************************************************************

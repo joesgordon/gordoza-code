@@ -1,7 +1,5 @@
 package org.jutils.ui.validation;
 
-import java.awt.Color;
-
 import javax.swing.JComponent;
 
 import org.jutils.ui.model.IComponentView;
@@ -29,18 +27,6 @@ public interface IValidationField extends IComponentView
      * @return the reason for invalidation.
      **************************************************************************/
     public Validity getValidity();
-
-    /***************************************************************************
-     * Sets the background color of the component when it is valid.
-     * @param bg the new valid background color.
-     **************************************************************************/
-    public void setValidBackground( Color bg );
-
-    /***************************************************************************
-     * Sets the background color of the component when it is invalid.
-     * @param bg the new invalid background color.
-     **************************************************************************/
-    public void setInvalidBackground( Color bg );
 
     /***************************************************************************
      * 

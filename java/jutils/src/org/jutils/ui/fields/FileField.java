@@ -358,24 +358,6 @@ public class FileField implements IDataView<File>, IValidationField
     }
 
     /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setValidBackground( Color bg )
-    {
-        field.setValidBackground( bg );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setInvalidBackground( Color bg )
-    {
-        field.setInvalidBackground( bg );
-    }
-
-    /***************************************************************************
      * @param b
      **************************************************************************/
     public void setEditable( boolean editable )

@@ -174,26 +174,6 @@ public final class ValidationTextField implements IValidationField
     }
 
     /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setValidBackground( Color bg )
-    {
-        validBackground = bg;
-        setComponentValid( listenerList.getValidity().isValid );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setInvalidBackground( Color bg )
-    {
-        invalidBackground = bg;
-        setComponentValid( listenerList.getValidity().isValid );
-    }
-
-    /***************************************************************************
      * @param validator
      **************************************************************************/
     public final void setValidator( ITextValidator validator )
