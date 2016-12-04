@@ -1,10 +1,12 @@
 package org.jutils.ui.model;
 
+import java.awt.Component;
+
 /*******************************************************************************
  * Defines a view that allows for display and optionally editing of data.
  * @param <T> the type of the data to be displayed/edited.
  ******************************************************************************/
-public interface IDataView<T> extends IComponentView
+public interface IDataView<D> extends IView<Component>
 {
     /***************************************************************************
      * Returns the data as seen in the view. This function may optionally build
@@ -12,11 +14,11 @@ public interface IDataView<T> extends IComponentView
      * data was updated without creating a new instance).
      * @return the data as seen in the view.
      **************************************************************************/
-    public T getData();
+    public D getData();
 
     /***************************************************************************
      * Sets the components in this view to the fields within the provided data.
      * @param data the data to be displayed.
      **************************************************************************/
-    public void setData( T data );
+    public void setData( D data );
 }

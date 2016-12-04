@@ -110,7 +110,7 @@ public class HexByteFormField implements IDataFormField<Byte>
      * 
      **************************************************************************/
     @Override
-    public String getFieldName()
+    public String getName()
     {
         return name;
     }

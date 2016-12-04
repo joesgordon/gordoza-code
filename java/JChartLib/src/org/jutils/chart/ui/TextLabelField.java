@@ -122,7 +122,7 @@ public class TextLabelField implements IDataFormField<TextLabel>
      * 
      **************************************************************************/
     @Override
-    public String getFieldName()
+    public String getName()
     {
         return name;
     }

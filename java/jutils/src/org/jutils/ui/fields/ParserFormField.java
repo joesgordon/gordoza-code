@@ -44,7 +44,7 @@ public class ParserFormField<T> implements IDataFormField<T>
      * 
      **************************************************************************/
     @Override
-    public String getFieldName()
+    public String getName()
     {
         return name;
     }

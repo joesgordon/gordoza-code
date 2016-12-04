@@ -86,7 +86,7 @@ public class ShortFormField implements IDataFormField<Short>
      * 
      **************************************************************************/
     @Override
-    public String getFieldName()
+    public String getName()
     {
         return name;
     }

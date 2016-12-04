@@ -110,7 +110,7 @@ public class HexIntFormField implements IDataFormField<Integer>
      * 
      **************************************************************************/
     @Override
-    public String getFieldName()
+    public String getName()
     {
         return name;
     }

@@ -1,13 +1,16 @@
 package org.jutils.ui.validation;
 
+import java.awt.Component;
+
 import javax.swing.JComponent;
 
 import org.jutils.ui.model.IComponentView;
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * Defines an {@link IComponentView} that supports validation.
  ******************************************************************************/
-public interface IValidationField extends IComponentView
+public interface IValidationField extends IView<Component>
 {
     /***************************************************************************
      * Adds a listener that will be called when the user has entered data that

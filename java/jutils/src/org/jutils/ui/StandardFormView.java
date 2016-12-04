@@ -133,9 +133,9 @@ public class StandardFormView implements IView<JPanel>
             : GridBagConstraints.EAST;
         int colSpan = 2;
 
-        if( field.getFieldName() != null )
+        if( field.getName() != null )
         {
-            label = new JLabel( field.getFieldName() + ":" );
+            label = new JLabel( field.getName() + ":" );
 
             constraints = new GridBagConstraints( 0, index * 2, 1, 1, 0.0, 0.0,
                 labelAnchor, GridBagConstraints.NONE,
@@ -277,7 +277,7 @@ public class StandardFormView implements IView<JPanel>
         {
             info = fields.get( i );
 
-            if( info.field.getFieldName() != null )
+            if( info.field.getName() != null )
             {
                 constraints = layout.getConstraints( info.label );
                 constraints.gridy = i * 2;
@@ -327,7 +327,7 @@ public class StandardFormView implements IView<JPanel>
         }
 
         @Override
-        public String getFieldName()
+        public String getName()
         {
             return name;
         }

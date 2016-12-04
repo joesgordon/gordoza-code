@@ -61,9 +61,9 @@ public class NetworkInterfaceField implements IDataFormField<NetworkInterface>
      * 
      **************************************************************************/
     @Override
-    public String getFieldName()
+    public String getName()
     {
-        return nicField.getFieldName();
+        return nicField.getName();
     }
 
     /***************************************************************************

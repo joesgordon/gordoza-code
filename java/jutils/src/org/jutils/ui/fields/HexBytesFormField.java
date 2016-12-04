@@ -68,7 +68,7 @@ public class HexBytesFormField implements IDataFormField<byte []>
      * 
      **************************************************************************/
     @Override
-    public String getFieldName()
+    public String getName()
     {
         return name;
     }

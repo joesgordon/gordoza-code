@@ -551,7 +551,7 @@ public class JHexFrame implements IView<JFrame>
             hexField.getValidationField() );
         StandardFormView form = new StandardFormView( true );
 
-        form.addField( hexField.getFieldName(), view.getView() );
+        form.addField( hexField.getName(), view.getView() );
 
         hexField.getTextField().addAncestorListener(
             new RequestFocusListener() );

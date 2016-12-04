@@ -44,7 +44,7 @@ public class MoneyFormField implements IDataFormField<Money>
      * 
      **************************************************************************/
     @Override
-    public String getFieldName()
+    public String getName()
     {
         return fieldName;
     }

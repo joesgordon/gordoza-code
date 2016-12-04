@@ -35,7 +35,7 @@ public class BooleanFormField
      * 
      **************************************************************************/
     @Override
-    public String getFieldName()
+    public String getName()
     {
         return name;
     }

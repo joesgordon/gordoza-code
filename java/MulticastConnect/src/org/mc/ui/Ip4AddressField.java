@@ -11,7 +11,7 @@ public class Ip4AddressField implements IDataFormField<Ip4Address>
 {
 
     @Override
-    public String getFieldName()
+    public String getName()
     {
         // TODO Auto-generated method stub
         return null;

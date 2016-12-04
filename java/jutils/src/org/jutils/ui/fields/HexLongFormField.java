@@ -109,7 +109,7 @@ public class HexLongFormField implements IDataFormField<Long>
      * 
      **************************************************************************/
     @Override
-    public String getFieldName()
+    public String getName()
     {
         return name;
     }

@@ -105,7 +105,7 @@ public class DoubleFormField implements IDataFormField<Double>
      * 
      **************************************************************************/
     @Override
-    public String getFieldName()
+    public String getName()
     {
         return name;
     }

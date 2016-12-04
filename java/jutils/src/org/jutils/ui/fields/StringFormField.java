@@ -58,7 +58,7 @@ public class StringFormField implements IDataFormField<String>
      * 
      **************************************************************************/
     @Override
-    public String getFieldName()
+    public String getName()
     {
         return name;
     }

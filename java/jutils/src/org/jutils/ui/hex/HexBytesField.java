@@ -79,7 +79,7 @@ public class HexBytesField implements IDataFormField<byte []>
      * 
      **************************************************************************/
     @Override
-    public String getFieldName()
+    public String getName()
     {
         return "SYNC";
     }

@@ -42,7 +42,7 @@ public class BitsField implements IDataFormField<BitArray>
      * 
      **************************************************************************/
     @Override
-    public String getFieldName()
+    public String getName()
     {
         return name;
     }

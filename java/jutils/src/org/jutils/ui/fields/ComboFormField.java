@@ -75,7 +75,7 @@ public final class ComboFormField<T> implements IDataFormField<T>
      * 
      **************************************************************************/
     @Override
-    public String getFieldName()
+    public String getName()
     {
         return name;
     }
