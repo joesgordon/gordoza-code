@@ -13,7 +13,6 @@ import org.jutils.io.IParser;
 import org.jutils.ui.event.updater.ComboBoxUpdater;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.fields.IDescriptor;
-import org.jutils.ui.fields.IValidationField;
 import org.jutils.ui.model.ItemComboBoxModel;
 
 /*******************************************************************************

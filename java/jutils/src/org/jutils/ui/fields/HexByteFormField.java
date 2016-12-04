@@ -6,6 +6,7 @@ import javax.swing.JTextField;
 import org.jutils.io.parsers.HexByteParser;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.hex.HexUtils;
+import org.jutils.ui.validation.IValidationField;
 import org.jutils.ui.validation.ValidationTextView;
 import org.jutils.ui.validators.*;
 

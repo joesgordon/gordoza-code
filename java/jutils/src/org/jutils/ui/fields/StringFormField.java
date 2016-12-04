@@ -6,6 +6,7 @@ import javax.swing.JTextField;
 import org.jutils.io.IParser;
 import org.jutils.io.parsers.StringLengthParser;
 import org.jutils.ui.event.updater.IUpdater;
+import org.jutils.ui.validation.IValidationField;
 import org.jutils.ui.validation.ValidationTextView;
 import org.jutils.ui.validators.*;
 

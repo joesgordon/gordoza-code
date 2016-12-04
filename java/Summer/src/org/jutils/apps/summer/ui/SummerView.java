@@ -15,10 +15,8 @@ import org.jutils.io.cksum.ChecksumType;
 import org.jutils.ui.JGoodiesToolBar;
 import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.event.ActionAdapter;
-import org.jutils.ui.fields.IValidationField;
 import org.jutils.ui.model.IView;
-import org.jutils.ui.validation.IValidityChangedListener;
-import org.jutils.ui.validation.Validity;
+import org.jutils.ui.validation.*;
 
 /*******************************************************************************
  * 

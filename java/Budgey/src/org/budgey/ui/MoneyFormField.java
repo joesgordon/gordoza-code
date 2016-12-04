@@ -5,7 +5,7 @@ import javax.swing.JComponent;
 import org.budgey.data.Money;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.fields.IDataFormField;
-import org.jutils.ui.fields.IValidationField;
+import org.jutils.ui.validation.IValidationField;
 import org.jutils.ui.validation.ValidationTextView;
 import org.jutils.ui.validators.DataTextValidator;
 import org.jutils.ui.validators.ITextValidator;

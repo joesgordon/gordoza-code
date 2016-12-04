@@ -7,8 +7,7 @@ import javax.swing.JComponent;
 
 import org.jutils.ui.event.updater.CheckBoxUpdater;
 import org.jutils.ui.event.updater.IUpdater;
-import org.jutils.ui.validation.IValidityChangedListener;
-import org.jutils.ui.validation.Validity;
+import org.jutils.ui.validation.*;
 
 /*******************************************************************************
  * 

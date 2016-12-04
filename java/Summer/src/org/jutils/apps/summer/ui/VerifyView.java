@@ -20,7 +20,6 @@ import org.jutils.ui.TitleView;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
 import org.jutils.ui.fields.FileField;
-import org.jutils.ui.fields.IValidationField;
 import org.jutils.ui.model.*;
 import org.jutils.ui.model.LabelTableCellRenderer.ITableCellLabelDecorator;
 import org.jutils.ui.validation.*;

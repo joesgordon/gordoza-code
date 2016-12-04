@@ -27,7 +27,6 @@ import org.jutils.ui.*;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.DropActionType;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
-import org.jutils.ui.fields.IValidationField;
 import org.jutils.ui.model.*;
 import org.jutils.ui.model.LabelTableCellRenderer.ITableCellLabelDecorator;
 import org.jutils.ui.validation.*;

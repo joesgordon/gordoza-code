@@ -5,6 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import org.jutils.ui.event.updater.IUpdater;
+import org.jutils.ui.validation.IValidationField;
 
 /*******************************************************************************
  * 

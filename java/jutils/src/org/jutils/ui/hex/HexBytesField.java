@@ -12,6 +12,7 @@ import org.jutils.ui.fields.*;
 import org.jutils.ui.model.ItemComboBoxModel;
 import org.jutils.ui.model.LabelListCellRenderer;
 import org.jutils.ui.model.LabelListCellRenderer.IListCellLabelDecorator;
+import org.jutils.ui.validation.IValidationField;
 import org.jutils.ui.validation.ValidationView;
 
 /*******************************************************************************

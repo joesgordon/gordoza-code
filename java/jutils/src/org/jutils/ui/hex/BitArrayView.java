@@ -7,7 +7,6 @@ import javax.swing.JPanel;
 
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.fields.BitsField;
-import org.jutils.ui.fields.IValidationField;
 import org.jutils.ui.model.IDataView;
 import org.jutils.ui.validation.*;
 import org.jutils.utils.BitArray;
