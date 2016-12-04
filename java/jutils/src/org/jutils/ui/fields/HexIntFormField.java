@@ -7,7 +7,8 @@ import org.jutils.io.parsers.HexIntegerParser;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.validation.IValidationField;
 import org.jutils.ui.validation.ValidationTextView;
-import org.jutils.ui.validators.*;
+import org.jutils.ui.validators.DataTextValidator;
+import org.jutils.ui.validators.ITextValidator;
 
 /*******************************************************************************
  * Defines an {@link IFormField} that contains a double validater.
@@ -119,7 +120,7 @@ public class HexIntFormField implements IDataFormField<Integer>
      * 
      **************************************************************************/
     @Override
-    public JComponent getField()
+    public JComponent getView()
     {
         return textField.getView();
     }

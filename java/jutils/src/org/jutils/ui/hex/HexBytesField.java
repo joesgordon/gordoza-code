@@ -8,7 +8,8 @@ import java.util.*;
 import javax.swing.*;
 
 import org.jutils.ui.event.updater.IUpdater;
-import org.jutils.ui.fields.*;
+import org.jutils.ui.fields.HexBytesFormField;
+import org.jutils.ui.fields.IDataFormField;
 import org.jutils.ui.model.ItemComboBoxModel;
 import org.jutils.ui.model.LabelListCellRenderer;
 import org.jutils.ui.model.LabelListCellRenderer.IListCellLabelDecorator;
@@ -88,7 +89,7 @@ public class HexBytesField implements IDataFormField<byte []>
      * 
      **************************************************************************/
     @Override
-    public JComponent getField()
+    public JComponent getView()
     {
         return view.getView();
     }

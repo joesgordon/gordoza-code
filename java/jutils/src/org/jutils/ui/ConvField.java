@@ -1,6 +1,6 @@
 package org.jutils.ui;
 
-import javax.swing.JComponent;
+import java.awt.Component;
 
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.fields.IDataFormField;
@@ -104,9 +104,9 @@ public class ConvField<F, T> implements IDataFormField<T>
      * 
      **************************************************************************/
     @Override
-    public JComponent getField()
+    public Component getView()
     {
-        return field.getField();
+        return field.getView();
     }
 
     /***************************************************************************

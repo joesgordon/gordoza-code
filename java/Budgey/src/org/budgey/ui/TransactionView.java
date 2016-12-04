@@ -69,7 +69,7 @@ public class TransactionView implements IDataView<Transaction>
             new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets( 4, 4, 2, 2 ), 0, 0 ) );
-        panel.add( secondPartyField.getField(),
+        panel.add( secondPartyField.getView(),
             new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
                 new Insets( 2, 4, 4, 4 ), 0, 0 ) );
@@ -78,7 +78,7 @@ public class TransactionView implements IDataView<Transaction>
             new GridBagConstraints( 0, 2, 1, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets( 4, 4, 2, 2 ), 0, 0 ) );
-        panel.add( tagField.getField(),
+        panel.add( tagField.getView(),
             new GridBagConstraints( 0, 3, 1, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
                 new Insets( 2, 4, 4, 4 ), 0, 0 ) );
@@ -87,7 +87,7 @@ public class TransactionView implements IDataView<Transaction>
             new GridBagConstraints( 0, 4, 1, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets( 4, 4, 2, 2 ), 0, 0 ) );
-        panel.add( amountField.getField(),
+        panel.add( amountField.getView(),
             new GridBagConstraints( 0, 5, 1, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
                 new Insets( 2, 4, 4, 4 ), 0, 0 ) );
@@ -160,7 +160,7 @@ public class TransactionView implements IDataView<Transaction>
      **************************************************************************/
     public void requestFocus()
     {
-        secondPartyField.getField().requestFocus();
+        secondPartyField.getView().requestFocus();
     }
 
     /***************************************************************************

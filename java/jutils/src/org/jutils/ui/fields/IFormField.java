@@ -1,16 +1,13 @@
 package org.jutils.ui.fields;
 
-import javax.swing.JComponent;
+import java.awt.Component;
 
 import org.jutils.INamedItem;
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public interface IFormField extends INamedItem
+public interface IFormField extends INamedItem, IView<Component>
 {
-    /**************************************************************************
-     * @return
-     **************************************************************************/
-    public JComponent getField();
 }

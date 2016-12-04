@@ -8,7 +8,8 @@ import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.hex.HexUtils;
 import org.jutils.ui.validation.IValidationField;
 import org.jutils.ui.validation.ValidationTextView;
-import org.jutils.ui.validators.*;
+import org.jutils.ui.validators.DataTextValidator;
+import org.jutils.ui.validators.ITextValidator;
 
 /*******************************************************************************
  * Defines an {@link IFormField} that contains a double validater.
@@ -101,8 +102,8 @@ public class HexByteFormField implements IDataFormField<Byte>
 
         ITextValidator textValidator;
 
-        textValidator = new DataTextValidator<>(
-            new HexByteParser( min, max ), new ValueUpdater( this ) );
+        textValidator = new DataTextValidator<>( new HexByteParser( min, max ),
+            new ValueUpdater( this ) );
         textField.getField().setValidator( textValidator );
     }
 
@@ -119,7 +120,7 @@ public class HexByteFormField implements IDataFormField<Byte>
      * 
      **************************************************************************/
     @Override
-    public JComponent getField()
+    public JComponent getView()
     {
         return textField.getView();
     }

@@ -6,7 +6,8 @@ import org.jutils.io.parsers.DoubleParser;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.validation.IValidationField;
 import org.jutils.ui.validation.ValidationTextView;
-import org.jutils.ui.validators.*;
+import org.jutils.ui.validators.DataTextValidator;
+import org.jutils.ui.validators.ITextValidator;
 
 /*******************************************************************************
  * Defines an {@link IFormField} that contains a double validater.
@@ -96,8 +97,8 @@ public class DoubleFormField implements IDataFormField<Double>
 
         ITextValidator textValidator;
 
-        textValidator = new DataTextValidator<>(
-            new DoubleParser( min, max ), new ValueUpdater( this ) );
+        textValidator = new DataTextValidator<>( new DoubleParser( min, max ),
+            new ValueUpdater( this ) );
         textField.getField().setValidator( textValidator );
     }
 
@@ -114,7 +115,7 @@ public class DoubleFormField implements IDataFormField<Double>
      * 
      **************************************************************************/
     @Override
-    public JComponent getField()
+    public JComponent getView()
     {
         return textField.getView();
     }

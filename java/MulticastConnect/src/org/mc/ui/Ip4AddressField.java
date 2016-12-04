@@ -18,7 +18,7 @@ public class Ip4AddressField implements IDataFormField<Ip4Address>
     }
 
     @Override
-    public JComponent getField()
+    public JComponent getView()
     {
         // TODO Auto-generated method stub
         return null;

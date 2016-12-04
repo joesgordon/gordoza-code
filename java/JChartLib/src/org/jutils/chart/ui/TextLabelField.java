@@ -14,9 +14,10 @@ import org.jutils.ui.ColorButtonView;
 import org.jutils.ui.OkDialogView;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.updater.*;
-import org.jutils.ui.fields.*;
+import org.jutils.ui.fields.IDataFormField;
 import org.jutils.ui.validation.*;
-import org.jutils.ui.validators.*;
+import org.jutils.ui.validators.DataTextValidator;
+import org.jutils.ui.validators.ITextValidator;
 
 /*******************************************************************************
  * 
@@ -131,7 +132,7 @@ public class TextLabelField implements IDataFormField<TextLabel>
      * 
      **************************************************************************/
     @Override
-    public JComponent getField()
+    public JComponent getView()
     {
         return view;
     }
@@ -222,7 +223,7 @@ public class TextLabelField implements IDataFormField<TextLabel>
         public void actionPerformed( ActionEvent e )
         {
             fontView = new FontView();
-            OkDialogView okView = new OkDialogView( field.getField(),
+            OkDialogView okView = new OkDialogView( field.getView(),
                 fontView.getView(), ModalityType.DOCUMENT_MODAL );
             JDialog dialog = okView.getView();
 
@@ -231,7 +232,7 @@ public class TextLabelField implements IDataFormField<TextLabel>
 
             dialog.setTitle( "Choose Font" );
             dialog.pack();
-            dialog.setLocationRelativeTo( field.getField() );
+            dialog.setLocationRelativeTo( field.getView() );
             dialog.setVisible( true );
         }
 

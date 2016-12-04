@@ -153,7 +153,7 @@ public class StandardFormView implements IView<JPanel>
         constraints = new GridBagConstraints( fieldx, fieldy, colSpan, 1, 1.0,
             0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
             new Insets( top, left, 0, formMargin ), 0, 0 );
-        view.add( field.getField(), constraints );
+        view.add( field.getView(), constraints );
 
         refreshForm( index + 1 );
     }
@@ -193,7 +193,7 @@ public class StandardFormView implements IView<JPanel>
         {
             view.remove( info.label );
         }
-        view.remove( info.field.getField() );
+        view.remove( info.field.getView() );
 
         refreshForm( index );
     }
@@ -212,7 +212,7 @@ public class StandardFormView implements IView<JPanel>
      **************************************************************************/
     public void setVisible( IFormField f, boolean visible )
     {
-        setVisible( f.getField(), visible );
+        setVisible( f.getView(), visible );
     }
 
     /***************************************************************************
@@ -224,7 +224,7 @@ public class StandardFormView implements IView<JPanel>
         int index = indexOfField( c );
         FieldInfo info = fields.get( index );
 
-        info.field.getField().setVisible( visible );
+        info.field.getView().setVisible( visible );
         if( info.label != null )
         {
             info.label.setVisible( visible );
@@ -256,7 +256,7 @@ public class StandardFormView implements IView<JPanel>
     {
         for( int i = 0; i < fields.size(); i++ )
         {
-            if( fields.get( i ).field.getField() == c )
+            if( fields.get( i ).field.getView() == c )
             {
                 return i;
             }
@@ -284,9 +284,9 @@ public class StandardFormView implements IView<JPanel>
                 layout.setConstraints( info.label, constraints );
             }
 
-            constraints = layout.getConstraints( info.field.getField() );
+            constraints = layout.getConstraints( info.field.getView() );
             constraints.gridy = i * 2 + 1;
-            layout.setConstraints( info.field.getField(), constraints );
+            layout.setConstraints( info.field.getView(), constraints );
         }
 
         constraints = layout.getConstraints( spacer );
@@ -333,7 +333,7 @@ public class StandardFormView implements IView<JPanel>
         }
 
         @Override
-        public JComponent getField()
+        public JComponent getView()
         {
             return comp;
         }

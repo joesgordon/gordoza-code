@@ -53,7 +53,7 @@ public class ParserFormField<T> implements IDataFormField<T>
      * 
      **************************************************************************/
     @Override
-    public JComponent getField()
+    public JComponent getView()
     {
         return textField.getView();
     }

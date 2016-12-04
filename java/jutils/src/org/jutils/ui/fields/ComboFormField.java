@@ -84,7 +84,7 @@ public final class ComboFormField<T> implements IDataFormField<T>
      * 
      **************************************************************************/
     @Override
-    public JComponent getField()
+    public JComponent getView()
     {
         return field.getView();
     }

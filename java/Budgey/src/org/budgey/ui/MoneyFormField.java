@@ -53,7 +53,7 @@ public class MoneyFormField implements IDataFormField<Money>
      * 
      **************************************************************************/
     @Override
-    public JComponent getField()
+    public JComponent getView()
     {
         return field.getView();
     }

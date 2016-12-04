@@ -8,7 +8,8 @@ import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.hex.HexUtils;
 import org.jutils.ui.validation.IValidationField;
 import org.jutils.ui.validation.ValidationTextView;
-import org.jutils.ui.validators.*;
+import org.jutils.ui.validators.DataTextValidator;
+import org.jutils.ui.validators.ITextValidator;
 
 /*******************************************************************************
  * Defines an {@link IFormField} that contains a byte [] validater.
@@ -77,7 +78,7 @@ public class HexBytesFormField implements IDataFormField<byte []>
      * 
      **************************************************************************/
     @Override
-    public JComponent getField()
+    public JComponent getView()
     {
         return textField.getView();
     }

@@ -85,17 +85,17 @@ public class BitArrayView implements IDataView<BitArray>, IValidationField
         constraints = new GridBagConstraints( 0, 0, 2, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 0, 8, 0 ), 0, 0 );
-        panel.add( bitsField.getField(), constraints );
+        panel.add( bitsField.getView(), constraints );
 
         constraints = new GridBagConstraints( 0, 1, 1, 1, 0.5, 0.0,
             GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 0, 0, 8 ), 0, 0 );
-        panel.add( leftField.getField(), constraints );
+        panel.add( leftField.getView(), constraints );
 
         constraints = new GridBagConstraints( 1, 1, 1, 1, 0.5, 0.0,
             GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 0, 0, 0 ), 0, 0 );
-        panel.add( rightField.getField(), constraints );
+        panel.add( rightField.getView(), constraints );
 
         return panel;
     }

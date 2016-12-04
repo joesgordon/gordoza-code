@@ -54,7 +54,7 @@ public class UsableFormField<T>
         usedField.addActionListener( new CheckedListener<T>( this ) );
 
         panel.add( usedField, BorderLayout.WEST );
-        panel.add( field.getField(), BorderLayout.CENTER );
+        panel.add( field.getView(), BorderLayout.CENTER );
 
         return panel;
     }
@@ -66,15 +66,6 @@ public class UsableFormField<T>
     public String getName()
     {
         return field.getName();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public JComponent getField()
-    {
-        return panel;
     }
 
     /***************************************************************************
@@ -161,7 +152,7 @@ public class UsableFormField<T>
     @Override
     public JComponent getView()
     {
-        return getField();
+        return panel;
     }
 
     /***************************************************************************

@@ -70,9 +70,9 @@ public class NetworkInterfaceField implements IDataFormField<NetworkInterface>
      * 
      **************************************************************************/
     @Override
-    public JComponent getField()
+    public JComponent getView()
     {
-        return nicField.getField();
+        return nicField.getView();
     }
 
     /***************************************************************************

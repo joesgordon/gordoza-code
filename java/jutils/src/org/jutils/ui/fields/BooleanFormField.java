@@ -44,15 +44,6 @@ public class BooleanFormField
      * 
      **************************************************************************/
     @Override
-    public JComponent getField()
-    {
-        return flagField;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
     public Boolean getValue()
     {
         return flagField.isSelected();

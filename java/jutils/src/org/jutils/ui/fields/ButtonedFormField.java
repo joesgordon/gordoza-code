@@ -40,7 +40,7 @@ public class ButtonedFormField<T> implements IDataFormField<T>
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
             GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 0, 0, 6 ), 0, 0 );
-        panel.add( field.getField(), constraints );
+        panel.add( field.getView(), constraints );
 
         constraints = new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
             GridBagConstraints.WEST, GridBagConstraints.NONE,
@@ -63,7 +63,7 @@ public class ButtonedFormField<T> implements IDataFormField<T>
      * 
      **************************************************************************/
     @Override
-    public JComponent getField()
+    public JComponent getView()
     {
         return view;
     }
