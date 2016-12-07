@@ -5,7 +5,8 @@ import java.awt.*;
 import javax.swing.*;
 
 import org.jutils.ui.event.updater.IUpdater;
-import org.jutils.ui.validation.IValidationField;
+import org.jutils.ui.validation.IValidityChangedListener;
+import org.jutils.ui.validation.Validity;
 
 /*******************************************************************************
  * 
@@ -108,18 +109,34 @@ public class ButtonedFormField<T> implements IDataFormField<T>
      * 
      **************************************************************************/
     @Override
-    public IValidationField getValidationField()
+    public void setEditable( boolean editable )
     {
-        return field.getValidationField();
+        field.setEditable( editable );
+        button.setEnabled( editable );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void setEditable( boolean editable )
+    public void addValidityChanged( IValidityChangedListener l )
     {
-        field.setEditable( editable );
-        button.setEnabled( editable );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void removeValidityChanged( IValidityChangedListener l )
+    {
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Validity getValidity()
+    {
+        return new Validity();
     }
 }

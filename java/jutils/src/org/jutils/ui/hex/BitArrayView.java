@@ -57,17 +57,15 @@ public class BitArrayView implements IDataView<BitArray>, IValidationField
 
         this.updater = null;
 
-        bitsField.getValidationField().getView().setToolTipText( "Bits Text" );
-        leftField.getValidationField().getView().setToolTipText(
-            "Left Aligned Hex Text" );
-        rightField.getValidationField().getView().setToolTipText(
-            "Right Aligned Hex Text" );
+        bitsField.getView().setToolTipText( "Bits Text" );
+        leftField.getView().setToolTipText( "Left Aligned Hex Text" );
+        rightField.getView().setToolTipText( "Right Aligned Hex Text" );
 
         setData( new BitArray() );
 
-        validityManager.addField( bitsField.getValidationField() );
-        validityManager.addField( leftField.getValidationField() );
-        validityManager.addField( rightField.getValidationField() );
+        validityManager.addField( bitsField );
+        validityManager.addField( leftField );
+        validityManager.addField( rightField );
 
         bitsField.setUpdater( bitsUpdater );
         leftField.setUpdater( leftUpdater );

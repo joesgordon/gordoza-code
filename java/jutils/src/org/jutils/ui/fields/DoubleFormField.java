@@ -4,8 +4,7 @@ import javax.swing.JComponent;
 
 import org.jutils.io.parsers.DoubleParser;
 import org.jutils.ui.event.updater.IUpdater;
-import org.jutils.ui.validation.IValidationField;
-import org.jutils.ui.validation.ValidationTextView;
+import org.jutils.ui.validation.*;
 import org.jutils.ui.validators.DataTextValidator;
 import org.jutils.ui.validators.ITextValidator;
 
@@ -146,15 +145,6 @@ public class DoubleFormField implements IDataFormField<Double>
     }
 
     /***************************************************************************
-     * @return
-     **************************************************************************/
-    @Override
-    public IValidationField getValidationField()
-    {
-        return textField.getField();
-    }
-
-    /***************************************************************************
      * @param editable
      **************************************************************************/
     @Override
@@ -179,6 +169,33 @@ public class DoubleFormField implements IDataFormField<Double>
     public IUpdater<Double> getUpdater()
     {
         return updater;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void addValidityChanged( IValidityChangedListener l )
+    {
+        textField.getField().addValidityChanged( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void removeValidityChanged( IValidityChangedListener l )
+    {
+        textField.getField().removeValidityChanged( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Validity getValidity()
+    {
+        return textField.getField().getValidity();
     }
 
     /***************************************************************************

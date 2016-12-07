@@ -138,6 +138,7 @@ public class MulticastConnection implements Closeable
     /***************************************************************************
      * @throws IOException
      **************************************************************************/
+    @Override
     public void close() throws IOException
     {
         socket.leaveGroup( address );

@@ -5,8 +5,7 @@ import javax.swing.JComponent;
 import org.budgey.data.Money;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.fields.IDataFormField;
-import org.jutils.ui.validation.IValidationField;
-import org.jutils.ui.validation.ValidationTextView;
+import org.jutils.ui.validation.*;
 import org.jutils.ui.validators.DataTextValidator;
 import org.jutils.ui.validators.ITextValidator;
 
@@ -102,18 +101,36 @@ public class MoneyFormField implements IDataFormField<Money>
      * 
      **************************************************************************/
     @Override
-    public IValidationField getValidationField()
+    public void setEditable( boolean editable )
     {
-        return field.getField();
+        field.getField().setEditable( editable );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void setEditable( boolean editable )
+    public void addValidityChanged( IValidityChangedListener l )
     {
-        field.getField().setEditable( editable );
+        field.getField().addValidityChanged( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void removeValidityChanged( IValidityChangedListener l )
+    {
+        field.getField().removeValidityChanged( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Validity getValidity()
+    {
+        return field.getField().getValidity();
     }
 
     /***************************************************************************

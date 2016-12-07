@@ -547,8 +547,7 @@ public class JHexFrame implements IView<JFrame>
     private void showSearchDialog()
     {
         HexBytesFormField hexField = new HexBytesFormField( "Hex Bytes" );
-        ValidationView view = new ValidationView(
-            hexField.getValidationField() );
+        ValidationView view = new ValidationView( hexField );
         StandardFormView form = new StandardFormView( true );
 
         form.addField( hexField.getName(), view.getView() );
@@ -562,11 +561,11 @@ public class JHexFrame implements IView<JFrame>
 
         if( ans == JOptionPane.OK_OPTION )
         {
-            if( !hexField.getValidationField().getValidity().isValid )
+            if( !hexField.getValidity().isValid )
             {
                 JOptionPane.showMessageDialog( frame,
-                    hexField.getValidationField().getValidity().reason,
-                    "Invalid Hexadecimal Entry", JOptionPane.ERROR_MESSAGE );
+                    hexField.getValidity().reason, "Invalid Hexadecimal Entry",
+                    JOptionPane.ERROR_MESSAGE );
                 return;
             }
 

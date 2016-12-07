@@ -1,10 +1,11 @@
 package org.jutils.ui;
 
-import java.awt.Component;
+import javax.swing.JComponent;
 
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.fields.IDataFormField;
-import org.jutils.ui.validation.IValidationField;
+import org.jutils.ui.validation.IValidityChangedListener;
+import org.jutils.ui.validation.Validity;
 
 /*******************************************************************************
  * 
@@ -77,15 +78,6 @@ public class ConvField<F, T> implements IDataFormField<T>
      * 
      **************************************************************************/
     @Override
-    public IValidationField getValidationField()
-    {
-        return field.getValidationField();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
     public void setEditable( boolean editable )
     {
         field.setEditable( editable );
@@ -101,12 +93,39 @@ public class ConvField<F, T> implements IDataFormField<T>
     }
 
     /***************************************************************************
+     * @return
+     **************************************************************************/
+    @Override
+    public JComponent getView()
+    {
+        return field.getView();
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public Component getView()
+    public void addValidityChanged( IValidityChangedListener l )
     {
-        return field.getView();
+        field.addValidityChanged( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void removeValidityChanged( IValidityChangedListener l )
+    {
+        field.removeValidityChanged( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Validity getValidity()
+    {
+        return field.getValidity();
     }
 
     /***************************************************************************

@@ -4,12 +4,18 @@ import javax.swing.JComponent;
 
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.fields.IDataFormField;
-import org.jutils.ui.validation.IValidationField;
+import org.jutils.ui.validation.IValidityChangedListener;
+import org.jutils.ui.validation.Validity;
 import org.mc.io.Ip4Address;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class Ip4AddressField implements IDataFormField<Ip4Address>
 {
-
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public String getName()
     {
@@ -17,6 +23,9 @@ public class Ip4AddressField implements IDataFormField<Ip4Address>
         return null;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public JComponent getView()
     {
@@ -24,6 +33,9 @@ public class Ip4AddressField implements IDataFormField<Ip4Address>
         return null;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public Ip4Address getValue()
     {
@@ -31,6 +43,9 @@ public class Ip4AddressField implements IDataFormField<Ip4Address>
         return null;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void setValue( Ip4Address value )
     {
@@ -38,6 +53,9 @@ public class Ip4AddressField implements IDataFormField<Ip4Address>
 
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void setUpdater( IUpdater<Ip4Address> updater )
     {
@@ -45,6 +63,9 @@ public class Ip4AddressField implements IDataFormField<Ip4Address>
 
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public IUpdater<Ip4Address> getUpdater()
     {
@@ -52,13 +73,9 @@ public class Ip4AddressField implements IDataFormField<Ip4Address>
         return null;
     }
 
-    @Override
-    public IValidationField getValidationField()
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public void setEditable( boolean editable )
     {
@@ -66,4 +83,33 @@ public class Ip4AddressField implements IDataFormField<Ip4Address>
 
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void addValidityChanged( IValidityChangedListener l )
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void removeValidityChanged( IValidityChangedListener l )
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Validity getValidity()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

@@ -10,8 +10,7 @@ import org.jutils.ValidationException;
 import org.jutils.io.IParser;
 import org.jutils.ui.event.updater.ComboBoxUpdater;
 import org.jutils.ui.event.updater.IUpdater;
-import org.jutils.ui.validation.IValidationField;
-import org.jutils.ui.validation.ValidationComboField;
+import org.jutils.ui.validation.*;
 
 /*******************************************************************************
  * 
@@ -129,18 +128,36 @@ public final class ComboFormField<T> implements IDataFormField<T>
      * 
      **************************************************************************/
     @Override
-    public IValidationField getValidationField()
+    public void setEditable( boolean editable )
     {
-        return field;
+        field.getView().setEnabled( editable );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void setEditable( boolean editable )
+    public void addValidityChanged( IValidityChangedListener l )
     {
-        field.getView().setEnabled( editable );
+        field.addValidityChanged( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void removeValidityChanged( IValidityChangedListener l )
+    {
+        field.removeValidityChanged( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Validity getValidity()
+    {
+        return field.getValidity();
     }
 
     /***************************************************************************

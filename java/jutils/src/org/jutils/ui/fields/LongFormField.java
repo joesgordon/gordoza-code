@@ -5,8 +5,7 @@ import javax.swing.JTextField;
 
 import org.jutils.io.parsers.LongParser;
 import org.jutils.ui.event.updater.IUpdater;
-import org.jutils.ui.validation.IValidationField;
-import org.jutils.ui.validation.ValidationTextView;
+import org.jutils.ui.validation.*;
 import org.jutils.ui.validators.DataTextValidator;
 import org.jutils.ui.validators.ITextValidator;
 
@@ -167,15 +166,6 @@ public class LongFormField implements IDataFormField<Long>
     /***************************************************************************
      * @return
      **************************************************************************/
-    @Override
-    public IValidationField getValidationField()
-    {
-        return textField.getField();
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
     public JTextField getTextField()
     {
         return textField.getField().getView();
@@ -188,6 +178,33 @@ public class LongFormField implements IDataFormField<Long>
     public void setEditable( boolean editable )
     {
         textField.getField().setEditable( editable );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void addValidityChanged( IValidityChangedListener l )
+    {
+        textField.getField().addValidityChanged( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void removeValidityChanged( IValidityChangedListener l )
+    {
+        textField.getField().removeValidityChanged( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Validity getValidity()
+    {
+        return textField.getField().getValidity();
     }
 
     /***************************************************************************

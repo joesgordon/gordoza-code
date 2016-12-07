@@ -1,42 +1,69 @@
 package org.jutils.ui.fields;
 
+import java.io.File;
+
 import javax.swing.JComponent;
 
-import org.jutils.io.IParser;
+import org.jutils.io.parsers.ExistenceType;
 import org.jutils.ui.event.updater.IUpdater;
+import org.jutils.ui.event.updater.ItemActionUpdater;
 import org.jutils.ui.validation.*;
-import org.jutils.ui.validators.DataTextValidator;
-import org.jutils.ui.validators.ITextValidator;
 
 /*******************************************************************************
- * Defines an {@link IFormField} that allows the user to define an object that
- * has the provided parser.
+ * 
  ******************************************************************************/
-public class ParserFormField<T> implements IDataFormField<T>
+public class FileFormField implements IDataFormField<File>
 {
     /**  */
     private final String name;
     /**  */
-    private final ValidationTextView textField;
+    private final ValidationView view;
+    /**  */
+    private final FileField field;
 
     /**  */
-    private IUpdater<T> updater;
-    /**  */
-    private T value;
+    private IUpdater<File> updater;
 
     /***************************************************************************
      * @param name
      **************************************************************************/
-    public ParserFormField( String name, IParser<T> parser )
+    public FileFormField( String name )
+    {
+        this( name, ExistenceType.FILE_ONLY, true, false );
+    }
+
+    /***************************************************************************
+     * @param name
+     * @param existence
+     **************************************************************************/
+    public FileFormField( String name, ExistenceType existence )
+    {
+        this( name, existence, true, existence != ExistenceType.FILE_ONLY );
+    }
+
+    /***************************************************************************
+     * @param name
+     * @param existence
+     * @param required
+     **************************************************************************/
+    public FileFormField( String name, ExistenceType existence,
+        boolean required )
+    {
+        this( name, existence, required, true );
+    }
+
+    /***************************************************************************
+     * @param name
+     * @param existence
+     * @param required
+     * @param isSave
+     **************************************************************************/
+    public FileFormField( String name, ExistenceType existence,
+        boolean required, boolean isSave )
     {
         this.name = name;
-        this.textField = new ValidationTextView( null, 20 );
-
-        ITextValidator textValidator;
-        IUpdater<T> updater = ( d ) -> update( d );
-
-        textValidator = new DataTextValidator<>( parser, updater );
-        textField.getField().setValidator( textValidator );
+        this.field = new FileField( existence, required, isSave );
+        this.view = new ValidationView( field );
     }
 
     /***************************************************************************
@@ -54,45 +81,43 @@ public class ParserFormField<T> implements IDataFormField<T>
     @Override
     public JComponent getView()
     {
-        return textField.getView();
+        return view.getView();
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public T getValue()
+    public File getValue()
     {
-        return value;
+        return field.getData();
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void setValue( T value )
+    public void setValue( File value )
     {
-        this.value = value;
-
-        String text = value == null ? "" : "" + value;
-
-        textField.setText( text );
+        field.setData( value );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void setUpdater( IUpdater<T> updater )
+    public void setUpdater( IUpdater<File> updater )
     {
         this.updater = updater;
+
+        field.addChangeListener( new ItemActionUpdater<>( updater ) );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public IUpdater<T> getUpdater()
+    public IUpdater<File> getUpdater()
     {
         return updater;
     }
@@ -103,7 +128,7 @@ public class ParserFormField<T> implements IDataFormField<T>
     @Override
     public void setEditable( boolean editable )
     {
-        textField.getField().setEditable( editable );
+        field.setEditable( editable );
     }
 
     /***************************************************************************
@@ -112,7 +137,7 @@ public class ParserFormField<T> implements IDataFormField<T>
     @Override
     public void addValidityChanged( IValidityChangedListener l )
     {
-        textField.getField().addValidityChanged( l );
+        field.addValidityChanged( l );
     }
 
     /***************************************************************************
@@ -121,7 +146,7 @@ public class ParserFormField<T> implements IDataFormField<T>
     @Override
     public void removeValidityChanged( IValidityChangedListener l )
     {
-        textField.getField().removeValidityChanged( l );
+        field.removeValidityChanged( l );
     }
 
     /***************************************************************************
@@ -130,19 +155,15 @@ public class ParserFormField<T> implements IDataFormField<T>
     @Override
     public Validity getValidity()
     {
-        return textField.getField().getValidity();
+        return field.getValidity();
     }
 
     /***************************************************************************
-     * @param data
+     * @param description
+     * @param extensions
      **************************************************************************/
-    private void update( T data )
+    public void addExtension( String description, String... extensions )
     {
-        value = data;
-
-        if( updater != null )
-        {
-            updater.update( data );
-        }
+        field.addExtension( description, extensions );
     }
 }

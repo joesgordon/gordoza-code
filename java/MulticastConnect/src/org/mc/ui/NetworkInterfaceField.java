@@ -7,7 +7,8 @@ import javax.swing.JComponent;
 
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.fields.*;
-import org.jutils.ui.validation.IValidationField;
+import org.jutils.ui.validation.IValidityChangedListener;
+import org.jutils.ui.validation.Validity;
 
 /*******************************************************************************
  * 
@@ -115,18 +116,36 @@ public class NetworkInterfaceField implements IDataFormField<NetworkInterface>
      * 
      **************************************************************************/
     @Override
-    public IValidationField getValidationField()
+    public void setEditable( boolean editable )
     {
-        return nicField.getValidationField();
+        nicField.setEditable( editable );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void setEditable( boolean editable )
+    public void addValidityChanged( IValidityChangedListener l )
     {
-        nicField.setEditable( editable );
+        nicField.addValidityChanged( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void removeValidityChanged( IValidityChangedListener l )
+    {
+        nicField.removeValidityChanged( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Validity getValidity()
+    {
+        return nicField.getValidity();
     }
 
     /***************************************************************************

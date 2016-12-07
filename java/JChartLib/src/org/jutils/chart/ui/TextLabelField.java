@@ -191,18 +191,36 @@ public class TextLabelField implements IDataFormField<TextLabel>
      * 
      **************************************************************************/
     @Override
-    public IValidationField getValidationField()
+    public void setEditable( boolean editable )
     {
-        return textField;
+        textField.setEditable( editable );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void setEditable( boolean editable )
+    public void addValidityChanged( IValidityChangedListener l )
     {
-        textField.setEditable( editable );
+        textField.addValidityChanged( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void removeValidityChanged( IValidityChangedListener l )
+    {
+        textField.removeValidityChanged( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Validity getValidity()
+    {
+        return textField.getValidity();
     }
 
     /***************************************************************************

@@ -6,32 +6,32 @@ import org.jutils.ui.validation.IValidationField;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public interface IDataFormField<T> extends IFormField
+public interface IDataFormField<D> extends IFormField, IValidationField
 {
     /***************************************************************************
      * @return
      **************************************************************************/
-    public T getValue();
+    public D getValue();
 
     /***************************************************************************
      * @param value
      **************************************************************************/
-    public void setValue( T value );
+    public void setValue( D value );
 
     /***************************************************************************
      * @param updater
      **************************************************************************/
-    public void setUpdater( IUpdater<T> updater );
+    public void setUpdater( IUpdater<D> updater );
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    public IUpdater<T> getUpdater();
+    public IUpdater<D> getUpdater();
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    public IValidationField getValidationField();
+    // public IValidationField getValidationField();
 
     /***************************************************************************
      * @param editable

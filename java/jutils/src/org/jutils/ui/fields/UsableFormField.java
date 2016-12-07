@@ -121,15 +121,6 @@ public class UsableFormField<T>
      * 
      **************************************************************************/
     @Override
-    public IValidationField getValidationField()
-    {
-        return this;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
     public void setEditable( boolean editable )
     {
         field.setEditable( editable );
@@ -161,7 +152,7 @@ public class UsableFormField<T>
     @Override
     public void addValidityChanged( IValidityChangedListener l )
     {
-        field.getValidationField().addValidityChanged( l );
+        field.addValidityChanged( l );
     }
 
     /***************************************************************************
@@ -170,7 +161,7 @@ public class UsableFormField<T>
     @Override
     public void removeValidityChanged( IValidityChangedListener l )
     {
-        field.getValidationField().removeValidityChanged( l );
+        field.removeValidityChanged( l );
     }
 
     /***************************************************************************
@@ -179,8 +170,7 @@ public class UsableFormField<T>
     @Override
     public Validity getValidity()
     {
-        return usedField.isSelected() ? field.getValidationField().getValidity()
-            : new Validity();
+        return usedField.isSelected() ? field.getValidity() : new Validity();
     }
 
     /***************************************************************************

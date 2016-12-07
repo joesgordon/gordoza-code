@@ -13,8 +13,7 @@ import org.jutils.ui.fields.IDataFormField;
 import org.jutils.ui.model.ItemComboBoxModel;
 import org.jutils.ui.model.LabelListCellRenderer;
 import org.jutils.ui.model.LabelListCellRenderer.IListCellLabelDecorator;
-import org.jutils.ui.validation.IValidationField;
-import org.jutils.ui.validation.ValidationView;
+import org.jutils.ui.validation.*;
 
 /*******************************************************************************
  * 
@@ -43,8 +42,7 @@ public class HexBytesField implements IDataFormField<byte []>
     {
         this.comboField = new JComboBox<>( createModel( quickList ) );
         this.bytesField = new HexBytesFormField( "" );
-        this.view = new ValidationView( getValidationField(), null,
-            comboField );
+        this.view = new ValidationView( this, null, comboField );
 
         comboField.setRenderer(
             new LabelListCellRenderer( new HexBytesCellDecorator() ) );
@@ -136,18 +134,36 @@ public class HexBytesField implements IDataFormField<byte []>
      * 
      **************************************************************************/
     @Override
-    public IValidationField getValidationField()
+    public void setEditable( boolean editable )
     {
-        return bytesField.getValidationField();
+        bytesField.setEditable( editable );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void setEditable( boolean editable )
+    public void addValidityChanged( IValidityChangedListener l )
     {
-        bytesField.setEditable( editable );
+        bytesField.addValidityChanged( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void removeValidityChanged( IValidityChangedListener l )
+    {
+        bytesField.removeValidityChanged( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Validity getValidity()
+    {
+        return bytesField.getValidity();
     }
 
     /***************************************************************************

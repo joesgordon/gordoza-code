@@ -5,13 +5,13 @@ import javax.swing.JComponent;
 
 import org.jutils.ui.event.updater.CheckBoxUpdater;
 import org.jutils.ui.event.updater.IUpdater;
-import org.jutils.ui.validation.*;
+import org.jutils.ui.validation.IValidityChangedListener;
+import org.jutils.ui.validation.Validity;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class BooleanFormField
-    implements IDataFormField<Boolean>, IValidationField
+public class BooleanFormField implements IDataFormField<Boolean>
 {
     /**  */
     private final String name;
@@ -81,15 +81,6 @@ public class BooleanFormField
     public IUpdater<Boolean> getUpdater()
     {
         return cbUpdater == null ? null : cbUpdater.updater;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public IValidationField getValidationField()
-    {
-        return this;
     }
 
     /***************************************************************************

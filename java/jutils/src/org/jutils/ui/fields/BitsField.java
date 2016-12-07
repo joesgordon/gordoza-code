@@ -4,8 +4,7 @@ import javax.swing.JComponent;
 
 import org.jutils.io.parsers.BinaryParser;
 import org.jutils.ui.event.updater.IUpdater;
-import org.jutils.ui.validation.IValidationField;
-import org.jutils.ui.validation.ValidationTextView;
+import org.jutils.ui.validation.*;
 import org.jutils.ui.validators.DataTextValidator;
 import org.jutils.ui.validators.ITextValidator;
 import org.jutils.utils.BitArray;
@@ -25,6 +24,9 @@ public class BitsField implements IDataFormField<BitArray>
     /**  */
     private IUpdater<BitArray> updater;
 
+    /***************************************************************************
+     * @param name
+     **************************************************************************/
     public BitsField( String name )
     {
         this.name = name;
@@ -101,18 +103,36 @@ public class BitsField implements IDataFormField<BitArray>
      * 
      **************************************************************************/
     @Override
-    public IValidationField getValidationField()
+    public void setEditable( boolean editable )
     {
-        return textField.getField();
+        textField.getField().setEditable( editable );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void setEditable( boolean editable )
+    public void addValidityChanged( IValidityChangedListener l )
     {
-        textField.getField().setEditable( editable );
+        textField.getField().addValidityChanged( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void removeValidityChanged( IValidityChangedListener l )
+    {
+        textField.getField().removeValidityChanged( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public Validity getValidity()
+    {
+        return textField.getField().getValidity();
     }
 
     /***************************************************************************
