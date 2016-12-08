@@ -112,6 +112,14 @@ public class ValidationView implements IView<JPanel>
     }
 
     /***************************************************************************
+     * @param editable
+     **************************************************************************/
+    public void setEditable( boolean editable )
+    {
+        setErrorFieldVisible( editable && !field.getValidity().isValid );
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     @Override

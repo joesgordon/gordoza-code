@@ -49,6 +49,15 @@ public class ValidationTextView implements IView<JPanel>
     }
 
     /***************************************************************************
+     * @param editable
+     **************************************************************************/
+    public void setEditable( boolean editable )
+    {
+        view.setEditable( editable );
+        field.setEditable( editable );
+    }
+
+    /***************************************************************************
      * @param text
      **************************************************************************/
     public void setText( String text )

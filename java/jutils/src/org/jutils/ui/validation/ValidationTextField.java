@@ -103,14 +103,14 @@ public final class ValidationTextField implements IValidationField
                 v = new Validity( ex.getMessage() );
             }
 
-            setComponentValid( v.isValid );
-
             // LogUtils.printDebug(
             // ">>> Validating text \"%s\", old validity: %s, new validity: %s",
             // field.getText(), listenerList.getValidity(), v );
             // Utils.printStackTrace();
 
             listenerList.signalValidity( v );
+
+            setComponentValid( v.isValid );
         }
     }
 
@@ -122,15 +122,21 @@ public final class ValidationTextField implements IValidationField
         field.setBackground( null );
         field.setEditable( editable );
 
+        // LogUtils.printDebug(
+        // ">>> setting editable - text: \"%s\", editable: %b, validity: %s",
+        // getText(), editable, getValidity() );
+
         if( editable )
         {
+
             setComponentValid( getValidity().isValid );
         }
         else
         {
             setComponentValid( true );
-            listenerList.signalValidity();
         }
+
+        // listenerList.signalValidity( listenerList.getValidity() );
     }
 
     /***************************************************************************

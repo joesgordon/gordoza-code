@@ -118,7 +118,7 @@ public class StringFormField implements IDataFormField<String>
     @Override
     public void setEditable( boolean editable )
     {
-        textField.getField().setEditable( editable );
+        textField.setEditable( editable );
     }
 
     /***************************************************************************

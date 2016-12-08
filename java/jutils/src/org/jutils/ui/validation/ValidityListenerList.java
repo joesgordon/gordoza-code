@@ -4,18 +4,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 /*******************************************************************************
- * 
+ * Provides a notification list for {@link IValidityChangedListener}s.
  ******************************************************************************/
 public class ValidityListenerList
 {
-    /**  */
+    /** The notification list to be signalled. */
     private final List<IValidityChangedListener> validityChangedListeners;
 
     /** The last evaluated validity; {@code true} by default. */
     private Validity validity;
 
     /***************************************************************************
-     * 
+     * Creates a new empty notification list and an invalid validity state.
      **************************************************************************/
     public ValidityListenerList()
     {
@@ -25,7 +25,8 @@ public class ValidityListenerList
     }
 
     /***************************************************************************
-     * @param vcl
+     * Adds the provided listener.
+     * @param vcl the listener to be added.
      **************************************************************************/
     public void addListener( IValidityChangedListener vcl )
     {
@@ -33,7 +34,8 @@ public class ValidityListenerList
     }
 
     /***************************************************************************
-     * @param vcl
+     * Removes the provided listener
+     * @param vcl the listener to be removed.
      **************************************************************************/
     public void removeListener( IValidityChangedListener vcl )
     {
@@ -41,8 +43,7 @@ public class ValidityListenerList
     }
 
     /***************************************************************************
-     * Updates the last known validity and calls listeners if it changed.
-     * @param newValidity the latest validity.
+     * Signals all listeners that the item is valid.
      **************************************************************************/
     public void signalValidity()
     {
@@ -50,7 +51,8 @@ public class ValidityListenerList
     }
 
     /***************************************************************************
-     * @param reason
+     * Signals all listeners that the items is invalid with the provided reason.
+     * @param reason the explanation as to why the item is invalid.
      **************************************************************************/
     public void signalValidity( String reason )
     {
@@ -58,10 +60,13 @@ public class ValidityListenerList
     }
 
     /***************************************************************************
-     * @param validity
+     * Signals all listeners with the provided validity.
+     * @param validity defines whether the item is valid or not.
      **************************************************************************/
     public void signalValidity( Validity validity )
     {
+        this.validity = validity;
+
         for( IValidityChangedListener vcl : validityChangedListeners )
         {
             vcl.signalValidity( validity );
@@ -69,7 +74,7 @@ public class ValidityListenerList
     }
 
     /***************************************************************************
-     * @return
+     * Returns the current validity state.
      **************************************************************************/
     public Validity getValidity()
     {
