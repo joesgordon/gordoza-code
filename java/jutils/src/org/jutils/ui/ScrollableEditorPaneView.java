@@ -53,6 +53,11 @@ public class ScrollableEditorPaneView implements IView<JTextPane>
         return pane;
     }
 
+    public String getText()
+    {
+        return pane.getText();
+    }
+
     public void setContentType( String type )
     {
         pane.setContentType( type );

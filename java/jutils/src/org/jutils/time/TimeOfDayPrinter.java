@@ -25,6 +25,8 @@ public class TimeOfDayPrinter
         buffer[8] = '.';
     }
 
+    // TODO write instance function that uses buffer
+
     /***************************************************************************
      * @param microseconds
      * @return

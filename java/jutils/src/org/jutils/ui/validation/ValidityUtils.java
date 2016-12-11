@@ -1,44 +1,47 @@
 package org.jutils.ui.validation;
 
+import javax.swing.Action;
+import javax.swing.JButton;
+
+import org.jutils.SwingUtils;
+
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class Validity
+public final class ValidityUtils
 {
-    /**  */
-    public final boolean isValid;
-    /**  */
-    public final String reason;
-
     /***************************************************************************
      * 
      **************************************************************************/
-    public Validity()
+    private ValidityUtils()
     {
-        this.isValid = true;
-        this.reason = "";
     }
 
     /***************************************************************************
-     * @param reason
+     * @param a
+     * @param v
+     * @param validTip
      **************************************************************************/
-    public Validity( String reason )
+    public static void setActionValidity( Action a, Validity v,
+        String validTip )
     {
-        this.isValid = false;
-        this.reason = reason;
+        String tip = v.choose( validTip, v.reason );
+
+        a.setEnabled( v.isValid );
+        SwingUtils.setActionToolTip( a, tip );
     }
 
     /***************************************************************************
-     * 
+     * @param a
+     * @param v
+     * @param validTip
      **************************************************************************/
-    @Override
-    public String toString()
+    public static void setButtonValidity( JButton b, Validity v,
+        String validTip )
     {
-        return isValid + " - " + reason;
-    }
+        String tip = v.choose( validTip, v.reason );
 
-    public <C> C choose( C validChoice, C invalidChoice )
-    {
-        return isValid ? validChoice : invalidChoice;
+        b.setEnabled( v.isValid );
+        b.setToolTipText( tip );
     }
 }

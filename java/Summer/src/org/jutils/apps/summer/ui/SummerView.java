@@ -214,15 +214,12 @@ public class SummerView implements IView<JFrame>
         }
 
         @Override
-        public void signalValidity( Validity validity )
+        public void signalValidity( Validity v )
         {
             if( view.tabField.getSelectedIndex() == index )
             {
-                String tooltip = validity.isValid ? "Create Checksums"
-                    : validity.reason;
-                view.createAction.setEnabled( validity.isValid );
-
-                SwingUtils.setActionToolTip( view.createAction, tooltip );
+                ValidityUtils.setActionValidity( view.createAction, v,
+                    "Create Checksums" );
 
                 // LogUtils.printDebug( "Validity @ index[%d]: %s", index,
                 // validity.toString() );

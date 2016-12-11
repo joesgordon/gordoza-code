@@ -15,4 +15,21 @@ public class NamedItemDescriptor<T extends INamedItem> implements IDescriptor<T>
     {
         return item == null ? "" : item.getName();
     }
+
+    /***************************************************************************
+     * @param items
+     * @return
+     **************************************************************************/
+    public String [] getDescriptions( T [] items )
+    {
+        String [] strs = new String[items.length];
+
+        int i = 0;
+        for( T item : items )
+        {
+            strs[i++] = item == null ? "" : item.getName();
+        }
+
+        return strs;
+    }
 }

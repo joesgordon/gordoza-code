@@ -129,12 +129,9 @@ public class ValidationTestApp implements IFrameApp
         }
 
         @Override
-        public void signalValidity( Validity validity )
+        public void signalValidity( Validity v )
         {
-            String tooltip = validity.isValid ? null : validity.reason;
-
-            button.setToolTipText( tooltip );
-            button.setEnabled( validity.isValid );
+            ValidityUtils.setButtonValidity( button, v, "Input Valid" );
         }
     }
 
