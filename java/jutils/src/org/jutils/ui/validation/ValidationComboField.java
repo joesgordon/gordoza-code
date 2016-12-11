@@ -177,6 +177,22 @@ public final class ValidationComboField<T> implements IValidationField
     }
 
     /***************************************************************************
+     * @param editor
+     **************************************************************************/
+    public void setEditor( ComboBoxEditor editor )
+    {
+        field.setEditor( editor );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public int getSelectedIndex()
+    {
+        return field.getSelectedIndex();
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     private static class ItemChangedListener<T> implements IUpdater<T>

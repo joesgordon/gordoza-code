@@ -42,7 +42,7 @@ public class HexBytesField implements IDataFormField<byte []>
     {
         this.comboField = new JComboBox<>( createModel( quickList ) );
         this.bytesField = new HexBytesFormField( "" );
-        this.view = new ValidationView( this, null, comboField );
+        this.view = new ValidationView( bytesField, null, comboField );
 
         comboField.setRenderer(
             new LabelListCellRenderer( new HexBytesCellDecorator() ) );
@@ -61,6 +61,10 @@ public class HexBytesField implements IDataFormField<byte []>
         comboField.setPreferredSize( dim );
     }
 
+    /***************************************************************************
+     * @param quickList
+     * @return
+     **************************************************************************/
     private static ItemComboBoxModel<HexBytesItem> createModel(
         List<byte []> quickList )
     {
@@ -98,8 +102,8 @@ public class HexBytesField implements IDataFormField<byte []>
     @Override
     public byte [] getValue()
     {
-        int index = comboField.getSelectedIndex();
-        return index < 0 ? null : comboField.getItemAt( index ).bytes;
+        HexBytesItem item = ( HexBytesItem )comboField.getSelectedItem();
+        return item == null ? new byte[] {} : item.bytes;
     }
 
     /***************************************************************************

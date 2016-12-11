@@ -3,8 +3,7 @@ package org.jutils.ui.fields;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.JComponent;
-import javax.swing.ListCellRenderer;
+import javax.swing.*;
 
 import org.jutils.ValidationException;
 import org.jutils.io.IParser;
@@ -169,6 +168,14 @@ public final class ComboFormField<T> implements IDataFormField<T>
     }
 
     /***************************************************************************
+     * @param editor
+     **************************************************************************/
+    public void setEditor( ComboBoxEditor editor )
+    {
+        field.setEditor( editor );
+    }
+
+    /***************************************************************************
      * @param items
      **************************************************************************/
     public void setValues( List<T> items )
@@ -237,5 +244,13 @@ public final class ComboFormField<T> implements IDataFormField<T>
 
             return item;
         }
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public int getSelectedIndex()
+    {
+        return field.getSelectedIndex();
     }
 }
