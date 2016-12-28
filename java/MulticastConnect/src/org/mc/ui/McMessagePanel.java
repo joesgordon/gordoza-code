@@ -5,6 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import org.mc.McMessage;
+import org.mc.io.TimeDescriptor;
 
 /*******************************************************************************
  * 
@@ -30,18 +31,22 @@ public class McMessagePanel implements ListCellRenderer<McMessage>
     /**  */
     private final Color altBgColor;
 
+    /**  */
+    private final TimeDescriptor timeDesc;
+
     /***************************************************************************
      * 
      **************************************************************************/
     public McMessagePanel()
     {
         this.view = new JPanel( new GridBagLayout() );
-        timeLabel = new JLabel( "Date/Time:" );
-        timeField = new JLabel();
-        addressLabel = new JLabel( "Address:" );
-        addressField = new JLabel();
-        contentsField = new JTextArea();
-        altBgColor = new Color( 0xeeeeee );
+        this.timeLabel = new JLabel( "Date/Time:" );
+        this.timeField = new JLabel();
+        this.addressLabel = new JLabel( "Address:" );
+        this.addressField = new JLabel();
+        this.contentsField = new JTextArea();
+        this.altBgColor = new Color( 0xeeeeee );
+        this.timeDesc = new TimeDescriptor();
 
         contentsField.setBorder( null );
         contentsField.setOpaque( false );
@@ -112,10 +117,9 @@ public class McMessagePanel implements ListCellRenderer<McMessage>
      **************************************************************************/
     public void setMessage( McMessage msg )
     {
-        String selfStr = msg.selfMessage ? "(Self) " : "";
-        addressField.setText( selfStr + msg.address );
+        addressField.setText( msg.address );
         contentsField.setText(
             new String( msg.contents, 0, msg.contents.length - 1 ) );
-        timeField.setText( msg.getDateTime() );
+        timeField.setText( timeDesc.getDescription( msg.time ) );
     }
 }

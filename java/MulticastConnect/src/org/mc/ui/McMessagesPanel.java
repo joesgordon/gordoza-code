@@ -93,17 +93,7 @@ public class McMessagesPanel implements IView<JPanel>
 
         for( McMessage msg : allMessages )
         {
-            if( hide )
-            {
-                if( !msg.selfMessage )
-                {
-                    msgModel.addElement( msg );
-                }
-            }
-            else
-            {
-                msgModel.addElement( msg );
-            }
+            msgModel.addElement( msg );
         }
     }
 

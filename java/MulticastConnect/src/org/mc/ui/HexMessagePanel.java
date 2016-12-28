@@ -1,6 +1,7 @@
 package org.mc.ui;
 
 import java.awt.*;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import javax.swing.*;
@@ -11,6 +12,7 @@ import org.jutils.ui.hex.ByteBuffer;
 import org.jutils.ui.hex.HexTable;
 import org.jutils.ui.model.IView;
 import org.mc.McMessage;
+import org.mc.io.TimeDescriptor;
 
 /*******************************************************************************
  * 
@@ -37,6 +39,9 @@ public class HexMessagePanel
     /**  */
     private final Color altBgColor;
 
+    /**  */
+    private final TimeDescriptor timeDesc;
+
     /***************************************************************************
      * 
      **************************************************************************/
@@ -49,6 +54,7 @@ public class HexMessagePanel
         this.addressField = new JLabel();
         this.contentsField = new HexTable();
         this.altBgColor = new Color( 0xeeeeee );
+        this.timeDesc = new TimeDescriptor();
 
         view.setLayout( new GridBagLayout() );
 
@@ -117,14 +123,13 @@ public class HexMessagePanel
 
     public void setMessage( McMessage msg )
     {
-        String selfStr = msg.selfMessage ? "(Self) " : "";
         byte[] bytes = msg.contents;
         int len = bytes.length > 0x20 ? 0x20 : bytes.length;
         bytes = Arrays.copyOf( msg.contents, len );
 
-        addressField.setText( selfStr + msg.address );
+        addressField.setText( msg.address );
         contentsField.setBuffer( new ByteBuffer( bytes ) );
-        timeField.setText( msg.getDateTime() );
+        timeField.setText( timeDesc.getDescription( msg.time ) );
     }
 
     public static void main( String[] args )
@@ -137,33 +142,33 @@ public class HexMessagePanel
     {
         return view;
     }
-}
 
-class HexMessageApp implements IFrameApp
-{
-    @Override
-    public JFrame createFrame()
+    private static final class HexMessageApp implements IFrameApp
     {
-        JFrame frame = new JFrame();
+        @Override
+        public JFrame createFrame()
+        {
+            JFrame frame = new JFrame();
 
-        HexMessagePanel panel = new HexMessagePanel();
+            HexMessagePanel panel = new HexMessagePanel();
 
-        frame.setContentPane( panel.getView() );
+            frame.setContentPane( panel.getView() );
 
-        frame.setSize( 600, 200 );
-        frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+            frame.setSize( 600, 200 );
+            frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 
-        McMessage msg = new McMessage();
+            byte[] contents = "So long and thanks f".getBytes(
+                Charset.forName( "US-ASCII" ) );
+            McMessage msg = new McMessage( "fdfdsfsd", 1234, contents );
 
-        msg.contents = "So long and thanks f".getBytes();
+            panel.setMessage( msg );
 
-        panel.setMessage( msg );
+            return frame;
+        }
 
-        return frame;
-    }
-
-    @Override
-    public void finalizeGui()
-    {
+        @Override
+        public void finalizeGui()
+        {
+        }
     }
 }

@@ -3,7 +3,7 @@ package org.mc.io;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.*;
-import java.util.*;
+import java.util.Arrays;
 
 import org.mc.McMessage;
 
@@ -22,8 +22,6 @@ public class MulticastConnection implements Closeable
     private final byte[] rxBuffer;
     /**  */
     private final DatagramPacket rxPacket;
-    /**  */
-    private final List<InterfaceAddress> localHosts;
 
     /***************************************************************************
      * @param group
@@ -32,68 +30,58 @@ public class MulticastConnection implements Closeable
      * @param msgLength
      * @throws IOException
      **************************************************************************/
-    public MulticastConnection( String group, int port, int ttl,
-        NetworkInterface nic ) throws IOException
+    public MulticastConnection( MulticastSocketDef socket ) throws IOException
     {
-        if( port < 1 || port > 65535 )
+        if( socket.port < 1 || socket.port > 65535 )
         {
-            throw new IOException( "Invalid port: " + port );
-        }
-        if( ttl < 0 || ttl > 255 )
-        {
-            throw new IOException( "Invalid Time to Live: " + ttl );
+            throw new IOException( "Invalid port: " + socket.port );
         }
 
-        address = InetAddress.getByName( group );
-        rxBuffer = new byte[65535];
-        socket = new MulticastSocket( port );
-        rxPacket = new DatagramPacket( rxBuffer, rxBuffer.length, address,
-            port );
-        this.port = port;
+        if( socket.ttl < 0 || socket.ttl > 255 )
+        {
+            throw new IOException( "Invalid Time to Live: " + socket.ttl );
+        }
 
-        socket.setTimeToLive( ttl );
-        socket.joinGroup( address );
-        socket.setSoTimeout( 1000 );
+        this.address = socket.address.getInetAddress();
+        this.rxBuffer = new byte[65535];
+        this.socket = new MulticastSocket( socket.port );
+        this.rxPacket = new DatagramPacket( rxBuffer, rxBuffer.length, address,
+            socket.port );
+        this.port = socket.port;
+
+        this.socket.setReuseAddress( true );
+        this.socket.setTimeToLive( socket.ttl );
+        this.socket.joinGroup( address );
+        this.socket.setSoTimeout( 1000 );
+
+        NetworkInterface nic = socket.getSystemNic();
 
         if( nic != null )
         {
-            socket.setNetworkInterface( nic );
+            this.socket.setNetworkInterface( nic );
         }
-        else
-        {
-            nic = socket.getNetworkInterface();
-        }
-
-        if( nic == null )
-        {
-            throw new IOException(
-                "No NIC configured for " + group + ":" + port );
-        }
-
-        this.localHosts = nic.getInterfaceAddresses();
+        // else
+        // {
+        // InetAddress ina = this.socket.getInterface();
+        //
+        // nic = NetworkInterface.getByName( ina.getHostName() );
+        //
+        // if( nic == null )
+        // {
+        // throw new IOException( "No NIC configured for " +
+        // socket.address.toString() + ":" + port );
+        // }
+        // }
     }
 
     /***************************************************************************
      * @param msg
      * @param buffer
      **************************************************************************/
-    private void fillMessage( McMessage msg, byte[] buffer,
-        DatagramPacket packet )
+    private McMessage fillMessage( byte[] buffer, DatagramPacket packet )
     {
-        msg.time = GregorianCalendar.getInstance().getTimeInMillis();
-        msg.contents = buffer;
-        msg.address = packet.getAddress().getHostAddress();
-        msg.port = port;
-        msg.selfMessage = false;
-
-        InetAddress pa = packet.getAddress();
-        for( InterfaceAddress ia : localHosts )
-        {
-            if( ia.getAddress().equals( pa ) )
-            {
-                msg.selfMessage = true;
-            }
-        }
+        return new McMessage( packet.getAddress().getHostAddress(), port,
+            buffer );
     }
 
     /***************************************************************************
@@ -103,8 +91,6 @@ public class MulticastConnection implements Closeable
      **************************************************************************/
     public McMessage txMessage( byte[] buf ) throws IOException
     {
-        McMessage msg = new McMessage();
-
         // LogUtils.printDebug( "Sending message..." );
 
         DatagramPacket pack = new DatagramPacket( buf, buf.length, address,
@@ -112,7 +98,7 @@ public class MulticastConnection implements Closeable
 
         socket.send( pack );
 
-        fillMessage( msg, buf, pack );
+        McMessage msg = fillMessage( buf, pack );
 
         return msg;
     }
@@ -123,14 +109,13 @@ public class MulticastConnection implements Closeable
      **************************************************************************/
     public McMessage rxMessage() throws IOException
     {
-        McMessage msg = new McMessage();
-
         // LogUtils.printDebug( "Receiving message..." );
 
         socket.receive( rxPacket );
 
-        fillMessage( msg, Arrays.copyOf( rxBuffer, rxPacket.getLength() ),
-            rxPacket );
+        byte[] contents = Arrays.copyOf( rxBuffer, rxPacket.getLength() );
+
+        McMessage msg = fillMessage( contents, rxPacket );
 
         return msg;
     }

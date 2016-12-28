@@ -13,10 +13,12 @@ import org.jutils.ui.validation.Validity;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class NetworkInterfaceField implements IDataFormField<NetworkInterface>
+public class NetworkInterfaceField implements IDataFormField<String>
 {
     /**  */
     private final ComboFormField<NetworkInterface> nicField;
+    /**  */
+    private final NicUpdater updater;
 
     /***************************************************************************
      * @param name
@@ -25,6 +27,10 @@ public class NetworkInterfaceField implements IDataFormField<NetworkInterface>
     {
         this.nicField = new ComboFormField<>( name, buildNicList(),
             new NicDescriptor() );
+
+        this.updater = new NicUpdater();
+
+        nicField.setUpdater( updater );
     }
 
     /***************************************************************************
@@ -80,36 +86,52 @@ public class NetworkInterfaceField implements IDataFormField<NetworkInterface>
      * 
      **************************************************************************/
     @Override
-    public NetworkInterface getValue()
+    public String getValue()
     {
-        return nicField.getValue();
+        NetworkInterface nic = nicField.getValue();
+        return nic == null ? null : nic.getName();
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void setValue( NetworkInterface value )
+    public void setValue( String value )
     {
-        nicField.setValue( value );
+
+        NetworkInterface nic = null;
+
+        if( value != null )
+        {
+            try
+            {
+                nic = NetworkInterface.getByName( value );
+            }
+            catch( SocketException ex )
+            {
+                nic = null;
+            }
+        }
+
+        nicField.setValue( nic );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void setUpdater( IUpdater<NetworkInterface> updater )
+    public void setUpdater( IUpdater<String> updater )
     {
-        nicField.setUpdater( updater );
+        this.updater.setUpdater( updater );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public IUpdater<NetworkInterface> getUpdater()
+    public IUpdater<String> getUpdater()
     {
-        return nicField.getUpdater();
+        return updater.getUpdater();
     }
 
     /***************************************************************************
@@ -162,6 +184,33 @@ public class NetworkInterfaceField implements IDataFormField<NetworkInterface>
             }
 
             return nic.getDisplayName();
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private final static class NicUpdater implements IUpdater<NetworkInterface>
+    {
+        private IUpdater<String> updater;
+
+        @Override
+        public void update( NetworkInterface data )
+        {
+            if( updater != null )
+            {
+                updater.update( data.getName() );
+            }
+        }
+
+        public IUpdater<String> getUpdater()
+        {
+            return updater;
+        }
+
+        public void setUpdater( IUpdater<String> updater )
+        {
+            this.updater = updater;
         }
     }
 }

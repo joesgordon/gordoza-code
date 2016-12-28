@@ -1,7 +1,6 @@
 package org.mc;
 
-import java.text.SimpleDateFormat;
-import java.util.GregorianCalendar;
+import org.jutils.time.TimeUtils;
 
 /*******************************************************************************
  * 
@@ -9,42 +8,30 @@ import java.util.GregorianCalendar;
 public class McMessage
 {
     /**  */
-    public boolean selfMessage;
-
+    public final String address;
     /**  */
-    public byte[] contents;
-
-    /**  */
-    public String address;
-
-    /**  */
-    public int port;
-
+    public final int port;
     /** Time in millis */
-    public long time;
-
+    public final long time;
     /**  */
-    private GregorianCalendar calendar;
-
-    /**  */
-    private SimpleDateFormat dateFormat;
+    public final byte[] contents;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public McMessage()
+    public McMessage( String address, int port, byte[] contents )
     {
-        calendar = new GregorianCalendar();
-        dateFormat = new SimpleDateFormat( "yyyy.MM.dd HH:mm:ss z" );
+        this( address, port, TimeUtils.now(), contents );
     }
 
     /***************************************************************************
-     * @return
+     * 
      **************************************************************************/
-    public String getDateTime()
+    public McMessage( String address, int port, long time, byte[] contents )
     {
-        calendar.setTimeInMillis( time );
-
-        return dateFormat.format( calendar.getTime() );
+        this.address = address;
+        this.port = port;
+        this.time = time;
+        this.contents = contents;
     }
 }

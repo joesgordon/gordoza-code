@@ -1,8 +1,6 @@
 package chatterbox.ui;
 
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -10,8 +8,6 @@ import javax.swing.event.DocumentListener;
 
 public class GrowingTextPane extends JTextPane
 {
-    private static final long serialVersionUID = 1L;
-
     public GrowingTextPane()
     {
         super();
@@ -45,14 +41,7 @@ public class GrowingTextPane extends JTextPane
 
             private void revalidateWindowLater()
             {
-                Timer timer = new Timer( 50, new ActionListener()
-                {
-                    @Override
-                    public void actionPerformed( ActionEvent e )
-                    {
-                        revalidateWindow();
-                    }
-                } );
+                Timer timer = new Timer( 50, ( e ) -> revalidateWindow() );
 
                 timer.setRepeats( false );
                 timer.start();

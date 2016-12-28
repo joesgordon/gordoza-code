@@ -1,6 +1,8 @@
 package org.jutils.ui.fields;
 
 import javax.swing.JComponent;
+import javax.swing.JTextField;
+import javax.swing.text.JTextComponent;
 
 import org.jutils.io.IParser;
 import org.jutils.ui.event.updater.IUpdater;
@@ -17,7 +19,9 @@ public class ParserFormField<T> implements IDataFormField<T>
     /**  */
     private final String name;
     /**  */
-    private final ValidationTextView textField;
+    private final ValidationTextComponentField<JTextComponent> textField;
+    /**  */
+    private final ValidationView view;
 
     /**  */
     private IUpdater<T> updater;
@@ -26,17 +30,30 @@ public class ParserFormField<T> implements IDataFormField<T>
 
     /***************************************************************************
      * @param name
+     * @param parser
      **************************************************************************/
     public ParserFormField( String name, IParser<T> parser )
     {
+        this( name, parser, new JTextField( 20 ) );
+    }
+
+    /***************************************************************************
+     * @param name
+     * @param parser
+     * @param comp
+     **************************************************************************/
+    public ParserFormField( String name, IParser<T> parser,
+        JTextComponent comp )
+    {
         this.name = name;
-        this.textField = new ValidationTextView( null, 20 );
+        this.textField = new ValidationTextComponentField<>( comp );
+        this.view = new ValidationView( textField );
 
         ITextValidator textValidator;
         IUpdater<T> updater = ( d ) -> update( d );
 
         textValidator = new DataTextValidator<>( parser, updater );
-        textField.getField().setValidator( textValidator );
+        textField.setValidator( textValidator );
     }
 
     /***************************************************************************
@@ -54,7 +71,7 @@ public class ParserFormField<T> implements IDataFormField<T>
     @Override
     public JComponent getView()
     {
-        return textField.getView();
+        return view.getView();
     }
 
     /***************************************************************************
@@ -103,7 +120,7 @@ public class ParserFormField<T> implements IDataFormField<T>
     @Override
     public void setEditable( boolean editable )
     {
-        textField.getField().setEditable( editable );
+        textField.setEditable( editable );
     }
 
     /***************************************************************************
@@ -112,7 +129,7 @@ public class ParserFormField<T> implements IDataFormField<T>
     @Override
     public void addValidityChanged( IValidityChangedListener l )
     {
-        textField.getField().addValidityChanged( l );
+        textField.addValidityChanged( l );
     }
 
     /***************************************************************************
@@ -121,7 +138,7 @@ public class ParserFormField<T> implements IDataFormField<T>
     @Override
     public void removeValidityChanged( IValidityChangedListener l )
     {
-        textField.getField().removeValidityChanged( l );
+        textField.removeValidityChanged( l );
     }
 
     /***************************************************************************
@@ -130,7 +147,7 @@ public class ParserFormField<T> implements IDataFormField<T>
     @Override
     public Validity getValidity()
     {
-        return textField.getField().getValidity();
+        return textField.getValidity();
     }
 
     /***************************************************************************

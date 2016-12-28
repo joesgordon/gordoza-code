@@ -3,7 +3,6 @@ package org.mc.ui;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
-import java.net.NetworkInterface;
 import java.util.Arrays;
 
 import javax.swing.*;
@@ -13,6 +12,7 @@ import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.model.IView;
 import org.mc.*;
 import org.mc.io.MulticastConnection;
+import org.mc.io.MulticastSocketDef;
 
 /*******************************************************************************
  * 
@@ -72,21 +72,17 @@ public class McFrame implements IView<JFrame>
             new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 new Insets( 6, 6, 6, 6 ), 0, 0 ) );
-        mainPanel.add( new MulticastSocketDefView().getView(),
-            new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                new Insets( 6, 6, 6, 6 ), 0, 0 ) );
         mainPanel.add( messagesPanel.getView(),
-            new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
+            new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 new Insets( 0, 6, 6, 6 ), 0, 0 ) );
         mainPanel.add( inputPanel.getView(),
-            new GridBagConstraints( 0, 3, 1, 1, 1.0, 0.0,
+            new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 new Insets( 0, 6, 6, 6 ), 0, 0 ) );
 
         frameView.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-        frameView.setSize( 500, 500 );
+        frameView.setSize( 500, 700 );
         frameView.setTitle( "MulticastConnect" );
         frameView.setContent( mainPanel );
 
@@ -169,13 +165,9 @@ public class McFrame implements IView<JFrame>
         {
             if( bound )
             {
-                String addressString = confPanel.getAddress();
-                int port = confPanel.getPort();
-                int ttl = confPanel.getTTL();
-                NetworkInterface nic = confPanel.getNic();
+                MulticastSocketDef socket = confPanel.getSocket();
 
-                commModel = new MulticastConnection( addressString, port, ttl,
-                    nic );
+                commModel = new MulticastConnection( socket );
                 receiver = new McRxThread( this, commModel );
                 rxThread = new Stoppable( receiver );
                 Thread thread = new Thread( rxThread );

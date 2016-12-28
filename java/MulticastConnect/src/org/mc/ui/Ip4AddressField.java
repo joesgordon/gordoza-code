@@ -1,26 +1,53 @@
 package org.mc.ui;
 
 import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 
+import org.jutils.io.IParser;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.fields.IDataFormField;
+import org.jutils.ui.fields.ParserFormField;
+import org.jutils.ui.model.ParserTextFormatter;
 import org.jutils.ui.validation.IValidityChangedListener;
 import org.jutils.ui.validation.Validity;
 import org.mc.io.Ip4Address;
+import org.mc.io.parsers.Ip4AddressParser;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
 public class Ip4AddressField implements IDataFormField<Ip4Address>
 {
+    /**  */
+    private final IDataFormField<Ip4Address> field;
+
+    /***************************************************************************
+     * @param name
+     **************************************************************************/
+    public Ip4AddressField( String name )
+    {
+        this( name, new Ip4AddressParser() );
+    }
+
+    /***************************************************************************
+     * @param name
+     * @param parser
+     **************************************************************************/
+    public Ip4AddressField( String name, IParser<Ip4Address> parser )
+    {
+        JFormattedTextField textField = new JFormattedTextField(
+            new ParserTextFormatter<>( parser ) );
+
+        this.field = new ParserFormField<>( name, parser, textField );
+    }
+
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
     public String getName()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return field.getName();
     }
 
     /***************************************************************************
@@ -29,8 +56,7 @@ public class Ip4AddressField implements IDataFormField<Ip4Address>
     @Override
     public JComponent getView()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return field.getView();
     }
 
     /***************************************************************************
@@ -39,8 +65,7 @@ public class Ip4AddressField implements IDataFormField<Ip4Address>
     @Override
     public Ip4Address getValue()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return field.getValue();
     }
 
     /***************************************************************************
@@ -49,8 +74,7 @@ public class Ip4AddressField implements IDataFormField<Ip4Address>
     @Override
     public void setValue( Ip4Address value )
     {
-        // TODO Auto-generated method stub
-
+        field.setValue( value );
     }
 
     /***************************************************************************
@@ -59,8 +83,7 @@ public class Ip4AddressField implements IDataFormField<Ip4Address>
     @Override
     public void setUpdater( IUpdater<Ip4Address> updater )
     {
-        // TODO Auto-generated method stub
-
+        field.setUpdater( updater );
     }
 
     /***************************************************************************
@@ -69,8 +92,7 @@ public class Ip4AddressField implements IDataFormField<Ip4Address>
     @Override
     public IUpdater<Ip4Address> getUpdater()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return field.getUpdater();
     }
 
     /***************************************************************************
@@ -79,8 +101,7 @@ public class Ip4AddressField implements IDataFormField<Ip4Address>
     @Override
     public void setEditable( boolean editable )
     {
-        // TODO Auto-generated method stub
-
+        field.setEditable( editable );
     }
 
     /***************************************************************************
@@ -89,8 +110,7 @@ public class Ip4AddressField implements IDataFormField<Ip4Address>
     @Override
     public void addValidityChanged( IValidityChangedListener l )
     {
-        // TODO Auto-generated method stub
-
+        field.addValidityChanged( l );
     }
 
     /***************************************************************************
@@ -99,8 +119,7 @@ public class Ip4AddressField implements IDataFormField<Ip4Address>
     @Override
     public void removeValidityChanged( IValidityChangedListener l )
     {
-        // TODO Auto-generated method stub
-
+        field.removeValidityChanged( l );
     }
 
     /***************************************************************************
@@ -109,7 +128,6 @@ public class Ip4AddressField implements IDataFormField<Ip4Address>
     @Override
     public Validity getValidity()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return field.getValidity();
     }
 }
