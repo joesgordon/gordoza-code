@@ -191,6 +191,8 @@ public class HexPanel implements IView<JComponent>
     private static class HexRowListModel extends AbstractListModel<String>
     {
         /**  */
+        private static final long serialVersionUID = -5271777526267037957L;
+        /**  */
         private long startingAddress;
         /**  */
         private int rowCount;

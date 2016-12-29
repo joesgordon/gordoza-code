@@ -221,6 +221,8 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
     private static class RowListModel extends AbstractListModel<String>
     {
         /**  */
+        private static final long serialVersionUID = -7144290320125729828L;
+        /**  */
         private final SpreadSheetView view;
         /**  */
         private int rowCount;

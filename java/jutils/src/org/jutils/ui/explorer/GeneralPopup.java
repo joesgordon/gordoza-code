@@ -1,57 +1,48 @@
 package org.jutils.ui.explorer;
 
-import java.awt.Component;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
-import javax.swing.*;
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  *
  ******************************************************************************/
-public class GeneralPopup extends JPopupMenu
+public class GeneralPopup implements IView<JPopupMenu>
 {
     /**  */
-    private ExplorerTable table = null;
-
+    private final JPopupMenu menu;
     /**  */
-    private JMenuItem copyItem = new JMenuItem();
-
+    private final JMenuItem copyItem;
     /**  */
-    private JMenuItem pasteItem = new JMenuItem();
-
+    private final JMenuItem pasteItem;
     /**  */
-    private JMenu newMenu = new JMenu();
-
+    private final JMenuItem newFolderItem;
     /**  */
-    private JMenuItem newFolderItem = new JMenuItem();
-
-    /**  */
-    private JMenuItem newFileItem = new JMenuItem();
+    private final JMenuItem newFileItem;
 
     /**
      * @param table
      */
-    public GeneralPopup( ExplorerTable table )
+    public GeneralPopup()
     {
-        super();
-        this.table = table;
+        this.menu = new JPopupMenu();
 
-        copyItem.setText( "Copy" );
-        pasteItem.setText( "Paste" );
-        newMenu.setText( "New" );
-        newFolderItem.setText( "Folder" );
-        newFileItem.setText( "File" );
+        copyItem = new JMenuItem( "Copy" );
+        pasteItem = new JMenuItem( "Paste" );
+        newFolderItem = new JMenuItem( "Folder" );
+        newFileItem = new JMenuItem( "File" );
 
-        // super.show( new JLabel(), 0, 0 );
-        super.show( this.table.getView(), 0, 0 );
+        menu.add( copyItem );
+        menu.add( pasteItem );
+        menu.addSeparator();
+        menu.add( newFolderItem );
+        menu.add( newFileItem );
     }
 
-    /**
-     * 
-     */
     @Override
-    public void show( Component comp, int x, int y )
+    public JPopupMenu getView()
     {
-        // File file = table.getSelectedFile();
-        super.show( comp, x, y );
+        return menu;
     }
 }

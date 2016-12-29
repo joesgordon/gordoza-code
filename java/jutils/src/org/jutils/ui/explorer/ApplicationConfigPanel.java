@@ -4,7 +4,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
-public class ProgramPanel extends JPanel
+public class ApplicationConfigPanel extends JPanel
 {
     private JLabel nameLabel = new JLabel();
 
@@ -16,7 +16,7 @@ public class ProgramPanel extends JPanel
 
     private JScrollPane argScrollPane = new JScrollPane( argArea );
 
-    public ProgramPanel()
+    public ApplicationConfigPanel()
     {
         this.setLayout( new GridBagLayout() );
 

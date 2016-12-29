@@ -9,6 +9,9 @@ import javax.swing.table.TableModel;
  ******************************************************************************/
 public class HexTableModel extends AbstractTableModel
 {
+    /**  */
+    private static final long serialVersionUID = 3798740609336860057L;
+
     /** The buffer to be displayed */
     private IByteBuffer buffer;
     /**  */
