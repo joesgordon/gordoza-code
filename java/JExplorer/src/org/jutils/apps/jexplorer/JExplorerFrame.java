@@ -14,6 +14,7 @@ import org.jutils.io.FileComparator;
 import org.jutils.ui.*;
 import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.explorer.*;
+import org.jutils.ui.explorer.data.AppManagerConfig;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
@@ -433,9 +434,8 @@ public class JExplorerFrame implements IView<JFrame>
 
     public void showOptions()
     {
-        FileConfigurationDialog dialog = FileConfigurationDialog.showDialog(
-            getView() );
-        dialog.getClass();
+        AppManagerConfig config = AppManagerView.showDialog( getView() );
+        config.getClass();
     }
 
     private void doAddress()

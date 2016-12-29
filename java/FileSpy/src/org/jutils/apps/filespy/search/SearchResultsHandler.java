@@ -7,7 +7,7 @@ import javax.swing.SwingUtilities;
 import org.jutils.apps.filespy.data.SearchRecord;
 import org.jutils.apps.filespy.ui.SearchView;
 import org.jutils.ui.StatusBarPanel;
-import org.jutils.ui.explorer.ExplorerItem;
+import org.jutils.ui.explorer.IExplorerItem;
 
 /*******************************************************************************
  *
@@ -42,7 +42,7 @@ public class SearchResultsHandler
     /***************************************************************************
      * @param list List
      **************************************************************************/
-    public void addFiles( List<? extends ExplorerItem> list )
+    public void addFiles( List<? extends IExplorerItem> list )
     {
         SwingUtilities.invokeLater( new UiFilesAdder( searchPanel, list ) );
     }
@@ -91,10 +91,10 @@ public class SearchResultsHandler
     {
         private final SearchView searchPanel;
 
-        private final List<? extends ExplorerItem> list;
+        private final List<? extends IExplorerItem> list;
 
         public UiFilesAdder( SearchView panel,
-            List<? extends ExplorerItem> list )
+            List<? extends IExplorerItem> list )
         {
             this.searchPanel = panel;
             this.list = list;

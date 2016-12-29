@@ -162,6 +162,15 @@ public class ItemListView<T> implements IDataView<List<T>>
     }
 
     /***************************************************************************
+     * @param enabled
+     **************************************************************************/
+    public void setEnabled( boolean enabled )
+    {
+        itemsView.setSelected( null );
+        itemsView.setEnabled( enabled );
+    }
+
+    /***************************************************************************
      * @param evt
      **************************************************************************/
     private void itemSelected( ItemActionEvent<T> evt )

@@ -6,12 +6,12 @@ import java.util.*;
 
 import javax.swing.filechooser.FileSystemView;
 
-import org.jutils.ui.explorer.ExplorerItem;
+import org.jutils.ui.explorer.IExplorerItem;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class SearchRecord implements ExplorerItem
+public class SearchRecord implements IExplorerItem
 {
     /**  */
     private static final FileSystemView FILE_SYSTEM_VIEW = FileSystemView.getFileSystemView();

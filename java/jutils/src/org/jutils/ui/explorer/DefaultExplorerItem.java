@@ -6,7 +6,7 @@ import java.util.Date;
 
 import javax.swing.filechooser.FileSystemView;
 
-public class DefaultExplorerItem implements ExplorerItem
+public class DefaultExplorerItem implements IExplorerItem
 {
     /**  */
     public static final FileSystemView FILE_SYSTEM_VIEW = FileSystemView.getFileSystemView();

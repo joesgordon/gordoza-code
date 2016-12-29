@@ -6,7 +6,7 @@ import java.util.List;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class FileAppConfiguration
+public class AppManagerConfig
 {
     /**  */
     public boolean useCustom;
@@ -19,7 +19,7 @@ public class FileAppConfiguration
     /***************************************************************************
      * 
      **************************************************************************/
-    public FileAppConfiguration()
+    public AppManagerConfig()
     {
         useCustom = true;
         exts = new ArrayList<>();

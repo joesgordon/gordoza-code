@@ -92,7 +92,7 @@ public class ExplorerTable implements IView<JTable>
     /***************************************************************************
      * @param files File[]
      **************************************************************************/
-    public void addFiles( List<? extends ExplorerItem> files )
+    public void addFiles( List<? extends IExplorerItem> files )
     {
         model.addFiles( files );
     }
@@ -108,7 +108,7 @@ public class ExplorerTable implements IView<JTable>
         if( row > -1 && row < model.getRowCount() )
         {
             row = table.convertRowIndexToModel( row );
-            ExplorerItem item = model.getExplorerItem( row );
+            IExplorerItem item = model.getExplorerItem( row );
             file = item.getFile();
         }
 
@@ -118,9 +118,9 @@ public class ExplorerTable implements IView<JTable>
     /***************************************************************************
      * @return ExplorerItem
      **************************************************************************/
-    public ExplorerItem getSelectedItem()
+    public IExplorerItem getSelectedItem()
     {
-        ExplorerItem item = null;
+        IExplorerItem item = null;
         int row = table.getSelectedRow();
 
         if( row > -1 && row < model.getRowCount() )
@@ -175,9 +175,9 @@ public class ExplorerTable implements IView<JTable>
             renderer.getTableCellRendererComponent( table, value, isSelected,
                 hasFocus, row, column );
 
-            if( value instanceof ExplorerItem )
+            if( value instanceof IExplorerItem )
             {
-                File file = ( ( ExplorerItem )value ).getFile();
+                File file = ( ( IExplorerItem )value ).getFile();
                 if( file != null && file.exists() )
                 {
                     Icon icon = view.getSystemIcon( file );

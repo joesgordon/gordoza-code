@@ -19,7 +19,7 @@ public class ExplorerTableModel extends AbstractTableModel
         "Size (kB)", "Type", "Modified" };
 
     /**  */
-    private List<ExplorerItem> contents = new ArrayList<ExplorerItem>( 1024 );
+    private List<IExplorerItem> contents = new ArrayList<IExplorerItem>( 1024 );
 
     /***************************************************************************
      * 
@@ -79,9 +79,9 @@ public class ExplorerTableModel extends AbstractTableModel
      * @param rowIndex
      * @return
      **************************************************************************/
-    public ExplorerItem getExplorerItem( int rowIndex )
+    public IExplorerItem getExplorerItem( int rowIndex )
     {
-        ExplorerItem item = null;
+        IExplorerItem item = null;
 
         if( rowIndex > -1 && rowIndex < contents.size() )
         {
@@ -99,7 +99,7 @@ public class ExplorerTableModel extends AbstractTableModel
     @Override
     public Object getValueAt( int rowIndex, int columnIndex )
     {
-        ExplorerItem item = contents.get( rowIndex );
+        IExplorerItem item = contents.get( rowIndex );
         Object value = null;
 
         switch( columnIndex )
@@ -146,7 +146,7 @@ public class ExplorerTableModel extends AbstractTableModel
     /***************************************************************************
      * @param files List
      **************************************************************************/
-    public void addFiles( List<? extends ExplorerItem> files )
+    public void addFiles( List<? extends IExplorerItem> files )
     {
         int start = contents.size();
         int end = 0;
@@ -179,7 +179,7 @@ public class ExplorerTableModel extends AbstractTableModel
     /***************************************************************************
      * @param file File
      **************************************************************************/
-    public void addFile( ExplorerItem item )
+    public void addFile( IExplorerItem item )
     {
         insertFile( contents.size(), item );
     }
@@ -188,7 +188,7 @@ public class ExplorerTableModel extends AbstractTableModel
      * @param row integer
      * @param file File
      **************************************************************************/
-    public void insertFile( int row, ExplorerItem item )
+    public void insertFile( int row, IExplorerItem item )
     {
         contents.add( row, item );
         fireTableRowsInserted( row, row );

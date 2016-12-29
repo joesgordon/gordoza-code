@@ -34,9 +34,15 @@ public class ListView<T> implements IDataView<List<T>>
     private final IItemListModel<T> itemsModel;
 
     /**  */
-    private final JButton upButton;
+    private final Action addAction;
     /**  */
-    private final JButton downButton;
+    private final Action removeAction;
+    /**  */
+    private final Action upAction;
+    /**  */
+    private final Action downAction;
+    /**  */
+    private final JToolBar toolbar;
 
     /**  */
     private final ItemActionList<T> selectedListeners;
@@ -50,14 +56,29 @@ public class ListView<T> implements IDataView<List<T>>
      **************************************************************************/
     public ListView( IItemListModel<T> itemsModel )
     {
+        this( itemsModel, true, true );
+    }
+
+    /***************************************************************************
+     * @param itemsModel
+     * @param canAddRemove
+     * @param canOrder
+     **************************************************************************/
+    public ListView( IItemListModel<T> itemsModel, boolean canAddRemove,
+        boolean canOrder )
+    {
         this.itemsModel = itemsModel;
 
         this.itemsListModel = new CollectionListModel<>();
         this.itemsList = new JList<>( itemsListModel );
         this.itemsPane = new JScrollPane( itemsList );
         this.items = new ArrayList<>();
-        this.upButton = new JButton();
-        this.downButton = new JButton();
+        this.addAction = canAddRemove ? createAddAction() : null;
+        this.removeAction = canAddRemove ? createRemoveAction() : null;
+        this.upAction = canOrder ? createUpAction() : null;
+        this.downAction = canOrder ? createDownAction() : null;
+
+        this.toolbar = createButtonsPanel();
 
         this.selectedListeners = new ItemActionList<>();
 
@@ -75,7 +96,7 @@ public class ListView<T> implements IDataView<List<T>>
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets( 0, 0, 0, 0 ), 0, 0 );
-        panel.add( createButtonsPanel(), constraints );
+        panel.add( toolbar, constraints );
 
         // itemsPane.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
 
@@ -93,11 +114,67 @@ public class ListView<T> implements IDataView<List<T>>
     }
 
     /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createAddAction()
+    {
+        Icon icon = IconConstants.getIcon( IconConstants.EDIT_ADD_16 );
+        ActionListener listener = new AddItemListener<T>( this );
+        return new ActionAdapter( listener, "Add", icon );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createRemoveAction()
+    {
+        Icon icon = IconConstants.getIcon( IconConstants.EDIT_DELETE_16 );
+        ActionListener listener = new DeleteItemListener( this );
+        return new ActionAdapter( listener, "Delete", icon );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createUpAction()
+    {
+        Icon icon = IconConstants.getIcon( IconConstants.UP_16 );
+        ActionListener listener = new MoveUpListener<T>( this );
+        return new ActionAdapter( listener, "Move Up", icon );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createDownAction()
+    {
+        Icon icon = IconConstants.getIcon( IconConstants.DOWN_16 );
+        ActionListener listener = new MoveDownListener<T>( this );
+        return new ActionAdapter( listener, "Move Down", icon );
+    }
+
+    /***************************************************************************
      * @param l
      **************************************************************************/
     public void addSelectedListener( ItemActionListener<T> l )
     {
         selectedListeners.addListener( l );
+    }
+
+    /***************************************************************************
+     * @param button
+     **************************************************************************/
+    public void addToToolbar( JButton button )
+    {
+        toolbar.add( button );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public void addSeparatorToToolbar()
+    {
+        toolbar.addSeparator();
     }
 
     /***************************************************************************
@@ -115,59 +192,24 @@ public class ListView<T> implements IDataView<List<T>>
     }
 
     /***************************************************************************
-     * @param visible
-     **************************************************************************/
-    public void setOrderButtonsVisible( boolean visible )
-    {
-        upButton.setVisible( visible );
-        downButton.setVisible( visible );
-    }
-
-    /***************************************************************************
      * Creates the component that provides add/remove buttons.
      **************************************************************************/
-    private Component createButtonsPanel()
+    private JToolBar createButtonsPanel()
     {
         JToolBar toolbar = new JToolBar();
-        Icon icon;
-        ActionListener listener;
-        Action action;
 
         SwingUtils.setToolbarDefaults( toolbar );
 
-        // ---------------------------------------------------------------------
-        // Create and add "add" button.
-        // ---------------------------------------------------------------------
-        icon = IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 );
-        listener = new AddItemListener<T>( this );
-        action = new ActionAdapter( listener, "Add", icon );
-        SwingUtils.addActionToToolbar( toolbar, action );
+        SwingUtils.addActionToToolbar( toolbar, addAction );
+        SwingUtils.addActionToToolbar( toolbar, removeAction );
 
-        // ---------------------------------------------------------------------
-        // Create and add "delete" button.
-        // ---------------------------------------------------------------------
-        icon = IconConstants.loader.getIcon( IconConstants.EDIT_DELETE_16 );
-        listener = new DeleteItemListener( this );
-        action = new ActionAdapter( listener, "Delete", icon );
-        SwingUtils.addActionToToolbar( toolbar, action );
+        if( toolbar.getComponentCount() > 0 )
+        {
+            toolbar.addSeparator();
+        }
 
-        toolbar.addSeparator();
-
-        // ---------------------------------------------------------------------
-        // Create and add "up" button.
-        // ---------------------------------------------------------------------
-        icon = IconConstants.loader.getIcon( IconConstants.UP_16 );
-        listener = new MoveUpListener<T>( this );
-        action = new ActionAdapter( listener, "Move Up", icon );
-        SwingUtils.addActionToToolbar( toolbar, action, upButton );
-
-        // ---------------------------------------------------------------------
-        // Create and add "down" button.
-        // ---------------------------------------------------------------------
-        icon = IconConstants.loader.getIcon( IconConstants.DOWN_16 );
-        listener = new MoveDownListener<T>( this );
-        action = new ActionAdapter( listener, "Move Down", icon );
-        SwingUtils.addActionToToolbar( toolbar, action, downButton );
+        SwingUtils.addActionToToolbar( toolbar, upAction );
+        SwingUtils.addActionToToolbar( toolbar, downAction );
 
         return toolbar;
     }
@@ -309,6 +351,33 @@ public class ListView<T> implements IDataView<List<T>>
     public void clear()
     {
         itemsListModel.clear();
+    }
+
+    /***************************************************************************
+     * @param enabled
+     **************************************************************************/
+    public void setEnabled( boolean enabled )
+    {
+        itemsList.setEnabled( enabled );
+        addAction.setEnabled( enabled );
+        removeAction.setEnabled( enabled );
+        upAction.setEnabled( enabled );
+        downAction.setEnabled( enabled );
+    }
+
+    /***************************************************************************
+     * @param item
+     **************************************************************************/
+    public void setSelected( T item )
+    {
+        if( item != null )
+        {
+            itemsList.setSelectedValue( item, false );
+        }
+        else
+        {
+            itemsList.clearSelection();
+        }
     }
 
     /***************************************************************************

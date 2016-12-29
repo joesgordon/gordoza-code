@@ -1,80 +1,50 @@
-package org.jutils.ui.explorer.data;
+package org.jutils.ui.explorer;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ExtensionConfig implements Comparable<Object>
+public interface IExplorerItem
 {
-    /**  */
-    public String ext;
-    /** A short description of the file type */
-    public String description;
-    /**  */
-    public final List<String> apps;
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public File getFile();
 
     /***************************************************************************
-     * 
+     * @return
      **************************************************************************/
-    public ExtensionConfig()
-    {
-        this.ext = "";
-        this.description = "";
-        this.apps = new ArrayList<>();
-    }
+    public String getFilename();
 
     /***************************************************************************
-     * @param ext
-     * @param description
+     * @return
      **************************************************************************/
-    public ExtensionConfig( String ext, String description )
-    {
-        this();
-
-        this.ext = ext;
-        this.description = description;
-    }
+    public String getSystemName();
 
     /***************************************************************************
-     * 
+     * @return
      **************************************************************************/
-    @Override
-    public String toString()
-    {
-        return ext;
-    }
+    public String getParentPath();
 
     /***************************************************************************
-     * 
+     * @return
      **************************************************************************/
-    @Override
-    public int compareTo( Object obj )
-    {
-        return ext.compareToIgnoreCase( obj.toString() );
-    }
+    public long getSizeInKb();
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public String getType();
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public String getLastModified();
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public int hashCode()
-    {
-        return ext.hashCode();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public boolean equals( Object obj )
-    {
-        if( obj != null )
-        {
-            return ext.equalsIgnoreCase( obj.toString() );
-        }
-
-        return false;
-    }
+    public String toString();
 }

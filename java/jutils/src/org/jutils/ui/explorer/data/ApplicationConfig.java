@@ -24,6 +24,13 @@ public class ApplicationConfig implements Comparable<Object>
         this.args = "";
     }
 
+    public ApplicationConfig( String name, File path, String args )
+    {
+        this.name = name;
+        this.path = path;
+        this.args = args;
+    }
+
     /***************************************************************************
      * 
      **************************************************************************/

@@ -17,7 +17,7 @@ import org.jutils.io.XStreamUtils;
 import org.jutils.io.options.OptionsSerializer;
 import org.jutils.licensing.LicenseDialog;
 import org.jutils.ui.*;
-import org.jutils.ui.explorer.FileConfigurationDialog;
+import org.jutils.ui.explorer.AppManagerView;
 import org.jutils.ui.model.IView;
 
 import com.jgoodies.looks.Options;
@@ -367,7 +367,7 @@ public class FileSpyFrameView implements IView<JFrame>
      **************************************************************************/
     private void showFileConfig()
     {
-        FileConfigurationDialog.showDialog( frame );
+        AppManagerView.showDialog( frame );
     }
 
     /***************************************************************************

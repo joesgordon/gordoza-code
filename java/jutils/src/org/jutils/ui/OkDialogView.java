@@ -271,6 +271,15 @@ public class OkDialogView implements IView<JDialog>
     }
 
     /***************************************************************************
+     * @param width
+     * @param height
+     **************************************************************************/
+    public void setSize( int width, int height )
+    {
+        dialog.setSize( width, height );
+    }
+
+    /***************************************************************************
      * Creates the content pane for this dialog.
      * @param content the user content to be displayed.
      **************************************************************************/

@@ -770,7 +770,7 @@ public class SearchView implements IDataView<SearchParams>
     /***************************************************************************
      * @param records List
      **************************************************************************/
-    public void addRecords( java.util.List<? extends ExplorerItem> records )
+    public void addRecords( java.util.List<? extends IExplorerItem> records )
     {
         resultsTableModel.addFiles( records );
     }

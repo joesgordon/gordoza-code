@@ -35,6 +35,16 @@ public class StringFormField implements IDataFormField<String>
 
     /***************************************************************************
      * @param name
+     * @param minLen
+     * @param maxLen
+     **************************************************************************/
+    public StringFormField( String name, Integer minLen, Integer maxLen )
+    {
+        this( name, 20, minLen, maxLen );
+    }
+
+    /***************************************************************************
+     * @param name
      * @param columns
      **************************************************************************/
     public StringFormField( String name, int columns, Integer minLen,

@@ -1,7 +1,6 @@
 package org.jutils.ui.fields;
 
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
 
 import org.jutils.ui.event.updater.CheckBoxUpdater;
 import org.jutils.ui.event.updater.IUpdater;
@@ -121,7 +120,7 @@ public class BooleanFormField implements IDataFormField<Boolean>
      * 
      **************************************************************************/
     @Override
-    public JComponent getView()
+    public JCheckBox getView()
     {
         return flagField;
     }
