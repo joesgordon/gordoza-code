@@ -29,9 +29,9 @@ public class DirectoryTree implements IView<JTree>
     /**  */
     private final JTree tree;
     /**  */
-    private final DefaultMutableTreeNode root;
+    private final FileTreeNode root;
     /**  */
-    private final DefaultTreeModel treeModel;
+    private final FileTreeModel treeModel;
     /**  */
     private final ItemActionList<List<File>> selectedListeners;
     /**  */
@@ -42,7 +42,7 @@ public class DirectoryTree implements IView<JTree>
      **************************************************************************/
     public DirectoryTree()
     {
-        this( FILE_SYSTEM.getRoots() );
+        this( new FileTreeNode() );
     }
 
     /***************************************************************************
@@ -50,27 +50,19 @@ public class DirectoryTree implements IView<JTree>
      **************************************************************************/
     public DirectoryTree( File rootFile )
     {
-        this( new File[] { rootFile } );
+        this( new FileTreeNode( null, rootFile ) );
     }
 
     /***************************************************************************
      * @param rootFiles File[]
      **************************************************************************/
-    public DirectoryTree( File [] rootFiles )
+    private DirectoryTree( FileTreeNode root )
     {
-        this.root = new DefaultMutableTreeNode();
-        this.treeModel = new DefaultTreeModel( root );
+        this.root = root;
+        this.treeModel = new FileTreeModel( root );
         this.tree = new JTree( treeModel );
         this.selectedListeners = new ItemActionList<>();
         this.localSelectedListener = new SelectionListener( this );
-
-        if( rootFiles != null )
-        {
-            for( int i = 0; i < rootFiles.length; i++ )
-            {
-                addFile( rootFiles[i], root );
-            }
-        }
 
         // super.putClientProperty( "JTree.lineStyle", "None" );
 
@@ -80,6 +72,8 @@ public class DirectoryTree implements IView<JTree>
         tree.expandPath( new TreePath( root ) );
         tree.setCellRenderer( new Renderer() );
         tree.addTreeWillExpandListener( new ExpansionListener() );
+
+        tree.setModel( new DefaultTreeModel( root ) );
 
         tree.setDropTarget(
             new FileDropTarget( new FileDroppedListener( this ) ) );
@@ -119,19 +113,32 @@ public class DirectoryTree implements IView<JTree>
     public File [] getSelected()
     {
         TreePath [] paths = tree.getSelectionPaths();
+
         if( paths == null )
         {
-            return new File[0];
+            return new File[] {};
         }
-        File [] files = new File[paths.length];
+
+        List<File> files = new ArrayList<>( paths.length );
 
         for( int i = 0; i < paths.length; i++ )
         {
-            DirectoryNode node = ( DirectoryNode )paths[i].getLastPathComponent();
-            files[i] = node.getDirectory();
+            Object lpc = paths[i].getLastPathComponent();
+
+            if( lpc instanceof FileTreeNode )
+            {
+                FileTreeNode node = ( FileTreeNode )lpc;
+
+                files.add( node.file );
+            }
+            else
+            {
+                LogUtils.printDebug( "Node not a DirNode: " + lpc.toString() +
+                    " of class " + lpc.getClass().getName() );
+            }
         }
 
-        return files;
+        return files.toArray( new File[] {} );
     }
 
     /***************************************************************************
@@ -197,10 +204,9 @@ public class DirectoryTree implements IView<JTree>
             for( TreePath path : paths )
             {
                 Object lastComp = path.getLastPathComponent();
-                DirectoryNode node = ( DirectoryNode )lastComp;
+                FileTreeNode node = ( FileTreeNode )lastComp;
 
-                node.removeAllChildren();
-                expandDirectoryPath( path );
+                node.loadChildren();
                 treeModel.reload( node );
             }
         }
@@ -246,7 +252,7 @@ public class DirectoryTree implements IView<JTree>
     {
         TreePath path = null;
         File [] filesPath = getParentage( dir );
-        MutableTreeNode dmtr = root;
+        FileTreeNode dmtr = root;
 
         // LogUtils.printDebug( "Dir: " + dir.getAbsolutePath() );
         // for( int i = 0; i < filesPath.length; i++ )
@@ -258,7 +264,7 @@ public class DirectoryTree implements IView<JTree>
         {
             tree.expandPath( SwingUtils.getPath( dmtr ) );
 
-            DirectoryNode node = getNodeWithFile( dmtr, filesPath[i] );
+            FileTreeNode node = getNodeWithFile( dmtr, filesPath[i] );
 
             if( node == null )
             {
@@ -320,8 +326,7 @@ public class DirectoryTree implements IView<JTree>
      * @param dir
      * @return
      **************************************************************************/
-    private static DirectoryNode getNodeWithFile( MutableTreeNode node,
-        File dir )
+    private static FileTreeNode getNodeWithFile( FileTreeNode node, File dir )
     {
         if( dir == null )
         {
@@ -330,8 +335,8 @@ public class DirectoryTree implements IView<JTree>
 
         for( int i = 0; i < node.getChildCount(); i++ )
         {
-            DirectoryNode fn = ( DirectoryNode )node.getChildAt( i );
-            File file = fn.getDirectory();
+            FileTreeNode fn = node.getChildAt( i );
+            File file = ( File )fn.file;
 
             if( file.equals( dir ) )
             {
@@ -358,58 +363,247 @@ public class DirectoryTree implements IView<JTree>
     }
 
     /***************************************************************************
-     * @param f File
-     * @param node DefaultMutableTreeNode
-     * @param recurse boolean
-     **************************************************************************/
-    private static void addFile( File f, MutableTreeNode node )
-    {
-        DirectoryNode newNode = new DirectoryNode( f );
-        node.insert( newNode, node.getChildCount() );
-
-        // LogUtils.printDebug( "DEBUG: Adding directory: " + newNode );
-    }
-
-    /***************************************************************************
-     * @param node DirectoryNode
-     **************************************************************************/
-    private static void addChildren( DirectoryNode node )
-    {
-        File f = node.getDirectory();
-        File [] chillen = f.listFiles();
-        chillen = chillen == null ? new File[0] : chillen;
-
-        java.util.Arrays.sort( chillen );
-
-        // node.removeAllChildren();
-        for( int i = 0; i < chillen.length; i++ )
-        {
-            if( chillen[i].isDirectory() )
-            {
-                addFile( chillen[i], node );
-            }
-        }
-    }
-
-    /***************************************************************************
      * @param event TreeExpansionEvent
      * @throws ExpandVetoException
      **************************************************************************/
     private static void expandDirectoryPath( TreePath path )
     {
         Object lastComp = path.getLastPathComponent();
-        DirectoryNode node = ( DirectoryNode )lastComp;
+        FileTreeNode node = ( FileTreeNode )lastComp;
 
         if( node.getChildCount() == 0 )
         {
-            addChildren( node );
+            node.loadChildren();
         }
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private class ExpansionListener implements TreeWillExpandListener
+    private static final class FileTreeNode implements TreeNode
+    {
+        public final FileTreeNode parent;
+        public final File file;
+        private final List<FileTreeNode> children;
+
+        public FileTreeNode()
+        {
+            this( null, null );
+
+            File [] roots = FILE_SYSTEM.getRoots();
+
+            if( roots != null )
+            {
+                for( File root : roots )
+                {
+                    children.add( new FileTreeNode( this, root ) );
+                }
+            }
+        }
+
+        public Object [] getPath()
+        {
+            List<FileTreeNode> nodes = new ArrayList<>();
+
+            FileTreeNode node = this;
+
+            while( node != null )
+            {
+                nodes.add( node );
+                node = node.parent;
+            }
+
+            Collections.reverse( nodes );
+
+            return nodes.toArray();
+        }
+
+        public FileTreeNode( FileTreeNode parent, File file )
+        {
+            this.parent = parent;
+            this.file = file;
+            this.children = new ArrayList<>();
+        }
+
+        @Override
+        public FileTreeNode getChildAt( int childIndex )
+        {
+            return children.get( childIndex );
+        }
+
+        @Override
+        public int getChildCount()
+        {
+            return children.size();
+        }
+
+        @Override
+        public TreeNode getParent()
+        {
+            return parent;
+        }
+
+        @Override
+        public int getIndex( TreeNode node )
+        {
+            return children.indexOf( node );
+        }
+
+        @Override
+        public boolean getAllowsChildren()
+        {
+            return file == null ? true : file.isDirectory();
+        }
+
+        @Override
+        public boolean isLeaf()
+        {
+            return file == null ? false : !file.isDirectory();
+        }
+
+        @Override
+        public Enumeration<FileTreeNode> children()
+        {
+            return new EnumeratedIterator<>( children.iterator() );
+        }
+
+        public void loadChildren()
+        {
+            File [] files;
+
+            try
+            {
+                files = file.listFiles();
+                files = files == null ? new File[0] : files;
+
+            }
+            catch( SecurityException ex )
+            {
+                files = new File[0];
+            }
+
+            Arrays.sort( files );
+
+            children.clear();
+
+            for( File f : files )
+            {
+                if( f.isDirectory() )
+                {
+                    children.add( new FileTreeNode( this, f ) );
+                }
+            }
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static final class EnumeratedIterator<T> implements Enumeration<T>
+    {
+        private final Iterator<T> iterator;
+
+        public EnumeratedIterator( Iterator<T> iterator )
+        {
+            this.iterator = iterator;
+        }
+
+        @Override
+        public boolean hasMoreElements()
+        {
+            return iterator.hasNext();
+        }
+
+        @Override
+        public T nextElement()
+        {
+            return iterator.next();
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private final class FileTreeModel implements TreeModel
+    {
+        private final DefaultTreeModel model;
+
+        private FileTreeModel( FileTreeNode node )
+        {
+            this.model = new DefaultTreeModel( node );
+        }
+
+        @Override
+        public Object getRoot()
+        {
+            return model.getRoot();
+        }
+
+        @Override
+        public Object getChild( Object parent, int index )
+        {
+            return model.getChild( parent, index );
+        }
+
+        @Override
+        public int getChildCount( Object parent )
+        {
+            return model.getChildCount( parent );
+        }
+
+        @Override
+        public boolean isLeaf( Object node )
+        {
+            if( node instanceof FileTreeNode )
+            {
+                FileTreeNode dmtn = ( FileTreeNode )node;
+                Object obj = dmtn.file;
+
+                if( obj != null && obj instanceof File )
+                {
+                    File file = ( File )obj;
+
+                    return !file.isDirectory();
+                }
+            }
+
+            return model.isLeaf( node );
+        }
+
+        @Override
+        public void valueForPathChanged( TreePath path, Object newValue )
+        {
+            model.valueForPathChanged( path, newValue );
+        }
+
+        @Override
+        public int getIndexOfChild( Object parent, Object child )
+        {
+            return model.getIndexOfChild( parent, child );
+        }
+
+        @Override
+        public void addTreeModelListener( TreeModelListener l )
+        {
+            model.addTreeModelListener( l );
+        }
+
+        @Override
+        public void removeTreeModelListener( TreeModelListener l )
+        {
+            model.removeTreeModelListener( l );
+        }
+
+        public void reload( FileTreeNode node )
+        {
+            model.reload( node );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private final class ExpansionListener implements TreeWillExpandListener
     {
         @Override
         public void treeWillExpand( TreeExpansionEvent event )
@@ -430,144 +624,15 @@ public class DirectoryTree implements IView<JTree>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class DirectoryNode implements MutableTreeNode
-    {
-        private final DefaultMutableTreeNode node;
-
-        private String desc = null;
-        private Icon icon = null;
-
-        public DirectoryNode( File dir )
-        {
-            this.node = new DefaultMutableTreeNode( dir );
-        }
-
-        public TreeNode [] getPath()
-        {
-            return node.getPath();
-        }
-
-        public void removeAllChildren()
-        {
-            node.removeAllChildren();
-        }
-
-        public File getDirectory()
-        {
-            return ( File )node.getUserObject();
-        }
-
-        public Icon getIcon()
-        {
-            if( icon == null )
-            {
-                icon = DirectoryTree.FILE_SYSTEM.getSystemIcon(
-                    getDirectory() );
-            }
-            return icon;
-        }
-
-        @Override
-        public String toString()
-        {
-            if( desc == null )
-            {
-                desc = DirectoryTree.FILE_SYSTEM.getSystemDisplayName(
-                    getDirectory() );
-            }
-
-            return desc;
-        }
-
-        @Override
-        public boolean isLeaf()
-        {
-            return !getDirectory().isDirectory();
-        }
-
-        @Override
-        public TreeNode getChildAt( int childIndex )
-        {
-            return node.getChildAt( childIndex );
-        }
-
-        @Override
-        public int getChildCount()
-        {
-            return node.getChildCount();
-        }
-
-        @Override
-        public TreeNode getParent()
-        {
-            return node.getParent();
-        }
-
-        @Override
-        public int getIndex( TreeNode node )
-        {
-            return node.getIndex( node );
-        }
-
-        @Override
-        public boolean getAllowsChildren()
-        {
-            return node.getAllowsChildren();
-        }
-
-        @Override
-        public Enumeration<?> children()
-        {
-            return node.children();
-        }
-
-        @Override
-        public void insert( MutableTreeNode newChild, int childIndex )
-        {
-            node.insert( newChild, childIndex );
-        }
-
-        @Override
-        public void remove( int index )
-        {
-            node.remove( index );
-        }
-
-        @Override
-        public void remove( MutableTreeNode node )
-        {
-            node.remove( node );
-        }
-
-        @Override
-        public void setUserObject( Object object )
-        {
-            node.setUserObject( object );
-        }
-
-        @Override
-        public void removeFromParent()
-        {
-            node.removeFromParent();
-        }
-
-        @Override
-        public void setParent( MutableTreeNode newParent )
-        {
-            node.setParent( newParent );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
     private static class Renderer implements TreeCellRenderer
     {
         private final DefaultTreeCellRenderer renderer;
+        private final Map<File, FileData> iconCache;
 
         public Renderer()
         {
             this.renderer = new DefaultTreeCellRenderer();
+            this.iconCache = new HashMap<>();
         }
 
         @Override
@@ -578,14 +643,39 @@ public class DirectoryTree implements IView<JTree>
             renderer.getTreeCellRendererComponent( tree, value, sel, expanded,
                 leaf, row, hasFocus );
 
-            if( value instanceof DirectoryNode )
+            if( value instanceof FileTreeNode )
             {
-                DirectoryNode node = ( DirectoryNode )value;
+                FileTreeNode node = ( FileTreeNode )value;
+                File f = node.file;
 
-                renderer.setIcon( node.getIcon() );
+                FileData fd = iconCache.get( f );
+
+                if( fd == null )
+                {
+                    fd = new FileData( f );
+                    iconCache.put( f, fd );
+                }
+
+                renderer.setIcon( fd.icon );
+                renderer.setText( fd.name );
             }
 
             return renderer;
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static final class FileData
+    {
+        public final Icon icon;
+        public final String name;
+
+        public FileData( File file )
+        {
+            this.icon = DirectoryTree.FILE_SYSTEM.getSystemIcon( file );
+            this.name = DirectoryTree.FILE_SYSTEM.getSystemDisplayName( file );
         }
     }
 
@@ -655,9 +745,9 @@ public class DirectoryTree implements IView<JTree>
 
             for( TreePath path : paths )
             {
-                DirectoryNode node = ( DirectoryNode )path.getLastPathComponent();
+                FileTreeNode node = ( FileTreeNode )path.getLastPathComponent();
 
-                files.add( node.getDirectory() );
+                files.add( node.file );
             }
 
             dirTree.selectedListeners.fireListeners( dirTree, files );

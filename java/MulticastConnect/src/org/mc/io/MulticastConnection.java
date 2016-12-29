@@ -1,6 +1,5 @@
 package org.mc.io;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.net.*;
 import java.util.Arrays;
@@ -10,7 +9,7 @@ import org.mc.McMessage;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class MulticastConnection implements Closeable
+public class MulticastConnection implements IConnection
 {
     /**  */
     private final InetAddress address;
@@ -75,20 +74,9 @@ public class MulticastConnection implements Closeable
     }
 
     /***************************************************************************
-     * @param msg
-     * @param buffer
+     * 
      **************************************************************************/
-    private McMessage fillMessage( byte[] buffer, DatagramPacket packet )
-    {
-        return new McMessage( packet.getAddress().getHostAddress(), port,
-            buffer );
-    }
-
-    /***************************************************************************
-     * @param buf
-     * @return
-     * @throws IOException
-     **************************************************************************/
+    @Override
     public McMessage txMessage( byte[] buf ) throws IOException
     {
         // LogUtils.printDebug( "Sending message..." );
@@ -104,9 +92,9 @@ public class MulticastConnection implements Closeable
     }
 
     /***************************************************************************
-     * @return
-     * @throws IOException
+     * 
      **************************************************************************/
+    @Override
     public McMessage rxMessage() throws IOException
     {
         // LogUtils.printDebug( "Receiving message..." );
@@ -128,5 +116,15 @@ public class MulticastConnection implements Closeable
     {
         socket.leaveGroup( address );
         socket.close();
+    }
+
+    /***************************************************************************
+     * @param msg
+     * @param buffer
+     **************************************************************************/
+    private McMessage fillMessage( byte[] buffer, DatagramPacket packet )
+    {
+        return new McMessage( packet.getAddress().getHostAddress(), port,
+            buffer );
     }
 }

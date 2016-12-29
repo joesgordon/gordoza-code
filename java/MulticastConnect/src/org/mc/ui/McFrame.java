@@ -9,10 +9,11 @@ import javax.swing.*;
 
 import org.jutils.concurrent.Stoppable;
 import org.jutils.ui.StandardFrameView;
+import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.model.IView;
-import org.mc.*;
-import org.mc.io.MulticastConnection;
-import org.mc.io.MulticastSocketDef;
+import org.mc.McMessage;
+import org.mc.McTxThread;
+import org.mc.io.*;
 
 /*******************************************************************************
  * 
@@ -30,7 +31,7 @@ public class McFrame implements IView<JFrame>
     /**  */
     private MulticastConnection commModel;
     /**  */
-    private McRxThread receiver;
+    private ConnectionReceiver receiver;
     /**  */
     private Stoppable rxThread;
 
@@ -167,11 +168,18 @@ public class McFrame implements IView<JFrame>
             {
                 MulticastSocketDef socket = confPanel.getSocket();
 
+                ItemActionListener<McMessage> rxListener;
+
+                rxListener = ( e ) -> SwingUtilities.invokeLater(
+                    () -> addMessage( e.getItem() ) );
+
                 commModel = new MulticastConnection( socket );
-                receiver = new McRxThread( this, commModel );
+                receiver = new ConnectionReceiver( commModel );
                 rxThread = new Stoppable( receiver );
                 Thread thread = new Thread( rxThread );
                 thread.start();
+
+                receiver.addMessageListener( rxListener );
             }
             else
             {

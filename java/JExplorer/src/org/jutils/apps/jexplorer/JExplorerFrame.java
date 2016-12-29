@@ -265,6 +265,11 @@ public class JExplorerFrame implements IView<JFrame>
      **************************************************************************/
     private void setDirectory( File dir, boolean setTree )
     {
+        if( dir == null )
+        {
+            return;
+        }
+
         File parent = dir.getParentFile();
         if( currentDirectory != null && !currentDirectory.equals( dir ) )
         {

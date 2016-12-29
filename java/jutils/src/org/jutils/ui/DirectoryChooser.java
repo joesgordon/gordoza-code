@@ -260,6 +260,7 @@ public class DirectoryChooser
     public void setSelectedPaths( String paths )
     {
         tree.setSelectedPaths( paths );
+
         dirsField.setText( tree.getSelectedPaths() );
     }
 
