@@ -140,7 +140,7 @@ public class AxesWidget implements IChartWidget
         // Determine tick sizes.
         // ---------------------------------------------------------------------s
         ticks = calculateTicks();
-        textSpace = calculateLabelInsets( size, ticks );
+        textSpace = calculateLabelInsets( ticks );
 
         // ---------------------------------------------------------------------
         // Update plot size.
@@ -161,7 +161,7 @@ public class AxesWidget implements IChartWidget
         // Determine tick sizes.
         // ---------------------------------------------------------------------
         ticks = calculateTicks();
-        textSpace = calculateLabelInsets( size, ticks );
+        textSpace = calculateLabelInsets( ticks );
 
         // ---------------------------------------------------------------------
         // Update plot size.
@@ -603,7 +603,7 @@ public class AxesWidget implements IChartWidget
     /***************************************************************************
      * @return
      **************************************************************************/
-    private Insets calculateLabelInsets( Dimension canvasSize, Ticks ticks )
+    private Insets calculateLabelInsets( Ticks ticks )
     {
         Insets textSpace = new Insets( 0, 0, 0, 0 );
 

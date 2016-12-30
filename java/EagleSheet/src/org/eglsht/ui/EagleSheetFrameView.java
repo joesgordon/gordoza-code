@@ -1,8 +1,8 @@
 package org.eglsht.ui;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.*;
 
@@ -12,8 +12,11 @@ import org.eglsht.data.EagleSheet;
 import org.eglsht.data.SheetSize;
 import org.jutils.IconConstants;
 import org.jutils.ui.*;
+import org.jutils.ui.event.*;
 import org.jutils.ui.model.IView;
 import org.jutils.ui.sheet.SpreadSheetView;
+import org.jutils.utils.ICallback;
+import org.jutils.utils.IGetter;
 
 /*******************************************************************************
  * 
@@ -43,6 +46,9 @@ public class EagleSheetFrameView implements IView<JFrame>
         sheetView.setData( new EagleSheet() );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private JMenuBar createMenuBar()
     {
         JMenuBar menubar = new JGoodiesMenuBar();
@@ -54,29 +60,43 @@ public class EagleSheetFrameView implements IView<JFrame>
         return menubar;
     }
 
+    /**
+     * @return
+     */
     private JMenu createFileMenu()
     {
         JMenu menu = new JMenu( "File" );
         JMenuItem item;
 
-        item = new JMenuItem( "New",
-            IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
-        item.addActionListener( new NewDocumentListener( this ) );
-        menu.add( item );
+        menu.add( createNewAction() );
 
-        item = new JMenuItem( "Open",
-            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
-        item.addActionListener( new OpenDocumentListener( this ) );
-        menu.add( item );
+        menu.add( createOpenAction() );
 
         menu.addSeparator();
 
         item = new JMenuItem( "Exit",
-            IconConstants.loader.getIcon( IconConstants.STOP_16 ) );
+            IconConstants.getIcon( IconConstants.STOP_16 ) );
         item.addActionListener( new ExitListener( frame ) );
         menu.add( item );
 
         return menu;
+    }
+
+    private Action createNewAction()
+    {
+        Icon icon = IconConstants.getIcon( IconConstants.NEW_FILE_16 );
+        ActionListener listener = ( e ) -> createNewSheet();
+        return new ActionAdapter( listener, "New", icon );
+    }
+
+    private Action createOpenAction()
+    {
+        Icon icon = IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 );
+        ICallback<File> callback = ( f ) -> openFile( f );
+        IFileSelectionListener fileListener = new FileListener( callback );
+        ActionListener listener = new FileChooserListener( frame, "Open File",
+            fileListener, false );
+        return new ActionAdapter( listener, "Open", icon );
     }
 
     private JMenu createEditMenu()
@@ -85,8 +105,8 @@ public class EagleSheetFrameView implements IView<JFrame>
         JMenuItem item;
 
         item = new JMenuItem( "Font",
-            IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
-        item.addActionListener( new FontEditListener( this ) );
+            IconConstants.getIcon( IconConstants.NEW_FILE_16 ) );
+        item.addActionListener( ( e ) -> editFont() );
         menu.add( item );
 
         return menu;
@@ -98,30 +118,30 @@ public class EagleSheetFrameView implements IView<JFrame>
         JMenuItem item;
 
         item = new JMenuItem( "Auto Layout",
-            IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
-        item.addActionListener( new AutoLayoutListener( this ) );
+            IconConstants.getIcon( IconConstants.NEW_FILE_16 ) );
+        item.addActionListener( ( e ) -> sheetView.autoLayout() );
         menu.add( item );
 
         menu.addSeparator();
 
         item = new JMenuItem( "No Headers",
-            IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
-        item.addActionListener( new HeaderListener( this ) );
+            IconConstants.getIcon( IconConstants.NEW_FILE_16 ) );
+        item.addActionListener( ( e ) -> setHeadersVisible( false, false ) );
         menu.add( item );
 
         item = new JMenuItem( "Row Headers",
-            IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
-        item.addActionListener( new HeaderListener( this ) );
+            IconConstants.getIcon( IconConstants.NEW_FILE_16 ) );
+        item.addActionListener( ( e ) -> setHeadersVisible( true, false ) );
         menu.add( item );
 
         item = new JMenuItem( "Column Headers",
-            IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
-        item.addActionListener( new HeaderListener( this ) );
+            IconConstants.getIcon( IconConstants.NEW_FILE_16 ) );
+        item.addActionListener( ( e ) -> setHeadersVisible( false, true ) );
         menu.add( item );
 
         item = new JMenuItem( "Row and Column Headers",
-            IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
-        item.addActionListener( new HeaderListener( this ) );
+            IconConstants.getIcon( IconConstants.NEW_FILE_16 ) );
+        item.addActionListener( ( e ) -> setHeadersVisible( true, true ) );
         menu.add( item );
 
         return menu;
@@ -165,19 +185,19 @@ public class EagleSheetFrameView implements IView<JFrame>
         button = new JButton( EagleSheetIcons.getInsertRowBeforeIcon() );
         button.setToolTipText( "Insert Row Before" );
         button.setFocusable( false );
-        button.addActionListener( new InsertRowListener( this ) );
+        button.addActionListener( ( e ) -> insertRow( false ) );
         toolbar.add( button );
 
         button = new JButton( EagleSheetIcons.getInsertRowAfterIcon() );
         button.setToolTipText( "Insert Row After" );
         button.setFocusable( false );
-        button.addActionListener( new InsertRowListener( this, 1 ) );
+        button.addActionListener( ( e ) -> insertRow( true ) );
         toolbar.add( button );
 
         button = new JButton( EagleSheetIcons.getDeleteRowIcon() );
         button.setToolTipText( "Delete Row" );
         button.setFocusable( false );
-        button.addActionListener( new DeleteRowListener( this ) );
+        button.addActionListener( ( e ) -> removeSelectedRows() );
         toolbar.add( button );
 
         toolbar.addSeparator();
@@ -185,19 +205,19 @@ public class EagleSheetFrameView implements IView<JFrame>
         button = new JButton( EagleSheetIcons.getInsertColumnBeforeIcon() );
         button.setToolTipText( "Insert Column Before" );
         button.setFocusable( false );
-        button.addActionListener( new InsertColumnListener( this ) );
+        button.addActionListener( ( e ) -> insertCol( false ) );
         toolbar.add( button );
 
         button = new JButton( EagleSheetIcons.getInsertColumnAfterIcon() );
         button.setToolTipText( "Insert Column After" );
         button.setFocusable( false );
-        button.addActionListener( new InsertColumnListener( this, 1 ) );
+        button.addActionListener( ( e ) -> insertCol( true ) );
         toolbar.add( button );
 
         button = new JButton( EagleSheetIcons.getDeleteColumnIcon() );
         button.setToolTipText( "Delete Column" );
         button.setFocusable( false );
-        button.addActionListener( new DeleteColumnListener( this ) );
+        button.addActionListener( ( e ) -> removeSelectedCols() );
         toolbar.add( button );
 
         toolbar.addSeparator();
@@ -205,7 +225,7 @@ public class EagleSheetFrameView implements IView<JFrame>
         button = new JButton( EagleSheetIcons.getEditTableIcon() );
         button.setToolTipText( "Change Size" );
         button.setFocusable( false );
-        button.addActionListener( new EditTableListener( this ) );
+        button.addActionListener( ( e ) -> showEditSize() );
         toolbar.add( button );
 
         return toolbar;
@@ -223,216 +243,97 @@ public class EagleSheetFrameView implements IView<JFrame>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class NewDocumentListener implements ActionListener
+    private void createNewSheet()
     {
-        private final EagleSheetFrameView view;
+        SheetSizeView sizeView = new SheetSizeView();
 
-        public NewDocumentListener( EagleSheetFrameView view )
+        int option = JOptionPane.showOptionDialog( frame, sizeView.getView(),
+            "Enter Size", JOptionPane.OK_CANCEL_OPTION,
+            JOptionPane.QUESTION_MESSAGE, null, null, null );
+
+        if( option == JOptionPane.OK_OPTION )
         {
-            this.view = view;
+            SheetSize size = sizeView.getData();
+            EagleSheet sheet = new EagleSheet( size.rows, size.cols );
+
+            sheetView.setData( sheet );
         }
+    }
 
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            SheetSizeView sizeView = new SheetSizeView();
+    @SuppressWarnings( "unused")
+    public void openFile( File f )
+    {
+        // TODO Auto-generated method stub
+    }
 
-            int option = JOptionPane.showOptionDialog( view.frame,
-                sizeView.getView(), "Enter Size", JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.QUESTION_MESSAGE, null, null, null );
+    private void editFont()
+    {
+        // TODO Auto-generated method stub
+    }
 
-            if( option == JOptionPane.OK_OPTION )
-            {
-                SheetSize size = sizeView.getData();
-                EagleSheet sheet = new EagleSheet( size.rows, size.cols );
+    @SuppressWarnings( "unused")
+    private void setHeadersVisible( boolean row, boolean col )
+    {
+        // TODO Auto-generated method stub
+    }
 
-                view.sheetView.setData( sheet );
-            }
-        }
+    @SuppressWarnings( "unused")
+    private void insertRow( boolean after )
+    {
+        // TODO Auto-generated method stub
+    }
+
+    private void removeSelectedRows()
+    {
+        // TODO Auto-generated method stub
+    }
+
+    @SuppressWarnings( "unused")
+    private void insertCol( boolean after )
+    {
+        // TODO Auto-generated method stub
+    }
+
+    private void removeSelectedCols()
+    {
+        // TODO Auto-generated method stub
+    }
+
+    private void showEditSize()
+    {
+        // TODO Auto-generated method stub
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class OpenDocumentListener implements ActionListener
+    private static class FileListener implements IFileSelectionListener
     {
-        // private final EagleSheetFrameView view;
+        private final IGetter<File> getDefaultListener;
+        private final ICallback<File> fileChosenListener;
 
-        public OpenDocumentListener( EagleSheetFrameView view )
+        public FileListener( ICallback<File> fileChosenListener )
         {
-            // this.view = view;
+            this( null, fileChosenListener );
+        }
+
+        public FileListener( IGetter<File> getDefaultListener,
+            ICallback<File> fileChosenListener )
+        {
+            this.fileChosenListener = fileChosenListener;
+            this.getDefaultListener = getDefaultListener;
         }
 
         @Override
-        public void actionPerformed( ActionEvent e )
+        public File getDefaultFile()
         {
-            // TODO Auto-generated method stub
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class InsertRowListener implements ActionListener
-    {
-        // private final EagleSheetFrameView view;
-        // private final int offset;
-
-        public InsertRowListener( EagleSheetFrameView view )
-        {
-            // this( view, 0 );
-        }
-
-        public InsertRowListener( EagleSheetFrameView view, int offset )
-        {
-            // this.view = view;
-            // this.offset = offset;
+            return getDefaultListener == null ? null : getDefaultListener.get();
         }
 
         @Override
-        public void actionPerformed( ActionEvent e )
+        public void filesChosen( File [] files )
         {
-            // TODO Auto-generated method stub
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class InsertColumnListener implements ActionListener
-    {
-        // private final EagleSheetFrameView view;
-        // private final int offset;
-
-        public InsertColumnListener( EagleSheetFrameView view )
-        {
-            // this( view, 0 );
-        }
-
-        public InsertColumnListener( EagleSheetFrameView view, int offset )
-        {
-            // this.view = view;
-            // this.offset = offset;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            // TODO Auto-generated method stub
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class DeleteColumnListener implements ActionListener
-    {
-        // private final EagleSheetFrameView view;
-
-        public DeleteColumnListener( EagleSheetFrameView view )
-        {
-            // this.view = view;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            // TODO Auto-generated method stub
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class DeleteRowListener implements ActionListener
-    {
-        // private final EagleSheetFrameView view;
-
-        public DeleteRowListener( EagleSheetFrameView view )
-        {
-            // this.view = view;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            // TODO Auto-generated method stub
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class EditTableListener implements ActionListener
-    {
-        // private final EagleSheetFrameView view;
-
-        public EditTableListener( EagleSheetFrameView view )
-        {
-            // this.view = view;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            // TODO Auto-generated method stub
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class FontEditListener implements ActionListener
-    {
-        // private final EagleSheetFrameView view;
-
-        public FontEditListener( EagleSheetFrameView view )
-        {
-            // this.view = view;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            // TODO Auto-generated method stub
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class AutoLayoutListener implements ActionListener
-    {
-        private final EagleSheetFrameView view;
-
-        public AutoLayoutListener( EagleSheetFrameView view )
-        {
-            this.view = view;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            view.sheetView.autoLayout();
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class HeaderListener implements ActionListener
-    {
-        // private final EagleSheetFrameView view;
-
-        public HeaderListener( EagleSheetFrameView view )
-        {
-            // this.view = view;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            // TODO Auto-generated method stub
+            fileChosenListener.invoke( files[0] );
         }
     }
 }

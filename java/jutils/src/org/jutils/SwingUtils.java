@@ -72,6 +72,23 @@ public final class SwingUtils
     }
 
     /***************************************************************************
+     * @param parent
+     * @param message
+     * @param title
+     **************************************************************************/
+    public static void showErrorMessage( Component parent, Object message,
+        String title )
+    {
+        JOptionPane jop = new JOptionPane( message, JOptionPane.ERROR_MESSAGE,
+            JOptionPane.OK_OPTION, null );
+
+        JDialog dialog = jop.createDialog( parent, title );
+        dialog.setModalityType( ModalityType.DOCUMENT_MODAL );
+
+        dialog.setVisible( true );
+    }
+
+    /***************************************************************************
      * Displays an OK/Cancel option dialog with the provided message, title, and
      * choices.
      * @param parent the parent component of the dialog to be displayed.

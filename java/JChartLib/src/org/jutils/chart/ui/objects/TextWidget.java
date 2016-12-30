@@ -152,7 +152,7 @@ public class TextWidget implements IChartWidget
         }
     }
 
-    public Dimension layout( Dimension size )
+    public Dimension layout()
     {
         Dimension dim = new Dimension();
 
@@ -187,7 +187,7 @@ public class TextWidget implements IChartWidget
     @Override
     public Dimension calculateSize( Dimension canvasSize )
     {
-        return layout( canvasSize );
+        return layout();
     }
 
     /***************************************************************************

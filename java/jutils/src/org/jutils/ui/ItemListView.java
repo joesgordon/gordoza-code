@@ -15,7 +15,8 @@ import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
  * Defines a view that displays a list of items to the user. The view allows for
- * additions/deletions to the list and each item of the list may be displayed.
+ * additions/deletions/reordering of the list. Each item in the list is
+ * displayed with the {@link IDataView} provided.
  ******************************************************************************/
 public class ItemListView<T> implements IDataView<List<T>>
 {

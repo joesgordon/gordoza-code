@@ -69,8 +69,11 @@ public class ConversationView implements IDataView<IConversation>
 
         this.chatEditorPane = new AppendableTextPane();
         this.usersView = new UserView();
-        this.msgEditorPane = new GrowingTextPane();
+        this.msgEditorPane = new JTextPane();
         this.view = createView();
+
+        msgEditorPane.getDocument().addDocumentListener(
+            new GrowingTextDocumentListener( msgEditorPane ) );
 
         this.dateFormatter = new SimpleDateFormat( "(MM-dd-yy HH:mm:ss)" );
 

@@ -9,6 +9,9 @@ import org.jutils.ui.ListView.IItemListModel;
 import org.jutils.ui.explorer.data.ExtensionConfig;
 import org.jutils.ui.model.IDataView;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class ExtensionsView implements IDataView<List<ExtensionConfig>>
 {
     /**  */
