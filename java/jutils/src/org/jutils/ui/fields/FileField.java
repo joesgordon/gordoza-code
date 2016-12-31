@@ -12,6 +12,7 @@ import org.jutils.*;
 import org.jutils.io.IOUtils;
 import org.jutils.io.parsers.ExistenceType;
 import org.jutils.io.parsers.FileParser;
+import org.jutils.ui.IconTextField;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileChooserListener.IFileSelected;
 import org.jutils.ui.event.FileDropTarget.JTextFieldFilesListener;
@@ -30,7 +31,9 @@ public class FileField implements IDataView<File>, IValidationField
     /**  */
     private final JPanel view;
     /**  */
-    private final ValidationTextField field;
+    private final IconTextField textField;
+    /**  */
+    private final ValidationTextComponentField<JTextField> field;
     /**  */
     private final JPopupMenu openMenu;
     /**  */
@@ -39,6 +42,8 @@ public class FileField implements IDataView<File>, IValidationField
     private final FileChooserListener fileListener;
     /**  */
     private final JMenuItem openPathMenuItem;
+    /**  */
+    private final FileIcon icon;
 
     /***************************************************************************
      * Creates a File view with an {@link ExistenceType} of FILE_ONLY, required,
@@ -96,11 +101,17 @@ public class FileField implements IDataView<File>, IValidationField
     {
         this.changeListeners = new ItemActionList<>();
 
-        this.field = new ValidationTextField();
+        this.field = new ValidationTextComponentField<>( new JTextField() );
+        this.textField = new IconTextField( field.getView() );
         this.fileListener = createFileListener( existence, isSave );
         this.openPathMenuItem = new JMenuItem();
         this.openMenu = createMenu();
         this.view = createView( existence, required, isSave, showButton );
+        this.icon = new FileIcon();
+
+        textField.setIcon( icon );
+
+        // textField.setIcon( icon );
 
         field.getView().setColumns( 20 );
 
@@ -310,7 +321,7 @@ public class FileField implements IDataView<File>, IValidationField
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
             GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 0, 0, 0 ), 0, 0 );
-        panel.add( field.getView(), constraints );
+        panel.add( textField.getView(), constraints );
 
         if( showButton )
         {
@@ -376,6 +387,7 @@ public class FileField implements IDataView<File>, IValidationField
         // LogUtils.printDebug( "Setting data to: \"" + text + "\"" );
 
         field.setText( text );
+        icon.setFile( file );
     }
 
     /***************************************************************************
@@ -475,7 +487,69 @@ public class FileField implements IDataView<File>, IValidationField
         {
             // LogUtils.printDebug( "File changed to " + file.getAbsolutePath()
             // );
+            view.icon.setFile( file );
             view.changeListeners.fireListeners( view, file );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class FileIcon implements Icon
+    {
+        private final FileSystemView fileSys;
+        private final Icon fileIcon;
+        private final Icon dirIcon;
+
+        private Icon icon;
+
+        public FileIcon()
+        {
+            this.fileSys = FileSystemView.getFileSystemView();
+            this.fileIcon = IconConstants.getIcon( IconConstants.OPEN_FILE_16 );
+            this.dirIcon = IconConstants.getIcon(
+                IconConstants.OPEN_FOLDER_16 );
+
+            this.icon = fileIcon;
+        }
+
+        @Override
+        public void paintIcon( Component c, Graphics g, int x, int y )
+        {
+            icon.paintIcon( c, g, x, y );
+        }
+
+        @Override
+        public int getIconWidth()
+        {
+            return icon.getIconWidth();
+        }
+
+        @Override
+        public int getIconHeight()
+        {
+            return icon.getIconHeight();
+        }
+
+        public void setFile( File file )
+        {
+            if( file == null )
+            {
+                icon = fileIcon;
+            }
+            else if( file.isDirectory() )
+            {
+                icon = dirIcon;
+            }
+            else if( file.isFile() )
+            {
+                icon = fileSys.getSystemIcon( file );
+
+                if( icon == null )
+                {
+                    icon = fileIcon;
+                }
+            }
         }
     }
 
@@ -485,17 +559,10 @@ public class FileField implements IDataView<File>, IValidationField
     private static class MenuListener extends MouseAdapter
     {
         private final FileField field;
-        private final FileSystemView fileSys;
-        private final Icon fileIcon;
-        private final Icon dirIcon;
 
         public MenuListener( FileField field )
         {
             this.field = field;
-            this.fileSys = FileSystemView.getFileSystemView();
-            this.fileIcon = field.openPathMenuItem.getIcon();
-            this.dirIcon = IconConstants.getIcon(
-                IconConstants.OPEN_FOLDER_16 );
         }
 
         @Override
@@ -509,29 +576,9 @@ public class FileField implements IDataView<File>, IValidationField
                 int y = c.getHeight() / 2; // e.getY();
 
                 File file = field.getData();
-                Icon icon = fileIcon;
-                boolean enabled = true;
 
-                if( file.isFile() )
-                {
-                    icon = fileSys.getSystemIcon( file );
-
-                    if( icon == null )
-                    {
-                        icon = fileIcon;
-                    }
-                }
-                else if( file.isDirectory() )
-                {
-                    icon = dirIcon;
-                }
-                else
-                {
-                    enabled = false;
-                }
-
-                field.openPathMenuItem.setIcon( icon );
-                field.openPathMenuItem.setEnabled( enabled );
+                field.openPathMenuItem.setIcon( field.icon );
+                field.openPathMenuItem.setEnabled( file.exists() );
 
                 field.openMenu.show( c, x, y );
             }

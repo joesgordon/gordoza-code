@@ -1,13 +1,9 @@
 package org.jutils.ui.validation;
 
-import java.awt.Color;
 import java.awt.Font;
 
 import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
-import org.jutils.ValidationException;
 import org.jutils.ui.validators.ITextValidator;
 
 /*******************************************************************************
@@ -17,16 +13,9 @@ import org.jutils.ui.validators.ITextValidator;
 public final class ValidationTextField implements IValidationField
 {
     /**  */
-    private final JTextField field;
+    private final JTextField textField;
     /**  */
-    private final ValidityListenerList listenerList;
-
-    /**  */
-    private Color validBackground;
-    /**  */
-    private Color invalidBackground;
-    /**  */
-    private ITextValidator validator;
+    private final ValidationTextComponentField<JTextField> field;
 
     /***************************************************************************
      * 
@@ -41,9 +30,7 @@ public final class ValidationTextField implements IValidationField
      **************************************************************************/
     public ValidationTextField( int columns )
     {
-        this();
-
-        setColumns( columns );
+        this( "", columns );
     }
 
     /***************************************************************************
@@ -51,19 +38,20 @@ public final class ValidationTextField implements IValidationField
      **************************************************************************/
     public ValidationTextField( String str )
     {
-        this.field = new JTextField( str );
-        this.listenerList = new ValidityListenerList();
+        this( str, 20 );
+    }
 
-        this.validBackground = field.getBackground();
-        this.invalidBackground = Color.red;
+    /***************************************************************************
+     * @param str
+     * @param columns
+     **************************************************************************/
+    private ValidationTextField( String str, int columns )
+    {
+        this.textField = new JTextField();
+        this.field = new ValidationTextComponentField<>( textField );
 
-        this.validator = null;
-
-        field.getDocument().addDocumentListener(
-            new ValidationDocumentListener( this ) );
-        field.setBackground( validBackground );
-
-        setComponentValid( listenerList.getValidity().isValid );
+        textField.setText( str );
+        setColumns( columns );
     }
 
     /***************************************************************************
@@ -72,7 +60,7 @@ public final class ValidationTextField implements IValidationField
     @Override
     public JTextField getView()
     {
-        return field;
+        return textField;
     }
 
     /***************************************************************************
@@ -81,37 +69,7 @@ public final class ValidationTextField implements IValidationField
     @Override
     public Validity getValidity()
     {
-        return listenerList.getValidity();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private void validateText()
-    {
-        if( validator != null )
-        {
-            Validity v;
-
-            try
-            {
-                validator.validateText( field.getText() );
-                v = new Validity();
-            }
-            catch( ValidationException ex )
-            {
-                v = new Validity( ex.getMessage() );
-            }
-
-            // LogUtils.printDebug(
-            // ">>> Validating text \"%s\", old validity: %s, new validity: %s",
-            // field.getText(), listenerList.getValidity(), v );
-            // Utils.printStackTrace();
-
-            listenerList.signalValidity( v );
-
-            setComponentValid( v.isValid );
-        }
+        return field.getValidity();
     }
 
     /***************************************************************************
@@ -119,46 +77,7 @@ public final class ValidationTextField implements IValidationField
      **************************************************************************/
     public void setEditable( boolean editable )
     {
-        field.setBackground( null );
         field.setEditable( editable );
-
-        // LogUtils.printDebug(
-        // ">>> setting editable - text: \"%s\", editable: %b, validity: %s",
-        // getText(), editable, getValidity() );
-
-        if( editable )
-        {
-
-            setComponentValid( getValidity().isValid );
-        }
-        else
-        {
-            setComponentValid( true );
-        }
-
-        // listenerList.signalValidity( listenerList.getValidity() );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private void setComponentValid( boolean valid )
-    {
-        if( field.isEditable() && field.isEnabled() )
-        {
-            if( valid )
-            {
-                field.setBackground( validBackground );
-            }
-            else
-            {
-                field.setBackground( invalidBackground );
-            }
-        }
-        else
-        {
-            field.setBackground( null );
-        }
     }
 
     /***************************************************************************
@@ -167,7 +86,7 @@ public final class ValidationTextField implements IValidationField
     @Override
     public void addValidityChanged( IValidityChangedListener vcl )
     {
-        listenerList.addListener( vcl );
+        field.addValidityChanged( vcl );
     }
 
     /***************************************************************************
@@ -176,7 +95,7 @@ public final class ValidationTextField implements IValidationField
     @Override
     public void removeValidityChanged( IValidityChangedListener vcl )
     {
-        listenerList.removeListener( vcl );
+        field.removeValidityChanged( vcl );
     }
 
     /***************************************************************************
@@ -184,9 +103,7 @@ public final class ValidationTextField implements IValidationField
      **************************************************************************/
     public final void setValidator( ITextValidator validator )
     {
-        this.validator = validator;
-
-        validateText();
+        field.setValidator( validator );
     }
 
     /***************************************************************************
@@ -195,7 +112,6 @@ public final class ValidationTextField implements IValidationField
     public void setText( String text )
     {
         field.setText( text );
-        validateText();
     }
 
     /***************************************************************************
@@ -219,40 +135,6 @@ public final class ValidationTextField implements IValidationField
      **************************************************************************/
     public void setColumns( int columns )
     {
-        field.setColumns( columns );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class ValidationDocumentListener implements DocumentListener
-    {
-        private ValidationTextField field;
-
-        public ValidationDocumentListener( ValidationTextField field )
-        {
-            this.field = field;
-        }
-
-        @Override
-        public void removeUpdate( DocumentEvent e )
-        {
-            // LogUtils.printDebug( "Updating text" );
-            field.validateText();
-        }
-
-        @Override
-        public void insertUpdate( DocumentEvent e )
-        {
-            // LogUtils.printDebug( "Inserting text" );
-            field.validateText();
-        }
-
-        @Override
-        public void changedUpdate( DocumentEvent e )
-        {
-            // LogUtils.printDebug( "Changing text" );
-            field.validateText();
-        }
+        textField.setColumns( columns );
     }
 }
