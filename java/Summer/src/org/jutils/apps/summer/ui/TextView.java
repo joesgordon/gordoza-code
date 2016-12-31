@@ -11,7 +11,10 @@ import javax.swing.border.EmptyBorder;
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
 import org.jutils.ui.JGoodiesToolBar;
-import org.jutils.ui.event.*;
+import org.jutils.ui.event.ActionAdapter;
+import org.jutils.ui.event.FileChooserListener;
+import org.jutils.ui.event.FileChooserListener.IFileSelected;
+import org.jutils.ui.event.FileChooserListener.ILastFile;
 import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
@@ -47,14 +50,14 @@ public class TextView implements IDataView<String>
         this.view = new JPanel();
         this.textField = new JTextArea();
 
-        this.openListener = new FileChooserListener( view, "Open File",
-            new OpenListener( this ), false );
+        this.openListener = new FileChooserListener( view, "Open File", false,
+            new OpenListener( this ) );
         icon = IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 );
         this.openAction = new ActionAdapter( openListener, "Open File", icon );
 
         this.saveFileListener = new SaveListener( this );
-        this.saveListener = new FileChooserListener( view, "Save File",
-            saveFileListener, true );
+        this.saveListener = new FileChooserListener( view, "Save File", true,
+            saveFileListener, saveFileListener );
         icon = IconConstants.loader.getIcon( IconConstants.SAVE_16 );
         this.saveAction = new ActionAdapter( saveListener, "Save File", icon );
 
@@ -165,7 +168,7 @@ public class TextView implements IDataView<String>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class OpenListener implements IFileSelectionListener
+    private static class OpenListener implements IFileSelected
     {
         private final TextView view;
 
@@ -175,15 +178,9 @@ public class TextView implements IDataView<String>
         }
 
         @Override
-        public File getDefaultFile()
+        public void fileChosen( File file )
         {
-            return null;
-        }
-
-        @Override
-        public void filesChosen( File [] files )
-        {
-            try( Scanner scnr = new Scanner( files[0] ) )
+            try( Scanner scnr = new Scanner( file ) )
             {
                 String text = scnr.useDelimiter( "\\A" ).next();
 
@@ -192,8 +189,7 @@ public class TextView implements IDataView<String>
             catch( FileNotFoundException ex )
             {
                 JOptionPane.showMessageDialog( view.view,
-                    "Cannot open file for reading: " +
-                        files[0].getAbsolutePath(),
+                    "Cannot open file for reading: " + file.getAbsolutePath(),
                     "Cannot Open File", JOptionPane.ERROR_MESSAGE );
             }
         }
@@ -202,7 +198,7 @@ public class TextView implements IDataView<String>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class SaveListener implements IFileSelectionListener
+    private static class SaveListener implements IFileSelected, ILastFile
     {
         private final TextView view;
 
@@ -215,23 +211,22 @@ public class TextView implements IDataView<String>
         }
 
         @Override
-        public File getDefaultFile()
+        public File getLastFile()
         {
             return defaultFile;
         }
 
         @Override
-        public void filesChosen( File [] files )
+        public void fileChosen( File file )
         {
-            try( PrintStream stream = new PrintStream( files[0] ) )
+            try( PrintStream stream = new PrintStream( file ) )
             {
                 stream.print( view.text );
             }
             catch( FileNotFoundException ex )
             {
                 JOptionPane.showMessageDialog( view.view,
-                    "Cannot open file for writing: " +
-                        files[0].getAbsolutePath(),
+                    "Cannot open file for writing: " + file.getAbsolutePath(),
                     "Cannot Open File", JOptionPane.ERROR_MESSAGE );
             }
         }

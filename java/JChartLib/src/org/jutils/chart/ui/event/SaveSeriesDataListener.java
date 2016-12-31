@@ -11,13 +11,14 @@ import org.jutils.chart.io.FilteredWriter;
 import org.jutils.chart.model.Series;
 import org.jutils.io.IOUtils;
 import org.jutils.io.options.OptionsSerializer;
-import org.jutils.ui.event.IFileSelectionListener;
+import org.jutils.ui.event.FileChooserListener.IFileSelected;
+import org.jutils.ui.event.FileChooserListener.ILastFile;
 import org.jutils.ui.model.IDataView;
 
 /***************************************************************************
  * 
  **************************************************************************/
-public class SaveSeriesDataListener implements IFileSelectionListener
+public class SaveSeriesDataListener implements ILastFile, IFileSelected
 {
     /**  */
     private final IDataView<Series> view;
@@ -34,7 +35,7 @@ public class SaveSeriesDataListener implements IFileSelectionListener
      * 
      **************************************************************************/
     @Override
-    public File getDefaultFile()
+    public File getLastFile()
     {
         Series s = view.getData();
 
@@ -70,10 +71,10 @@ public class SaveSeriesDataListener implements IFileSelectionListener
      * 
      **************************************************************************/
     @Override
-    public void filesChosen( File [] files )
+    public void fileChosen( File file )
     {
         Series s = view.getData();
-        File toFile = files[0];
+        File toFile = file;
         File fromFile = s.getResourceFile();
 
         try

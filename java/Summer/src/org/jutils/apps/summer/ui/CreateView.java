@@ -25,6 +25,8 @@ import org.jutils.task.TaskMetrics;
 import org.jutils.time.TimeUtils;
 import org.jutils.ui.*;
 import org.jutils.ui.event.*;
+import org.jutils.ui.event.FileChooserListener.IFilesSelected;
+import org.jutils.ui.event.FileChooserListener.ILastFiles;
 import org.jutils.ui.event.FileDropTarget.DropActionType;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
 import org.jutils.ui.model.*;
@@ -147,9 +149,9 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
     private Action createAddFileListener( JPanel parent )
     {
         Icon icon = IconConstants.loader.getIcon( IconConstants.OPEN_FILE_16 );
-        IFileSelectionListener fileListener = new AddFileListener( this );
+        LastFilesListener lfl = new LastFilesListener( this );
         ActionListener listener = new FileChooserListener( parent,
-            "Choose File", fileListener, false );
+            "Choose File", false, lfl, lfl );
         Action action = new ActionAdapter( listener, "Add File", icon );
 
         return action;
@@ -163,9 +165,9 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
     {
         Icon icon = IconConstants.loader.getIcon(
             IconConstants.OPEN_FOLDER_16 );
-        IFileSelectionListener fileListener = new AddFileListener( this );
+        LastFilesListener lfl = new LastFilesListener( this );
         ActionListener listener = new DirectoryChooserListener( parent,
-            "Choose Directory", fileListener );
+            "Choose Directory", lfl, lfl );
         Action action = new ActionAdapter( listener, "Add Directory", icon );
 
         return action;
@@ -411,6 +413,27 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
         // TaskView.startAndShow( parent, task, "Creating Checksums" );
 
         return metrics;
+    }
+
+    private void addDirs( File [] files )
+    {
+        view.setCursor( new Cursor( Cursor.WAIT_CURSOR ) );
+
+        List<File> fileList = new ArrayList<>();
+
+        for( File file : files )
+        {
+            if( file.isDirectory() )
+            {
+                fileList.addAll( IOUtils.getAllFiles( file ) );
+            }
+            else
+            {
+                fileList.add( file );
+            }
+        }
+
+        addFiles( fileList );
     }
 
     /***************************************************************************
@@ -685,20 +708,18 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class AddFileListener implements IFileSelectionListener
+    private static class LastFilesListener implements IFilesSelected, ILastFiles
     {
         private final CreateView view;
+        private File [] lastFile = null;
 
-        private File lastFile;
-
-        private AddFileListener( CreateView view )
+        public LastFilesListener( CreateView view )
         {
             this.view = view;
-            this.lastFile = null;
         }
 
         @Override
-        public File getDefaultFile()
+        public File [] getLastFiles()
         {
             return lastFile;
         }
@@ -706,25 +727,9 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
         @Override
         public void filesChosen( File [] files )
         {
-            lastFile = files[0];
+            this.lastFile = files;
 
-            view.view.setCursor( new Cursor( Cursor.WAIT_CURSOR ) );
-
-            List<File> fileList = new ArrayList<>();
-
-            for( File file : files )
-            {
-                if( file.isDirectory() )
-                {
-                    fileList.addAll( IOUtils.getAllFiles( file ) );
-                }
-                else
-                {
-                    fileList.add( file );
-                }
-            }
-
-            view.addFiles( fileList );
+            view.addDirs( files );
         }
     }
 

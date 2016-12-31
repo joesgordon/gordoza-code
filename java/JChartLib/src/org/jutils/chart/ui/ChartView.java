@@ -27,6 +27,8 @@ import org.jutils.ui.JGoodiesToolBar;
 import org.jutils.ui.OkDialogView;
 import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.event.*;
+import org.jutils.ui.event.FileChooserListener.IFilesSelected;
+import org.jutils.ui.event.FileChooserListener.ILastFiles;
 import org.jutils.ui.event.FileDropTarget.DropActionType;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
 import org.jutils.ui.model.IDataView;
@@ -216,11 +218,12 @@ public class ChartView implements IView<JComponent>
         FileChooserListener listener;
         Icon icon;
         String name;
+        OpenListener ol = new OpenListener( this );
 
         name = "Open";
-        icon = IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 );
+        icon = IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 );
         listener = new FileChooserListener( getView(), "Choose Data File",
-            new OpenListener( this ), false );
+            false, ol, ol );
         action = new ActionAdapter( listener, name, icon );
 
         return action;
@@ -736,7 +739,7 @@ public class ChartView implements IView<JComponent>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class OpenListener implements IFileSelectionListener
+    private static class OpenListener implements ILastFiles, IFilesSelected
     {
         private final ChartView view;
 
@@ -746,9 +749,9 @@ public class ChartView implements IView<JComponent>
         }
 
         @Override
-        public File getDefaultFile()
+        public File [] getLastFiles()
         {
-            return view.options.getOptions().recentFiles.first();
+            return new File[] { view.options.getOptions().recentFiles.first() };
         }
 
         @Override
@@ -848,15 +851,14 @@ public class ChartView implements IView<JComponent>
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            IFileSelectionListener ifsl;
             FileChooserListener listener;
 
             for( Series s : view.chart.series )
             {
                 IDataView<Series> sv = new SeriesViewAdapter( s, view );
-                ifsl = new SaveSeriesDataListener( sv );
+                SaveSeriesDataListener ssdl = new SaveSeriesDataListener( sv );
                 listener = new FileChooserListener( view.getView(),
-                    "Choose File to Save", ifsl, true );
+                    "Choose File to Save", true, ssdl, ssdl );
 
                 listener.actionPerformed( new ActionEvent( this, 0, null ) );
             }

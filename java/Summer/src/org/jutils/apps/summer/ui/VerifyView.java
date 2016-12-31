@@ -18,6 +18,7 @@ import org.jutils.task.TaskView;
 import org.jutils.ui.StandardFormView;
 import org.jutils.ui.TitleView;
 import org.jutils.ui.event.*;
+import org.jutils.ui.event.FileChooserListener.IFileSelected;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
 import org.jutils.ui.fields.FileField;
 import org.jutils.ui.model.*;
@@ -140,8 +141,8 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
         toolbar.setBorder( new MatteBorder( 0, 0, 1, 0, Color.gray ) );
 
         FileChooserListener openListener = new FileChooserListener( view,
-            "Choose Checksum File", new OpenChecksumFileListener( this ),
-            false );
+            "Choose Checksum File", false,
+            new OpenChecksumFileListener( this ) );
 
         openListener.addExtension( "MD5 Checksum File", "md5" );
         openListener.addExtension( "CRC Checksum File", "crc" );
@@ -390,8 +391,7 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class OpenChecksumFileListener
-        implements IFileSelectionListener
+    private static class OpenChecksumFileListener implements IFileSelected
     {
         private final VerifyView view;
 
@@ -401,15 +401,8 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
         }
 
         @Override
-        public File getDefaultFile()
+        public void fileChosen( File file )
         {
-            return null;
-        }
-
-        @Override
-        public void filesChosen( File [] files )
-        {
-            File file = files[0];
 
             if( file == null || !file.isFile() )
             {

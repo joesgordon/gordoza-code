@@ -546,7 +546,6 @@ public final class Utils
         };
 
         clipboard.setContents( selection, co );
-
     }
 
     /***************************************************************************

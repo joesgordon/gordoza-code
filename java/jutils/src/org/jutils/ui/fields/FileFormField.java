@@ -53,10 +53,12 @@ public class FileFormField implements IDataFormField<File>
     }
 
     /***************************************************************************
-     * @param name
-     * @param existence
-     * @param required
-     * @param isSave
+     * Creates a new field with the provided parameters:
+     * @param name the name of the field.
+     * @param existence type of existence to be checked.
+     * @param required if the path can be empty or is required.
+     * @param isSave if the path is to be be save to (alt. read from).
+     * @see FileField#FileField(ExistenceType, boolean, boolean)
      **************************************************************************/
     public FileFormField( String name, ExistenceType existence,
         boolean required, boolean isSave )

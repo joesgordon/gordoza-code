@@ -135,9 +135,14 @@ public class FormFieldsTest
                 new ComboFormField<>( "Combo Form Field",
                     Character.UnicodeScript.values() ),
                 Character.UnicodeScript.JAVANESE ) );
-            itemsModel.addElement(
-                createFormFieldItem( new FileFormField( "File Form Field",
-                    ExistenceType.DO_NOT_CHECK ), new File( "" ) ) );
+            itemsModel.addElement( createFormFieldItem(
+                new FileFormField( "File Form Field (File/Save)",
+                    ExistenceType.DO_NOT_CHECK ),
+                new File( "" ) ) );
+            itemsModel.addElement( createFormFieldItem(
+                new FileFormField( "File Form Field (Dir/Save)",
+                    ExistenceType.DIRECTORY_ONLY ),
+                new File( "" ) ) );
             itemsModel.addElement( createFormFieldItem(
                 new HexByteFormField( "Hex Byte Form Field" ), ( byte )0x81 ) );
             itemsModel.addElement( createFormFieldItem(

@@ -6,18 +6,21 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
 
 import org.jutils.*;
 import org.jutils.io.IOUtils;
 import org.jutils.io.parsers.ExistenceType;
 import org.jutils.io.parsers.FileParser;
 import org.jutils.ui.event.*;
+import org.jutils.ui.event.FileChooserListener.IFileSelected;
 import org.jutils.ui.event.FileDropTarget.JTextFieldFilesListener;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.model.IDataView;
 import org.jutils.ui.validation.*;
 import org.jutils.ui.validators.DataTextValidator;
 import org.jutils.ui.validators.ITextValidator;
+import org.jutils.utils.IGetter;
 
 /*******************************************************************************
  * 
@@ -34,6 +37,8 @@ public class FileField implements IDataView<File>, IValidationField
     private final ItemActionList<File> changeListeners;
     /**  */
     private final FileChooserListener fileListener;
+    /**  */
+    private final JMenuItem openPathMenuItem;
 
     /***************************************************************************
      * Creates a File view with an {@link ExistenceType} of FILE_ONLY, required,
@@ -93,6 +98,7 @@ public class FileField implements IDataView<File>, IValidationField
 
         this.field = new ValidationTextField();
         this.fileListener = createFileListener( existence, isSave );
+        this.openPathMenuItem = new JMenuItem();
         this.openMenu = createMenu();
         this.view = createView( existence, required, isSave, showButton );
 
@@ -107,13 +113,49 @@ public class FileField implements IDataView<File>, IValidationField
     private JPopupMenu createMenu()
     {
         JPopupMenu menu = new JPopupMenu();
-        JMenuItem item;
+        Action a;
 
-        item = new JMenuItem( createOpenPathAction() );
-        menu.add( item );
+        a = createAction( ( e ) -> openPath(), "Open Path",
+            IconConstants.OPEN_FILE_16 );
+        openPathMenuItem.setAction( a );
+        menu.add( openPathMenuItem );
 
-        item = new JMenuItem( createOpenParentAction() );
-        menu.add( item );
+        a = createAction( ( e ) -> openParent(), "Open Parent",
+            IconConstants.OPEN_FOLDER_16 );
+        menu.add( new JMenuItem( a ) );
+
+        menu.addSeparator();
+
+        IGetter<String> copyPath = () -> {
+            return getData().getAbsolutePath();
+        };
+        IGetter<String> copyName = () -> {
+            return getData().getName();
+        };
+        IGetter<String> copyParent = () -> {
+            return getData().getParent();
+        };
+        IGetter<String> copyParentName = () -> {
+            return getData().getParentFile().getName();
+        };
+
+        a = createAction( ( e ) -> copyPath( copyPath ), "Copy Path",
+            IconConstants.EDIT_COPY_16 );
+        menu.add( new JMenuItem( a ) );
+
+        a = createAction( ( e ) -> copyPath( copyName ), "Copy Name",
+            IconConstants.EDIT_COPY_16 );
+        menu.add( new JMenuItem( a ) );
+
+        menu.addSeparator();
+
+        a = createAction( ( e ) -> copyPath( copyParent ), "Copy Parent Path",
+            IconConstants.EDIT_COPY_16 );
+        menu.add( new JMenuItem( a ) );
+
+        a = createAction( ( e ) -> copyPath( copyParentName ),
+            "Copy Parent Name", IconConstants.EDIT_COPY_16 );
+        menu.add( new JMenuItem( a ) );
 
         return menu;
     }
@@ -121,21 +163,24 @@ public class FileField implements IDataView<File>, IValidationField
     /***************************************************************************
      * @return
      **************************************************************************/
-    private Action createOpenParentAction()
+    private static Action createAction( ActionListener l, String name,
+        String iconStr )
     {
-        Icon icon = IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 );
+        Icon icon = IconConstants.getIcon( iconStr );
 
-        return new ActionAdapter( ( e ) -> openParent(), "Open Parent", icon );
+        return new ActionAdapter( l, name, icon );
     }
 
     /***************************************************************************
-     * @return
+     * 
      **************************************************************************/
-    private Action createOpenPathAction()
+    private void copyPath( IGetter<String> strGetter )
     {
-        Icon icon = IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 );
-
-        return new ActionAdapter( ( e ) -> openPath(), "Open Path", icon );
+        String str = strGetter.get();
+        if( str != null )
+        {
+            Utils.setClipboardText( str );
+        }
     }
 
     /***************************************************************************
@@ -220,8 +265,9 @@ public class FileField implements IDataView<File>, IValidationField
 
         if( existence != ExistenceType.DIRECTORY_ONLY )
         {
+            IFileSelected ifs = ( f ) -> setData( f );
             fcl = new FileChooserListener( field.getView(), "Choose File",
-                new FileBrowseListener( this ), isSave );
+                isSave, ifs, () -> getDefaultFile() );
         }
 
         return fcl;
@@ -244,8 +290,9 @@ public class FileField implements IDataView<File>, IValidationField
 
         if( existence == ExistenceType.DIRECTORY_ONLY )
         {
+            IFileSelected ifs = ( f ) -> setData( f );
             browseListener = new DirectoryChooserListener( panel,
-                "Choose Directory", new FileBrowseListener( this ) );
+                "Choose Directory", ifs, () -> getDefaultFile() );
         }
         else
         {
@@ -270,6 +317,7 @@ public class FileField implements IDataView<File>, IValidationField
             button = new JButton(
                 IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
             button.addActionListener( browseListener );
+            button.setToolTipText( "Browse (Right-click to open path)" );
 
             constraints = new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.NONE,
@@ -374,10 +422,17 @@ public class FileField implements IDataView<File>, IValidationField
     }
 
     /***************************************************************************
-     * @param description
-     * @param extensions
+     * Adds the provided extension description and extensions to the file
+     * dialog.
+     * @param description the description of the file type denoted by the
+     * extension list.
+     * @param extensions the list of extensions of a file type.
+     * @throws if this field was initialized with
+     * {@link ExistenceType#DIRECTORY_ONLY}.
+     * @see FileChooserListener#addExtension(String, String...)
      **************************************************************************/
     public void addExtension( String description, String... extensions )
+        throws IllegalStateException
     {
         if( fileListener == null )
         {
@@ -389,39 +444,22 @@ public class FileField implements IDataView<File>, IValidationField
     }
 
     /***************************************************************************
-     * 
+     * Returns the last selected file for the listener.
      **************************************************************************/
-    private static class FileBrowseListener implements IFileSelectionListener
+    private File getDefaultFile()
     {
-        private final FileField view;
+        File f = getData();
 
-        public FileBrowseListener( FileField view )
+        while( f != null && !f.exists() )
         {
-            this.view = view;
+            f = f.getParentFile();
         }
 
-        @Override
-        public File getDefaultFile()
-        {
-            File f = view.getData();
-
-            while( f != null && !f.exists() )
-            {
-                f = f.getParentFile();
-            }
-
-            return f;
-        }
-
-        @Override
-        public void filesChosen( File [] files )
-        {
-            view.setData( files[0] );
-        }
+        return f;
     }
 
     /***************************************************************************
-     * 
+     * Notifies the listeners that the file has been updated.
      **************************************************************************/
     private static class FileUpdater implements IUpdater<File>
     {
@@ -442,15 +480,22 @@ public class FileField implements IDataView<File>, IValidationField
     }
 
     /***************************************************************************
-     * 
+     * Displays the context menu on the button on right-click.
      **************************************************************************/
     private static class MenuListener extends MouseAdapter
     {
         private final FileField field;
+        private final FileSystemView fileSys;
+        private final Icon fileIcon;
+        private final Icon dirIcon;
 
         public MenuListener( FileField field )
         {
             this.field = field;
+            this.fileSys = FileSystemView.getFileSystemView();
+            this.fileIcon = field.openPathMenuItem.getIcon();
+            this.dirIcon = IconConstants.getIcon(
+                IconConstants.OPEN_FOLDER_16 );
         }
 
         @Override
@@ -459,7 +504,36 @@ public class FileField implements IDataView<File>, IValidationField
             if( SwingUtilities.isRightMouseButton( e ) &&
                 e.getClickCount() == 1 )
             {
-                field.openMenu.show( e.getComponent(), e.getX(), e.getY() );
+                Component c = e.getComponent();
+                int x = c.getWidth() / 2; // e.getX();
+                int y = c.getHeight() / 2; // e.getY();
+
+                File file = field.getData();
+                Icon icon = fileIcon;
+                boolean enabled = true;
+
+                if( file.isFile() )
+                {
+                    icon = fileSys.getSystemIcon( file );
+
+                    if( icon == null )
+                    {
+                        icon = fileIcon;
+                    }
+                }
+                else if( file.isDirectory() )
+                {
+                    icon = dirIcon;
+                }
+                else
+                {
+                    enabled = false;
+                }
+
+                field.openPathMenuItem.setIcon( icon );
+                field.openPathMenuItem.setEnabled( enabled );
+
+                field.openMenu.show( c, x, y );
             }
         }
     }

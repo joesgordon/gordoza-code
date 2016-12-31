@@ -2,9 +2,12 @@ package org.jutils.ui.explorer;
 
 import java.awt.*;
 import java.awt.Dialog.ModalityType;
+import java.io.*;
 
 import javax.swing.*;
 
+import org.jutils.SwingUtils;
+import org.jutils.io.XStreamUtils;
 import org.jutils.ui.OkDialogView;
 import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.event.updater.ReflectiveUpdater;
@@ -12,6 +15,8 @@ import org.jutils.ui.event.updater.WrappedUpdater;
 import org.jutils.ui.explorer.data.AppManagerConfig;
 import org.jutils.ui.fields.BooleanFormField;
 import org.jutils.ui.model.IDataView;
+
+import com.thoughtworks.xstream.XStreamException;
 
 /*******************************************************************************
  * 
@@ -129,5 +134,55 @@ public class AppManagerView implements IDataView<AppManagerConfig>
     {
         this.extsView.setEnabled( using );
         this.appsView.setEnabled( using );
+    }
+
+    public void openFile( File file )
+    {
+        try
+        {
+            AppManagerConfig cfg = XStreamUtils.readObjectXStream( file );
+
+            setData( cfg );
+        }
+        catch( XStreamException ex )
+        {
+            SwingUtils.showErrorMessage( getView(),
+                "Error reading from file: " + file.getAbsolutePath(),
+                "Read Error" );
+        }
+        catch( FileNotFoundException ex )
+        {
+            SwingUtils.showErrorMessage( getView(),
+                "File not found: " + file.getAbsolutePath(),
+                "File Not Found Error" );
+        }
+        catch( IOException ex )
+        {
+            SwingUtils.showErrorMessage( getView(),
+                "Error reading from file: " + file.getAbsolutePath(),
+                "I/O Error" );
+        }
+    }
+
+    public void saveFile( File file )
+    {
+        AppManagerConfig cfg = getData();
+
+        try
+        {
+            XStreamUtils.writeObjectXStream( cfg, file );
+        }
+        catch( XStreamException e )
+        {
+            SwingUtils.showErrorMessage( getView(),
+                "Error reading from file: " + file.getAbsolutePath(),
+                "Serialization Error" );
+        }
+        catch( IOException e )
+        {
+            SwingUtils.showErrorMessage( getView(),
+                "Error reading from file: " + file.getAbsolutePath(),
+                "I/O Error" );
+        }
     }
 }

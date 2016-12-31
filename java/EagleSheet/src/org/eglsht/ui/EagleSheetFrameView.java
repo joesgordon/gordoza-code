@@ -12,11 +12,11 @@ import org.eglsht.data.EagleSheet;
 import org.eglsht.data.SheetSize;
 import org.jutils.IconConstants;
 import org.jutils.ui.*;
-import org.jutils.ui.event.*;
+import org.jutils.ui.event.ActionAdapter;
+import org.jutils.ui.event.FileChooserListener;
+import org.jutils.ui.event.FileChooserListener.IFileSelected;
 import org.jutils.ui.model.IView;
 import org.jutils.ui.sheet.SpreadSheetView;
-import org.jutils.utils.ICallback;
-import org.jutils.utils.IGetter;
 
 /*******************************************************************************
  * 
@@ -92,10 +92,9 @@ public class EagleSheetFrameView implements IView<JFrame>
     private Action createOpenAction()
     {
         Icon icon = IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 );
-        ICallback<File> callback = ( f ) -> openFile( f );
-        IFileSelectionListener fileListener = new FileListener( callback );
+        IFileSelected ifs = ( f ) -> openFile( f );
         ActionListener listener = new FileChooserListener( frame, "Open File",
-            fileListener, false );
+            false, ifs );
         return new ActionAdapter( listener, "Open", icon );
     }
 
@@ -302,38 +301,5 @@ public class EagleSheetFrameView implements IView<JFrame>
     private void showEditSize()
     {
         // TODO Auto-generated method stub
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class FileListener implements IFileSelectionListener
-    {
-        private final IGetter<File> getDefaultListener;
-        private final ICallback<File> fileChosenListener;
-
-        public FileListener( ICallback<File> fileChosenListener )
-        {
-            this( null, fileChosenListener );
-        }
-
-        public FileListener( IGetter<File> getDefaultListener,
-            ICallback<File> fileChosenListener )
-        {
-            this.fileChosenListener = fileChosenListener;
-            this.getDefaultListener = getDefaultListener;
-        }
-
-        @Override
-        public File getDefaultFile()
-        {
-            return getDefaultListener == null ? null : getDefaultListener.get();
-        }
-
-        @Override
-        public void filesChosen( File [] files )
-        {
-            fileChosenListener.invoke( files[0] );
-        }
     }
 }

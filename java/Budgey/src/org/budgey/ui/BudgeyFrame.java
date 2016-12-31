@@ -16,7 +16,10 @@ import org.jutils.io.XStreamUtils;
 import org.jutils.io.options.OptionsSerializer;
 import org.jutils.ui.JGoodiesToolBar;
 import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.event.*;
+import org.jutils.ui.event.ActionAdapter;
+import org.jutils.ui.event.FileChooserListener;
+import org.jutils.ui.event.FileChooserListener.IFileSelected;
+import org.jutils.ui.event.FileChooserListener.ILastFile;
 import org.jutils.ui.model.IDataView;
 import org.jutils.ui.model.IView;
 
@@ -112,8 +115,10 @@ public class BudgeyFrame implements IView<JFrame>
     {
         Icon icon = IconConstants.loader.getIcon(
             IconConstants.OPEN_FOLDER_16 );
+        IFileSelected ifs = ( f ) -> openFile( f );
+        ILastFile ils = () -> options.getOptions().lastBudgets.first();
         ActionListener listener = new FileChooserListener( getView(),
-            "Open Budget", new OpenButtonListener(), false );
+            "Open Budget", false, ifs, ils );
         return new ActionAdapter( listener, "Open Budget", icon );
     }
 
@@ -123,8 +128,10 @@ public class BudgeyFrame implements IView<JFrame>
     private Action createSaveAction()
     {
         Icon icon = IconConstants.loader.getIcon( IconConstants.SAVE_16 );
+        IFileSelected ifs = ( f ) -> saveFile( f );
+        ILastFile ils = () -> options.getOptions().lastBudgets.first();
         ActionListener listener = new FileChooserListener( getView(),
-            "Save Budget", new SaveButtonListener(), true );
+            "Save Budget", true, ifs, ils );
         return new ActionAdapter( listener, "Save Budget", icon );
     }
 
@@ -136,79 +143,49 @@ public class BudgeyFrame implements IView<JFrame>
         budgeyPanel.setData( budget );
     }
 
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private class OpenButtonListener implements IFileSelectionListener
+    private void openFile( File file )
     {
-        @Override
-        public File getDefaultFile()
+        options.getOptions().lastBudgets.push( file );
+
+        try
         {
-            return options.getOptions().lastBudgets.first();
+            Budget b = XStreamUtils.readObjectXStream( file );
+            budgeyPanel.setData( b );
         }
-
-        @Override
-        public void filesChosen( File [] files )
+        catch( XStreamException ex )
         {
-            File file = files[0];
-
-            options.getOptions().lastBudgets.push( file );
-
-            try
-            {
-                Budget b = XStreamUtils.readObjectXStream( file );
-                budgeyPanel.setData( b );
-            }
-            catch( XStreamException ex )
-            {
-                JOptionPane.showMessageDialog( getView(), ex.getMessage(),
-                    "Data Error", JOptionPane.ERROR_MESSAGE );
-            }
-            catch( FileNotFoundException ex )
-            {
-                JOptionPane.showMessageDialog( getView(), ex.getMessage(),
-                    "File Not Found Error", JOptionPane.ERROR_MESSAGE );
-            }
-            catch( IOException ex )
-            {
-                JOptionPane.showMessageDialog( getView(), ex.getMessage(),
-                    "I/O Error", JOptionPane.ERROR_MESSAGE );
-            }
+            JOptionPane.showMessageDialog( getView(), ex.getMessage(),
+                "Data Error", JOptionPane.ERROR_MESSAGE );
+        }
+        catch( FileNotFoundException ex )
+        {
+            JOptionPane.showMessageDialog( getView(), ex.getMessage(),
+                "File Not Found Error", JOptionPane.ERROR_MESSAGE );
+        }
+        catch( IOException ex )
+        {
+            JOptionPane.showMessageDialog( getView(), ex.getMessage(),
+                "I/O Error", JOptionPane.ERROR_MESSAGE );
         }
     }
 
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private class SaveButtonListener implements IFileSelectionListener
+    private void saveFile( File file )
     {
-        @Override
-        public File getDefaultFile()
+        options.getOptions().lastBudgets.push( file );
+
+        try
         {
-            return options.getOptions().lastBudgets.first();
+            XStreamUtils.writeObjectXStream( budgeyPanel.getData(), file );
         }
-
-        @Override
-        public void filesChosen( File [] files )
+        catch( XStreamException ex )
         {
-            File file = files[0];
-
-            options.getOptions().lastBudgets.push( file );
-
-            try
-            {
-                XStreamUtils.writeObjectXStream( budgeyPanel.getData(), file );
-            }
-            catch( XStreamException ex )
-            {
-                JOptionPane.showMessageDialog( getView(), ex.getMessage(),
-                    "Data Error", JOptionPane.ERROR_MESSAGE );
-            }
-            catch( IOException ex )
-            {
-                JOptionPane.showMessageDialog( getView(), ex.getMessage(),
-                    "I/O Error", JOptionPane.ERROR_MESSAGE );
-            }
+            JOptionPane.showMessageDialog( getView(), ex.getMessage(),
+                "Data Error", JOptionPane.ERROR_MESSAGE );
+        }
+        catch( IOException ex )
+        {
+            JOptionPane.showMessageDialog( getView(), ex.getMessage(),
+                "I/O Error", JOptionPane.ERROR_MESSAGE );
         }
     }
 }
