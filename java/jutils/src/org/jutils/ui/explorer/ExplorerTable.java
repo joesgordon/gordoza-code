@@ -1,8 +1,7 @@
 package org.jutils.ui.explorer;
 
 import java.awt.Component;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.awt.event.*;
 import java.io.File;
 import java.util.List;
 
@@ -10,6 +9,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.*;
 
+import org.jutils.ui.FileContextMenu;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
@@ -39,9 +39,11 @@ public class ExplorerTable implements IView<JTable>
         table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
         table.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
         // this.setAutoCreateRowSorter( true );
-        table.addFocusListener( new ExplorerTable_FocusLostAdapter( this ) );
+        table.addFocusListener( new TableFocusListener( this ) );
 
         table.getTableHeader().setReorderingAllowed( false );
+
+        table.addMouseListener( new TableMouseListener( this ) );
 
         clearTable();
     }
@@ -132,12 +134,14 @@ public class ExplorerTable implements IView<JTable>
         return item;
     }
 
-    private static final class ExplorerTable_FocusLostAdapter
-        implements FocusListener
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static final class TableFocusListener implements FocusListener
     {
         private ExplorerTable table = null;
 
-        public ExplorerTable_FocusLostAdapter( ExplorerTable table )
+        public TableFocusListener( ExplorerTable table )
         {
             this.table = table;
         }
@@ -155,11 +159,12 @@ public class ExplorerTable implements IView<JTable>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static final class FilenameRenderer implements TableCellRenderer
     {
-        /**  */
         private static final FileSystemView view = FileSystemView.getFileSystemView();
-        /**  */
         private final DefaultTableCellRenderer renderer;
 
         public FilenameRenderer()
@@ -194,6 +199,41 @@ public class ExplorerTable implements IView<JTable>
             }
 
             return renderer;
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static final class TableMouseListener extends MouseAdapter
+    {
+        private final ExplorerTable etable;
+        private final FileContextMenu menu;
+
+        public TableMouseListener( ExplorerTable etable )
+        {
+            this.etable = etable;
+            this.menu = new FileContextMenu( etable.table );
+        }
+
+        @Override
+        public void mouseReleased( MouseEvent e )
+        {
+            int r = etable.table.rowAtPoint( e.getPoint() );
+            if( r > -1 && r < etable.table.getRowCount() )
+            {
+                etable.table.setRowSelectionInterval( r, r );
+                if( e.isPopupTrigger() && e.getComponent() instanceof JTable )
+                {
+                    IExplorerItem iei = etable.model.getExplorerItem( r );
+                    menu.show( iei.getFile(), e.getComponent(), e.getX(),
+                        e.getY() );
+                }
+            }
+            else
+            {
+                etable.table.clearSelection();
+            }
         }
     }
 }

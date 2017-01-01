@@ -15,7 +15,6 @@ import org.jutils.SwingUtils;
 import org.jutils.io.options.OptionsSerializer;
 import org.jutils.task.TaskView;
 import org.jutils.ui.*;
-import org.jutils.ui.RecentFilesMenuView.IRecentSelected;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileChooserListener.IFileSelected;
 import org.jutils.ui.event.FileChooserListener.ILastFile;
@@ -67,7 +66,7 @@ public class DuakFrame implements IView<JFrame>
         frameView.setContent( duakPanel.getView() );
 
         recentMenu.setData( options.getOptions().recentDirs.toList() );
-        recentMenu.addSelectedListener( new OpenListener( this ) );
+        recentMenu.addSelectedListener( ( f, c ) -> open( f ) );
     }
 
     /***************************************************************************
@@ -218,20 +217,13 @@ public class DuakFrame implements IView<JFrame>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class OpenListener
-        implements ILastFile, IFileSelected, IRecentSelected
+    private static class OpenListener implements ILastFile, IFileSelected
     {
         private final DuakFrame view;
 
         public OpenListener( DuakFrame view )
         {
             this.view = view;
-        }
-
-        @Override
-        public void selected( File file, boolean ctrlPressed )
-        {
-            view.open( file );
         }
 
         @Override

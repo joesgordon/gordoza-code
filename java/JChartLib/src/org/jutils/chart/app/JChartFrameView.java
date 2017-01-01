@@ -14,7 +14,6 @@ import org.jutils.chart.model.Series;
 import org.jutils.chart.ui.ChartView;
 import org.jutils.io.options.OptionsSerializer;
 import org.jutils.ui.RecentFilesMenuView;
-import org.jutils.ui.RecentFilesMenuView.IRecentSelected;
 import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
@@ -59,7 +58,8 @@ public class JChartFrameView implements IView<JFrame>
         chartView.addFileLoadedListener( new FileLoadedListener( this ) );
 
         recentFiles.setData( options.getOptions().recentFiles.toList() );
-        recentFiles.addSelectedListener( new FileSelected( this ) );
+        recentFiles.addSelectedListener(
+            ( f, c ) -> chartView.importData( f, c ) );
 
         chartView.chart.domainAxis.title.visible = true;
         chartView.chart.domainAxis.title.text = "X Values";
@@ -215,25 +215,6 @@ public class JChartFrameView implements IView<JFrame>
             view.options.write();
             view.recentFiles.setData(
                 view.options.getOptions().recentFiles.toList() );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class FileSelected implements IRecentSelected
-    {
-        private final JChartFrameView view;
-
-        public FileSelected( JChartFrameView view )
-        {
-            this.view = view;
-        }
-
-        @Override
-        public void selected( File file, boolean ctrlPressed )
-        {
-            view.chartView.importData( file, ctrlPressed );
         }
     }
 

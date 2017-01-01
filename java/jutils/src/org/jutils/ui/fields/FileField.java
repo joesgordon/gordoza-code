@@ -3,20 +3,13 @@ package org.jutils.ui.fields;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileSystemView;
 
-import org.jutils.*;
-import org.jutils.io.IOUtils;
-import org.jutils.io.StringPrintStream;
+import org.jutils.IconConstants;
 import org.jutils.io.parsers.ExistenceType;
 import org.jutils.io.parsers.FileParser;
-import org.jutils.ui.IconTextField;
-import org.jutils.ui.VerboseMessageView;
+import org.jutils.ui.*;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileChooserListener.IFileSelected;
 import org.jutils.ui.event.FileDropTarget.JTextFieldFilesListener;
@@ -25,7 +18,6 @@ import org.jutils.ui.model.IDataView;
 import org.jutils.ui.validation.*;
 import org.jutils.ui.validators.DataTextValidator;
 import org.jutils.ui.validators.ITextValidator;
-import org.jutils.utils.IGetter;
 
 /*******************************************************************************
  * 
@@ -39,13 +31,9 @@ public class FileField implements IDataView<File>, IValidationField
     /**  */
     private final ValidationTextComponentField<JTextField> field;
     /**  */
-    private final JPopupMenu openMenu;
-    /**  */
     private final ItemActionList<File> changeListeners;
     /**  */
     private final FileChooserListener fileListener;
-    /**  */
-    private final JMenuItem openPathMenuItem;
     /**  */
     private final FileIcon icon;
 
@@ -108,8 +96,6 @@ public class FileField implements IDataView<File>, IValidationField
         this.field = new ValidationTextComponentField<>( new JTextField() );
         this.textField = new IconTextField( field.getView() );
         this.fileListener = createFileListener( existence, isSave );
-        this.openPathMenuItem = new JMenuItem();
-        this.openMenu = createMenu();
         this.view = createView( existence, required, isSave, showButton );
         this.icon = new FileIcon();
 
@@ -120,198 +106,6 @@ public class FileField implements IDataView<File>, IValidationField
         field.getView().setColumns( 20 );
 
         field.setText( "" );
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    private JPopupMenu createMenu()
-    {
-        JPopupMenu menu = new JPopupMenu();
-        Action a;
-
-        a = createAction( ( e ) -> openPath(), "Open Path",
-            IconConstants.OPEN_FILE_16 );
-        openPathMenuItem.setAction( a );
-        menu.add( openPathMenuItem );
-
-        a = createAction( ( e ) -> openParent(), "Open Parent",
-            IconConstants.OPEN_FOLDER_16 );
-        menu.add( new JMenuItem( a ) );
-
-        menu.addSeparator();
-
-        IGetter<String> copyPath = () -> {
-            return getData().getAbsolutePath();
-        };
-        IGetter<String> copyName = () -> {
-            return getData().getName();
-        };
-        IGetter<String> copyParent = () -> {
-            return getData().getParent();
-        };
-        IGetter<String> copyParentName = () -> {
-            return getData().getParentFile().getName();
-        };
-
-        a = createAction( ( e ) -> copyPath( copyPath ), "Copy Path",
-            IconConstants.EDIT_COPY_16 );
-        menu.add( new JMenuItem( a ) );
-
-        a = createAction( ( e ) -> copyPath( copyName ), "Copy Name",
-            IconConstants.EDIT_COPY_16 );
-        menu.add( new JMenuItem( a ) );
-
-        menu.addSeparator();
-
-        a = createAction( ( e ) -> copyPath( copyParent ), "Copy Parent Path",
-            IconConstants.EDIT_COPY_16 );
-        menu.add( new JMenuItem( a ) );
-
-        a = createAction( ( e ) -> copyPath( copyParentName ),
-            "Copy Parent Name", IconConstants.EDIT_COPY_16 );
-        menu.add( new JMenuItem( a ) );
-
-        menu.addSeparator();
-
-        a = createAction( ( e ) -> showInfo(), "File Info",
-            IconConstants.CONFIG_16 );
-        menu.add( new JMenuItem( a ) );
-
-        return menu;
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    private static Action createAction( ActionListener l, String name,
-        String iconStr )
-    {
-        Icon icon = IconConstants.getIcon( iconStr );
-
-        return new ActionAdapter( l, name, icon );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private void copyPath( IGetter<String> strGetter )
-    {
-        String str = strGetter.get();
-        if( str != null )
-        {
-            Utils.setClipboardText( str );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private void showInfo()
-    {
-        VerboseMessageView msgView = new VerboseMessageView();
-        File file = getData();
-        SimpleDateFormat fmt = new SimpleDateFormat(
-            "MM/dd/yyyy HH:mm:ss.SSS" );
-
-        try( StringPrintStream msg = new StringPrintStream() )
-        {
-            msg.println( "  Can Execute: %s", file.canRead() );
-            msg.println( "     Can Read: %s", file.canRead() );
-            msg.println( "    Can Write: %s", file.canRead() );
-            msg.println( "    Is Hidden: %s", file.isHidden() );
-            msg.println( "       Exists: %s", file.exists() );
-            msg.println( " Is Directory: %s", file.isDirectory() );
-            msg.println( "      Is File: %s", file.isFile() );
-            msg.println( "  File Length: %s",
-                IOUtils.byteCount( file.length() ) );
-            msg.println( "Last Modified: %s",
-                fmt.format( new Date( file.lastModified() ) ) );
-
-            msg.println();
-
-            msg.println( "--- Volume Info ---" );
-            msg.println( "   Free Space: %s",
-                IOUtils.byteCount( file.getFreeSpace() ) );
-            msg.println( "  Total Space: %s",
-                IOUtils.byteCount( file.getTotalSpace() ) );
-            msg.println( " Usable Space: %s",
-                IOUtils.byteCount( file.getUsableSpace() ) );
-
-            msgView.setMessages( file.getName(), msg.toString() );
-        }
-
-        msgView.show( getView(), "File Info", 350, 400 );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private void openPath()
-    {
-        File file = getData();
-        if( file != null )
-        {
-            openPath( file );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private void openParent()
-    {
-        File file = getData();
-        if( file != null )
-        {
-            openPath( file.getParentFile() );
-        }
-    }
-
-    /***************************************************************************
-     * @param file
-     **************************************************************************/
-    private void openPath( File file )
-    {
-        if( !file.exists() )
-        {
-            String [] choices = new String[] { "Open Parent", "Cancel" };
-            String choice = SwingUtils.showConfirmMessage( getView(),
-                "File does not exist. Open existing parent?",
-                "File does not exist", choices, choices[0] );
-
-            if( choices[0].equals( choice ) )
-            {
-                File parent = IOUtils.getExistingDir( file.getAbsolutePath() );
-
-                if( parent == null )
-                {
-                    JOptionPane.showMessageDialog( getView(),
-                        "No parent exists for file:" + Utils.NEW_LINE +
-                            file.getAbsolutePath(),
-                        "Error Opening File", JOptionPane.ERROR_MESSAGE );
-                    return;
-                }
-
-                file = parent;
-            }
-            else
-            {
-                return;
-            }
-        }
-
-        try
-        {
-            Desktop.getDesktop().open( file );
-        }
-        catch( IOException ex )
-        {
-            JOptionPane.showMessageDialog( getView(),
-                "Could not open file externally:" + Utils.NEW_LINE +
-                    file.getAbsolutePath(),
-                "Error Opening File", JOptionPane.ERROR_MESSAGE );
-        }
     }
 
     /***************************************************************************
@@ -385,7 +179,7 @@ public class FileField implements IDataView<File>, IValidationField
                 new Insets( 0, 4, 0, 0 ), 0, 0 );
             panel.add( button, constraints );
 
-            button.addMouseListener( new MenuListener( this ) );
+            button.addMouseListener( new MenuListener( this, panel ) );
         }
 
         return panel;
@@ -543,76 +337,17 @@ public class FileField implements IDataView<File>, IValidationField
     }
 
     /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class FileIcon implements Icon
-    {
-        private final FileSystemView fileSys;
-        private final Icon fileIcon;
-        private final Icon dirIcon;
-
-        private Icon icon;
-
-        public FileIcon()
-        {
-            this.fileSys = FileSystemView.getFileSystemView();
-            this.fileIcon = IconConstants.getIcon( IconConstants.OPEN_FILE_16 );
-            this.dirIcon = IconConstants.getIcon(
-                IconConstants.OPEN_FOLDER_16 );
-
-            this.icon = fileIcon;
-        }
-
-        @Override
-        public void paintIcon( Component c, Graphics g, int x, int y )
-        {
-            icon.paintIcon( c, g, x, y );
-        }
-
-        @Override
-        public int getIconWidth()
-        {
-            return icon.getIconWidth();
-        }
-
-        @Override
-        public int getIconHeight()
-        {
-            return icon.getIconHeight();
-        }
-
-        public void setFile( File file )
-        {
-            if( file == null )
-            {
-                icon = fileIcon;
-            }
-            else if( file.isDirectory() )
-            {
-                icon = dirIcon;
-            }
-            else if( file.isFile() )
-            {
-                icon = fileSys.getSystemIcon( file );
-
-                if( icon == null )
-                {
-                    icon = fileIcon;
-                }
-            }
-        }
-    }
-
-    /***************************************************************************
      * Displays the context menu on the button on right-click.
      **************************************************************************/
     private static class MenuListener extends MouseAdapter
     {
         private final FileField field;
+        private final FileContextMenu menu;
 
-        public MenuListener( FileField field )
+        public MenuListener( FileField field, Component parent )
         {
             this.field = field;
+            this.menu = new FileContextMenu( parent );
         }
 
         @Override
@@ -627,12 +362,7 @@ public class FileField implements IDataView<File>, IValidationField
 
                 File file = field.getData();
 
-                boolean enabled = file != null && file.exists();
-
-                field.openPathMenuItem.setIcon( field.icon );
-                field.openPathMenuItem.setEnabled( enabled );
-
-                field.openMenu.show( c, x, y );
+                menu.show( file, c, x, y );
             }
         }
     }
