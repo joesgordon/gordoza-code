@@ -67,12 +67,12 @@ public class ChatFrameView implements IView<JFrame>
         Action action;
         Icon icon;
 
-        // icon = IconConstants.loader.getIcon( IconConstants.CLOCK_16 );
+        // icon = IconConstants.getIcon( IconConstants.CLOCK_16 );
         // action = new ActionAdapter( new HistoryListener( this ),
         // "View Chat History", icon );
         // SwingUtils.addActionToToolbar( toolbar, action );
 
-        icon = IconConstants.loader.getIcon( IconConstants.CONFIG_16 );
+        icon = IconConstants.getIcon( IconConstants.CONFIG_16 );
         action = new ActionAdapter( new ConfigListener( this ),
             "Edit Configuration", icon );
         SwingUtils.addActionToToolbar( toolbar, action );

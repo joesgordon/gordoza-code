@@ -112,7 +112,7 @@ public class TextLabelField implements IDataFormField<TextLabel>
         String name;
 
         name = null;
-        icon = IconConstants.loader.getIcon( IconConstants.FONT_16 );
+        icon = IconConstants.getIcon( IconConstants.FONT_16 );
         listener = new FontListener( this );
         action = new ActionAdapter( listener, name, icon );
 

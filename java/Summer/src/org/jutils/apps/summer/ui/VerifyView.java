@@ -147,7 +147,7 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
         openListener.addExtension( "MD5 Checksum File", "md5" );
         openListener.addExtension( "CRC Checksum File", "crc" );
 
-        icon = IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 );
+        icon = IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 );
         action = new ActionAdapter( openListener, "Open Checksum File", icon );
         JButton button = SwingUtils.addActionToToolbar( toolbar, action );
 

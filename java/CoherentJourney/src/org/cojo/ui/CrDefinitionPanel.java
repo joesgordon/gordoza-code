@@ -239,7 +239,7 @@ public class CrDefinitionPanel implements IView<JPanel>
      * @param title
      * @return
      **************************************************************************/
-    private JPanel createListPanel( String title )
+    private static JPanel createListPanel( String title )
     {
         JPanel panel = new JPanel( new GridBagLayout() );
         JLabel label = new JLabel( title );
@@ -251,7 +251,7 @@ public class CrDefinitionPanel implements IView<JPanel>
         scrollPane.setPreferredSize( new Dimension( 150, 100 ) );
 
         openButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+            IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
 
         panel.add( label,
             new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,

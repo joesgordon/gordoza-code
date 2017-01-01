@@ -18,7 +18,7 @@ public class JHexApp implements ILibraryApp
     @Override
     public Icon getIcon32()
     {
-        return IconConstants.loader.getIcon( IconConstants.BINARY_32 );
+        return IconConstants.getIcon( IconConstants.BINARY_32 );
     }
 
     /***************************************************************************

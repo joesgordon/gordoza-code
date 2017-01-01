@@ -96,12 +96,11 @@ public class JExplorerFrame implements IView<JFrame>
             treeScrollPane, tableScrollPane );
 
         this.prevAction = new ActionAdapter( ( e ) -> goPreviousDirectory(),
-            "Previous", IconConstants.loader.getIcon( IconConstants.BACK_24 ) );
+            "Previous", IconConstants.getIcon( IconConstants.BACK_24 ) );
         this.nextAction = new ActionAdapter( ( e ) -> goNextDirectory(), "Next",
-            IconConstants.loader.getIcon( IconConstants.FORWARD_24 ) );
+            IconConstants.getIcon( IconConstants.FORWARD_24 ) );
         this.upAction = new ActionAdapter( ( e ) -> goDirectoryUp(),
-            "Up a Directory",
-            IconConstants.loader.getIcon( IconConstants.UP_24 ) );
+            "Up a Directory", IconConstants.getIcon( IconConstants.UP_24 ) );
 
         TreeSelectionListener dirTreeSelListener = ( e ) -> dirTreeChanged();
         MouseListener dirTreeMouseListener = new DirTreeMouseListener( this );
@@ -112,7 +111,7 @@ public class JExplorerFrame implements IView<JFrame>
 
         frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         frame.setTitle( "JExplorer" );
-        frame.setIconImages( IconConstants.loader.getImages(
+        frame.setIconImages( IconConstants.getImages(
             IconConstants.OPEN_FOLDER_16, IconConstants.OPEN_FOLDER_32 ) );
         frame.setSize( new Dimension( 600, 450 ) );
 
@@ -165,7 +164,7 @@ public class JExplorerFrame implements IView<JFrame>
         toolsMenu.setText( "Tools" );
         optionsMenuItem.setText( "Options" );
         optionsMenuItem.setIcon(
-            IconConstants.loader.getIcon( IconConstants.CONFIG_16 ) );
+            IconConstants.getIcon( IconConstants.CONFIG_16 ) );
         // optionsMenuItem.setIcon( IconLoader.getIcon( IconLoader.EDIT_16 ) );
         optionsMenuItem.addActionListener( optionsMenuItemListener );
         toolsMenu.add( optionsMenuItem );
@@ -194,8 +193,7 @@ public class JExplorerFrame implements IView<JFrame>
         toolbar.addSeparator();
 
         Action refreshAction = new ActionAdapter( ( e ) -> refreshDirectory(),
-            "Refresh",
-            IconConstants.loader.getIcon( IconConstants.REFRESH_24 ) );
+            "Refresh", IconConstants.getIcon( IconConstants.REFRESH_24 ) );
         SwingUtils.addActionToToolbar( toolbar, refreshAction );
         SwingUtils.setActionToolTip( upAction,
             "Refresh the current directory" );

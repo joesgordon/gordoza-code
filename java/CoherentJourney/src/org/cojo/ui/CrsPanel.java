@@ -70,14 +70,13 @@ public class CrsPanel implements IView<JPanel>
     /***************************************************************************
      * @return
      **************************************************************************/
-    private JToolBar createToolbar()
+    private static JToolBar createToolbar()
     {
         JToolBar toolbar = new JToolBar();
 
         JButton addButton = new JButton();
 
-        addButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 ) );
+        addButton.setIcon( IconConstants.getIcon( IconConstants.EDIT_ADD_16 ) );
         addButton.setToolTipText( "Add a CR" );
         addButton.setFocusable( false );
 

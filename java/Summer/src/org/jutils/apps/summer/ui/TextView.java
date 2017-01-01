@@ -52,13 +52,13 @@ public class TextView implements IDataView<String>
 
         this.openListener = new FileChooserListener( view, "Open File", false,
             new OpenListener( this ) );
-        icon = IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 );
+        icon = IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 );
         this.openAction = new ActionAdapter( openListener, "Open File", icon );
 
         this.saveFileListener = new SaveListener( this );
         this.saveListener = new FileChooserListener( view, "Save File", true,
             saveFileListener, saveFileListener );
-        icon = IconConstants.loader.getIcon( IconConstants.SAVE_16 );
+        icon = IconConstants.getIcon( IconConstants.SAVE_16 );
         this.saveAction = new ActionAdapter( saveListener, "Save File", icon );
 
         createContent();

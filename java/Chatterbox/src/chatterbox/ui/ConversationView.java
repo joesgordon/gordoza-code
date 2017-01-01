@@ -154,8 +154,7 @@ public class ConversationView implements IDataView<IConversation>
         BottomScroller bottomScroller = new BottomScroller( msgEditorPane );
         JButton fontButton = new JButton( "Font" );
 
-        fontButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.FONT_24 ) );
+        fontButton.setIcon( IconConstants.getIcon( IconConstants.FONT_24 ) );
         fontButton.addActionListener( fontButtonListener );
 
         this.msgEditorPane.addComponentListener( bottomScroller );

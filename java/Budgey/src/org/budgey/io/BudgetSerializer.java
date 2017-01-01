@@ -38,7 +38,7 @@ public class BudgetSerializer
     /***************************************************************************
      * @param budget
      **************************************************************************/
-    private void init( Budget budget )
+    private static void init( Budget budget )
     {
         if( budget.getAccounts() == null )
         {
@@ -56,7 +56,7 @@ public class BudgetSerializer
     /***************************************************************************
      * @param a
      **************************************************************************/
-    private void init( Account a )
+    private static void init( Account a )
     {
         if( a.getName() == null )
         {
@@ -82,7 +82,7 @@ public class BudgetSerializer
     /***************************************************************************
      * @param month
      **************************************************************************/
-    private void init( LedgerMonth month )
+    private static void init( LedgerMonth month )
     {
         if( month.getTransactions() == null )
         {

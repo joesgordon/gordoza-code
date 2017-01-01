@@ -13,7 +13,7 @@ public class JExplorerApp implements ILibraryApp
     @Override
     public Icon getIcon32()
     {
-        return IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_32 );
+        return IconConstants.getIcon( IconConstants.OPEN_FOLDER_32 );
     }
 
     @Override

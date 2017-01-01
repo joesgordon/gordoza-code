@@ -105,20 +105,19 @@ public class StfsPanel implements IView<JPanel>
     /***************************************************************************
      * @return
      **************************************************************************/
-    private JToolBar createToolbar()
+    private static JToolBar createToolbar()
     {
         JToolBar toolbar = new JToolBar();
 
         JButton addButton = new JButton();
         JButton deleteButton = new JButton();
 
-        addButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 ) );
+        addButton.setIcon( IconConstants.getIcon( IconConstants.EDIT_ADD_16 ) );
         addButton.setToolTipText( "Add an STF" );
         addButton.setFocusable( false );
 
         deleteButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.EDIT_DELETE_16 ) );
+            IconConstants.getIcon( IconConstants.EDIT_DELETE_16 ) );
         deleteButton.setToolTipText( "Delete an STF" );
         deleteButton.setFocusable( false );
 

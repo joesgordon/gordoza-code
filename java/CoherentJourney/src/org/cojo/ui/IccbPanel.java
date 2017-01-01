@@ -51,7 +51,7 @@ public class IccbPanel implements IView<JPanel>
         JLabel dateApprovedLabel = new JLabel( "Date Approved :" );
         this.dateApprovedField = new JTextField( "Date", 25 );
         this.dateApprovedButton = new JButton(
-            IconConstants.loader.getIcon( IconConstants.CALENDAR_16 ) );
+            IconConstants.getIcon( IconConstants.CALENDAR_16 ) );
 
         JLabel releasedVersionLabel = new JLabel( "Released Version :" );
         this.releasedVersionField = new JComboBox<String>();

@@ -103,7 +103,7 @@ public class BudgeyFrame implements IView<JFrame>
      **************************************************************************/
     private Action createNewAction()
     {
-        Icon icon = IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 );
+        Icon icon = IconConstants.getIcon( IconConstants.NEW_FILE_16 );
         ActionListener listener = ( e ) -> setBudget( new Budget() );
         return new ActionAdapter( listener, "New Budget", icon );
     }
@@ -113,8 +113,7 @@ public class BudgeyFrame implements IView<JFrame>
      **************************************************************************/
     private Action createOpenAction()
     {
-        Icon icon = IconConstants.loader.getIcon(
-            IconConstants.OPEN_FOLDER_16 );
+        Icon icon = IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 );
         IFileSelected ifs = ( f ) -> openFile( f );
         ILastFile ils = () -> options.getOptions().lastBudgets.first();
         ActionListener listener = new FileChooserListener( getView(),
@@ -127,7 +126,7 @@ public class BudgeyFrame implements IView<JFrame>
      **************************************************************************/
     private Action createSaveAction()
     {
-        Icon icon = IconConstants.loader.getIcon( IconConstants.SAVE_16 );
+        Icon icon = IconConstants.getIcon( IconConstants.SAVE_16 );
         IFileSelected ifs = ( f ) -> saveFile( f );
         ILastFile ils = () -> options.getOptions().lastBudgets.first();
         ActionListener listener = new FileChooserListener( getView(),

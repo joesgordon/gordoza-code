@@ -207,19 +207,19 @@ public class PlotContext
                 continue;
             }
 
-            if( min == null )
-            {
-                min = span.min;
-                max = span.max;
-            }
-            else
+            if( min != null && max != null )
             {
                 min = Math.min( min, span.min );
                 max = Math.max( max, span.max );
             }
+            else
+            {
+                min = span.min;
+                max = span.max;
+            }
         }
 
-        if( min == null )
+        if( min == null || max == null )
         {
             if( isPrimary )
             {

@@ -66,7 +66,7 @@ public class BudgetView implements IDataView<Budget>
     /***************************************************************************
      * @return
      **************************************************************************/
-    private Component createAccountsView()
+    private static Component createAccountsView()
     {
         JPanel panel = new JPanel( new GridBagLayout() );
 

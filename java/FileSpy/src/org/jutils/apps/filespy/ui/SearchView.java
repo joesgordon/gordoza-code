@@ -139,7 +139,7 @@ public class SearchView implements IDataView<SearchParams>
         rightResultsScroll = new JScrollPane();
         rightResultsPane = new ScrollableEditorPaneView();
         defStyledDocument = new DefaultStyledDocument();
-        startIcon = IconConstants.loader.getIcon( IconConstants.FIND_32 );
+        startIcon = IconConstants.getIcon( IconConstants.FIND_32 );
         browseListener = new BrowseButtonListener( this );
         startListener = new StartButtonListener();
 
@@ -458,7 +458,7 @@ public class SearchView implements IDataView<SearchParams>
             "Signifies that sub folders " + "should be searched." );
         browseButton.setToolTipText( "Choose the directory to be searched." );
         browseButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+            IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
         browseButton.addActionListener( browseListener );
 
         browsePanel.add( browseLabel,
@@ -950,8 +950,7 @@ public class SearchView implements IDataView<SearchParams>
      **************************************************************************/
     private void setSearchStarted()
     {
-        startButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.STOP_16 ) );
+        startButton.setIcon( IconConstants.getIcon( IconConstants.STOP_16 ) );
         startButton.setText( "Stop" );
         startButton.setActionCommand( "Stop" );
     }

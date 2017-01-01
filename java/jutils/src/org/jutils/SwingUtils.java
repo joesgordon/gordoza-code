@@ -521,7 +521,7 @@ public final class SwingUtils
     public static <T> Action createCopyAction( IDataView<T> view )
     {
         ActionListener listener = new CopyListener<T>( view );
-        Icon icon = IconConstants.loader.getIcon( IconConstants.EDIT_COPY_16 );
+        Icon icon = IconConstants.getIcon( IconConstants.EDIT_COPY_16 );
         Action action = new ActionAdapter( listener, "Copy", icon );
 
         return action;
@@ -536,7 +536,7 @@ public final class SwingUtils
         ItemActionListener<T> itemListener )
     {
         ActionListener listener = new PasteListener<T>( itemListener );
-        Icon icon = IconConstants.loader.getIcon( IconConstants.EDIT_PASTE_16 );
+        Icon icon = IconConstants.getIcon( IconConstants.EDIT_PASTE_16 );
         Action action = new ActionAdapter( listener, "Paste", icon );
 
         return action;

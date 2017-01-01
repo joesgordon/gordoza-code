@@ -128,7 +128,7 @@ public class StatusBarPanel
         refreshButton.setMargin( new Insets( 0, 0, 0, 0 ) );
         refreshButton.setText( "" );
         refreshButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.REFRESH_16 ) );
+            IconConstants.getIcon( IconConstants.REFRESH_16 ) );
         refreshButton.setFocusable( false );
         refreshButton.addActionListener( new RefreshButtonListener() );
 

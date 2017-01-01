@@ -44,7 +44,7 @@ public class ByteCacheTest
     {
         URL url;
 
-        url = IconConstants.loader.loader.getUrl( IconConstants.ATOMIC_32 );
+        url = IconConstants.getUrl( IconConstants.ATOMIC_32 );
 
         return loadBytes( url );
     }
@@ -52,7 +52,7 @@ public class ByteCacheTest
     /***************************************************************************
      * @return
      **************************************************************************/
-    private byte [] getTestBytes()
+    private static byte [] getTestBytes()
     {
         try
         {

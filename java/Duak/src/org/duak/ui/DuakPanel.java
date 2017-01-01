@@ -108,12 +108,12 @@ public class DuakPanel implements IDataView<FileInfo>
         Action action;
 
         action = new ActionAdapter( new OpenFileListener( this ), "Open File",
-            IconConstants.loader.getIcon( IconConstants.OPEN_FILE_16 ) );
+            IconConstants.getIcon( IconConstants.OPEN_FILE_16 ) );
         menu.add( action );
 
         action = new ActionAdapter( new OpenLocationListener( this ),
             "Open Location",
-            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+            IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
         menu.add( action );
 
         return menu;
@@ -373,8 +373,7 @@ public class DuakPanel implements IDataView<FileInfo>
         {
             fsv = FileSystemView.getFileSystemView();
             iconMap = new HashMap<File, Icon>();
-            defaultIcon = IconConstants.loader.getIcon(
-                IconConstants.OPEN_FILE_16 );
+            defaultIcon = IconConstants.getIcon( IconConstants.OPEN_FILE_16 );
         }
 
         public String getSystemName( File file )

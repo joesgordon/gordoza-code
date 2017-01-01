@@ -25,7 +25,7 @@ public class NewTaskView implements IView<JPanel>
     /***************************************************************************
      * @return
      **************************************************************************/
-    private JPanel createMainPanel()
+    private static JPanel createMainPanel()
     {
         JTextField jTextField1 = new JTextField();
         JLabel nameLabel = new JLabel( "Name :" );

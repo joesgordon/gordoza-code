@@ -13,7 +13,7 @@ public class TaskflowLibApp implements ILibraryApp
     @Override
     public Icon getIcon32()
     {
-        return IconConstants.loader.getIcon( IconConstants.CALENDAR_32 );
+        return IconConstants.getIcon( IconConstants.CALENDAR_32 );
     }
 
     @Override

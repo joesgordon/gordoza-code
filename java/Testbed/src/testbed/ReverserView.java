@@ -31,7 +31,7 @@ public class ReverserView implements IFrameApp
         JScrollPane textPane = new JScrollPane( textField );
         Action reverseAction = new ActionAdapter(
             new ReverseAction( textField ), "Reverse",
-            IconConstants.loader.getIcon( IconConstants.REFRESH_16 ) );
+            IconConstants.getIcon( IconConstants.REFRESH_16 ) );
 
         frameView.setToolbar( toolbar );
 

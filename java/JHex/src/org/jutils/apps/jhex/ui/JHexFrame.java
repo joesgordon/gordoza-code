@@ -99,7 +99,7 @@ public class JHexFrame implements IView<JFrame>
         this.lastSearch = null;
 
         this.searchAction = new ActionAdapter( new SearchListener( this ),
-            "Search", IconConstants.loader.getIcon( IconConstants.FIND_16 ) );
+            "Search", IconConstants.getIcon( IconConstants.FIND_16 ) );
 
         JPanel editorView = editor.getView();
         KeyStroke key;
@@ -201,14 +201,13 @@ public class JHexFrame implements IView<JFrame>
         JButton button;
 
         button = new JButton(
-            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+            IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
         button.setToolTipText( "Open File" );
         button.setFocusable( false );
         button.addActionListener( ( e ) -> showOpenDialog() );
         toolbar.add( button );
 
-        button = new JButton(
-            IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
+        button = new JButton( IconConstants.getIcon( IconConstants.SAVE_16 ) );
         button.setToolTipText( "Save File (Not Yet Implemented)" );
         button.setFocusable( false );
         button.addActionListener( ( e ) -> saveFile() );
@@ -253,7 +252,7 @@ public class JHexFrame implements IView<JFrame>
         toolbar.add( button );
 
         button = new JButton(
-            IconConstants.loader.getIcon( IconConstants.CONFIG_16 ) );
+            IconConstants.getIcon( IconConstants.CONFIG_16 ) );
         button.setToolTipText( "Configure Options" );
         button.setFocusable( false );
         button.addActionListener( new BufferSizeListener( this ) );
@@ -267,7 +266,7 @@ public class JHexFrame implements IView<JFrame>
         toolbar.add( jtb );
 
         button = new JButton(
-            IconConstants.loader.getIcon( IconConstants.ANALYZE_16 ) );
+            IconConstants.getIcon( IconConstants.ANALYZE_16 ) );
         button.setToolTipText( "Analyze" );
         button.setFocusable( false );
         button.addActionListener( ( e ) -> showAnalyzer() );
@@ -317,13 +316,12 @@ public class JHexFrame implements IView<JFrame>
 
         item = new JMenuItem( "Open" );
         item.addActionListener( ( e ) -> showOpenDialog() );
-        item.setIcon(
-            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+        item.setIcon( IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
         fileMenu.add( item, idx++ );
 
         item = new JMenuItem( "Save" );
         item.addActionListener( ( e ) -> saveFile() );
-        item.setIcon( IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
+        item.setIcon( IconConstants.getIcon( IconConstants.SAVE_16 ) );
         // fileMenu.add( item, idx++ );
 
         fileMenu.add( recentFiles.getView(), idx++ );
@@ -372,7 +370,7 @@ public class JHexFrame implements IView<JFrame>
         JMenuItem item;
 
         item = new JMenuItem( "Set Buffer Size" );
-        item.setIcon( IconConstants.loader.getIcon( IconConstants.CONFIG_16 ) );
+        item.setIcon( IconConstants.getIcon( IconConstants.CONFIG_16 ) );
         item.addActionListener( new BufferSizeListener( this ) );
         menu.add( item );
 

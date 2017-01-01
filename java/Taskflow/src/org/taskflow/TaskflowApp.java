@@ -24,7 +24,7 @@ public class TaskflowApp implements IFrameApp
         TaskflowFrameView frameView = new TaskflowFrameView();
         JFrame frame = frameView.getView();
         TaskflowMenu popup = new TaskflowMenu( frameView );
-        Image img = IconConstants.loader.getImage( IconConstants.CALENDAR_16 );
+        Image img = IconConstants.getImage( IconConstants.CALENDAR_16 );
 
         TrayIcon icon = SwingUtils.createTrayIcon( img, "Tuvok", frame, null );
         SwingUtils.addTrayMenu( icon, popup.getView() );

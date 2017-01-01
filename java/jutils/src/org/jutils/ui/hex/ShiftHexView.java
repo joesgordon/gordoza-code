@@ -116,7 +116,7 @@ public class ShiftHexView implements IView<JComponent>
         // ---------------------------------------------------------------------
         // Setup left shift.
         // ---------------------------------------------------------------------
-        icon = IconConstants.loader.getIcon( IconConstants.BACK_16 );
+        icon = IconConstants.getIcon( IconConstants.BACK_16 );
         action = new ActionAdapter( new ShiftListener( this, -1 ), "Shift Left",
             icon );
         SwingUtils.addActionToToolbar( toolbar, action, leftButton );
@@ -130,7 +130,7 @@ public class ShiftHexView implements IView<JComponent>
         // ---------------------------------------------------------------------
         // Setup right shift.
         // ---------------------------------------------------------------------
-        icon = IconConstants.loader.getIcon( IconConstants.FORWARD_16 );
+        icon = IconConstants.getIcon( IconConstants.FORWARD_16 );
         action = new ActionAdapter( new ShiftListener( this, 1 ), "Shift Right",
             icon );
         SwingUtils.addActionToToolbar( toolbar, action, rightButton );
@@ -144,7 +144,7 @@ public class ShiftHexView implements IView<JComponent>
         // ---------------------------------------------------------------------
         // Setup find.
         // ---------------------------------------------------------------------
-        icon = IconConstants.loader.getIcon( IconConstants.FIND_16 );
+        icon = IconConstants.getIcon( IconConstants.FIND_16 );
         action = new ActionAdapter( new FindListener( this ), "Find Bits",
             icon );
         SwingUtils.addActionToToolbar( toolbar, action );

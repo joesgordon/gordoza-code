@@ -151,7 +151,7 @@ public class FileContextMenu
     /***************************************************************************
      * 
      **************************************************************************/
-    private void copyString( IGetter<String> strGetter )
+    private static void copyString( IGetter<String> strGetter )
     {
         String str = strGetter.get();
         if( str != null )

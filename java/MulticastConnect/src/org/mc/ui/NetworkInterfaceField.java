@@ -36,7 +36,7 @@ public class NetworkInterfaceField implements IDataFormField<String>
     /***************************************************************************
      * @return
      **************************************************************************/
-    private List<NetworkInterface> buildNicList()
+    private static List<NetworkInterface> buildNicList()
     {
         List<NetworkInterface> nics = new ArrayList<>();
         Enumeration<NetworkInterface> nets;

@@ -170,7 +170,7 @@ public class FileField implements IDataView<File>, IValidationField
         if( showButton )
         {
             button = new JButton(
-                IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+                IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
             button.addActionListener( browseListener );
             button.setToolTipText( "Browse (Right-click to open path)" );
 

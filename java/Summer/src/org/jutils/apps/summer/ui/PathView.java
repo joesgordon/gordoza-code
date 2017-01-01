@@ -199,11 +199,11 @@ public class PathView implements IDataView<File>
             {
                 name = FILE_SYSTEM.getSystemDisplayName( file );
                 setIcon( FILE_SYSTEM.getSystemIcon( file ) );
-            }
 
-            if( name == null )
-            {
-                name = file.getName();
+                if( name == null )
+                {
+                    name = file.getName();
+                }
             }
 
             setText( name );

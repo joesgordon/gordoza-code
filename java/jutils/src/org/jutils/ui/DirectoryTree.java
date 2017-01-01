@@ -336,7 +336,7 @@ public class DirectoryTree implements IView<JTree>
         for( int i = 0; i < node.getChildCount(); i++ )
         {
             FileTreeNode fn = node.getChildAt( i );
-            File file = ( File )fn.file;
+            File file = fn.file;
 
             if( file.equals( dir ) )
             {

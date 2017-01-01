@@ -100,7 +100,7 @@ public class SeriesPropertiesView implements IDataView<Series>
 
         listener = new FileChooserListener( view, "Choose File to Save", true,
             ssdl, ssdl );
-        icon = IconConstants.loader.getIcon( IconConstants.SAVE_AS_16 );
+        icon = IconConstants.getIcon( IconConstants.SAVE_AS_16 );
         action = new ActionAdapter( listener, "Save", icon );
 
         return action;

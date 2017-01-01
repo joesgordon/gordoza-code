@@ -44,8 +44,8 @@ public class CalDisMain
             // frame.setSize( 500, 500 );
 
             SwingUtils.createTrayIcon(
-                IconConstants.loader.getImage( IconConstants.CALENDAR_16 ),
-                "CalDis", frame, null );
+                IconConstants.getImage( IconConstants.CALENDAR_16 ), "CalDis",
+                frame, null );
 
             return frame;
         }

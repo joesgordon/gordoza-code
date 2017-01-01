@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.awt.Window;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 
 import javax.swing.Icon;
@@ -130,8 +131,8 @@ public final class IconConstants
     public final static String UP_24 = "up24.png";
 
     /** The icon loader to be used to access icons in this project. */
-    public final static IconLoader loader = new IconLoader( IconConstants.class,
-        "icons" );
+    private final static IconLoader loader = new IconLoader(
+        IconConstants.class, "icons" );
 
     /***************************************************************************
      * Private constructor to prevent instantiation.
@@ -187,5 +188,15 @@ public final class IconConstants
     public static List<? extends Image> getImages( String... names )
     {
         return loader.getImages( names );
+    }
+
+    public static Image getImage( String name )
+    {
+        return loader.getImage( name );
+    }
+
+    public static URL getUrl( String name )
+    {
+        return loader.loader.getUrl( name );
     }
 }

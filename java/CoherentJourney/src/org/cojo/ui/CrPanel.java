@@ -70,7 +70,7 @@ public class CrPanel implements IView<JPanel>
     /***************************************************************************
      * @return
      **************************************************************************/
-    private JToolBar createToolbar()
+    private static JToolBar createToolbar()
     {
         JToolBar toolbar = new JToolBar();
 
@@ -79,8 +79,7 @@ public class CrPanel implements IView<JPanel>
         JButton stateButton = new JButton();
         JButton helpButton = new JButton();
 
-        saveButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
+        saveButton.setIcon( IconConstants.getIcon( IconConstants.SAVE_16 ) );
         saveButton.setToolTipText( "Save CR" );
         saveButton.setFocusable( false );
 

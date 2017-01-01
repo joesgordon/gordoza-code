@@ -62,7 +62,7 @@ public class CalendarField implements IView<JPanel>
         calendarButton.setText( "" );
         calendarButton.addActionListener( new CalendarButtonListener() );
         calendarButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.CALENDAR_16 ) );
+            IconConstants.getIcon( IconConstants.CALENDAR_16 ) );
         calendarButton.setMargin( new Insets( 0, 0, 0, 0 ) );
 
         view.add( dateTextField,

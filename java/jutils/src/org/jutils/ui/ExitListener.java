@@ -43,7 +43,7 @@ public class ExitListener implements ActionListener
         Action action;
 
         action = new ActionAdapter( new ExitListener( win ), "Exit",
-            IconConstants.loader.getIcon( IconConstants.CLOSE_16 ) );
+            IconConstants.getIcon( IconConstants.CLOSE_16 ) );
 
         action.putValue( Action.MNEMONIC_KEY, ( int )'x' );
 

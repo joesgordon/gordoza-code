@@ -22,9 +22,8 @@ public class UserListCellDecorator implements IListCellLabelDecorator
      **************************************************************************/
     public UserListCellDecorator()
     {
-        userAvailableIcon = IconConstants.loader.getIcon(
-            IconConstants.IM_USER_32 );
-        userUnavailableIcon = IconConstants.loader.getIcon(
+        userAvailableIcon = IconConstants.getIcon( IconConstants.IM_USER_32 );
+        userUnavailableIcon = IconConstants.getIcon(
             IconConstants.IM_USER_OFFLINE_32 );
     }
 

@@ -71,8 +71,7 @@ public class TaskView implements ITaskView
         progressBar.setMinimum( 0 );
         progressBar.setMaximum( 100 );
 
-        cancelButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.STOP_16 ) );
+        cancelButton.setIcon( IconConstants.getIcon( IconConstants.STOP_16 ) );
         cancelButton.addActionListener( new TaskCancelListener( this ) );
         cancelButton.setFocusable( false );
 

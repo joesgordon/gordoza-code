@@ -38,8 +38,8 @@ public class McConfigurationPanel implements IView<JPanel>
         this.view = new JPanel( new GridBagLayout() );
 
         this.bindButton = new JButton();
-        this.checkIcon = IconConstants.loader.getIcon( IconConstants.CHECK_16 );
-        this.deleteIcon = IconConstants.loader.getIcon( IconConstants.STOP_16 );
+        this.checkIcon = IconConstants.getIcon( IconConstants.CHECK_16 );
+        this.deleteIcon = IconConstants.getIcon( IconConstants.STOP_16 );
 
         this.multicastView = new MulticastSocketDefView();
 

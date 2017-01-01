@@ -39,38 +39,38 @@ public class TaskflowFrameView implements IView<JFrame>
 
         frame.setTitle( "Taskflow" );
 
-        frame.setIconImages( IconConstants.loader.getImages(
-            IconConstants.CALENDAR_16, IconConstants.CALENDAR_32 ) );
+        frame.setIconImages( IconConstants.getImages( IconConstants.CALENDAR_16,
+            IconConstants.CALENDAR_32 ) );
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    private JToolBar createToolBar()
+    private static JToolBar createToolBar()
     {
         JButton openButton = new JButton(
-            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+            IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
 
         JButton upButton = new JButton(
-            IconConstants.loader.getIcon( IconConstants.UP_16 ) );
+            IconConstants.getIcon( IconConstants.UP_16 ) );
 
         JButton leftButton = new JButton(
-            IconConstants.loader.getIcon( IconConstants.LEFT_16 ) );
+            IconConstants.getIcon( IconConstants.LEFT_16 ) );
 
         JButton rightButton = new JButton(
-            IconConstants.loader.getIcon( IconConstants.RIGHT_16 ) );
+            IconConstants.getIcon( IconConstants.RIGHT_16 ) );
 
         JButton undoButton = new JButton(
-            IconConstants.loader.getIcon( IconConstants.UNDO_16 ) );
+            IconConstants.getIcon( IconConstants.UNDO_16 ) );
 
         JButton redoButton = new JButton(
-            IconConstants.loader.getIcon( IconConstants.REDO_16 ) );
+            IconConstants.getIcon( IconConstants.REDO_16 ) );
 
         JButton addButton = new JButton(
-            IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 ) );
+            IconConstants.getIcon( IconConstants.EDIT_ADD_16 ) );
 
         JButton removeButton = new JButton(
-            IconConstants.loader.getIcon( IconConstants.EDIT_DELETE_16 ) );
+            IconConstants.getIcon( IconConstants.EDIT_DELETE_16 ) );
 
         JToolBar mainToolBar = new JGoodiesToolBar();
         mainToolBar.add( openButton );
@@ -109,17 +109,16 @@ public class TaskflowFrameView implements IView<JFrame>
     {
         JMenuItem newMenuItem = new JMenuItem( "New" );
         newMenuItem.setIcon(
-            IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
+            IconConstants.getIcon( IconConstants.NEW_FILE_16 ) );
         newMenuItem.addActionListener( new NewListener() );
 
         JMenuItem openMenuItem = new JMenuItem( "Open" );
         openMenuItem.setIcon(
-            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+            IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
         openMenuItem.addActionListener( new OpenListener( this ) );
 
         JMenuItem saveMenuItem = new JMenuItem( "Save" );
-        saveMenuItem.setIcon(
-            IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
+        saveMenuItem.setIcon( IconConstants.getIcon( IconConstants.SAVE_16 ) );
         saveMenuItem.addActionListener( new SaveListener( this ) );
 
         fileMenu.add( newMenuItem, 0 );
@@ -131,7 +130,7 @@ public class TaskflowFrameView implements IView<JFrame>
     /***************************************************************************
      * @return
      **************************************************************************/
-    private JMenu createViewMenu()
+    private static JMenu createViewMenu()
     {
         JMenu viewMenu = new JMenu( "View" );
         JMenuItem foldersMenuItem = new JMenuItem( "Folders" );
@@ -144,7 +143,7 @@ public class TaskflowFrameView implements IView<JFrame>
     /***************************************************************************
      * @return
      **************************************************************************/
-    private JMenu createToolsMenu()
+    private static JMenu createToolsMenu()
     {
         JMenu toolsMenu = new JMenu( "Tools" );
         JMenuItem optionsMenuItem = new JMenuItem( "Options" );
@@ -157,7 +156,7 @@ public class TaskflowFrameView implements IView<JFrame>
     /***************************************************************************
      * @return
      **************************************************************************/
-    private JMenu createHelpMenu()
+    private static JMenu createHelpMenu()
     {
         JMenu helpMenu = new JMenu( "Help" );
         JMenuItem aboutMenuItem = new JMenuItem( "About" );

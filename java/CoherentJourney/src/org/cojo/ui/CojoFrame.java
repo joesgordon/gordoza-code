@@ -117,16 +117,14 @@ public class CojoFrame implements IView<JFrame>
         JButton openButton = new JButton();
         JButton saveButton = new JButton();
 
-        newButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.NEW_FILE_16 ) );
+        newButton.setIcon( IconConstants.getIcon( IconConstants.NEW_FILE_16 ) );
         newButton.setFocusable( false );
 
         openButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+            IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
         openButton.setFocusable( false );
 
-        saveButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.SAVE_16 ) );
+        saveButton.setIcon( IconConstants.getIcon( IconConstants.SAVE_16 ) );
         saveButton.setFocusable( false );
 
         toolbar.add( newButton );

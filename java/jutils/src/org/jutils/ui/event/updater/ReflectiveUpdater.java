@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
+import org.jutils.Utils;
+
 /*******************************************************************************
  * @param <T>
  ******************************************************************************/
@@ -84,7 +86,18 @@ public class ReflectiveUpdater<T> implements IUpdater<T>
                 }
             }
 
-            field.set( obj, data );
+            if( field != null )
+            {
+                field.set( obj, data );
+            }
+            else
+            {
+                String msg = String.format(
+                    "The is no data path %s in object of type %s",
+                    Utils.arrayToString( dataPath, "." ),
+                    obj.getClass().getName() );
+                throw new IllegalStateException( msg );
+            }
         }
         catch( NoSuchFieldException ex )
         {

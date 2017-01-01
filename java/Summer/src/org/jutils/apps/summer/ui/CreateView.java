@@ -148,7 +148,7 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
      **************************************************************************/
     private Action createAddFileListener( JPanel parent )
     {
-        Icon icon = IconConstants.loader.getIcon( IconConstants.OPEN_FILE_16 );
+        Icon icon = IconConstants.getIcon( IconConstants.OPEN_FILE_16 );
         LastFilesListener lfl = new LastFilesListener( this );
         ActionListener listener = new FileChooserListener( parent,
             "Choose File", false, lfl, lfl );
@@ -163,8 +163,7 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
      **************************************************************************/
     private Action createAddDirListener( JPanel parent )
     {
-        Icon icon = IconConstants.loader.getIcon(
-            IconConstants.OPEN_FOLDER_16 );
+        Icon icon = IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 );
         LastFilesListener lfl = new LastFilesListener( this );
         ActionListener listener = new DirectoryChooserListener( parent,
             "Choose Directory", lfl, lfl );
@@ -178,7 +177,7 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
      **************************************************************************/
     private Action createClearAllListener()
     {
-        Icon icon = IconConstants.loader.getIcon( IconConstants.CLOSE_16 );
+        Icon icon = IconConstants.getIcon( IconConstants.CLOSE_16 );
         ActionListener listener = new ClearAllListener( this );
         Action action = new ActionAdapter( listener, "Clear All", icon );
 

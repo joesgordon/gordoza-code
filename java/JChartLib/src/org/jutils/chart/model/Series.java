@@ -61,7 +61,7 @@ public class Series
         {
             if( !p.isHidden() )
             {
-                if( min == null )
+                if( min == null || max == null )
                 {
                     min = p.getX();
                     max = p.getX();
@@ -74,7 +74,7 @@ public class Series
             }
         }
 
-        if( min == null )
+        if( min == null || max == null )
         {
             return null;
         }
@@ -94,7 +94,7 @@ public class Series
         {
             if( !p.isHidden() )
             {
-                if( min == null )
+                if( min == null || max == null )
                 {
                     min = p.getY();
                     max = p.getY();
@@ -107,7 +107,7 @@ public class Series
             }
         }
 
-        if( min == null )
+        if( min == null || max == null )
         {
             return null;
         }

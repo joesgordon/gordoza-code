@@ -62,8 +62,7 @@ public class MultiTaskView implements IMultiTaskView
         progressBar.setStringPainted( true );
 
         cancelButton.setText( "Cancel" );
-        cancelButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.STOP_16 ) );
+        cancelButton.setIcon( IconConstants.getIcon( IconConstants.STOP_16 ) );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
             GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,

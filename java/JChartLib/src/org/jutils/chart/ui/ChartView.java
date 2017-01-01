@@ -240,7 +240,7 @@ public class ChartView implements IView<JComponent>
         String name;
 
         name = "Save";
-        icon = IconConstants.loader.getIcon( IconConstants.SAVE_16 );
+        icon = IconConstants.getIcon( IconConstants.SAVE_16 );
         listener = new SaveListener( this );
         action = new ActionAdapter( listener, name, icon );
 
@@ -258,7 +258,7 @@ public class ChartView implements IView<JComponent>
         String name;
 
         name = "Save Data";
-        icon = IconConstants.loader.getIcon( IconConstants.SAVE_AS_16 );
+        icon = IconConstants.getIcon( IconConstants.SAVE_AS_16 );
         listener = new SaveDataListener( this );
         action = new ActionAdapter( listener, name, icon );
 
@@ -276,7 +276,7 @@ public class ChartView implements IView<JComponent>
         String name;
 
         name = "Properties";
-        icon = IconConstants.loader.getIcon( IconConstants.CONFIG_16 );
+        icon = IconConstants.getIcon( IconConstants.CONFIG_16 );
         listener = new PropertiesDialogListener( this );
         action = new ActionAdapter( listener, name, icon );
 
@@ -294,7 +294,7 @@ public class ChartView implements IView<JComponent>
         String name;
 
         name = "Zoom In";
-        icon = ChartIcons.loader.getIcon( ChartIcons.ZOOM_IN_016 );
+        icon = ChartIcons.getIcon( ChartIcons.ZOOM_IN_016 );
         listener = new ZoomInListener( this );
         action = new ActionAdapter( listener, name, icon );
 
@@ -312,7 +312,7 @@ public class ChartView implements IView<JComponent>
         String name;
 
         name = "Zoom Out";
-        icon = ChartIcons.loader.getIcon( ChartIcons.ZOOM_OUT_016 );
+        icon = ChartIcons.getIcon( ChartIcons.ZOOM_OUT_016 );
         listener = new ZoomOutListener( this );
         action = new ActionAdapter( listener, name, icon );
 

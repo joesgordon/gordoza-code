@@ -78,7 +78,7 @@ public class BudgeyView implements IDataView<Budget>
         transactionAddButton = new JButton(
             BudgeyIconConstants.getCoinsAddIcon() );
         calenderButton = new JButton(
-            IconConstants.loader.getIcon( IconConstants.CALENDAR_32 ) );
+            IconConstants.getIcon( IconConstants.CALENDAR_32 ) );
         configButton = new JButton( BudgeyIconConstants.getCogIcon() );
 
         accountField = new JLabel( "Account Name" );

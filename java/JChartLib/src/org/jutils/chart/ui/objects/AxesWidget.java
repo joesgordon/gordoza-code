@@ -467,7 +467,7 @@ public class AxesWidget implements IChartWidget
     /***************************************************************************
      * 
      **************************************************************************/
-    private void positionTicks( List<Tick> ticks, IAxisCoords coords,
+    private static void positionTicks( List<Tick> ticks, IAxisCoords coords,
         int offset )
     {
         for( Tick t : ticks )

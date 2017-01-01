@@ -49,7 +49,7 @@ public class NotesPanel implements IView<JPanel>
     /***************************************************************************
      * @return
      **************************************************************************/
-    private JPanel createNotesPanel()
+    private static JPanel createNotesPanel()
     {
         JPanel panel = new JPanel( new GridBagLayout() );
         JButton addButton = new JButton();
@@ -58,12 +58,10 @@ public class NotesPanel implements IView<JPanel>
         JList<String> notesList = new JList<String>();
         JScrollPane notesScrollPane = new JScrollPane( notesList );
 
-        addButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 ) );
-        editButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.EDIT_16 ) );
+        addButton.setIcon( IconConstants.getIcon( IconConstants.EDIT_ADD_16 ) );
+        editButton.setIcon( IconConstants.getIcon( IconConstants.EDIT_16 ) );
         deleteButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.EDIT_DELETE_16 ) );
+            IconConstants.getIcon( IconConstants.EDIT_DELETE_16 ) );
 
         panel.setBorder( new TitledBorder( "Notes" ) );
 
@@ -91,7 +89,7 @@ public class NotesPanel implements IView<JPanel>
     /***************************************************************************
      * @return
      **************************************************************************/
-    private JPanel createAttachPanel()
+    private static JPanel createAttachPanel()
     {
         JPanel panel = new JPanel( new GridBagLayout() );
         JButton addButton = new JButton();
@@ -100,9 +98,9 @@ public class NotesPanel implements IView<JPanel>
         JScrollPane notesScrollPane = new JScrollPane( notesList );
 
         addButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+            IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
         deleteButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.EDIT_DELETE_16 ) );
+            IconConstants.getIcon( IconConstants.EDIT_DELETE_16 ) );
 
         panel.setBorder( new TitledBorder( "Attachments" ) );
 

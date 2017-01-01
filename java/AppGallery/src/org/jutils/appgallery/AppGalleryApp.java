@@ -51,7 +51,7 @@ public class AppGalleryApp implements IFrameApp
         AppGalleryView appFrame = new AppGalleryView( apps );
         JFrame frame = frameView.getView();
 
-        Image img = IconConstants.loader.getImage( IconConstants.LAUNCH_16 );
+        Image img = IconConstants.getImage( IconConstants.LAUNCH_16 );
 
         frameView.setContent( appFrame.getView() );
 

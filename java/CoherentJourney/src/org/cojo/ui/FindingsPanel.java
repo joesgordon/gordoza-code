@@ -34,12 +34,10 @@ public class FindingsPanel implements IView<JPanel>
         findingTable = new JTable( findingTableModel );
         JScrollPane findingScrollPane = new JScrollPane( findingTable );
 
-        addButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.EDIT_ADD_16 ) );
-        editButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.EDIT_16 ) );
+        addButton.setIcon( IconConstants.getIcon( IconConstants.EDIT_ADD_16 ) );
+        editButton.setIcon( IconConstants.getIcon( IconConstants.EDIT_16 ) );
         deleteButton.setIcon(
-            IconConstants.loader.getIcon( IconConstants.EDIT_DELETE_16 ) );
+            IconConstants.getIcon( IconConstants.EDIT_DELETE_16 ) );
 
         findingTable.addMouseListener( new MouseAdapter()
         {

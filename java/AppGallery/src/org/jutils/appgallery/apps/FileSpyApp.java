@@ -18,7 +18,7 @@ public class FileSpyApp implements ILibraryApp
     @Override
     public Icon getIcon32()
     {
-        return IconConstants.loader.getIcon( IconConstants.PAGEMAG_32 );
+        return IconConstants.getIcon( IconConstants.PAGEMAG_32 );
     }
 
     /***************************************************************************

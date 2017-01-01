@@ -513,21 +513,25 @@ public final class Utils
         String result = "";
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         Transferable contents = clipboard.getContents( null );
-        boolean hasTransferableText = contents != null &&
-            contents.isDataFlavorSupported( DataFlavor.stringFlavor );
 
-        if( hasTransferableText )
+        if( contents != null )
         {
-            try
+            boolean hasTransferableText = contents.isDataFlavorSupported(
+                DataFlavor.stringFlavor );
+
+            if( hasTransferableText )
             {
-                result = ( String )contents.getTransferData(
-                    DataFlavor.stringFlavor );
-            }
-            catch( UnsupportedFlavorException ex )
-            {
-            }
-            catch( IOException ex )
-            {
+                try
+                {
+                    result = ( String )contents.getTransferData(
+                        DataFlavor.stringFlavor );
+                }
+                catch( UnsupportedFlavorException ex )
+                {
+                }
+                catch( IOException ex )
+                {
+                }
             }
         }
 
