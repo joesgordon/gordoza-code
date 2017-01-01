@@ -244,6 +244,15 @@ public class FileChooserListener implements ActionListener
             if( defaultFile != null )
             {
                 chooser.setSelectedFile( defaultFile );
+
+                if( !chooser.getSelectedFile().equals( defaultFile ) ||
+                    !chooser.getCurrentDirectory().equals(
+                        defaultFile.getParent() ) )
+                {
+                    chooser.setCurrentDirectory( defaultFile );
+                }
+                // LogUtils.printDebug(
+                // "Last selected is " + defaultFile.getAbsolutePath() );
             }
             else if( lastDir != null )
             {

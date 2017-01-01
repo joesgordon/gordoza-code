@@ -138,11 +138,11 @@ public class FormFieldsTest
             itemsModel.addElement( createFormFieldItem(
                 new FileFormField( "File Form Field (File/Save)",
                     ExistenceType.DO_NOT_CHECK ),
-                new File( "" ) ) );
+                new File( "/" ) ) );
             itemsModel.addElement( createFormFieldItem(
                 new FileFormField( "File Form Field (Dir/Save)",
                     ExistenceType.DIRECTORY_ONLY ),
-                new File( "" ) ) );
+                new File( "/" ) ) );
             itemsModel.addElement( createFormFieldItem(
                 new HexByteFormField( "Hex Byte Form Field" ), ( byte )0x81 ) );
             itemsModel.addElement( createFormFieldItem(

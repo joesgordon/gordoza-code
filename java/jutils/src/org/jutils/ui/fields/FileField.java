@@ -4,15 +4,19 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 
 import org.jutils.*;
 import org.jutils.io.IOUtils;
+import org.jutils.io.StringPrintStream;
 import org.jutils.io.parsers.ExistenceType;
 import org.jutils.io.parsers.FileParser;
 import org.jutils.ui.IconTextField;
+import org.jutils.ui.VerboseMessageView;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileChooserListener.IFileSelected;
 import org.jutils.ui.event.FileDropTarget.JTextFieldFilesListener;
@@ -168,6 +172,12 @@ public class FileField implements IDataView<File>, IValidationField
             "Copy Parent Name", IconConstants.EDIT_COPY_16 );
         menu.add( new JMenuItem( a ) );
 
+        menu.addSeparator();
+
+        a = createAction( ( e ) -> showInfo(), "File Info",
+            IconConstants.CONFIG_16 );
+        menu.add( new JMenuItem( a ) );
+
         return menu;
     }
 
@@ -192,6 +202,46 @@ public class FileField implements IDataView<File>, IValidationField
         {
             Utils.setClipboardText( str );
         }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private void showInfo()
+    {
+        VerboseMessageView msgView = new VerboseMessageView();
+        File file = getData();
+        SimpleDateFormat fmt = new SimpleDateFormat(
+            "MM/dd/yyyy HH:mm:ss.SSS" );
+
+        try( StringPrintStream msg = new StringPrintStream() )
+        {
+            msg.println( "  Can Execute: %s", file.canRead() );
+            msg.println( "     Can Read: %s", file.canRead() );
+            msg.println( "    Can Write: %s", file.canRead() );
+            msg.println( "    Is Hidden: %s", file.isHidden() );
+            msg.println( "       Exists: %s", file.exists() );
+            msg.println( " Is Directory: %s", file.isDirectory() );
+            msg.println( "      Is File: %s", file.isFile() );
+            msg.println( "  File Length: %s",
+                IOUtils.byteCount( file.length() ) );
+            msg.println( "Last Modified: %s",
+                fmt.format( new Date( file.lastModified() ) ) );
+
+            msg.println();
+
+            msg.println( "--- Volume Info ---" );
+            msg.println( "   Free Space: %s",
+                IOUtils.byteCount( file.getFreeSpace() ) );
+            msg.println( "  Total Space: %s",
+                IOUtils.byteCount( file.getTotalSpace() ) );
+            msg.println( " Usable Space: %s",
+                IOUtils.byteCount( file.getUsableSpace() ) );
+
+            msgView.setMessages( file.getName(), msg.toString() );
+        }
+
+        msgView.show( getView(), "File Info", 350, 400 );
     }
 
     /***************************************************************************
@@ -577,8 +627,10 @@ public class FileField implements IDataView<File>, IValidationField
 
                 File file = field.getData();
 
+                boolean enabled = file != null && file.exists();
+
                 field.openPathMenuItem.setIcon( field.icon );
-                field.openPathMenuItem.setEnabled( file.exists() );
+                field.openPathMenuItem.setEnabled( enabled );
 
                 field.openMenu.show( c, x, y );
             }

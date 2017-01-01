@@ -103,13 +103,37 @@ public class VerboseMessageView implements IView<JPanel>
      **************************************************************************/
     public void show( Component parent, String title, ModalityType modality )
     {
+        show( parent, title, modality, 600, 600 );
+    }
+
+    /***************************************************************************
+     * @param parent
+     * @param title
+     * @param width
+     * @param height
+     **************************************************************************/
+    public void show( Component parent, String title, int width, int height )
+    {
+        show( parent, title, ModalityType.DOCUMENT_MODAL, width, height );
+    }
+
+    /***************************************************************************
+     * @param parent
+     * @param title
+     * @param modality
+     * @param width
+     * @param height
+     **************************************************************************/
+    public void show( Component parent, String title, ModalityType modality,
+        int width, int height )
+    {
         OkDialogView dialogView = new OkDialogView( parent, getView(),
             modality );
         JDialog dialog = dialogView.getView();
 
         dialog.setTitle( title );
         dialog.setResizable( true );
-        dialog.setSize( 600, 600 );
+        dialog.setSize( width, height );
         dialog.validate();
         dialog.setDefaultCloseOperation( JDialog.DISPOSE_ON_CLOSE );
         dialog.setLocationRelativeTo( null );

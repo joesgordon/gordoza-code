@@ -9,6 +9,9 @@ import javax.swing.text.JTextComponent;
 
 import org.jutils.ui.model.IView;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class IconTextField implements IView<JPanel>
 {
     /**  */
@@ -18,6 +21,9 @@ public class IconTextField implements IView<JPanel>
     /**  */
     private final JTextComponent textField;
 
+    /***************************************************************************
+     * @param textField
+     **************************************************************************/
     public IconTextField( JTextComponent textField )
     {
         this.iconLabel = new JLabel();
@@ -28,6 +34,9 @@ public class IconTextField implements IView<JPanel>
         textField.addPropertyChangeListener( ( e ) -> updateBackground() );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private JPanel createView()
     {
         JPanel panel = new JPanel( new BorderLayout() );
@@ -47,16 +56,25 @@ public class IconTextField implements IView<JPanel>
         return panel;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private void updateBackground()
     {
         panel.setBackground( textField.getBackground() );
     }
 
+    /***************************************************************************
+     * @param icon
+     **************************************************************************/
     public void setIcon( Icon icon )
     {
         iconLabel.setIcon( icon );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public JPanel getView()
     {
