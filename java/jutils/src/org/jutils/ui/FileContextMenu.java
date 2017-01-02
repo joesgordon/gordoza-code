@@ -131,7 +131,7 @@ public class FileContextMenu
 
         icon.setFile( file );
 
-        openParentMenuItem.setIcon( icon );
+        openPathMenuItem.setIcon( icon );
 
         openPathMenuItem.setEnabled( file != null && file.exists() );
         openParentMenuItem.setEnabled(
