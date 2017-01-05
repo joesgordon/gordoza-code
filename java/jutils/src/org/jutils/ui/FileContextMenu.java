@@ -5,14 +5,11 @@ import java.awt.Desktop;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.swing.*;
 
 import org.jutils.*;
 import org.jutils.io.IOUtils;
-import org.jutils.io.StringPrintStream;
 import org.jutils.ui.event.ActionAdapter;
 import org.jutils.utils.IGetter;
 
@@ -40,10 +37,15 @@ public class FileContextMenu
     /**  */
     private final JMenuItem copyParentNameMenuItem;
     /**  */
-    private final JMenuItem infoMenuItem;
+    private final JMenuItem propertiesMenuItem;
 
     /**  */
     private File file;
+
+    // TODO Add Delete
+    // TODO Add Open With
+    // TODO Change Info to Properties
+    // TODO Create a better properties dialog.
 
     /***************************************************************************
      * @param parent
@@ -58,7 +60,7 @@ public class FileContextMenu
         this.copyNameMenuItem = new JMenuItem();
         this.copyParentPathMenuItem = new JMenuItem();
         this.copyParentNameMenuItem = new JMenuItem();
-        this.infoMenuItem = new JMenuItem();
+        this.propertiesMenuItem = new JMenuItem();
         this.menu = createMenu();
     }
 
@@ -107,10 +109,10 @@ public class FileContextMenu
 
         menu.addSeparator();
 
-        l = ( e ) -> showInfo();
-        a = createAction( l, "File Info", IconConstants.CONFIG_16 );
-        infoMenuItem.setAction( a );
-        menu.add( infoMenuItem );
+        l = ( e ) -> showProperties();
+        a = createAction( l, "Properties", IconConstants.CONFIG_16 );
+        propertiesMenuItem.setAction( a );
+        menu.add( propertiesMenuItem );
 
         return menu;
     }
@@ -143,7 +145,7 @@ public class FileContextMenu
         copyParentPathMenuItem.setEnabled( file != null );
         copyParentNameMenuItem.setEnabled( file != null && parent != null );
 
-        infoMenuItem.setEnabled( file != null );
+        propertiesMenuItem.setEnabled( file != null );
 
         menu.show( c, x, y );
     }
@@ -163,40 +165,12 @@ public class FileContextMenu
     /***************************************************************************
      * 
      **************************************************************************/
-    private void showInfo()
+    private void showProperties()
     {
-        VerboseMessageView msgView = new VerboseMessageView();
-        SimpleDateFormat fmt = new SimpleDateFormat(
-            "MM/dd/yyyy HH:mm:ss.SSS" );
+        FilePropertiesView propView = new FilePropertiesView();
 
-        try( StringPrintStream msg = new StringPrintStream() )
-        {
-            msg.println( "  Can Execute: %s", file.canRead() );
-            msg.println( "     Can Read: %s", file.canRead() );
-            msg.println( "    Can Write: %s", file.canRead() );
-            msg.println( "    Is Hidden: %s", file.isHidden() );
-            msg.println( "       Exists: %s", file.exists() );
-            msg.println( " Is Directory: %s", file.isDirectory() );
-            msg.println( "      Is File: %s", file.isFile() );
-            msg.println( "  File Length: %s",
-                IOUtils.byteCount( file.length() ) );
-            msg.println( "Last Modified: %s",
-                fmt.format( new Date( file.lastModified() ) ) );
-
-            msg.println();
-
-            msg.println( "--- Volume Info ---" );
-            msg.println( "   Free Space: %s",
-                IOUtils.byteCount( file.getFreeSpace() ) );
-            msg.println( "  Total Space: %s",
-                IOUtils.byteCount( file.getTotalSpace() ) );
-            msg.println( " Usable Space: %s",
-                IOUtils.byteCount( file.getUsableSpace() ) );
-
-            msgView.setMessages( file.getName(), msg.toString() );
-        }
-
-        msgView.show( parent, "File Info", 350, 400 );
+        propView.setData( file );
+        propView.show( parent );
     }
 
     /***************************************************************************
@@ -206,7 +180,7 @@ public class FileContextMenu
     {
         if( file != null )
         {
-            openPath( file );
+            openPath( parent, file );
         }
     }
 
@@ -217,19 +191,19 @@ public class FileContextMenu
     {
         if( file != null )
         {
-            openPath( file.getParentFile() );
+            openPath( parent, file.getParentFile() );
         }
     }
 
     /***************************************************************************
      * @param file
      **************************************************************************/
-    private void openPath( File file )
+    private static void openPath( Component parentComp, File file )
     {
         if( !file.exists() )
         {
             String [] choices = new String[] { "Open Parent", "Cancel" };
-            String choice = SwingUtils.showConfirmMessage( parent,
+            String choice = SwingUtils.showConfirmMessage( parentComp,
                 "File does not exist. Open existing parent?",
                 "File does not exist", choices, choices[0] );
 
@@ -239,10 +213,10 @@ public class FileContextMenu
 
                 if( parent == null )
                 {
-                    JOptionPane.showMessageDialog( this.parent,
-                        "No parent exists for file:" + Utils.NEW_LINE +
-                            file.getAbsolutePath(),
-                        "Error Opening File", JOptionPane.ERROR_MESSAGE );
+                    SwingUtils.showErrorMessage(
+                        parentComp, "No parent exists for file:" +
+                            Utils.NEW_LINE + file.getAbsolutePath(),
+                        "Error Opening File" );
                     return;
                 }
 
@@ -254,16 +228,19 @@ public class FileContextMenu
             }
         }
 
-        try
+        if( Desktop.isDesktopSupported() )
         {
-            Desktop.getDesktop().open( file );
-        }
-        catch( IOException ex )
-        {
-            JOptionPane.showMessageDialog( parent,
-                "Could not open file externally:" + Utils.NEW_LINE +
-                    file.getAbsolutePath(),
-                "Error Opening File", JOptionPane.ERROR_MESSAGE );
+            try
+            {
+                Desktop.getDesktop().open( file );
+            }
+            catch( IOException ex )
+            {
+                SwingUtils.showErrorMessage(
+                    parentComp, "Could not open file externally:" +
+                        Utils.NEW_LINE + file.getAbsolutePath(),
+                    "Error Opening File" );
+            }
         }
     }
 

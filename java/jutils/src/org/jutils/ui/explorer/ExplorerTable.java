@@ -1,7 +1,8 @@
 package org.jutils.ui.explorer;
 
 import java.awt.Component;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.List;
 
@@ -39,7 +40,6 @@ public class ExplorerTable implements IView<JTable>
         table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
         table.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
         // this.setAutoCreateRowSorter( true );
-        table.addFocusListener( new TableFocusListener( this ) );
 
         table.getTableHeader().setReorderingAllowed( false );
 
@@ -137,31 +137,6 @@ public class ExplorerTable implements IView<JTable>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static final class TableFocusListener implements FocusListener
-    {
-        private ExplorerTable table = null;
-
-        public TableFocusListener( ExplorerTable table )
-        {
-            this.table = table;
-        }
-
-        @Override
-        public void focusGained( FocusEvent e )
-        {
-            ;
-        }
-
-        @Override
-        public void focusLost( FocusEvent e )
-        {
-            table.table.getSelectionModel().clearSelection();
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
     private static final class FilenameRenderer implements TableCellRenderer
     {
         private static final FileSystemView view = FileSystemView.getFileSystemView();
@@ -220,9 +195,11 @@ public class ExplorerTable implements IView<JTable>
         public void mouseReleased( MouseEvent e )
         {
             int r = etable.table.rowAtPoint( e.getPoint() );
+
             if( r > -1 && r < etable.table.getRowCount() )
             {
                 etable.table.setRowSelectionInterval( r, r );
+
                 if( e.isPopupTrigger() && e.getComponent() instanceof JTable )
                 {
                     IExplorerItem iei = etable.model.getExplorerItem( r );
@@ -230,10 +207,10 @@ public class ExplorerTable implements IView<JTable>
                         e.getY() );
                 }
             }
-            else
-            {
-                etable.table.clearSelection();
-            }
+            // else
+            // {
+            // etable.table.clearSelection();
+            // }
         }
     }
 }
