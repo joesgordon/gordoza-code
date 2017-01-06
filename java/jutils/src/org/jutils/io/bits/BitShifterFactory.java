@@ -177,14 +177,6 @@ public class BitShifterFactory
         {
             List<IBitShiftPhase> shiftPhases = new ArrayList<>( 3 );
 
-            if( phases.get( 0 ).fromBit == 0 && phases.get( 0 ).toBit == 1 )
-            {
-                for( PhaseInfo pi : phases )
-                {
-                    System.out.println( pi.toString() );
-                }
-            }
-
             for( PhaseInfo pi : phases )
             {
 
@@ -314,6 +306,9 @@ public class BitShifterFactory
                 phase1.shift( f, t, fi, ti );
                 phase2.shift( f, t, fi++, ti++ );
             }
+
+            from.setPosition( from.getByte() + byteCount, from.getBit() );
+            to.setPosition( to.getByte() + byteCount, to.getBit() );
         }
     }
 
@@ -339,6 +334,7 @@ public class BitShifterFactory
         {
             byte [] f = from.buffer;
             byte [] t = to.buffer;
+
             int fi = from.getByte();
             int ti = to.getByte();
 
@@ -348,6 +344,9 @@ public class BitShifterFactory
                 phase2.shift( f, t, fi, ti );
                 phase3.shift( f, t, fi++, ti++ );
             }
+
+            from.setPosition( from.getByte() + byteCount, from.getBit() );
+            to.setPosition( to.getByte() + byteCount, to.getBit() );
         }
     }
 
@@ -386,12 +385,13 @@ public class BitShifterFactory
         public void shift( byte [] from, byte [] to, int fi, int ti )
         {
             int v = from[fi + fromIdx];
-            v &= fromMask;
 
+            v &= fromMask;
             v <<= shift;
 
-            to[ti + toIdx] &= toMask;
-            to[ti + toIdx] |= v;
+            int dstIdx = ti + toIdx;
+            to[dstIdx] &= toMask;
+            to[dstIdx] |= v;
         }
     }
 
@@ -422,12 +422,13 @@ public class BitShifterFactory
         public void shift( byte [] from, byte [] to, int fi, int ti )
         {
             int v = from[fi + fromIdx];
-            v &= fromMask;
 
+            v &= fromMask;
             v >>>= shift;
 
-            to[ti + toIdx] &= toMask;
-            to[ti + toIdx] |= v;
+            int dstIdx = ti + toIdx;
+            to[dstIdx] &= toMask;
+            to[dstIdx] |= v;
         }
     }
 
@@ -457,8 +458,9 @@ public class BitShifterFactory
             int v = from[fi + fromIdx];
             v &= fromMask;
 
-            to[ti + toIdx] &= toMask;
-            to[ti + toIdx] |= v;
+            int dstIdx = ti + toIdx;
+            to[dstIdx] &= toMask;
+            to[dstIdx] |= v;
         }
     }
 }

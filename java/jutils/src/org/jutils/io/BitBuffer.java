@@ -53,28 +53,6 @@ public class BitBuffer
     }
 
     /***************************************************************************
-     * Reads bits from this buffer and places them in the provided buffer.
-     * @param dest the buffer to which bits will be written.
-     * @param bitCount the number of bits to read/write.
-     **************************************************************************/
-    public void writeTo( BitBuffer dest, int bitCount )
-    {
-        // int remaining = remainingBits();
-        //
-        // if( bitCount > remaining )
-        // {
-        // throw new IllegalArgumentException(
-        // "Too few bits remaining in buffer; expected >= " + bitCount +
-        // ", found " + remaining );
-        // }
-
-        for( int i = 0; i < bitCount; i++ )
-        {
-            dest.writeBit( this.readBit() );
-        }
-    }
-
-    /***************************************************************************
      * Sets the position of the next read/write operation.
      * @param byteIndex the index of the byte.
      * @param bitIndex the index of the bit (0 - 7).
@@ -222,6 +200,28 @@ public class BitBuffer
         }
 
         position.increment();
+    }
+
+    /***************************************************************************
+     * Reads bits from this buffer and places them in the provided buffer.
+     * @param dest the buffer to which bits will be written.
+     * @param bitCount the number of bits to read/write.
+     **************************************************************************/
+    public void writeTo( BitBuffer dest, int bitCount )
+    {
+        // int remaining = remainingBits();
+        //
+        // if( bitCount > remaining )
+        // {
+        // throw new IllegalArgumentException(
+        // "Too few bits remaining in buffer; expected >= " + bitCount +
+        // ", found " + remaining );
+        // }
+
+        for( int i = 0; i < bitCount; i++ )
+        {
+            dest.writeBit( this.readBit() );
+        }
     }
 
     /***************************************************************************

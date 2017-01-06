@@ -171,4 +171,36 @@ public class BitPosition
     {
         return "" + byteIndex + "[" + bitIndex + "]";
     }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public boolean equals( Object obj )
+    {
+        if( obj == null )
+        {
+            return false;
+        }
+        else if( obj instanceof BitPosition )
+        {
+            BitPosition pos = ( BitPosition )obj;
+
+            if( pos.byteIndex == byteIndex && pos.bitIndex == bitIndex )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public int hashCode()
+    {
+        return getPosition();
+    }
 }
