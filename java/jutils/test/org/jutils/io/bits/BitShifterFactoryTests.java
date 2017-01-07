@@ -6,8 +6,14 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.jutils.io.*;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class BitShifterFactoryTests
 {
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testCreateFromMask()
     {
@@ -15,6 +21,9 @@ public class BitShifterFactoryTests
         Assert.assertEquals( 0xFE, mask );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testCreateToMask()
     {
@@ -22,6 +31,9 @@ public class BitShifterFactoryTests
         Assert.assertEquals( 0x80, mask );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testFactory()
     {
@@ -40,6 +52,11 @@ public class BitShifterFactoryTests
         }
     }
 
+    /***************************************************************************
+     * @param shifter
+     * @param f
+     * @param t
+     **************************************************************************/
     private static void testShifter( IBitShifter shifter, int f, int t )
     {
         final byte [] buffer = buildBytes( 42 );
@@ -62,6 +79,10 @@ public class BitShifterFactoryTests
             toBitBuf.getPosition() );
     }
 
+    /***************************************************************************
+     * @param count
+     * @return
+     **************************************************************************/
     private static byte [] buildBytes( int count )
     {
         byte [] buffer = new byte[count];
@@ -72,6 +93,12 @@ public class BitShifterFactoryTests
         return buffer;
     }
 
+    /***************************************************************************
+     * @param buffer
+     * @param fromBit
+     * @param toBit
+     * @return
+     **************************************************************************/
     private static byte [] buildExpected( byte [] buffer, int fromBit,
         int toBit )
     {

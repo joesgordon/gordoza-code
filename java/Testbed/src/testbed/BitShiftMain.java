@@ -16,7 +16,9 @@ import org.jutils.utils.RunningStat.Stats;
  ******************************************************************************/
 public class BitShiftMain
 {
+    /**  */
     private static final int BUF_SIZE = 1024 * 128;
+    /**  */
     private static final int ITERATION_CNT = 100;
 
     /***************************************************************************
