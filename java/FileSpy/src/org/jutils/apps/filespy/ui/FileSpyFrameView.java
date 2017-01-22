@@ -1,26 +1,27 @@
 package org.jutils.apps.filespy.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.*;
 
-import org.jutils.IconConstants;
+import org.jutils.*;
 import org.jutils.apps.filespy.FileSpyMain;
 import org.jutils.apps.filespy.data.FileSpyData;
 import org.jutils.apps.filespy.data.SearchParams;
+import org.jutils.apps.filespy.search.Searcher;
 import org.jutils.io.XStreamUtils;
 import org.jutils.io.options.OptionsSerializer;
 import org.jutils.licensing.LicenseDialog;
 import org.jutils.ui.*;
+import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.explorer.AppManagerView;
 import org.jutils.ui.model.IView;
-
-import com.jgoodies.looks.Options;
 
 /*******************************************************************************
  *
@@ -28,42 +29,75 @@ import com.jgoodies.looks.Options;
 public class FileSpyFrameView implements IView<JFrame>
 {
     /**  */
+    private final OptionsSerializer<FileSpyData> options;
+
+    /**  */
+    private final JButton startButton;
+    /**  */
+    private final Icon startIcon;
+    /**  */
+    private final Icon stopIcon;
+
+    /**  */
+    private final StandardFrameView view;
+    /**  */
+    private final StatusBarPanel statusBar;
+
+    /**  */
     private final SearchView spyPanel;
     /**  */
-    private final JFrame frame;
+    private final ResultsView resultsView;
+
     /**  */
-    private final OptionsSerializer<FileSpyData> options;
+    private final AtomicReference<Searcher> searcher;
 
     /***************************************************************************
      *
      **************************************************************************/
     public FileSpyFrameView()
     {
-        StatusBarPanel statusBar = new StatusBarPanel();
-
         this.options = FileSpyMain.getOptions();
-        this.frame = new JFrame();
-        this.spyPanel = new SearchView( statusBar, options );
 
-        JPanel contentPane = new JPanel( new BorderLayout() );
+        this.startButton = new JButton();
+        this.startIcon = IconConstants.getIcon( IconConstants.FIND_16 );
+        this.stopIcon = IconConstants.getIcon( IconConstants.STOP_16 );
 
-        spyPanel.setData( null );
+        this.spyPanel = new SearchView( options );
+        this.view = new StandardFrameView();
+        this.statusBar = view.getStatusBar();
+        this.resultsView = new ResultsView();
+
+        this.searcher = new AtomicReference<>();
+
+        spyPanel.setData( options.getOptions().lastParams );
         statusBar.setText( "" );
 
-        contentPane.add( createToolBar(), BorderLayout.NORTH );
-        contentPane.add( spyPanel.getView(), java.awt.BorderLayout.CENTER );
-        contentPane.add( statusBar.getView(), BorderLayout.SOUTH );
+        createMenuBar( view.getMenuBar(), view.getFileMenu() );
+        view.setSize( 850, 800 );
+        view.setTitle( "FileSpy" );
 
-        frame.setJMenuBar( createMenuBar() );
-        frame.setSize( new Dimension( 725, 500 ) );
-        frame.setTitle( "FileSpy" );
+        view.getView().setIconImages( IconConstants.getImages(
+            IconConstants.PAGEMAG_16, IconConstants.PAGEMAG_32,
+            IconConstants.PAGEMAG_64, IconConstants.PAGEMAG_128 ) );
+        view.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 
-        frame.setIconImages( IconConstants.getImages( IconConstants.PAGEMAG_16,
-            IconConstants.PAGEMAG_32, IconConstants.PAGEMAG_64,
-            IconConstants.PAGEMAG_128 ) );
-        frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        view.setToolbar( createToolBar() );
+        view.setContent( createContent() );
 
-        frame.setContentPane( contentPane );
+        setSearchButtonState( true );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Container createContent()
+    {
+        JPanel contentPane = new JPanel( new BorderLayout() );
+
+        contentPane.add( spyPanel.getView(), BorderLayout.NORTH );
+        contentPane.add( resultsView.getView(), java.awt.BorderLayout.CENTER );
+
+        return contentPane;
     }
 
     /***************************************************************************
@@ -71,33 +105,17 @@ public class FileSpyFrameView implements IView<JFrame>
      **************************************************************************/
     private JToolBar createToolBar()
     {
-        JButton newButton = new JButton();
-        newButton.setIcon( IconConstants.getIcon( IconConstants.NEW_FILE_16 ) );
-        newButton.setToolTipText( "Creates a new search tab." );
-        newButton.addActionListener( ( e ) -> {
-            spyPanel.setData( null );
-        } );
-        newButton.setFocusable( false );
-
-        JButton openButton = new JButton();
-        openButton.setIcon(
-            IconConstants.getIcon( IconConstants.OPEN_FILE_16 ) );
-        openButton.setToolTipText( "Opens a previously saved search tab." );
-        openButton.addActionListener( new OpenListener() );
-        openButton.setFocusable( false );
-
-        JButton saveButton = new JButton();
-        saveButton.setIcon( IconConstants.getIcon( IconConstants.SAVE_16 ) );
-        saveButton.setToolTipText( "Saves search tab." );
-        saveButton.addActionListener( ( e ) -> {
-            saveSearchParams();
-        } );
-        saveButton.setFocusable( false );
-
         JToolBar toolbar = new JGoodiesToolBar();
-        toolbar.add( newButton );
-        toolbar.add( openButton );
-        toolbar.add( saveButton );
+
+        SwingUtils.addActionToToolbar( toolbar, createNewAction() );
+        SwingUtils.addActionToToolbar( toolbar, createOpenAction() );
+        SwingUtils.addActionToToolbar( toolbar, createSaveSearchAction() );
+        SwingUtils.addActionToToolbar( toolbar, createSaveResultsAction() );
+
+        toolbar.addSeparator();
+
+        SwingUtils.addActionToToolbar( toolbar, createStartStopAction(),
+            startButton );
 
         return toolbar;
     }
@@ -105,11 +123,88 @@ public class FileSpyFrameView implements IView<JFrame>
     /***************************************************************************
      * @return
      **************************************************************************/
-    private JMenuBar createMenuBar()
+    private Action createNewAction()
     {
-        JMenuBar menuBar = new JGoodiesMenuBar();
-        menuBar.add( createFileMenu() );
-        menuBar.add( createViewMenu() );
+        Action action;
+        Icon icon = IconConstants.getIcon( IconConstants.NEW_FILE_16 );
+        ActionListener l = ( e ) -> spyPanel.setData( new SearchParams() );
+
+        action = new ActionAdapter( l, "New", icon );
+
+        SwingUtils.setActionToolTip( action, "Creates a new search" );
+
+        return action;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createOpenAction()
+    {
+        Action action;
+        Icon icon = IconConstants.getIcon( IconConstants.OPEN_FILE_16 );
+        ActionListener l = ( e ) -> openSearchParams();
+
+        action = new ActionAdapter( l, "Open", icon );
+
+        SwingUtils.setActionToolTip( action,
+            "Opens a previously saved search" );
+
+        return action;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createSaveSearchAction()
+    {
+        Action action;
+        Icon icon = IconConstants.getIcon( IconConstants.SAVE_16 );
+        ActionListener l = ( e ) -> saveSearchParams();
+
+        action = new ActionAdapter( l, "Save Search", icon );
+
+        SwingUtils.setActionToolTip( action, "Saves the current search terms" );
+
+        return action;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createSaveResultsAction()
+    {
+        Action action;
+        Icon icon = IconConstants.getIcon( IconConstants.SAVE_AS_16 );
+        ActionListener l = ( e ) -> saveSearchResults();
+
+        action = new ActionAdapter( l, "Save Results", icon );
+
+        SwingUtils.setActionToolTip( action, "Saves search results" );
+
+        return action;
+    }
+
+    private Action createStartStopAction()
+    {
+        Action action;
+        Icon icon = startIcon;
+        ActionListener l = new StartButtonListener();
+
+        action = new ActionAdapter( l, "Start", icon );
+
+        return action;
+    }
+
+    /***************************************************************************
+     * @param jMenu
+     * @param jMenuBar
+     * @return
+     **************************************************************************/
+    private JMenuBar createMenuBar( JMenuBar menuBar, JMenu fileMenu )
+    {
+        createFileMenu( fileMenu );
+
         menuBar.add( createToolsMenu() );
         menuBar.add( createHelpMenu() );
 
@@ -117,84 +212,21 @@ public class FileSpyFrameView implements IView<JFrame>
     }
 
     /***************************************************************************
+     * @param fileMenu
      * @return
      **************************************************************************/
-    private JMenu createFileMenu()
+    private JMenu createFileMenu( JMenu fileMenu )
     {
-        JMenu fileMenu = new JMenu( "File" );
+        int index = 0;
 
-        JMenuItem newMenuItem = new JMenuItem( "New" );
-        newMenuItem.setToolTipText( "Creates a new search tab." );
-        newMenuItem.addActionListener( ( e ) -> {
-            spyPanel.setData( null );
-        } );
-        newMenuItem.setIcon(
-            IconConstants.getIcon( IconConstants.NEW_FILE_16 ) );
+        fileMenu.add( new JMenuItem( createNewAction() ), index++ );
+        fileMenu.add( new JMenuItem( createOpenAction() ), index++ );
+        fileMenu.add( new JMenuItem( createSaveSearchAction() ), index++ );
+        fileMenu.add( new JMenuItem( createSaveResultsAction() ), index++ );
 
-        JMenuItem openMenuItem = new JMenuItem( "Open" );
-        openMenuItem.setToolTipText( "Opens a previously saved search tab." );
-        openMenuItem.addActionListener( new OpenListener() );
-        openMenuItem.setIcon(
-            IconConstants.getIcon( IconConstants.OPEN_FILE_16 ) );
-
-        JMenuItem saveMenuItem = new JMenuItem( "Save" );
-        saveMenuItem.setToolTipText( "Saves search tab." );
-        saveMenuItem.addActionListener( ( e ) -> {
-            saveSearchParams();
-        } );
-        saveMenuItem.setIcon( IconConstants.getIcon( IconConstants.SAVE_16 ) );
-
-        JMenuItem exitMenuItem = new JMenuItem();
-        exitMenuItem.setText( "Exit" );
-        exitMenuItem.setToolTipText( "Exits the application." );
-        exitMenuItem.addActionListener( new ExitListener( frame ) );
-        exitMenuItem.setIcon( IconConstants.getIcon( IconConstants.CLOSE_16 ) );
-
-        fileMenu.add( newMenuItem );
-        fileMenu.add( openMenuItem );
-        fileMenu.add( saveMenuItem );
-        fileMenu.add( exitMenuItem );
+        fileMenu.add( new JSeparator(), index++ );
 
         return fileMenu;
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    private JMenu createViewMenu()
-    {
-        JMenu viewMenu = new JMenu( "View" );
-
-        JMenuItem menuItem;
-
-        menuItem = new JMenuItem( "JG Windows" );
-        menuItem.addActionListener(
-            new SetLafListener( Options.JGOODIES_WINDOWS_NAME ) );
-        viewMenu.add( menuItem );
-
-        menuItem = new JMenuItem( "Plastic" );
-        menuItem.addActionListener(
-            new SetLafListener( Options.PLASTIC_NAME ) );
-        viewMenu.add( menuItem );
-
-        menuItem = new JMenuItem( "Plastic 3D" );
-        menuItem.addActionListener(
-            new SetLafListener( Options.PLASTIC3D_NAME ) );
-        viewMenu.add( menuItem );
-
-        menuItem = new JMenuItem( "Plastic XP" );
-        menuItem.addActionListener(
-            new SetLafListener( Options.PLASTICXP_NAME ) );
-        viewMenu.add( menuItem );
-
-        viewMenu.addSeparator();
-
-        menuItem = new JMenuItem( "Nimbus" );
-        menuItem.addActionListener( new SetLafListener(
-            "com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel" ) );
-        viewMenu.add( menuItem );
-
-        return viewMenu;
     }
 
     /***************************************************************************
@@ -234,31 +266,11 @@ public class FileSpyFrameView implements IView<JFrame>
         JMenuItem aboutMenuItem = new JMenuItem( "About" );
         aboutMenuItem.setToolTipText(
             "Presents infomation about this program." );
-        aboutMenuItem.addActionListener( new AboutListener( frame ) );
+        aboutMenuItem.addActionListener( new AboutListener( getView() ) );
 
         helpMenu.add( aboutMenuItem );
 
         return helpMenu;
-    }
-
-    /***************************************************************************
-     * @param laf
-     **************************************************************************/
-    private void resetLaf( String laf )
-    {
-        try
-        {
-            UIManager.setLookAndFeel( laf );
-            SwingUtilities.updateComponentTreeUI( frame );
-            frame.validate();
-        }
-        catch( Exception ex )
-        {
-            JOptionPane.showMessageDialog( frame,
-                "Unable to set the look and feel to " + laf + ". " +
-                    ex.getMessage(),
-                "ERROR", JOptionPane.ERROR_MESSAGE );
-        }
     }
 
     /***************************************************************************
@@ -277,7 +289,7 @@ public class FileSpyFrameView implements IView<JFrame>
         chooser.setFileFilter( new FileSpySearchFilter() );
         chooser.setDialogTitle( "Open Search File" );
 
-        result = chooser.showOpenDialog( frame );
+        result = chooser.showOpenDialog( getView() );
         if( result == JFileChooser.APPROVE_OPTION )
         {
             options.write();
@@ -288,14 +300,11 @@ public class FileSpyFrameView implements IView<JFrame>
                 try
                 {
                     params = XStreamUtils.readObjectXStream( fileChosen );
-                    params.name = fileChosen.getName().substring( 0,
-                        fileChosen.getName().length() -
-                            FileSpySearchFilter.FILESPY_SEARCH_EXT.length() );
                     spyPanel.setData( params );
                 }
                 catch( IOException ex )
                 {
-                    JOptionPane.showMessageDialog( frame, ex.getMessage(),
+                    JOptionPane.showMessageDialog( getView(), ex.getMessage(),
                         "I/O ERROR", JOptionPane.ERROR_MESSAGE );
                 }
             }
@@ -318,7 +327,7 @@ public class FileSpyFrameView implements IView<JFrame>
         chooser.setFileFilter( new FileSpySearchFilter() );
         chooser.setDialogTitle( "Save As" );
 
-        result = chooser.showSaveDialog( frame );
+        result = chooser.showSaveDialog( getView() );
         if( result == JFileChooser.APPROVE_OPTION )
         {
             options.write();
@@ -338,10 +347,15 @@ public class FileSpyFrameView implements IView<JFrame>
             }
             catch( IOException ex )
             {
-                JOptionPane.showMessageDialog( frame, ex.getMessage(),
+                JOptionPane.showMessageDialog( getView(), ex.getMessage(),
                     "I/O ERROR", JOptionPane.ERROR_MESSAGE );
             }
         }
+    }
+
+    private void saveSearchResults()
+    {
+        // TODO Auto-generated method stub
     }
 
     /***************************************************************************
@@ -349,7 +363,7 @@ public class FileSpyFrameView implements IView<JFrame>
      **************************************************************************/
     private void showRegexHelper()
     {
-        JDialog dialog = new JDialog( frame );
+        JDialog dialog = new JDialog( getView() );
         dialog.setTitle( "Regex Friend" );
         dialog.setContentPane( new RegexPanel().getView() );
         dialog.setSize( new Dimension( 500, 500 ) );
@@ -363,7 +377,7 @@ public class FileSpyFrameView implements IView<JFrame>
      **************************************************************************/
     private void showFileConfig()
     {
-        AppManagerView.showDialog( frame );
+        AppManagerView.showDialog( getView() );
     }
 
     /***************************************************************************
@@ -372,18 +386,116 @@ public class FileSpyFrameView implements IView<JFrame>
     @Override
     public JFrame getView()
     {
-        return frame;
+        return view.getView();
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private class OpenListener implements ActionListener
+    private void startSearch()
+    {
+        SearchParams params = spyPanel.getData();
+
+        try
+        {
+            params.validate();
+        }
+        catch( ValidationException ex )
+        {
+            SwingUtils.showErrorMessage( getView(), ex.getMessage(),
+                "Input Validation Error" );
+            return;
+        }
+
+        options.getOptions().lastParams = params;
+        options.write();
+
+        Searcher s = new Searcher( resultsView, statusBar );
+
+        searcher.set( s );
+
+        s.search( params, ( e ) -> SwingUtilities.invokeLater(
+            () -> setSearchFinished( e.getItem() ) ) );
+
+        setSearchButtonState( false );
+
+        FileSpyData configData = options.getOptions();
+
+        if( !configData.filenames.isEmpty() )
+        {
+            configData.filenames.push( params.filename );
+        }
+
+        if( params.contents.isUsed )
+        {
+            configData.contents.push( params.contents.data );
+        }
+
+        configData.folders.push( params.path.getAbsolutePath() );
+
+        options.write();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private void stopSearch()
+    {
+        this.searcher.getAndSet( null ).cancel();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private void setSearchButtonState( boolean start )
+    {
+        Icon icon = stopIcon;
+        String text = "Stop";
+
+        if( start )
+        {
+            icon = startIcon;
+            text = "Start";
+        }
+
+        startButton.setIcon( icon );
+        startButton.setText( text );
+        startButton.setActionCommand( text );
+    }
+
+    /***************************************************************************
+     * @param millis
+     **************************************************************************/
+    private void setSearchFinished( long millis )
+    {
+        startButton.setIcon( startIcon );
+        startButton.setText( "Start" );
+        startButton.setActionCommand( "Start" );
+
+        int rowCount = resultsView.getRecordCount();
+        String elapsed = Utils.getElapsedString( new Date( millis ) );
+
+        statusBar.setText( rowCount + " file(s) found in " + elapsed + "." );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private class StartButtonListener implements ActionListener
     {
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            openSearchParams();
+            String str = e.getActionCommand();
+
+            if( str.compareTo( "Start" ) == 0 )
+            {
+                startSearch();
+            }
+            else if( str.compareTo( "Stop" ) == 0 )
+            {
+                stopSearch();
+            }
         }
     }
 
@@ -407,25 +519,6 @@ public class FileSpyFrameView implements IView<JFrame>
 
             d.setLocationRelativeTo( frame );
             d.setVisible( true );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private class SetLafListener implements ActionListener
-    {
-        private String laf;
-
-        public SetLafListener( String lookAndFeel )
-        {
-            laf = lookAndFeel;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            resetLaf( laf );
         }
     }
 

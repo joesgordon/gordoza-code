@@ -2,27 +2,22 @@ package org.jutils.apps.filespy.ui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.util.*;
-import java.util.List;
-import java.util.regex.PatternSyntaxException;
+import java.time.LocalDate;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.text.*;
 
-import org.jutils.*;
-import org.jutils.apps.filespy.data.*;
-import org.jutils.apps.filespy.search.Searcher;
-import org.jutils.io.IOUtils;
-import org.jutils.io.LogUtils;
+import org.jutils.apps.filespy.data.FileSpyData;
+import org.jutils.apps.filespy.data.SearchParams;
 import org.jutils.io.options.OptionsSerializer;
-import org.jutils.ui.*;
-import org.jutils.ui.calendar.CalendarField;
-import org.jutils.ui.explorer.*;
+import org.jutils.io.parsers.ExistenceType;
+import org.jutils.io.parsers.StringParser;
+import org.jutils.ui.StandardFormView;
+import org.jutils.ui.calendar.DateField;
+import org.jutils.ui.event.ItemActionList;
+import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.event.updater.ReflectiveUpdater;
+import org.jutils.ui.fields.*;
 import org.jutils.ui.model.IDataView;
-import org.jutils.ui.model.ItemComboBoxModel;
 
 /*******************************************************************************
  *
@@ -30,194 +25,135 @@ import org.jutils.ui.model.ItemComboBoxModel;
 public class SearchView implements IDataView<SearchParams>
 {
     /**  */
-    private final JComboBox<String> filenameComboBox;
-    /**  */
-    private final JCheckBox contentsCheckBox;
-    /**  */
-    private final JComboBox<String> contentsComboBox;
-    /**  */
-    private final JButton startButton;
-    /**  */
-    private final JComboBox<String> searchInComboBox;
-    /**  */
-    private final JCheckBox subfoldersCheckBox;
-    /**  */
-    private final JButton browseButton;
-    /**  */
-    private final JCheckBox moreThanCheckBox;
-    /**  */
-    private final JTextField moreThanTextField;
-    /**  */
-    private final JCheckBox lessThanCheckBox;
-    /**  */
-    private final JTextField lessThanTextField;
-    /**  */
-    private final JCheckBox afterCheckBox;
-    /**  */
-    private final CalendarField afterTextField;
-    /**  */
-    private final JCheckBox beforeCheckBox;
-    /**  */
-    private final CalendarField beforeTextField;
-    /**  */
-    private final JCheckBox fileNotCheckBox;
-    /**  */
-    private final JCheckBox fileRegexCheckBox;
-    /**  */
-    private final JCheckBox fileMatchCheckBox;
-    /**  */
-    private final JCheckBox contentRegexCheckBox;
-    /**  */
-    private final JCheckBox contentMatchCheckBox;
-    /**  */
-    private final JScrollPane leftResultsScroll;
-    /**  */
-    private final ExplorerTable resultsTableView;
-    /**  */
-    private final ExplorerTableModel resultsTableModel;
-    /**  */
-    private final JScrollPane rightResultsScroll;
-    /**  */
-    private final ScrollableEditorPaneView rightResultsPane;
-    /**  */
-    private final DefaultStyledDocument defStyledDocument;
-    /**  */
-    private final Icon startIcon;
-    /**  */
-    private final ActionListener browseListener;
-    /**  */
-    private final ActionListener startListener;
-    /**  */
-    private final ItemComboBoxModel<String> filenameModel;
-    /**  */
-    private final ItemComboBoxModel<String> contentsModel;
-    /**  */
-    private final ItemComboBoxModel<String> searchInModel;
-    /**  */
     private final JPanel view;
-    /**  */
-    private final StatusBarPanel statusBar;
 
     /**  */
-    private final OptionsSerializer<FileSpyData> options;
+    private final ComboFormField<String> filenameField;
+    /**  */
+    private final UsableFormField<String> contentsField;
+    /**  */
+    private final FileFormField pathField;
 
     /**  */
-    private Searcher searcher;
+    private final UsableFormField<Long> moreThanField;
+    /**  */
+    private final UsableFormField<Long> lessThanField;
+
+    /**  */
+    private final UsableFormField<LocalDate> afterField;
+    /**  */
+    private final UsableFormField<LocalDate> beforeField;
+
+    /**  */
+    private final BooleanFormField fileNotCheckBox;
+    /**  */
+    private final BooleanFormField fileRegexCheckBox;
+    /**  */
+    private final BooleanFormField fileMatchCheckBox;
+    /**  */
+    private final BooleanFormField subfoldersField;
+
+    /**  */
+    private final BooleanFormField contentsRegexCheckBox;
+    /**  */
+    private final BooleanFormField contentsMatchCheckBox;
+
+    /**  */
+    private final ItemActionList<SearchParams> startListeners;
+
+    /**  */
+    private SearchParams params;
 
     /***************************************************************************
      *
      **************************************************************************/
-    public SearchView( StatusBarPanel statusBar,
-        OptionsSerializer<FileSpyData> options )
+    public SearchView( OptionsSerializer<FileSpyData> options )
     {
-        this.statusBar = statusBar;
-        this.options = options;
+        FileSpyData userData = options.getOptions();
 
-        view = new JPanel( new GridBagLayout() );
-        filenameComboBox = new JComboBox<String>();
-        contentsCheckBox = new JCheckBox();
-        startButton = new JButton();
-        contentsComboBox = new JComboBox<String>();
-        searchInComboBox = new JComboBox<String>();
-        browseButton = new JButton();
-        subfoldersCheckBox = new JCheckBox();
-        moreThanCheckBox = new JCheckBox();
-        moreThanTextField = new JTextField();
-        lessThanCheckBox = new JCheckBox();
-        lessThanTextField = new JTextField();
-        afterCheckBox = new JCheckBox();
-        afterTextField = new CalendarField();
-        beforeCheckBox = new JCheckBox();
-        beforeTextField = new CalendarField();
-        fileNotCheckBox = new JCheckBox();
-        fileRegexCheckBox = new JCheckBox();
-        fileMatchCheckBox = new JCheckBox();
-        contentRegexCheckBox = new JCheckBox();
-        contentMatchCheckBox = new JCheckBox();
-        leftResultsScroll = new JScrollPane();
-        resultsTableView = new ExplorerTable();
-        rightResultsScroll = new JScrollPane();
-        rightResultsPane = new ScrollableEditorPaneView();
-        defStyledDocument = new DefaultStyledDocument();
-        startIcon = IconConstants.getIcon( IconConstants.FIND_32 );
-        browseListener = new BrowseButtonListener( this );
-        startListener = new StartButtonListener();
+        ComboFormField<String> contentsComboField = new ComboFormField<>(
+            "Contents", userData.contents.toList() );
 
-        KeyListener enterListener = new StartKeyListener();
+        this.filenameField = new ComboFormField<String>( "Filename",
+            userData.filenames.toList() );
+        this.contentsField = new UsableFormField<>( contentsComboField );
+        this.pathField = new FileFormField( "Search In",
+            ExistenceType.DIRECTORY_ONLY );
+        this.subfoldersField = new BooleanFormField( "Search Sub-directories" );
+        this.moreThanField = new UsableFormField<>(
+            new LongFormField( "More Than", null, 10, null ) );
+        this.lessThanField = new UsableFormField<>(
+            new LongFormField( "Less Than", null, 10, null ) );
+        this.afterField = new UsableFormField<>( new DateField( "After" ) );
+        this.beforeField = new UsableFormField<>( new DateField( "Before" ) );
+        this.fileNotCheckBox = new BooleanFormField( "Specify Not Condition" );
+        this.fileRegexCheckBox = new BooleanFormField(
+            "Use Regular Expressions" );
+        this.fileMatchCheckBox = new BooleanFormField( "Match Case" );
+        this.contentsRegexCheckBox = new BooleanFormField(
+            "Use Regular Expressions" );
+        this.contentsMatchCheckBox = new BooleanFormField( "Match Case" );
 
-        // ---------------------------------------------------------------------
-        // Setup search panel
-        // ---------------------------------------------------------------------
-        FileSpyData configData = options.getOptions();
+        this.view = createView( new StartKeyListener( this ) );
 
-        filenameModel = new ItemComboBoxModel<String>( configData.filenames );
-        contentsModel = new ItemComboBoxModel<String>( configData.contents );
-        searchInModel = new ItemComboBoxModel<String>( configData.folders );
+        this.startListeners = new ItemActionList<>();
 
-        // ---------------------------------------------------------------------
-        // Setup main panel.
-        // ---------------------------------------------------------------------
-        resultsTableModel = resultsTableView.getExplorerTableModel();
-
-        JTable resultsTable = resultsTableView.getView();
-
-        // resultsTable.setAutoCreateRowSorter( true );
-        resultsTable.getSelectionModel().addListSelectionListener(
-            new SearchPanel_listSelectionAdapter( this ) );
-        ToolTipManager.sharedInstance().unregisterComponent( resultsTable );
-        ToolTipManager.sharedInstance().unregisterComponent(
-            resultsTable.getTableHeader() );
-        resultsTable.setAutoCreateRowSorter( true );
-        resultsTable.setBackground( Color.white );
-        resultsTable.addMouseListener( new OpenResultsListener( this ) );
-
-        leftResultsScroll.setViewportView( resultsTable );
-        leftResultsScroll.getViewport().setBackground( Color.white );
-        leftResultsScroll.setMinimumSize( new Dimension( 150, 150 ) );
-
-        rightResultsScroll.setViewportView( rightResultsPane.getView() );
-        rightResultsScroll.setMinimumSize( new Dimension( 150, 150 ) );
-
-        rightResultsPane.setDocument( defStyledDocument );
-        rightResultsPane.setEditable( false );
-        rightResultsPane.setBackground( Color.white );
-
-        JSplitPane resultsPane = new JSplitPane( JSplitPane.VERTICAL_SPLIT );
-        resultsPane.setResizeWeight( 0.0 );
-        resultsPane.setLeftComponent( leftResultsScroll );
-        resultsPane.setRightComponent( rightResultsScroll );
-        resultsPane.setDividerLocation( 300 );
-
-        view.add( createSearchPanel( enterListener ),
-            new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
-
-        view.add( createBrowsePanel( enterListener ),
-            new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
-
-        view.add( createOptionsPanel(),
-            new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
-
-        view.add( resultsPane,
-            new GridBagConstraints( 0, 3, 1, 1, 1.0, 1.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
+        filenameField.setUserEditable( new StringParser() );
+        contentsComboField.setUserEditable( new StringParser() );
 
         setData( new SearchParams() );
+
+        filenameField.setUpdater(
+            new ReflectiveUpdater<>( this, "params.filename" ) );
+        contentsField.setUpdater(
+            new ReflectiveUpdater<>( this, "params.contents" ) );
+        pathField.setUpdater( new ReflectiveUpdater<>( this, "params.path" ) );
+        subfoldersField.setUpdater(
+            new ReflectiveUpdater<>( this, "params.searchSubfolders" ) );
+
+        moreThanField.setUpdater(
+            new ReflectiveUpdater<>( this, "params.moreThan" ) );
+        lessThanField.setUpdater(
+            new ReflectiveUpdater<>( this, "params.lessThan" ) );
+
+        afterField.setUpdater(
+            new ReflectiveUpdater<>( this, "params.after" ) );
+        beforeField.setUpdater(
+            new ReflectiveUpdater<>( this, "params.before" ) );
+
+        fileRegexCheckBox.setUpdater(
+            new ReflectiveUpdater<>( this, "params.filenameRegex" ) );
+        fileMatchCheckBox.setUpdater(
+            new ReflectiveUpdater<>( this, "params.filenameMatch" ) );
+        fileNotCheckBox.setUpdater(
+            new ReflectiveUpdater<>( this, "params.filenameNot" ) );
+
+        contentsRegexCheckBox.setUpdater(
+            new ReflectiveUpdater<>( this, "params.contentsRegex" ) );
+        contentsMatchCheckBox.setUpdater(
+            new ReflectiveUpdater<>( this, "params.contentsMatch" ) );
     }
 
     /***************************************************************************
-     * 
+     * @param enterListener
+     * @return
      **************************************************************************/
-    @Override
-    public JPanel getView()
+    private JPanel createView( KeyListener enterListener )
     {
-        return view;
+        JPanel panel = new JPanel( new GridBagLayout() );
+        GridBagConstraints constraints;
+
+        constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
+        panel.add( createSearchPanel( enterListener ), constraints );
+
+        constraints = new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets( 0, 4, 4, 4 ), 0, 0 );
+        panel.add( createOptionsPanel(), constraints );
+
+        return panel;
     }
 
     /***************************************************************************
@@ -230,23 +166,23 @@ public class SearchView implements IDataView<SearchParams>
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 0.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 );
-        optionsPanel.add( createSizePanel(), constraints );
+            new Insets( 0, 0, 0, 2 ), 0, 0 );
+        optionsPanel.add( createFileOptionsPanel(), constraints );
 
         constraints = new GridBagConstraints( 1, 0, 1, 1, 0.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 );
-        optionsPanel.add( createTimePanel(), constraints );
+            new Insets( 0, 0, 0, 2 ), 0, 0 );
+        optionsPanel.add( createContentOptionsPanel(), constraints );
 
         constraints = new GridBagConstraints( 2, 0, 1, 1, 0.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 );
-        optionsPanel.add( createFileOptionsPanel(), constraints );
+            new Insets( 0, 0, 0, 2 ), 0, 0 );
+        optionsPanel.add( createSizePanel(), constraints );
 
         constraints = new GridBagConstraints( 3, 0, 1, 1, 0.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets( 0, 0, 0, 0 ), 0, 0 );
-        optionsPanel.add( createContentOptionsPanel(), constraints );
+        optionsPanel.add( createTimePanel(), constraints );
 
         constraints = new GridBagConstraints( 4, 0, 1, 1, 1.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -254,7 +190,6 @@ public class SearchView implements IDataView<SearchParams>
         optionsPanel.add( Box.createHorizontalStrut( 0 ), constraints );
 
         optionsPanel.setMinimumSize( optionsPanel.getPreferredSize() );
-        view.setMinimumSize( optionsPanel.getMinimumSize() );
 
         return optionsPanel;
     }
@@ -264,99 +199,33 @@ public class SearchView implements IDataView<SearchParams>
      **************************************************************************/
     private JPanel createSizePanel()
     {
-        JPanel sizePanel = new JPanel( new GridBagLayout() );
-        GridBagConstraints constraints;
+        StandardFormView form = new StandardFormView();
 
-        sizePanel.setBorder( BorderFactory.createTitledBorder( "Size (kb)" ) );
+        form.addField( moreThanField );
+        form.addField( lessThanField );
 
-        moreThanCheckBox.setText( "More Than :" );
-        moreThanCheckBox.setToolTipText(
-            "Specifies that files should be " + "larger than given." );
-        moreThanCheckBox.addActionListener(
-            new CheckBoxEnabler_actionAdapter( moreThanTextField ) );
-        moreThanTextField.setColumns( 6 );
-        moreThanTextField.setToolTipText(
-            "The amount the file should be " + "larger than." );
-        moreThanTextField.setHorizontalAlignment( JTextField.RIGHT );
+        JPanel panel = form.getView();
 
-        lessThanCheckBox.setText( "Less Than :" );
-        lessThanCheckBox.setToolTipText(
-            "Specifies that files should be " + "smaller than given." );
-        lessThanCheckBox.addActionListener(
-            new CheckBoxEnabler_actionAdapter( lessThanTextField ) );
-        lessThanTextField.setColumns( 6 );
-        lessThanTextField.setToolTipText(
-            "The amount the file should be " + "smaller than." );
-        lessThanTextField.setHorizontalAlignment( JTextField.RIGHT );
+        panel.setBorder( BorderFactory.createTitledBorder( "Size (kb)" ) );
 
-        constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 0, 0, 0, 0 ), 0, 0 );
-        sizePanel.add(
-            createRightSidedPanel( moreThanCheckBox, moreThanTextField ),
-            constraints );
-
-        constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 0, 0, 0, 0 ), 0, 0 );
-        sizePanel.add(
-            createRightSidedPanel( lessThanCheckBox, lessThanTextField ),
-            constraints );
-
-        constraints = new GridBagConstraints( 0, 2, 3, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 );
-        sizePanel.add( Box.createHorizontalStrut( 0 ), constraints );
-
-        sizePanel.setMinimumSize( sizePanel.getPreferredSize() );
-
-        return sizePanel;
+        return panel;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private JPanel createTimePanel()
     {
-        JPanel advancedPanel = new JPanel( new GridBagLayout() );
-        GridBagConstraints constraints;
+        StandardFormView form = new StandardFormView();
 
-        advancedPanel.setBorder(
-            BorderFactory.createTitledBorder( "Time Options" ) );
+        form.addField( afterField );
+        form.addField( beforeField );
 
-        afterCheckBox.setText( "After :" );
-        afterCheckBox.setToolTipText( "Specifies that files should be " +
-            "modified after the date given." );
-        afterCheckBox.addActionListener(
-            new CheckBoxEnabler_actionAdapter( afterTextField.getView() ) );
-        afterTextField.setToolTipText(
-            "The date the file should be " + "modified after." );
+        JPanel panel = form.getView();
 
-        beforeCheckBox.setText( "Before :" );
-        beforeCheckBox.setToolTipText( "Specifies that files should be " +
-            "modified before the date given." );
-        beforeCheckBox.addActionListener(
-            new CheckBoxEnabler_actionAdapter( beforeTextField.getView() ) );
-        beforeTextField.setToolTipText(
-            "The date the file should be " + "modified before." );
+        panel.setBorder( BorderFactory.createTitledBorder( "Time Options" ) );
 
-        constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 0, 0, 0, 0 ), 0, 0 );
-        advancedPanel.add(
-            createRightSidedPanel( afterCheckBox, afterTextField.getView() ),
-            constraints );
-
-        constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 0, 0, 0, 0 ), 0, 0 );
-        advancedPanel.add(
-            createRightSidedPanel( beforeCheckBox, beforeTextField.getView() ),
-            constraints );
-
-        constraints = new GridBagConstraints( 0, 2, 3, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 );
-        advancedPanel.add( Box.createHorizontalStrut( 0 ), constraints );
-
-        return advancedPanel;
+        return panel;
     }
 
     /***************************************************************************
@@ -364,121 +233,33 @@ public class SearchView implements IDataView<SearchParams>
      **************************************************************************/
     private JPanel createFileOptionsPanel()
     {
-        JPanel fileOptionsPanel = new JPanel( new GridBagLayout() );
+        StandardFormView form = new StandardFormView();
 
-        fileOptionsPanel.setBorder(
+        form.addField( fileRegexCheckBox );
+        form.addField( fileMatchCheckBox );
+        form.addField( fileNotCheckBox );
+
+        JPanel panel = form.getView();
+
+        panel.setBorder(
             BorderFactory.createTitledBorder( "Filename Options" ) );
 
-        fileRegexCheckBox.setText( "Use Regular Expressions" );
-        fileRegexCheckBox.setToolTipText(
-            "Specifies to use regular instead " + "of literal expressions." );
-        fileMatchCheckBox.setText( "Match Case" );
-        fileMatchCheckBox.setToolTipText(
-            "Specifies to match the case of " + "the filename search." );
-        fileNotCheckBox.setText( "Specify Not Condition" );
-        fileNotCheckBox.setToolTipText( "Specifies to return all files " +
-            "NOT matched by the filename expression." );
-
-        fileOptionsPanel.add( fileRegexCheckBox,
-            new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-
-        fileOptionsPanel.add( fileMatchCheckBox,
-            new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-
-        fileOptionsPanel.add( fileNotCheckBox,
-            new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-
-        fileOptionsPanel.add( Box.createHorizontalStrut( 1 ),
-            new GridBagConstraints( 0, 3, 1, 1, 1.0, 1.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
-
-        return fileOptionsPanel;
+        return panel;
     }
 
     private JPanel createContentOptionsPanel()
     {
-        JPanel contentOptionsPanel = new JPanel( new GridBagLayout() );
-        contentOptionsPanel.setBorder(
+        StandardFormView form = new StandardFormView();
+
+        form.addField( contentsRegexCheckBox );
+        form.addField( contentsMatchCheckBox );
+
+        JPanel panel = form.getView();
+
+        panel.setBorder(
             BorderFactory.createTitledBorder( "Content Options" ) );
 
-        contentRegexCheckBox.setText( "Use Regular Expressions" );
-        contentRegexCheckBox.setToolTipText(
-            "Specifies to use regular " + "instead of literal expressions." );
-        contentMatchCheckBox.setText( "Match Case" );
-        contentMatchCheckBox.setToolTipText(
-            "Specifies to match the case of " + "the filename search." );
-
-        contentOptionsPanel.add( contentRegexCheckBox,
-            new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-
-        contentOptionsPanel.add( contentMatchCheckBox,
-            new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-
-        contentOptionsPanel.add( Box.createHorizontalStrut( 1 ),
-            new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
-
-        return contentOptionsPanel;
-    }
-
-    /***************************************************************************
-     * @param enterListener
-     * @return
-     **************************************************************************/
-    private JPanel createBrowsePanel( KeyListener enterListener )
-    {
-        JPanel browsePanel = new JPanel();
-        GridBagLayout browseLayout = new GridBagLayout();
-        JLabel browseLabel = new JLabel();
-
-        browsePanel.setLayout( browseLayout );
-
-        browseLabel.setText( "Search In :" );
-        searchInComboBox.setToolTipText(
-            "The directory in which the " + "search will be performed." );
-        searchInComboBox.setModel( searchInModel );
-        searchInComboBox.setEditable( true );
-        searchInComboBox.getEditor().getEditorComponent().addKeyListener(
-            enterListener );
-
-        subfoldersCheckBox.setText( "Search Subfolders" );
-        subfoldersCheckBox.setToolTipText(
-            "Signifies that sub folders " + "should be searched." );
-        browseButton.setToolTipText( "Choose the directory to be searched." );
-        browseButton.setIcon(
-            IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
-        browseButton.addActionListener( browseListener );
-
-        browsePanel.add( browseLabel,
-            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-                GridBagConstraints.EAST, GridBagConstraints.NONE,
-                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        browsePanel.add( searchInComboBox,
-            new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        browsePanel.add( subfoldersCheckBox,
-            new GridBagConstraints( 2, 0, 1, 1, 0.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.NONE,
-                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        browsePanel.add( browseButton,
-            new GridBagConstraints( 3, 0, 1, 1, 0.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.NONE,
-                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-
-        return browsePanel;
+        return panel;
     }
 
     /***************************************************************************
@@ -487,93 +268,23 @@ public class SearchView implements IDataView<SearchParams>
      **************************************************************************/
     private JPanel createSearchPanel( KeyListener enterListener )
     {
-        JPanel searchPanel = new JPanel( new GridBagLayout() );
-        JLabel filenameLabel = new JLabel();
+        StandardFormView form = new StandardFormView();
 
-        filenameLabel.setText( "Filename : " );
-        filenameComboBox.setToolTipText(
-            "Literal or regular expression for " + "a filename." );
-        filenameComboBox.setModel( filenameModel );
-        filenameComboBox.setEditable( true );
-        filenameComboBox.getEditor().getEditorComponent().addKeyListener(
-            enterListener );
+        form.addField( filenameField );
+        form.addField( contentsField );
+        form.addField( pathField );
+        form.addField( subfoldersField );
 
-        startButton.setText( "Start" );
-        startButton.setToolTipText( "Begin the search." );
-        startButton.setActionCommand( "Start" );
-        startButton.setIcon( startIcon );
-        startButton.addActionListener( startListener );
-
-        contentsCheckBox.setText( "Containing Text :" );
-        contentsCheckBox.setToolTipText(
-            "Signifies that contents should " + "also be checked." );
-        contentsCheckBox.addActionListener(
-            new CheckBoxEnabler_actionAdapter( contentsComboBox ) );
-        contentsComboBox.setToolTipText(
-            "Literal or regular expression " + "for a line within a file." );
-        contentsComboBox.setModel( contentsModel );
-        contentsComboBox.setEditable( true );
-        contentsComboBox.getEditor().getEditorComponent().addKeyListener(
-            enterListener );
-
-        searchPanel.add( filenameLabel,
-            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-                GridBagConstraints.EAST, GridBagConstraints.NONE,
-                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        searchPanel.add( filenameComboBox,
-            new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        searchPanel.add( startButton,
-            new GridBagConstraints( 2, 0, 1, 2, 0.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                new Insets( 2, 2, 2, 2 ), 10, 0 ) );
-
-        searchPanel.add( contentsCheckBox,
-            new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
-                GridBagConstraints.EAST, GridBagConstraints.NONE,
-                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        searchPanel.add( contentsComboBox,
-            new GridBagConstraints( 1, 1, 1, 1, 1.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-
-        return searchPanel;
+        return form.getView();
     }
 
     /***************************************************************************
-     *
+     * 
      **************************************************************************/
-    public void clearPanel()
+    @Override
+    public JPanel getView()
     {
-        resultsTableModel.clearModel();
-
-        GcThread.createAndStart();
-    }
-
-    /***************************************************************************
-     * @param left JComponent
-     * @param right JComponent
-     * @return JPanel
-     **************************************************************************/
-    private static JPanel createRightSidedPanel( JComponent left,
-        JComponent right )
-    {
-        JPanel panel = new JPanel();
-        GridBagLayout layout = new GridBagLayout();
-
-        panel.setLayout( layout );
-
-        panel.add( left,
-            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        panel.add( right,
-            new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-
-        return panel;
+        return view;
     }
 
     /***************************************************************************
@@ -582,143 +293,7 @@ public class SearchView implements IDataView<SearchParams>
     @Override
     public SearchParams getData()
     {
-        SearchParams params = new SearchParams();
-        Object obj = filenameComboBox.getSelectedItem();
-
-        params.filename = obj != null ? obj.toString() : "";
-
-        if( contentsCheckBox.isSelected() )
-        {
-            params.contents = contentsComboBox.getSelectedItem().toString();
-        }
-        else
-        {
-            params.contents = null;
-        }
-
-        params.searchSubfolders = subfoldersCheckBox.isSelected();
-
-        params.setSearchFolders( IOUtils.getFilesFromString(
-            searchInComboBox.getSelectedItem().toString() ) );
-
-        if( moreThanCheckBox.isSelected() )
-        {
-            try
-            {
-                params.moreThan = Long.valueOf( moreThanTextField.getText() );
-            }
-            catch( NumberFormatException ex )
-            {
-                params.moreThan = null;
-            }
-        }
-        else
-        {
-            params.moreThan = null;
-        }
-
-        if( lessThanCheckBox.isSelected() )
-        {
-            try
-            {
-                params.lessThan = Long.valueOf( lessThanTextField.getText() );
-            }
-            catch( NumberFormatException ex )
-            {
-                params.lessThan = null;
-            }
-        }
-        else
-        {
-            params.lessThan = null;
-        }
-
-        if( afterCheckBox.isSelected() )
-        {
-            params.after = afterTextField.getDate();
-        }
-        else
-        {
-            params.after = null;
-        }
-
-        if( beforeCheckBox.isSelected() )
-        {
-            params.before = beforeTextField.getDate();
-        }
-        else
-        {
-            params.before = null;
-        }
-
-        params.filenameRegex = fileRegexCheckBox.isSelected();
-        params.filenameMatch = fileMatchCheckBox.isSelected();
-        params.filenameNot = fileNotCheckBox.isSelected();
-
-        params.contentsRegex = contentRegexCheckBox.isSelected();
-        params.contentsMatch = contentMatchCheckBox.isSelected();
-
         return params;
-    }
-
-    private void setContents( String contents )
-    {
-        boolean contentsValid = contents != null;
-
-        contentsCheckBox.setSelected( contentsValid );
-        contentsComboBox.setSelectedItem( contents );
-    }
-
-    private void setMoreThan( Long moreThan )
-    {
-        boolean moreThanValid = moreThan != null;
-
-        moreThanCheckBox.setSelected( moreThanValid );
-        moreThanTextField.setEnabled( moreThanValid );
-
-        if( moreThanValid )
-        {
-            moreThanTextField.setText( moreThan.toString() );
-        }
-    }
-
-    private void setLessThan( Long lessThan )
-    {
-        boolean lessThanValid = lessThan != null;
-
-        lessThanCheckBox.setSelected( lessThanValid );
-        lessThanTextField.setEnabled( lessThanValid );
-
-        if( lessThanValid )
-        {
-            lessThanTextField.setText( lessThan.toString() );
-        }
-    }
-
-    private void setAfter( Calendar after )
-    {
-        boolean afterValid = after != null;
-
-        afterCheckBox.setSelected( afterValid );
-        afterTextField.setEnabled( afterValid );
-
-        if( afterValid )
-        {
-            afterTextField.setDate( after );
-        }
-    }
-
-    private void setBefore( Calendar before )
-    {
-        boolean beforeValid = before != null;
-
-        beforeCheckBox.setSelected( beforeValid );
-        beforeTextField.setEnabled( beforeValid );
-
-        if( beforeValid )
-        {
-            beforeTextField.setDate( before );
-        }
     }
 
     /***************************************************************************
@@ -729,419 +304,60 @@ public class SearchView implements IDataView<SearchParams>
     {
         params = params != null ? params : new SearchParams();
 
-        filenameComboBox.setSelectedItem( params.filename );
+        this.params = params;
 
-        setContents( params.contents );
+        filenameField.setValue( params.filename );
+        contentsField.setValue( params.contents );
 
-        subfoldersCheckBox.setSelected( params.searchSubfolders );
+        pathField.setValue( params.path );
 
-        String path = IOUtils.getStringFromFiles( params.getSearchFolders() );
+        moreThanField.setValue( params.moreThan );
+        lessThanField.setValue( params.lessThan );
 
-        if( path != null && path.length() > 0 )
-        {
-            searchInComboBox.setSelectedItem( path );
-        }
-        else
-        {
-            if( searchInComboBox.getItemCount() > 0 )
-            {
-                searchInComboBox.setSelectedIndex( 0 );
-            }
-        }
+        afterField.setValue( params.after );
+        beforeField.setValue( params.before );
 
-        setMoreThan( params.moreThan );
+        fileRegexCheckBox.setValue( params.filenameRegex );
+        fileMatchCheckBox.setValue( params.filenameMatch );
+        fileNotCheckBox.setValue( params.filenameNot );
+        subfoldersField.setValue( params.searchSubfolders );
 
-        setLessThan( params.lessThan );
-
-        setAfter( params.after );
-
-        setBefore( params.before );
-
-        fileRegexCheckBox.setSelected( params.filenameRegex );
-        fileMatchCheckBox.setSelected( params.filenameMatch );
-        fileNotCheckBox.setSelected( params.filenameNot );
-
-        contentRegexCheckBox.setSelected( params.contentsRegex );
-        contentMatchCheckBox.setSelected( params.contentsMatch );
-
-        contentsComboBox.setEnabled( params.contentsMatch );
+        contentsRegexCheckBox.setValue( params.contentsRegex );
+        contentsMatchCheckBox.setValue( params.contentsMatch );
     }
 
     /***************************************************************************
-     * @param records List
+     * @param e
      **************************************************************************/
-    public void addRecords( java.util.List<? extends IExplorerItem> records )
+    private void checkForStartKey( KeyEvent e )
     {
-        resultsTableModel.addFiles( records );
+        if( e.getKeyCode() == KeyEvent.VK_ENTER && params != null )
+        {
+            startListeners.fireListeners( this, params );
+        }
     }
 
-    /***************************************************************************
-     * @param record SearchRecord
-     **************************************************************************/
-    public void addRecord( SearchRecord record )
+    public void addStartListener( ItemActionListener<SearchParams> l )
     {
-        resultsTableModel.addFile( record );
-    }
-
-    private boolean checkParams( SearchParams params )
-    {
-        StringBuffer errBuffer = new StringBuffer();
-
-        // ---------------------------------------------------------------------
-        // Check the files
-        // ---------------------------------------------------------------------
-        List<File> files = Arrays.asList( params.getSearchFolders() );
-        for( File f : files )
-        {
-            if( !f.isDirectory() )
-            {
-                errBuffer.append(
-                    "Non-existant directory: " + f.getAbsolutePath() );
-            }
-        }
-
-        // ---------------------------------------------------------------------
-        // Check regex.
-        // ---------------------------------------------------------------------
-        try
-        {
-            params.getFilenamePattern();
-        }
-        catch( PatternSyntaxException ex )
-        {
-            errBuffer.append( "Invalid filename pattern: " + Utils.NEW_LINE );
-            errBuffer.append( ex.getMessage() );
-        }
-        try
-        {
-            params.getContentsPattern();
-        }
-        catch( PatternSyntaxException ex )
-        {
-            if( errBuffer.length() > 0 )
-            {
-                errBuffer.append( Utils.NEW_LINE );
-                errBuffer.append( Utils.NEW_LINE );
-            }
-            errBuffer.append( "Invalid contents pattern: " + Utils.NEW_LINE );
-            errBuffer.append( ex.getMessage() );
-        }
-
-        if( errBuffer.length() > 0 )
-        {
-            JOptionPane.showMessageDialog( view, errBuffer.toString(), "ERROR",
-                JOptionPane.ERROR_MESSAGE );
-            return false;
-        }
-
-        return true;
+        startListeners.addListener( l );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private void listener_startButton_actionPerformed()
+    private static final class StartKeyListener extends KeyAdapter
     {
-        SearchParams params = getData();
+        private final SearchView view;
 
-        if( !checkParams( params ) )
+        public StartKeyListener( SearchView view )
         {
-            return;
+            this.view = view;
         }
 
-        searcher = new Searcher( resultsTableView, this, statusBar );
-
-        searcher.search( params, ( e ) -> SwingUtilities.invokeLater(
-            () -> setSearchFinished( e.getItem() ) ) );
-
-        setSearchStarted();
-
-        FileSpyData configData = options.getOptions();
-        Object contents = contentsComboBox.getSelectedItem();
-        Object filename = filenameComboBox.getSelectedItem();
-        Object folder = searchInComboBox.getSelectedItem();
-
-        if( filename != null && filename.toString().length() > 0 )
-        {
-            configData.filenames.push( filename.toString() );
-        }
-
-        if( contents != null )
-        {
-            configData.contents.push( contents.toString() );
-        }
-
-        configData.folders.push( folder.toString() );
-
-        options.write();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private void listener_stopButton_actionPerformed()
-    {
-        searcher.cancel();
-    }
-
-    /***************************************************************************
-     * @param e ActionEvent
-     **************************************************************************/
-    private void listener_resultsTable_valueChanged( ListSelectionEvent e )
-    {
-        int index = resultsTableView.getView().getSelectedRow();
-
-        if( !e.getValueIsAdjusting() && index > -1 )
-        {
-            SearchRecord record = ( SearchRecord )resultsTableView.getSelectedItem();
-            java.util.List<LineMatch> lines = record.getLinesFound();
-            Style plain = StyleContext.getDefaultStyleContext().getStyle(
-                StyleContext.DEFAULT_STYLE );
-            Style matchStyle = rightResultsPane.addStyle( "match", plain );
-            Style headerStyle = rightResultsPane.addStyle( "header", plain );
-
-            StyleConstants.setBold( matchStyle, true );
-            StyleConstants.setUnderline( matchStyle, true );
-            StyleConstants.setForeground( matchStyle, new Color( 0x0A246A ) );
-
-            StyleConstants.setBold( headerStyle, true );
-            StyleConstants.setUnderline( headerStyle, true );
-            StyleConstants.setFontSize( headerStyle, 16 );
-
-            // LogUtils.printDebug( record.getFile().getAbsolutePath() +
-            // " clicked." );
-
-            rightResultsPane.setText( "" );
-
-            // Remove exception.
-
-            try
-            {
-                rightResultsPane.appendText( record.getFile().getName(),
-                    headerStyle );
-                rightResultsPane.appendText( Utils.NEW_LINE, null );
-                rightResultsPane.appendText( Utils.NEW_LINE, null );
-
-                for( int i = 0; i < lines.size(); i++ )
-                {
-                    LineMatch line = lines.get( i );
-                    // LogUtils.printDebug( "\tWriting line:" + i );
-
-                    rightResultsPane.appendText( line.lineNumber + ": \t",
-                        null );
-                    rightResultsPane.appendText( line.preMatch, null );
-                    rightResultsPane.appendText( line.match, matchStyle );
-                    rightResultsPane.appendText( line.postMatch, null );
-                    rightResultsPane.appendText( Utils.NEW_LINE, null );
-                }
-
-                // LogUtils.printDebug( "Text:" + rightResultsPane.getText() );
-            }
-            catch( Exception ex )
-            {
-                LogUtils.printError( "\tGot an exception!" );
-                ex.printStackTrace();
-            }
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private void setSearchStarted()
-    {
-        startButton.setIcon( IconConstants.getIcon( IconConstants.STOP_16 ) );
-        startButton.setText( "Stop" );
-        startButton.setActionCommand( "Stop" );
-    }
-
-    /***************************************************************************
-     * @param millis
-     **************************************************************************/
-    private void setSearchFinished( long millis )
-    {
-        startButton.setIcon( startIcon );
-        startButton.setText( "Start" );
-        startButton.setActionCommand( "Start" );
-
-        int rowCount = resultsTableModel.getRowCount();
-        String elapsed = Utils.getElapsedString( new Date( millis ) );
-
-        statusBar.setText( rowCount + " file(s) found in " + elapsed + "." );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class BrowseButtonListener implements ActionListener
-    {
-        private final SearchView panel;
-
-        public BrowseButtonListener( SearchView panel )
-        {
-            this.panel = panel;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            DirectoryChooser chooser = new DirectoryChooser(
-                SwingUtils.getComponentsFrame( panel.view ),
-                "Choose Directories",
-                "Choose one or more directories in which to search:" );
-            String selectedItemStr = panel.searchInComboBox.getSelectedItem().toString();
-            String paths = "";
-
-            chooser.setSelectedPaths( selectedItemStr );
-            chooser.setVisible( true );
-
-            paths = chooser.getSelectedPaths();
-
-            if( paths != null && paths.length() > 0 )
-            {
-                panel.searchInComboBox.setSelectedItem( paths );
-            }
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private class StartButtonListener implements ActionListener
-    {
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            String str = e.getActionCommand();
-
-            if( str.compareTo( "Start" ) == 0 )
-            {
-                listener_startButton_actionPerformed();
-            }
-            else if( str.compareTo( "Stop" ) == 0 )
-            {
-                listener_stopButton_actionPerformed();
-            }
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private class StartKeyListener extends KeyAdapter
-    {
         @Override
         public void keyReleased( KeyEvent e )
         {
-            if( e.getKeyCode() == KeyEvent.VK_ENTER )
-            {
-                listener_startButton_actionPerformed();
-            }
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class SearchPanel_listSelectionAdapter
-        implements ListSelectionListener
-    {
-        private SearchView adaptee;
-
-        SearchPanel_listSelectionAdapter( SearchView adaptee )
-        {
-            this.adaptee = adaptee;
-        }
-
-        @Override
-        public void valueChanged( ListSelectionEvent e )
-        {
-            adaptee.listener_resultsTable_valueChanged( e );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class CheckBoxEnabler_actionAdapter implements ActionListener
-    {
-        private JComponent [] components;
-
-        public CheckBoxEnabler_actionAdapter( JComponent component )
-        {
-            this( new JComponent[] { component } );
-        }
-
-        public CheckBoxEnabler_actionAdapter( JComponent [] components )
-        {
-            this.components = components;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            JCheckBox box = ( JCheckBox )e.getSource();
-            for( int i = 0; i < components.length; i++ )
-            {
-                components[i].setEnabled( box.isSelected() );
-            }
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class OpenResultsListener extends MouseAdapter
-    {
-        private final SearchView panel;
-
-        // private final JExplorerFrame explorer;
-
-        public OpenResultsListener( SearchView adaptee )
-        {
-            this.panel = adaptee;
-            // this.explorer = new JExplorerFrame();
-        }
-
-        @Override
-        public void mouseClicked( MouseEvent e )
-        {
-            if( e.getClickCount() == 2 && !e.isPopupTrigger() )
-            {
-                File file = panel.resultsTableView.getSelectedFile();
-
-                if( file != null )
-                {
-                    // if( file.isDirectory() )
-                    // {
-                    // Desktop.getDesktop().open( file );
-                    // // showFile( file );
-                    // if( explorer == null )
-                    // {
-                    // explorer.setDefaultCloseOperation( JFrame.HIDE_ON_CLOSE
-                    // );
-                    // }
-                    // else
-                    // {
-                    // explorer.setVisible( true );
-                    // }
-                    // }
-                    // else
-                    // {
-                    try
-                    {
-                        Desktop.getDesktop().open( file );
-                    }
-                    catch( Exception ex )
-                    {
-                        JOptionPane.showMessageDialog( panel.view,
-                            ex.getMessage(), "ERROR",
-                            JOptionPane.ERROR_MESSAGE );
-                    }
-                    // }
-                }
-
-            }
+            view.checkForStartKey( e );
         }
     }
 }

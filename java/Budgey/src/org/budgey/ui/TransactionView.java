@@ -2,15 +2,12 @@ package org.budgey.ui;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.budgey.data.Transaction;
-import org.jutils.ui.calendar.CalendarField;
-import org.jutils.ui.event.updater.IUpdater;
+import org.jutils.ui.calendar.DateField;
 import org.jutils.ui.event.updater.ReflectiveUpdater;
 import org.jutils.ui.fields.StringFormField;
 import org.jutils.ui.model.IDataView;
@@ -27,7 +24,7 @@ public class TransactionView implements IDataView<Transaction>
     /**  */
     private final MoneyFormField amountField;
     /**  */
-    private final CalendarField dateField;
+    private final DateField dateField;
     /**  */
     private final ItemView itemView;
 
@@ -42,7 +39,7 @@ public class TransactionView implements IDataView<Transaction>
         secondPartyField = new StringFormField( "Seondary Party", 20, 3, null );
         tagField = new StringFormField( "Tags", 20, 0, null );
         amountField = new MoneyFormField( "Amount" );
-        dateField = new CalendarField();
+        dateField = new DateField( "Date" );
 
         itemView = new ItemView( createFieldsPanel() );
 
@@ -54,8 +51,8 @@ public class TransactionView implements IDataView<Transaction>
             new ReflectiveUpdater<>( this, "transaction.tags" ) );
         amountField.setUpdater(
             new ReflectiveUpdater<>( this, "transaction.amount" ) );
-        dateField.addDataUpdater( new DateUpdater(
-            new ReflectiveUpdater<>( this, "transaction.date" ) ) );
+        dateField.setUpdater(
+            new ReflectiveUpdater<>( this, "transaction.date" ) );
     }
 
     /***************************************************************************
@@ -146,13 +143,10 @@ public class TransactionView implements IDataView<Transaction>
     {
         this.transaction = transaction;
 
-        Calendar cal = new GregorianCalendar();
-        cal.setTime( transaction.getDate() );
-
         secondPartyField.setValue( transaction.getSecondParty() );
         tagField.setValue( transaction.getTag() );
         amountField.setValue( transaction.getAmount() );
-        dateField.setDate( new GregorianCalendar() );
+        dateField.setValue( transaction.getDate() );
     }
 
     /***************************************************************************
@@ -161,24 +155,5 @@ public class TransactionView implements IDataView<Transaction>
     public void requestFocus()
     {
         secondPartyField.getView().requestFocus();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class DateUpdater implements IUpdater<Calendar>
-    {
-        private final IUpdater<Long> updater;
-
-        public DateUpdater( IUpdater<Long> updater )
-        {
-            this.updater = updater;
-        }
-
-        @Override
-        public void update( Calendar data )
-        {
-            updater.update( data.getTimeInMillis() );
-        }
     }
 }

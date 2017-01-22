@@ -1,20 +1,23 @@
 package org.jutils.apps.filespy.search;
 
 import java.io.File;
+import java.time.*;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jutils.apps.filespy.data.SearchParams;
 import org.jutils.apps.filespy.data.SearchRecord;
 import org.jutils.concurrent.*;
-import org.jutils.ui.event.ItemActionEvent;
-import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.MessageExceptionView;
 
 /*******************************************************************************
  *
  ******************************************************************************/
 public class SearchTask implements IStoppableTask
 {
+    /**  */
+    private static final ZoneId GMT = ZoneId.of( "GMT" );
     /**  */
     private final SearchResultsHandler searchHandler;
     /**  */
@@ -48,15 +51,14 @@ public class SearchTask implements IStoppableTask
         if( params.contentsMatch )
         {
             fileConsumer = new FileContentsConsumer(
-                params.getContentsPattern(), searchHandler, finalizer,
-                stopper );
+                params.getContentsPattern(), searchHandler );
         }
         else
         {
-            fileConsumer = new FileNameConsumer( searchHandler, finalizer );
+            fileConsumer = new FileNameConsumer( searchHandler );
         }
 
-        File [] searchPaths = params.getSearchFolders();
+        File [] searchPaths = new File[] { params.path };
 
         for( File searchFolder : searchPaths )
         {
@@ -74,6 +76,8 @@ public class SearchTask implements IStoppableTask
 
         // contentsSearcherThread.interrupt();
 
+        finalizer.run();
+
         stopper.signalFinished();
     }
 
@@ -83,8 +87,15 @@ public class SearchTask implements IStoppableTask
      **************************************************************************/
     private boolean isAfter( long lastModified )
     {
-        return params.after == null ||
-            lastModified < params.after.getTime().getTime();
+        if( params.after.isUsed )
+        {
+            Instant instant = Instant.ofEpochMilli( lastModified );
+            ZonedDateTime zdt = ZonedDateTime.ofInstant( instant, GMT );
+
+            return params.after.data.isBefore( zdt.toLocalDate() );
+        }
+
+        return true;
     }
 
     /***************************************************************************
@@ -93,8 +104,15 @@ public class SearchTask implements IStoppableTask
      **************************************************************************/
     private boolean isBefore( long lastModified )
     {
-        return params.before == null ||
-            lastModified > params.before.getTime().getTime();
+        if( params.before.isUsed )
+        {
+            Instant instant = Instant.ofEpochMilli( lastModified );
+            ZonedDateTime zdt = ZonedDateTime.ofInstant( instant, GMT );
+
+            return params.before.data.isAfter( zdt.toLocalDate() );
+        }
+
+        return true;
     }
 
     /***************************************************************************
@@ -103,7 +121,7 @@ public class SearchTask implements IStoppableTask
      **************************************************************************/
     private boolean isLessThan( long length )
     {
-        return params.lessThan == null || length > params.lessThan.longValue();
+        return !params.lessThan.isUsed || length > params.lessThan.data;
     }
 
     /***************************************************************************
@@ -112,7 +130,7 @@ public class SearchTask implements IStoppableTask
      **************************************************************************/
     private boolean isMoreThan( long length )
     {
-        return params.moreThan == null || length > params.moreThan.longValue();
+        return !params.moreThan.isUsed || length > params.moreThan.data;
     }
 
     /***************************************************************************
@@ -223,38 +241,48 @@ public class SearchTask implements IStoppableTask
     {
         private final SearchResultsHandler searchHandler;
         private final FileContentsSearcher contentsSearcher;
-        private final ConsumerTask<SearchRecord> contentsConsumer;
-        private final Stoppable contentsStopper;
-        private final Thread contentsSearcherThread;
+        private final SafeExecutorService contentsService;
 
         public FileContentsConsumer( Pattern contentsPattern,
-            SearchResultsHandler searchHandler, Runnable finalizer,
-            ITaskStopManager stopper )
+            SearchResultsHandler searchHandler )
         {
             this.searchHandler = searchHandler;
             this.contentsSearcher = new FileContentsSearcher( contentsPattern,
                 searchHandler );
-            this.contentsConsumer = new ConsumerTask<SearchRecord>(
-                contentsSearcher, finalizer );
-            this.contentsStopper = new Stoppable( contentsConsumer );
-            this.contentsSearcherThread = new Thread( contentsStopper,
-                "FileSpy Contents Search Thread" );
+            this.contentsService = new SafeExecutorService( 8,
+                new IFinishedHandler()
+                {
+                    @Override
+                    public void signalError( Throwable t )
+                    {
+                        MessageExceptionView.invokeLater( t, "ERROR",
+                            "Error searching files" );
+                    }
 
-            stopper.addFinishedListener( new SearchStoppedListener(
-                contentsConsumer, contentsStopper, contentsSearcherThread ) );
-
-            contentsSearcherThread.start();
+                    @Override
+                    public void signalComplete()
+                    {
+                    }
+                } );
         }
 
         @Override
         public void consume( SearchRecord record, ITaskStopManager stopper )
         {
             File file = record.getFile();
+
             if( file.canRead() )
             {
                 // LogUtils.printDebug( "Found record for file " +
                 // record.getFile().getAbsolutePath() );
-                contentsConsumer.addData( record );
+                contentsService.submit( new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        contentsSearcher.consume( record, stopper );
+                    }
+                } );
             }
             else
             {
@@ -266,17 +294,22 @@ public class SearchTask implements IStoppableTask
         @Override
         public void signalInputFinished()
         {
-            contentsConsumer.stopAcceptingInput();
+            // LogUtils.printDebug( "Shuting contents service down" );
+            contentsService.shutdown();
 
+            // LogUtils.printDebug( "awaiting contents service termination" );
             try
             {
-                // LogUtils.printDebug( "Waiting for contents to finish" );
-                contentsStopper.waitFor();
-                // LogUtils.printDebug( "Contents search finished" );
+                while( !contentsService.awaitTermination( 1L,
+                    TimeUnit.SECONDS ) )
+                {
+                    // LogUtils.printDebug( "still waiting for termination" );
+                }
             }
-            catch( InterruptedException e )
+            catch( InterruptedException ex )
             {
-                ;
+                // Ignore interrupt.
+                ex.printStackTrace();
             }
 
             searchHandler.updateStatus( "" );
@@ -289,13 +322,10 @@ public class SearchTask implements IStoppableTask
     private static class FileNameConsumer implements IResultsConsumer
     {
         private final SearchResultsHandler searchHandler;
-        private final Runnable finalizer;
 
-        public FileNameConsumer( SearchResultsHandler searchHandler,
-            Runnable finalizer )
+        public FileNameConsumer( SearchResultsHandler searchHandler )
         {
             this.searchHandler = searchHandler;
-            this.finalizer = finalizer;
         }
 
         @Override
@@ -308,41 +338,6 @@ public class SearchTask implements IStoppableTask
         public void signalInputFinished()
         {
             searchHandler.updateStatus( "" );
-            finalizer.run();
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class SearchStoppedListener
-        implements ItemActionListener<Boolean>
-    {
-        private final Stoppable searcher;
-        /**  */
-        private final ConsumerTask<SearchRecord> contentsConsumer;
-        /**  */
-        private final Thread contentsSearcherThread;
-
-        public SearchStoppedListener(
-            ConsumerTask<SearchRecord> contentsConsumer, Stoppable searcher,
-            Thread contentsSearcherThread )
-        {
-            this.contentsConsumer = contentsConsumer;
-            this.searcher = searcher;
-            this.contentsSearcherThread = contentsSearcherThread;
-        }
-
-        @Override
-        public void actionPerformed( ItemActionEvent<Boolean> event )
-        {
-            contentsConsumer.stopAcceptingInput();
-            searcher.stop();
-
-            if( contentsSearcherThread != null )
-            {
-                contentsSearcherThread.interrupt();
-            }
         }
     }
 }

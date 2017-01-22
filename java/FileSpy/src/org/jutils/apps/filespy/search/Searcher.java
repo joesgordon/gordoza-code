@@ -2,12 +2,11 @@ package org.jutils.apps.filespy.search;
 
 import org.jutils.Stopwatch;
 import org.jutils.apps.filespy.data.SearchParams;
-import org.jutils.apps.filespy.ui.SearchView;
+import org.jutils.apps.filespy.ui.ResultsView;
 import org.jutils.concurrent.Stoppable;
 import org.jutils.ui.StatusBarPanel;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
-import org.jutils.ui.explorer.ExplorerTable;
 
 /*******************************************************************************
  * 
@@ -15,9 +14,7 @@ import org.jutils.ui.explorer.ExplorerTable;
 public class Searcher
 {
     /**  */
-    private final ExplorerTable resultsTable;
-    /**  */
-    private final SearchView panel;
+    private final ResultsView resultsView;
     /**  */
     private final StatusBarPanel statusBar;
 
@@ -27,15 +24,13 @@ public class Searcher
     private Thread searchThread;
 
     /***************************************************************************
-     * @param resultsTable
-     * @param panel
+     * @param resultsView
+     * @param fileSpyFrameView
      * @param statusBar
      **************************************************************************/
-    public Searcher( ExplorerTable resultsTable, SearchView panel,
-        StatusBarPanel statusBar )
+    public Searcher( ResultsView resultsView, StatusBarPanel statusBar )
     {
-        this.resultsTable = resultsTable;
-        this.panel = panel;
+        this.resultsView = resultsView;
         this.statusBar = statusBar;
     }
 
@@ -49,11 +44,11 @@ public class Searcher
         Stopwatch stopwatch = new Stopwatch();
         ConsumerFinalizer finalizer = new ConsumerFinalizer( stopwatch,
             finishedListener );
-        SearchResultsHandler handler = new SearchResultsHandler( panel,
+        SearchResultsHandler handler = new SearchResultsHandler( resultsView,
             statusBar );
 
         statusBar.setText( "" );
-        resultsTable.clearTable();
+        resultsView.clearPanel();
 
         SearchTask searchTask = new SearchTask( handler, params, finalizer );
 

@@ -1,10 +1,14 @@
 package org.jutils.ui.calendar;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import java.awt.Component;
+import java.awt.Container;
+
+import javax.swing.*;
 
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
+import org.jutils.ui.StandardFormView;
+import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
@@ -31,23 +35,72 @@ public class CalDisMain
         @Override
         public JFrame createFrame()
         {
-            JFrame frame = new JFrame();
-            CalendarPanel calView = new CalendarPanel();
-            JPanel panel = new JPanel();
-
-            panel.add( calView.getView() );
+            StandardFrameView view = new StandardFrameView();
+            JFrame frame = view.getView();
 
             frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
             frame.setTitle( "CalDis" );
-            frame.setContentPane( panel );
+            frame.setContentPane( createContent() );
 
-            // frame.setSize( 500, 500 );
+            frame.setSize( 500, 500 );
+            // frame.pack();
 
             SwingUtils.createTrayIcon(
                 IconConstants.getImage( IconConstants.CALENDAR_16 ), "CalDis",
                 frame, null );
 
             return frame;
+        }
+
+        private Container createContent()
+        {
+            JTabbedPane tabs = new JTabbedPane();
+
+            tabs.addTab( "Date View", createDateView() );
+
+            tabs.addTab( "Date Field", createDateField() );
+
+            tabs.addTab( "Time Field", createTimeField() );
+
+            tabs.addTab( "Date/Time Field", createDateTimeField() );
+
+            return tabs;
+        }
+
+        private Component createDateView()
+        {
+            JPanel panel = new JPanel();
+
+            panel.add( new DateView().getView() );
+
+            return panel;
+        }
+
+        private Component createDateField()
+        {
+            StandardFormView form = new StandardFormView();
+
+            form.addField( new DateField( "Date" ) );
+
+            return form.getView();
+        }
+
+        private Component createTimeField()
+        {
+            StandardFormView form = new StandardFormView();
+
+            form.addField( new TimeField( "Time" ) );
+
+            return form.getView();
+        }
+
+        private Component createDateTimeField()
+        {
+            StandardFormView form = new StandardFormView();
+
+            form.addField( new DateTimeField( "Date/Time" ) );
+
+            return form.getView();
         }
 
         @Override

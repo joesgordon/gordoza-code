@@ -1,10 +1,10 @@
 package org.budgey.data;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Transaction
 {
-    private long date;
+    private LocalDate date;
     private String secondParty;
     private String tags;
     private Money amount;
@@ -12,16 +12,16 @@ public class Transaction
 
     public Transaction()
     {
-        date = new Date().getTime();
+        date = LocalDate.now();
         secondParty = "";
         tags = "";
         amount = new Money( 0 );
         runningBalance = new Money( 0 );
     }
 
-    public Date getDate()
+    public LocalDate getDate()
     {
-        return new Date( date );
+        return date;
     }
 
     public String getSecondParty()

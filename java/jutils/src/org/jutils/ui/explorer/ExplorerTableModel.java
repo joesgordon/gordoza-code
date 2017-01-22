@@ -1,8 +1,7 @@
 package org.jutils.ui.explorer;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -15,18 +14,51 @@ public class ExplorerTableModel extends AbstractTableModel
     private static final long serialVersionUID = -8775953721896711927L;
 
     /**  */
-    public static final String [] HEADERS = new String[] { "Name", "Location",
-        "Size (kB)", "Type", "Modified" };
+    public static final String [] STD_HEADERS = new String[] { "Name",
+        "Location", "Size (kB)", "Type", "Modified" };
+    /**  */
+    public static final Class<?> [] STD_CLASSES = new Class<?>[] {
+        IExplorerItem.class, File.class, Long.class, String.class,
+        String.class };
 
     /**  */
-    private List<IExplorerItem> contents = new ArrayList<IExplorerItem>( 1024 );
+    private final List<String> headers;
+    /**  */
+    private final List<Class<?>> classes;
+    /**  */
+    private final int [] itemIndexes;
+    /**  */
+    private final List<IExplorerItem> contents;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public ExplorerTableModel()
     {
+        this( true );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public ExplorerTableModel( boolean showPath )
+    {
         super();
+
+        this.headers = new ArrayList<>( Arrays.asList( STD_HEADERS ) );
+        this.classes = new ArrayList<>( Arrays.asList( STD_CLASSES ) );
+        this.itemIndexes = new int[] { 0, 1, 2, 3, 4 };
+        this.contents = new ArrayList<IExplorerItem>( 1024 );
+
+        if( !showPath )
+        {
+            headers.remove( 1 );
+            classes.remove( 1 );
+            itemIndexes[1] = 2;
+            itemIndexes[2] = 3;
+            itemIndexes[3] = 4;
+            itemIndexes[4] = -1;
+        }
     }
 
     /***************************************************************************
@@ -46,7 +78,7 @@ public class ExplorerTableModel extends AbstractTableModel
     @Override
     public int getColumnCount()
     {
-        return HEADERS.length;
+        return headers.size();
     }
 
     /***************************************************************************
@@ -67,9 +99,22 @@ public class ExplorerTableModel extends AbstractTableModel
     {
         String name = null;
 
-        if( col > -1 && col < HEADERS.length )
+        if( col > -1 && col < headers.size() )
         {
-            name = HEADERS[col];
+            name = headers.get( col );
+        }
+
+        return name;
+    }
+
+    @Override
+    public Class<?> getColumnClass( int col )
+    {
+        Class<?> name = null;
+
+        if( col > -1 && col < classes.size() )
+        {
+            name = classes.get( col );
         }
 
         return name;
@@ -92,17 +137,19 @@ public class ExplorerTableModel extends AbstractTableModel
     }
 
     /***************************************************************************
-     * @param rowIndex int
-     * @param columnIndex int
+     * @param row int
+     * @param col int
      * @return Object
      **************************************************************************/
     @Override
-    public Object getValueAt( int rowIndex, int columnIndex )
+    public Object getValueAt( int row, int col )
     {
-        IExplorerItem item = contents.get( rowIndex );
+        IExplorerItem item = contents.get( row );
         Object value = null;
 
-        switch( columnIndex )
+        int itemKey = itemIndexes[col];
+
+        switch( itemKey )
         {
             case 0:
             {
@@ -111,27 +158,22 @@ public class ExplorerTableModel extends AbstractTableModel
             }
             case 1:
             {
-                value = "  " + item.getParentPath() + "  ";
-                // value = "path";
+                value = item.getFile().getParentFile();
                 break;
             }
             case 2:
             {
-                long len = item.getSizeInKb();
-                value = len < 0 ? "" : "  " + len + "  ";
-                // value = "path";
+                value = item.getSizeInKb();
                 break;
             }
             case 3:
             {
                 value = "  " + item.getType() + "  ";
-                // value = "path";
                 break;
             }
             case 4:
             {
                 value = "  " + item.getLastModified() + "  ";
-                // value = "path";
                 break;
             }
             default:
@@ -141,6 +183,14 @@ public class ExplorerTableModel extends AbstractTableModel
         }
 
         return value;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public boolean isShowingPath()
+    {
+        return headers.size() == STD_HEADERS.length;
     }
 
     /***************************************************************************

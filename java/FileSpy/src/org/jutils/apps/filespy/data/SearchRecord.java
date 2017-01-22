@@ -1,11 +1,10 @@
 package org.jutils.apps.filespy.data;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.swing.filechooser.FileSystemView;
-
+import org.jutils.ui.explorer.DefaultExplorerItem;
 import org.jutils.ui.explorer.IExplorerItem;
 
 /*******************************************************************************
@@ -14,59 +13,17 @@ import org.jutils.ui.explorer.IExplorerItem;
 public class SearchRecord implements IExplorerItem
 {
     /**  */
-    private static final FileSystemView FILE_SYSTEM_VIEW = FileSystemView.getFileSystemView();
+    private ArrayList<LineMatch> linesFound;
 
-    /**  */
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
-        "MMMM/dd/yyyy kk:mm" );
-
-    /**  */
-    private File file = null;
-
-    /**  */
-    private Date lastModifiedDate = null;
-
-    /**  */
-    private ArrayList<LineMatch> linesFound = new ArrayList<LineMatch>();
-
-    // -------------------------------------------------------------------------
-    private String filename = null;
-
-    private String systemName = null;
-
-    private String parentPath = null;
-
-    private long size = -1;
-
-    private String type = null;
-
-    private String lastModified = null;
+    private final DefaultExplorerItem item;
 
     /***************************************************************************
      * @param file
      **************************************************************************/
     public SearchRecord( File file )
     {
-        super();
-        File parent = file.getParentFile();
-
-        this.file = file;
-        try
-        {
-            ;
-            type = FILE_SYSTEM_VIEW.getSystemTypeDescription( file );
-            systemName = FILE_SYSTEM_VIEW.getSystemDisplayName( file );
-        }
-        catch( Exception ex )
-        {
-            type = "?";
-            systemName = "?";
-        }
-        lastModifiedDate = new Date( file.lastModified() );
-        filename = file.getName();
-        lastModified = DATE_FORMAT.format( lastModifiedDate );
-        parentPath = parent == null ? "" : parent.getAbsolutePath();
-        size = file.length() / 1024;
+        this.item = new DefaultExplorerItem( file );
+        this.linesFound = new ArrayList<LineMatch>();
     }
 
     /***************************************************************************
@@ -75,7 +32,7 @@ public class SearchRecord implements IExplorerItem
     @Override
     public File getFile()
     {
-        return file.getAbsoluteFile();
+        return item.getFile();
     }
 
     /***************************************************************************
@@ -100,7 +57,7 @@ public class SearchRecord implements IExplorerItem
     @Override
     public String getFilename()
     {
-        return filename;
+        return item.getFilename();
     }
 
     /***************************************************************************
@@ -109,7 +66,7 @@ public class SearchRecord implements IExplorerItem
     @Override
     public String getLastModified()
     {
-        return lastModified;
+        return item.getLastModified();
     }
 
     /***************************************************************************
@@ -118,7 +75,7 @@ public class SearchRecord implements IExplorerItem
     @Override
     public String getParentPath()
     {
-        return parentPath;
+        return item.getParentPath();
     }
 
     /***************************************************************************
@@ -127,7 +84,7 @@ public class SearchRecord implements IExplorerItem
     @Override
     public long getSizeInKb()
     {
-        return size;
+        return item.getSizeInKb();
     }
 
     /***************************************************************************
@@ -136,7 +93,7 @@ public class SearchRecord implements IExplorerItem
     @Override
     public String getType()
     {
-        return type != null ? type : "?";
+        return item.getType();
     }
 
     /***************************************************************************
@@ -145,7 +102,7 @@ public class SearchRecord implements IExplorerItem
     @Override
     public String getSystemName()
     {
-        return systemName;
+        return item.getSystemName();
     }
 
     /***************************************************************************

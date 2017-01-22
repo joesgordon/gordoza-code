@@ -10,7 +10,6 @@ import org.jutils.apps.filespy.data.SearchRecord;
 import org.jutils.concurrent.IConsumer;
 import org.jutils.concurrent.ITaskStopManager;
 import org.jutils.io.IOUtils;
-import org.jutils.io.LogUtils;
 
 /*******************************************************************************
  * 
@@ -107,7 +106,7 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
 
         boolean matched = false;
 
-        LogUtils.printDebug( "Searching file " + file.getAbsolutePath() );
+        // LogUtils.printDebug( "Searching file " + file.getAbsolutePath() );
 
         try( InputStream is = new FileInputStream( file );
              Reader r = new InputStreamReader( is, IOUtils.US_ASCII );

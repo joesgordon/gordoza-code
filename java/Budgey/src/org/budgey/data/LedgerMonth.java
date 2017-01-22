@@ -1,5 +1,7 @@
 package org.budgey.data;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.*;
 
 /*******************************************************************************
@@ -8,7 +10,7 @@ import java.util.*;
 public class LedgerMonth
 {
     /**  */
-    private short year;
+    private int year;
     /**  */
     private Month month;
     /**  */
@@ -33,27 +35,16 @@ public class LedgerMonth
      * @param date
      * @return
      **************************************************************************/
-    public int containsDate( long date )
+    public int containsDate( LocalDate d )
     {
-        long diff;
-        Calendar c = getCalendar();
+        LocalDate date = getDate();
 
-        diff = c.getTime().getTime() - date;
-
-        if( diff < 0 )
+        if( d.getMonth() == date.getMonth() && d.getYear() == date.getYear() )
         {
-            return -1;
+            return 0;
         }
 
-        c.add( Calendar.MONTH, 1 );
-        diff = c.getTime().getTime() - date;
-
-        if( diff > 0 )
-        {
-            return 1;
-        }
-
-        return 0;
+        return date.compareTo( d );
     }
 
     /***************************************************************************
@@ -105,9 +96,9 @@ public class LedgerMonth
     /***************************************************************************
      * @return
      **************************************************************************/
-    public Calendar getCalendar()
+    public LocalDate getDate()
     {
-        return new GregorianCalendar( year, month.toCalendarMonth(), 1 );
+        return LocalDate.of( year, month, 1 );
     }
 
     /***************************************************************************
@@ -141,14 +132,10 @@ public class LedgerMonth
     /***************************************************************************
      * @param time
      **************************************************************************/
-    public void setDate( long time )
+    public void setDate( LocalDate date )
     {
-        Date d = new Date( time );
-        Calendar c = new GregorianCalendar();
-        c.setTime( d );
-
-        month = Month.fromCalendarMonth( c.get( Calendar.MONTH ) );
-        year = ( short )c.get( Calendar.YEAR );
+        month = date.getMonth();
+        year = date.getYear();
     }
 
     private class TransactionComparable implements Comparator<Transaction>

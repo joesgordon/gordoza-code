@@ -14,12 +14,12 @@ public class FileSpyData
 
     /**  */
     public final UniqueMaxStack<String> filenames;
-
     /**  */
     public final UniqueMaxStack<String> contents;
-
     /**  */
     public final UniqueMaxStack<String> folders;
+    /**  */
+    public SearchParams lastParams;
 
     /***************************************************************************
      * 
@@ -53,6 +53,11 @@ public class FileSpyData
         if( data.folders != null )
         {
             this.folders.pushAll( data.folders );
+        }
+
+        if( data.lastParams != null )
+        {
+            this.lastParams = new SearchParams( data.lastParams );
         }
     }
 }

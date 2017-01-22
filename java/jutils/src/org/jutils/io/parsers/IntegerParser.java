@@ -88,7 +88,8 @@ public class IntegerParser implements IParser<Integer>
                 }
             }
 
-            throw new ValidationException( ex.getLocalizedMessage() );
+            throw new ValidationException( "Input outside of range " +
+                Integer.MIN_VALUE + " to " + Integer.MAX_VALUE );
         }
     }
 }

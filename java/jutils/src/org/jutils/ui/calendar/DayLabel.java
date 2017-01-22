@@ -1,7 +1,7 @@
 package org.jutils.ui.calendar;
 
 import java.awt.Color;
-import java.util.GregorianCalendar;
+import java.time.LocalDate;
 
 import javax.swing.JLabel;
 import javax.swing.UIManager;
@@ -29,9 +29,7 @@ class DayLabel implements IView<JLabel>
     private final JLabel label;
 
     /**  */
-    private int year = 0;
-    /**  */
-    private int month = 0;
+    private LocalDate date;
     /**  */
     private boolean isSelected = false;
     /**  */
@@ -43,6 +41,8 @@ class DayLabel implements IView<JLabel>
     public DayLabel()
     {
         this.label = new JLabel();
+
+        this.date = LocalDate.now();
 
         label.setForeground( dayFG );
         label.setBackground( dayBG );
@@ -62,31 +62,15 @@ class DayLabel implements IView<JLabel>
      **************************************************************************/
     public int getDay()
     {
-        return Integer.parseInt( label.getText() );
-    }
-
-    /***************************************************************************
-     * @param year
-     **************************************************************************/
-    public void setYear( int year )
-    {
-        this.year = year;
-    }
-
-    /***************************************************************************
-     * @param month
-     **************************************************************************/
-    public void setMonth( int month )
-    {
-        this.month = month;
+        return date.getDayOfMonth();
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    public GregorianCalendar getDate()
+    public LocalDate getDate()
     {
-        return new GregorianCalendar( year, month, getDay() );
+        return date;
     }
 
     /***************************************************************************
@@ -156,8 +140,10 @@ class DayLabel implements IView<JLabel>
     /***************************************************************************
      * @param text
      **************************************************************************/
-    public void setText( String text )
+    public void setDate( LocalDate date )
     {
-        label.setText( text );
+        this.date = date;
+
+        label.setText( "" + date.getDayOfMonth() );
     }
 }

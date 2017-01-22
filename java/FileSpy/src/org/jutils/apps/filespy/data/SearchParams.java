@@ -1,11 +1,13 @@
 package org.jutils.apps.filespy.data;
 
 import java.io.File;
-import java.util.Calendar;
+import java.time.LocalDate;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import org.jutils.Utils;
-import org.jutils.io.IOUtils;
+import org.jutils.ValidationException;
+import org.jutils.utils.Usable;
 
 /*******************************************************************************
  * This class defines the parameters of the files to find.
@@ -13,77 +15,70 @@ import org.jutils.io.IOUtils;
 public class SearchParams
 {
     /** The filename pattern. */
-    public String filename = null;
-
+    public String filename;
     /** The contents pattern. */
-    public String contents = null;
-
+    public final Usable<String> contents;
     /** The paths to be searched. */
-    private String searchIn = "/";
-
+    public File path;
     /** Option to search sub-folders. */
-    public boolean searchSubfolders = true;
-
+    public boolean searchSubfolders;
     /** Kilobytes that the file must be more than. */
-    public Long moreThan = null;
-
+    public final Usable<Long> moreThan;
     /** Kilobytes that the file must be less than. */
-    public Long lessThan = null;
-
+    public final Usable<Long> lessThan;
     /** Date after which the last modified date of the file must occur. */
-    public Calendar after = null;
-
+    public final Usable<LocalDate> after;
     /** Date before which the last modified date of the file must occur. */
-    public Calendar before = null;
-
+    public final Usable<LocalDate> before;
     /** Option to interpret the filename pattern as a regular expression. */
-    public boolean filenameRegex = false;
-
+    public boolean filenameRegex;
     /** Option to match the case in the filename pattern. */
-    public boolean filenameMatch = false;
-
+    public boolean filenameMatch;
     /** Option to return all files not matched. */
-    public boolean filenameNot = false;
-
+    public boolean filenameNot;
     /** Option to interpret the contents pattern as a regular expression. */
-    public boolean contentsRegex = false;
-
+    public boolean contentsRegex;
     /** Option to match the case in the filename pattern. */
-    public boolean contentsMatch = false;
-
-    /** The name of these parameters. */
-    public transient String name = null;
-
-    /** The pattern used for matching the filename. */
-    private transient Pattern filenamePattern = null;
-
-    /** The pattern used for matching the contents. */
-    private transient Pattern contentsPattern = null;
+    public boolean contentsMatch;
 
     /***************************************************************************
      * Creates new search parameters.
      **************************************************************************/
     public SearchParams()
     {
-        init();
+        this.filename = "";
+        this.contents = new Usable<>( false, "" );
+        this.path = new File( "/" );
+        this.searchSubfolders = true;
+        this.moreThan = new Usable<>( false );
+        this.lessThan = new Usable<>( false );
+        this.after = new Usable<>( false );
+        this.before = new Usable<>( false );
+        this.filenameRegex = false;
+        this.filenameMatch = false;
+        this.filenameNot = false;
+        this.contentsRegex = false;
+        this.contentsMatch = false;
     }
 
     /***************************************************************************
-     * Sets the paths to be search with the provided files.
-     * @param paths The paths to be searched.
+     * @param sp
      **************************************************************************/
-    public void setSearchFolders( File [] paths )
+    public SearchParams( SearchParams sp )
     {
-        searchIn = IOUtils.getStringFromFiles( paths );
-    }
-
-    /***************************************************************************
-     * Returns the files to be searched.
-     * @return the files to be searched.
-     **************************************************************************/
-    public File [] getSearchFolders()
-    {
-        return IOUtils.getFilesFromString( searchIn );
+        this.filename = sp.filename;
+        this.contents = new Usable<>( sp.contents );
+        this.path = sp.path;
+        this.searchSubfolders = sp.searchSubfolders;
+        this.moreThan = new Usable<>( sp.moreThan );
+        this.lessThan = new Usable<>( sp.lessThan );
+        this.after = new Usable<>( sp.after );
+        this.before = new Usable<>( sp.before );
+        this.filenameRegex = sp.filenameRegex;
+        this.filenameMatch = sp.filenameMatch;
+        this.filenameNot = sp.filenameNot;
+        this.contentsRegex = sp.contentsRegex;
+        this.contentsMatch = sp.contentsMatch;
     }
 
     /***************************************************************************
@@ -93,19 +88,7 @@ public class SearchParams
      **************************************************************************/
     public Pattern getFilenamePattern()
     {
-        if( filenamePattern == null && filename != null &&
-            filename.length() > 0 )
-        {
-            int flags = 0;
-            String pattern = filename;
-            if( !filenameRegex )
-            {
-                pattern = Utils.escapeRegexMetaChar( pattern );
-            }
-            flags |= filenameMatch ? flags : Pattern.CASE_INSENSITIVE;
-            filenamePattern = Pattern.compile( pattern, flags );
-        }
-        return filenamePattern;
+        return createPattern( filename, filenameRegex, filenameMatch, false );
     }
 
     /***************************************************************************
@@ -115,33 +98,73 @@ public class SearchParams
      **************************************************************************/
     public Pattern getContentsPattern()
     {
-        if( contentsPattern == null && contents != null &&
-            contents.length() > 0 )
+        if( contents.isUsed )
         {
-            int flags = Pattern.MULTILINE;
-            String pattern = contents;
-            if( !contentsRegex )
-            {
-                pattern = Utils.escapeRegexMetaChar( pattern );
-            }
-            flags |= contentsMatch ? flags : Pattern.CASE_INSENSITIVE;
-            contentsPattern = Pattern.compile( pattern, flags );
+            return createPattern( contents.data, contentsRegex, contentsMatch,
+                true );
         }
-        return contentsPattern;
+        return null;
     }
 
     /***************************************************************************
-     * Initializes this data (called after de-serialization).
+     * @param pattern
+     * @param isRegex
+     * @param caseSensitive
+     * @param multiline
+     * @return
      **************************************************************************/
-    public void init()
+    private static Pattern createPattern( String pattern, boolean isRegex,
+        boolean caseSensitive, boolean multiline )
     {
-        if( searchIn == null )
+        if( pattern != null && pattern.length() > 0 )
         {
-            searchIn = "\\";
+            int flags = 0;
+
+            flags |= ( multiline ? Pattern.MULTILINE : flags );
+            flags |= ( caseSensitive ? flags : Pattern.CASE_INSENSITIVE );
+
+            if( !isRegex )
+            {
+                pattern = Utils.escapeRegexMetaChar( pattern );
+            }
+
+            return Pattern.compile( pattern, flags );
         }
-        if( filename == null )
+
+        return null;
+    }
+
+    public void validate() throws ValidationException
+    {
+        // ---------------------------------------------------------------------
+        // Check the files
+        // ---------------------------------------------------------------------
+        if( !path.isDirectory() )
         {
-            filename = "";
+            throw new ValidationException(
+                "Non-existant directory: " + path.getAbsolutePath() );
+        }
+
+        // ---------------------------------------------------------------------
+        // Check regex.
+        // ---------------------------------------------------------------------
+        try
+        {
+            getFilenamePattern();
+        }
+        catch( PatternSyntaxException ex )
+        {
+            throw new ValidationException(
+                "Invalid filename pattern: " + ex.getMessage() );
+        }
+        try
+        {
+            getContentsPattern();
+        }
+        catch( PatternSyntaxException ex )
+        {
+            throw new ValidationException(
+                "Invalid contents pattern: " + ex.getMessage() );
         }
     }
 }

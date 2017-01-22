@@ -60,7 +60,36 @@ public class LongParser implements IParser<Long>
         }
         catch( NumberFormatException ex )
         {
-            throw new ValidationException( ex.getMessage() );
+            int idx = 0;
+            char c;
+
+            if( !text.isEmpty() )
+            {
+                c = text.charAt( idx );
+
+                if( c == '+' || c == '-' )
+                {
+                    idx++;
+                }
+            }
+            else
+            {
+                throw new ValidationException( "No input" );
+            }
+
+            for( ; idx < text.length(); idx++ )
+            {
+                c = text.charAt( idx );
+                if( !Character.isDigit( c ) )
+                {
+                    String msg = String.format(
+                        "Invalid integer character '%c' at index %d", c, idx );
+                    throw new ValidationException( msg );
+                }
+            }
+
+            throw new ValidationException( "Input outside of range " +
+                Long.MIN_VALUE + " to " + Long.MAX_VALUE );
         }
     }
 }

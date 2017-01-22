@@ -5,7 +5,7 @@ import java.util.List;
 import javax.swing.SwingUtilities;
 
 import org.jutils.apps.filespy.data.SearchRecord;
-import org.jutils.apps.filespy.ui.SearchView;
+import org.jutils.apps.filespy.ui.ResultsView;
 import org.jutils.ui.StatusBarPanel;
 import org.jutils.ui.explorer.IExplorerItem;
 
@@ -15,7 +15,7 @@ import org.jutils.ui.explorer.IExplorerItem;
 public class SearchResultsHandler
 {
     /**  */
-    private final SearchView searchPanel;
+    private final ResultsView resultsView;
     /**  */
     private final StatusBarPanel statusBar;
 
@@ -23,9 +23,10 @@ public class SearchResultsHandler
      * @param panel SearchPanel
      * @param statusBar
      **************************************************************************/
-    public SearchResultsHandler( SearchView panel, StatusBarPanel statusBar )
+    public SearchResultsHandler( ResultsView resultsView,
+        StatusBarPanel statusBar )
     {
-        this.searchPanel = panel;
+        this.resultsView = resultsView;
         this.statusBar = statusBar;
     }
 
@@ -36,16 +37,16 @@ public class SearchResultsHandler
     {
         // LogUtils.printDebug( "Found record for file " +
         // record.getFile().getAbsolutePath() );
-        SwingUtilities.invokeLater( new UiFileAdder( searchPanel, record ) );
+        SwingUtilities.invokeLater( new UiFileAdder( resultsView, record ) );
     }
 
     /***************************************************************************
      * @param list List
      **************************************************************************/
-    public void addFiles( List<? extends IExplorerItem> list )
-    {
-        SwingUtilities.invokeLater( new UiFilesAdder( searchPanel, list ) );
-    }
+    // public void addFiles( List<? extends IExplorerItem> list )
+    // {
+    // SwingUtilities.invokeLater( new UiFilesAdder( resultsView, list ) );
+    // }
 
     /***************************************************************************
      * @param messge
@@ -89,21 +90,21 @@ public class SearchResultsHandler
      **************************************************************************/
     private static class UiFilesAdder implements Runnable
     {
-        private final SearchView searchPanel;
+        private final ResultsView resultsView;
 
         private final List<? extends IExplorerItem> list;
 
-        public UiFilesAdder( SearchView panel,
+        public UiFilesAdder( ResultsView resultsView,
             List<? extends IExplorerItem> list )
         {
-            this.searchPanel = panel;
+            this.resultsView = resultsView;
             this.list = list;
         }
 
         @Override
         public void run()
         {
-            searchPanel.addRecords( list );
+            resultsView.addRecords( list );
             // LogUtils.printDebug( "Adding record: " +
             // record.getFile().toString()
             // );
@@ -115,20 +116,20 @@ public class SearchResultsHandler
      **************************************************************************/
     private static class UiFileAdder implements Runnable
     {
-        private final SearchView searchPanel;
+        private final ResultsView resultsView;
 
         private final SearchRecord record;
 
-        public UiFileAdder( SearchView panel, SearchRecord record )
+        public UiFileAdder( ResultsView resultsView, SearchRecord record )
         {
-            searchPanel = panel;
+            this.resultsView = resultsView;
             this.record = record;
         }
 
         @Override
         public void run()
         {
-            searchPanel.addRecord( record );
+            resultsView.addRecord( record );
             // LogUtils.printDebug( "Adding record: " +
             // record.getFile().toString()
             // );

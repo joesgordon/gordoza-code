@@ -43,7 +43,7 @@ public class SliderTestFrame implements IView<JFrame>
         this.nextButton = new JButton();
 
         view.setToolbar( createToolBar() );
-        view.setContent( createSliderPanel( view.getStatusBar() ) );
+        view.setContent( createSliderPanel() );
         resetButtonStates();
     }
 
@@ -83,11 +83,11 @@ public class SliderTestFrame implements IView<JFrame>
         return toolbar;
     }
 
-    private JComponent createSliderPanel( StatusBarPanel statusBar )
+    private JComponent createSliderPanel()
     {
         sliderPanel.addPanel( createPanel1() );
         sliderPanel.addPanel( createPanel2() );
-        sliderPanel.addPanel( createPanel3( statusBar ) );
+        sliderPanel.addPanel( createPanel3() );
         sliderPanel.addPanel( createPanel4() );
 
         return sliderPanel;
@@ -112,10 +112,9 @@ public class SliderTestFrame implements IView<JFrame>
         return panel;
     }
 
-    private static JPanel createPanel3( StatusBarPanel statusBar )
+    private static JPanel createPanel3()
     {
-        SearchView panel = new SearchView( statusBar,
-            FileSpyMain.getOptions() );
+        SearchView panel = new SearchView( FileSpyMain.getOptions() );
 
         return panel.getView();
     }

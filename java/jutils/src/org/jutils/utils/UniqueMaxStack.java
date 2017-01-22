@@ -1,7 +1,6 @@
 package org.jutils.utils;
 
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 
 /*******************************************************************************
  * Stack containing no more than a user-specified number of unique items.
@@ -111,5 +110,13 @@ public class UniqueMaxStack<T> implements Iterable<T>
     public Iterator<T> iterator()
     {
         return stack.iterator();
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public List<T> toList()
+    {
+        return new ArrayList<>( stack );
     }
 }

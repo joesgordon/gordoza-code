@@ -90,7 +90,7 @@ public class JExplorerFrame implements IView<JFrame>
         this.addressField = new JTextField();
         this.dirTree = new DirectoryTree();
         this.treeScrollPane = new JScrollPane( dirTree.getView() );
-        this.fileTableView = new ExplorerTable();
+        this.fileTableView = new ExplorerTable( false );
         this.tableScrollPane = new JScrollPane( fileTableView.getView() );
         this.splitPane = new JSplitPane( JSplitPane.HORIZONTAL_SPLIT,
             treeScrollPane, tableScrollPane );

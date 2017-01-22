@@ -19,8 +19,6 @@ import org.jutils.ui.model.IView;
 public class ExplorerTable implements IView<JTable>
 {
     /**  */
-    private final DefaultTableCellRenderer rightRenderer;
-    /**  */
     private final JTable table;
     /**  */
     private final ExplorerTableModel model;
@@ -30,16 +28,22 @@ public class ExplorerTable implements IView<JTable>
      **************************************************************************/
     public ExplorerTable()
     {
-        this.model = new ExplorerTableModel();
-        this.table = new JTable( model );
-        this.rightRenderer = new DefaultTableCellRenderer();
+        this( true );
+    }
 
-        rightRenderer.setHorizontalAlignment( SwingConstants.RIGHT );
+    /***************************************************************************
+    *
+    **************************************************************************/
+    public ExplorerTable( boolean showPath )
+    {
+        this.model = new ExplorerTableModel( showPath );
+        this.table = new JTable( model );
 
         table.setShowGrid( false );
         table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
         table.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
         // this.setAutoCreateRowSorter( true );
+        table.setRowHeight( 21 );
 
         table.getTableHeader().setReorderingAllowed( false );
 
@@ -71,14 +75,26 @@ public class ExplorerTable implements IView<JTable>
     public void clearTable()
     {
         TableColumnModel columnModel = table.getColumnModel();
-        columnModel.getColumn( 0 ).setCellRenderer( new FilenameRenderer() );
-        columnModel.getColumn( 0 ).setPreferredWidth( 200 );
-        columnModel.getColumn( 1 ).setPreferredWidth( 200 );
-        columnModel.getColumn( 2 ).setPreferredWidth( 50 );
-        columnModel.getColumn( 2 ).setCellRenderer( rightRenderer );
-        columnModel.getColumn( 3 ).setPreferredWidth( 150 );
-        columnModel.getColumn( 4 ).setPreferredWidth( 150 );
-        columnModel.getColumn( 4 ).setCellRenderer( rightRenderer );
+        int idx = 0;
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+
+        rightRenderer.setHorizontalAlignment( SwingConstants.RIGHT );
+
+        columnModel.getColumn( idx ).setCellRenderer( new FilenameRenderer() );
+        columnModel.getColumn( idx++ ).setPreferredWidth( 200 );
+
+        if( model.isShowingPath() )
+        {
+            columnModel.getColumn( idx++ ).setPreferredWidth( 200 );
+        }
+
+        columnModel.getColumn( idx ).setPreferredWidth( 50 );
+        columnModel.getColumn( idx++ ).setCellRenderer( new SizeRenderer() );
+
+        columnModel.getColumn( idx++ ).setPreferredWidth( 150 );
+
+        columnModel.getColumn( idx ).setPreferredWidth( 115 );
+        columnModel.getColumn( idx++ ).setCellRenderer( rightRenderer );
 
         model.clearModel();
     }
@@ -132,6 +148,35 @@ public class ExplorerTable implements IView<JTable>
         }
 
         return item;
+    }
+
+    private static final class SizeRenderer implements TableCellRenderer
+    {
+        private final DefaultTableCellRenderer renderer;
+
+        public SizeRenderer()
+        {
+            this.renderer = new DefaultTableCellRenderer();
+            renderer.setHorizontalAlignment( SwingConstants.RIGHT );
+        }
+
+        @Override
+        public Component getTableCellRendererComponent( JTable table,
+            Object value, boolean isSelected, boolean hasFocus, int row,
+            int column )
+        {
+            renderer.getTableCellRendererComponent( table, value, isSelected,
+                hasFocus, row, column );
+
+            Long val = ( Long )value;
+
+            if( val < 0 )
+            {
+                renderer.setText( "" );
+            }
+
+            return renderer;
+        }
     }
 
     /***************************************************************************

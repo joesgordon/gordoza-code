@@ -1,6 +1,8 @@
 package org.budgey.data;
 
-import java.util.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /*******************************************************************************
  * 
@@ -32,11 +34,11 @@ public class Account
     public void addTransaction( Transaction trans )
     {
         boolean added = false;
-        long time = trans.getDate().getTime();
+        LocalDate date = trans.getDate();
 
         for( LedgerMonth ledger : ledgers )
         {
-            if( ledger.containsDate( time ) == 0 )
+            if( ledger.containsDate( date ) == 0 )
             {
                 ledger.addTransaction( trans );
                 added = true;
@@ -47,7 +49,7 @@ public class Account
         if( !added )
         {
             LedgerMonth month = new LedgerMonth();
-            month.setDate( time );
+            month.setDate( date );
             month.addTransaction( trans );
             ledgers.add( month );
         }
@@ -63,24 +65,14 @@ public class Account
 
     public List<Transaction> getCurrentMonthsTransactions()
     {
-        Date start;
-        Date end;
+        LocalDate start = LocalDate.now();
+        LocalDate end;
 
-        Calendar c = new GregorianCalendar();
+        start = LocalDate.of( start.getYear(), start.getMonth(),
+            start.getDayOfMonth() );
+        end = start.plusMonths( 1 );
 
-        c.set( Calendar.DAY_OF_MONTH, 1 );
-        c.set( Calendar.HOUR_OF_DAY, 0 );
-        c.set( Calendar.MINUTE, 0 );
-        c.set( Calendar.SECOND, 0 );
-        c.set( Calendar.MILLISECOND, 0 );
-
-        start = c.getTime();
-
-        c.add( Calendar.MONTH, 1 );
-
-        end = c.getTime();
-
-        return getTransactions( start.getTime(), end.getTime() );
+        return getTransactions( start, end );
     }
 
     /***************************************************************************
@@ -88,7 +80,8 @@ public class Account
      * @param end
      * @return
      **************************************************************************/
-    public List<Transaction> getTransactions( long beginning, long end )
+    public List<Transaction> getTransactions( LocalDate beginning,
+        LocalDate end )
     {
         List<Transaction> transactions = new ArrayList<Transaction>();
 
