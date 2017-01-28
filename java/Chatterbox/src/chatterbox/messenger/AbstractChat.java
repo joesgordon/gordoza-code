@@ -9,7 +9,6 @@ import org.jutils.ui.event.ItemActionListener;
 
 import chatterbox.data.ChatConfig;
 import chatterbox.data.ChatUser;
-import chatterbox.model.IConversation;
 
 /*******************************************************************************
  * 
@@ -19,9 +18,9 @@ public abstract class AbstractChat
     /**  */
     private final ChatUser localUser;
     /**  */
-    private final Map<String, IConversation> conversations;
+    private final Map<String, Conversation> conversations;
     /**  */
-    private final ItemActionList<IConversation> conversationCreatedListeners;
+    private final ItemActionList<Conversation> conversationCreatedListeners;
     /**  */
     private final String jvmName;
 
@@ -31,8 +30,8 @@ public abstract class AbstractChat
      **************************************************************************/
     public AbstractChat( ChatUser user )
     {
-        this.conversations = new HashMap<String, IConversation>( 100 );
-        this.conversationCreatedListeners = new ItemActionList<IConversation>();
+        this.conversations = new HashMap<String, Conversation>( 100 );
+        this.conversationCreatedListeners = new ItemActionList<Conversation>();
         this.localUser = user;
         this.jvmName = ManagementFactory.getRuntimeMXBean().getName();
     }
@@ -41,7 +40,7 @@ public abstract class AbstractChat
      * 
      **************************************************************************/
     public final void addConversationCreatedListener(
-        ItemActionListener<IConversation> l )
+        ItemActionListener<Conversation> l )
     {
         conversationCreatedListeners.addListener( l );
     }
@@ -65,7 +64,7 @@ public abstract class AbstractChat
     /***************************************************************************
      * @param conversation
      **************************************************************************/
-    protected final void addConversation( IConversation conversation )
+    protected final void addConversation( Conversation conversation )
     {
         conversations.put( conversation.getConversationId(), conversation );
     }
@@ -74,7 +73,7 @@ public abstract class AbstractChat
      * @param conversationId
      * @return
      **************************************************************************/
-    protected final IConversation getConversation( String conversationId )
+    protected final Conversation getConversation( String conversationId )
     {
         if( conversationId.equals(
             getDefaultConversation().getConversationId() ) )
@@ -87,7 +86,7 @@ public abstract class AbstractChat
     /***************************************************************************
      * 
      **************************************************************************/
-    public final void removeConversation( IConversation conversation )
+    public final void removeConversation( Conversation conversation )
     {
         if( conversation == getDefaultConversation() )
         {
@@ -102,15 +101,15 @@ public abstract class AbstractChat
     /***************************************************************************
      * @return
      **************************************************************************/
-    protected List<IConversation> getConversations()
+    protected List<Conversation> getConversations()
     {
-        return new ArrayList<IConversation>( conversations.values() );
+        return new ArrayList<Conversation>( conversations.values() );
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    public abstract IConversation getDefaultConversation();
+    public abstract Conversation getDefaultConversation();
 
     /***************************************************************************
      * 
@@ -127,7 +126,7 @@ public abstract class AbstractChat
      * @param users
      * @return
      **************************************************************************/
-    public abstract IConversation createConversation( List<ChatUser> users );
+    public abstract Conversation createConversation( List<ChatUser> users );
 
     /***************************************************************************
      * @return

@@ -5,7 +5,7 @@ import javax.swing.JComponent;
 import org.jutils.ui.model.IView;
 
 import chatterbox.messenger.Chat;
-import chatterbox.model.IConversation;
+import chatterbox.messenger.Conversation;
 
 /*******************************************************************************
  * 
@@ -41,7 +41,7 @@ public class ChatView implements IView<JComponent>
     /***************************************************************************
      * 
      **************************************************************************/
-    public ConversationView createConversationView( IConversation conversation )
+    public ConversationView createConversationView( Conversation conversation )
     {
         ConversationView cv = new ConversationView( chat );
 

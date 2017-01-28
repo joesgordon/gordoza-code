@@ -7,7 +7,7 @@ import org.jutils.ValidationException;
 import org.jutils.concurrent.Stoppable;
 import org.jutils.ui.event.ItemActionListener;
 
-import chatterbox.data.RawMessage;
+import chatterbox.data.messages.RawMessage;
 
 /*******************************************************************************
  * 

@@ -32,7 +32,6 @@ public class Conversation extends AbstractConversation
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
     public void sendMessage( ChatMessage message )
     {
         try
@@ -47,5 +46,14 @@ public class Conversation extends AbstractConversation
         {
             throw new RuntimeException( ex );
         }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public final void leaveConversation()
+    {
+        chat.removeConversation( this );
+        chat = null;
     }
 }

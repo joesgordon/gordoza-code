@@ -6,8 +6,8 @@ import org.jutils.ValidationException;
 import org.jutils.io.IDataSerializer;
 import org.jutils.io.IDataStream;
 
-import chatterbox.data.ChatHeader;
-import chatterbox.data.ChatMessageType;
+import chatterbox.data.messages.ChatHeader;
+import chatterbox.data.messages.ChatMessageType;
 
 public class ChatHeaderSerializer implements IDataSerializer<ChatHeader>
 {

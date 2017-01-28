@@ -12,7 +12,7 @@ import chatterbox.model.*;
 /***************************************************************************
  * 
  **************************************************************************/
-public abstract class AbstractConversation implements IConversation
+public abstract class AbstractConversation
 {
     /**  */
     private String localId;
@@ -51,7 +51,6 @@ public abstract class AbstractConversation implements IConversation
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
     public final void addMessageReceivedListener(
         ItemActionListener<ChatMessage> l )
     {
@@ -61,7 +60,6 @@ public abstract class AbstractConversation implements IConversation
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
     public void addUserListener( IUserListener l )
 
     {
@@ -71,7 +69,6 @@ public abstract class AbstractConversation implements IConversation
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
     public final Chat getChat()
     {
         return chat;
@@ -80,7 +77,6 @@ public abstract class AbstractConversation implements IConversation
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
     public final String getConversationId()
     {
         return localId;
@@ -89,12 +85,15 @@ public abstract class AbstractConversation implements IConversation
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
     public final List<ChatUser> getUsers()
     {
         return users;
     }
 
+    /***************************************************************************
+     * @param user
+     * @param change
+     **************************************************************************/
     private void fireUserListeners( ChatUser user, ChangeType change )
     {
         for( IUserListener l : userListeners )
@@ -106,7 +105,6 @@ public abstract class AbstractConversation implements IConversation
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
     public final void addUser( ChatUser user )
     {
         users.add( user );
@@ -116,7 +114,6 @@ public abstract class AbstractConversation implements IConversation
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
     public void removeUser( ChatUser user )
     {
         users.remove( user );
@@ -126,7 +123,6 @@ public abstract class AbstractConversation implements IConversation
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
     public void setUserAvailable( ChatUser user, boolean available )
     {
         int index = users.indexOf( user );
@@ -141,7 +137,6 @@ public abstract class AbstractConversation implements IConversation
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
     public final boolean isUserParticipating( ChatUser user )
     {
         return users.contains( user );
@@ -150,17 +145,6 @@ public abstract class AbstractConversation implements IConversation
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
-    public final void leaveConversation()
-    {
-        chat.removeConversation( this );
-        chat = null;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
     public void receiveMessage( ChatMessage message )
     {
         messageReceivedListeners.fireListeners( this, message );

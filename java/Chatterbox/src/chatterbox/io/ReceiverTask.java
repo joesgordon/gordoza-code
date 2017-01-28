@@ -9,7 +9,7 @@ import org.jutils.concurrent.ITaskStopManager;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
 
-import chatterbox.data.RawMessage;
+import chatterbox.data.messages.RawMessage;
 
 /*******************************************************************************
  * 

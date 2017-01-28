@@ -101,18 +101,18 @@ public class ChatFrameView implements IView<JFrame>
             OkDialogButtons.OK_CANCEL );
 
         OptionsSerializer<ChatterConfig> options = ChatterboxConstants.getOptions();
-        ChatterConfig config = new ChatterConfig( options.getDefault() );
+        ChatterConfig config = options.getOptions();
+        ChatterConfig newConfig = new ChatterConfig( config );
 
-        config.chatCfg.set( chatView.getChat().getConfig() );
-
-        configView.setData( config );
+        configView.setData( newConfig );
 
         if( dialogView.show( "Chat Configuration", getView().getIconImages(),
             null ) )
         {
-            config = configView.getData();
+            newConfig = configView.getData();
             options.write();
-            reconnect( config );
+            reconnect( config, newConfig );
+            config = newConfig;
         }
         else
         {
@@ -122,12 +122,12 @@ public class ChatFrameView implements IView<JFrame>
         return config;
     }
 
-    private void reconnect( ChatterConfig newCfg )
+    private void reconnect( ChatterConfig oldCfg, ChatterConfig newCfg )
     {
         Chat chat = chatView.getChat();
         ChatConfig config = chat.getConfig();
 
-        if( newCfg.chatCfg.address.equals( config.address ) ||
+        if( !newCfg.chatCfg.address.equals( config.address ) ||
             newCfg.chatCfg.port != config.port )
         {
             chat.disconnect();
@@ -145,9 +145,9 @@ public class ChatFrameView implements IView<JFrame>
             }
         }
 
-        if( newCfg.chatCfg.displayName.equals( config.displayName ) )
+        if( !newCfg.displayName.equals( oldCfg.displayName ) )
         {
-            chat.getLocalUser().displayName = newCfg.chatCfg.displayName;
+            chat.getLocalUser().displayName = newCfg.displayName;
         }
     }
 

@@ -1,14 +1,10 @@
 package chatterbox.data;
 
-import chatterbox.ChatterboxConstants;
-
 /*******************************************************************************
  * 
  ******************************************************************************/
 public class ChatConfig
 {
-    /**  */
-    public String displayName;
     /**  */
     public String address;
     /**  */
@@ -19,7 +15,6 @@ public class ChatConfig
      **************************************************************************/
     public ChatConfig()
     {
-        this.displayName = ChatterboxConstants.DEFAULT_USERNAME;
         this.address = "238.192.69.69";
         this.port = 6969;
     }
@@ -29,7 +24,6 @@ public class ChatConfig
      **************************************************************************/
     public ChatConfig( ChatConfig config )
     {
-        this.displayName = config.displayName;
         this.address = config.address;
         this.port = config.port;
     }
@@ -39,7 +33,6 @@ public class ChatConfig
      **************************************************************************/
     public void set( ChatConfig config )
     {
-        this.displayName = config.displayName;
         this.address = config.address;
         this.port = config.port;
     }

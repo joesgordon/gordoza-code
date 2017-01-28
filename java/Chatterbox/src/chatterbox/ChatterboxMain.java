@@ -19,8 +19,8 @@ public class ChatterboxMain
     {
         OptionsSerializer<ChatterConfig> options = ChatterboxConstants.getOptions();
         ChatUser user = ChatterboxConstants.createDefaultUser();
-        
-        user.displayName = options.getOptions().chatCfg.displayName;
+
+        user.displayName = options.getOptions().displayName;
 
         FrameRunner.invokeLater( new ChatterboxApp( new Chat( user ) ) );
     }

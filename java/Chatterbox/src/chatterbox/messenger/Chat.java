@@ -13,11 +13,9 @@ import org.jutils.ui.event.ItemActionListener;
 
 import chatterbox.ChatterboxConstants;
 import chatterbox.data.*;
-import chatterbox.data.messages.UserAvailableMessage;
-import chatterbox.data.messages.UserLeftMessage;
+import chatterbox.data.messages.*;
 import chatterbox.io.*;
 import chatterbox.model.ChatMessage;
-import chatterbox.model.IConversation;
 
 /*******************************************************************************
  * 
@@ -25,7 +23,7 @@ import chatterbox.model.IConversation;
 public class Chat extends AbstractChat
 {
     /**  */
-    private final IConversation defaultConversation;
+    private final Conversation defaultConversation;
     /**  */
     private final MessageSerializer msgSerializer;
     /**  */
@@ -100,7 +98,7 @@ public class Chat extends AbstractChat
                 defaultConversation.removeUser( u );
             }
 
-            for( IConversation c : new ArrayList<>( getConversations() ) )
+            for( Conversation c : new ArrayList<>( getConversations() ) )
             {
                 if( c != getDefaultConversation() )
                 {
@@ -117,9 +115,9 @@ public class Chat extends AbstractChat
      * 
      **************************************************************************/
     @Override
-    public IConversation createConversation( List<ChatUser> users )
+    public Conversation createConversation( List<ChatUser> users )
     {
-        IConversation conversation = new Conversation( this,
+        Conversation conversation = new Conversation( this,
             getNextConversationId(), users );
         this.addConversation( conversation );
         return conversation;
@@ -129,7 +127,7 @@ public class Chat extends AbstractChat
      * 
      **************************************************************************/
     @Override
-    public IConversation getDefaultConversation()
+    public Conversation getDefaultConversation()
     {
         return defaultConversation;
     }
@@ -155,16 +153,16 @@ public class Chat extends AbstractChat
                 OptionsSerializer<ChatterConfig> options;
 
                 options = ChatterboxConstants.getOptions();
-                options.getOptions().chatCfg.displayName = user.displayName;
+                options.getOptions().displayName = user.displayName;
                 options.write();
             }
 
             // return;
         }
 
-        List<IConversation> conversations = getConversations();
+        List<Conversation> conversations = getConversations();
 
-        for( IConversation conv : conversations )
+        for( Conversation conv : conversations )
         {
             conv.setUserAvailable( user, available );
         }
@@ -184,9 +182,9 @@ public class Chat extends AbstractChat
      **************************************************************************/
     public void removeUser( ChatUser user )
     {
-        List<IConversation> conversations = getConversations();
+        List<Conversation> conversations = getConversations();
 
-        for( IConversation conv : conversations )
+        for( Conversation conv : conversations )
         {
             conv.removeUser( user );
         }
@@ -197,7 +195,7 @@ public class Chat extends AbstractChat
      **************************************************************************/
     public void removeUser( String conversationId, ChatUser user )
     {
-        IConversation conversation = getConversation( conversationId );
+        Conversation conversation = getConversation( conversationId );
         if( conversation != null )
         {
             conversation.removeUser( user );
@@ -212,7 +210,7 @@ public class Chat extends AbstractChat
         // if( !message.isLocalUser() )
         // {
         String conversationId = message.conversation;
-        IConversation conversation = getConversation( conversationId );
+        Conversation conversation = getConversation( conversationId );
         if( conversation == null )
         {
             List<ChatUser> users = Arrays.asList(

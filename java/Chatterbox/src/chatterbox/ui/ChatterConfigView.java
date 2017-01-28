@@ -85,7 +85,7 @@ public class ChatterConfigView implements IDataView<ChatterConfig>
     {
         this.config = config;
 
-        nameField.setValue( config.chatCfg.displayName );
+        nameField.setValue( config.displayName );
         addressField.setValue( config.chatCfg.address );
         portField.setValue( config.chatCfg.port );
     }
