@@ -12,7 +12,6 @@ import javax.swing.text.*;
 
 import org.jutils.IconConstants;
 import org.jutils.Utils;
-import org.jutils.io.LogUtils;
 import org.jutils.ui.FontChooserView;
 import org.jutils.ui.FontChooserView.FontDescription;
 import org.jutils.ui.OkDialogView;
@@ -20,6 +19,7 @@ import org.jutils.ui.event.*;
 import org.jutils.ui.model.IDataView;
 
 import chatterbox.data.ChatUser;
+import chatterbox.messenger.Chat;
 import chatterbox.model.*;
 
 /*******************************************************************************
@@ -59,12 +59,12 @@ public class ConversationView implements IDataView<IConversation>
     private final ItemActionListener<ChatMessage> messageReceivedListener;
 
     /**  */
-    private final IChat chat;
+    private final Chat chat;
 
     /***************************************************************************
      * @param showUserPanel
      **************************************************************************/
-    public ConversationView( IChat chat )
+    public ConversationView( Chat chat )
     {
         this.chat = chat;
 
@@ -445,7 +445,6 @@ public class ConversationView implements IDataView<IConversation>
         public void actionPerformed( ActionEvent e )
         {
             view.sendMessage();
-            LogUtils.printDebug( "Sending" );
         }
     }
 }

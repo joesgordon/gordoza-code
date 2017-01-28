@@ -1,5 +1,7 @@
 package chatterbox.data;
 
+import org.jutils.Utils;
+
 /*******************************************************************************
  * 
  ******************************************************************************/
@@ -39,7 +41,7 @@ public class ChatUser
     @Override
     public String toString()
     {
-        return displayName;
+        return Utils.argsToString( userId, displayName, nickName, available );
     }
 
     /***************************************************************************

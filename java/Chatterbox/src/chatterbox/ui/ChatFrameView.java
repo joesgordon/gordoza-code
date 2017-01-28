@@ -1,13 +1,15 @@
 package chatterbox.ui;
 
 import java.awt.Dialog.ModalityType;
-import java.awt.event.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 
 import javax.swing.*;
 
-import org.jutils.IconConstants;
-import org.jutils.SwingUtils;
+import org.jutils.*;
+import org.jutils.io.LogUtils;
+import org.jutils.io.options.OptionsSerializer;
 import org.jutils.ui.*;
 import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.event.ActionAdapter;
@@ -16,7 +18,7 @@ import org.jutils.ui.model.IView;
 import chatterbox.ChatterboxConstants;
 import chatterbox.data.ChatConfig;
 import chatterbox.data.ChatterConfig;
-import chatterbox.model.IChat;
+import chatterbox.messenger.Chat;
 
 /*******************************************************************************
  * 
@@ -24,14 +26,14 @@ import chatterbox.model.IChat;
 public class ChatFrameView implements IView<JFrame>
 {
     /**  */
-    private final ChatView chatView;
-    /**  */
     private final StandardFrameView frameView;
+    /**  */
+    private final ChatView chatView;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public ChatFrameView( IChat chat )
+    public ChatFrameView( Chat chat )
     {
         this.frameView = new StandardFrameView();
         this.chatView = new ChatView( chat );
@@ -73,8 +75,8 @@ public class ChatFrameView implements IView<JFrame>
         // SwingUtils.addActionToToolbar( toolbar, action );
 
         icon = IconConstants.getIcon( IconConstants.CONFIG_16 );
-        action = new ActionAdapter( new ConfigListener( this ),
-            "Edit Configuration", icon );
+        action = new ActionAdapter( ( e ) -> showConfig(), "Edit Configuration",
+            icon );
         SwingUtils.addActionToToolbar( toolbar, action );
 
         return toolbar;
@@ -98,16 +100,55 @@ public class ChatFrameView implements IView<JFrame>
             configView.getView(), ModalityType.DOCUMENT_MODAL,
             OkDialogButtons.OK_CANCEL );
 
-        ChatterConfig config = ChatterboxConstants.getOptions().getOptions();
+        OptionsSerializer<ChatterConfig> options = ChatterboxConstants.getOptions();
+        ChatterConfig config = new ChatterConfig( options.getDefault() );
 
         config.chatCfg.set( chatView.getChat().getConfig() );
 
         configView.setData( config );
 
-        boolean accept = dialogView.show( "Chat Configuration",
-            getView().getIconImages(), null );
+        if( dialogView.show( "Chat Configuration", getView().getIconImages(),
+            null ) )
+        {
+            config = configView.getData();
+            options.write();
+            reconnect( config );
+        }
+        else
+        {
+            config = null;
+        }
 
-        return accept ? configView.getData() : null;
+        return config;
+    }
+
+    private void reconnect( ChatterConfig newCfg )
+    {
+        Chat chat = chatView.getChat();
+        ChatConfig config = chat.getConfig();
+
+        if( newCfg.chatCfg.address.equals( config.address ) ||
+            newCfg.chatCfg.port != config.port )
+        {
+            chat.disconnect();
+
+            try
+            {
+                chat.connect( newCfg.chatCfg );
+            }
+            catch( IOException ex )
+            {
+                JOptionPane.showMessageDialog( getView(),
+                    "Cannot connect to chat: " + ex.getMessage(),
+                    "Connection Error", JOptionPane.ERROR_MESSAGE );
+                return;
+            }
+        }
+
+        if( newCfg.chatCfg.displayName.equals( config.displayName ) )
+        {
+            chat.getLocalUser().displayName = newCfg.chatCfg.displayName;
+        }
     }
 
     /***************************************************************************
@@ -125,7 +166,26 @@ public class ChatFrameView implements IView<JFrame>
         @Override
         public void windowClosing( WindowEvent e )
         {
+            // showMessage();
+            Stopwatch watch = new Stopwatch();
             view.chatView.getChat().disconnect();
+            watch.stop();
+
+            LogUtils.printDebug( "Disconnected in %d ms", watch.getElapsed() );
+        }
+
+        private void showMessage()
+        {
+            JOptionPane pane = new JOptionPane( "Disconnecting",
+                JOptionPane.INFORMATION_MESSAGE );
+
+            JDialog dialog = pane.createDialog( view.getView(),
+                "Disconnecting" );
+
+            dialog.setModalityType( ModalityType.MODELESS );
+
+            dialog.pack();
+            dialog.setVisible( true );
         }
     }
 
@@ -149,54 +209,4 @@ public class ChatFrameView implements IView<JFrame>
     // "Not Supported", JOptionPane.ERROR_MESSAGE );
     // }
     // }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class ConfigListener implements ActionListener
-    {
-        private final ChatFrameView view;
-
-        public ConfigListener( ChatFrameView view )
-        {
-            this.view = view;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            ChatterConfig newCfg = view.showConfig();
-
-            if( newCfg != null )
-            {
-                IChat chat = view.chatView.getChat();
-                ChatConfig config = chat.getConfig();
-
-                ChatterboxConstants.getOptions().write( newCfg );
-
-                if( newCfg.chatCfg.address.equals( config.address ) ||
-                    newCfg.chatCfg.port != config.port )
-                {
-                    chat.disconnect();
-
-                    try
-                    {
-                        chat.connect( newCfg.chatCfg );
-                    }
-                    catch( IOException ex )
-                    {
-                        JOptionPane.showMessageDialog( view.getView(),
-                            "Cannot connect to chat: " + ex.getMessage(),
-                            "Connection Error", JOptionPane.ERROR_MESSAGE );
-                        return;
-                    }
-                }
-
-                if( newCfg.chatCfg.displayName.equals( config.displayName ) )
-                {
-                    chat.getLocalUser().displayName = newCfg.chatCfg.displayName;
-                }
-            }
-        }
-    }
 }

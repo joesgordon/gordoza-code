@@ -5,6 +5,7 @@ import java.util.List;
 import org.jutils.ui.event.ItemActionListener;
 
 import chatterbox.data.ChatUser;
+import chatterbox.messenger.Chat;
 
 /*******************************************************************************
  * 
@@ -35,7 +36,7 @@ public interface IConversation
     /***************************************************************************
      * @return
      **************************************************************************/
-    public IChat getChat();
+    public Chat getChat();
 
     /***************************************************************************
      * @return

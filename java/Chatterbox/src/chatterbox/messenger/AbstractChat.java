@@ -1,19 +1,20 @@
 package chatterbox.messenger;
 
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.util.*;
 
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
 
+import chatterbox.data.ChatConfig;
 import chatterbox.data.ChatUser;
-import chatterbox.model.IChat;
 import chatterbox.model.IConversation;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public abstract class AbstractChat implements IChat
+public abstract class AbstractChat
 {
     /**  */
     private final ChatUser localUser;
@@ -39,7 +40,6 @@ public abstract class AbstractChat implements IChat
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
     public final void addConversationCreatedListener(
         ItemActionListener<IConversation> l )
     {
@@ -57,7 +57,6 @@ public abstract class AbstractChat implements IChat
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
     public final ChatUser getLocalUser()
     {
         return localUser;
@@ -88,7 +87,6 @@ public abstract class AbstractChat implements IChat
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
     public final void removeConversation( IConversation conversation )
     {
         if( conversation == getDefaultConversation() )
@@ -108,4 +106,31 @@ public abstract class AbstractChat implements IChat
     {
         return new ArrayList<IConversation>( conversations.values() );
     }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public abstract IConversation getDefaultConversation();
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public abstract void disconnect();
+
+    /***************************************************************************
+     * @param config
+     * @throws IOException
+     **************************************************************************/
+    public abstract void connect( ChatConfig config ) throws IOException;
+
+    /***************************************************************************
+     * @param users
+     * @return
+     **************************************************************************/
+    public abstract IConversation createConversation( List<ChatUser> users );
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public abstract ChatConfig getConfig();
 }

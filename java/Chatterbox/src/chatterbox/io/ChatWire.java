@@ -19,7 +19,9 @@ public class ChatWire
     /**  */
     private InetAddress address;
     /**  */
-    private Stoppable receiveThread;
+    private Stoppable rxRunner;
+    /**  */
+    private Thread rxThread;
     /**  */
     private ReceiverTask receiver;
     /**  */
@@ -47,12 +49,12 @@ public class ChatWire
         socket.joinGroup( this.address );
         socket.setSoTimeout( 1000 );
 
-        receiver = new ReceiverTask( rxListener, socket );
-        receiveThread = new Stoppable( receiver );
+        this.receiver = new ReceiverTask( rxListener, socket );
+        this.rxRunner = new Stoppable( receiver );
+        this.rxThread = new Thread( rxRunner );
 
-        Thread thread = new Thread( receiveThread );
-        thread.setName( "Message Receive Thread" );
-        thread.start();
+        rxThread.setName( "Message Receive Thread" );
+        rxThread.start();
     }
 
     /***************************************************************************
@@ -77,14 +79,16 @@ public class ChatWire
 
             try
             {
-                receiveThread.stopAndWaitFor();
+                rxRunner.stop();
+                rxThread.interrupt();
+                rxRunner.stopAndWaitFor();
             }
             catch( InterruptedException ex )
             {
             }
             finally
             {
-                receiveThread = null;
+                rxRunner = null;
             }
         }
     }

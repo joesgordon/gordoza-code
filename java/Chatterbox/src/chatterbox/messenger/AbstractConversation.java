@@ -17,7 +17,7 @@ public abstract class AbstractConversation implements IConversation
     /**  */
     private String localId;
     /**  */
-    private IChat chat;
+    private Chat chat;
     /**  */
     private List<ChatUser> users;
 
@@ -33,7 +33,7 @@ public abstract class AbstractConversation implements IConversation
      * @param chat
      * @param user
      **************************************************************************/
-    public AbstractConversation( IChat chat, String id, List<ChatUser> users )
+    public AbstractConversation( Chat chat, String id, List<ChatUser> users )
     {
         this.localId = id;
         this.chat = chat;
@@ -72,7 +72,7 @@ public abstract class AbstractConversation implements IConversation
      * 
      **************************************************************************/
     @Override
-    public final IChat getChat()
+    public final Chat getChat()
     {
         return chat;
     }

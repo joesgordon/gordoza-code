@@ -4,7 +4,7 @@ import javax.swing.JComponent;
 
 import org.jutils.ui.model.IView;
 
-import chatterbox.model.IChat;
+import chatterbox.messenger.Chat;
 import chatterbox.model.IConversation;
 
 /*******************************************************************************
@@ -16,12 +16,12 @@ public class ChatView implements IView<JComponent>
     private final ConversationView conversationPanel;
 
     /**  */
-    private IChat chat;
+    private Chat chat;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public ChatView( IChat chat )
+    public ChatView( Chat chat )
     {
         this.chat = chat;
 
@@ -33,7 +33,7 @@ public class ChatView implements IView<JComponent>
     /***************************************************************************
      * 
      **************************************************************************/
-    public IChat getChat()
+    public Chat getChat()
     {
         return chat;
     }

@@ -32,9 +32,11 @@ public class Chat extends AbstractChat
     private final ChatWire wire;
 
     /**  */
-    private TaskRunner userThread;
-    /**  */
     private UserCheckTask userTask;
+    /**  */
+    private TaskRunner userRunner;
+    /**  */
+    private Thread userThread;
     /**  */
     private ChatConfig config;
 
@@ -61,15 +63,15 @@ public class Chat extends AbstractChat
     {
         this.config = config;
         this.userTask = new UserCheckTask( this );
-        this.userThread = new TaskRunner( userTask,
+        this.userRunner = new TaskRunner( userTask,
             new SignalerTaskHander( new Signaler() ) );
 
         wire.connect( config.address, config.port );
 
-        Thread t = new Thread( userThread, "User Checking Thread" );
-        t.start();
+        this.userThread = new Thread( userRunner, "User Checking Thread" );
+        userThread.start();
 
-        getLocalUser().displayName = config.displayName;
+        // getLocalUser().displayName = config.displayName;
     }
 
     /***************************************************************************
@@ -78,15 +80,18 @@ public class Chat extends AbstractChat
     @Override
     public void disconnect()
     {
-        if( userThread != null )
+        if( userRunner != null )
         {
             try
             {
-                userThread.stopAndWait();
+                userRunner.stop();
+                userThread.interrupt();
+                userRunner.stopAndWait();
             }
             catch( InterruptedException e )
             {
             }
+
             wire.disconnect();
 
             for( ChatUser u : new ArrayList<>(
@@ -104,7 +109,7 @@ public class Chat extends AbstractChat
             }
 
             userTask = null;
-            userThread = null;
+            userRunner = null;
         }
     }
 

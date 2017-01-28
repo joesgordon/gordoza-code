@@ -34,6 +34,9 @@ public class ChatConfig
         this.port = config.port;
     }
 
+    /***************************************************************************
+     * @param config
+     **************************************************************************/
     public void set( ChatConfig config )
     {
         this.displayName = config.displayName;
