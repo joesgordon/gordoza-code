@@ -6,7 +6,9 @@ import java.util.*;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
 
-import chatterbox.model.*;
+import chatterbox.data.ChatUser;
+import chatterbox.model.IChat;
+import chatterbox.model.IConversation;
 
 /*******************************************************************************
  * 
@@ -14,7 +16,7 @@ import chatterbox.model.*;
 public abstract class AbstractChat implements IChat
 {
     /**  */
-    private final IUser localUser;
+    private final ChatUser localUser;
     /**  */
     private final Map<String, IConversation> conversations;
     /**  */
@@ -26,7 +28,7 @@ public abstract class AbstractChat implements IChat
      * @param user *
      * ************************************************************************
      **************************************************************************/
-    public AbstractChat( IUser user )
+    public AbstractChat( ChatUser user )
     {
         this.conversations = new HashMap<String, IConversation>( 100 );
         this.conversationCreatedListeners = new ItemActionList<IConversation>();
@@ -56,7 +58,7 @@ public abstract class AbstractChat implements IChat
      * 
      **************************************************************************/
     @Override
-    public final IUser getLocalUser()
+    public final ChatUser getLocalUser()
     {
         return localUser;
     }

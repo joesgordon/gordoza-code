@@ -1,18 +1,18 @@
 package chatterbox.data;
 
-import chatterbox.model.IUser;
-
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ChatUser implements IUser
+public class ChatUser
 {
+    /** The name of the user on the system. */
+    public final String userId;
     /**  */
-    private final String userId;
+    public String displayName;
     /**  */
-    private String displayName;
+    public String nickName;
     /**  */
-    private boolean available;
+    public boolean available;
 
     /***************************************************************************
      * @param userId
@@ -37,54 +37,9 @@ public class ChatUser implements IUser
      * 
      **************************************************************************/
     @Override
-    public String getDisplayName()
-    {
-        return displayName;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public String getUserId()
-    {
-        return userId;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setDisplayName( String name )
-    {
-        displayName = name;
-    }
-
-    /***************************************************************************
-     * @param available
-     **************************************************************************/
-    @Override
-    public void setAvailable( boolean available )
-    {
-        this.available = available;
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    @Override
-    public boolean isAvailable()
-    {
-        return available;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
     public String toString()
     {
-        return getDisplayName();
+        return displayName;
     }
 
     /***************************************************************************
@@ -106,11 +61,11 @@ public class ChatUser implements IUser
         {
             return false;
         }
-        else if( obj instanceof IUser )
+        else if( obj instanceof ChatUser )
         {
-            IUser u = ( IUser )obj;
+            ChatUser u = ( ChatUser )obj;
 
-            return userId.equals( u.getUserId() );// &&
+            return userId.equals( u.userId );// &&
             // displayName.equals( u.getDisplayName() );
         }
 

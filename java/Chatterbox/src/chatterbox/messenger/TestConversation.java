@@ -3,7 +3,9 @@ package chatterbox.messenger;
 import java.util.ArrayList;
 import java.util.List;
 
-import chatterbox.model.*;
+import chatterbox.data.ChatUser;
+import chatterbox.model.ChatMessage;
+import chatterbox.model.IChat;
 
 /***************************************************************************
  * 
@@ -16,7 +18,7 @@ public class TestConversation extends AbstractConversation
      * @param chat
      * @param user
      **************************************************************************/
-    public TestConversation( IChat chat, String id, List<IUser> users )
+    public TestConversation( IChat chat, String id, List<ChatUser> users )
     {
         super( chat, id, users );
     }
@@ -40,9 +42,9 @@ public class TestConversation extends AbstractConversation
     /***************************************************************************
      * @return
      **************************************************************************/
-    private IUser getRandomUser()
+    private ChatUser getRandomUser()
     {
-        List<IUser> users = getUsers();
+        List<ChatUser> users = getUsers();
         int index = ( int )Math.floor( Math.random() * users.size() );
 
         return users.get( index );

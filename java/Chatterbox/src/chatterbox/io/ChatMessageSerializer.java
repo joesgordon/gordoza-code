@@ -8,7 +8,9 @@ import org.jutils.io.IDataSerializer;
 import org.jutils.io.IDataStream;
 
 import chatterbox.ChatterboxConstants;
-import chatterbox.model.*;
+import chatterbox.data.ChatUser;
+import chatterbox.model.ChatMessage;
+import chatterbox.model.MessageAttributeSet;
 
 /*******************************************************************************
  * 
@@ -41,7 +43,7 @@ public class ChatMessageSerializer implements IDataSerializer<ChatMessage>
         String conversationId;
         long txTime;
         long rxTime = ChatterboxConstants.now();
-        IUser sender;
+        ChatUser sender;
         String text;
         int numAttributes;
         List<MessageAttributeSet> attributeSets = new ArrayList<MessageAttributeSet>();

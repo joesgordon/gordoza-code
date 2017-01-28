@@ -16,7 +16,8 @@ import chatterbox.data.*;
 import chatterbox.data.messages.UserAvailableMessage;
 import chatterbox.data.messages.UserLeftMessage;
 import chatterbox.io.*;
-import chatterbox.model.*;
+import chatterbox.model.ChatMessage;
+import chatterbox.model.IConversation;
 
 /*******************************************************************************
  * 
@@ -41,7 +42,7 @@ public class Chat extends AbstractChat
      * @param user
      * @param options
      **************************************************************************/
-    public Chat( IUser user )
+    public Chat( ChatUser user )
     {
         super( user );
 
@@ -68,7 +69,7 @@ public class Chat extends AbstractChat
         Thread t = new Thread( userThread, "User Checking Thread" );
         t.start();
 
-        getLocalUser().setDisplayName( config.displayName );
+        getLocalUser().displayName = config.displayName;
     }
 
     /***************************************************************************
@@ -88,7 +89,8 @@ public class Chat extends AbstractChat
             }
             wire.disconnect();
 
-            for( IUser u : new ArrayList<>( defaultConversation.getUsers() ) )
+            for( ChatUser u : new ArrayList<>(
+                defaultConversation.getUsers() ) )
             {
                 defaultConversation.removeUser( u );
             }
@@ -110,7 +112,7 @@ public class Chat extends AbstractChat
      * 
      **************************************************************************/
     @Override
-    public IConversation createConversation( List<IUser> users )
+    public IConversation createConversation( List<ChatUser> users )
     {
         IConversation conversation = new Conversation( this,
             getNextConversationId(), users );
@@ -130,9 +132,9 @@ public class Chat extends AbstractChat
     /***************************************************************************
      * @param message
      **************************************************************************/
-    public void setUserAvailable( IUser user, boolean available )
+    public void setUserAvailable( ChatUser user, boolean available )
     {
-        IUser localMe = getLocalUser();
+        ChatUser localMe = getLocalUser();
 
         if( user.equals( localMe ) )
         {
@@ -141,14 +143,14 @@ public class Chat extends AbstractChat
             // user.getUserId(), user.getDisplayName(), localMe.getUserId(),
             // localMe.getDisplayName() ) );
 
-            if( !user.getDisplayName().equals( localMe.getDisplayName() ) )
+            if( !user.displayName.equals( localMe.displayName ) )
             {
-                localMe.setDisplayName( user.getDisplayName() );
+                localMe.displayName = user.displayName;
 
                 OptionsSerializer<ChatterConfig> options;
 
                 options = ChatterboxConstants.getOptions();
-                options.getOptions().chatCfg.displayName = user.getDisplayName();
+                options.getOptions().chatCfg.displayName = user.displayName;
                 options.write();
             }
 
@@ -175,7 +177,7 @@ public class Chat extends AbstractChat
     /***************************************************************************
      * @param user
      **************************************************************************/
-    public void removeUser( IUser user )
+    public void removeUser( ChatUser user )
     {
         List<IConversation> conversations = getConversations();
 
@@ -188,7 +190,7 @@ public class Chat extends AbstractChat
     /***************************************************************************
      * @param message
      **************************************************************************/
-    public void removeUser( String conversationId, IUser user )
+    public void removeUser( String conversationId, ChatUser user )
     {
         IConversation conversation = getConversation( conversationId );
         if( conversation != null )
@@ -208,7 +210,8 @@ public class Chat extends AbstractChat
         IConversation conversation = getConversation( conversationId );
         if( conversation == null )
         {
-            List<IUser> users = Arrays.asList( new IUser[] { message.sender } );
+            List<ChatUser> users = Arrays.asList(
+                new ChatUser[] { message.sender } );
             conversation = new Conversation( this, conversationId, users );
         }
         conversation.receiveMessage( message );

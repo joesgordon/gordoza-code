@@ -4,7 +4,6 @@ import org.jutils.ui.app.FrameRunner;
 
 import chatterbox.data.ChatUser;
 import chatterbox.messenger.Chat;
-import chatterbox.model.IUser;
 
 /*******************************************************************************
  * 
@@ -16,7 +15,7 @@ public class ChatterboxMain
      **************************************************************************/
     public static void main( String[] args )
     {
-        IUser user;
+        ChatUser user;
 
         if( args.length == 1 )
         {

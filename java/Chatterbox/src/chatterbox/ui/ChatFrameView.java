@@ -194,8 +194,7 @@ public class ChatFrameView implements IView<JFrame>
 
                 if( newCfg.chatCfg.displayName.equals( config.displayName ) )
                 {
-                    chat.getLocalUser().setDisplayName(
-                        newCfg.chatCfg.displayName );
+                    chat.getLocalUser().displayName = newCfg.chatCfg.displayName;
                 }
             }
         }

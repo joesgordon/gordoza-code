@@ -5,7 +5,7 @@ import javax.swing.*;
 import org.jutils.IconConstants;
 import org.jutils.ui.model.LabelListCellRenderer.IListCellLabelDecorator;
 
-import chatterbox.model.IUser;
+import chatterbox.data.ChatUser;
 
 /***************************************************************************
  * 
@@ -34,11 +34,11 @@ public class UserListCellDecorator implements IListCellLabelDecorator
     public void decorate( JLabel label, JList<?> list, Object value, int index,
         boolean isSelected, boolean cellHasFocus )
     {
-        IUser user = ( IUser )value;
+        ChatUser user = ( ChatUser )value;
 
-        label.setText( user.getDisplayName() );
+        label.setText( user.displayName );
 
-        if( user.isAvailable() )
+        if( user.available )
         {
             label.setIcon( userAvailableIcon );
         }

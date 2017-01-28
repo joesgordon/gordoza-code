@@ -6,6 +6,7 @@ import java.util.List;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
 
+import chatterbox.data.ChatUser;
 import chatterbox.model.*;
 
 /***************************************************************************
@@ -18,7 +19,7 @@ public abstract class AbstractConversation implements IConversation
     /**  */
     private IChat chat;
     /**  */
-    private List<IUser> users;
+    private List<ChatUser> users;
 
     /**  */
     protected ItemActionList<ChatMessage> messageReceivedListeners;
@@ -32,11 +33,11 @@ public abstract class AbstractConversation implements IConversation
      * @param chat
      * @param user
      **************************************************************************/
-    public AbstractConversation( IChat chat, String id, List<IUser> users )
+    public AbstractConversation( IChat chat, String id, List<ChatUser> users )
     {
         this.localId = id;
         this.chat = chat;
-        this.users = new ArrayList<IUser>();
+        this.users = new ArrayList<ChatUser>();
 
         if( users != null )
         {
@@ -89,12 +90,12 @@ public abstract class AbstractConversation implements IConversation
      * 
      **************************************************************************/
     @Override
-    public final List<IUser> getUsers()
+    public final List<ChatUser> getUsers()
     {
         return users;
     }
 
-    private void fireUserListeners( IUser user, ChangeType change )
+    private void fireUserListeners( ChatUser user, ChangeType change )
     {
         for( IUserListener l : userListeners )
         {
@@ -106,7 +107,7 @@ public abstract class AbstractConversation implements IConversation
      * 
      **************************************************************************/
     @Override
-    public final void addUser( IUser user )
+    public final void addUser( ChatUser user )
     {
         users.add( user );
         fireUserListeners( user, ChangeType.ADDED );
@@ -116,7 +117,7 @@ public abstract class AbstractConversation implements IConversation
      * 
      **************************************************************************/
     @Override
-    public void removeUser( IUser user )
+    public void removeUser( ChatUser user )
     {
         users.remove( user );
         fireUserListeners( user, ChangeType.REMOVED );
@@ -126,7 +127,7 @@ public abstract class AbstractConversation implements IConversation
      * 
      **************************************************************************/
     @Override
-    public void setUserAvailable( IUser user, boolean available )
+    public void setUserAvailable( ChatUser user, boolean available )
     {
         int index = users.indexOf( user );
         if( index > -1 )
@@ -141,7 +142,7 @@ public abstract class AbstractConversation implements IConversation
      * 
      **************************************************************************/
     @Override
-    public final boolean isUserParticipating( IUser user )
+    public final boolean isUserParticipating( ChatUser user )
     {
         return users.contains( user );
     }

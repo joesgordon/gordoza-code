@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.jutils.ValidationException;
 
+import chatterbox.data.ChatUser;
 import chatterbox.model.ChatMessage;
-import chatterbox.model.IUser;
 
 /*******************************************************************************
  * 
@@ -22,7 +22,7 @@ public class Conversation extends AbstractConversation
      * @param chat
      * @param users
      **************************************************************************/
-    public Conversation( Chat chat, String id, List<IUser> users )
+    public Conversation( Chat chat, String id, List<ChatUser> users )
     {
         super( chat, id, users );
 

@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.jutils.ui.event.ItemActionListener;
 
+import chatterbox.data.ChatUser;
+
 /*******************************************************************************
  * 
  ******************************************************************************/
@@ -38,29 +40,29 @@ public interface IConversation
     /***************************************************************************
      * @return
      **************************************************************************/
-    public List<IUser> getUsers();
+    public List<ChatUser> getUsers();
 
     /***************************************************************************
      * @param user
      **************************************************************************/
-    public void addUser( IUser user );
+    public void addUser( ChatUser user );
 
     /***************************************************************************
      * @param user
      **************************************************************************/
-    public void removeUser( IUser user );
+    public void removeUser( ChatUser user );
 
     /***************************************************************************
      * @param user
      * @param available
      **************************************************************************/
-    public void setUserAvailable( IUser user, boolean available );
+    public void setUserAvailable( ChatUser user, boolean available );
 
     /***************************************************************************
      * @param user
      * @return
      **************************************************************************/
-    public boolean isUserParticipating( IUser user );
+    public boolean isUserParticipating( ChatUser user );
 
     /***************************************************************************
      * @param l

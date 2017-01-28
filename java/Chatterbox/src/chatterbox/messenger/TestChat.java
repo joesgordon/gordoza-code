@@ -7,7 +7,6 @@ import org.jutils.io.LogUtils;
 import chatterbox.data.ChatConfig;
 import chatterbox.data.ChatUser;
 import chatterbox.model.IConversation;
-import chatterbox.model.IUser;
 
 /*******************************************************************************
  * 
@@ -36,13 +35,13 @@ public class TestChat extends AbstractChat
     {
         this.config = config;
 
-        IUser user;
+        ChatUser user;
 
         user = new ChatUser( "fflinstone", "Fred Flinstone" );
         defaultConversation.addUser( user );
 
         user = new ChatUser( "brubble", "Barney Rubble" );
-        user.setAvailable( false );
+        user.available = false;
         defaultConversation.addUser( user );
     }
 
@@ -50,7 +49,7 @@ public class TestChat extends AbstractChat
      * 
      **************************************************************************/
     @Override
-    public IConversation createConversation( List<IUser> users )
+    public IConversation createConversation( List<ChatUser> users )
     {
         String id = getNextConversationId();
         IConversation conv = new TestConversation( this, id, users );

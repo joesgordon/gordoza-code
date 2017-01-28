@@ -8,8 +8,8 @@ import org.jutils.ValidationException;
 import org.jutils.task.*;
 
 import chatterbox.ChatterboxConstants;
+import chatterbox.data.ChatUser;
 import chatterbox.data.messages.UserAvailableMessage;
-import chatterbox.model.IUser;
 
 /*******************************************************************************
  * 
@@ -34,7 +34,7 @@ public class UserCheckTask implements ITask
     /***************************************************************************
      * @param user
      **************************************************************************/
-    public void markSeen( IUser user )
+    public void markSeen( ChatUser user )
     {
         synchronized( userlogs )
         {
@@ -124,7 +124,7 @@ public class UserCheckTask implements ITask
      **************************************************************************/
     private void sendAvailable() throws IOException, ValidationException
     {
-        IUser user = chat.getLocalUser();
+        ChatUser user = chat.getLocalUser();
         UserAvailableMessage message = new UserAvailableMessage( user );
 
         chat.sendMessage( message );
@@ -135,10 +135,10 @@ public class UserCheckTask implements ITask
      **************************************************************************/
     private static class UserData
     {
-        public IUser user;
+        public ChatUser user;
         public long lastSeen;
 
-        public UserData( IUser user )
+        public UserData( ChatUser user )
         {
             this.user = user;
             this.lastSeen = ChatterboxConstants.now();

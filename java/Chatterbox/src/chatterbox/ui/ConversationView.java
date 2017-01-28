@@ -19,6 +19,7 @@ import org.jutils.ui.OkDialogView;
 import org.jutils.ui.event.*;
 import org.jutils.ui.model.IDataView;
 
+import chatterbox.data.ChatUser;
 import chatterbox.model.*;
 
 /*******************************************************************************
@@ -190,11 +191,11 @@ public class ConversationView implements IDataView<IConversation>
     {
         boolean canSend = false;
 
-        List<IUser> users = conversation.getUsers();
+        List<ChatUser> users = conversation.getUsers();
 
-        for( IUser user : users )
+        for( ChatUser user : users )
         {
-            if( user.isAvailable() )
+            if( user.available )
             {
                 canSend = true;
             }
@@ -238,12 +239,12 @@ public class ConversationView implements IDataView<IConversation>
     {
         StyledDocument doc = chatEditorPane.getStyledDocument();
         SimpleAttributeSet a = new SimpleAttributeSet();
-        IUser localUser = chat.getLocalUser();
+        ChatUser localUser = chat.getLocalUser();
         boolean isLocal = localUser.equals( message.sender );
         Color fg = isLocal ? Color.blue : Color.red;
         String username = isLocal
-            ? conversation.getChat().getLocalUser().getDisplayName()
-            : message.sender.getDisplayName();
+            ? conversation.getChat().getLocalUser().displayName
+            : message.sender.displayName;
 
         StyleConstants.setFontFamily( a, "Dialog" );
         StyleConstants.setFontSize( a, 12 );
@@ -367,7 +368,7 @@ public class ConversationView implements IDataView<IConversation>
         }
 
         @Override
-        public void userChanged( IUser user, ChangeType change )
+        public void userChanged( ChatUser user, ChangeType change )
         {
             view.usersView.setData( view.getData().getUsers() );
         }

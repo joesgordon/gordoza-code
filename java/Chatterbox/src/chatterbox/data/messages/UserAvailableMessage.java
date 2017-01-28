@@ -1,6 +1,6 @@
 package chatterbox.data.messages;
 
-import chatterbox.model.IUser;
+import chatterbox.data.ChatUser;
 
 /*******************************************************************************
  * 
@@ -8,12 +8,12 @@ import chatterbox.model.IUser;
 public class UserAvailableMessage
 {
     /**  */
-    public final IUser user;
+    public final ChatUser user;
 
     /***************************************************************************
      * @param user
      **************************************************************************/
-    public UserAvailableMessage( IUser user )
+    public UserAvailableMessage( ChatUser user )
     {
         this.user = user;
     }

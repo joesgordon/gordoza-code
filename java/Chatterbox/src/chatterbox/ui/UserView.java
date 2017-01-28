@@ -15,25 +15,25 @@ import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.model.*;
 
-import chatterbox.model.IUser;
+import chatterbox.data.ChatUser;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class UserView implements IDataView<List<IUser>>
+public class UserView implements IDataView<List<ChatUser>>
 {
     /**  */
     private final TitleView view;
     /**  */
-    private final CollectionListModel<IUser> userModel;
+    private final CollectionListModel<ChatUser> userModel;
     /**  */
-    private final JList<IUser> userList;
+    private final JList<ChatUser> userList;
 
     /**  */
-    private final ItemActionList<List<IUser>> conversationStartedListeners;
+    private final ItemActionList<List<ChatUser>> conversationStartedListeners;
 
     /**  */
-    private List<IUser> users;
+    private List<ChatUser> users;
 
     /***************************************************************************
      * 
@@ -74,7 +74,7 @@ public class UserView implements IDataView<List<IUser>>
      * 
      **************************************************************************/
     @Override
-    public List<IUser> getData()
+    public List<ChatUser> getData()
     {
         return users;
     }
@@ -83,11 +83,11 @@ public class UserView implements IDataView<List<IUser>>
      * 
      **************************************************************************/
     @Override
-    public void setData( List<IUser> users )
+    public void setData( List<ChatUser> users )
     {
         this.users = users;
 
-        // for( IUser u : users )
+        // for( ChatUser u : users )
         // {
         // LogUtils.printDebug(
         // String.format( "%s: %s", u.getUserId(), u.getDisplayName() ) );
@@ -100,7 +100,7 @@ public class UserView implements IDataView<List<IUser>>
      * 
      **************************************************************************/
     public void addConversationStartedListener(
-        ItemActionListener<List<IUser>> l )
+        ItemActionListener<List<ChatUser>> l )
     {
         conversationStartedListeners.addListener( l );
     }
@@ -130,11 +130,11 @@ public class UserView implements IDataView<List<IUser>>
 
                 if( index > -1 )
                 {
-                    ArrayList<IUser> users = new ArrayList<IUser>();
-                    ListModel<IUser> dlm = view.userList.getModel();
+                    ArrayList<ChatUser> users = new ArrayList<ChatUser>();
+                    ListModel<ChatUser> dlm = view.userList.getModel();
                     Object item = dlm.getElementAt( index );
 
-                    users.add( ( IUser )item );
+                    users.add( ( ChatUser )item );
                     view.conversationStartedListeners.fireListeners( view,
                         users );
                     view.userList.ensureIndexIsVisible( index );

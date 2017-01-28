@@ -10,7 +10,6 @@ import org.jutils.io.options.OptionsSerializer;
 
 import chatterbox.data.ChatUser;
 import chatterbox.data.ChatterConfig;
-import chatterbox.model.IUser;
 
 /*******************************************************************************
  * 
@@ -64,7 +63,7 @@ public class ChatterboxConstants
     /***************************************************************************
      * @return
      **************************************************************************/
-    public static IUser createDefaultUser()
+    public static ChatUser createDefaultUser()
     {
         return new ChatUser( System.getProperty( "user.name" ) );
     }

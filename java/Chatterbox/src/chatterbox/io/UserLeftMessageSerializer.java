@@ -5,8 +5,8 @@ import java.io.IOException;
 import org.jutils.io.IDataSerializer;
 import org.jutils.io.IDataStream;
 
+import chatterbox.data.ChatUser;
 import chatterbox.data.messages.UserLeftMessage;
-import chatterbox.model.IUser;
 
 /*******************************************************************************
  * 
@@ -35,7 +35,7 @@ public class UserLeftMessageSerializer
     public UserLeftMessage read( IDataStream stream ) throws IOException
     {
         String conversationId;
-        IUser user;
+        ChatUser user;
 
         conversationId = stringSerializer.read( stream );
         user = userSerializer.read( stream );

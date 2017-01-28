@@ -6,6 +6,7 @@ import java.util.List;
 import org.jutils.ui.event.ItemActionListener;
 
 import chatterbox.data.ChatConfig;
+import chatterbox.data.ChatUser;
 
 /*******************************************************************************
  * 
@@ -48,10 +49,10 @@ public interface IChat
      * @param users
      * @return
      **************************************************************************/
-    public IConversation createConversation( List<IUser> users );
+    public IConversation createConversation( List<ChatUser> users );
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    public IUser getLocalUser();
+    public ChatUser getLocalUser();
 }
