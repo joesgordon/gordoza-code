@@ -31,7 +31,6 @@ import org.jutils.ui.hex.HexEditorFilePanel;
 import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
 import org.jutils.ui.hex.ValueView;
 import org.jutils.ui.model.IView;
-import org.jutils.ui.validation.ValidationView;
 
 /*******************************************************************************
  * Represents the view that builds and contains the main frame for the
@@ -42,9 +41,8 @@ public class JHexFrame implements IView<JFrame>
     // -------------------------------------------------------------------------
     // Main panel widgets
     // -------------------------------------------------------------------------
+    /**  */
     private final StandardFrameView frameView;
-    /** The actual window. */
-    private final JFrame frame;
     /** The file tree displaying the directories in the given file system. */
     private final HexEditorFilePanel editor;
     /** The serializer to access user options. */
@@ -65,7 +63,17 @@ public class JHexFrame implements IView<JFrame>
     private final RecentFilesMenuView recentFiles;
 
     /**  */
-    private final ActionAdapter searchAction;
+    private final Action prevAction;
+    /**  */
+    private final Action nextAction;
+    /**  */
+    private final Action searchAction;
+    /**  */
+    private final Action gotoAction;
+    /**  */
+    private final Action analyzeAction;
+    /**  */
+    private final Action plotAction;
 
     /** Index of the currently selected buffer size. */
     private HexBufferSize bufferSize;
@@ -88,7 +96,6 @@ public class JHexFrame implements IView<JFrame>
         this.options = JHexMain.getOptions();
 
         this.frameView = new StandardFrameView();
-        this.frame = frameView.getView();
         this.editor = new HexEditorFilePanel();
         this.dataViewButton = new JToggleButton();
         this.valuePanel = new ValueView();
@@ -98,8 +105,20 @@ public class JHexFrame implements IView<JFrame>
         this.bufferSize = HexBufferSize.LARGE;
         this.lastSearch = null;
 
-        this.searchAction = new ActionAdapter( new SearchListener( this ),
+        this.prevAction = new ActionAdapter( ( e ) -> editor.jumpPrevious(),
+            "Previous Data Block", JHexIcons.getIcon( JHexIcons.JUMP_LEFT ) );
+        this.nextAction = new ActionAdapter( ( e ) -> editor.jumpForward(),
+            "Next Data Block", JHexIcons.getIcon( JHexIcons.JUMP_RIGHT ) );
+
+        this.searchAction = new ActionAdapter( ( e ) -> showSearchDialog(),
             "Search", IconConstants.getIcon( IconConstants.FIND_16 ) );
+        this.gotoAction = new ActionAdapter( ( e ) -> showGotoDialog(),
+            "Go To Byte", JHexIcons.loader.getIcon( JHexIcons.GOTO ) );
+
+        this.analyzeAction = new ActionAdapter( ( e ) -> showAnalyzer(),
+            "Analyze", IconConstants.getIcon( IconConstants.ANALYZE_16 ) );
+        this.plotAction = new ActionAdapter( ( e ) -> showPlot(), "Plot",
+            ChartIcons.getIcon( ChartIcons.CHART_016 ) );
 
         JPanel editorView = editor.getView();
         KeyStroke key;
@@ -132,6 +151,13 @@ public class JHexFrame implements IView<JFrame>
         inMap.put( key, "findPrevAction" );
         acMap.put( "findPrevAction", action );
 
+        prevAction.setEnabled( false );
+        nextAction.setEnabled( false );
+        searchAction.setEnabled( false );
+        gotoAction.setEnabled( false );
+        analyzeAction.setEnabled( false );
+        plotAction.setEnabled( false );
+
         // ---------------------------------------------------------------------
         // Setup frame
         // ---------------------------------------------------------------------
@@ -140,6 +166,7 @@ public class JHexFrame implements IView<JFrame>
         frameView.setToolbar( createToolbar() );
         frameView.setContent( editor.getView() );
 
+        JFrame frame = frameView.getView();
         if( closeFileWithFrame )
         {
             frame.addWindowListener( new WindowCloseListener( this ) );
@@ -157,7 +184,7 @@ public class JHexFrame implements IView<JFrame>
      **************************************************************************/
     private JDialog createDataDialog()
     {
-        JDialog dialog = new JDialog( frame, ModalityType.MODELESS );
+        JDialog dialog = new JDialog( getView(), ModalityType.MODELESS );
         JPanel panel = new JPanel( new GridBagLayout() );
         JButton okButton = new JButton( "OK" );
         GridBagConstraints constraints;
@@ -187,7 +214,7 @@ public class JHexFrame implements IView<JFrame>
         dialog.setIconImages( JHexIcons.getAppImages() );
 
         dialog.pack();
-        dialog.setLocationRelativeTo( frame );
+        dialog.setLocationRelativeTo( getView() );
 
         return dialog;
     }
@@ -198,65 +225,43 @@ public class JHexFrame implements IView<JFrame>
     private JToolBar createToolbar()
     {
         JToolBar toolbar = new JGoodiesToolBar();
-        JButton button;
 
-        button = new JButton(
-            IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
-        button.setToolTipText( "Open File" );
-        button.setFocusable( false );
-        button.addActionListener( ( e ) -> showOpenDialog() );
-        toolbar.add( button );
+        SwingUtils.addActionToToolbar( toolbar,
+            new ActionAdapter( ( e ) -> showOpenDialog(), "Open File",
+                IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) ) );
 
-        button = new JButton( IconConstants.getIcon( IconConstants.SAVE_16 ) );
-        button.setToolTipText( "Save File (Not Yet Implemented)" );
-        button.setFocusable( false );
-        button.addActionListener( ( e ) -> saveFile() );
-        // toolbar.add( button );
+        // SwingUtils.addActionToToolbar( toolbar,
+        // new ActionAdapter( ( e ) -> saveFile(), "Save File",
+        // IconConstants.getIcon( IconConstants.SAVE_16 ) ) );
 
         toolbar.addSeparator();
 
-        button = new JButton( JHexIcons.loader.getIcon( JHexIcons.JUMP_LEFT ) );
-        button.setToolTipText( "Previous Data Block" );
-        button.setFocusable( false );
-        button.addActionListener( new BackListener( this ) );
-        toolbar.add( button );
+        SwingUtils.addActionToToolbar( toolbar, prevAction );
 
-        button = new JButton( JHexIcons.loader.getIcon( JHexIcons.INCH_LEFT ) );
-        button.setToolTipText( "Previous Data" );
-        button.setFocusable( false );
-        button.addActionListener( new BackListener( this ) );
-        // toolbar.add( button );
+        // SwingUtils.addActionToToolbar( toolbar, new ActionAdapter( null,
+        // "Previous Data", JHexIcons.getIcon( JHexIcons.INCH_LEFT ) ) );
         //
-        button = new JButton(
-            JHexIcons.loader.getIcon( JHexIcons.INCH_RIGHT ) );
-        button.setToolTipText( "Next Data" );
-        button.setFocusable( false );
-        button.addActionListener( new NextListener( this ) );
-        // toolbar.add( button );
+        // SwingUtils.addActionToToolbar( toolbar, new ActionAdapter( null,
+        // "Next Data", JHexIcons.getIcon( JHexIcons.INCH_RIGHT ) ) );
 
-        button = new JButton(
-            JHexIcons.loader.getIcon( JHexIcons.JUMP_RIGHT ) );
-        button.setToolTipText( "Next Data Block" );
-        button.setFocusable( false );
-        button.addActionListener( new NextListener( this ) );
-        toolbar.add( button );
+        SwingUtils.addActionToToolbar( toolbar, nextAction );
 
         toolbar.addSeparator();
 
         SwingUtils.addActionToToolbar( toolbar, searchAction );
+        SwingUtils.addActionToToolbar( toolbar, gotoAction );
 
-        button = new JButton( JHexIcons.loader.getIcon( JHexIcons.GOTO ) );
-        button.setToolTipText( "Go To Byte" );
-        button.setFocusable( false );
-        button.addActionListener( new GoToListener( this ) );
-        toolbar.add( button );
+        toolbar.addSeparator();
 
-        button = new JButton(
-            IconConstants.getIcon( IconConstants.CONFIG_16 ) );
-        button.setToolTipText( "Configure Options" );
-        button.setFocusable( false );
-        button.addActionListener( new BufferSizeListener( this ) );
-        toolbar.add( button );
+        SwingUtils.addActionToToolbar( toolbar, analyzeAction );
+        SwingUtils.addActionToToolbar( toolbar, plotAction );
+
+        toolbar.addSeparator();
+
+        SwingUtils.addActionToToolbar( toolbar,
+            new ActionAdapter( ( e ) -> showBufferSizeDialog(),
+                "Configure Options",
+                IconConstants.getIcon( IconConstants.CONFIG_16 ) ) );
 
         JToggleButton jtb = dataViewButton;
         jtb.setIcon( JHexIcons.loader.getIcon( JHexIcons.SHOW_DATA ) );
@@ -265,28 +270,7 @@ public class JHexFrame implements IView<JFrame>
         jtb.addActionListener( new ShowDataListener( this, jtb ) );
         toolbar.add( jtb );
 
-        button = new JButton(
-            IconConstants.getIcon( IconConstants.ANALYZE_16 ) );
-        button.setToolTipText( "Analyze" );
-        button.setFocusable( false );
-        button.addActionListener( ( e ) -> showAnalyzer() );
-        toolbar.add( button );
-
-        SwingUtils.addActionToToolbar( toolbar, createPlotAction() );
-
         return toolbar;
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    private Action createPlotAction()
-    {
-        Icon icon;
-
-        icon = ChartIcons.getIcon( ChartIcons.CHART_016 );
-
-        return new ActionAdapter( ( e ) -> showPlot(), "Plot", icon );
     }
 
     /***************************************************************************
@@ -352,7 +336,7 @@ public class JHexFrame implements IView<JFrame>
 
         item = new JMenuItem( "Go To Offset" );
         item.setIcon( JHexIcons.loader.getIcon( JHexIcons.GOTO ) );
-        item.addActionListener( new GoToListener( this ) );
+        item.addActionListener( ( e ) -> showGotoDialog() );
         menu.add( item );
 
         item = new JMenuItem( searchAction );
@@ -371,7 +355,7 @@ public class JHexFrame implements IView<JFrame>
 
         item = new JMenuItem( "Set Buffer Size" );
         item.setIcon( IconConstants.getIcon( IconConstants.CONFIG_16 ) );
-        item.addActionListener( new BufferSizeListener( this ) );
+        item.addActionListener( ( e ) -> showBufferSizeDialog() );
         menu.add( item );
 
         return menu;
@@ -383,7 +367,7 @@ public class JHexFrame implements IView<JFrame>
     @Override
     public JFrame getView()
     {
-        return frame;
+        return frameView.getView();
     }
 
     /***************************************************************************
@@ -393,6 +377,12 @@ public class JHexFrame implements IView<JFrame>
     {
         @SuppressWarnings( "resource")
         IStream stream = editor.getStream();
+
+        if( stream == null )
+        {
+            return;
+        }
+
         DataDistributionTask ddt = new DataDistributionTask( stream );
 
         TaskView.startAndShow( getView(), ddt, "Analyzing Data" );
@@ -422,7 +412,7 @@ public class JHexFrame implements IView<JFrame>
             return;
         }
 
-        Window w = SwingUtils.getComponentsWindow( frame );
+        Window w = SwingUtils.getComponentsWindow( getView() );
         DataPlotView plotView = new DataPlotView( stream );
         OkDialogView dialogView = new OkDialogView( w, plotView.getView(),
             ModalityType.DOCUMENT_MODAL, OkDialogButtons.OK_ONLY );
@@ -439,9 +429,9 @@ public class JHexFrame implements IView<JFrame>
      **************************************************************************/
     private void showBufferSizeDialog()
     {
-        Object ans = JOptionPane.showInputDialog( frame, "Choose buffer size:",
-            "Buffer Size", JOptionPane.QUESTION_MESSAGE, null,
-            HexBufferSize.values(), bufferSize );
+        Object ans = JOptionPane.showInputDialog( getView(),
+            "Choose buffer size:", "Buffer Size", JOptionPane.QUESTION_MESSAGE,
+            null, HexBufferSize.values(), bufferSize );
 
         if( ans != null )
         {
@@ -460,7 +450,7 @@ public class JHexFrame implements IView<JFrame>
         JHexOptions options = this.options.getOptions();
 
         chooser.setSelectedFile( options.getLastFile() );
-        choice = chooser.showOpenDialog( frame );
+        choice = chooser.showOpenDialog( getView() );
 
         if( choice == JFileChooser.APPROVE_OPTION )
         {
@@ -488,11 +478,22 @@ public class JHexFrame implements IView<JFrame>
         try
         {
             editor.setFile( f );
+
+            boolean enabled = editor.getStream() != null;
+
+            prevAction.setEnabled( enabled );
+            nextAction.setEnabled( enabled );
+
+            searchAction.setEnabled( enabled );
+            gotoAction.setEnabled( enabled );
+
+            analyzeAction.setEnabled( enabled );
+            plotAction.setEnabled( enabled );
         }
         catch( IOException ex )
         {
-            JOptionPane.showMessageDialog( frame, ex.getMessage(), "I/O Error",
-                JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog( getView(), ex.getMessage(),
+                "I/O Error", JOptionPane.ERROR_MESSAGE );
         }
 
         updateFileMenu();
@@ -503,7 +504,7 @@ public class JHexFrame implements IView<JFrame>
      **************************************************************************/
     private void saveFile()
     {
-        JOptionPane.showMessageDialog( frame,
+        JOptionPane.showMessageDialog( getView(),
             "This functionality is not yet implemented.", "Not Yet Implemented",
             JOptionPane.INFORMATION_MESSAGE );
 
@@ -517,7 +518,7 @@ public class JHexFrame implements IView<JFrame>
         JHexOptions options = this.options.getOptions();
 
         chooser.setSelectedFile( options.getLastFile() );
-        choice = chooser.showSaveDialog( frame );
+        choice = chooser.showSaveDialog( getView() );
 
         if( choice == JFileChooser.APPROVE_OPTION )
         {
@@ -544,16 +545,20 @@ public class JHexFrame implements IView<JFrame>
      **************************************************************************/
     private void showSearchDialog()
     {
+        if( editor.getStream() == null )
+        {
+            return;
+        }
+
         HexBytesFormField hexField = new HexBytesFormField( "Hex Bytes" );
-        ValidationView view = new ValidationView( hexField );
         StandardFormView form = new StandardFormView( true );
 
-        form.addField( hexField.getName(), view.getView() );
+        form.addField( hexField.getName(), hexField.getView() );
 
         hexField.getTextField().addAncestorListener(
             new RequestFocusListener() );
 
-        int ans = JOptionPane.showOptionDialog( frame, form.getView(),
+        int ans = JOptionPane.showOptionDialog( getView(), form.getView(),
             "Enter Hexadecimal String", JOptionPane.OK_CANCEL_OPTION,
             JOptionPane.QUESTION_MESSAGE, null, null, null );
 
@@ -561,7 +566,7 @@ public class JHexFrame implements IView<JFrame>
         {
             if( !hexField.getValidity().isValid )
             {
-                JOptionPane.showMessageDialog( frame,
+                JOptionPane.showMessageDialog( getView(),
                     hexField.getValidity().reason, "Invalid Hexadecimal Entry",
                     JOptionPane.ERROR_MESSAGE );
                 return;
@@ -605,7 +610,7 @@ public class JHexFrame implements IView<JFrame>
         SearchTask task = new SearchTask( bytes, editor.getStream(), fromOffset,
             isForward );
 
-        TaskView.startAndShow( frame, task, "Byte Search" );
+        TaskView.startAndShow( getView(), task, "Byte Search" );
 
         long foundOffset = task.foundOffset;
 
@@ -621,7 +626,7 @@ public class JHexFrame implements IView<JFrame>
      **************************************************************************/
     private void showGotoDialog()
     {
-        Object ans = JOptionPane.showInputDialog( frame,
+        Object ans = JOptionPane.showInputDialog( getView(),
             "Enter Offset in hexadecimal:", new Integer( 0 ) );
         if( ans != null )
         {
@@ -632,7 +637,7 @@ public class JHexFrame implements IView<JFrame>
             }
             catch( NumberFormatException ex )
             {
-                JOptionPane.showMessageDialog( frame,
+                JOptionPane.showMessageDialog( getView(),
                     "'" + ans.toString() + "' is not a hexadecimal string.",
                     "ERROR", JOptionPane.ERROR_MESSAGE );
             }
@@ -650,68 +655,8 @@ public class JHexFrame implements IView<JFrame>
         }
         catch( IOException ex )
         {
-            JOptionPane.showMessageDialog( frame, ex.getMessage(), "I/O Error",
-                JOptionPane.ERROR_MESSAGE );
-        }
-    }
-
-    /***************************************************************************
-     * Action listener for displaying the go to dialog.
-     **************************************************************************/
-    private static class GoToListener implements ActionListener
-    {
-        private final JHexFrame frame;
-
-        public GoToListener( JHexFrame frame )
-        {
-            this.frame = frame;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            frame.showGotoDialog();
-        }
-    }
-
-    /***************************************************************************
-     * Action listener for displaying the find dialog.
-     **************************************************************************/
-    private static class SearchListener implements ActionListener
-    {
-        private final JHexFrame frame;
-
-        public SearchListener( JHexFrame frame )
-        {
-            this.frame = frame;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            if( frame.editor.getStream() != null )
-            {
-                frame.showSearchDialog();
-            }
-        }
-    }
-
-    /***************************************************************************
-     * Action listener for displaying the buffer size dialog.
-     **************************************************************************/
-    private static class BufferSizeListener implements ActionListener
-    {
-        private final JHexFrame frame;
-
-        public BufferSizeListener( JHexFrame frame )
-        {
-            this.frame = frame;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            frame.showBufferSizeDialog();
+            JOptionPane.showMessageDialog( getView(), ex.getMessage(),
+                "I/O Error", JOptionPane.ERROR_MESSAGE );
         }
     }
 
@@ -765,44 +710,6 @@ public class JHexFrame implements IView<JFrame>
             {
                 frame.openFile( files.get( 0 ) );
             }
-        }
-    }
-
-    /***************************************************************************
-     * Action listener for navigating to the previous buffer.
-     **************************************************************************/
-    private static class BackListener implements ActionListener
-    {
-        private final JHexFrame frame;
-
-        public BackListener( JHexFrame view )
-        {
-            this.frame = view;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            frame.editor.jumpPrevious();
-        }
-    }
-
-    /***************************************************************************
-     * Action listener for navigating to the next buffer.
-     **************************************************************************/
-    private static class NextListener implements ActionListener
-    {
-        private final JHexFrame frame;
-
-        public NextListener( JHexFrame view )
-        {
-            this.frame = view;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            frame.editor.jumpForward();
         }
     }
 

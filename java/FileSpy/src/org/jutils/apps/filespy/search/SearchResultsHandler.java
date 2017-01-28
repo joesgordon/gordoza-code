@@ -1,13 +1,10 @@
 package org.jutils.apps.filespy.search;
 
-import java.util.List;
-
 import javax.swing.SwingUtilities;
 
 import org.jutils.apps.filespy.data.SearchRecord;
 import org.jutils.apps.filespy.ui.ResultsView;
 import org.jutils.ui.StatusBarPanel;
-import org.jutils.ui.explorer.IExplorerItem;
 
 /*******************************************************************************
  *
@@ -82,32 +79,6 @@ public class SearchResultsHandler
         {
             System.err.println( msg );
             // TODO add error to UI.
-        }
-    }
-
-    /***************************************************************************
-     *
-     **************************************************************************/
-    private static class UiFilesAdder implements Runnable
-    {
-        private final ResultsView resultsView;
-
-        private final List<? extends IExplorerItem> list;
-
-        public UiFilesAdder( ResultsView resultsView,
-            List<? extends IExplorerItem> list )
-        {
-            this.resultsView = resultsView;
-            this.list = list;
-        }
-
-        @Override
-        public void run()
-        {
-            resultsView.addRecords( list );
-            // LogUtils.printDebug( "Adding record: " +
-            // record.getFile().toString()
-            // );
         }
     }
 
