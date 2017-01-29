@@ -2,7 +2,8 @@ package org.mc.io.parsers;
 
 import org.jutils.ValidationException;
 import org.jutils.io.IParser;
-import org.mc.io.Ip4Address;
+import org.jutils.io.Ip4Address;
+import org.jutils.io.parsers.Ip4AddressParser;
 
 /*******************************************************************************
  * 

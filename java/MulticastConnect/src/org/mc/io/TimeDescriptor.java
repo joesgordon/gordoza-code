@@ -1,36 +1,23 @@
 package org.mc.io;
 
-import java.text.SimpleDateFormat;
-import java.util.GregorianCalendar;
+import java.time.*;
 
 import org.jutils.ui.fields.IDescriptor;
 
-/**  */
-public class TimeDescriptor implements IDescriptor<Long>
+/*******************************************************************************
+ * 
+ ******************************************************************************/
+public class TimeDescriptor implements IDescriptor<LocalDateTime>
 {
-    /**  */
-    private final SimpleDateFormat dateFormat;
-    /**  */
-    private final GregorianCalendar calendar;
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public TimeDescriptor()
-    {
-        this.dateFormat = new SimpleDateFormat( "yyyy.MM.dd HH:mm:ss z" );
-        this.calendar = new GregorianCalendar();
-    }
-
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public String getDescription( Long time )
+    public String getDescription( LocalDateTime time )
     {
-        calendar.setTimeInMillis( time );
+        LocalDate date = time.toLocalDate();
+        LocalTime t = time.toLocalTime();
 
-        return dateFormat.format( calendar.getTime() );
+        return date.toString() + " " + t.toString();
     }
-
 }

@@ -6,7 +6,7 @@ import javax.swing.*;
 
 import org.jutils.concurrent.IStoppableTask;
 import org.jutils.concurrent.ITaskStopManager;
-import org.mc.io.MulticastConnection;
+import org.mc.io.IConnection;
 import org.mc.ui.TxDialog;
 
 /*******************************************************************************
@@ -25,7 +25,7 @@ public class McTxThread implements IStoppableTask
     /**  */
     private final byte[] msgContents;
     /**  */
-    private final MulticastConnection commModel;
+    private final IConnection commModel;
     /**  */
     private final JFrame frame;
 
@@ -36,8 +36,8 @@ public class McTxThread implements IStoppableTask
      * @param commModel
      * @param parent
      **************************************************************************/
-    public McTxThread( int count, int delay, byte[] contents, MulticastConnection commModel,
-        JFrame parent )
+    public McTxThread( int count, int delay, byte[] contents,
+        IConnection commModel, JFrame parent )
     {
         sendCount = 0;
         sendCountMax = count;

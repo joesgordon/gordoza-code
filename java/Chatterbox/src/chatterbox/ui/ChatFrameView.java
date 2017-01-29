@@ -7,8 +7,8 @@ import java.io.IOException;
 
 import javax.swing.*;
 
-import org.jutils.*;
-import org.jutils.io.LogUtils;
+import org.jutils.IconConstants;
+import org.jutils.SwingUtils;
 import org.jutils.io.options.OptionsSerializer;
 import org.jutils.ui.*;
 import org.jutils.ui.OkDialogView.OkDialogButtons;
@@ -16,7 +16,6 @@ import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.model.IView;
 
 import chatterbox.ChatterboxConstants;
-import chatterbox.data.ChatConfig;
 import chatterbox.data.ChatterConfig;
 import chatterbox.messenger.Chat;
 
@@ -75,8 +74,8 @@ public class ChatFrameView implements IView<JFrame>
         // SwingUtils.addActionToToolbar( toolbar, action );
 
         icon = IconConstants.getIcon( IconConstants.CONFIG_16 );
-        action = new ActionAdapter( ( e ) -> showConfig(), "Edit Configuration",
-            icon );
+        action = new ActionAdapter( ( e ) -> showConfigAndReconnect(),
+            "Edit Configuration", icon );
         SwingUtils.addActionToToolbar( toolbar, action );
 
         return toolbar;
@@ -109,10 +108,8 @@ public class ChatFrameView implements IView<JFrame>
         if( dialogView.show( "Chat Configuration", getView().getIconImages(),
             null ) )
         {
-            newConfig = configView.getData();
-            options.write();
-            reconnect( config, newConfig );
-            config = newConfig;
+            config = configView.getData();
+            options.write( config );
         }
         else
         {
@@ -122,13 +119,23 @@ public class ChatFrameView implements IView<JFrame>
         return config;
     }
 
+    private void showConfigAndReconnect()
+    {
+        OptionsSerializer<ChatterConfig> options = ChatterboxConstants.getOptions();
+        ChatterConfig oldConfig = options.getOptions();
+        ChatterConfig newConfig = showConfig();
+
+        if( newConfig != null )
+        {
+            reconnect( oldConfig, newConfig );
+        }
+    }
+
     private void reconnect( ChatterConfig oldCfg, ChatterConfig newCfg )
     {
         Chat chat = chatView.getChat();
-        ChatConfig config = chat.getConfig();
 
-        if( !newCfg.chatCfg.address.equals( config.address ) ||
-            newCfg.chatCfg.port != config.port )
+        if( !newCfg.chatCfg.equals( oldCfg.chatCfg ) )
         {
             chat.disconnect();
 
@@ -167,11 +174,7 @@ public class ChatFrameView implements IView<JFrame>
         public void windowClosing( WindowEvent e )
         {
             // showMessage();
-            Stopwatch watch = new Stopwatch();
             view.chatView.getChat().disconnect();
-            watch.stop();
-
-            LogUtils.printDebug( "Disconnected in %d ms", watch.getElapsed() );
         }
 
         private void showMessage()

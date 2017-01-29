@@ -17,7 +17,7 @@ public class LogUtils
 
     static
     {
-        dateFormatter = new SimpleDateFormat( "HH:mm:ss:SSSS" );
+        dateFormatter = new SimpleDateFormat( "HH:mm:ss:SSS" );
     }
 
     /***************************************************************************

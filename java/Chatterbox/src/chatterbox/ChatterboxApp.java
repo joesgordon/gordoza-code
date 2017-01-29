@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.jutils.io.options.OptionsSerializer;
+import org.jutils.ui.ExitListener;
 import org.jutils.ui.app.IFrameApp;
 
 import chatterbox.data.ChatterConfig;
@@ -55,13 +56,15 @@ public class ChatterboxApp implements IFrameApp
         OptionsSerializer<ChatterConfig> options = ChatterboxConstants.getOptions();
         ChatterConfig config = options.getOptions();
 
-        while( config != null )
+        boolean connected = false;
+
+        while( !connected )
         {
             try
             {
                 chat.connect( config.chatCfg );
-                options.write();
-                break;
+
+                connected = true;
             }
             catch( IOException ex )
             {
@@ -70,7 +73,21 @@ public class ChatterboxApp implements IFrameApp
                     "Unable to connect", JOptionPane.ERROR_MESSAGE );
 
                 config = frameView.showConfig();
+
+                if( config == null )
+                {
+                    break;
+                }
+                else
+                {
+                    options.write( config );
+                }
             }
+        }
+
+        if( !connected )
+        {
+            ExitListener.doDefaultCloseOperation( frameView.getView() );
         }
     }
 }

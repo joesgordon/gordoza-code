@@ -7,7 +7,7 @@ import javax.swing.*;
 
 import org.jutils.IconConstants;
 import org.jutils.ui.model.IView;
-import org.mc.io.MulticastSocketDef;
+import org.mc.io.MulticastInputs;
 
 /*******************************************************************************
  * 
@@ -28,7 +28,7 @@ public class McConfigurationPanel implements IView<JPanel>
     /**  */
     private final Icon deleteIcon;
     /**  */
-    private final MulticastSocketDefView multicastView;
+    private final MulticastInputsView multicastView;
 
     /***************************************************************************
      * 
@@ -41,7 +41,7 @@ public class McConfigurationPanel implements IView<JPanel>
         this.checkIcon = IconConstants.getIcon( IconConstants.CHECK_16 );
         this.deleteIcon = IconConstants.getIcon( IconConstants.STOP_16 );
 
-        this.multicastView = new MulticastSocketDefView();
+        this.multicastView = new MulticastInputsView();
 
         bindButton.setIcon( checkIcon );
         bindButton.setText( bindText );
@@ -70,17 +70,9 @@ public class McConfigurationPanel implements IView<JPanel>
     /***************************************************************************
      * @return
      **************************************************************************/
-    public MulticastSocketDef getSocket()
+    public MulticastInputs getSocket()
     {
         return multicastView.getData();
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public boolean isBound()
-    {
-        return bindButton.getText().equals( bindText );
     }
 
     /***************************************************************************

@@ -1,4 +1,4 @@
-package org.mc.ui;
+package org.jutils.ui.fields;
 
 import java.net.*;
 import java.util.*;
@@ -6,7 +6,6 @@ import java.util.*;
 import javax.swing.JComponent;
 
 import org.jutils.ui.event.updater.IUpdater;
-import org.jutils.ui.fields.*;
 import org.jutils.ui.validation.IValidityChangedListener;
 import org.jutils.ui.validation.Validity;
 
@@ -199,7 +198,8 @@ public class NetworkInterfaceField implements IDataFormField<String>
         {
             if( updater != null )
             {
-                updater.update( data.getName() );
+                String name = data == null ? null : data.getName();
+                updater.update( name );
             }
         }
 

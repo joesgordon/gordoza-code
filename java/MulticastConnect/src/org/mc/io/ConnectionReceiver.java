@@ -61,8 +61,19 @@ public class ConnectionReceiver implements IStoppableTask
         }
     }
 
+    /***************************************************************************
+     * @param l
+     **************************************************************************/
     public void addMessageListener( ItemActionListener<McMessage> l )
     {
         msgListeners.addListener( l );
+    }
+
+    /***************************************************************************
+     * @param l
+     **************************************************************************/
+    public void addErrorListener( ItemActionListener<String> l )
+    {
+        errListeners.addListener( l );
     }
 }

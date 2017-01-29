@@ -20,10 +20,6 @@ public class HexMessagePanel
     /**  */
     private final JPanel view;
     /**  */
-    private final JLabel addressLabel;
-    /**  */
-    private final JLabel addressField;
-    /**  */
     private final HexTable contentsField;
     /**  */
     private final JLabel timeLabel;
@@ -47,8 +43,6 @@ public class HexMessagePanel
         this.view = new JPanel();
         this.timeLabel = new JLabel( "Date/Time:" );
         this.timeField = new JLabel();
-        this.addressLabel = new JLabel( "Address:" );
-        this.addressField = new JLabel();
         this.contentsField = new HexTable();
         this.altBgColor = new Color( 0xeeeeee );
         this.timeDesc = new TimeDescriptor();
@@ -60,15 +54,6 @@ public class HexMessagePanel
         contentsField.setOpaque( false );
         contentsField.setFocusable( false );
         contentsField.setCellSelectionEnabled( false );
-
-        view.add( addressLabel,
-            new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
-                GridBagConstraints.EAST, GridBagConstraints.NONE,
-                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        view.add( addressField,
-            new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
-                GridBagConstraints.WEST, GridBagConstraints.NONE,
-                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
         view.add( timeLabel,
             new GridBagConstraints( 2, 1, 1, 1, 0.0, 0.0,
@@ -106,8 +91,6 @@ public class HexMessagePanel
         Color bg = index % 2 == 1 ? altBgColor : backgroundColor;
         bg = isSelected ? list.getSelectionBackground() : bg;
 
-        addressLabel.setForeground( fg );
-        addressField.setForeground( fg );
         contentsField.setForeground( fg );
         timeLabel.setForeground( fg );
         timeField.setForeground( fg );
@@ -124,7 +107,6 @@ public class HexMessagePanel
         int len = bytes.length > 0x20 ? 0x20 : bytes.length;
         bytes = Arrays.copyOf( msg.contents, len );
 
-        addressField.setText( msg.address );
         contentsField.setBuffer( new ByteBuffer( bytes ) );
         timeField.setText( timeDesc.getDescription( msg.time ) );
     }

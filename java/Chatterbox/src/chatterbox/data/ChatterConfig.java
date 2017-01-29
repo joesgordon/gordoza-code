@@ -1,5 +1,7 @@
 package chatterbox.data;
 
+import org.mc.io.MulticastInputs;
+
 import chatterbox.ChatterboxConstants;
 
 /***************************************************************************
@@ -8,7 +10,7 @@ import chatterbox.ChatterboxConstants;
 public class ChatterConfig
 {
     /**  */
-    public final ChatConfig chatCfg;
+    public final MulticastInputs chatCfg;
     /**  */
     public String displayName;
     /**  */
@@ -19,7 +21,7 @@ public class ChatterConfig
      **************************************************************************/
     public ChatterConfig()
     {
-        this.chatCfg = new ChatConfig();
+        this.chatCfg = new MulticastInputs();
         this.displayName = ChatterboxConstants.DEFAULT_USERNAME;
         this.showPopups = true;
     }
@@ -29,7 +31,7 @@ public class ChatterConfig
      **************************************************************************/
     public ChatterConfig( ChatterConfig cfg )
     {
-        this.chatCfg = new ChatConfig( cfg.chatCfg );
+        this.chatCfg = new MulticastInputs( cfg.chatCfg );
         this.displayName = cfg.displayName;
         this.showPopups = cfg.showPopups;
     }

@@ -8,8 +8,7 @@ import org.jutils.concurrent.IStoppableTask;
 import org.jutils.concurrent.ITaskStopManager;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
-
-import chatterbox.data.messages.RawMessage;
+import org.mc.McMessage;
 
 /*******************************************************************************
  * 
@@ -17,7 +16,7 @@ import chatterbox.data.messages.RawMessage;
 public class ReceiverTask implements IStoppableTask
 {
     /**  */
-    private final ItemActionListener<RawMessage> rxListener;
+    private final ItemActionListener<McMessage> rxListener;
     /**  */
     private final MulticastSocket socket;
     /**  */
@@ -27,7 +26,7 @@ public class ReceiverTask implements IStoppableTask
      * @param rxListener
      * @param socket
      **************************************************************************/
-    public ReceiverTask( ItemActionListener<RawMessage> rxListener,
+    public ReceiverTask( ItemActionListener<McMessage> rxListener,
         MulticastSocket socket )
     {
         this.rxListener = rxListener;
@@ -53,8 +52,8 @@ public class ReceiverTask implements IStoppableTask
                 byte[] messageBytes = Arrays.copyOf( rxPacket.getData(),
                     rxPacket.getLength() );
 
-                rxListener.actionPerformed( new ItemActionEvent<RawMessage>(
-                    this, new RawMessage( messageBytes ) ) );
+                rxListener.actionPerformed( new ItemActionEvent<McMessage>(
+                    this, new McMessage( messageBytes ) ) );
             }
             catch( SocketTimeoutException ex )
             {

@@ -29,7 +29,7 @@ public class MulticastConnection implements IConnection
      * @param msgLength
      * @throws IOException
      **************************************************************************/
-    public MulticastConnection( MulticastSocketDef socket ) throws IOException
+    public MulticastConnection( MulticastInputs socket ) throws IOException
     {
         if( socket.port < 1 || socket.port > 65535 )
         {
@@ -51,7 +51,7 @@ public class MulticastConnection implements IConnection
         this.socket.setReuseAddress( true );
         this.socket.setTimeToLive( socket.ttl );
         this.socket.joinGroup( address );
-        this.socket.setSoTimeout( 1000 );
+        this.socket.setSoTimeout( 500 );
 
         NetworkInterface nic = socket.getSystemNic();
 
@@ -86,7 +86,7 @@ public class MulticastConnection implements IConnection
 
         socket.send( pack );
 
-        McMessage msg = fillMessage( buf, pack );
+        McMessage msg = new McMessage( buf );
 
         return msg;
     }
@@ -103,7 +103,7 @@ public class MulticastConnection implements IConnection
 
         byte[] contents = Arrays.copyOf( rxBuffer, rxPacket.getLength() );
 
-        McMessage msg = fillMessage( contents, rxPacket );
+        McMessage msg = new McMessage( contents );
 
         return msg;
     }
@@ -116,15 +116,5 @@ public class MulticastConnection implements IConnection
     {
         socket.leaveGroup( address );
         socket.close();
-    }
-
-    /***************************************************************************
-     * @param msg
-     * @param buffer
-     **************************************************************************/
-    private McMessage fillMessage( byte[] buffer, DatagramPacket packet )
-    {
-        return new McMessage( packet.getAddress().getHostAddress(), port,
-            buffer );
     }
 }

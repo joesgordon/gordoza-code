@@ -1,17 +1,15 @@
-package org.mc.ui;
+package org.jutils.ui.fields;
 
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 
 import org.jutils.io.IParser;
+import org.jutils.io.Ip4Address;
+import org.jutils.io.parsers.Ip4AddressParser;
 import org.jutils.ui.event.updater.IUpdater;
-import org.jutils.ui.fields.IDataFormField;
-import org.jutils.ui.fields.ParserFormField;
 import org.jutils.ui.model.ParserTextFormatter;
 import org.jutils.ui.validation.IValidityChangedListener;
 import org.jutils.ui.validation.Validity;
-import org.mc.io.Ip4Address;
-import org.mc.io.parsers.Ip4AddressParser;
 
 /*******************************************************************************
  * 
@@ -19,7 +17,7 @@ import org.mc.io.parsers.Ip4AddressParser;
 public class Ip4AddressField implements IDataFormField<Ip4Address>
 {
     /**  */
-    private final IDataFormField<Ip4Address> field;
+    private final ParserFormField<Ip4Address> field;
 
     /***************************************************************************
      * @param name

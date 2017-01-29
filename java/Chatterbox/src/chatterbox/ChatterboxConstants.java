@@ -17,7 +17,7 @@ import chatterbox.data.ChatterConfig;
 public class ChatterboxConstants
 {
     /**  */
-    private static final File USER_FILE = IOUtils.getUsersFile( "jutils",
+    private static final File USER_FILE = IOUtils.getUsersFile( ".jutils",
         "chatterbox", "options.xml" );
     /**  */
     public static final String DEFAULT_USERNAME = System.getProperty(

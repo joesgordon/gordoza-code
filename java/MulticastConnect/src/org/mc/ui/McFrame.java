@@ -7,13 +7,15 @@ import java.util.Arrays;
 
 import javax.swing.*;
 
+import org.jutils.SwingUtils;
 import org.jutils.concurrent.Stoppable;
 import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.model.IView;
 import org.mc.McMessage;
 import org.mc.McTxThread;
-import org.mc.io.*;
+import org.mc.io.MulticastInputs;
+import org.mc.io.Multicaster;
 
 /*******************************************************************************
  * 
@@ -28,12 +30,9 @@ public class McFrame implements IView<JFrame>
     private final McMessagesPanel messagesPanel;
     /**  */
     private final McInputPanel inputPanel;
+
     /**  */
-    private MulticastConnection commModel;
-    /**  */
-    private ConnectionReceiver receiver;
-    /**  */
-    private Stoppable rxThread;
+    private Multicaster commModel;
 
     /***************************************************************************
      * 
@@ -135,14 +134,14 @@ public class McFrame implements IView<JFrame>
                 int msgDelay = inputPanel.getSendDelay();
 
                 McTxThread txThread = new McTxThread( msgCount, msgDelay,
-                    msgBytes, commModel, getView() );
+                    msgBytes, commModel.getConnection(), getView() );
                 Stoppable stoppable = new Stoppable( txThread );
                 Thread thread = new Thread( stoppable );
                 thread.start();
             }
             else
             {
-                commModel.txMessage( msgBytes );
+                commModel.getConnection().txMessage( msgBytes );
             }
         }
         catch( IOException ex )
@@ -156,9 +155,9 @@ public class McFrame implements IView<JFrame>
     /***************************************************************************
      * 
      **************************************************************************/
-    private void connect()
+    private void bindUnbind()
     {
-        boolean bound = confPanel.isBound();
+        boolean bound = ( commModel != null );
 
         confPanel.setBindEnabled( false );
 
@@ -166,24 +165,23 @@ public class McFrame implements IView<JFrame>
         {
             if( bound )
             {
-                MulticastSocketDef socket = confPanel.getSocket();
-
-                ItemActionListener<McMessage> rxListener;
-
-                rxListener = ( e ) -> SwingUtilities.invokeLater(
-                    () -> addMessage( e.getItem() ) );
-
-                commModel = new MulticastConnection( socket );
-                receiver = new ConnectionReceiver( commModel );
-                rxThread = new Stoppable( receiver );
-                Thread thread = new Thread( rxThread );
-                thread.start();
-
-                receiver.addMessageListener( rxListener );
+                unbindSocket();
+                bound = false;
             }
             else
             {
-                unbindSocket();
+                MulticastInputs socket = confPanel.getSocket();
+
+                ItemActionListener<McMessage> rxListener;
+                ItemActionListener<String> errListener;
+
+                rxListener = ( e ) -> SwingUtilities.invokeLater(
+                    () -> addMessage( e.getItem() ) );
+                errListener = ( e ) -> SwingUtilities.invokeLater(
+                    () -> displayErrorMessage( e.getItem() ) );
+
+                commModel = new Multicaster( socket, rxListener, errListener );
+                bound = true;
             }
         }
         catch( IOException ex )
@@ -195,8 +193,16 @@ public class McFrame implements IView<JFrame>
 
         confPanel.setBound( bound );
         inputPanel.setBound( bound );
-
         confPanel.setBindEnabled( true );
+    }
+
+    /***************************************************************************
+     * @param errorMsg
+     **************************************************************************/
+    private void displayErrorMessage( String errorMsg )
+    {
+        SwingUtils.showErrorMessage( getView(), errorMsg,
+            "Communication Error" );
     }
 
     /***************************************************************************
@@ -204,19 +210,15 @@ public class McFrame implements IView<JFrame>
      **************************************************************************/
     private void unbindSocket() throws IOException
     {
-        try
-        {
-            rxThread.stopAndWaitFor();
-        }
-        catch( InterruptedException e )
-        {
-        }
-
         messagesPanel.clearMessages();
+
         commModel.close();
         commModel = null;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private class SendListener implements ActionListener
     {
         @Override
@@ -226,15 +228,21 @@ public class McFrame implements IView<JFrame>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private class BindListener implements ActionListener
     {
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            connect();
+            bindUnbind();
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private final class ClosingListener extends WindowAdapter
     {
         private final Component parent;

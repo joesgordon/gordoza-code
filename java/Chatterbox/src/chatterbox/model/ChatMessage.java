@@ -1,8 +1,7 @@
 package chatterbox.model;
 
-import java.util.List;
-
 import chatterbox.data.ChatUser;
+import chatterbox.data.DecoratedText;
 
 /*******************************************************************************
  * 
@@ -18,9 +17,7 @@ public class ChatMessage
     /**  */
     public final long rxTime;
     /**  */
-    public final String text;
-    /**  */
-    public final List<MessageAttributeSet> attributes;
+    public final DecoratedText text;
 
     /***************************************************************************
      * @param conversation
@@ -31,13 +28,12 @@ public class ChatMessage
      * @param attributes
      **************************************************************************/
     public ChatMessage( String conversation, ChatUser sender, long tx, long rx,
-        String text, List<MessageAttributeSet> attributes )
+        DecoratedText text )
     {
         this.conversation = conversation;
         this.txTime = tx;
         this.rxTime = rx;
         this.sender = sender;
         this.text = text;
-        this.attributes = attributes;
     }
 }

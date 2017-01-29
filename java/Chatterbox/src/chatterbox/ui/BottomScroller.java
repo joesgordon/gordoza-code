@@ -1,51 +1,42 @@
-package org.mc.io;
+package chatterbox.ui;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.awt.Rectangle;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+
+import javax.swing.JTextPane;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class Ip4Address
+public class BottomScroller extends ComponentAdapter
 {
     /**  */
-    public final byte[] address;
+    private final JTextPane textPane;
+
+    /***************************************************************************
+     * @param textPane
+     **************************************************************************/
+    public BottomScroller( JTextPane textPane )
+    {
+        this.textPane = textPane;
+    }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public Ip4Address()
+    private void scrollToBottom()
     {
-        this.address = new byte[4];
+        textPane.scrollRectToVisible(
+            new Rectangle( 0, textPane.getHeight(), 1, 1 ) );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public String toString()
+    public void componentResized( ComponentEvent e )
     {
-        String str = "";
-
-        for( byte b : address )
-        {
-            if( !str.isEmpty() )
-            {
-                str += ".";
-            }
-
-            str += Integer.toString( Byte.toUnsignedInt( b ) );
-        }
-
-        return str;
-    }
-
-    /***************************************************************************
-     * @return
-     * @throws UnknownHostException
-     **************************************************************************/
-    public InetAddress getInetAddress() throws UnknownHostException
-    {
-        return InetAddress.getByAddress( address );
+        scrollToBottom();
     }
 }

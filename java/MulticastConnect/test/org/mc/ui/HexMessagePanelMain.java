@@ -40,7 +40,7 @@ public class HexMessagePanelMain
 
             byte[] contents = "So long and thanks f".getBytes(
                 Charset.forName( "US-ASCII" ) );
-            McMessage msg = new McMessage( "fdfdsfsd", 1234, contents );
+            McMessage msg = new McMessage( contents );
 
             panel.setMessage( msg );
 

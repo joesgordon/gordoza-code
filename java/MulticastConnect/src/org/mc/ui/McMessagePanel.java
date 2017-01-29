@@ -17,8 +17,6 @@ public class McMessagePanel implements ListCellRenderer<McMessage>
     /**  */
     private final JLabel addressLabel;
     /**  */
-    private final JLabel addressField;
-    /**  */
     private final JTextArea contentsField;
     /**  */
     private final JLabel timeLabel;
@@ -43,7 +41,6 @@ public class McMessagePanel implements ListCellRenderer<McMessage>
         this.timeLabel = new JLabel( "Date/Time:" );
         this.timeField = new JLabel();
         this.addressLabel = new JLabel( "Address:" );
-        this.addressField = new JLabel();
         this.contentsField = new JTextArea();
         this.altBgColor = new Color( 0xeeeeee );
         this.timeDesc = new TimeDescriptor();
@@ -55,10 +52,6 @@ public class McMessagePanel implements ListCellRenderer<McMessage>
         view.add( addressLabel,
             new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
                 GridBagConstraints.EAST, GridBagConstraints.NONE,
-                new Insets( 2, 2, 2, 2 ), 0, 0 ) );
-        view.add( addressField,
-            new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
-                GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets( 2, 2, 2, 2 ), 0, 0 ) );
 
         view.add( timeLabel,
@@ -101,7 +94,6 @@ public class McMessagePanel implements ListCellRenderer<McMessage>
         bg = isSelected ? list.getSelectionBackground() : bg;
 
         addressLabel.setForeground( fg );
-        addressField.setForeground( fg );
         contentsField.setForeground( fg );
         timeLabel.setForeground( fg );
         timeField.setForeground( fg );
@@ -117,7 +109,6 @@ public class McMessagePanel implements ListCellRenderer<McMessage>
      **************************************************************************/
     public void setMessage( McMessage msg )
     {
-        addressField.setText( msg.address );
         contentsField.setText(
             new String( msg.contents, 0, msg.contents.length - 1 ) );
         timeField.setText( timeDesc.getDescription( msg.time ) );

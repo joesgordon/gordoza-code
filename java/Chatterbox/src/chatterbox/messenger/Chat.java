@@ -10,9 +10,13 @@ import org.jutils.task.TaskError;
 import org.jutils.task.TaskRunner;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
+import org.mc.McMessage;
+import org.mc.io.MulticastInputs;
+import org.mc.io.Multicaster;
 
 import chatterbox.ChatterboxConstants;
-import chatterbox.data.*;
+import chatterbox.data.ChatUser;
+import chatterbox.data.ChatterConfig;
 import chatterbox.data.messages.*;
 import chatterbox.io.*;
 import chatterbox.model.ChatMessage;
@@ -26,9 +30,9 @@ public class Chat extends AbstractChat
     private final Conversation defaultConversation;
     /**  */
     private final MessageSerializer msgSerializer;
-    /**  */
-    private final ChatWire wire;
 
+    /**  */
+    private Multicaster wire;
     /**  */
     private UserCheckTask userTask;
     /**  */
@@ -36,7 +40,7 @@ public class Chat extends AbstractChat
     /**  */
     private Thread userThread;
     /**  */
-    private ChatConfig config;
+    private MulticastInputs config;
 
     /***************************************************************************
      * @param user
@@ -48,7 +52,6 @@ public class Chat extends AbstractChat
 
         this.defaultConversation = new Conversation( this, "", null );
         this.msgSerializer = new MessageSerializer();
-        this.wire = new ChatWire( new RawReceiver( this ) );
         this.userTask = null;
         this.config = null;
     }
@@ -57,19 +60,36 @@ public class Chat extends AbstractChat
      * 
      **************************************************************************/
     @Override
-    public void connect( ChatConfig config ) throws IOException
+    public void connect( MulticastInputs config ) throws IOException
     {
         this.config = config;
+
+        try
+        {
+            this.wire = new Multicaster( config, new RawReceiver( this ),
+                ( e ) -> displayErrorMessage( e.getItem() ) );
+        }
+        catch( IOException ex )
+        {
+            // ex.printStackTrace();
+
+            this.config = null;
+
+            throw ex;
+        }
+
         this.userTask = new UserCheckTask( this );
         this.userRunner = new TaskRunner( userTask,
             new SignalerTaskHander( new Signaler() ) );
-
-        wire.connect( config.address, config.port );
-
         this.userThread = new Thread( userRunner, "User Checking Thread" );
         userThread.start();
 
         // getLocalUser().displayName = config.displayName;
+    }
+
+    private void displayErrorMessage( String errorMessage )
+    {
+        // TODO Auto-generated method stub
     }
 
     /***************************************************************************
@@ -90,7 +110,15 @@ public class Chat extends AbstractChat
             {
             }
 
-            wire.disconnect();
+            try
+            {
+                wire.close();
+            }
+            catch( IOException e )
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
 
             for( ChatUser u : new ArrayList<>(
                 defaultConversation.getUsers() ) )
@@ -308,23 +336,14 @@ public class Chat extends AbstractChat
                     "Message is too long: " + msgBytes.length );
             }
 
-            wire.send( msgBytes );
+            wire.getConnection().txMessage( msgBytes );
         }
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
-    public ChatConfig getConfig()
-    {
-        return config;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class RawReceiver implements ItemActionListener<RawMessage>
+    private static class RawReceiver implements ItemActionListener<McMessage>
     {
         private final Chat chat;
         private final MessageSerializer msgSerializer;
@@ -336,22 +355,23 @@ public class Chat extends AbstractChat
         }
 
         @Override
-        public void actionPerformed( ItemActionEvent<RawMessage> event )
+        public void actionPerformed( ItemActionEvent<McMessage> event )
         {
-            RawMessage msg = event.getItem();
+            McMessage msg = event.getItem();
 
-            try( ByteArrayStream byteStream = new ByteArrayStream( msg.bytes );
+            try( ByteArrayStream byteStream = new ByteArrayStream(
+                msg.contents );
                  IDataStream stream = new DataStream( byteStream ); )
             {
                 parseMessage( stream );
             }
             catch( IOException ex )
             {
-                LogUtils.printError( "I/O error: " + ex.getMessage() );
+                chat.displayErrorMessage( "I/O error: " + ex.getMessage() );
             }
             catch( ValidationException ex )
             {
-                LogUtils.printWarning( ex.getMessage() );
+                chat.displayErrorMessage( ex.getMessage() );
             }
         }
 

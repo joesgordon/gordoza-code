@@ -1,16 +1,14 @@
 package chatterbox.io;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.jutils.io.IDataSerializer;
 import org.jutils.io.IDataStream;
 
 import chatterbox.ChatterboxConstants;
 import chatterbox.data.ChatUser;
+import chatterbox.data.DecoratedText;
 import chatterbox.model.ChatMessage;
-import chatterbox.model.MessageAttributeSet;
 
 /*******************************************************************************
  * 
@@ -22,7 +20,7 @@ public class ChatMessageSerializer implements IDataSerializer<ChatMessage>
     /**  */
     private final UserSerializer userSerializer;
     /**  */
-    private final MessageAttributeSetSerializer attributeSerializer;
+    private final AttributeSetSerializer attributeSerializer;
 
     /***************************************************************************
      * @param localUser
@@ -31,7 +29,7 @@ public class ChatMessageSerializer implements IDataSerializer<ChatMessage>
     {
         this.stringSerializer = new StringSerializer();
         this.userSerializer = new UserSerializer();
-        this.attributeSerializer = new MessageAttributeSetSerializer();
+        this.attributeSerializer = new AttributeSetSerializer();
     }
 
     /***************************************************************************
@@ -44,22 +42,16 @@ public class ChatMessageSerializer implements IDataSerializer<ChatMessage>
         long txTime;
         long rxTime = ChatterboxConstants.now();
         ChatUser sender;
-        String text;
-        int numAttributes;
-        List<MessageAttributeSet> attributeSets = new ArrayList<MessageAttributeSet>();
+        DecoratedText text = new DecoratedText();
 
         conversationId = stringSerializer.read( stream );
         txTime = stream.readLong();
         sender = userSerializer.read( stream );
-        text = stringSerializer.read( stream );
-        numAttributes = stream.readInt();
-        for( int i = 0; i < numAttributes; i++ )
-        {
-            attributeSets.add( attributeSerializer.read( stream ) );
-        }
+        text.text = stringSerializer.read( stream );
+        text.attributes = attributeSerializer.read( stream );
 
         ChatMessage msg = new ChatMessage( conversationId, sender, txTime,
-            rxTime, text, attributeSets );
+            rxTime, text );
 
         return msg;
     }
@@ -74,12 +66,7 @@ public class ChatMessageSerializer implements IDataSerializer<ChatMessage>
         stringSerializer.write( message.conversation, stream );
         stream.writeLong( ChatterboxConstants.now() );
         userSerializer.write( message.sender, stream );
-        stringSerializer.write( message.text, stream );
-        stream.writeInt( message.attributes.size() );
-
-        for( MessageAttributeSet attribute : message.attributes )
-        {
-            attributeSerializer.write( attribute, stream );
-        }
+        stringSerializer.write( message.text.text, stream );
+        attributeSerializer.write( message.text.attributes, stream );
     }
 }

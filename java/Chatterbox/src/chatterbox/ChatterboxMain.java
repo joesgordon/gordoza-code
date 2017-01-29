@@ -1,5 +1,6 @@
 package chatterbox;
 
+import org.jutils.io.LogUtils;
 import org.jutils.io.options.OptionsSerializer;
 import org.jutils.ui.app.FrameRunner;
 
@@ -19,6 +20,9 @@ public class ChatterboxMain
     {
         OptionsSerializer<ChatterConfig> options = ChatterboxConstants.getOptions();
         ChatUser user = ChatterboxConstants.createDefaultUser();
+
+        LogUtils.printDebug(
+            "Default ip: " + options.getOptions().chatCfg.address.toString() );
 
         user.displayName = options.getOptions().displayName;
 

@@ -6,8 +6,8 @@ import java.util.*;
 
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
+import org.mc.io.MulticastInputs;
 
-import chatterbox.data.ChatConfig;
 import chatterbox.data.ChatUser;
 
 /*******************************************************************************
@@ -120,16 +120,11 @@ public abstract class AbstractChat
      * @param config
      * @throws IOException
      **************************************************************************/
-    public abstract void connect( ChatConfig config ) throws IOException;
+    public abstract void connect( MulticastInputs config ) throws IOException;
 
     /***************************************************************************
      * @param users
      * @return
      **************************************************************************/
     public abstract Conversation createConversation( List<ChatUser> users );
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public abstract ChatConfig getConfig();
 }

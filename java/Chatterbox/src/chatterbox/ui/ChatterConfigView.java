@@ -2,14 +2,14 @@ package chatterbox.ui;
 
 import java.awt.Component;
 
-import javax.swing.JCheckBox;
+import javax.swing.border.TitledBorder;
 
 import org.jutils.ui.StandardFormView;
-import org.jutils.ui.event.updater.CheckBoxUpdater;
 import org.jutils.ui.event.updater.ReflectiveUpdater;
-import org.jutils.ui.fields.IntegerFormField;
+import org.jutils.ui.fields.BooleanFormField;
 import org.jutils.ui.fields.StringFormField;
 import org.jutils.ui.model.IDataView;
+import org.mc.ui.MulticastInputsView;
 
 import chatterbox.data.ChatterConfig;
 
@@ -21,13 +21,11 @@ public class ChatterConfigView implements IDataView<ChatterConfig>
     /**  */
     private final StandardFormView form;
     /**  */
+    private final MulticastInputsView inputsView;
+    /**  */
     private final StringFormField nameField;
     /**  */
-    private final StringFormField addressField;
-    /**  */
-    private final IntegerFormField portField;
-    /**  */
-    private final JCheckBox popupField;
+    private final BooleanFormField popupField;
 
     /**  */
     private ChatterConfig config;
@@ -38,25 +36,23 @@ public class ChatterConfigView implements IDataView<ChatterConfig>
     public ChatterConfigView()
     {
         this.form = new StandardFormView();
+        this.inputsView = new MulticastInputsView();
         this.nameField = new StringFormField( "Name" );
-        this.addressField = new StringFormField( "Address" );
-        this.portField = new IntegerFormField( "Port", 0, 65535 );
-        this.popupField = new JCheckBox();
+        this.popupField = new BooleanFormField( "Show Popups" );
 
         form.addField( nameField );
-        form.addField( addressField );
-        form.addField( portField );
+        form.addField( popupField );
+        form.addField( null, inputsView.getView() );
+
+        inputsView.getView().setBorder(
+            new TitledBorder( "Connection Options" ) );
 
         setData( new ChatterConfig() );
 
         nameField.setUpdater(
-            new ReflectiveUpdater<>( this, "config.chatCfg.displayName" ) );
-        addressField.setUpdater(
-            new ReflectiveUpdater<>( this, "config.chatCfg.address" ) );
-        portField.setUpdater(
-            new ReflectiveUpdater<>( this, "config.chatCfg.port" ) );
-        popupField.addActionListener( new CheckBoxUpdater(
-            new ReflectiveUpdater<>( this, "config.showPopups" ) ) );
+            new ReflectiveUpdater<>( this, "config.displayName" ) );
+        popupField.setUpdater(
+            new ReflectiveUpdater<>( this, "config.showPopups" ) );
     }
 
     /***************************************************************************
@@ -85,8 +81,8 @@ public class ChatterConfigView implements IDataView<ChatterConfig>
     {
         this.config = config;
 
+        inputsView.setData( config.chatCfg );
         nameField.setValue( config.displayName );
-        addressField.setValue( config.chatCfg.address );
-        portField.setValue( config.chatCfg.port );
+        popupField.setValue( config.showPopups );
     }
 }

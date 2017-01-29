@@ -1,25 +1,23 @@
 package org.mc.ui;
 
-import java.awt.Component;
+import javax.swing.JComponent;
 
 import org.jutils.ui.StandardFormView;
 import org.jutils.ui.event.updater.ReflectiveUpdater;
-import org.jutils.ui.fields.IDataFormField;
-import org.jutils.ui.fields.IntegerFormField;
+import org.jutils.ui.fields.*;
 import org.jutils.ui.model.IDataView;
-import org.mc.io.Ip4Address;
-import org.mc.io.MulticastSocketDef;
+import org.mc.io.MulticastInputs;
 import org.mc.io.parsers.MulticastGroupParser;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class MulticastSocketDefView implements IDataView<MulticastSocketDef>
+public class MulticastInputsView implements IDataView<MulticastInputs>
 {
     /**  */
     private final StandardFormView form;
     /**  */
-    private final IDataFormField<Ip4Address> addressField;
+    private final Ip4AddressField addressField;
     /**  */
     private final IntegerFormField portField;
     /**  */
@@ -28,12 +26,12 @@ public class MulticastSocketDefView implements IDataView<MulticastSocketDef>
     private final IntegerFormField ttlField;
 
     /**  */
-    private MulticastSocketDef def;
+    private MulticastInputs inputs;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public MulticastSocketDefView()
+    public MulticastInputsView()
     {
         this.form = new StandardFormView();
         this.addressField = new Ip4AddressField( "Multicast Group",
@@ -47,20 +45,20 @@ public class MulticastSocketDefView implements IDataView<MulticastSocketDef>
         form.addField( nicField );
         form.addField( ttlField );
 
-        setData( new MulticastSocketDef() );
+        setData( new MulticastInputs() );
 
         addressField.setUpdater(
-            new ReflectiveUpdater<>( this, "def.address" ) );
-        portField.setUpdater( new ReflectiveUpdater<>( this, "def.port" ) );
-        nicField.setUpdater( new ReflectiveUpdater<>( this, "def.nic" ) );
-        ttlField.setUpdater( new ReflectiveUpdater<>( this, "def.ttl" ) );
+            new ReflectiveUpdater<>( this, "inputs.address" ) );
+        portField.setUpdater( new ReflectiveUpdater<>( this, "inputs.port" ) );
+        nicField.setUpdater( new ReflectiveUpdater<>( this, "inputs.nic" ) );
+        ttlField.setUpdater( new ReflectiveUpdater<>( this, "inputs.ttl" ) );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public Component getView()
+    public JComponent getView()
     {
         return form.getView();
     }
@@ -69,23 +67,23 @@ public class MulticastSocketDefView implements IDataView<MulticastSocketDef>
      * 
      **************************************************************************/
     @Override
-    public MulticastSocketDef getData()
+    public MulticastInputs getData()
     {
-        return def;
+        return inputs;
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void setData( MulticastSocketDef data )
+    public void setData( MulticastInputs data )
     {
-        this.def = data;
+        this.inputs = data;
 
-        addressField.setValue( def.address );
-        portField.setValue( def.port );
-        nicField.setValue( def.nic );
-        ttlField.setValue( def.ttl );
+        addressField.setValue( inputs.address );
+        portField.setValue( inputs.port );
+        nicField.setValue( inputs.nic );
+        ttlField.setValue( inputs.ttl );
     }
 
     /***************************************************************************
