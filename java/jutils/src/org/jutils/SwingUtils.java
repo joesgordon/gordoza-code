@@ -80,7 +80,7 @@ public final class SwingUtils
         String title )
     {
         JOptionPane jop = new JOptionPane( message, JOptionPane.ERROR_MESSAGE,
-            JOptionPane.OK_OPTION, null );
+            JOptionPane.DEFAULT_OPTION, null );
 
         JDialog dialog = jop.createDialog( parent, title );
         dialog.setModalityType( ModalityType.DOCUMENT_MODAL );

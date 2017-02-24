@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="all" name="Builds jutils and creates jars">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+
+    <property name="proj_root" location=".." />
+    <property name="run_jar" location="./jutils.jar" />
+    <property name="src_jar" location="./jutils_src.jar" />
+	
+	<target name="clean_jars">
+        <delete file="${run_jar}" failonerror="false" quiet="true"/>
+        <delete file="${src_jar}" failonerror="false" quiet="true"/>
+	</target>
+	
+    <target name="create_run_jar">
+        <jar destfile="${run_jar}" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="org.jutils.ui.DirectoryChooser"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="${proj_root}/bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="${proj_root}/../libs/jgoodies.jar"/>
+            <zipfileset excludes="META-INF/*.SF,**/*.java" src="${proj_root}/../libs/xstream_min.jar"/>
+        </jar>
+    </target>
+    
+    <target name="create_src_jar">
+        <jar destfile="${src_jar}" filesetmanifest="mergewithoutmain">
+            <fileset dir="${proj_root}/src"/>
+            <zipfileset excludes="META-INF/*.SF" src="${proj_root}/../libs/jgoodies.zip"/>
+            <zipfileset excludes="META-INF/*.SF,**/*.class" src="${proj_root}/../libs/xstream_min.jar"/>
+        </jar>
+    </target>
+
+    <target name="all" depends="clean_jars,create_run_jar,create_src_jar"/>
+	
+</project>

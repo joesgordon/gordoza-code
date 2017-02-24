@@ -7,6 +7,7 @@ import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
 
 import chatterbox.data.ChatUser;
+import chatterbox.data.messages.ChatMessage;
 import chatterbox.model.*;
 
 /***************************************************************************

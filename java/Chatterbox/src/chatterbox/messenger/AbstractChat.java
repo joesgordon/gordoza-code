@@ -1,7 +1,6 @@
 package chatterbox.messenger;
 
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
 import java.util.*;
 
 import org.jutils.ui.event.ItemActionList;
@@ -21,19 +20,16 @@ public abstract class AbstractChat
     private final Map<String, Conversation> conversations;
     /**  */
     private final ItemActionList<Conversation> conversationCreatedListeners;
-    /**  */
-    private final String jvmName;
 
-    /**
-     * @param user *
-     * ************************************************************************
+    /***************************************************************************
+     * @param user
      **************************************************************************/
     public AbstractChat( ChatUser user )
     {
+        this.localUser = user;
+
         this.conversations = new HashMap<String, Conversation>( 100 );
         this.conversationCreatedListeners = new ItemActionList<Conversation>();
-        this.localUser = user;
-        this.jvmName = ManagementFactory.getRuntimeMXBean().getName();
     }
 
     /***************************************************************************
@@ -50,7 +46,7 @@ public abstract class AbstractChat
      **************************************************************************/
     protected final String getNextConversationId()
     {
-        return jvmName + "@" + new Date().getTime();
+        return localUser.userId + "@" + new Date().getTime();
     }
 
     /***************************************************************************

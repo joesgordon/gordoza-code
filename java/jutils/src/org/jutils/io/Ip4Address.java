@@ -2,6 +2,7 @@ package org.jutils.io;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 
 import org.jutils.Utils;
 
@@ -97,5 +98,28 @@ public class Ip4Address
     public void set( Ip4Address address )
     {
         Utils.byteArrayCopy( address.address, 0, this.address, 0, 4 );
+    }
+
+    @Override
+    public boolean equals( Object obj )
+    {
+        if( obj == null )
+        {
+            return false;
+        }
+        else if( obj instanceof Ip4Address )
+        {
+            Ip4Address address = ( Ip4Address )obj;
+
+            return Arrays.equals( this.address, address.address );
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Arrays.hashCode( address );
     }
 }

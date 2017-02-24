@@ -1,4 +1,4 @@
-package chatterbox.model;
+package chatterbox.data.messages;
 
 import chatterbox.data.ChatUser;
 import chatterbox.data.DecoratedText;

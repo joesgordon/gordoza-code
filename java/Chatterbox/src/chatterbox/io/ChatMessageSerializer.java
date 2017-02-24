@@ -8,7 +8,7 @@ import org.jutils.io.IDataStream;
 import chatterbox.ChatterboxConstants;
 import chatterbox.data.ChatUser;
 import chatterbox.data.DecoratedText;
-import chatterbox.model.ChatMessage;
+import chatterbox.data.messages.ChatMessage;
 
 /*******************************************************************************
  * 

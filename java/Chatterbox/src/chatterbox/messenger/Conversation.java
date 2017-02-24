@@ -6,7 +6,7 @@ import java.util.List;
 import org.jutils.ValidationException;
 
 import chatterbox.data.ChatUser;
-import chatterbox.model.ChatMessage;
+import chatterbox.data.messages.ChatMessage;
 
 /*******************************************************************************
  * 

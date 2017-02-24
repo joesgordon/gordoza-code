@@ -6,8 +6,6 @@ import java.util.Date;
 
 import javax.swing.filechooser.FileSystemView;
 
-import org.jutils.io.LogUtils;
-
 public class DefaultExplorerItem implements IExplorerItem
 {
     /**  */
@@ -72,14 +70,6 @@ public class DefaultExplorerItem implements IExplorerItem
         len = fileLen > 0 && len == 0 ? 1 : len;
 
         return file.isDirectory() ? -1 : len;
-    }
-
-    public static void main( String [] args )
-    {
-        DefaultExplorerItem dei = new DefaultExplorerItem( new File(
-            "C:\\Files\\jgordon\\code\\gordoza-code\\java\\AppGallery\\src\\org\\jutils\\appgallery\\AppGalleryIcons.java" ) );
-
-        LogUtils.printDebug( "size: %d", dei.getSizeInKb() );
     }
 
     /***************************************************************************

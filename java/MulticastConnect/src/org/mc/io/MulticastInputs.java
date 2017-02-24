@@ -2,6 +2,7 @@ package org.mc.io;
 
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.Objects;
 
 import org.jutils.io.Ip4Address;
 
@@ -65,5 +66,11 @@ public class MulticastInputs
         }
 
         return false;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash( address, port, nic, ttl );
     }
 }

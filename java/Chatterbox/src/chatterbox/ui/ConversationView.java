@@ -15,6 +15,7 @@ import org.jutils.ui.model.IView;
 
 import chatterbox.data.ChatUser;
 import chatterbox.data.DecoratedText;
+import chatterbox.data.messages.ChatMessage;
 import chatterbox.messenger.Chat;
 import chatterbox.messenger.Conversation;
 import chatterbox.model.*;

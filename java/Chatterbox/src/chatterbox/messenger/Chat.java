@@ -19,7 +19,6 @@ import chatterbox.data.ChatUser;
 import chatterbox.data.ChatterConfig;
 import chatterbox.data.messages.*;
 import chatterbox.io.*;
-import chatterbox.model.ChatMessage;
 
 /*******************************************************************************
  * 
@@ -39,8 +38,6 @@ public class Chat extends AbstractChat
     private TaskRunner userRunner;
     /**  */
     private Thread userThread;
-    /**  */
-    private MulticastInputs config;
 
     /***************************************************************************
      * @param user
@@ -53,7 +50,6 @@ public class Chat extends AbstractChat
         this.defaultConversation = new Conversation( this, "", null );
         this.msgSerializer = new MessageSerializer();
         this.userTask = null;
-        this.config = null;
     }
 
     /***************************************************************************
@@ -62,8 +58,6 @@ public class Chat extends AbstractChat
     @Override
     public void connect( MulticastInputs config ) throws IOException
     {
-        this.config = config;
-
         try
         {
             this.wire = new Multicaster( config, new RawReceiver( this ),
@@ -72,8 +66,6 @@ public class Chat extends AbstractChat
         catch( IOException ex )
         {
             // ex.printStackTrace();
-
-            this.config = null;
 
             throw ex;
         }

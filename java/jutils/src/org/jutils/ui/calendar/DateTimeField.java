@@ -1,10 +1,10 @@
 package org.jutils.ui.calendar;
 
+import java.awt.*;
 import java.time.*;
 
 import javax.swing.JPanel;
 
-import org.jutils.ui.StandardFormView;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.fields.IDataFormField;
 import org.jutils.ui.validation.IValidityChangedListener;
@@ -45,12 +45,20 @@ public class DateTimeField implements IDataFormField<LocalDateTime>
      **************************************************************************/
     private JPanel createView()
     {
-        StandardFormView form = new StandardFormView();
+        JPanel panel = new JPanel( new GridBagLayout() );
+        GridBagConstraints constraints;
 
-        form.addField( timeField );
-        form.addField( null, dateField.getView() );
+        constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets( 4, 4, 4, 4 ), 0, 0 );
+        panel.add( timeField.getView(), constraints );
 
-        return form.getView();
+        constraints = new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets( 4, 0, 4, 4 ), 0, 0 );
+        panel.add( dateField.getView(), constraints );
+
+        return panel;
     }
 
     /***************************************************************************

@@ -38,6 +38,11 @@ public class Layer2d
      **************************************************************************/
     private void createImage()
     {
+        if( graphics != null )
+        {
+            graphics.dispose();
+        }
+
         // img = new BufferedImage( size.width, size.height,
         // BufferedImage.TYPE_INT_RGB );
         img = Utils.createTransparentImage( size.width, size.height );
