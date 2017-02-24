@@ -44,12 +44,13 @@ public class Stopwatch
      **************************************************************************/
     public long stop()
     {
-        long stopTime = System.currentTimeMillis();
+        long now = System.currentTimeMillis();
+        long tempElapsed = now - startTime;
 
-        this.elapsed = stopTime - startTime;
+        this.elapsed += tempElapsed;
         this.state = WatchState.STOPPED;
 
-        return stopTime;
+        return now;
     }
 
     /***************************************************************************
