@@ -1,13 +1,13 @@
-package org.mc.ui;
+package org.jutils.ui.net;
 
 import javax.swing.JComponent;
 
+import org.jutils.io.parsers.MulticastGroupParser;
+import org.jutils.net.MulticastInputs;
 import org.jutils.ui.StandardFormView;
 import org.jutils.ui.event.updater.ReflectiveUpdater;
 import org.jutils.ui.fields.*;
 import org.jutils.ui.model.IDataView;
-import org.mc.io.MulticastInputs;
-import org.mc.io.parsers.MulticastGroupParser;
 
 /*******************************************************************************
  * 

@@ -9,7 +9,7 @@ import org.jutils.ui.event.updater.ReflectiveUpdater;
 import org.jutils.ui.fields.BooleanFormField;
 import org.jutils.ui.fields.StringFormField;
 import org.jutils.ui.model.IDataView;
-import org.mc.ui.MulticastInputsView;
+import org.jutils.ui.net.MulticastInputsView;
 
 import chatterbox.data.ChatterConfig;
 

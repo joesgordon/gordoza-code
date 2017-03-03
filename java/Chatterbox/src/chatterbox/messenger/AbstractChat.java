@@ -3,9 +3,9 @@ package chatterbox.messenger;
 import java.io.IOException;
 import java.util.*;
 
+import org.jutils.net.MulticastInputs;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
-import org.mc.io.MulticastInputs;
 
 import chatterbox.data.ChatUser;
 

@@ -5,17 +5,17 @@ import java.util.Arrays;
 
 import javax.swing.*;
 
+import org.jutils.net.NetMessage;
 import org.jutils.ui.hex.ByteBuffer;
 import org.jutils.ui.hex.HexTable;
 import org.jutils.ui.model.IView;
-import org.mc.McMessage;
 import org.mc.io.TimeDescriptor;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
 public class HexMessagePanel
-    implements IView<JPanel>, ListCellRenderer<McMessage>
+    implements IView<JPanel>, ListCellRenderer<NetMessage>
 {
     /**  */
     private final JPanel view;
@@ -82,7 +82,7 @@ public class HexMessagePanel
 
     @Override
     public Component getListCellRendererComponent(
-        JList<? extends McMessage> list, McMessage value, int index,
+        JList<? extends NetMessage> list, NetMessage value, int index,
         boolean isSelected, boolean cellHasFocus )
     {
         setMessage( value );
@@ -101,7 +101,7 @@ public class HexMessagePanel
         return view;
     }
 
-    public void setMessage( McMessage msg )
+    public void setMessage( NetMessage msg )
     {
         byte[] bytes = msg.contents;
         int len = bytes.length > 0x20 ? 0x20 : bytes.length;

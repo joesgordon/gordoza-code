@@ -1,4 +1,4 @@
-package org.mc.io;
+package org.jutils.net;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -7,7 +7,6 @@ import org.jutils.concurrent.IStoppableTask;
 import org.jutils.concurrent.ITaskStopManager;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
-import org.mc.McMessage;
 
 /*******************************************************************************
  * 
@@ -17,7 +16,7 @@ public class ConnectionReceiver implements IStoppableTask
     /**  */
     private final IConnection connection;
     /**  */
-    private final ItemActionList<McMessage> msgListeners;
+    private final ItemActionList<NetMessage> msgListeners;
     /**  */
     private final ItemActionList<String> errListeners;
 
@@ -41,7 +40,7 @@ public class ConnectionReceiver implements IStoppableTask
         {
             try
             {
-                McMessage msg = connection.rxMessage();
+                NetMessage msg = connection.rxMessage();
                 msgListeners.fireListeners( this, msg );
             }
             catch( SocketTimeoutException ex )
@@ -64,7 +63,7 @@ public class ConnectionReceiver implements IStoppableTask
     /***************************************************************************
      * @param l
      **************************************************************************/
-    public void addMessageListener( ItemActionListener<McMessage> l )
+    public void addMessageListener( ItemActionListener<NetMessage> l )
     {
         msgListeners.addListener( l );
     }

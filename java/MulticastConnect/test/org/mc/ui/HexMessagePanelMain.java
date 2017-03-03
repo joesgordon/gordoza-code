@@ -4,9 +4,9 @@ import java.nio.charset.Charset;
 
 import javax.swing.JFrame;
 
+import org.jutils.net.NetMessage;
 import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
-import org.mc.McMessage;
 
 /*******************************************************************************
  * 
@@ -40,7 +40,7 @@ public class HexMessagePanelMain
 
             byte[] contents = "So long and thanks f".getBytes(
                 Charset.forName( "US-ASCII" ) );
-            McMessage msg = new McMessage( contents );
+            NetMessage msg = new NetMessage( contents );
 
             panel.setMessage( msg );
 

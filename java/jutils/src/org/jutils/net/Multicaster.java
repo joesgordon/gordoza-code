@@ -1,11 +1,10 @@
-package org.mc.io;
+package org.jutils.net;
 
 import java.io.Closeable;
 import java.io.IOException;
 
 import org.jutils.concurrent.Stoppable;
 import org.jutils.ui.event.ItemActionListener;
-import org.mc.McMessage;
 
 /*******************************************************************************
  * 
@@ -28,7 +27,7 @@ public class Multicaster implements Closeable
      * @throws IOException
      **************************************************************************/
     public Multicaster( MulticastInputs socket,
-        ItemActionListener<McMessage> msgListener,
+        ItemActionListener<NetMessage> msgListener,
         ItemActionListener<String> errListener ) throws IOException
     {
         this.connection = new MulticastConnection( socket );

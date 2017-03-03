@@ -1,9 +1,7 @@
-package org.mc.io;
+package org.jutils.net;
 
 import java.io.Closeable;
 import java.io.IOException;
-
-import org.mc.McMessage;
 
 /*******************************************************************************
  * 
@@ -15,11 +13,11 @@ public interface IConnection extends Closeable
      * @return
      * @throws IOException
      **************************************************************************/
-    public McMessage txMessage( byte[] buf ) throws IOException;
+    public NetMessage txMessage( byte [] buf ) throws IOException;
 
     /***************************************************************************
      * @return
      * @throws IOException
      **************************************************************************/
-    public McMessage rxMessage() throws IOException;
+    public NetMessage rxMessage() throws IOException;
 }

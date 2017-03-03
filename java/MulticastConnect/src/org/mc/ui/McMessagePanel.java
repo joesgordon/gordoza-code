@@ -4,13 +4,13 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import org.mc.McMessage;
+import org.jutils.net.NetMessage;
 import org.mc.io.TimeDescriptor;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class McMessagePanel implements ListCellRenderer<McMessage>
+public class McMessagePanel implements ListCellRenderer<NetMessage>
 {
     /**  */
     private final JPanel view;
@@ -84,7 +84,7 @@ public class McMessagePanel implements ListCellRenderer<McMessage>
      **************************************************************************/
     @Override
     public Component getListCellRendererComponent(
-        JList<? extends McMessage> list, McMessage value, int index,
+        JList<? extends NetMessage> list, NetMessage value, int index,
         boolean isSelected, boolean cellHasFocus )
     {
         setMessage( value );
@@ -107,7 +107,7 @@ public class McMessagePanel implements ListCellRenderer<McMessage>
     /***************************************************************************
      * @param msg
      **************************************************************************/
-    public void setMessage( McMessage msg )
+    public void setMessage( NetMessage msg )
     {
         contentsField.setText(
             new String( msg.contents, 0, msg.contents.length - 1 ) );

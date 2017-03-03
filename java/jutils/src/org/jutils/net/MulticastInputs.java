@@ -1,4 +1,4 @@
-package org.mc.io;
+package org.jutils.net;
 
 import java.net.NetworkInterface;
 import java.net.SocketException;

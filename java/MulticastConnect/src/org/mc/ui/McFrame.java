@@ -9,13 +9,11 @@ import javax.swing.*;
 
 import org.jutils.SwingUtils;
 import org.jutils.concurrent.Stoppable;
+import org.jutils.net.*;
 import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.model.IView;
-import org.mc.McMessage;
 import org.mc.McTxThread;
-import org.mc.io.MulticastInputs;
-import org.mc.io.Multicaster;
 
 /*******************************************************************************
  * 
@@ -102,7 +100,7 @@ public class McFrame implements IView<JFrame>
     /***************************************************************************
      * @param msg
      **************************************************************************/
-    public void addMessage( McMessage msg )
+    public void addMessage( NetMessage msg )
     {
         messagesPanel.addMessage( msg );
     }
@@ -172,7 +170,7 @@ public class McFrame implements IView<JFrame>
             {
                 MulticastInputs socket = confPanel.getSocket();
 
-                ItemActionListener<McMessage> rxListener;
+                ItemActionListener<NetMessage> rxListener;
                 ItemActionListener<String> errListener;
 
                 rxListener = ( e ) -> SwingUtilities.invokeLater(

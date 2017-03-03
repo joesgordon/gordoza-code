@@ -8,10 +8,10 @@ import java.util.List;
 import javax.swing.*;
 
 import org.jutils.SwingUtils;
+import org.jutils.net.NetMessage;
 import org.jutils.ui.hex.ByteBuffer;
 import org.jutils.ui.hex.HexPanel;
 import org.jutils.ui.model.IView;
-import org.mc.McMessage;
 
 /*******************************************************************************
  * 
@@ -23,11 +23,11 @@ public class McMessagesPanel implements IView<JPanel>
     /**  */
     private final JCheckBox filterCheckBox;
     /**  */
-    private final JList<McMessage> displayList;
+    private final JList<NetMessage> displayList;
     /**  */
-    private final DefaultListModel<McMessage> msgModel;
+    private final DefaultListModel<NetMessage> msgModel;
     /**  */
-    private final List<McMessage> allMessages;
+    private final List<NetMessage> allMessages;
 
     /***************************************************************************
      * 
@@ -39,10 +39,10 @@ public class McMessagesPanel implements IView<JPanel>
         JButton clearButton = new JButton( "Clear" );
         GridBagConstraints constraints;
 
-        msgModel = new DefaultListModel<McMessage>();
-        allMessages = new ArrayList<McMessage>( 100 );
+        msgModel = new DefaultListModel<NetMessage>();
+        allMessages = new ArrayList<NetMessage>( 100 );
 
-        displayList = new JList<McMessage>( msgModel );
+        displayList = new JList<NetMessage>( msgModel );
         JScrollPane displayScrollPane = new JScrollPane( displayList );
         JScrollBar vScrollBar = displayScrollPane.getVerticalScrollBar();
         filterCheckBox = new JCheckBox( "Do not display sent messages" );
@@ -91,7 +91,7 @@ public class McMessagesPanel implements IView<JPanel>
     {
         msgModel.clear();
 
-        for( McMessage msg : allMessages )
+        for( NetMessage msg : allMessages )
         {
             msgModel.addElement( msg );
         }
@@ -100,7 +100,7 @@ public class McMessagesPanel implements IView<JPanel>
     /***************************************************************************
      * @param msg
      **************************************************************************/
-    public void addMessage( McMessage msg )
+    public void addMessage( NetMessage msg )
     {
         allMessages.add( msg );
         if( !filterCheckBox.isSelected() )
@@ -178,8 +178,8 @@ public class McMessagesPanel implements IView<JPanel>
             {
                 Frame f = SwingUtils.getComponentsFrame( displayList );
                 int index = displayList.locationToIndex( e.getPoint() );
-                ListModel<McMessage> dlm = displayList.getModel();
-                McMessage item = dlm.getElementAt( index );
+                ListModel<NetMessage> dlm = displayList.getModel();
+                NetMessage item = dlm.getElementAt( index );
 
                 displayList.ensureIndexIsVisible( index );
 

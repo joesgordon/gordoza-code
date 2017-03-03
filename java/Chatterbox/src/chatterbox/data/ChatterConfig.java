@@ -1,6 +1,6 @@
 package chatterbox.data;
 
-import org.mc.io.MulticastInputs;
+import org.jutils.net.MulticastInputs;
 
 import chatterbox.ChatterboxConstants;
 

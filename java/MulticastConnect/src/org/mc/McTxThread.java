@@ -6,7 +6,7 @@ import javax.swing.*;
 
 import org.jutils.concurrent.IStoppableTask;
 import org.jutils.concurrent.ITaskStopManager;
-import org.mc.io.IConnection;
+import org.jutils.net.IConnection;
 import org.mc.ui.TxDialog;
 
 /*******************************************************************************

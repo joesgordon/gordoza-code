@@ -6,13 +6,11 @@ import java.util.*;
 import org.jutils.ValidationException;
 import org.jutils.io.*;
 import org.jutils.io.options.OptionsSerializer;
+import org.jutils.net.*;
 import org.jutils.task.TaskError;
 import org.jutils.task.TaskRunner;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
-import org.mc.McMessage;
-import org.mc.io.MulticastInputs;
-import org.mc.io.Multicaster;
 
 import chatterbox.ChatterboxConstants;
 import chatterbox.data.ChatUser;
@@ -335,7 +333,7 @@ public class Chat extends AbstractChat
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class RawReceiver implements ItemActionListener<McMessage>
+    private static class RawReceiver implements ItemActionListener<NetMessage>
     {
         private final Chat chat;
         private final MessageSerializer msgSerializer;
@@ -347,9 +345,9 @@ public class Chat extends AbstractChat
         }
 
         @Override
-        public void actionPerformed( ItemActionEvent<McMessage> event )
+        public void actionPerformed( ItemActionEvent<NetMessage> event )
         {
-            McMessage msg = event.getItem();
+            NetMessage msg = event.getItem();
 
             try( ByteArrayStream byteStream = new ByteArrayStream(
                 msg.contents );

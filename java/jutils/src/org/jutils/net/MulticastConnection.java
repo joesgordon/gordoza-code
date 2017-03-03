@@ -1,10 +1,8 @@
-package org.mc.io;
+package org.jutils.net;
 
 import java.io.IOException;
 import java.net.*;
 import java.util.Arrays;
-
-import org.mc.McMessage;
 
 /*******************************************************************************
  * 
@@ -77,7 +75,7 @@ public class MulticastConnection implements IConnection
      * 
      **************************************************************************/
     @Override
-    public McMessage txMessage( byte[] buf ) throws IOException
+    public NetMessage txMessage( byte[] buf ) throws IOException
     {
         // LogUtils.printDebug( "Sending message..." );
 
@@ -86,7 +84,7 @@ public class MulticastConnection implements IConnection
 
         socket.send( pack );
 
-        McMessage msg = new McMessage( buf );
+        NetMessage msg = new NetMessage( buf );
 
         return msg;
     }
@@ -95,7 +93,7 @@ public class MulticastConnection implements IConnection
      * 
      **************************************************************************/
     @Override
-    public McMessage rxMessage() throws IOException
+    public NetMessage rxMessage() throws IOException
     {
         // LogUtils.printDebug( "Receiving message..." );
 
@@ -103,7 +101,7 @@ public class MulticastConnection implements IConnection
 
         byte[] contents = Arrays.copyOf( rxBuffer, rxPacket.getLength() );
 
-        McMessage msg = new McMessage( contents );
+        NetMessage msg = new NetMessage( contents );
 
         return msg;
     }

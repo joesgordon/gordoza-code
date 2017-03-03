@@ -6,8 +6,9 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import org.jutils.IconConstants;
+import org.jutils.net.MulticastInputs;
 import org.jutils.ui.model.IView;
-import org.mc.io.MulticastInputs;
+import org.jutils.ui.net.MulticastInputsView;
 
 /*******************************************************************************
  * 

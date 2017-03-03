@@ -36,26 +36,34 @@ public class CheckTreeManager implements TreeSelectionListener
         selectionModel.addTreeSelectionListener( this );
     }
 
-    public void selectPath( TreePath path )
+    /***************************************************************************
+     * @param path
+     * @param selected
+     **************************************************************************/
+    public void setPathSelected( TreePath path, boolean selected )
     {
-        boolean selected = selectionModel.isPathSelected( path, true );
-        selectionModel.removeTreeSelectionListener( this );
+        boolean isSelected = selectionModel.isPathSelected( path, true );
 
-        try
+        if( isSelected != selected )
         {
-            if( selected )
+            selectionModel.removeTreeSelectionListener( this );
+
+            try
             {
-                selectionModel.removeSelectionPath( path );
+                if( selected )
+                {
+                    selectionModel.removeSelectionPath( path );
+                }
+                else
+                {
+                    selectionModel.addSelectionPath( path );
+                }
             }
-            else
+            finally
             {
-                selectionModel.addSelectionPath( path );
+                selectionModel.addTreeSelectionListener( this );
+                tree.treeDidChange();
             }
-        }
-        finally
-        {
-            selectionModel.addTreeSelectionListener( this );
-            tree.treeDidChange();
         }
     }
 
@@ -96,40 +104,38 @@ public class CheckTreeManager implements TreeSelectionListener
 
         return path;
     }
-}
 
-class CheckTreeManager_mouseAdapter extends MouseAdapter
-{
-    private CheckTreeManager manager = null;
-
-    private TreePath pressedPath = null;
-
-    public CheckTreeManager_mouseAdapter( CheckTreeManager manager )
+    private final class CheckTreeManager_mouseAdapter extends MouseAdapter
     {
-        this.manager = manager;
-    }
+        private CheckTreeManager manager = null;
 
-    /***************************************************************************
-     * @param me MouseEvent
-     **************************************************************************/
-    @Override
-    public void mousePressed( MouseEvent e )
-    {
-        pressedPath = manager.getPath( e );
-    }
+        private TreePath pressedPath = null;
 
-    /***************************************************************************
-     * @param me MouseEvent
-     **************************************************************************/
-    @Override
-    public void mouseReleased( MouseEvent e )
-    {
-        TreePath releasedPath = manager.getPath( e );
-
-        if( releasedPath != null && releasedPath.equals( pressedPath ) )
+        public CheckTreeManager_mouseAdapter( CheckTreeManager manager )
         {
-            manager.selectPath( releasedPath );
+            this.manager = manager;
         }
-        pressedPath = null;
+
+        @Override
+        public void mousePressed( MouseEvent e )
+        {
+            pressedPath = manager.getPath( e );
+        }
+
+        @Override
+        public void mouseReleased( MouseEvent e )
+        {
+            TreePath releasedPath = manager.getPath( e );
+
+            if( releasedPath != null && releasedPath.equals( pressedPath ) )
+            {
+                boolean isSelected = manager.selectionModel.isPathSelected(
+                    releasedPath );
+                manager.setPathSelected( releasedPath, !isSelected );
+            }
+
+            pressedPath = null;
+        }
     }
+
 }
