@@ -56,4 +56,12 @@ public class Conversation extends AbstractConversation
         chat.removeConversation( this );
         chat = null;
     }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public ChatUser getLocalUser()
+    {
+        return chat.getLocalUser();
+    }
 }

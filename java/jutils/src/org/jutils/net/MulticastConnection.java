@@ -16,7 +16,7 @@ public class MulticastConnection implements IConnection
     /**  */
     private final int port;
     /**  */
-    private final byte[] rxBuffer;
+    private final byte [] rxBuffer;
     /**  */
     private final DatagramPacket rxPacket;
 
@@ -75,7 +75,7 @@ public class MulticastConnection implements IConnection
      * 
      **************************************************************************/
     @Override
-    public NetMessage txMessage( byte[] buf ) throws IOException
+    public NetMessage txMessage( byte [] buf ) throws IOException
     {
         // LogUtils.printDebug( "Sending message..." );
 
@@ -99,7 +99,7 @@ public class MulticastConnection implements IConnection
 
         socket.receive( rxPacket );
 
-        byte[] contents = Arrays.copyOf( rxBuffer, rxPacket.getLength() );
+        byte [] contents = Arrays.copyOf( rxBuffer, rxPacket.getLength() );
 
         NetMessage msg = new NetMessage( contents );
 
@@ -112,7 +112,6 @@ public class MulticastConnection implements IConnection
     @Override
     public void close() throws IOException
     {
-        socket.leaveGroup( address );
         socket.close();
     }
 }

@@ -1,8 +1,7 @@
 package chatterbox.ui;
 
 import java.awt.Dialog.ModalityType;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.IOException;
 
 import javax.swing.*;
@@ -32,25 +31,25 @@ public class ChatFrameView implements IView<JFrame>
     /***************************************************************************
      * 
      **************************************************************************/
-    public ChatFrameView( Chat chat )
+    public ChatFrameView()
     {
         this.frameView = new StandardFrameView();
-        this.chatView = new ChatView( chat );
+        this.chatView = new ChatView();
 
+        frameView.setTitle( "Chatterbox" );
+        frameView.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        frameView.setSize( 800, 450 );
         frameView.setContent( chatView.getView() );
         frameView.setToolbar( createToolbar() );
 
-        JFrame frame = getView();
+        JFrame frame = frameView.getView();
 
         frame.addWindowListener( new FrameListener( this ) );
-
         frame.setIconImages( ChatterboxConstants.getIcons() );
-
-        frame.setTitle( "Chatterbox" );
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JFrame getView()
@@ -68,10 +67,10 @@ public class ChatFrameView implements IView<JFrame>
         Action action;
         Icon icon;
 
-        // icon = IconConstants.getIcon( IconConstants.CLOCK_16 );
-        // action = new ActionAdapter( new HistoryListener( this ),
-        // "View Chat History", icon );
-        // SwingUtils.addActionToToolbar( toolbar, action );
+        icon = IconConstants.getIcon( IconConstants.CALENDAR_16 );
+        action = new ActionAdapter( new HistoryListener( this ),
+            "View Chat History", icon );
+        SwingUtils.addActionToToolbar( toolbar, action );
 
         icon = IconConstants.getIcon( IconConstants.CONFIG_16 );
         action = new ActionAdapter( ( e ) -> showConfigAndReconnect(),
@@ -119,6 +118,9 @@ public class ChatFrameView implements IView<JFrame>
         return config;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private void showConfigAndReconnect()
     {
         OptionsSerializer<ChatterConfig> options = ChatterboxConstants.getOptions();
@@ -131,9 +133,18 @@ public class ChatFrameView implements IView<JFrame>
         }
     }
 
+    /***************************************************************************
+     * @param oldCfg
+     * @param newCfg
+     **************************************************************************/
     private void reconnect( ChatterConfig oldCfg, ChatterConfig newCfg )
     {
-        Chat chat = chatView.getChat();
+        Chat chat = chatView.getData();
+
+        if( !newCfg.displayName.equals( oldCfg.displayName ) )
+        {
+            chat.getLocalUser().displayName = newCfg.displayName;
+        }
 
         if( !newCfg.chatCfg.equals( oldCfg.chatCfg ) )
         {
@@ -152,10 +163,15 @@ public class ChatFrameView implements IView<JFrame>
             }
         }
 
-        if( !newCfg.displayName.equals( oldCfg.displayName ) )
-        {
-            chat.getLocalUser().displayName = newCfg.displayName;
-        }
+        getView().setTitle( "Chatterbox - " + chat.getLocalUser().userId );
+    }
+
+    /***************************************************************************
+     * @param chat
+     **************************************************************************/
+    public void setChat( Chat chat )
+    {
+        chatView.setData( chat );
     }
 
     /***************************************************************************
@@ -173,43 +189,33 @@ public class ChatFrameView implements IView<JFrame>
         @Override
         public void windowClosing( WindowEvent e )
         {
-            // showMessage();
-            view.chatView.getChat().disconnect();
-        }
+            Chat chat = view.chatView.getData();
 
-        private void showMessage()
-        {
-            JOptionPane pane = new JOptionPane( "Disconnecting",
-                JOptionPane.INFORMATION_MESSAGE );
-
-            JDialog dialog = pane.createDialog( view.getView(),
-                "Disconnecting" );
-
-            dialog.setModalityType( ModalityType.MODELESS );
-
-            dialog.pack();
-            dialog.setVisible( true );
+            if( chat != null )
+            {
+                chat.disconnect();
+            }
         }
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    // private static class HistoryListener implements ActionListener
-    // {
-    // private final ChatFrameView view;
-    //
-    // public HistoryListener( ChatFrameView view )
-    // {
-    // this.view = view;
-    // }
-    //
-    // @Override
-    // public void actionPerformed( ActionEvent e )
-    // {
-    // JOptionPane.showMessageDialog( view.getView(),
-    // "This functionality is not yet supported. Good try, though.",
-    // "Not Supported", JOptionPane.ERROR_MESSAGE );
-    // }
-    // }
+    private static class HistoryListener implements ActionListener
+    {
+        private final ChatFrameView view;
+
+        public HistoryListener( ChatFrameView view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            JOptionPane.showMessageDialog( view.getView(),
+                "This functionality is not yet supported. Good try, though.",
+                "Not Supported", JOptionPane.ERROR_MESSAGE );
+        }
+    }
 }

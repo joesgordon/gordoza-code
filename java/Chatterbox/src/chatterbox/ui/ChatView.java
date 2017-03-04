@@ -1,8 +1,11 @@
 package chatterbox.ui;
 
-import javax.swing.JComponent;
+import java.awt.*;
 
-import org.jutils.ui.model.IView;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+
+import org.jutils.ui.model.IDataView;
 
 import chatterbox.messenger.Chat;
 import chatterbox.messenger.Conversation;
@@ -10,10 +13,14 @@ import chatterbox.messenger.Conversation;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ChatView implements IView<JComponent>
+public class ChatView implements IDataView<Chat>
 {
     /**  */
-    private final ConversationView conversationPanel;
+    private final JPanel view;
+    /**  */
+    private final ConversationView defaultConversationView;
+    /**  */
+    private final ConversationsView conversationsView;
 
     /**  */
     private Chat chat;
@@ -21,21 +28,36 @@ public class ChatView implements IView<JComponent>
     /***************************************************************************
      * 
      **************************************************************************/
-    public ChatView( Chat chat )
+    public ChatView()
     {
-        this.chat = chat;
-
-        this.conversationPanel = new ConversationView( chat );
-
-        conversationPanel.setData( chat.getDefaultConversation() );
+        this.defaultConversationView = new ConversationView();
+        this.conversationsView = new ConversationsView();
+        this.view = createView();
     }
 
     /***************************************************************************
-     * 
+     * @return
      **************************************************************************/
-    public Chat getChat()
+    private JPanel createView()
     {
-        return chat;
+        JPanel panel = new JPanel( new GridBagLayout() );
+        GridBagConstraints constraints;
+
+        conversationsView.getView().setMinimumSize( new Dimension( 250, 250 ) );
+        conversationsView.getView().setPreferredSize(
+            new Dimension( 200, 250 ) );
+
+        constraints = new GridBagConstraints( 0, 0, 1, 1, 0.0, 1.0,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 10, 10, 10, 10 ), 0, 0 );
+        panel.add( conversationsView.getView(), constraints );
+
+        constraints = new GridBagConstraints( 1, 0, 1, 1, 1.0, 1.0,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets( 10, 0, 10, 10 ), 0, 0 );
+        panel.add( defaultConversationView.getView(), constraints );
+
+        return panel;
     }
 
     /***************************************************************************
@@ -43,7 +65,7 @@ public class ChatView implements IView<JComponent>
      **************************************************************************/
     public ConversationView createConversationView( Conversation conversation )
     {
-        ConversationView cv = new ConversationView( chat );
+        ConversationView cv = new ConversationView();
 
         cv.setData( conversation );
 
@@ -51,19 +73,31 @@ public class ChatView implements IView<JComponent>
     }
 
     /***************************************************************************
-     * 
-     **************************************************************************/
-    public ConversationView getDefaultConversationView()
-    {
-        return conversationPanel;
-    }
-
-    /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JComponent getView()
     {
-        return conversationPanel.getView();
+        return view;
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public Chat getData()
+    {
+        return chat;
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public void setData( Chat chat )
+    {
+        this.chat = chat;
+
+        defaultConversationView.setData( chat.getDefaultConversation() );
     }
 }

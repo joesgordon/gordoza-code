@@ -21,11 +21,11 @@ public class ChatterConfigView implements IDataView<ChatterConfig>
     /**  */
     private final StandardFormView form;
     /**  */
-    private final MulticastInputsView inputsView;
-    /**  */
     private final StringFormField nameField;
     /**  */
     private final BooleanFormField popupField;
+    /**  */
+    private final MulticastInputsView inputsView;
 
     /**  */
     private ChatterConfig config;
@@ -36,8 +36,8 @@ public class ChatterConfigView implements IDataView<ChatterConfig>
     public ChatterConfigView()
     {
         this.form = new StandardFormView();
-        this.inputsView = new MulticastInputsView();
-        this.nameField = new StringFormField( "Name" );
+        this.inputsView = new MulticastInputsView( false );
+        this.nameField = new StringFormField( "Display Name" );
         this.popupField = new BooleanFormField( "Show Popups" );
 
         form.addField( nameField );

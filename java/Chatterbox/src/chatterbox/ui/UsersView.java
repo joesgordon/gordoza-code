@@ -1,7 +1,6 @@
 package chatterbox.ui;
 
-import java.awt.Component;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import org.jutils.ui.TitleView;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.model.*;
@@ -20,10 +18,10 @@ import chatterbox.data.ChatUser;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class UserView implements IDataView<List<ChatUser>>
+public class UsersView implements IDataView<List<ChatUser>>
 {
     /**  */
-    private final TitleView view;
+    private final JPanel view;
     /**  */
     private final CollectionListModel<ChatUser> userModel;
     /**  */
@@ -38,9 +36,9 @@ public class UserView implements IDataView<List<ChatUser>>
     /***************************************************************************
      * 
      **************************************************************************/
-    public UserView()
+    public UsersView()
     {
-        this.view = new TitleView();
+        this.view = new JPanel( new BorderLayout() );
         this.userModel = new CollectionListModel<>();
         this.userList = new JList<>( userModel );
 
@@ -57,8 +55,8 @@ public class UserView implements IDataView<List<ChatUser>>
         userList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
         userList.addMouseListener( new UsersMouseListener( this ) );
 
-        view.setTitle( "Users" );
-        view.setComponent( userScrollPane );
+        view.add( userScrollPane, BorderLayout.CENTER );
+        view.setBorder( BorderFactory.createEtchedBorder() );
     }
 
     /***************************************************************************
@@ -67,7 +65,7 @@ public class UserView implements IDataView<List<ChatUser>>
     @Override
     public Component getView()
     {
-        return view.getView();
+        return view;
     }
 
     /***************************************************************************
@@ -110,9 +108,9 @@ public class UserView implements IDataView<List<ChatUser>>
      **************************************************************************/
     private static class UsersMouseListener extends MouseAdapter
     {
-        private final UserView view;
+        private final UsersView view;
 
-        public UsersMouseListener( UserView view )
+        public UsersMouseListener( UsersView view )
         {
             this.view = view;
         }

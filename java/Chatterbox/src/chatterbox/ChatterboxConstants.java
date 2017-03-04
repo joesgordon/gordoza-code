@@ -1,7 +1,9 @@
 package chatterbox;
 
 import java.awt.Image;
-import java.io.File;
+import java.io.*;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.*;
 
 import org.jutils.IconConstants;
@@ -65,6 +67,69 @@ public class ChatterboxConstants
      **************************************************************************/
     public static ChatUser createDefaultUser()
     {
-        return new ChatUser( System.getProperty( "user.name" ) );
+        String system = getHostname();
+        String username = System.getProperty( "user.name" );
+        String userId = username + "@" + system;
+        ChatUser user = new ChatUser( userId );
+
+        user.displayName = getOptions().getOptions().displayName;
+
+        return user;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private static String getHostname()
+    {
+        Map<String, String> env = System.getenv();
+
+        if( env.containsKey( "COMPUTERNAME" ) )
+        {
+            return env.get( "COMPUTERNAME" );
+        }
+        else if( env.containsKey( "HOSTNAME" ) )
+        {
+            return env.get( "HOSTNAME" );
+        }
+        else
+        {
+            try
+            {
+                InetAddress addr = InetAddress.getLocalHost();
+                return addr.getHostName();
+            }
+            catch( UnknownHostException ex )
+            {
+                try
+                {
+                    ProcessBuilder pb = new ProcessBuilder( "hostname" );
+                    Process process = pb.start();
+                    String host = null;
+
+                    try( InputStream is = process.getInputStream();
+                         InputStreamReader isr = new InputStreamReader( is );
+                         BufferedReader br = new BufferedReader( isr ) )
+                    {
+                        host = br.readLine();
+                    }
+
+                    process.waitFor();
+
+                    if( host == null )
+                    {
+                        return "Unknown Computer";
+                    }
+                    else
+                    {
+                        return host.trim();
+                    }
+                }
+                catch( IOException | InterruptedException e )
+                {
+                    return "Unknown Computer";
+                }
+            }
+        }
     }
 }

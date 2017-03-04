@@ -33,6 +33,11 @@ public class MulticastInputsView implements IDataView<MulticastInputs>
      **************************************************************************/
     public MulticastInputsView()
     {
+        this( true );
+    }
+
+    public MulticastInputsView( boolean showTtl )
+    {
         this.form = new StandardFormView();
         this.addressField = new Ip4AddressField( "Multicast Group",
             new MulticastGroupParser() );
@@ -43,7 +48,10 @@ public class MulticastInputsView implements IDataView<MulticastInputs>
         form.addField( addressField );
         form.addField( portField );
         form.addField( nicField );
-        form.addField( ttlField );
+        if( showTtl )
+        {
+            form.addField( ttlField );
+        }
 
         setData( new MulticastInputs() );
 

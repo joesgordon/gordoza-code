@@ -8,7 +8,7 @@ import org.jutils.appgallery.ILibraryApp;
 import org.jutils.ui.app.IFrameApp;
 
 import chatterbox.ChatterboxConstants;
-import chatterbox.messenger.Chat;
+import chatterbox.data.ChatUser;
 
 //TODO comments
 
@@ -41,9 +41,12 @@ public class ChatterboxApp implements ILibraryApp
     @Override
     public JFrame createApp()
     {
-        IFrameApp frameApp = new chatterbox.ChatterboxApp(
-            new Chat( ChatterboxConstants.createDefaultUser() ) );
+        ChatUser user = ChatterboxConstants.createDefaultUser();
+        IFrameApp frameApp = new chatterbox.ChatterboxApp( user );
+        JFrame frame = frameApp.createFrame();
 
-        return frameApp.createFrame();
+        frameApp.finalizeGui();
+
+        return frame;
     }
 }

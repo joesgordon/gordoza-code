@@ -7,13 +7,13 @@ import org.jutils.Utils;
  ******************************************************************************/
 public class ChatUser
 {
-    /** The name of the user on the system. */
+    /** The name of the user on the system (e.g. user@system). */
     public final String userId;
-    /**  */
+    /** The name the user has chosen for their default. */
     public String displayName;
-    /**  */
+    /** The name the local user has chosen for the remote user. */
     public String nickName;
-    /**  */
+    /** {@code true} if the user has been active recently. */
     public boolean available;
 
     /***************************************************************************
@@ -31,8 +31,9 @@ public class ChatUser
     public ChatUser( String userId, String displayName )
     {
         this.userId = userId;
-        this.available = true;
         this.displayName = displayName;
+        this.nickName = displayName;
+        this.available = true;
     }
 
     /***************************************************************************

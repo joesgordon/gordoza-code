@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.text.*;
 
 import org.jutils.Utils;
+import org.jutils.ui.TitleView;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.model.IDataView;
@@ -16,9 +17,9 @@ import org.jutils.ui.model.IView;
 import chatterbox.data.ChatUser;
 import chatterbox.data.DecoratedText;
 import chatterbox.data.messages.ChatMessage;
-import chatterbox.messenger.Chat;
 import chatterbox.messenger.Conversation;
-import chatterbox.model.*;
+import chatterbox.model.ChangeType;
+import chatterbox.model.IUserListener;
 
 /*******************************************************************************
  * 
@@ -30,13 +31,13 @@ public class ConversationView implements IDataView<Conversation>
     // -------------------------------------------------------------------------
 
     /**  */
-    private final JPanel view;
+    private final TitleView view;
     /**  */
     private final AppendableTextPane chatEditorPane;
     /**  */
     private final DecoratedTextView textView;
     /**  */
-    private final UserView usersView;
+    private final UsersView usersView;
 
     // -------------------------------------------------------------------------
     // Helper members
@@ -56,20 +57,15 @@ public class ConversationView implements IDataView<Conversation>
     /**  */
     private final ItemActionListener<ChatMessage> messageReceivedListener;
 
-    /**  */
-    private final Chat chat;
-
     /***************************************************************************
      * @param showUserPanel
      **************************************************************************/
-    public ConversationView( Chat chat )
+    public ConversationView()
     {
-        this.chat = chat;
-
         this.chatEditorPane = new AppendableTextPane();
         this.textView = new DecoratedTextView();
-        this.usersView = new UserView();
-        this.view = createView();
+        this.usersView = new UsersView();
+        this.view = new TitleView( "", createView() );
 
         this.dateFormatter = new SimpleDateFormat( "(MM-dd-yy HH:mm:ss)" );
 
@@ -167,7 +163,7 @@ public class ConversationView implements IDataView<Conversation>
     {
         StyledDocument doc = chatEditorPane.getView().getStyledDocument();
         SimpleAttributeSet a = new SimpleAttributeSet();
-        ChatUser localUser = chat.getLocalUser();
+        ChatUser localUser = conversation.getLocalUser();
         boolean isLocal = localUser.equals( message.sender );
         Color fg = isLocal ? Color.blue : Color.red;
         String username = isLocal
@@ -201,7 +197,7 @@ public class ConversationView implements IDataView<Conversation>
     @Override
     public JComponent getView()
     {
-        return view;
+        return view.getView();
     }
 
     /***************************************************************************
@@ -220,6 +216,8 @@ public class ConversationView implements IDataView<Conversation>
     public void setData( Conversation conversation )
     {
         this.conversation = conversation;
+
+        view.setTitle( conversation.getConversationId() );
 
         usersView.setData( conversation.getUsers() );
 

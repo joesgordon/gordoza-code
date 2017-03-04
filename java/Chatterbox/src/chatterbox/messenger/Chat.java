@@ -51,7 +51,7 @@ public class Chat extends AbstractChat
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void connect( MulticastInputs config ) throws IOException
@@ -77,6 +77,9 @@ public class Chat extends AbstractChat
         // getLocalUser().displayName = config.displayName;
     }
 
+    /***************************************************************************
+     * @param errorMessage
+     **************************************************************************/
     private void displayErrorMessage( String errorMessage )
     {
         // TODO Auto-generated method stub

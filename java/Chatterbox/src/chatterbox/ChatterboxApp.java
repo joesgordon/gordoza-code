@@ -9,6 +9,7 @@ import org.jutils.io.options.OptionsSerializer;
 import org.jutils.ui.ExitListener;
 import org.jutils.ui.app.IFrameApp;
 
+import chatterbox.data.ChatUser;
 import chatterbox.data.ChatterConfig;
 import chatterbox.messenger.Chat;
 import chatterbox.ui.ChatFrameView;
@@ -19,42 +20,41 @@ import chatterbox.ui.ChatFrameView;
 public class ChatterboxApp implements IFrameApp
 {
     /**  */
-    private final Chat chat;
+    private final ChatUser user;
+
     /**  */
     private ChatFrameView frameView;
 
-    /**************************************************************************
-     * @param chat
+    /***************************************************************************
+     * @param user
      **************************************************************************/
-    public ChatterboxApp( Chat chat )
+    public ChatterboxApp( ChatUser user )
     {
-        this.chat = chat;
+        this.user = user;
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JFrame createFrame()
     {
-        this.frameView = new ChatFrameView( chat );
+        this.frameView = new ChatFrameView();
 
         JFrame frame = frameView.getView();
-
-        frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-        frame.setSize( 550, 450 );
 
         return frame;
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void finalizeGui()
     {
         OptionsSerializer<ChatterConfig> options = ChatterboxConstants.getOptions();
         ChatterConfig config = options.getOptions();
+        Chat chat = new Chat( user );
 
         boolean connected = false;
 
@@ -63,6 +63,7 @@ public class ChatterboxApp implements IFrameApp
             try
             {
                 chat.connect( config.chatCfg );
+                frameView.setChat( chat );
 
                 connected = true;
             }
