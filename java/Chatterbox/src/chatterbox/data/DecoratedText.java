@@ -11,4 +11,13 @@ public class DecoratedText
     public AttributeSet attributes;
     /**  */
     public String text;
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public String toString()
+    {
+        return text;
+    }
 }

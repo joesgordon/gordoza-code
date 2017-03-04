@@ -8,7 +8,8 @@ import org.jutils.ui.event.ItemActionListener;
 
 import chatterbox.data.ChatUser;
 import chatterbox.data.messages.ChatMessage;
-import chatterbox.model.*;
+import chatterbox.model.ChangeType;
+import chatterbox.model.IUserListener;
 
 /***************************************************************************
  * 
@@ -124,7 +125,7 @@ public abstract class AbstractConversation
     /***************************************************************************
      * 
      **************************************************************************/
-    public void setUserAvailable( ChatUser user, boolean available )
+    public void setUserAvailable( ChatUser user )
     {
         int index = users.indexOf( user );
         if( index > -1 )

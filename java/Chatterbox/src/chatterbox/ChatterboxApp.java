@@ -10,7 +10,7 @@ import org.jutils.ui.ExitListener;
 import org.jutils.ui.app.IFrameApp;
 
 import chatterbox.data.ChatUser;
-import chatterbox.data.ChatterConfig;
+import chatterbox.data.ChatterboxOptions;
 import chatterbox.messenger.Chat;
 import chatterbox.ui.ChatFrameView;
 
@@ -52,8 +52,8 @@ public class ChatterboxApp implements IFrameApp
     @Override
     public void finalizeGui()
     {
-        OptionsSerializer<ChatterConfig> options = ChatterboxConstants.getOptions();
-        ChatterConfig config = options.getOptions();
+        OptionsSerializer<ChatterboxOptions> options = ChatterboxConstants.getOptions();
+        ChatterboxOptions config = options.getOptions();
         Chat chat = new Chat( user );
 
         boolean connected = false;

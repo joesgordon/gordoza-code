@@ -11,12 +11,12 @@ import org.jutils.ui.fields.StringFormField;
 import org.jutils.ui.model.IDataView;
 import org.jutils.ui.net.MulticastInputsView;
 
-import chatterbox.data.ChatterConfig;
+import chatterbox.data.ChatterboxOptions;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ChatterConfigView implements IDataView<ChatterConfig>
+public class ChatterConfigView implements IDataView<ChatterboxOptions>
 {
     /**  */
     private final StandardFormView form;
@@ -28,7 +28,7 @@ public class ChatterConfigView implements IDataView<ChatterConfig>
     private final MulticastInputsView inputsView;
 
     /**  */
-    private ChatterConfig config;
+    private ChatterboxOptions config;
 
     /***************************************************************************
      * 
@@ -47,7 +47,7 @@ public class ChatterConfigView implements IDataView<ChatterConfig>
         inputsView.getView().setBorder(
             new TitledBorder( "Connection Options" ) );
 
-        setData( new ChatterConfig() );
+        setData( new ChatterboxOptions() );
 
         nameField.setUpdater(
             new ReflectiveUpdater<>( this, "config.displayName" ) );
@@ -68,7 +68,7 @@ public class ChatterConfigView implements IDataView<ChatterConfig>
      * 
      **************************************************************************/
     @Override
-    public ChatterConfig getData()
+    public ChatterboxOptions getData()
     {
         return config;
     }
@@ -77,7 +77,7 @@ public class ChatterConfigView implements IDataView<ChatterConfig>
      * 
      **************************************************************************/
     @Override
-    public void setData( ChatterConfig config )
+    public void setData( ChatterboxOptions config )
     {
         this.config = config;
 

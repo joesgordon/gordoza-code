@@ -14,7 +14,7 @@ import org.jutils.ui.event.ItemActionListener;
 
 import chatterbox.ChatterboxConstants;
 import chatterbox.data.ChatUser;
-import chatterbox.data.ChatterConfig;
+import chatterbox.data.ChatterboxOptions;
 import chatterbox.data.messages.*;
 import chatterbox.io.*;
 
@@ -156,7 +156,7 @@ public class Chat extends AbstractChat
     /***************************************************************************
      * @param message
      **************************************************************************/
-    public void setUserAvailable( ChatUser user, boolean available )
+    public void setUserAvailable( ChatUser user )
     {
         ChatUser localMe = getLocalUser();
 
@@ -171,7 +171,7 @@ public class Chat extends AbstractChat
             {
                 localMe.displayName = user.displayName;
 
-                OptionsSerializer<ChatterConfig> options;
+                OptionsSerializer<ChatterboxOptions> options;
 
                 options = ChatterboxConstants.getOptions();
                 options.getOptions().displayName = user.displayName;
@@ -185,7 +185,7 @@ public class Chat extends AbstractChat
 
         for( Conversation conv : conversations )
         {
-            conv.setUserAvailable( user, available );
+            conv.setUserAvailable( user );
         }
 
         if( !defaultConversation.getUsers().contains( user ) )
@@ -193,7 +193,7 @@ public class Chat extends AbstractChat
             defaultConversation.addUser( user );
         }
 
-        defaultConversation.setUserAvailable( user, available );
+        defaultConversation.setUserAvailable( user );
 
         userTask.markSeen( user );
     }
@@ -386,7 +386,7 @@ public class Chat extends AbstractChat
                 {
                     UserAvailableMessage message = msgSerializer.userAvailableMessageSerializer.read(
                         stream );
-                    chat.setUserAvailable( message.user, true );
+                    chat.setUserAvailable( message.user );
                     break;
                 }
                 case UserLeft:

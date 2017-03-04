@@ -15,7 +15,7 @@ import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.model.IView;
 
 import chatterbox.ChatterboxConstants;
-import chatterbox.data.ChatterConfig;
+import chatterbox.data.ChatterboxOptions;
 import chatterbox.messenger.Chat;
 
 /*******************************************************************************
@@ -91,16 +91,16 @@ public class ChatFrameView implements IView<JFrame>
     /***************************************************************************
      * @return {@code true} if the user clicks "OK", {@code false} otherwise.
      **************************************************************************/
-    public ChatterConfig showConfig()
+    public ChatterboxOptions showConfig()
     {
         ChatterConfigView configView = new ChatterConfigView();
         OkDialogView dialogView = new OkDialogView( getView(),
             configView.getView(), ModalityType.DOCUMENT_MODAL,
             OkDialogButtons.OK_CANCEL );
 
-        OptionsSerializer<ChatterConfig> options = ChatterboxConstants.getOptions();
-        ChatterConfig config = options.getOptions();
-        ChatterConfig newConfig = new ChatterConfig( config );
+        OptionsSerializer<ChatterboxOptions> options = ChatterboxConstants.getOptions();
+        ChatterboxOptions config = options.getOptions();
+        ChatterboxOptions newConfig = new ChatterboxOptions( config );
 
         configView.setData( newConfig );
 
@@ -123,9 +123,9 @@ public class ChatFrameView implements IView<JFrame>
      **************************************************************************/
     private void showConfigAndReconnect()
     {
-        OptionsSerializer<ChatterConfig> options = ChatterboxConstants.getOptions();
-        ChatterConfig oldConfig = options.getOptions();
-        ChatterConfig newConfig = showConfig();
+        OptionsSerializer<ChatterboxOptions> options = ChatterboxConstants.getOptions();
+        ChatterboxOptions oldConfig = options.getOptions();
+        ChatterboxOptions newConfig = showConfig();
 
         if( newConfig != null )
         {
@@ -137,7 +137,7 @@ public class ChatFrameView implements IView<JFrame>
      * @param oldCfg
      * @param newCfg
      **************************************************************************/
-    private void reconnect( ChatterConfig oldCfg, ChatterConfig newCfg )
+    private void reconnect( ChatterboxOptions oldCfg, ChatterboxOptions newCfg )
     {
         Chat chat = chatView.getData();
 

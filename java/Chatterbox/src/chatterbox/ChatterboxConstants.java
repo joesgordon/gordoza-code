@@ -11,7 +11,7 @@ import org.jutils.io.IOUtils;
 import org.jutils.io.options.OptionsSerializer;
 
 import chatterbox.data.ChatUser;
-import chatterbox.data.ChatterConfig;
+import chatterbox.data.ChatterboxOptions;
 
 /*******************************************************************************
  * 
@@ -28,16 +28,16 @@ public class ChatterboxConstants
     public static final TimeZone UTC = TimeZone.getTimeZone( "UTC" );
 
     /**  */
-    private static OptionsSerializer<ChatterConfig> options;
+    private static OptionsSerializer<ChatterboxOptions> options;
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    public static OptionsSerializer<ChatterConfig> getOptions()
+    public static OptionsSerializer<ChatterboxOptions> getOptions()
     {
         if( options == null )
         {
-            options = OptionsSerializer.getOptions( ChatterConfig.class,
+            options = OptionsSerializer.getOptions( ChatterboxOptions.class,
                 USER_FILE );
         }
 
