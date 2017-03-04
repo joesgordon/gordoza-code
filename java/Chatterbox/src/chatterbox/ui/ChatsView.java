@@ -12,7 +12,7 @@ import chatterbox.messenger.Chat;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ConversationsView implements IDataView<Chat>
+public class ChatsView implements IDataView<Chat>
 {
     /**  */
     private final JPanel view;
@@ -20,7 +20,7 @@ public class ConversationsView implements IDataView<Chat>
     /**  */
     private Chat chat;
 
-    public ConversationsView()
+    public ChatsView()
     {
         this.view = createView();
     }

@@ -12,7 +12,7 @@ import org.jutils.ui.app.IFrameApp;
 import chatterbox.data.ChatUser;
 import chatterbox.data.ChatterboxOptions;
 import chatterbox.messenger.Chat;
-import chatterbox.ui.ChatFrameView;
+import chatterbox.ui.ChatterboxFrameView;
 
 /*******************************************************************************
  * 
@@ -23,7 +23,7 @@ public class ChatterboxApp implements IFrameApp
     private final ChatUser user;
 
     /**  */
-    private ChatFrameView frameView;
+    private ChatterboxFrameView frameView;
 
     /***************************************************************************
      * @param user
@@ -39,7 +39,7 @@ public class ChatterboxApp implements IFrameApp
     @Override
     public JFrame createFrame()
     {
-        this.frameView = new ChatFrameView();
+        this.frameView = new ChatterboxFrameView();
 
         JFrame frame = frameView.getView();
 

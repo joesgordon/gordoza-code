@@ -16,7 +16,7 @@ import chatterbox.data.ChatterboxOptions;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ChatterConfigView implements IDataView<ChatterboxOptions>
+public class ChatterboxOptionsView implements IDataView<ChatterboxOptions>
 {
     /**  */
     private final StandardFormView form;
@@ -33,7 +33,7 @@ public class ChatterConfigView implements IDataView<ChatterboxOptions>
     /***************************************************************************
      * 
      **************************************************************************/
-    public ChatterConfigView()
+    public ChatterboxOptionsView()
     {
         this.form = new StandardFormView();
         this.inputsView = new MulticastInputsView( false );
