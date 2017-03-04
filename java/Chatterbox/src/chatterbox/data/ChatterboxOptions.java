@@ -19,7 +19,7 @@ public class ChatterboxOptions
     /**  */
     public boolean isAway;
     /**  */
-    public final List<ConversationInfo> activeConversations;
+    public final List<ChatInfo> activeConversations;
     /**  */
     public final List<UserOption> userOptions;
     /**  */
@@ -52,9 +52,9 @@ public class ChatterboxOptions
 
         if( cfg.activeConversations != null )
         {
-            for( ConversationInfo ci : cfg.activeConversations )
+            for( ChatInfo ci : cfg.activeConversations )
             {
-                this.activeConversations.add( new ConversationInfo( ci ) );
+                this.activeConversations.add( new ChatInfo( ci ) );
             }
         }
         if( cfg.userOptions != null )

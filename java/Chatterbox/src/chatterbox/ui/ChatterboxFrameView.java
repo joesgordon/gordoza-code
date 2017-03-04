@@ -162,8 +162,6 @@ public class ChatterboxFrameView implements IView<JFrame>
                 return;
             }
         }
-
-        getView().setTitle( "Chatterbox - " + chat.getLocalUser().userId );
     }
 
     /***************************************************************************
@@ -172,6 +170,8 @@ public class ChatterboxFrameView implements IView<JFrame>
     public void setChat( Chat chat )
     {
         chatView.setData( chat );
+
+        getView().setTitle( "Chatterbox - " + chat.getLocalUser().userId );
     }
 
     /***************************************************************************

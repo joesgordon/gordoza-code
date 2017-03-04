@@ -18,7 +18,7 @@ public class ChatterboxView implements IDataView<Chat>
     /**  */
     private final JPanel view;
     /**  */
-    private final ConversationView defaultConversationView;
+    private final ChatView defaultConversationView;
     /**  */
     private final ChatsView conversationsView;
 
@@ -30,7 +30,7 @@ public class ChatterboxView implements IDataView<Chat>
      **************************************************************************/
     public ChatterboxView()
     {
-        this.defaultConversationView = new ConversationView();
+        this.defaultConversationView = new ChatView();
         this.conversationsView = new ChatsView();
         this.view = createView();
     }
@@ -63,9 +63,9 @@ public class ChatterboxView implements IDataView<Chat>
     /***************************************************************************
      * 
      **************************************************************************/
-    public ConversationView createConversationView( Conversation conversation )
+    public ChatView createConversationView( Conversation conversation )
     {
-        ConversationView cv = new ConversationView();
+        ChatView cv = new ChatView();
 
         cv.setData( conversation );
 
