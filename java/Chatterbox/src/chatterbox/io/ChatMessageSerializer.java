@@ -6,7 +6,6 @@ import org.jutils.io.IDataSerializer;
 import org.jutils.io.IDataStream;
 
 import chatterbox.ChatterboxConstants;
-import chatterbox.data.ChatUser;
 import chatterbox.data.DecoratedText;
 import chatterbox.data.messages.ChatMessage;
 
@@ -18,8 +17,6 @@ public class ChatMessageSerializer implements IDataSerializer<ChatMessage>
     /**  */
     private final StringSerializer stringSerializer;
     /**  */
-    private final UserSerializer userSerializer;
-    /**  */
     private final AttributeSetSerializer attributeSerializer;
 
     /***************************************************************************
@@ -28,7 +25,6 @@ public class ChatMessageSerializer implements IDataSerializer<ChatMessage>
     public ChatMessageSerializer()
     {
         this.stringSerializer = new StringSerializer();
-        this.userSerializer = new UserSerializer();
         this.attributeSerializer = new AttributeSetSerializer();
     }
 
@@ -41,12 +37,12 @@ public class ChatMessageSerializer implements IDataSerializer<ChatMessage>
         String conversationId;
         long txTime;
         long rxTime = ChatterboxConstants.now();
-        ChatUser sender;
+        String sender;
         DecoratedText text = new DecoratedText();
 
         conversationId = stringSerializer.read( stream );
         txTime = stream.readLong();
-        sender = userSerializer.read( stream );
+        sender = stringSerializer.read( stream );
         text.text = stringSerializer.read( stream );
         text.attributes = attributeSerializer.read( stream );
 
@@ -65,7 +61,7 @@ public class ChatMessageSerializer implements IDataSerializer<ChatMessage>
     {
         stringSerializer.write( message.conversation, stream );
         stream.writeLong( ChatterboxConstants.now() );
-        userSerializer.write( message.sender, stream );
+        stringSerializer.write( message.sender, stream );
         stringSerializer.write( message.text.text, stream );
         attributeSerializer.write( message.text.attributes, stream );
     }

@@ -1,7 +1,8 @@
 package chatterbox.messenger;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jutils.ValidationException;
 import org.jutils.io.*;
@@ -228,18 +229,13 @@ public class Chat extends AbstractChat
      **************************************************************************/
     private void receiveMessage( ChatMessage message )
     {
-        // if( !message.isLocalUser() )
-        // {
         String conversationId = message.conversation;
         Conversation conversation = getConversation( conversationId );
-        if( conversation == null )
+
+        if( conversation != null )
         {
-            List<ChatUser> users = Arrays.asList(
-                new ChatUser[] { message.sender } );
-            conversation = new Conversation( this, conversationId, users );
+            conversation.receiveMessage( message );
         }
-        conversation.receiveMessage( message );
-        // }
     }
 
     /***************************************************************************
@@ -448,5 +444,18 @@ public class Chat extends AbstractChat
         {
             // TODO Auto-generated method stub
         }
+    }
+
+    public ChatUser getUser( String userId )
+    {
+        for( ChatUser user : defaultConversation.getUsers() )
+        {
+            if( user.userId.equals( userId ) )
+            {
+                return user;
+            }
+        }
+
+        return new ChatUser( userId );
     }
 }

@@ -120,12 +120,12 @@ public class ChatView implements IDataView<Conversation>
     private void sendMessage( DecoratedText text )
     {
         boolean canSend = false;
-
+        ChatUser me = conversation.getChat().getLocalUser();
         List<ChatUser> users = conversation.getUsers();
 
         for( ChatUser user : users )
         {
-            if( user.available )
+            if( user.available && !user.userId.equals( me.userId ) )
             {
                 canSend = true;
             }
@@ -134,7 +134,7 @@ public class ChatView implements IDataView<Conversation>
         if( canSend )
         {
             ChatMessage msg = new ChatMessage( conversation.getConversationId(),
-                conversation.getChat().getLocalUser(), 0L, 0L, text );
+                me.userId, 0L, 0L, text );
 
             conversation.sendMessage( msg );
 
@@ -164,11 +164,12 @@ public class ChatView implements IDataView<Conversation>
         StyledDocument doc = chatEditorPane.getView().getStyledDocument();
         SimpleAttributeSet a = new SimpleAttributeSet();
         ChatUser localUser = conversation.getLocalUser();
+        ChatUser sender = conversation.getChat().getUser( message.sender );
         boolean isLocal = localUser.equals( message.sender );
         Color fg = isLocal ? Color.blue : Color.red;
         String username = isLocal
             ? conversation.getChat().getLocalUser().displayName
-            : message.sender.displayName;
+            : sender.displayName;
 
         StyleConstants.setFontFamily( a, "Dialog" );
         StyleConstants.setFontSize( a, 12 );

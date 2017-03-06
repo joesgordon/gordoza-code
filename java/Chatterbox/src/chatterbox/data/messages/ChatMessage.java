@@ -1,6 +1,5 @@
 package chatterbox.data.messages;
 
-import chatterbox.data.ChatUser;
 import chatterbox.data.DecoratedText;
 
 /*******************************************************************************
@@ -11,7 +10,7 @@ public class ChatMessage
     /**  */
     public final String conversation;
     /**  */
-    public final ChatUser sender;
+    public final String sender;
     /**  */
     public final long txTime;
     /**  */
@@ -27,7 +26,7 @@ public class ChatMessage
      * @param text
      * @param attributes
      **************************************************************************/
-    public ChatMessage( String conversation, ChatUser sender, long tx, long rx,
+    public ChatMessage( String conversation, String sender, long tx, long rx,
         DecoratedText text )
     {
         this.conversation = conversation;
