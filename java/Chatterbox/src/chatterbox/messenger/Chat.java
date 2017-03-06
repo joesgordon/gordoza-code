@@ -1,8 +1,7 @@
 package chatterbox.messenger;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.jutils.ValidationException;
 import org.jutils.io.*;
@@ -10,8 +9,7 @@ import org.jutils.io.options.OptionsSerializer;
 import org.jutils.net.*;
 import org.jutils.task.TaskError;
 import org.jutils.task.TaskRunner;
-import org.jutils.ui.event.ItemActionEvent;
-import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.event.*;
 
 import chatterbox.ChatterboxConstants;
 import chatterbox.data.ChatUser;
@@ -22,8 +20,14 @@ import chatterbox.io.*;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class Chat extends AbstractChat
+public class Chat
 {
+    /**  */
+    private final ChatUser localUser;
+    /**  */
+    private final Map<String, Conversation> conversations;
+    /**  */
+    private final ItemActionList<Conversation> conversationCreatedListeners;
     /**  */
     private final Conversation defaultConversation;
     /**  */
@@ -44,7 +48,10 @@ public class Chat extends AbstractChat
      **************************************************************************/
     public Chat( ChatUser user )
     {
-        super( user );
+        this.localUser = user;
+
+        this.conversations = new HashMap<String, Conversation>( 100 );
+        this.conversationCreatedListeners = new ItemActionList<Conversation>();
 
         this.defaultConversation = new Conversation( this, "", null );
         this.msgSerializer = new MessageSerializer();
@@ -54,7 +61,6 @@ public class Chat extends AbstractChat
     /***************************************************************************
      * {@inheritDoc}
      **************************************************************************/
-    @Override
     public void connect( MulticastInputs config ) throws IOException
     {
         try
@@ -89,7 +95,6 @@ public class Chat extends AbstractChat
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
     public void disconnect()
     {
         if( userRunner != null )
@@ -136,7 +141,6 @@ public class Chat extends AbstractChat
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
     public Conversation createConversation( List<ChatUser> users )
     {
         Conversation conversation = new Conversation( this,
@@ -148,7 +152,6 @@ public class Chat extends AbstractChat
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
     public Conversation getDefaultConversation()
     {
         return defaultConversation;
@@ -457,5 +460,75 @@ public class Chat extends AbstractChat
         }
 
         return new ChatUser( userId );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public final void addConversationCreatedListener(
+        ItemActionListener<Conversation> l )
+    {
+        conversationCreatedListeners.addListener( l );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    protected final String getNextConversationId()
+    {
+        return localUser.userId + "@" + new Date().getTime();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public final ChatUser getLocalUser()
+    {
+        return localUser;
+    }
+
+    /***************************************************************************
+     * @param conversation
+     **************************************************************************/
+    protected final void addConversation( Conversation conversation )
+    {
+        conversations.put( conversation.getConversationId(), conversation );
+    }
+
+    /***************************************************************************
+     * @param conversationId
+     * @return
+     **************************************************************************/
+    protected final Conversation getConversation( String conversationId )
+    {
+        if( conversationId.equals(
+            getDefaultConversation().getConversationId() ) )
+        {
+            return getDefaultConversation();
+        }
+        return conversations.get( conversationId );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public final void removeConversation( Conversation conversation )
+    {
+        if( conversation == getDefaultConversation() )
+        {
+            disconnect();
+        }
+        else
+        {
+            conversations.remove( conversation.getConversationId() );
+        }
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    protected List<Conversation> getConversations()
+    {
+        return new ArrayList<Conversation>( conversations.values() );
     }
 }
