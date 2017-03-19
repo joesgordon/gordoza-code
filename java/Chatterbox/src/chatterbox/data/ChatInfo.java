@@ -35,4 +35,13 @@ public class ChatInfo
         this.name = ci.name;
         this.users = new ArrayList<>( ci.users );
     }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public String toString()
+    {
+        return name;
+    }
 }

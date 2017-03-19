@@ -9,16 +9,20 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 
+import org.jutils.ui.event.updater.IUpdater;
+import org.jutils.ui.event.updater.UpdaterList;
+
 /*******************************************************************************
  *
  ******************************************************************************/
 public class CheckTreeManager implements TreeSelectionListener
 {
     /**  */
-    private final CheckTreeSelectionModel selectionModel;
-
-    /**  */
     private final JTree tree;
+    /**  */
+    private final CheckTreeSelectionModel selectionModel;
+    /**  */
+    private final UpdaterList<TreePath> checkListeners;
 
     /**  */
     private static final int HOTSPOT = new JCheckBox().getPreferredSize().width;
@@ -29,10 +33,12 @@ public class CheckTreeManager implements TreeSelectionListener
     public CheckTreeManager( JTree tree )
     {
         this.tree = tree;
-        selectionModel = new CheckTreeSelectionModel( tree.getModel() );
+        this.selectionModel = new CheckTreeSelectionModel( tree.getModel() );
+        this.checkListeners = new UpdaterList<>();
+
         tree.setCellRenderer( new CheckTreeCellRenderer( tree.getCellRenderer(),
             selectionModel ) );
-        tree.addMouseListener( new CheckTreeManager_mouseAdapter( this ) );
+        tree.addMouseListener( new CheckClickListener( this ) );
         selectionModel.addTreeSelectionListener( this );
     }
 
@@ -105,13 +111,28 @@ public class CheckTreeManager implements TreeSelectionListener
         return path;
     }
 
-    private final class CheckTreeManager_mouseAdapter extends MouseAdapter
+    /***************************************************************************
+     * Adds a callback to be invoked when a node is check/unchecked. The
+     * callback is invoked for only the node checked/unchecked. It is not called
+     * for other nodes whose checked state is changed as a result of the
+     * original node's check state changing.
+     * @param l the callback to be invoked.
+     **************************************************************************/
+    public void addCheckListener( IUpdater<TreePath> l )
+    {
+        checkListeners.addListener( l );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private final class CheckClickListener extends MouseAdapter
     {
         private CheckTreeManager manager = null;
 
         private TreePath pressedPath = null;
 
-        public CheckTreeManager_mouseAdapter( CheckTreeManager manager )
+        public CheckClickListener( CheckTreeManager manager )
         {
             this.manager = manager;
         }
@@ -130,12 +151,12 @@ public class CheckTreeManager implements TreeSelectionListener
             if( releasedPath != null && releasedPath.equals( pressedPath ) )
             {
                 boolean isSelected = manager.selectionModel.isPathSelected(
-                    releasedPath );
+                    releasedPath, true );
                 manager.setPathSelected( releasedPath, !isSelected );
+                manager.checkListeners.fireListeners( releasedPath );
             }
 
             pressedPath = null;
         }
     }
-
 }

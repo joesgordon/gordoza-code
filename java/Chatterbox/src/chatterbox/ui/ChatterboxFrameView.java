@@ -16,7 +16,7 @@ import org.jutils.ui.model.IView;
 
 import chatterbox.ChatterboxConstants;
 import chatterbox.data.ChatterboxOptions;
-import chatterbox.messenger.Chat;
+import chatterbox.messenger.ChatterboxHandler;
 
 /*******************************************************************************
  * 
@@ -139,7 +139,7 @@ public class ChatterboxFrameView implements IView<JFrame>
      **************************************************************************/
     private void reconnect( ChatterboxOptions oldCfg, ChatterboxOptions newCfg )
     {
-        Chat chat = chatView.getData();
+        ChatterboxHandler chat = chatView.getData();
 
         if( !newCfg.displayName.equals( oldCfg.displayName ) )
         {
@@ -167,7 +167,7 @@ public class ChatterboxFrameView implements IView<JFrame>
     /***************************************************************************
      * @param chat
      **************************************************************************/
-    public void setChat( Chat chat )
+    public void setChat( ChatterboxHandler chat )
     {
         chatView.setData( chat );
 
@@ -189,7 +189,7 @@ public class ChatterboxFrameView implements IView<JFrame>
         @Override
         public void windowClosing( WindowEvent e )
         {
-            Chat chat = view.chatView.getData();
+            ChatterboxHandler chat = view.chatView.getData();
 
             if( chat != null )
             {

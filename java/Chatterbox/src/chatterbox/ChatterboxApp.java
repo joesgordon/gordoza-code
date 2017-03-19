@@ -11,7 +11,7 @@ import org.jutils.ui.app.IFrameApp;
 
 import chatterbox.data.ChatUser;
 import chatterbox.data.ChatterboxOptions;
-import chatterbox.messenger.Chat;
+import chatterbox.messenger.ChatterboxHandler;
 import chatterbox.ui.ChatterboxFrameView;
 
 /*******************************************************************************
@@ -54,7 +54,7 @@ public class ChatterboxApp implements IFrameApp
     {
         OptionsSerializer<ChatterboxOptions> options = ChatterboxConstants.getOptions();
         ChatterboxOptions config = options.getOptions();
-        Chat chat = new Chat( user );
+        ChatterboxHandler chat = new ChatterboxHandler( user );
 
         boolean connected = false;
 

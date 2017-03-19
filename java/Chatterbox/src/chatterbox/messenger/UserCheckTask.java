@@ -17,7 +17,7 @@ import chatterbox.data.messages.UserAvailableMessage;
 public class UserCheckTask implements ITask
 {
     /**  */
-    private final Chat chat;
+    private final ChatterboxHandler chat;
     /**  */
     private final List<UserData> userlogs;
 
@@ -25,7 +25,7 @@ public class UserCheckTask implements ITask
      * @param chat
      * @param user
      **************************************************************************/
-    public UserCheckTask( Chat chat )
+    public UserCheckTask( ChatterboxHandler chat )
     {
         this.chat = chat;
         this.userlogs = new ArrayList<>();

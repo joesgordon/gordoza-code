@@ -15,7 +15,7 @@ public class ItemActionList<T>
      **************************************************************************/
     public ItemActionList()
     {
-        listeners = new LinkedList<ItemActionListener<T>>();
+        listeners = new LinkedList<>();
     }
 
     /***************************************************************************

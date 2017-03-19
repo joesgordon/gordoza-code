@@ -7,13 +7,13 @@ import javax.swing.JPanel;
 
 import org.jutils.ui.model.IDataView;
 
-import chatterbox.messenger.Chat;
-import chatterbox.messenger.Conversation;
+import chatterbox.messenger.ChatHandler;
+import chatterbox.messenger.ChatterboxHandler;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ChatterboxView implements IDataView<Chat>
+public class ChatterboxView implements IDataView<ChatterboxHandler>
 {
     /**  */
     private final JPanel view;
@@ -23,7 +23,7 @@ public class ChatterboxView implements IDataView<Chat>
     private final ChatsView conversationsView;
 
     /**  */
-    private Chat chat;
+    private ChatterboxHandler chat;
 
     /***************************************************************************
      * 
@@ -63,7 +63,7 @@ public class ChatterboxView implements IDataView<Chat>
     /***************************************************************************
      * 
      **************************************************************************/
-    public ChatView createConversationView( Conversation conversation )
+    public ChatView createConversationView( ChatHandler conversation )
     {
         ChatView cv = new ChatView();
 
@@ -85,7 +85,7 @@ public class ChatterboxView implements IDataView<Chat>
      * {@inheritDoc}
      **************************************************************************/
     @Override
-    public Chat getData()
+    public ChatterboxHandler getData()
     {
         return chat;
     }
@@ -94,10 +94,11 @@ public class ChatterboxView implements IDataView<Chat>
      * {@inheritDoc}
      **************************************************************************/
     @Override
-    public void setData( Chat chat )
+    public void setData( ChatterboxHandler chat )
     {
         this.chat = chat;
 
         defaultConversationView.setData( chat.getDefaultConversation() );
+        conversationsView.setData( chat );
     }
 }

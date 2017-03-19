@@ -17,14 +17,14 @@ import org.jutils.ui.model.IView;
 import chatterbox.data.ChatUser;
 import chatterbox.data.DecoratedText;
 import chatterbox.data.messages.ChatMessage;
-import chatterbox.messenger.Conversation;
+import chatterbox.messenger.ChatHandler;
 import chatterbox.model.ChangeType;
 import chatterbox.model.IUserListener;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ChatView implements IDataView<Conversation>
+public class ChatView implements IDataView<ChatHandler>
 {
     // -------------------------------------------------------------------------
     // GUI Components.
@@ -46,7 +46,7 @@ public class ChatView implements IDataView<Conversation>
     /**  */
     private final SimpleDateFormat dateFormatter;
     /**  */
-    private Conversation conversation;
+    private ChatHandler conversation;
 
     // -------------------------------------------------------------------------
     // Listeners to be added to the model.
@@ -205,7 +205,7 @@ public class ChatView implements IDataView<Conversation>
      * 
      **************************************************************************/
     @Override
-    public Conversation getData()
+    public ChatHandler getData()
     {
         return conversation;
     }
@@ -214,11 +214,11 @@ public class ChatView implements IDataView<Conversation>
      * 
      **************************************************************************/
     @Override
-    public void setData( Conversation conversation )
+    public void setData( ChatHandler conversation )
     {
         this.conversation = conversation;
 
-        view.setTitle( conversation.getConversationId() );
+        view.setTitle( conversation.info.name );
 
         usersView.setData( conversation.getUsers() );
 
