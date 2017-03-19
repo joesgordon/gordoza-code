@@ -43,7 +43,7 @@ public class MultiTaskTestApp implements IFrameApp
      * @param frame
      * @return
      **************************************************************************/
-    private JToolBar createToolbar( JFrame frame )
+    private static JToolBar createToolbar( JFrame frame )
     {
         JToolBar toolbar = new JGoodiesToolBar();
 
@@ -56,7 +56,7 @@ public class MultiTaskTestApp implements IFrameApp
      * @param frame
      * @return
      **************************************************************************/
-    private Action createGoAction( JFrame frame )
+    private static Action createGoAction( JFrame frame )
     {
         Action action;
         ActionListener listener;

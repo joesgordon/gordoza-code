@@ -50,7 +50,7 @@ public class ShiftHexViewTest
             return frame;
         }
 
-        private byte [] generateBytes()
+        private static byte [] generateBytes()
         {
             byte [] bytes = new byte[1024];
             Random rand = new Random( 31415926 );

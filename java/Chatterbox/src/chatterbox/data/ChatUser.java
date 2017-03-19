@@ -11,6 +11,7 @@ public class ChatUser
     public final String userId;
     /** The name the user has chosen for their default. */
     public String displayName;
+    // TODO make nick name usable
     /** The name the local user has chosen for the remote user. */
     public String nickName;
     /** {@code true} if the user has been active recently. */

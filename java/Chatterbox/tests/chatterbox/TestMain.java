@@ -14,8 +14,19 @@ public class TestMain
      **************************************************************************/
     public static void main( String[] args )
     {
-        ChatUser user = new ChatUser( "jose", "gordoza" );
+        ChatUser user;
 
+        user = createUser( "jose", "gordoza" );
         FrameRunner.invokeLater( new ChatterboxApp( user ) );
+
+        user = ChatterboxConstants.createDefaultUser();
+        FrameRunner.invokeLater( new ChatterboxApp( user ) );
+    }
+
+    private static ChatUser createUser( String username, String displayName )
+    {
+        String system = ChatterboxConstants.getHostname();
+        String userId = username + "@" + system;
+        return new ChatUser( userId, displayName );
     }
 }

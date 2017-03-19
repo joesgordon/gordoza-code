@@ -97,7 +97,7 @@ public class AppManagerViewMain
         {
         }
 
-        private JToolBar createToolbar( AppManagerView appmanView )
+        private static JToolBar createToolbar( AppManagerView appmanView )
         {
             JToolBar toolbar = new JGoodiesToolBar();
 
@@ -109,7 +109,7 @@ public class AppManagerViewMain
             return toolbar;
         }
 
-        private Action createOpenAction( AppManagerView appmanView )
+        private static Action createOpenAction( AppManagerView appmanView )
         {
             Icon icon = IconConstants.getIcon( IconConstants.OPEN_FILE_16 );
             IFileSelected ifs = ( f ) -> appmanView.openFile( f );
@@ -119,7 +119,7 @@ public class AppManagerViewMain
             return new ActionAdapter( fcl, "Open", icon );
         }
 
-        private Action createSaveAction( AppManagerView appmanView )
+        private static Action createSaveAction( AppManagerView appmanView )
         {
             Icon icon = IconConstants.getIcon( IconConstants.SAVE_16 );
             IFileSelected ifs = ( f ) -> appmanView.saveFile( f );

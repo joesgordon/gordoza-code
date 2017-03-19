@@ -212,7 +212,7 @@ public class OkDialogView implements IView<JDialog>
     /***************************************************************************
      * @return
      **************************************************************************/
-    public boolean show()
+    private boolean showDialog()
     {
         StateListener listener = new StateListener();
 
@@ -224,6 +224,14 @@ public class OkDialogView implements IView<JDialog>
         okListeners.removeListener( listener );
 
         return listener.getSelection();
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public boolean show()
+    {
+        return show( null );
     }
 
     /***************************************************************************
@@ -242,7 +250,7 @@ public class OkDialogView implements IView<JDialog>
             dialog.validate();
         }
 
-        return show();
+        return showDialog();
     }
 
     /***************************************************************************

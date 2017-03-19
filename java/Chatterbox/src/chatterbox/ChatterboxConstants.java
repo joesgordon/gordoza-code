@@ -80,7 +80,7 @@ public class ChatterboxConstants
     /***************************************************************************
      * @return
      **************************************************************************/
-    private static String getHostname()
+    public static String getHostname()
     {
         Map<String, String> env = System.getenv();
 

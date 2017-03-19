@@ -37,7 +37,7 @@ public class ChatView implements IDataView<ChatHandler>
     /**  */
     private final DecoratedTextView textView;
     /**  */
-    private final UsersView usersView;
+    private final UserListView usersView;
 
     // -------------------------------------------------------------------------
     // Helper members
@@ -64,7 +64,7 @@ public class ChatView implements IDataView<ChatHandler>
     {
         this.chatEditorPane = new AppendableTextPane();
         this.textView = new DecoratedTextView();
-        this.usersView = new UsersView();
+        this.usersView = new UserListView();
         this.view = new TitleView( "", createView() );
 
         this.dateFormatter = new SimpleDateFormat( "(MM-dd-yy HH:mm:ss)" );

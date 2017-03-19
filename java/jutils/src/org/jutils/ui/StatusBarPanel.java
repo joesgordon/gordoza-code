@@ -380,7 +380,7 @@ public class StatusBarPanel
         @Override
         public void mouseClicked( MouseEvent e )
         {
-            if( e.getButton() == MouseEvent.BUTTON3 )
+            if( SwingUtilities.isRightMouseButton( e ) )
             {
                 // LogUtils.printDebug( "Right-click" );
                 popup.show( e.getComponent(), e.getX(),

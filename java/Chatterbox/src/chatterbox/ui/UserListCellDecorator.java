@@ -36,7 +36,7 @@ public class UserListCellDecorator implements IListCellLabelDecorator
     {
         ChatUser user = ( ChatUser )value;
 
-        label.setText( user.displayName );
+        label.setText( user.nickName );
 
         if( user.available )
         {

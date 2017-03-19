@@ -646,7 +646,7 @@ public abstract class IStreamTests
     /***************************************************************************
      * @return
      **************************************************************************/
-    private byte [] createBytes()
+    private static byte [] createBytes()
     {
         byte [] seed = { 42, 13, 37 };
         byte [] bytes = new byte[512];

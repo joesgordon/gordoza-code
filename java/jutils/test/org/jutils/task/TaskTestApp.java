@@ -31,7 +31,7 @@ public class TaskTestApp implements IFrameApp
         return frame;
     }
 
-    private JToolBar createToolbar( JFrame frame )
+    private static JToolBar createToolbar( JFrame frame )
     {
         JToolBar toolbar = new JGoodiesToolBar();
 
@@ -40,7 +40,7 @@ public class TaskTestApp implements IFrameApp
         return toolbar;
     }
 
-    private Action createGoAction( JFrame frame )
+    private static Action createGoAction( JFrame frame )
     {
         Action action;
         ActionListener listener;

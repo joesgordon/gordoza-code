@@ -14,7 +14,7 @@ public final class StoppableTest
      * Test method for {@link org.jutils.concurrent.Stoppable#canContinue()}.
      **************************************************************************/
     @Test
-    public final void testCanContinue()
+    public final static void testCanContinue()
     {
         TaskStopManager stopper = new TaskStopManager();
         boolean canContinuePrior = stopper.continueProcessing();
@@ -27,7 +27,7 @@ public final class StoppableTest
      * Test method for {@link org.jutils.concurrent.Stoppable#isFinished()}.
      **************************************************************************/
     @Test
-    public final void testIsFinished()
+    public final static void testIsFinished()
     {
         TaskStopManager stopper = new TaskStopManager();
 
@@ -41,7 +41,7 @@ public final class StoppableTest
      * Test method for {@link org.jutils.concurrent.Stoppable#stop()}.
      **************************************************************************/
     @Test
-    public final void testStop()
+    public final static void testStop()
     {
         TaskStopManager stopper = new TaskStopManager();
 

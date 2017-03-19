@@ -1,16 +1,15 @@
 package chatterbox.ui;
 
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import org.jutils.ui.event.ItemActionList;
-import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.OkDialogView;
+import org.jutils.ui.event.*;
 import org.jutils.ui.model.*;
 
 import chatterbox.data.ChatUser;
@@ -18,7 +17,7 @@ import chatterbox.data.ChatUser;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class UsersView implements IDataView<List<ChatUser>>
+public class UserListView implements IDataView<List<ChatUser>>
 {
     /**  */
     private final JPanel view;
@@ -36,7 +35,7 @@ public class UsersView implements IDataView<List<ChatUser>>
     /***************************************************************************
      * 
      **************************************************************************/
-    public UsersView()
+    public UserListView()
     {
         this.view = new JPanel( new BorderLayout() );
         this.userModel = new CollectionListModel<>();
@@ -60,7 +59,7 @@ public class UsersView implements IDataView<List<ChatUser>>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public Component getView()
@@ -69,7 +68,7 @@ public class UsersView implements IDataView<List<ChatUser>>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public List<ChatUser> getData()
@@ -78,7 +77,7 @@ public class UsersView implements IDataView<List<ChatUser>>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void setData( List<ChatUser> users )
@@ -95,6 +94,20 @@ public class UsersView implements IDataView<List<ChatUser>>
     }
 
     /***************************************************************************
+     * @param user
+     **************************************************************************/
+    private void showUserInfo( ChatUser user )
+    {
+        UserInfoView userView = new UserInfoView();
+        OkDialogView dialogView = new OkDialogView( getView(),
+            userView.getView() );
+
+        userView.setData( user );
+
+        dialogView.show();
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     public void addConversationStartedListener(
@@ -108,17 +121,34 @@ public class UsersView implements IDataView<List<ChatUser>>
      **************************************************************************/
     private static class UsersMouseListener extends MouseAdapter
     {
-        private final UsersView view;
+        private final UserListView view;
 
-        public UsersMouseListener( UsersView view )
+        public UsersMouseListener( UserListView view )
         {
             this.view = view;
         }
 
-        @Override
-        public void mouseClicked( MouseEvent e )
+        private JPopupMenu createPopup( ChatUser user )
         {
-            if( !"".isEmpty() && e.getClickCount() == 2 )
+            JPopupMenu popup = new JPopupMenu();
+
+            popup.add( createShowPropertiesAction( user ) );
+
+            return popup;
+        }
+
+        private Action createShowPropertiesAction( ChatUser user )
+        {
+            ActionListener l = ( e ) -> view.showUserInfo( user );
+
+            return new ActionAdapter( l, "Information", null );
+        }
+
+        @Override
+        public void mouseReleased( MouseEvent e )
+        {
+            if( SwingUtilities.isLeftMouseButton( e ) &&
+                e.getClickCount() == 2 )
             {
                 int index = view.userList.locationToIndex( e.getPoint() );
 
@@ -136,6 +166,19 @@ public class UsersView implements IDataView<List<ChatUser>>
                     view.conversationStartedListeners.fireListeners( view,
                         users );
                     view.userList.ensureIndexIsVisible( index );
+                }
+            }
+            else if( SwingUtilities.isRightMouseButton( e ) &&
+                e.getClickCount() == 1 )
+            {
+                int index = view.userList.locationToIndex( e.getPoint() );
+
+                if( index > -1 )
+                {
+                    view.userList.setSelectedIndex( index );
+                    ChatUser user = view.userModel.get( index );
+                    JPopupMenu popup = createPopup( user );
+                    popup.show( e.getComponent(), e.getX(), e.getY() );
                 }
             }
         }

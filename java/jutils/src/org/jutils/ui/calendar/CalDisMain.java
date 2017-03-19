@@ -52,7 +52,7 @@ public class CalDisMain
             return frame;
         }
 
-        private Container createContent()
+        private static Container createContent()
         {
             JTabbedPane tabs = new JTabbedPane();
 
@@ -67,7 +67,7 @@ public class CalDisMain
             return tabs;
         }
 
-        private Component createDateView()
+        private static Component createDateView()
         {
             JPanel panel = new JPanel();
 
@@ -76,7 +76,7 @@ public class CalDisMain
             return panel;
         }
 
-        private Component createDateField()
+        private static Component createDateField()
         {
             StandardFormView form = new StandardFormView();
 
@@ -85,7 +85,7 @@ public class CalDisMain
             return form.getView();
         }
 
-        private Component createTimeField()
+        private static Component createTimeField()
         {
             StandardFormView form = new StandardFormView();
 
@@ -94,7 +94,7 @@ public class CalDisMain
             return form.getView();
         }
 
-        private Component createDateTimeField()
+        private static Component createDateTimeField()
         {
             StandardFormView form = new StandardFormView();
 
