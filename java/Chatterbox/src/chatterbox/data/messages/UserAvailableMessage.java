@@ -15,6 +15,6 @@ public class UserAvailableMessage
      **************************************************************************/
     public UserAvailableMessage( ChatUser user )
     {
-        this.user = user;
+        this.user = new ChatUser( user );
     }
 }

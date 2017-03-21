@@ -12,6 +12,9 @@ import org.jutils.io.IDataStream;
  ******************************************************************************/
 public class AttributeSetSerializer implements IDataSerializer<AttributeSet>
 {
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
     @Override
     public AttributeSet read( IDataStream stream ) throws IOException
     {
@@ -19,6 +22,9 @@ public class AttributeSetSerializer implements IDataSerializer<AttributeSet>
         return null;
     }
 
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
     @Override
     public void write( AttributeSet t, IDataStream stream ) throws IOException
     {

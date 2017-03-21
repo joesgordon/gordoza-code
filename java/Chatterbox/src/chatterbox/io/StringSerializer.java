@@ -6,11 +6,6 @@ import org.jutils.io.*;
 
 public class StringSerializer implements IDataSerializer<String>
 {
-    public StringSerializer()
-    {
-        ;
-    }
-
     @Override
     public String read( IDataStream stream ) throws IOException
     {

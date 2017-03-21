@@ -1,5 +1,7 @@
 package chatterbox.data;
 
+import java.time.LocalDateTime;
+
 import org.jutils.Utils;
 
 /*******************************************************************************
@@ -14,8 +16,12 @@ public class ChatUser
     // TODO make nick name usable
     /** The name the local user has chosen for the remote user. */
     public String nickName;
-    /** {@code true} if the user has been active recently. */
+    /** {@code false} if the user does not want to be disturbed. */
     public boolean available;
+    /** {@code false} if the user has been active recently. */
+    public boolean away;
+    /**  */
+    public LocalDateTime lastSeen;
 
     /***************************************************************************
      * @param userId
@@ -35,10 +41,25 @@ public class ChatUser
         this.displayName = displayName;
         this.nickName = displayName;
         this.available = true;
+        this.away = false;
+        this.lastSeen = LocalDateTime.MIN;
     }
 
     /***************************************************************************
-     * 
+     * @param user
+     **************************************************************************/
+    public ChatUser( ChatUser user )
+    {
+        this.userId = user.userId;
+        this.displayName = user.displayName;
+        this.nickName = user.nickName;
+        this.available = user.available;
+        this.away = user.away;
+        this.lastSeen = user.lastSeen;
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public String toString()
@@ -47,7 +68,7 @@ public class ChatUser
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public int hashCode()
@@ -56,7 +77,7 @@ public class ChatUser
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public boolean equals( Object obj )

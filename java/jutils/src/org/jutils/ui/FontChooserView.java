@@ -9,7 +9,6 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.text.*;
 
-import org.jutils.io.LogUtils;
 import org.jutils.ui.FontChooserView.FontDescription;
 import org.jutils.ui.app.AppRunnable;
 import org.jutils.ui.app.IApplication;
@@ -292,7 +291,7 @@ public class FontChooserView implements IDataView<FontDescription>
         SimpleAttributeSet attributes = new SimpleAttributeSet();
         desc.getAttributes( attributes );
         previewLabel.setAttributes( attributes );
-        LogUtils.printDebug( "attr: " + attributes );
+        // LogUtils.printDebug( "attr: " + attributes );
     }
 
     /***************************************************************************

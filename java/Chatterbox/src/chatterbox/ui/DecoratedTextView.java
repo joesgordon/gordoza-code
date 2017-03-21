@@ -3,13 +3,16 @@ package chatterbox.ui;
 import java.awt.*;
 import java.awt.Dialog.ModalityType;
 import java.awt.event.*;
+import java.util.Enumeration;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.SimpleAttributeSet;
 
+import org.jutils.EnumerationIteratorAdapter;
 import org.jutils.IconConstants;
+import org.jutils.io.LogUtils;
 import org.jutils.ui.FontChooserView;
 import org.jutils.ui.FontChooserView.FontDescription;
 import org.jutils.ui.OkDialogView;
@@ -67,7 +70,7 @@ public class DecoratedTextView implements IDataView<DecoratedText>
     {
 
         JPanel contentPanel = new JPanel( new GridBagLayout() );
-        ActionListener fontButtonListener = new FontListener( textField );
+        ActionListener fontButtonListener = new FontListener( this );
 
         contentPanel.setBorder( BorderFactory.createEtchedBorder() );
 
@@ -174,23 +177,23 @@ public class DecoratedTextView implements IDataView<DecoratedText>
      **************************************************************************/
     private static class FontListener implements ActionListener
     {
-        private final JTextPane field;
+        private final DecoratedTextView view;
 
-        public FontListener( JTextPane field )
+        public FontListener( DecoratedTextView view )
         {
-            this.field = field;
+            this.view = view;
         }
 
         @Override
         public void actionPerformed( ActionEvent e )
         {
             FontChooserView fontChooser = new FontChooserView();
-            OkDialogView dialogView = new OkDialogView( field,
+            OkDialogView dialogView = new OkDialogView( view.textField,
                 fontChooser.getView(), ModalityType.DOCUMENT_MODAL );
 
             FontDescription desc = new FontDescription();
 
-            desc.setAttributes( field.getCharacterAttributes() );
+            desc.setAttributes( view.textField.getCharacterAttributes() );
             fontChooser.setData( desc );
             dialogView.pack();
 
@@ -201,7 +204,23 @@ public class DecoratedTextView implements IDataView<DecoratedText>
 
                 if( s != null )
                 {
-                    field.setCharacterAttributes( s, true );
+                    view.textField.setCharacterAttributes( s, true );
+                    view.text.attributes = s;
+
+                    LogUtils.printDebug( "Attribute count %d",
+                        s.getAttributeCount() );
+
+                    Enumeration<?> names = view.text.attributes.getAttributeNames();
+                    EnumerationIteratorAdapter<?> eia = new EnumerationIteratorAdapter<>(
+                        names );
+
+                    int i = 1;
+                    for( Object name : eia )
+                    {
+                        Object attr = s.getAttribute( name );
+                        LogUtils.printDebug( "attr %d of %d: %s = %s", i++,
+                            s.getAttributeCount(), name, attr );
+                    }
                 }
             }
         }

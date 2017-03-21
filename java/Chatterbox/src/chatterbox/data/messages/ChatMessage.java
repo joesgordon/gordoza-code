@@ -8,7 +8,7 @@ import chatterbox.data.DecoratedText;
 public class ChatMessage
 {
     /**  */
-    public final String conversation;
+    public final String chatId;
     /**  */
     public final String sender;
     /**  */
@@ -19,17 +19,17 @@ public class ChatMessage
     public final DecoratedText text;
 
     /***************************************************************************
-     * @param conversation
+     * @param chatId
      * @param sender
      * @param tx
      * @param rx
      * @param text
      * @param attributes
      **************************************************************************/
-    public ChatMessage( String conversation, String sender, long tx, long rx,
+    public ChatMessage( String chatId, String sender, long tx, long rx,
         DecoratedText text )
     {
-        this.conversation = conversation;
+        this.chatId = chatId;
         this.txTime = tx;
         this.rxTime = rx;
         this.sender = sender;

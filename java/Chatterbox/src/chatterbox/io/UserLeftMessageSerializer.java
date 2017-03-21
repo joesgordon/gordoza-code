@@ -29,7 +29,7 @@ public class UserLeftMessageSerializer
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public UserLeftMessage read( IDataStream stream ) throws IOException
@@ -44,7 +44,7 @@ public class UserLeftMessageSerializer
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void write( UserLeftMessage message, IDataStream stream )

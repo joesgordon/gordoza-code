@@ -236,7 +236,7 @@ public class ChatterboxHandler
      **************************************************************************/
     private void receiveMessage( ChatMessage message )
     {
-        String conversationId = message.conversation;
+        String conversationId = message.chatId;
         ChatHandler conversation = getConversation( conversationId );
 
         if( conversation != null )
