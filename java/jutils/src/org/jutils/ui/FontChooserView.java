@@ -9,7 +9,7 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.text.*;
 
-import org.jutils.ui.FontChooserView.FontDescription;
+import org.jutils.data.FontDescription;
 import org.jutils.ui.app.AppRunnable;
 import org.jutils.ui.app.IApplication;
 import org.jutils.ui.event.ItemActionListener;
@@ -461,61 +461,6 @@ public class FontChooserView implements IDataView<FontDescription>
             icon.setIconWidth( this.getWidth() - 2 * ICON_MARGIN );
             icon.setIconHeight( this.getHeight() - 2 * ICON_MARGIN );
             super.paint( g );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public static class FontDescription
-    {
-        public String name;
-        public int size;
-        public boolean bold;
-        public boolean italic;
-        public boolean underline;
-        public boolean strikeThrough;
-        public boolean subscript;
-        public boolean superscript;
-        public Color color;
-
-        public FontDescription()
-        {
-            this.name = "Arial";
-            this.size = 12;
-            this.bold = false;
-            this.italic = false;
-            this.underline = false;
-            this.strikeThrough = false;
-            this.subscript = false;
-            this.superscript = false;
-            this.color = Color.black;
-        }
-
-        public void getAttributes( MutableAttributeSet attributes )
-        {
-            StyleConstants.setFontFamily( attributes, name );
-            StyleConstants.setFontSize( attributes, size );
-            StyleConstants.setBold( attributes, bold );
-            StyleConstants.setItalic( attributes, italic );
-            StyleConstants.setUnderline( attributes, underline );
-            StyleConstants.setStrikeThrough( attributes, strikeThrough );
-            StyleConstants.setSubscript( attributes, subscript );
-            StyleConstants.setSuperscript( attributes, superscript );
-            StyleConstants.setForeground( attributes, color );
-        }
-
-        public void setAttributes( AttributeSet attributes )
-        {
-            name = StyleConstants.getFontFamily( attributes );
-            size = StyleConstants.getFontSize( attributes );
-            bold = StyleConstants.isBold( attributes );
-            italic = StyleConstants.isItalic( attributes );
-            underline = StyleConstants.isUnderline( attributes );
-            strikeThrough = StyleConstants.isStrikeThrough( attributes );
-            subscript = StyleConstants.isSubscript( attributes );
-            superscript = StyleConstants.isSuperscript( attributes );
-            color = StyleConstants.getForeground( attributes );
         }
     }
 }

@@ -199,7 +199,8 @@ public class ResultsView implements IView<JComponent>
         @Override
         public void mouseClicked( MouseEvent e )
         {
-            if( e.getClickCount() == 2 && !e.isPopupTrigger() )
+            if( e.getClickCount() == 2 &&
+                SwingUtilities.isLeftMouseButton( e ) )
             {
                 File file = panel.resultsTableView.getSelectedFile();
 

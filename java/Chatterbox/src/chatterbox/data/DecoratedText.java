@@ -1,6 +1,6 @@
 package chatterbox.data;
 
-import javax.swing.text.AttributeSet;
+import org.jutils.data.TextStyleList;
 
 /*******************************************************************************
  * 
@@ -8,9 +8,28 @@ import javax.swing.text.AttributeSet;
 public class DecoratedText
 {
     /**  */
-    public AttributeSet attributes;
-    /**  */
     public String text;
+    /**  */
+    public final TextStyleList attributes;
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public DecoratedText()
+    {
+        this.text = "";
+        this.attributes = new TextStyleList();
+    }
+
+    /***************************************************************************
+     * @param text
+     * @param attributes
+     **************************************************************************/
+    public DecoratedText( String text, TextStyleList attributes )
+    {
+        this.text = text;
+        this.attributes = attributes;
+    }
 
     /***************************************************************************
      * {@inheritDoc}

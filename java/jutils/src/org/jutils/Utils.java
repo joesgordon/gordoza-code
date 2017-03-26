@@ -743,6 +743,20 @@ public final class Utils
     }
 
     /***************************************************************************
+     * @param data
+     * @param obj
+     * @return
+     **************************************************************************/
+    public static <T> boolean standardEquals( T data, Object obj )
+    {
+        if( obj == null )
+        {
+            return false;
+        }
+        return data.getClass().isAssignableFrom( obj.getClass() );
+    }
+
+    /***************************************************************************
      * Object that can compare an item object to a key object. Used for sorting
      * or searching a list of the items type by a field of the item.
      * @see Comparator#compare(Object, Object)

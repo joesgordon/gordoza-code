@@ -180,7 +180,7 @@ public class DuakPanel implements IDataView<FileInfo>
         @Override
         public void mousePressed( MouseEvent e )
         {
-            if( e.isPopupTrigger() )
+            if( SwingUtilities.isRightMouseButton( e ) )
             {
                 selectRowAt( e.getPoint() );
             }
@@ -189,7 +189,7 @@ public class DuakPanel implements IDataView<FileInfo>
         @Override
         public void mouseReleased( MouseEvent e )
         {
-            if( e.isPopupTrigger() )
+            if( SwingUtilities.isRightMouseButton( e ) )
             {
                 selectRowAt( e.getPoint() );
             }

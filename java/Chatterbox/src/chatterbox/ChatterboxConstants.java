@@ -120,10 +120,8 @@ public class ChatterboxConstants
                     {
                         return "Unknown Computer";
                     }
-                    else
-                    {
-                        return host.trim();
-                    }
+
+                    return host.trim();
                 }
                 catch( IOException | InterruptedException e )
                 {

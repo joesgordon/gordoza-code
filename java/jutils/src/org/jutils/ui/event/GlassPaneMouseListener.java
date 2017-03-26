@@ -74,7 +74,8 @@ public class GlassPaneMouseListener extends MouseInputAdapter
                     glassPanePoint, component );
                 component.dispatchEvent( new MouseEvent( component, e.getID(),
                     e.getWhen(), e.getModifiers(), componentPoint.x,
-                    componentPoint.y, e.getClickCount(), e.isPopupTrigger() ) );
+                    componentPoint.y, e.getClickCount(),
+                    SwingUtilities.isRightMouseButton( e ) ) );
             }
         }
 

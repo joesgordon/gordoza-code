@@ -79,10 +79,8 @@ public class ChatterboxApp implements IFrameApp
                 {
                     break;
                 }
-                else
-                {
-                    options.write( config );
-                }
+
+                options.write( config );
             }
         }
 

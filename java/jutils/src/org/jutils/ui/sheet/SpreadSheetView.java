@@ -280,7 +280,7 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
         @Override
         public void mousePressed( MouseEvent e )
         {
-            if( e.isPopupTrigger() )
+            if( SwingUtilities.isRightMouseButton( e ) )
             {
                 selectCellAt( e.getPoint() );
             }
@@ -289,7 +289,7 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
         @Override
         public void mouseReleased( MouseEvent e )
         {
-            if( e.isPopupTrigger() )
+            if( SwingUtilities.isRightMouseButton( e ) )
             {
                 selectCellAt( e.getPoint() );
             }

@@ -3,18 +3,15 @@ package chatterbox.ui;
 import java.awt.*;
 import java.awt.Dialog.ModalityType;
 import java.awt.event.*;
-import java.util.Enumeration;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.SimpleAttributeSet;
 
-import org.jutils.EnumerationIteratorAdapter;
 import org.jutils.IconConstants;
-import org.jutils.io.LogUtils;
+import org.jutils.data.FontDescription;
 import org.jutils.ui.FontChooserView;
-import org.jutils.ui.FontChooserView.FontDescription;
 import org.jutils.ui.OkDialogView;
 import org.jutils.ui.event.*;
 import org.jutils.ui.model.IDataView;
@@ -59,7 +56,7 @@ public class DecoratedTextView implements IDataView<DecoratedText>
      **************************************************************************/
     private void updateData()
     {
-        text.attributes = textField.getStyledDocument().getDefaultRootElement().getAttributes();
+        text.attributes.fromStyledDocument( textField.getStyledDocument() );
         text.text = textField.getText();
     }
 
@@ -160,7 +157,7 @@ public class DecoratedTextView implements IDataView<DecoratedText>
         textField.setText( data.text );
         if( data.attributes != null )
         {
-            textField.setCharacterAttributes( data.attributes, true );
+            text.attributes.toStyledDocument( textField.getStyledDocument() );
         }
     }
 
@@ -205,22 +202,8 @@ public class DecoratedTextView implements IDataView<DecoratedText>
                 if( s != null )
                 {
                     view.textField.setCharacterAttributes( s, true );
-                    view.text.attributes = s;
-
-                    LogUtils.printDebug( "Attribute count %d",
-                        s.getAttributeCount() );
-
-                    Enumeration<?> names = view.text.attributes.getAttributeNames();
-                    EnumerationIteratorAdapter<?> eia = new EnumerationIteratorAdapter<>(
-                        names );
-
-                    int i = 1;
-                    for( Object name : eia )
-                    {
-                        Object attr = s.getAttribute( name );
-                        LogUtils.printDebug( "attr %d of %d: %s = %s", i++,
-                            s.getAttributeCount(), name, attr );
-                    }
+                    view.text.attributes.fromStyledDocument(
+                        view.textField.getStyledDocument() );
                 }
             }
         }

@@ -2,6 +2,7 @@ package chatterbox.io;
 
 import java.io.IOException;
 
+import org.jutils.data.TextStyleList;
 import org.jutils.io.IDataSerializer;
 import org.jutils.io.IDataStream;
 
@@ -38,16 +39,16 @@ public class ChatMessageSerializer implements IDataSerializer<ChatMessage>
         long txTime;
         long rxTime = ChatterboxConstants.now();
         String sender;
-        DecoratedText text = new DecoratedText();
 
         chatId = stringSerializer.read( stream );
         txTime = stream.readLong();
         sender = stringSerializer.read( stream );
-        text.text = stringSerializer.read( stream );
-        text.attributes = attributeSerializer.read( stream );
+        String chars = stringSerializer.read( stream );
+        TextStyleList styles = attributeSerializer.read( stream );
+        DecoratedText text = new DecoratedText( chars, styles );
 
-        ChatMessage msg = new ChatMessage( chatId, sender, txTime,
-            rxTime, text );
+        ChatMessage msg = new ChatMessage( chatId, sender, txTime, rxTime,
+            text );
 
         return msg;
     }

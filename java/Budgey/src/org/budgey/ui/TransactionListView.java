@@ -109,7 +109,8 @@ public class TransactionListView implements IView<Component>
         @Override
         public void mouseClicked( MouseEvent e )
         {
-            if( !e.isPopupTrigger() && e.getClickCount() == 2 )
+            if( SwingUtilities.isLeftMouseButton( e ) &&
+                e.getClickCount() == 2 )
             {
                 JTable table = ( JTable )e.getSource();
                 int row = table.getSelectedRow();
