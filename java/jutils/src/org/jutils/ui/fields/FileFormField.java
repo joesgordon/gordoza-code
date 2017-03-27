@@ -13,20 +13,29 @@ import org.jutils.ui.validation.*;
  ******************************************************************************/
 public class FileFormField implements IDataFormField<File>
 {
-    /**  */
+    /** The name of this field. */
     private final String name;
-    /**  */
+    /**
+     * The validation view that provides feedback to the user when the field is
+     * invalid.
+     */
     private final ValidationView view;
-    /**  */
+    /** The file validation field. */
     private final FileField field;
 
-    /**  */
+    /** The callback invoked when the control is changed by the user. */
     private IUpdater<File> updater;
-    /**  */
+    /**
+     * If {@code true}, the data is being set programmatically; {@code false}
+     * indicates that data is being set by the user.
+     */
     private boolean settingData;
 
     /***************************************************************************
-     * @param name
+     * Creates a file form field with the provided name and an
+     * {@link ExistenceType} of {@link ExistenceType#FILE_ONLY} that is required
+     * which shows "Save" text and a browse button.
+     * @param name the name of this field.
      **************************************************************************/
     public FileFormField( String name )
     {
@@ -34,8 +43,12 @@ public class FileFormField implements IDataFormField<File>
     }
 
     /***************************************************************************
-     * @param name
-     * @param existence
+     * Creates a file form field with the provided name and
+     * {@link ExistenceType} that ensures the file exists if the existence type
+     * is {@link ExistenceType#FILE_ONLY} and shows "Save" text and a browse
+     * button.
+     * @param name the name of this field.
+     * @param existence type of existence to be checked: file/dir/either/none.
      **************************************************************************/
     public FileFormField( String name, ExistenceType existence )
     {
@@ -43,7 +56,10 @@ public class FileFormField implements IDataFormField<File>
     }
 
     /***************************************************************************
-     * @param name
+     * Creates a file form field with the provided name and
+     * {@link ExistenceType} that ensures the file exists if {@code required}
+     * and shows "Save" text and a browse button.
+     * @param name the name of this field.
      * @param existence
      * @param required
      **************************************************************************/
@@ -54,24 +70,43 @@ public class FileFormField implements IDataFormField<File>
     }
 
     /***************************************************************************
-     * Creates a new field with the provided parameters:
-     * @param name the name of the field.
+     * Creates a file form field with the provided name and
+     * {@link ExistenceType} that ensures the file exists if {@code required}
+     * and shows "Save" text if {@code isSave} and shows a browse button.
+     * @param name the name of this field.
      * @param existence type of existence to be checked.
      * @param required if the path can be empty or is required.
      * @param isSave if the path is to be be save to (alt. read from).
-     * @see FileField#FileField(ExistenceType, boolean, boolean)
      **************************************************************************/
     public FileFormField( String name, ExistenceType existence,
         boolean required, boolean isSave )
     {
+        this( name, existence, required, isSave, true );
+    }
+
+    /***************************************************************************
+     * Creates a file form field with the provided name and
+     * {@link ExistenceType} that ensures the file exists if {@code required}
+     * and shows "Save" text if {@code isSave} and shows a browse button if
+     * {@code showBrowse}.
+     * @param name the name of this field.
+     * @param existence type of existence to be checked.
+     * @param required if the path can be empty or is required.
+     * @param isSave if the path is to be be save to (alt. read from).
+     * @param showBrowse denotes whether the browse button should be shown.
+     **************************************************************************/
+    public FileFormField( String name, ExistenceType existence,
+        boolean required, boolean isSave, boolean showBrowse )
+    {
         this.name = name;
-        this.field = new FileField( existence, required, isSave );
+        this.field = new FileField( existence, required, isSave, showBrowse );
         this.view = new ValidationView( field );
         this.settingData = false;
     }
 
     /***************************************************************************
-     * @param file
+     * Calls the updater with the provided file if non-{@code null}.
+     * @param file the file used when calling the updater.
      **************************************************************************/
     private void callUpdater( File file )
     {
@@ -79,6 +114,18 @@ public class FileFormField implements IDataFormField<File>
         {
             updater.update( file );
         }
+    }
+
+    /***************************************************************************
+     * Adds the provided extension description and list of exts. <p><code>
+     * addExtension( "JPEG Files", "jpg", jpeg" ); </code></p>
+     * @param description a short description of the type of file denoted by the
+     * provided list of extensions.
+     * @param extensions list of extensions with no '.'.
+     **************************************************************************/
+    public void addExtension( String description, String... extensions )
+    {
+        field.addExtension( description, extensions );
     }
 
     /***************************************************************************
@@ -173,14 +220,5 @@ public class FileFormField implements IDataFormField<File>
     public Validity getValidity()
     {
         return field.getValidity();
-    }
-
-    /***************************************************************************
-     * @param description
-     * @param extensions
-     **************************************************************************/
-    public void addExtension( String description, String... extensions )
-    {
-        field.addExtension( description, extensions );
     }
 }

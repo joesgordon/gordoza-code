@@ -38,50 +38,6 @@ public class FileField implements IDataView<File>, IValidationField
     private final FileIcon icon;
 
     /***************************************************************************
-     * Creates a File view with an {@link ExistenceType} of FILE_ONLY, required,
-     * opens files, and displays a browse button..
-     **************************************************************************/
-    public FileField()
-    {
-        this( ExistenceType.FILE_ONLY, true, false );
-    }
-
-    /***************************************************************************
-     * Creates a File view with the provided {@link ExistenceType}, required,
-     * and opens file if the existence is {@link ExistenceType#FILE_ONLY} that
-     * displays a browse button.
-     * @param existence type of existence to be checked: file/dir/either/none.
-     **************************************************************************/
-    public FileField( ExistenceType existence )
-    {
-        this( existence, true, existence != ExistenceType.FILE_ONLY );
-    }
-
-    /***************************************************************************
-     * Creates a File view with the provided {@link ExistenceType} and required,
-     * and saves files that displays a browse button.
-     * @param existence type of existence to be checked: file/dir/either/none.
-     * @param required if the path can be empty or is required.
-     **************************************************************************/
-    public FileField( ExistenceType existence, boolean required )
-    {
-        this( existence, required, true );
-    }
-
-    /***************************************************************************
-     * Creates a File view with the provided {@link ExistenceType}, required,
-     * and save boolean that displays a browse button.
-     * @param existence type of existence to be checked: file/dir/either/none.
-     * @param required if the path can be empty or is required.
-     * @param isSave if the path is to be be save to (alt. read from).
-     **************************************************************************/
-    public FileField( ExistenceType existence, boolean required,
-        boolean isSave )
-    {
-        this( existence, required, isSave, true );
-    }
-
-    /***************************************************************************
      * Creates a File view according to the parameters provided:
      * @param existence type of existence to be checked: file/dir/either/none.
      * @param required if the path can be empty or is required.
