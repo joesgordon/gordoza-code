@@ -6,7 +6,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import org.jutils.ui.event.updater.IUpdater;
-import org.jutils.ui.fields.BitsField;
+import org.jutils.ui.fields.BitsFormField;
 import org.jutils.ui.model.IDataView;
 import org.jutils.ui.validation.*;
 import org.jutils.utils.BitArray;
@@ -19,7 +19,7 @@ public class BitArrayView implements IDataView<BitArray>, IValidationField
     /**  */
     private final JPanel view;
     /**  */
-    private final BitsField bitsField;
+    private final BitsFormField bitsField;
     /**  */
     private final HexBytesField leftField;
     /**  */
@@ -45,7 +45,7 @@ public class BitArrayView implements IDataView<BitArray>, IValidationField
      **************************************************************************/
     public BitArrayView( List<byte []> quickList )
     {
-        this.bitsField = new BitsField( "Bits" );
+        this.bitsField = new BitsFormField( "Bits" );
         this.leftField = new HexBytesField( quickList );
         this.rightField = new HexBytesField( quickList );
         this.view = createView();

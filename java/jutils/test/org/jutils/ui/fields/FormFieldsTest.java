@@ -126,7 +126,7 @@ public class FormFieldsTest
         private static void createViews( DefaultListModel<ViewItem> itemsModel )
         {
             itemsModel.addElement( createFormFieldItem(
-                new BitsField( "Bits Field" ), new BitArray( "FAF320" ) ) );
+                new BitsFormField( "Bits Field" ), new BitArray( "FAF320" ) ) );
             itemsModel.addElement( createFormFieldItem(
                 new BooleanFormField( "Boolean Form Field" ), true ) );
             itemsModel.addElement( createFormFieldItem( new ButtonedFormField<>(
