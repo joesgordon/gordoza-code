@@ -32,7 +32,7 @@ public interface IValidationField extends IView<Component>
     public Validity getValidity();
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JComponent getView();
