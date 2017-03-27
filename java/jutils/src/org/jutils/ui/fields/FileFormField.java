@@ -6,7 +6,6 @@ import javax.swing.JComponent;
 
 import org.jutils.io.parsers.ExistenceType;
 import org.jutils.ui.event.updater.IUpdater;
-import org.jutils.ui.event.updater.ItemActionUpdater;
 import org.jutils.ui.validation.*;
 
 /*******************************************************************************
@@ -23,6 +22,8 @@ public class FileFormField implements IDataFormField<File>
 
     /**  */
     private IUpdater<File> updater;
+    /**  */
+    private boolean settingData;
 
     /***************************************************************************
      * @param name
@@ -66,10 +67,22 @@ public class FileFormField implements IDataFormField<File>
         this.name = name;
         this.field = new FileField( existence, required, isSave );
         this.view = new ValidationView( field );
+        this.settingData = false;
     }
 
     /***************************************************************************
-     * 
+     * @param file
+     **************************************************************************/
+    private void callUpdater( File file )
+    {
+        if( !settingData && updater != null )
+        {
+            updater.update( file );
+        }
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public String getName()
@@ -78,7 +91,7 @@ public class FileFormField implements IDataFormField<File>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JComponent getView()
@@ -87,7 +100,7 @@ public class FileFormField implements IDataFormField<File>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public File getValue()
@@ -96,27 +109,29 @@ public class FileFormField implements IDataFormField<File>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void setValue( File value )
     {
+        this.settingData = true;
         field.setData( value );
+        this.settingData = false;
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void setUpdater( IUpdater<File> updater )
     {
         this.updater = updater;
 
-        field.addChangeListener( new ItemActionUpdater<>( updater ) );
+        field.addChangeListener( ( e ) -> callUpdater( e.getItem() ) );
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public IUpdater<File> getUpdater()
@@ -125,7 +140,7 @@ public class FileFormField implements IDataFormField<File>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void setEditable( boolean editable )
@@ -134,7 +149,7 @@ public class FileFormField implements IDataFormField<File>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void addValidityChanged( IValidityChangedListener l )
@@ -143,7 +158,7 @@ public class FileFormField implements IDataFormField<File>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void removeValidityChanged( IValidityChangedListener l )
@@ -152,7 +167,7 @@ public class FileFormField implements IDataFormField<File>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public Validity getValidity()

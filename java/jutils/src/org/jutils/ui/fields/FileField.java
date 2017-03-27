@@ -186,7 +186,7 @@ public class FileField implements IDataView<File>, IValidationField
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JComponent getView()
@@ -195,7 +195,7 @@ public class FileField implements IDataView<File>, IValidationField
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public File getData()
@@ -216,7 +216,7 @@ public class FileField implements IDataView<File>, IValidationField
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void setData( File file )
@@ -235,7 +235,7 @@ public class FileField implements IDataView<File>, IValidationField
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void addValidityChanged( IValidityChangedListener l )
@@ -244,7 +244,7 @@ public class FileField implements IDataView<File>, IValidationField
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void removeValidityChanged( IValidityChangedListener l )
@@ -253,7 +253,7 @@ public class FileField implements IDataView<File>, IValidationField
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public Validity getValidity()
@@ -262,7 +262,9 @@ public class FileField implements IDataView<File>, IValidationField
     }
 
     /***************************************************************************
-     * @param b
+     * Sets the field as editable according to the provided boolean.
+     * @param editable {@code true} if the user can edit the control;
+     * {@code false} otherwise.
      **************************************************************************/
     public void setEditable( boolean editable )
     {
