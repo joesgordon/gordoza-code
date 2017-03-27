@@ -20,7 +20,7 @@ import org.jutils.ui.TitleView;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileChooserListener.IFileSelected;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
-import org.jutils.ui.fields.FileField;
+import org.jutils.ui.fields.FileFormField;
 import org.jutils.ui.model.*;
 import org.jutils.ui.model.LabelTableCellRenderer.ITableCellLabelDecorator;
 import org.jutils.ui.validation.*;
@@ -31,7 +31,7 @@ import org.jutils.ui.validation.*;
 public class VerifyView implements IDataView<ChecksumResult>, IValidationField
 {
     /**  */
-    private final FileField commonDirField;
+    private final FileFormField commonDirField;
     /**  */
     private final ItemsTableModel<SumFile> tableModel;
     /**  */
@@ -50,7 +50,8 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
      **************************************************************************/
     public VerifyView()
     {
-        this.commonDirField = new FileField( ExistenceType.DIRECTORY_ONLY );
+        this.commonDirField = new FileFormField( "Common Directory",
+            ExistenceType.DIRECTORY_ONLY );
         this.tableModel = new ItemsTableModel<>( new ChecksumsTableModel() );
         this.table = new JTable( tableModel );
 
@@ -89,10 +90,9 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
     {
         StandardFormView form = new StandardFormView();
 
-        commonDirField.addChangeListener(
-            new CommonFileChangedListener( this ) );
+        commonDirField.setUpdater( ( f ) -> setCommonFile( f ) );
 
-        form.addField( "Common Directory", commonDirField.getView() );
+        form.addField( commonDirField );
 
         return form.getView();
     }
@@ -219,7 +219,7 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
     {
         this.input = input;
 
-        commonDirField.setData( input.commonDir );
+        commonDirField.setValue( input.commonDir );
         tableModel.setItems( input.files );
 
         validate();
@@ -335,6 +335,24 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
                     file.getAbsolutePath(),
                 "I/O Error", JOptionPane.ERROR_MESSAGE );
         }
+    }
+
+    public void setCommonFile( File file )
+    {
+        if( input != null )
+        {
+            for( SumFile sf : input.files )
+            {
+                if( sf.file.isFile() )
+                {
+                    sf.length = sf.file.length();
+                }
+            }
+        }
+
+        input.setFiles( file );
+        table.repaint();
+        validate();
     }
 
     /***************************************************************************
@@ -462,7 +480,7 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
         {
 
             SumFile sum = view.tableModel.getItem( row );
-            File commonPath = view.commonDirField.getData();
+            File commonPath = view.commonDirField.getValue();
 
             Icon icon = null;
 
@@ -495,41 +513,6 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
 
                 label.setBackground( bg );
             }
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class CommonFileChangedListener
-        implements ItemActionListener<File>
-    {
-        private final VerifyView view;
-
-        public CommonFileChangedListener( VerifyView view )
-        {
-            this.view = view;
-        }
-
-        @Override
-        public void actionPerformed( ItemActionEvent<File> event )
-        {
-            ChecksumResult input = view.getData();
-
-            if( input != null )
-            {
-                for( SumFile sf : input.files )
-                {
-                    if( sf.file.isFile() )
-                    {
-                        sf.length = sf.file.length();
-                    }
-                }
-            }
-
-            view.input.setFiles( event.getItem() );
-            view.table.repaint();
-            view.validate();
         }
     }
 }
