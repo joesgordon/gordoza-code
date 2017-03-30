@@ -18,7 +18,7 @@ public class ChatMessageSerializer implements IDataSerializer<ChatMessage>
     /**  */
     private final StringSerializer stringSerializer;
     /**  */
-    private final AttributeSetSerializer attributeSerializer;
+    private final TextStyleListSerializer attributeSerializer;
 
     /***************************************************************************
      * @param localUser
@@ -26,7 +26,7 @@ public class ChatMessageSerializer implements IDataSerializer<ChatMessage>
     public ChatMessageSerializer()
     {
         this.stringSerializer = new StringSerializer();
-        this.attributeSerializer = new AttributeSetSerializer();
+        this.attributeSerializer = new TextStyleListSerializer();
     }
 
     /***************************************************************************

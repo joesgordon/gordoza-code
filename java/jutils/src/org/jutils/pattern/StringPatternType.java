@@ -1,33 +1,38 @@
-package chatterbox.io;
+package org.jutils.pattern;
 
-import java.io.IOException;
-
-import org.jutils.data.TextStyleList;
-import org.jutils.io.IDataSerializer;
-import org.jutils.io.IDataStream;
+import org.jutils.INamedItem;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class AttributeSetSerializer implements IDataSerializer<TextStyleList>
+public enum StringPatternType implements INamedItem
 {
+    /**  */
+    EXACT( "Exact" ),
+    /**  */
+    CONTAINS( "Contains" ),
+    /**  */
+    WILDCARD( "Wildcard" ),
+    /**  */
+    REGEX( "Regular Expression" );
+
+    /**  */
+    public final String name;
+
     /***************************************************************************
-     * {@inheritDoc}
+     * @param name
      **************************************************************************/
-    @Override
-    public TextStyleList read( IDataStream stream ) throws IOException
+    private StringPatternType( String name )
     {
-        // TODO Serialize attribute set
-        return null;
+        this.name = name;
     }
 
     /***************************************************************************
      * {@inheritDoc}
      **************************************************************************/
     @Override
-    public void write( TextStyleList data, IDataStream stream )
-        throws IOException
+    public String getName()
     {
-        // TODO Serialize attribute set
+        return name;
     }
 }
