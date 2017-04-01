@@ -6,6 +6,9 @@ import java.io.IOException;
 import org.jutils.io.FileStream;
 import org.jutils.io.IStream;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class BlockBuffer
 {
     /**  */
@@ -13,12 +16,15 @@ public class BlockBuffer
     /**  */
     public long fileLength;
     /**  */
-    public int maxBufferSize;
+    private int maxBufferSize;
     /**  */
     public File currentFile;
     /**  */
     public IStream byteStream;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public BlockBuffer()
     {
         this.startOffset = 0;
@@ -28,6 +34,10 @@ public class BlockBuffer
         this.byteStream = null;
     }
 
+    /***************************************************************************
+     * @param file
+     * @throws IOException
+     **************************************************************************/
     public void openFile( File file ) throws IOException
     {
         currentFile = file;
@@ -53,6 +63,11 @@ public class BlockBuffer
         }
     }
 
+    /***************************************************************************
+     * @param pos
+     * @return
+     * @throws IOException
+     **************************************************************************/
     public DataBlock loadBufferAt( long pos ) throws IOException
     {
         this.startOffset = pos;
@@ -69,6 +84,9 @@ public class BlockBuffer
         return new DataBlock( pos, buffer );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public static final class DataBlock
     {
         public final long position;
@@ -81,14 +99,31 @@ public class BlockBuffer
         }
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public long getPreviousPosition()
     {
-        return startOffset - ( startOffset % maxBufferSize ) - maxBufferSize;
+        long lastOffset = startOffset - ( startOffset % maxBufferSize ) -
+            maxBufferSize;
+        lastOffset = Math.max( lastOffset, 0 );
+        return lastOffset;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public long getNextPosition()
     {
         return startOffset - ( startOffset % maxBufferSize ) + maxBufferSize;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public long getLastPosition()
+    {
+        return getBlockStart( fileLength - 1 );
     }
 
     /***************************************************************************
@@ -102,13 +137,32 @@ public class BlockBuffer
         return blockCount * maxBufferSize;
     }
 
+    /***************************************************************************
+     * @return
+     */
     public boolean isOpen()
     {
         return currentFile != null;
     }
 
+    /***************************************************************************
+     * @param position
+     * @return
+     **************************************************************************/
     public long getBufferStart( Long position )
     {
         return ( position / maxBufferSize ) * maxBufferSize;
+    }
+
+    public long setBufferSize( int size )
+    {
+        this.maxBufferSize = size;
+
+        return getBufferStart( startOffset );
+    }
+
+    public long getBufferSize()
+    {
+        return maxBufferSize;
     }
 }

@@ -163,23 +163,17 @@ public class HexFileView implements IDataView<File>
         return hexView.getBuffer();
     }
 
+    public void jumpFirst()
+    {
+        jump( 0L );
+    }
+
     /***************************************************************************
      * 
      **************************************************************************/
     public void jumpPrevious()
     {
-        long lastOffset = buffer.getPreviousPosition();
-        lastOffset = Math.max( lastOffset, 0 );
-
-        try
-        {
-            loadBuffer( lastOffset );
-        }
-        catch( IOException ex )
-        {
-            JOptionPane.showMessageDialog( view, ex.getMessage(), "ERROR",
-                JOptionPane.ERROR_MESSAGE );
-        }
+        jump( buffer.getPreviousPosition() );
     }
 
     /***************************************************************************
@@ -187,11 +181,25 @@ public class HexFileView implements IDataView<File>
      **************************************************************************/
     public void jumpForward()
     {
-        long nextOffset = buffer.getNextPosition();
+        jump( buffer.getNextPosition() );
+    }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public void jumpLast()
+    {
+        jump( buffer.getLastPosition() );
+    }
+
+    /***************************************************************************
+     * @param position
+     **************************************************************************/
+    private void jump( long position )
+    {
         try
         {
-            loadBuffer( nextOffset );
+            loadBuffer( position );
         }
         catch( IOException ex )
         {
@@ -221,14 +229,14 @@ public class HexFileView implements IDataView<File>
      **************************************************************************/
     public void setBufferSize( int size )
     {
-        buffer.maxBufferSize = size;
+        long pos = buffer.setBufferSize( size );
+
         progressBar.setUnitLength( size );
 
         if( buffer.isOpen() )
         {
             try
             {
-                long pos = buffer.getBufferStart( buffer.startOffset );
                 loadBuffer( pos );
             }
             catch( IOException ex )
@@ -285,7 +293,7 @@ public class HexFileView implements IDataView<File>
         titlePanel.setTitle( file.getName() );
         loadBuffer( 0 );
         progressBar.setLength( buffer.fileLength );
-        progressBar.setUnitLength( buffer.maxBufferSize );
+        progressBar.setUnitLength( buffer.getBufferSize() );
     }
 
     /***************************************************************************
