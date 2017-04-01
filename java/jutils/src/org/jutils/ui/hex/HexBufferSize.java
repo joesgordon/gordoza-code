@@ -1,4 +1,4 @@
-package org.jutils.apps.jhex.data;
+package org.jutils.ui.hex;
 
 public enum HexBufferSize
 {

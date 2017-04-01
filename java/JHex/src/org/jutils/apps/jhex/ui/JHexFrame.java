@@ -13,7 +13,6 @@ import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
 import org.jutils.apps.jhex.JHexIcons;
 import org.jutils.apps.jhex.JHexMain;
-import org.jutils.apps.jhex.data.HexBufferSize;
 import org.jutils.apps.jhex.data.JHexOptions;
 import org.jutils.apps.jhex.task.DataDistributionTask;
 import org.jutils.apps.jhex.task.SearchTask;
@@ -27,9 +26,8 @@ import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
 import org.jutils.ui.fields.HexBytesFormField;
-import org.jutils.ui.hex.HexFileView;
+import org.jutils.ui.hex.*;
 import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
-import org.jutils.ui.hex.ValueView;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
