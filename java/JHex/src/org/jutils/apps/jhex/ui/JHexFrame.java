@@ -27,7 +27,7 @@ import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
 import org.jutils.ui.fields.HexBytesFormField;
-import org.jutils.ui.hex.HexEditorFilePanel;
+import org.jutils.ui.hex.HexFileView;
 import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
 import org.jutils.ui.hex.ValueView;
 import org.jutils.ui.model.IView;
@@ -44,7 +44,7 @@ public class JHexFrame implements IView<JFrame>
     /**  */
     private final StandardFrameView frameView;
     /** The file tree displaying the directories in the given file system. */
-    private final HexEditorFilePanel editor;
+    private final HexFileView editor;
     /** The serializer to access user options. */
     private final OptionsSerializer<JHexOptions> options;
     /**
@@ -96,7 +96,7 @@ public class JHexFrame implements IView<JFrame>
         this.options = JHexMain.getOptions();
 
         this.frameView = new StandardFrameView();
-        this.editor = new HexEditorFilePanel();
+        this.editor = new HexFileView();
         this.dataViewButton = new JToggleButton();
         this.valuePanel = new ValueView();
         this.dataDialog = createDataDialog();

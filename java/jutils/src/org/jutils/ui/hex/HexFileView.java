@@ -17,7 +17,7 @@ import org.jutils.ui.model.IView;
 /*******************************************************************************
  *
  ******************************************************************************/
-public class HexEditorFilePanel implements IView<JPanel>
+public class HexFileView implements IView<JPanel>
 {
     /**  */
     private final JPanel view;
@@ -47,7 +47,7 @@ public class HexEditorFilePanel implements IView<JPanel>
     /***************************************************************************
      * 
      **************************************************************************/
-    public HexEditorFilePanel()
+    public HexFileView()
     {
         this.progressBar = new PositionIndicator();
         this.offsetLabel = new JLabel( "" );
@@ -395,9 +395,9 @@ public class HexEditorFilePanel implements IView<JPanel>
      **************************************************************************/
     private static class PositionChanged implements ItemActionListener<Long>
     {
-        private final HexEditorFilePanel view;
+        private final HexFileView view;
 
-        public PositionChanged( HexEditorFilePanel view )
+        public PositionChanged( HexFileView view )
         {
             this.view = view;
         }
