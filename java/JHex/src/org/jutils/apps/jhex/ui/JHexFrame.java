@@ -477,7 +477,7 @@ public class JHexFrame implements IView<JFrame>
 
         try
         {
-            editor.setFile( f );
+            editor.openFile( f );
 
             boolean enabled = editor.getStream() != null;
 
@@ -492,8 +492,8 @@ public class JHexFrame implements IView<JFrame>
         }
         catch( IOException ex )
         {
-            JOptionPane.showMessageDialog( getView(), ex.getMessage(),
-                "I/O Error", JOptionPane.ERROR_MESSAGE );
+            SwingUtils.showErrorMessage( getView(), ex.getMessage(),
+                "I/O Error" );
         }
 
         updateFileMenu();

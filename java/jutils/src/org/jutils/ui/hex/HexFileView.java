@@ -1,23 +1,25 @@
 package org.jutils.ui.hex;
 
 import java.awt.*;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import org.jutils.SwingUtils;
 import org.jutils.io.FileStream;
 import org.jutils.io.IStream;
 import org.jutils.ui.*;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
-import org.jutils.ui.model.IView;
+import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
  *
  ******************************************************************************/
-public class HexFileView implements IView<JPanel>
+public class HexFileView implements IDataView<File>
 {
     /**  */
     private final JPanel view;
@@ -169,21 +171,6 @@ public class HexFileView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @throws IOException
-     **************************************************************************/
-    public void closeFile() throws IOException
-    {
-        if( byteStream != null )
-        {
-            byteStream.close();
-            byteStream = null;
-            hexView.setBuffer( null );
-            startOffset = 0;
-            fileLength = 0;
-        }
-    }
-
-    /***************************************************************************
      * 
      **************************************************************************/
     public void jumpPrevious()
@@ -261,10 +248,45 @@ public class HexFileView implements IView<JPanel>
     }
 
     /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public JPanel getView()
+    {
+        return view;
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public File getData()
+    {
+        return currentFile;
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public void setData( File data )
+    {
+        try
+        {
+            openFile( data );
+        }
+        catch( IOException ex )
+        {
+            SwingUtils.showErrorMessage( getView(), ex.getMessage(),
+                "I/O Error" );
+        }
+    }
+
+    /***************************************************************************
      * @param file
      * @throws IOException
      **************************************************************************/
-    public void setFile( File file ) throws IOException
+    public void openFile( File file ) throws IOException
     {
         currentFile = file;
         if( byteStream != null )
@@ -280,11 +302,18 @@ public class HexFileView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @return
+     * @throws IOException
      **************************************************************************/
-    public IStream getStream()
+    public void closeFile() throws IOException
     {
-        return byteStream;
+        if( byteStream != null )
+        {
+            byteStream.close();
+            byteStream = null;
+            hexView.setBuffer( null );
+            startOffset = 0;
+            fileLength = 0;
+        }
     }
 
     /***************************************************************************
@@ -293,31 +322,31 @@ public class HexFileView implements IView<JPanel>
      **************************************************************************/
     public void saveFile( File file ) throws IOException
     {
-        if( file.compareTo( currentFile ) == 0 )
-        {
-            byteStream.close();
-        }
-
-        try( FileOutputStream fileStream = new FileOutputStream( file ) )
-        {
-            byte [] buffer = hexView.getBuffer().getBytes();
-            fileStream.write( buffer );
-            fileStream.close();
-        }
-
-        if( file.compareTo( currentFile ) == 0 )
-        {
-            setFile( file );
-        }
+        // TODO fix saving of files.
+        // if( file.compareTo( currentFile ) == 0 )
+        // {
+        // byteStream.close();
+        // }
+        //
+        // try( FileOutputStream fileStream = new FileOutputStream( file ) )
+        // {
+        // byte [] buffer = hexView.getBuffer().getBytes();
+        // fileStream.write( buffer );
+        // fileStream.close();
+        // }
+        //
+        // if( file.compareTo( currentFile ) == 0 )
+        // {
+        // openFile( file );
+        // }
     }
 
     /***************************************************************************
-     * 
+     * @return
      **************************************************************************/
-    @Override
-    public JPanel getView()
+    public IStream getStream()
     {
-        return view;
+        return byteStream;
     }
 
     /***************************************************************************
