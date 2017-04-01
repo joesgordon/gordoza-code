@@ -124,21 +124,26 @@ public class HexFileView implements IDataView<File>
      **************************************************************************/
     private void loadBuffer( long position ) throws IOException
     {
+        if( position < 0 || position >= buffer.fileLength )
+        {
+            return;
+        }
+
         DataBlock block = buffer.loadBufferAt( position );
 
-        hexView.setStartingAddress( buffer.startOffset );
+        hexView.setStartingAddress( position );
         hexView.setBuffer( new ByteBuffer( block.buffer ) );
-        long nextOffset = block.position + block.buffer.length;
+        long nextOffset = position + block.buffer.length;
 
         offsetLabel.setText(
-            String.format( "Showing 0x%016X - 0x%016X of 0x%016X",
-                block.position, nextOffset - 1, buffer.fileLength ) );
+            String.format( "Showing 0x%016X - 0x%016X of 0x%016X", position,
+                nextOffset - 1, buffer.fileLength ) );
 
         // TODO create listener list to notify when buttons should be
         // dis/en-abled
         // nextButton.setEnabled( nextOffset < fileLength );
-        // backButton.setEnabled( startOffset > 0 );
-        progressBar.setOffset( block.position );
+        // backButton.setEnabled( position > 0 );
+        progressBar.setOffset( position );
         progressBar.setUnitLength( block.buffer.length );
     }
 
@@ -168,7 +173,7 @@ public class HexFileView implements IDataView<File>
 
         try
         {
-            setOffset( lastOffset );
+            loadBuffer( lastOffset );
         }
         catch( IOException ex )
         {
@@ -186,7 +191,7 @@ public class HexFileView implements IDataView<File>
 
         try
         {
-            setOffset( nextOffset );
+            loadBuffer( nextOffset );
         }
         catch( IOException ex )
         {
@@ -223,7 +228,8 @@ public class HexFileView implements IDataView<File>
         {
             try
             {
-                setOffset( buffer.startOffset );
+                long pos = buffer.getBufferStart( buffer.startOffset );
+                loadBuffer( pos );
             }
             catch( IOException ex )
             {
@@ -277,7 +283,7 @@ public class HexFileView implements IDataView<File>
         buffer.openFile( file );
 
         titlePanel.setTitle( file.getName() );
-        setOffset( 0 );
+        loadBuffer( 0 );
         progressBar.setLength( buffer.fileLength );
         progressBar.setUnitLength( buffer.maxBufferSize );
     }
@@ -341,7 +347,7 @@ public class HexFileView implements IDataView<File>
         try
         {
             long blockOffset = buffer.getBlockStart( offset );
-            setOffset( blockOffset );
+            loadBuffer( blockOffset );
 
             int startIndex = ( int )( offset - blockOffset );
             int endIndex = startIndex + length - 1;
@@ -352,18 +358,6 @@ public class HexFileView implements IDataView<File>
         {
             JOptionPane.showMessageDialog( getView(), ex.getMessage(), "ERROR",
                 JOptionPane.ERROR_MESSAGE );
-        }
-    }
-
-    /***************************************************************************
-     * @param offset
-     * @throws IOException
-     **************************************************************************/
-    private void setOffset( long offset ) throws IOException
-    {
-        if( offset > -1 && offset < buffer.fileLength )
-        {
-            loadBuffer( offset );
         }
     }
 
@@ -402,7 +396,7 @@ public class HexFileView implements IDataView<File>
 
             try
             {
-                view.setOffset( pos );
+                view.loadBuffer( pos );
             }
             catch( IOException ex )
             {
