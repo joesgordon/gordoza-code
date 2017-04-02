@@ -1,7 +1,8 @@
 package org.jutils.apps.jhex.ui;
 
-import java.awt.*;
 import java.awt.Dialog.ModalityType;
+import java.awt.Dimension;
+import java.awt.Window;
 import java.awt.event.*;
 import java.io.*;
 import java.util.List;
@@ -25,8 +26,8 @@ import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
 import org.jutils.ui.fields.HexBytesFormField;
-import org.jutils.ui.hex.*;
-import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
+import org.jutils.ui.hex.HexBufferSize;
+import org.jutils.ui.hex.HexFileView;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
@@ -44,18 +45,6 @@ public class JHexFrame implements IView<JFrame>
     private final HexFileView editor;
     /** The serializer to access user options. */
     private final OptionsSerializer<JHexOptions> options;
-    /**
-     * The dialog to show the data in different formats starting at the
-     * currently selected byte.
-     */
-    private final JDialog dataDialog;
-    /**
-     * The view to show the data in different formats starting at the currently
-     * selected byte.
-     */
-    private final ValueView valuePanel;
-    /** The button to toggle the data view between visible and invisible. */
-    private final JToggleButton dataViewButton;
     /** The recent files menu. */
     private final RecentFilesMenuView recentFiles;
 
@@ -94,9 +83,6 @@ public class JHexFrame implements IView<JFrame>
 
         this.frameView = new StandardFrameView();
         this.editor = new HexFileView();
-        this.dataViewButton = new JToggleButton();
-        this.valuePanel = new ValueView();
-        this.dataDialog = createDataDialog();
         this.recentFiles = new RecentFilesMenuView();
 
         this.bufferSize = HexBufferSize.LARGE;
@@ -126,7 +112,6 @@ public class JHexFrame implements IView<JFrame>
 
         editorView.setDropTarget(
             new FileDropTarget( new FileDroppedListener( this ) ) );
-        editor.addRangeSelectedListener( new SelectionListener( this ) );
 
         key = KeyStroke.getKeyStroke( "control F" );
         searchAction.putValue( Action.ACCELERATOR_KEY, key );
@@ -177,46 +162,6 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * Creates the data dialog.
-     **************************************************************************/
-    private JDialog createDataDialog()
-    {
-        JDialog dialog = new JDialog( getView(), ModalityType.MODELESS );
-        JPanel panel = new JPanel( new GridBagLayout() );
-        JButton okButton = new JButton( "OK" );
-        GridBagConstraints constraints;
-
-        valuePanel.addSizeSelectedListener( new SizeSelectedListener( this ) );
-
-        constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 4, 4, 4, 4 ), 0, 0 );
-        panel.add( valuePanel.getView(), constraints );
-
-        constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 );
-        panel.add( new JSeparator(), constraints );
-
-        okButton.addActionListener( new HideDialogListener( this ) );
-
-        constraints = new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.NONE,
-            new Insets( 10, 10, 10, 10 ), 30, 10 );
-        panel.add( okButton, constraints );
-
-        dialog.setTitle( "Data View" );
-        dialog.setContentPane( panel );
-        dialog.setAlwaysOnTop( false );
-        dialog.setIconImages( JHexIcons.getAppImages() );
-
-        dialog.pack();
-        dialog.setLocationRelativeTo( getView() );
-
-        return dialog;
-    }
-
-    /***************************************************************************
      * Creates the toolbar.
      **************************************************************************/
     private JToolBar createToolbar()
@@ -259,13 +204,6 @@ public class JHexFrame implements IView<JFrame>
             new ActionAdapter( ( e ) -> showBufferSizeDialog(),
                 "Configure Options",
                 IconConstants.getIcon( IconConstants.CONFIG_16 ) ) );
-
-        JToggleButton jtb = dataViewButton;
-        jtb.setIcon( JHexIcons.loader.getIcon( JHexIcons.SHOW_DATA ) );
-        jtb.setToolTipText( "Show Data" );
-        jtb.setFocusable( false );
-        jtb.addActionListener( new ShowDataListener( this, jtb ) );
-        toolbar.add( jtb );
 
         return toolbar;
     }
@@ -746,105 +684,6 @@ public class JHexFrame implements IView<JFrame>
             {
                 frame.openFile( files.get( 0 ) );
             }
-        }
-    }
-
-    /***************************************************************************
-     * Action listener for displaying the data dialog.
-     **************************************************************************/
-    private static class ShowDataListener implements ActionListener
-    {
-        private final JHexFrame view;
-        private final JToggleButton button;
-
-        public ShowDataListener( JHexFrame view, JToggleButton jtb )
-        {
-            this.view = view;
-            this.button = jtb;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            view.dataDialog.setVisible( button.isSelected() );
-
-            if( button.isSelected() )
-            {
-                view.editor.setHighlightLength(
-                    view.valuePanel.getSelectedSize() );
-            }
-            else
-            {
-                view.editor.setHighlightLength( -1 );
-            }
-        }
-    }
-
-    /***************************************************************************
-     * Action listener for hiding the dialog.
-     **************************************************************************/
-    private static class HideDialogListener implements ActionListener
-    {
-        private final JHexFrame frame;
-
-        public HideDialogListener( JHexFrame view )
-        {
-            this.frame = view;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            frame.dataDialog.setVisible( false );
-            frame.dataViewButton.setSelected( false );
-            frame.editor.setHighlightLength( -1 );
-        }
-    }
-
-    /***************************************************************************
-     * Listener to update the data dialog as bytes are selected.
-     **************************************************************************/
-    private static class SelectionListener implements IRangeSelectedListener
-    {
-        private final JHexFrame frame;
-
-        public SelectionListener( JHexFrame view )
-        {
-            this.frame = view;
-        }
-
-        @Override
-        public void rangeSelected( int start, int end )
-        {
-            frame.valuePanel.setBytes( frame.editor.getBuffer().getBytes(),
-                end );
-
-            // LogUtils.printDebug( "col: " + col + ", row: " + row +
-            // ", start: "
-            // +
-            // start + ", end: " + end );
-        }
-    }
-
-    /***************************************************************************
-     * Listener to update the buffer size.
-     **************************************************************************/
-    private static class SizeSelectedListener
-        implements ItemActionListener<Integer>
-    {
-        private final JHexFrame frame;
-
-        public SizeSelectedListener( JHexFrame frame )
-        {
-            this.frame = frame;
-        }
-
-        @Override
-        public void actionPerformed( ItemActionEvent<Integer> event )
-        {
-            int len = event.getItem() == null ? -1 : event.getItem();
-
-            frame.editor.setHighlightLength( len );
         }
     }
 

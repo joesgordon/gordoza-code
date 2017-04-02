@@ -110,6 +110,8 @@ public final class IconConstants
 
     public final static String SAVE_AS_16 = "saveAs16.png";
 
+    public static final String SHOW_DATA = "flashlight.png";
+
     public final static String SORT_DOWN_16 = "sortDown16.png";
 
     public final static String STOP_16 = "stop16.png";

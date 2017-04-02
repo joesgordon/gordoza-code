@@ -1,14 +1,19 @@
 package org.jutils.ui.hex;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
 import org.jutils.io.IStream;
 import org.jutils.ui.*;
+import org.jutils.ui.event.ItemActionEvent;
+import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.hex.BlockBuffer.DataBlock;
 import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
 import org.jutils.ui.model.IDataView;
@@ -26,11 +31,16 @@ public class HexFileView implements IDataView<File>
     /**  */
     private final JLabel offsetLabel;
     /**  */
-    private final JPanel titleContent;
-    /**  */
-    private final TitleView titlePanel;
+    private final TitleView fileTitleView;
     /**  */
     private final HexPanel hexView;
+    /**  */
+    private final TitleView dataTitleView;
+    /**
+     * The view to show the data in different formats starting at the currently
+     * selected byte.
+     */
+    private final ValueView valuePanel;
 
     private final BlockBuffer buffer;
 
@@ -42,40 +52,44 @@ public class HexFileView implements IDataView<File>
         this.progressBar = new PositionIndicator();
         this.offsetLabel = new JLabel( "" );
         this.hexView = new HexPanel();
-        this.titleContent = createTitleContent();
-        this.titlePanel = new TitleView();
-        this.view = new JPanel( new GridBagLayout() );
+        this.fileTitleView = new TitleView( "No File Loaded", createContent() );
+        this.valuePanel = new ValueView();
+        this.dataTitleView = new TitleView( "Value Selected",
+            valuePanel.getView() );
+        this.view = createView();
 
         this.buffer = new BlockBuffer();
 
-        // ---------------------------------------------------------------------
-        // Setup main panel.
-        // ---------------------------------------------------------------------
-        titlePanel.setTitle( "No File Loaded" );
-        titlePanel.setComponent( titleContent );
-
-        view.add( createContentPanel(),
-            new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
-                GridBagConstraints.WEST, GridBagConstraints.VERTICAL,
-                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+        valuePanel.addSizeSelectedListener( new SizeSelectedListener( this ) );
+        addRangeSelectedListener( new SelectionListener( this ) );
     }
 
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    private Component createContentPanel()
+    private JPanel createView()
     {
-        titlePanel.setTitle( "No File Loaded" );
-        titlePanel.setComponent( titleContent );
-        titlePanel.getView().setBorder( new ShadowBorder() );
+        JPanel panel = new JPanel( new GridBagLayout() );
 
-        return titlePanel.getView();
+        fileTitleView.getView().setBorder( new ShadowBorder() );
+
+        fileTitleView.getView().setMinimumSize( new Dimension( 500, 100 ) );
+        dataTitleView.getView().setMinimumSize(
+            dataTitleView.getView().getPreferredSize() );
+
+        panel.add( fileTitleView.getView(),
+            new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+                GridBagConstraints.WEST, GridBagConstraints.BOTH,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+        panel.add( dataTitleView.getView(),
+            new GridBagConstraints( 1, 0, 1, 1, 0.0, 1.0,
+                GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
+                new Insets( 4, 4, 4, 4 ), 0, 0 ) );
+
+        return panel;
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    private JPanel createTitleContent()
+    private JPanel createContent()
     {
         JPanel panel = new JPanel( new GridBagLayout() );
         GridBagConstraints constraints;
@@ -98,12 +112,22 @@ public class HexFileView implements IDataView<File>
         // editor.setAlternateRowBG( true );
         // editor.setShowGrid( true );
 
-        constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+        constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
+        panel.add( createToolbar(), constraints );
+
+        constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
+        panel.add( new JSeparator(), constraints );
+
+        constraints = new GridBagConstraints( 0, 2, 1, 1, 1.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets( 0, 0, 0, 0 ), 0, 0 );
         panel.add( hexView.getView(), constraints );
 
-        constraints = new GridBagConstraints( 0, 1, 1, 1, 1.0, 0.0,
+        constraints = new GridBagConstraints( 0, 3, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 0, 0, 0 ), 0, 0 );
         panel.add( new JSeparator(), constraints );
@@ -114,6 +138,21 @@ public class HexFileView implements IDataView<File>
         panel.add( progressBar, constraints );
 
         return panel;
+    }
+
+    private Component createToolbar()
+    {
+        JToolBar toolbar = new JGoodiesToolBar();
+
+        JToggleButton jtb = new JToggleButton();
+        jtb.setIcon( IconConstants.getIcon( IconConstants.SHOW_DATA ) );
+        jtb.setToolTipText( "Show Data" );
+        jtb.setFocusable( false );
+        jtb.setSelected( true );
+        jtb.addActionListener( new ShowDataListener( this, jtb ) );
+        toolbar.add( jtb );
+
+        return toolbar;
     }
 
     private void updatePosition( long position )
@@ -304,7 +343,7 @@ public class HexFileView implements IDataView<File>
     {
         buffer.openFile( file );
 
-        titlePanel.setTitle( file.getName() );
+        fileTitleView.setTitle( file.getName() );
         loadBuffer( 0 );
         progressBar.setLength( buffer.getLength() );
         progressBar.setUnitLength( buffer.getBufferSize() );
@@ -343,14 +382,6 @@ public class HexFileView implements IDataView<File>
         // {
         // openFile( file );
         // }
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public JPanel getNonTitleView()
-    {
-        return titleContent;
     }
 
     /***************************************************************************
@@ -406,5 +437,81 @@ public class HexFileView implements IDataView<File>
     public IStream openStreamCopy() throws FileNotFoundException
     {
         return buffer.openStreamCopy();
+    }
+
+    /***************************************************************************
+     * Action listener for displaying the data dialog.
+     **************************************************************************/
+    private static class ShowDataListener implements ActionListener
+    {
+        private final HexFileView view;
+        private final JToggleButton button;
+
+        public ShowDataListener( HexFileView view, JToggleButton jtb )
+        {
+            this.view = view;
+            this.button = jtb;
+        }
+
+        @Override
+        public void actionPerformed( ActionEvent e )
+        {
+            view.dataTitleView.getView().setVisible( button.isSelected() );
+
+            if( button.isSelected() )
+            {
+                view.setHighlightLength( view.valuePanel.getSelectedSize() );
+            }
+            else
+            {
+                view.setHighlightLength( -1 );
+            }
+        }
+    }
+
+    /***************************************************************************
+     * Listener to update the buffer size.
+     **************************************************************************/
+    private static class SizeSelectedListener
+        implements ItemActionListener<Integer>
+    {
+        private final HexFileView view;
+
+        public SizeSelectedListener( HexFileView view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ItemActionEvent<Integer> event )
+        {
+            int len = event.getItem() == null ? -1 : event.getItem();
+
+            view.setHighlightLength( len );
+        }
+    }
+
+    /***************************************************************************
+     * Listener to update the data dialog as bytes are selected.
+     **************************************************************************/
+    private static class SelectionListener implements IRangeSelectedListener
+    {
+        private final HexFileView view;
+
+        public SelectionListener( HexFileView view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void rangeSelected( int start, int end )
+        {
+            view.valuePanel.setBytes( view.getBuffer().getBytes(), end );
+
+            // LogUtils.printDebug( "col: " + col + ", row: " + row +
+            // ", start: "
+            // +
+            // start + ", end: " + end );
+        }
     }
 }
