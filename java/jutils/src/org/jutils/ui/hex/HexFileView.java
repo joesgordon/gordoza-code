@@ -56,7 +56,7 @@ public class HexFileView implements IDataView<File>
 
         view.add( createContentPanel(),
             new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                GridBagConstraints.WEST, GridBagConstraints.VERTICAL,
                 new Insets( 4, 4, 4, 4 ), 0, 0 ) );
     }
 
