@@ -1,8 +1,7 @@
 package org.jutils.ui.hex;
 
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -10,8 +9,6 @@ import javax.swing.border.EmptyBorder;
 import org.jutils.SwingUtils;
 import org.jutils.io.IStream;
 import org.jutils.ui.*;
-import org.jutils.ui.event.ItemActionEvent;
-import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.hex.BlockBuffer.DataBlock;
 import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
 import org.jutils.ui.model.IDataView;
@@ -95,7 +92,8 @@ public class HexFileView implements IDataView<File>
         progressBar.setLength( 100 );
         progressBar.setOffset( 0 );
         progressBar.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
-        progressBar.addPositionListener( new PositionChanged( this ) );
+        progressBar.addPositionListener(
+            ( e ) -> updatePosition( e.getItem() ) );
 
         // editor.setAlternateRowBG( true );
         // editor.setShowGrid( true );
@@ -118,13 +116,29 @@ public class HexFileView implements IDataView<File>
         return panel;
     }
 
+    private void updatePosition( long position )
+    {
+        long pos = buffer.getBufferStart( position );
+
+        try
+        {
+            loadBuffer( pos );
+        }
+        catch( IOException ex )
+        {
+            JOptionPane.showMessageDialog( getView(), ex.getMessage(), "ERROR",
+                JOptionPane.ERROR_MESSAGE );
+        }
+    }
+
     /***************************************************************************
      * @param position
      * @throws IOException
      **************************************************************************/
     private void loadBuffer( long position ) throws IOException
     {
-        if( position < 0 || position >= buffer.fileLength )
+        if( position < 0 || position >= buffer.getLength() ||
+            buffer.isLoaded( position ) )
         {
             return;
         }
@@ -137,7 +151,7 @@ public class HexFileView implements IDataView<File>
 
         offsetLabel.setText(
             String.format( "Showing 0x%016X - 0x%016X of 0x%016X", position,
-                nextOffset - 1, buffer.fileLength ) );
+                nextOffset - 1, buffer.getLength() ) );
 
         // TODO create listener list to notify when buttons should be
         // dis/en-abled
@@ -262,7 +276,7 @@ public class HexFileView implements IDataView<File>
     @Override
     public File getData()
     {
-        return buffer.currentFile;
+        return buffer.getFile();
     }
 
     /***************************************************************************
@@ -292,7 +306,7 @@ public class HexFileView implements IDataView<File>
 
         titlePanel.setTitle( file.getName() );
         loadBuffer( 0 );
-        progressBar.setLength( buffer.fileLength );
+        progressBar.setLength( buffer.getLength() );
         progressBar.setUnitLength( buffer.getBufferSize() );
     }
 
@@ -329,14 +343,6 @@ public class HexFileView implements IDataView<File>
         // {
         // openFile( file );
         // }
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public IStream getStream()
-    {
-        return buffer.byteStream;
     }
 
     /***************************************************************************
@@ -379,38 +385,26 @@ public class HexFileView implements IDataView<File>
 
         if( index > -1 )
         {
-            offset = buffer.startOffset + index;
+            offset = buffer.getPositionAt( index );
         }
 
         return offset;
     }
 
     /***************************************************************************
-     * 
+     * @return
      **************************************************************************/
-    private static class PositionChanged implements ItemActionListener<Long>
+    public boolean isOpen()
     {
-        private final HexFileView view;
+        return buffer.isOpen();
+    }
 
-        public PositionChanged( HexFileView view )
-        {
-            this.view = view;
-        }
-
-        @Override
-        public void actionPerformed( ItemActionEvent<Long> event )
-        {
-            long pos = view.buffer.getBufferStart( event.getItem() );
-
-            try
-            {
-                view.loadBuffer( pos );
-            }
-            catch( IOException ex )
-            {
-                JOptionPane.showMessageDialog( view.view, ex.getMessage(),
-                    "ERROR", JOptionPane.ERROR_MESSAGE );
-            }
-        }
+    /***************************************************************************
+     * @return
+     * @throws FileNotFoundException
+     **************************************************************************/
+    public IStream openStreamCopy() throws FileNotFoundException
+    {
+        return buffer.openStreamCopy();
     }
 }

@@ -1,7 +1,6 @@
 package org.jutils.ui.hex;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 import org.jutils.io.FileStream;
 import org.jutils.io.IStream;
@@ -12,26 +11,37 @@ import org.jutils.io.IStream;
 public class BlockBuffer
 {
     /**  */
-    public long startOffset;
+    private long position;
     /**  */
-    public long fileLength;
+    private long fileLength;
+    /** The size of the buffer to be loaded. */
+    private int bufferSize;
     /**  */
-    private int maxBufferSize;
+    private File file;
     /**  */
-    public File currentFile;
+    private IStream byteStream;
     /**  */
-    public IStream byteStream;
+    private byte [] bytes;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public BlockBuffer()
     {
-        this.startOffset = 0;
+        this.position = 0;
         this.fileLength = 0;
-        this.maxBufferSize = HexBufferSize.LARGE.size;
-        this.currentFile = null;
+        this.bufferSize = HexBufferSize.LARGE.size;
+        this.file = null;
         this.byteStream = null;
+        this.bytes = null;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public boolean isOpen()
+    {
+        return file != null;
     }
 
     /***************************************************************************
@@ -40,7 +50,7 @@ public class BlockBuffer
      **************************************************************************/
     public void openFile( File file ) throws IOException
     {
-        currentFile = file;
+        this.file = file;
         if( byteStream != null )
         {
             closeFile();
@@ -58,7 +68,7 @@ public class BlockBuffer
         {
             byteStream.close();
             byteStream = null;
-            startOffset = 0;
+            position = 0;
             fileLength = 0;
         }
     }
@@ -70,33 +80,18 @@ public class BlockBuffer
      **************************************************************************/
     public DataBlock loadBufferAt( long pos ) throws IOException
     {
-        this.startOffset = pos;
+        this.position = pos;
 
-        int bufLen = ( int )Math.min( maxBufferSize, fileLength - startOffset );
-        byte [] buffer = new byte[bufLen];
+        int bufLen = ( int )Math.min( bufferSize, fileLength - position );
+        bytes = new byte[bufLen];
 
         // LogUtils.printDebug( "Loading buffer @ " + startOffset + " , " +
         // percent + "%" );
 
         byteStream.seek( pos );
-        byteStream.readFully( buffer );
+        byteStream.readFully( bytes );
 
-        return new DataBlock( pos, buffer );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public static final class DataBlock
-    {
-        public final long position;
-        public final byte [] buffer;
-
-        public DataBlock( long position, byte [] buffer )
-        {
-            this.position = position;
-            this.buffer = buffer;
-        }
+        return new DataBlock( pos, bytes );
     }
 
     /***************************************************************************
@@ -104,8 +99,7 @@ public class BlockBuffer
      **************************************************************************/
     public long getPreviousPosition()
     {
-        long lastOffset = startOffset - ( startOffset % maxBufferSize ) -
-            maxBufferSize;
+        long lastOffset = position - ( position % bufferSize ) - bufferSize;
         lastOffset = Math.max( lastOffset, 0 );
         return lastOffset;
     }
@@ -115,7 +109,7 @@ public class BlockBuffer
      **************************************************************************/
     public long getNextPosition()
     {
-        return startOffset - ( startOffset % maxBufferSize ) + maxBufferSize;
+        return position - ( position % bufferSize ) + bufferSize;
     }
 
     /***************************************************************************
@@ -132,37 +126,99 @@ public class BlockBuffer
      **************************************************************************/
     public long getBlockStart( long offset )
     {
-        long blockCount = offset / maxBufferSize;
+        long blockCount = offset / bufferSize;
 
-        return blockCount * maxBufferSize;
-    }
-
-    /***************************************************************************
-     * @return
-     */
-    public boolean isOpen()
-    {
-        return currentFile != null;
+        return blockCount * bufferSize;
     }
 
     /***************************************************************************
      * @param position
      * @return
      **************************************************************************/
-    public long getBufferStart( Long position )
+    public long getBufferStart( long position )
     {
-        return ( position / maxBufferSize ) * maxBufferSize;
+        return ( position / bufferSize ) * bufferSize;
     }
 
+    /***************************************************************************
+     * @param size
+     * @return
+     **************************************************************************/
     public long setBufferSize( int size )
     {
-        this.maxBufferSize = size;
+        this.bufferSize = size;
 
-        return getBufferStart( startOffset );
+        return getBufferStart( position );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public long getBufferSize()
     {
-        return maxBufferSize;
+        return bufferSize;
+    }
+
+    /***************************************************************************
+     * @param index
+     * @return
+     **************************************************************************/
+    public long getPositionAt( int index )
+    {
+        return position + index;
+    }
+
+    /***************************************************************************
+     * @param position
+     * @return
+     **************************************************************************/
+    public boolean isLoaded( long position )
+    {
+        if( bytes == null )
+        {
+            return false;
+        }
+        return position > this.position &&
+            position < this.position + bytes.length;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public long getLength()
+    {
+        return fileLength;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public File getFile()
+    {
+        return file;
+    }
+
+    /***************************************************************************
+     * @return
+     * @throws FileNotFoundException
+     **************************************************************************/
+    public IStream openStreamCopy() throws FileNotFoundException
+    {
+        return file == null ? null : new FileStream( file, true );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public static final class DataBlock
+    {
+        public final long position;
+        public final byte [] buffer;
+
+        public DataBlock( long position, byte [] buffer )
+        {
+            this.position = position;
+            this.buffer = buffer;
+        }
     }
 }

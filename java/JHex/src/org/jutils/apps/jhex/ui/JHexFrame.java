@@ -3,8 +3,7 @@ package org.jutils.apps.jhex.ui;
 import java.awt.*;
 import java.awt.Dialog.ModalityType;
 import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 import javax.swing.*;
@@ -373,27 +372,38 @@ public class JHexFrame implements IView<JFrame>
      **************************************************************************/
     public void showAnalyzer()
     {
-        @SuppressWarnings( "resource")
-        IStream stream = editor.getStream();
-
-        if( stream == null )
+        try( IStream stream = editor.openStreamCopy() )
         {
-            return;
+            if( stream == null )
+            {
+                return;
+            }
+
+            DataDistributionTask ddt = new DataDistributionTask( stream );
+
+            TaskView.startAndShow( getView(), ddt, "Analyzing Data" );
+
+            DataDistribution dist = ddt.getDistribution();
+
+            if( dist != null )
+            {
+                VerboseMessageView msgView = new VerboseMessageView();
+
+                msgView.setMessages( "Finished Analyzing",
+                    dist.getDescription() );
+
+                msgView.show( getView(), "Finished Analyzing" );
+            }
         }
-
-        DataDistributionTask ddt = new DataDistributionTask( stream );
-
-        TaskView.startAndShow( getView(), ddt, "Analyzing Data" );
-
-        DataDistribution dist = ddt.getDistribution();
-
-        if( dist != null )
+        catch( FileNotFoundException ex )
         {
-            VerboseMessageView msgView = new VerboseMessageView();
-
-            msgView.setMessages( "Finished Analyzing", dist.getDescription() );
-
-            msgView.show( getView(), "Finished Analyzing" );
+            // TODO Auto-generated catch block
+            ex.printStackTrace();
+        }
+        catch( IOException ex )
+        {
+            // TODO Auto-generated catch block
+            ex.printStackTrace();
         }
     }
 
@@ -402,23 +412,33 @@ public class JHexFrame implements IView<JFrame>
      **************************************************************************/
     private void showPlot()
     {
-        @SuppressWarnings( "resource")
-        IStream stream = editor.getStream();
-
-        if( stream == null )
+        try( IStream stream = editor.openStreamCopy() )
         {
-            return;
+            if( stream == null )
+            {
+                return;
+            }
+
+            Window w = SwingUtils.getComponentsWindow( getView() );
+            DataPlotView plotView = new DataPlotView( stream );
+            OkDialogView dialogView = new OkDialogView( w, plotView.getView(),
+                ModalityType.DOCUMENT_MODAL, OkDialogButtons.OK_ONLY );
+
+            dialogView.setOkButtonText( "Close" );
+
+            dialogView.show( "Data Plot", JHexIcons.getAppImages(),
+                new Dimension( 640, 480 ) );
         }
-
-        Window w = SwingUtils.getComponentsWindow( getView() );
-        DataPlotView plotView = new DataPlotView( stream );
-        OkDialogView dialogView = new OkDialogView( w, plotView.getView(),
-            ModalityType.DOCUMENT_MODAL, OkDialogButtons.OK_ONLY );
-
-        dialogView.setOkButtonText( "Close" );
-
-        dialogView.show( "Data Plot", JHexIcons.getAppImages(),
-            new Dimension( 640, 480 ) );
+        catch( FileNotFoundException ex )
+        {
+            // TODO Auto-generated catch block
+            ex.printStackTrace();
+        }
+        catch( IOException ex )
+        {
+            // TODO Auto-generated catch block
+            ex.printStackTrace();
+        }
     }
 
     /***************************************************************************
@@ -477,7 +497,7 @@ public class JHexFrame implements IView<JFrame>
         {
             editor.openFile( f );
 
-            boolean enabled = editor.getStream() != null;
+            boolean enabled = editor.isOpen();
 
             prevAction.setEnabled( enabled );
             nextAction.setEnabled( enabled );
@@ -543,7 +563,7 @@ public class JHexFrame implements IView<JFrame>
      **************************************************************************/
     private void showSearchDialog()
     {
-        if( editor.getStream() == null )
+        if( !editor.isOpen() )
         {
             return;
         }
@@ -605,16 +625,34 @@ public class JHexFrame implements IView<JFrame>
         // ) +
         // " @ " + fromOffset + " " + ( isForward ? "Forward" : "Backward" ) );
 
-        SearchTask task = new SearchTask( bytes, editor.getStream(), fromOffset,
-            isForward );
-
-        TaskView.startAndShow( getView(), task, "Byte Search" );
-
-        long foundOffset = task.foundOffset;
-
-        if( foundOffset > -1 )
+        try( IStream stream = editor.openStreamCopy() )
         {
-            editor.highlightOffset( foundOffset, bytes.length );
+            if( stream == null )
+            {
+                return;
+            }
+
+            SearchTask task = new SearchTask( bytes, stream, fromOffset,
+                isForward );
+
+            TaskView.startAndShow( getView(), task, "Byte Search" );
+
+            long foundOffset = task.foundOffset;
+
+            if( foundOffset > -1 )
+            {
+                editor.highlightOffset( foundOffset, bytes.length );
+            }
+        }
+        catch( FileNotFoundException ex )
+        {
+            // TODO Auto-generated catch block
+            ex.printStackTrace();
+        }
+        catch( IOException ex )
+        {
+            // TODO Auto-generated catch block
+            ex.printStackTrace();
         }
     }
 
