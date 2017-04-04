@@ -27,7 +27,6 @@ import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
 import org.jutils.ui.fields.HexBytesFormField;
 import org.jutils.ui.hex.HexBufferSize;
-import org.jutils.ui.hex.HexFileView;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
@@ -335,13 +334,17 @@ public class JHexFrame implements IView<JFrame>
         }
         catch( FileNotFoundException ex )
         {
-            // TODO Auto-generated catch block
-            ex.printStackTrace();
+            SwingUtils.showErrorMessage( getView(),
+                "Unable to open file: " + editor.getData().getAbsolutePath() +
+                    " because " + ex.getMessage(),
+                "File Not Found Error" );
         }
         catch( IOException ex )
         {
-            // TODO Auto-generated catch block
-            ex.printStackTrace();
+            SwingUtils.showErrorMessage( getView(),
+                "Unable to read file: " + editor.getData().getAbsolutePath() +
+                    " because " + ex.getMessage(),
+                "I/O Error" );
         }
     }
 
@@ -369,13 +372,17 @@ public class JHexFrame implements IView<JFrame>
         }
         catch( FileNotFoundException ex )
         {
-            // TODO Auto-generated catch block
-            ex.printStackTrace();
+            SwingUtils.showErrorMessage( getView(),
+                "Unable to open file: " + editor.getData().getAbsolutePath() +
+                    " because " + ex.getMessage(),
+                "File Not Found Error" );
         }
         catch( IOException ex )
         {
-            // TODO Auto-generated catch block
-            ex.printStackTrace();
+            SwingUtils.showErrorMessage( getView(),
+                "Unable to read file: " + editor.getData().getAbsolutePath() +
+                    " because " + ex.getMessage(),
+                "I/O Error" );
         }
     }
 
@@ -584,13 +591,17 @@ public class JHexFrame implements IView<JFrame>
         }
         catch( FileNotFoundException ex )
         {
-            // TODO Auto-generated catch block
-            ex.printStackTrace();
+            SwingUtils.showErrorMessage( getView(),
+                "Unable to open file: " + editor.getData().getAbsolutePath() +
+                    " because " + ex.getMessage(),
+                "File Not Found Error" );
         }
         catch( IOException ex )
         {
-            // TODO Auto-generated catch block
-            ex.printStackTrace();
+            SwingUtils.showErrorMessage( getView(),
+                "Unable to read file: " + editor.getData().getAbsolutePath() +
+                    " because " + ex.getMessage(),
+                "I/O Error" );
         }
     }
 

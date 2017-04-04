@@ -1,4 +1,4 @@
-package org.jutils.ui.hex;
+package org.jutils.apps.jhex.ui;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,6 +14,7 @@ import org.jutils.io.IStream;
 import org.jutils.ui.*;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.hex.*;
 import org.jutils.ui.hex.BlockBuffer.DataBlock;
 import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
 import org.jutils.ui.model.IDataView;
