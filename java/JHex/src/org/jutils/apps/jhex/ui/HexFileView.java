@@ -1,6 +1,7 @@
 package org.jutils.apps.jhex.ui;
 
 import java.awt.*;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
@@ -10,10 +11,17 @@ import javax.swing.border.EmptyBorder;
 
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
+import org.jutils.apps.jhex.JHexIcons;
+import org.jutils.apps.jhex.task.DataDistributionTask;
+import org.jutils.apps.jhex.task.SearchTask;
+import org.jutils.chart.ChartIcons;
+import org.jutils.datadist.DataDistribution;
 import org.jutils.io.IStream;
+import org.jutils.task.TaskView;
 import org.jutils.ui.*;
-import org.jutils.ui.event.ItemActionEvent;
-import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.OkDialogView.OkDialogButtons;
+import org.jutils.ui.event.*;
+import org.jutils.ui.fields.HexBytesFormField;
 import org.jutils.ui.hex.*;
 import org.jutils.ui.hex.BlockBuffer.DataBlock;
 import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
@@ -43,13 +51,45 @@ public class HexFileView implements IDataView<File>
      */
     private final ValueView valuePanel;
 
+    /**  */
+    public final Action prevAction;
+    /**  */
+    public final Action nextAction;
+    /**  */
+    public final Action searchAction;
+    /**  */
+    public final Action gotoAction;
+    /**  */
+    public final Action analyzeAction;
+    /**  */
+    public final Action plotAction;
+
+    /**  */
     private final BlockBuffer buffer;
+
+    /**  */
+    private byte [] lastSearch;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public HexFileView()
     {
+        this.prevAction = new ActionAdapter( ( e ) -> jumpPrevious(),
+            "Previous Data Block", JHexIcons.getIcon( JHexIcons.JUMP_LEFT ) );
+        this.nextAction = new ActionAdapter( ( e ) -> jumpForward(),
+            "Next Data Block", JHexIcons.getIcon( JHexIcons.JUMP_RIGHT ) );
+
+        this.searchAction = new ActionAdapter( ( e ) -> showSearchDialog(),
+            "Search", IconConstants.getIcon( IconConstants.FIND_16 ) );
+        this.gotoAction = new ActionAdapter( ( e ) -> showGotoDialog(),
+            "Go To Byte", JHexIcons.loader.getIcon( JHexIcons.GOTO ) );
+
+        this.analyzeAction = new ActionAdapter( ( e ) -> showAnalyzer(),
+            "Analyze", IconConstants.getIcon( IconConstants.ANALYZE_16 ) );
+        this.plotAction = new ActionAdapter( ( e ) -> showPlot(), "Plot",
+            ChartIcons.getIcon( ChartIcons.CHART_016 ) );
+
         this.progressBar = new PositionIndicator();
         this.offsetLabel = new JLabel( "" );
         this.hexView = new HexPanel();
@@ -57,21 +97,57 @@ public class HexFileView implements IDataView<File>
         this.valuePanel = new ValueView();
         this.dataTitleView = new TitleView( "Value Selected",
             valuePanel.getView() );
+
         this.view = createView();
 
         this.buffer = new BlockBuffer();
+        this.lastSearch = null;
+
+        KeyStroke key;
+        Action action;
+        InputMap inMap = view.getInputMap( JComponent.WHEN_IN_FOCUSED_WINDOW );
+        ActionMap acMap = view.getActionMap();
+
+        key = KeyStroke.getKeyStroke( "control F" );
+        searchAction.putValue( Action.ACCELERATOR_KEY, key );
+        searchAction.putValue( Action.MNEMONIC_KEY, ( int )'F' );
+
+        action = new ActionAdapter( new FindAgainListener( this ), "Find Next",
+            null );
+        key = KeyStroke.getKeyStroke( "F3" );
+        action.putValue( Action.ACCELERATOR_KEY, key );
+        inMap.put( key, "findNextAction" );
+        acMap.put( "findNextAction", action );
+
+        action = new ActionAdapter( new FindAgainListener( this, false ),
+            "Find Previous", null );
+        key = KeyStroke.getKeyStroke( "shift F3" );
+        action.putValue( Action.ACCELERATOR_KEY, key );
+        inMap.put( key, "findPrevAction" );
+        acMap.put( "findPrevAction", action );
+
+        prevAction.setEnabled( false );
+        nextAction.setEnabled( false );
+        searchAction.setEnabled( false );
+        gotoAction.setEnabled( false );
+        analyzeAction.setEnabled( false );
+        plotAction.setEnabled( false );
 
         valuePanel.addSizeSelectedListener( new SizeSelectedListener( this ) );
         addRangeSelectedListener( new SelectionListener( this ) );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private JPanel createView()
     {
         JPanel panel = new JPanel( new GridBagLayout() );
 
         fileTitleView.getView().setBorder( new ShadowBorder() );
-
         fileTitleView.getView().setMinimumSize( new Dimension( 500, 100 ) );
+
+        dataTitleView.getView().setBorder( new ShadowBorder() );
         dataTitleView.getView().setMinimumSize(
             dataTitleView.getView().getPreferredSize() );
 
@@ -110,8 +186,8 @@ public class HexFileView implements IDataView<File>
         progressBar.addPositionListener(
             ( e ) -> updatePosition( e.getItem() ) );
 
-        // editor.setAlternateRowBG( true );
-        // editor.setShowGrid( true );
+        // setAlternateRowBG( true );
+        // setShowGrid( true );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
@@ -133,7 +209,7 @@ public class HexFileView implements IDataView<File>
             new Insets( 0, 0, 0, 0 ), 0, 0 );
         panel.add( new JSeparator(), constraints );
 
-        constraints = new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.0,
+        constraints = new GridBagConstraints( 0, 4, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 0, 0, 0 ), 0, 0 );
         panel.add( progressBar, constraints );
@@ -152,6 +228,26 @@ public class HexFileView implements IDataView<File>
         jtb.setSelected( true );
         jtb.addActionListener( new ShowDataListener( this, jtb ) );
         toolbar.add( jtb );
+
+        SwingUtils.addActionToToolbar( toolbar, prevAction );
+
+        // SwingUtils.addActionToToolbar( toolbar, new ActionAdapter( null,
+        // "Previous Data", JHexIcons.getIcon( JHexIcons.INCH_LEFT ) ) );
+        //
+        // SwingUtils.addActionToToolbar( toolbar, new ActionAdapter( null,
+        // "Next Data", JHexIcons.getIcon( JHexIcons.INCH_RIGHT ) ) );
+
+        SwingUtils.addActionToToolbar( toolbar, nextAction );
+
+        toolbar.addSeparator();
+
+        SwingUtils.addActionToToolbar( toolbar, searchAction );
+        SwingUtils.addActionToToolbar( toolbar, gotoAction );
+
+        toolbar.addSeparator();
+
+        SwingUtils.addActionToToolbar( toolbar, analyzeAction );
+        SwingUtils.addActionToToolbar( toolbar, plotAction );
 
         return toolbar;
     }
@@ -199,6 +295,214 @@ public class HexFileView implements IDataView<File>
         // backButton.setEnabled( position > 0 );
         progressBar.setOffset( position );
         progressBar.setUnitLength( block.buffer.length );
+    }
+
+    /***************************************************************************
+     * Displays the dialog that allows the user to go to a particular offset
+     * into the file.
+     **************************************************************************/
+    private void showGotoDialog()
+    {
+        Object ans = JOptionPane.showInputDialog( getView(),
+            "Enter Offset in hexadecimal:", new Integer( 0 ) );
+        if( ans != null )
+        {
+            try
+            {
+                long offset = Long.parseLong( ans.toString(), 16 );
+                highlightOffset( offset, 1 );
+            }
+            catch( NumberFormatException ex )
+            {
+                JOptionPane.showMessageDialog( getView(),
+                    "'" + ans.toString() + "' is not a hexadecimal string.",
+                    "ERROR", JOptionPane.ERROR_MESSAGE );
+            }
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private void showPlot()
+    {
+        try( IStream stream = openStreamCopy() )
+        {
+            if( stream == null )
+            {
+                return;
+            }
+
+            Window w = SwingUtils.getComponentsWindow( getView() );
+            DataPlotView plotView = new DataPlotView( stream );
+            OkDialogView dialogView = new OkDialogView( w, plotView.getView(),
+                ModalityType.DOCUMENT_MODAL, OkDialogButtons.OK_ONLY );
+
+            dialogView.setOkButtonText( "Close" );
+
+            dialogView.show( "Data Plot", JHexIcons.getAppImages(),
+                new Dimension( 640, 480 ) );
+        }
+        catch( FileNotFoundException ex )
+        {
+            SwingUtils.showErrorMessage(
+                getView(), "Unable to open file: " +
+                    getData().getAbsolutePath() + " because " + ex.getMessage(),
+                "File Not Found Error" );
+        }
+        catch( IOException ex )
+        {
+            SwingUtils.showErrorMessage(
+                getView(), "Unable to read file: " +
+                    getData().getAbsolutePath() + " because " + ex.getMessage(),
+                "I/O Error" );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private void showAnalyzer()
+    {
+        try( IStream stream = openStreamCopy() )
+        {
+            if( stream == null )
+            {
+                return;
+            }
+
+            DataDistributionTask ddt = new DataDistributionTask( stream );
+
+            TaskView.startAndShow( getView(), ddt, "Analyzing Data" );
+
+            DataDistribution dist = ddt.getDistribution();
+
+            if( dist != null )
+            {
+                VerboseMessageView msgView = new VerboseMessageView();
+
+                msgView.setMessages( "Finished Analyzing",
+                    dist.getDescription() );
+
+                msgView.show( getView(), "Finished Analyzing" );
+            }
+        }
+        catch( FileNotFoundException ex )
+        {
+            SwingUtils.showErrorMessage(
+                getView(), "Unable to open file: " +
+                    getData().getAbsolutePath() + " because " + ex.getMessage(),
+                "File Not Found Error" );
+        }
+        catch( IOException ex )
+        {
+            SwingUtils.showErrorMessage(
+                getView(), "Unable to read file: " +
+                    getData().getAbsolutePath() + " because " + ex.getMessage(),
+                "I/O Error" );
+        }
+    }
+
+    /***************************************************************************
+     * Displays the dialog that allows the user to enter bytes to be found.
+     **************************************************************************/
+    private void showSearchDialog()
+    {
+        if( !isOpen() )
+        {
+            return;
+        }
+
+        HexBytesFormField hexField = new HexBytesFormField( "Hex Bytes" );
+        StandardFormView form = new StandardFormView( true );
+
+        form.addField( hexField.getName(), hexField.getView() );
+
+        hexField.getTextField().addAncestorListener(
+            new RequestFocusListener() );
+
+        int ans = JOptionPane.showOptionDialog( getView(), form.getView(),
+            "Enter Hexadecimal String", JOptionPane.OK_CANCEL_OPTION,
+            JOptionPane.QUESTION_MESSAGE, null, null, null );
+
+        if( ans == JOptionPane.OK_OPTION )
+        {
+            if( !hexField.getValidity().isValid )
+            {
+                JOptionPane.showMessageDialog( getView(),
+                    hexField.getValidity().reason, "Invalid Hexadecimal Entry",
+                    JOptionPane.ERROR_MESSAGE );
+                return;
+            }
+
+            byte [] bytes = hexField.getValue();
+            long fromOffset = getSelectedOffset();
+
+            fromOffset = fromOffset > -1 ? fromOffset : 0;
+
+            search( bytes, fromOffset );
+        }
+        // else
+        // {
+        // LogUtils.printDebug( "cancelled" );
+        // }
+    }
+
+    /***************************************************************************
+     * @param bytes
+     * @param fromOffset
+     **************************************************************************/
+    private void search( byte [] bytes, long fromOffset )
+    {
+        search( bytes, fromOffset, true );
+    }
+
+    /***************************************************************************
+     * @param bytes
+     * @param fromOffset
+     * @param isForward
+     **************************************************************************/
+    private void search( byte [] bytes, long fromOffset, boolean isForward )
+    {
+        this.lastSearch = bytes;
+
+        // LogUtils.printDebug( "Searching for: " + HexUtils.toHexString( bytes
+        // ) +
+        // " @ " + fromOffset + " " + ( isForward ? "Forward" : "Backward" ) );
+
+        try( IStream stream = openStreamCopy() )
+        {
+            if( stream == null )
+            {
+                return;
+            }
+
+            SearchTask task = new SearchTask( bytes, stream, fromOffset,
+                isForward );
+
+            TaskView.startAndShow( getView(), task, "Byte Search" );
+
+            long foundOffset = task.foundOffset;
+
+            if( foundOffset > -1 )
+            {
+                highlightOffset( foundOffset, bytes.length );
+            }
+        }
+        catch( FileNotFoundException ex )
+        {
+            SwingUtils.showErrorMessage(
+                getView(), "Unable to open file: " +
+                    getData().getAbsolutePath() + " because " + ex.getMessage(),
+                "File Not Found Error" );
+        }
+        catch( IOException ex )
+        {
+            SwingUtils.showErrorMessage(
+                getView(), "Unable to read file: " +
+                    getData().getAbsolutePath() + " because " + ex.getMessage(),
+                "I/O Error" );
+        }
     }
 
     /***************************************************************************
@@ -333,6 +637,19 @@ public class HexFileView implements IDataView<File>
         {
             SwingUtils.showErrorMessage( getView(), ex.getMessage(),
                 "I/O Error" );
+        }
+        finally
+        {
+            boolean enabled = isOpen();
+
+            prevAction.setEnabled( enabled );
+            nextAction.setEnabled( enabled );
+
+            searchAction.setEnabled( enabled );
+            gotoAction.setEnabled( enabled );
+
+            analyzeAction.setEnabled( enabled );
+            plotAction.setEnabled( enabled );
         }
     }
 
@@ -513,6 +830,43 @@ public class HexFileView implements IDataView<File>
             // ", start: "
             // +
             // start + ", end: " + end );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class FindAgainListener implements ActionListener
+    {
+        private final HexFileView view;
+        private final boolean isForward;
+
+        public FindAgainListener( HexFileView view )
+        {
+            this( view, true );
+        }
+
+        public FindAgainListener( HexFileView view, boolean forward )
+        {
+            this.view = view;
+            this.isForward = forward;
+        }
+
+        @Override
+        public synchronized void actionPerformed( ActionEvent e )
+        {
+            if( view.lastSearch != null )
+            {
+                long off = view.getSelectedOffset();
+                off = off + ( isForward ? 1 : -1 );
+
+                // LogUtils.printDebug( "Searching for: " +
+                // HexUtils.toHexString( view.lastSearch ) + " @ " +
+                // String.format( "%016X", off ) + " " +
+                // ( isForward ? "Forward" : "Backward" ) );
+
+                view.search( view.lastSearch, off, isForward );
+            }
         }
     }
 }

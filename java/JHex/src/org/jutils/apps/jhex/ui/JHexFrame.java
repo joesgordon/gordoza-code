@@ -1,10 +1,9 @@
 package org.jutils.apps.jhex.ui;
 
-import java.awt.Dialog.ModalityType;
-import java.awt.Dimension;
-import java.awt.Window;
-import java.awt.event.*;
-import java.io.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import javax.swing.*;
@@ -14,18 +13,10 @@ import org.jutils.SwingUtils;
 import org.jutils.apps.jhex.JHexIcons;
 import org.jutils.apps.jhex.JHexMain;
 import org.jutils.apps.jhex.data.JHexOptions;
-import org.jutils.apps.jhex.task.DataDistributionTask;
-import org.jutils.apps.jhex.task.SearchTask;
-import org.jutils.chart.ChartIcons;
-import org.jutils.datadist.DataDistribution;
-import org.jutils.io.IStream;
 import org.jutils.io.options.OptionsSerializer;
-import org.jutils.task.TaskView;
 import org.jutils.ui.*;
-import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
-import org.jutils.ui.fields.HexBytesFormField;
 import org.jutils.ui.hex.HexBufferSize;
 import org.jutils.ui.model.IView;
 
@@ -47,23 +38,8 @@ public class JHexFrame implements IView<JFrame>
     /** The recent files menu. */
     private final RecentFilesMenuView recentFiles;
 
-    /**  */
-    private final Action prevAction;
-    /**  */
-    private final Action nextAction;
-    /**  */
-    private final Action searchAction;
-    /**  */
-    private final Action gotoAction;
-    /**  */
-    private final Action analyzeAction;
-    /**  */
-    private final Action plotAction;
-
     /** Index of the currently selected buffer size. */
     private HexBufferSize bufferSize;
-    /**  */
-    private byte [] lastSearch;
 
     /***************************************************************************
      * Creates a JHex frame.
@@ -85,59 +61,6 @@ public class JHexFrame implements IView<JFrame>
         this.recentFiles = new RecentFilesMenuView();
 
         this.bufferSize = HexBufferSize.LARGE;
-        this.lastSearch = null;
-
-        this.prevAction = new ActionAdapter( ( e ) -> editor.jumpPrevious(),
-            "Previous Data Block", JHexIcons.getIcon( JHexIcons.JUMP_LEFT ) );
-        this.nextAction = new ActionAdapter( ( e ) -> editor.jumpForward(),
-            "Next Data Block", JHexIcons.getIcon( JHexIcons.JUMP_RIGHT ) );
-
-        this.searchAction = new ActionAdapter( ( e ) -> showSearchDialog(),
-            "Search", IconConstants.getIcon( IconConstants.FIND_16 ) );
-        this.gotoAction = new ActionAdapter( ( e ) -> showGotoDialog(),
-            "Go To Byte", JHexIcons.loader.getIcon( JHexIcons.GOTO ) );
-
-        this.analyzeAction = new ActionAdapter( ( e ) -> showAnalyzer(),
-            "Analyze", IconConstants.getIcon( IconConstants.ANALYZE_16 ) );
-        this.plotAction = new ActionAdapter( ( e ) -> showPlot(), "Plot",
-            ChartIcons.getIcon( ChartIcons.CHART_016 ) );
-
-        JPanel editorView = editor.getView();
-        KeyStroke key;
-        Action action;
-        InputMap inMap = editorView.getInputMap(
-            JComponent.WHEN_IN_FOCUSED_WINDOW );
-        ActionMap acMap = editorView.getActionMap();
-
-        editorView.setDropTarget(
-            new FileDropTarget( new FileDroppedListener( this ) ) );
-
-        key = KeyStroke.getKeyStroke( "control F" );
-        searchAction.putValue( Action.ACCELERATOR_KEY, key );
-        // inMap.put( key, "findAction" );
-        // acMap.put( "findAction", findAction );
-        searchAction.putValue( Action.MNEMONIC_KEY, ( int )'F' );
-
-        action = new ActionAdapter( new FindAgainListener( this ), "Find Next",
-            null );
-        key = KeyStroke.getKeyStroke( "F3" );
-        action.putValue( Action.ACCELERATOR_KEY, key );
-        inMap.put( key, "findNextAction" );
-        acMap.put( "findNextAction", action );
-
-        action = new ActionAdapter( new FindAgainListener( this, false ),
-            "Find Previous", null );
-        key = KeyStroke.getKeyStroke( "shift F3" );
-        action.putValue( Action.ACCELERATOR_KEY, key );
-        inMap.put( key, "findPrevAction" );
-        acMap.put( "findPrevAction", action );
-
-        prevAction.setEnabled( false );
-        nextAction.setEnabled( false );
-        searchAction.setEnabled( false );
-        gotoAction.setEnabled( false );
-        analyzeAction.setEnabled( false );
-        plotAction.setEnabled( false );
 
         // ---------------------------------------------------------------------
         // Setup frame
@@ -146,6 +69,8 @@ public class JHexFrame implements IView<JFrame>
 
         frameView.setToolbar( createToolbar() );
         frameView.setContent( editor.getView() );
+        frameView.setSize( 1000, 600 );
+        frameView.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 
         JFrame frame = frameView.getView();
         if( closeFileWithFrame )
@@ -158,6 +83,8 @@ public class JHexFrame implements IView<JFrame>
         frame.setIconImages( JHexIcons.getAppImages() );
 
         recentFiles.addSelectedListener( ( f, c ) -> openFile( f ) );
+        editor.getView().setDropTarget(
+            new FileDropTarget( new FileDroppedListener( this ) ) );
     }
 
     /***************************************************************************
@@ -174,28 +101,6 @@ public class JHexFrame implements IView<JFrame>
         // SwingUtils.addActionToToolbar( toolbar,
         // new ActionAdapter( ( e ) -> saveFile(), "Save File",
         // IconConstants.getIcon( IconConstants.SAVE_16 ) ) );
-
-        toolbar.addSeparator();
-
-        SwingUtils.addActionToToolbar( toolbar, prevAction );
-
-        // SwingUtils.addActionToToolbar( toolbar, new ActionAdapter( null,
-        // "Previous Data", JHexIcons.getIcon( JHexIcons.INCH_LEFT ) ) );
-        //
-        // SwingUtils.addActionToToolbar( toolbar, new ActionAdapter( null,
-        // "Next Data", JHexIcons.getIcon( JHexIcons.INCH_RIGHT ) ) );
-
-        SwingUtils.addActionToToolbar( toolbar, nextAction );
-
-        toolbar.addSeparator();
-
-        SwingUtils.addActionToToolbar( toolbar, searchAction );
-        SwingUtils.addActionToToolbar( toolbar, gotoAction );
-
-        toolbar.addSeparator();
-
-        SwingUtils.addActionToToolbar( toolbar, analyzeAction );
-        SwingUtils.addActionToToolbar( toolbar, plotAction );
 
         toolbar.addSeparator();
 
@@ -268,12 +173,9 @@ public class JHexFrame implements IView<JFrame>
         JMenu menu = new JMenu( "Navigate" );
         JMenuItem item;
 
-        item = new JMenuItem( "Go To Offset" );
-        item.setIcon( JHexIcons.loader.getIcon( JHexIcons.GOTO ) );
-        item.addActionListener( ( e ) -> showGotoDialog() );
-        menu.add( item );
+        menu.add( editor.gotoAction );
 
-        item = new JMenuItem( searchAction );
+        item = new JMenuItem( editor.searchAction );
         menu.add( item );
 
         return menu;
@@ -302,88 +204,6 @@ public class JHexFrame implements IView<JFrame>
     public JFrame getView()
     {
         return frameView.getView();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public void showAnalyzer()
-    {
-        try( IStream stream = editor.openStreamCopy() )
-        {
-            if( stream == null )
-            {
-                return;
-            }
-
-            DataDistributionTask ddt = new DataDistributionTask( stream );
-
-            TaskView.startAndShow( getView(), ddt, "Analyzing Data" );
-
-            DataDistribution dist = ddt.getDistribution();
-
-            if( dist != null )
-            {
-                VerboseMessageView msgView = new VerboseMessageView();
-
-                msgView.setMessages( "Finished Analyzing",
-                    dist.getDescription() );
-
-                msgView.show( getView(), "Finished Analyzing" );
-            }
-        }
-        catch( FileNotFoundException ex )
-        {
-            SwingUtils.showErrorMessage( getView(),
-                "Unable to open file: " + editor.getData().getAbsolutePath() +
-                    " because " + ex.getMessage(),
-                "File Not Found Error" );
-        }
-        catch( IOException ex )
-        {
-            SwingUtils.showErrorMessage( getView(),
-                "Unable to read file: " + editor.getData().getAbsolutePath() +
-                    " because " + ex.getMessage(),
-                "I/O Error" );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private void showPlot()
-    {
-        try( IStream stream = editor.openStreamCopy() )
-        {
-            if( stream == null )
-            {
-                return;
-            }
-
-            Window w = SwingUtils.getComponentsWindow( getView() );
-            DataPlotView plotView = new DataPlotView( stream );
-            OkDialogView dialogView = new OkDialogView( w, plotView.getView(),
-                ModalityType.DOCUMENT_MODAL, OkDialogButtons.OK_ONLY );
-
-            dialogView.setOkButtonText( "Close" );
-
-            dialogView.show( "Data Plot", JHexIcons.getAppImages(),
-                new Dimension( 640, 480 ) );
-        }
-        catch( FileNotFoundException ex )
-        {
-            SwingUtils.showErrorMessage( getView(),
-                "Unable to open file: " + editor.getData().getAbsolutePath() +
-                    " because " + ex.getMessage(),
-                "File Not Found Error" );
-        }
-        catch( IOException ex )
-        {
-            SwingUtils.showErrorMessage( getView(),
-                "Unable to read file: " + editor.getData().getAbsolutePath() +
-                    " because " + ex.getMessage(),
-                "I/O Error" );
-        }
     }
 
     /***************************************************************************
@@ -438,26 +258,7 @@ public class JHexFrame implements IView<JFrame>
         options.lastAccessedFiles.push( f );
         this.options.write();
 
-        try
-        {
-            editor.openFile( f );
-
-            boolean enabled = editor.isOpen();
-
-            prevAction.setEnabled( enabled );
-            nextAction.setEnabled( enabled );
-
-            searchAction.setEnabled( enabled );
-            gotoAction.setEnabled( enabled );
-
-            analyzeAction.setEnabled( enabled );
-            plotAction.setEnabled( enabled );
-        }
-        catch( IOException ex )
-        {
-            SwingUtils.showErrorMessage( getView(), ex.getMessage(),
-                "I/O Error" );
-        }
+        editor.setData( f );
 
         updateFileMenu();
     }
@@ -504,132 +305,6 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * Displays the dialog that allows the user to enter bytes to be found.
-     **************************************************************************/
-    private void showSearchDialog()
-    {
-        if( !editor.isOpen() )
-        {
-            return;
-        }
-
-        HexBytesFormField hexField = new HexBytesFormField( "Hex Bytes" );
-        StandardFormView form = new StandardFormView( true );
-
-        form.addField( hexField.getName(), hexField.getView() );
-
-        hexField.getTextField().addAncestorListener(
-            new RequestFocusListener() );
-
-        int ans = JOptionPane.showOptionDialog( getView(), form.getView(),
-            "Enter Hexadecimal String", JOptionPane.OK_CANCEL_OPTION,
-            JOptionPane.QUESTION_MESSAGE, null, null, null );
-
-        if( ans == JOptionPane.OK_OPTION )
-        {
-            if( !hexField.getValidity().isValid )
-            {
-                JOptionPane.showMessageDialog( getView(),
-                    hexField.getValidity().reason, "Invalid Hexadecimal Entry",
-                    JOptionPane.ERROR_MESSAGE );
-                return;
-            }
-
-            byte [] bytes = hexField.getValue();
-            long fromOffset = editor.getSelectedOffset();
-
-            fromOffset = fromOffset > -1 ? fromOffset : 0;
-
-            search( bytes, fromOffset );
-        }
-        // else
-        // {
-        // LogUtils.printDebug( "cancelled" );
-        // }
-    }
-
-    /***************************************************************************
-     * @param bytes
-     * @param fromOffset
-     **************************************************************************/
-    private void search( byte [] bytes, long fromOffset )
-    {
-        search( bytes, fromOffset, true );
-    }
-
-    /***************************************************************************
-     * @param bytes
-     * @param fromOffset
-     * @param isForward
-     **************************************************************************/
-    private void search( byte [] bytes, long fromOffset, boolean isForward )
-    {
-        this.lastSearch = bytes;
-
-        // LogUtils.printDebug( "Searching for: " + HexUtils.toHexString( bytes
-        // ) +
-        // " @ " + fromOffset + " " + ( isForward ? "Forward" : "Backward" ) );
-
-        try( IStream stream = editor.openStreamCopy() )
-        {
-            if( stream == null )
-            {
-                return;
-            }
-
-            SearchTask task = new SearchTask( bytes, stream, fromOffset,
-                isForward );
-
-            TaskView.startAndShow( getView(), task, "Byte Search" );
-
-            long foundOffset = task.foundOffset;
-
-            if( foundOffset > -1 )
-            {
-                editor.highlightOffset( foundOffset, bytes.length );
-            }
-        }
-        catch( FileNotFoundException ex )
-        {
-            SwingUtils.showErrorMessage( getView(),
-                "Unable to open file: " + editor.getData().getAbsolutePath() +
-                    " because " + ex.getMessage(),
-                "File Not Found Error" );
-        }
-        catch( IOException ex )
-        {
-            SwingUtils.showErrorMessage( getView(),
-                "Unable to read file: " + editor.getData().getAbsolutePath() +
-                    " because " + ex.getMessage(),
-                "I/O Error" );
-        }
-    }
-
-    /***************************************************************************
-     * Displays the dialog that allows the user to go to a particular offset
-     * into the file.
-     **************************************************************************/
-    private void showGotoDialog()
-    {
-        Object ans = JOptionPane.showInputDialog( getView(),
-            "Enter Offset in hexadecimal:", new Integer( 0 ) );
-        if( ans != null )
-        {
-            try
-            {
-                long offset = Long.parseLong( ans.toString(), 16 );
-                editor.highlightOffset( offset, 1 );
-            }
-            catch( NumberFormatException ex )
-            {
-                JOptionPane.showMessageDialog( getView(),
-                    "'" + ans.toString() + "' is not a hexadecimal string.",
-                    "ERROR", JOptionPane.ERROR_MESSAGE );
-            }
-        }
-    }
-
-    /***************************************************************************
      * Closes the currently opened file.
      **************************************************************************/
     public void closeFile()
@@ -642,6 +317,32 @@ public class JHexFrame implements IView<JFrame>
         {
             JOptionPane.showMessageDialog( getView(), ex.getMessage(),
                 "I/O Error", JOptionPane.ERROR_MESSAGE );
+        }
+    }
+
+    /***************************************************************************
+     * Listener to open a file that is drag and dropped onto the table.
+     **************************************************************************/
+    private static class FileDroppedListener
+        implements ItemActionListener<IFileDropEvent>
+    {
+        private final JHexFrame view;
+
+        public FileDroppedListener( JHexFrame view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ItemActionEvent<IFileDropEvent> event )
+        {
+            IFileDropEvent dropEvent = event.getItem();
+            List<File> files = dropEvent.getFiles();
+
+            if( !files.isEmpty() )
+            {
+                view.openFile( files.get( 0 ) );
+            }
         }
     }
 
@@ -669,69 +370,6 @@ public class JHexFrame implements IView<JFrame>
         {
             // LogUtils.printDebug( "Window Closed" );
             frame.closeFile();
-        }
-    }
-
-    /***************************************************************************
-     * Listener to open a file that is drag and dropped onto the table.
-     **************************************************************************/
-    private static class FileDroppedListener
-        implements ItemActionListener<IFileDropEvent>
-    {
-        private final JHexFrame frame;
-
-        public FileDroppedListener( JHexFrame view )
-        {
-            this.frame = view;
-        }
-
-        @Override
-        public void actionPerformed( ItemActionEvent<IFileDropEvent> event )
-        {
-            IFileDropEvent dropEvent = event.getItem();
-            List<File> files = dropEvent.getFiles();
-
-            if( !files.isEmpty() )
-            {
-                frame.openFile( files.get( 0 ) );
-            }
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class FindAgainListener implements ActionListener
-    {
-        private final JHexFrame view;
-        private final boolean isForward;
-
-        public FindAgainListener( JHexFrame view )
-        {
-            this( view, true );
-        }
-
-        public FindAgainListener( JHexFrame view, boolean forward )
-        {
-            this.view = view;
-            this.isForward = forward;
-        }
-
-        @Override
-        public synchronized void actionPerformed( ActionEvent e )
-        {
-            if( view.lastSearch != null )
-            {
-                long off = view.editor.getSelectedOffset();
-                off = off + ( isForward ? 1 : -1 );
-
-                // LogUtils.printDebug( "Searching for: " +
-                // HexUtils.toHexString( view.lastSearch ) + " @ " +
-                // String.format( "%016X", off ) + " " +
-                // ( isForward ? "Forward" : "Backward" ) );
-
-                view.search( view.lastSearch, off, isForward );
-            }
         }
     }
 }

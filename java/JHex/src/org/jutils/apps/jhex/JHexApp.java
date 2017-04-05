@@ -1,6 +1,5 @@
 package org.jutils.apps.jhex;
 
-import java.awt.Dimension;
 import java.io.File;
 
 import javax.swing.JFrame;
@@ -63,9 +62,6 @@ public class JHexApp implements IFrameApp
     {
         view = new JHexFrame( closeFileWithFrame );
         JFrame frame = view.getView();
-
-        frame.setSize( new Dimension( 800, 600 ) );
-        frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 
         return frame;
     }
