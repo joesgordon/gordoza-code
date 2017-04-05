@@ -53,7 +53,7 @@ public class PositionIndicator extends JComponent
         this.thumbColor = UIManager.getColor( "ScrollBar.thumb" );
         this.thumbShadow = UIManager.getColor( "ScrollBar.thumbShadow" );
         this.unitLength = 10;
-        this.length = 100;
+        this.length = 0;
         this.offset = 50;
         this.dragOffset = null;
 
@@ -211,6 +211,11 @@ public class PositionIndicator extends JComponent
         long off = dragOffset == null ? offset : dragOffset;
         int unitCount = getUnitCount();
         int unitIndex = ( int )( ( double )unitCount * off / length );
+
+        if( length == 0 )
+        {
+            return;
+        }
 
         int x = 0;
         int y = 1;

@@ -180,7 +180,7 @@ public class HexFileView implements IDataView<File>
                 GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets( 2, 10, 2, 10 ), 0, 0 ) );
 
-        progressBar.setLength( 100 );
+        progressBar.setLength( 0 );
         progressBar.setOffset( 0 );
         progressBar.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
         progressBar.addPositionListener(
@@ -289,10 +289,8 @@ public class HexFileView implements IDataView<File>
             String.format( "Showing 0x%016X - 0x%016X of 0x%016X", position,
                 nextOffset - 1, buffer.getLength() ) );
 
-        // TODO create listener list to notify when buttons should be
-        // dis/en-abled
-        // nextButton.setEnabled( nextOffset < fileLength );
-        // backButton.setEnabled( position > 0 );
+        prevAction.setEnabled( position > 0 );
+        nextAction.setEnabled( position < buffer.getLastPosition() );
         progressBar.setOffset( position );
         progressBar.setUnitLength( block.buffer.length );
     }
@@ -566,6 +564,20 @@ public class HexFileView implements IDataView<File>
         }
     }
 
+    public void showData( boolean show )
+    {
+        dataTitleView.getView().setVisible( show );
+
+        if( show )
+        {
+            setHighlightLength( valuePanel.getSelectedSize() );
+        }
+        else
+        {
+            setHighlightLength( -1 );
+        }
+    }
+
     /***************************************************************************
      * @param c
      **************************************************************************/
@@ -638,19 +650,6 @@ public class HexFileView implements IDataView<File>
             SwingUtils.showErrorMessage( getView(), ex.getMessage(),
                 "I/O Error" );
         }
-        finally
-        {
-            boolean enabled = isOpen();
-
-            prevAction.setEnabled( enabled );
-            nextAction.setEnabled( enabled );
-
-            searchAction.setEnabled( enabled );
-            gotoAction.setEnabled( enabled );
-
-            analyzeAction.setEnabled( enabled );
-            plotAction.setEnabled( enabled );
-        }
     }
 
     /***************************************************************************
@@ -659,12 +658,29 @@ public class HexFileView implements IDataView<File>
      **************************************************************************/
     public void openFile( File file ) throws IOException
     {
-        buffer.openFile( file );
+        try
+        {
+            buffer.openFile( file );
 
-        fileTitleView.setTitle( file.getName() );
-        loadBuffer( 0 );
-        progressBar.setLength( buffer.getLength() );
-        progressBar.setUnitLength( buffer.getBufferSize() );
+            fileTitleView.setTitle( file.getName() );
+            loadBuffer( 0 );
+            progressBar.setLength( buffer.getLength() );
+            progressBar.setUnitLength( buffer.getBufferSize() );
+        }
+        finally
+        {
+            boolean enabled = isOpen();
+
+            prevAction.setEnabled( false );
+            nextAction.setEnabled(
+                enabled && !buffer.isLoaded( file.length() - 1 ) );
+
+            searchAction.setEnabled( enabled );
+            gotoAction.setEnabled( enabled );
+
+            analyzeAction.setEnabled( enabled );
+            plotAction.setEnabled( enabled );
+        }
     }
 
     /***************************************************************************
@@ -774,16 +790,7 @@ public class HexFileView implements IDataView<File>
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            view.dataTitleView.getView().setVisible( button.isSelected() );
-
-            if( button.isSelected() )
-            {
-                view.setHighlightLength( view.valuePanel.getSelectedSize() );
-            }
-            else
-            {
-                view.setHighlightLength( -1 );
-            }
+            view.showData( button.isSelected() );
         }
     }
 
