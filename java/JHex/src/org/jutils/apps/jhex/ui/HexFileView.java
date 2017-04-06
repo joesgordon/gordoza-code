@@ -217,6 +217,9 @@ public class HexFileView implements IDataView<File>
         return panel;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private Component createToolbar()
     {
         JToolBar toolbar = new JGoodiesToolBar();
@@ -252,6 +255,9 @@ public class HexFileView implements IDataView<File>
         return toolbar;
     }
 
+    /***************************************************************************
+     * @param position
+     **************************************************************************/
     private void updatePosition( long position )
     {
         long pos = buffer.getBufferStart( position );
@@ -564,6 +570,9 @@ public class HexFileView implements IDataView<File>
         }
     }
 
+    /***************************************************************************
+     * @param show
+     **************************************************************************/
     public void showData( boolean show )
     {
         dataTitleView.getView().setVisible( show );

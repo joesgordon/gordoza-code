@@ -50,6 +50,9 @@ public class PositionIndicatorTestMain
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static final class PositionIndicatorTestView
         implements IView<JComponent>
     {

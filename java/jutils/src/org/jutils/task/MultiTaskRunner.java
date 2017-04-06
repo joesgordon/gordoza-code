@@ -10,14 +10,16 @@ import org.jutils.ui.event.ActionListenerList;
  ******************************************************************************/
 public class MultiTaskRunner implements Runnable
 {
+    private final IMultiTask tasker;
     /**  */
-    final MultiTaskHandler handler;
+    private final MultiTaskHandler handler;
     /**  */
     private final TaskPool pool;
 
     /**  */
     private final ActionListenerList finishedListeners;
 
+    /**  */
     private TaskMetrics metrics;
 
     /***************************************************************************
@@ -28,13 +30,14 @@ public class MultiTaskRunner implements Runnable
     public MultiTaskRunner( IMultiTask tasker, IMultiTaskView view,
         int numThreads )
     {
+        this.tasker = tasker;
         this.handler = new MultiTaskHandler( tasker, view );
         this.pool = new TaskPool( handler, numThreads );
         this.finishedListeners = new ActionListenerList();
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void run()
@@ -44,7 +47,9 @@ public class MultiTaskRunner implements Runnable
         Stopwatch watch = new Stopwatch();
 
         start = watch.start();
+        tasker.startup();
         pool.start();
+        tasker.shutdown();
         stop = watch.stop();
 
         metrics = new TaskMetrics( start, stop, !handler.canContinue() );
@@ -60,6 +65,9 @@ public class MultiTaskRunner implements Runnable
         pool.shutdown();
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public TaskMetrics getMetrics()
     {
         return metrics;
@@ -71,5 +79,13 @@ public class MultiTaskRunner implements Runnable
     public void addFinishedListener( ActionListener l )
     {
         finishedListeners.addListener( l );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public TaskError getError()
+    {
+        return handler.error;
     }
 }

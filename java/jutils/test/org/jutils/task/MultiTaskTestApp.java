@@ -142,6 +142,16 @@ public class MultiTaskTestApp implements IFrameApp
         {
             return "Testing task";
         }
+
+        @Override
+        public void startup()
+        {
+        }
+
+        @Override
+        public void shutdown()
+        {
+        }
     }
 
     /***************************************************************************

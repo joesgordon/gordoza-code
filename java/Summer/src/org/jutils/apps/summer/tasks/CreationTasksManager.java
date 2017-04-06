@@ -3,6 +3,7 @@ package org.jutils.apps.summer.tasks;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jutils.apps.summer.data.ChecksumResult;
+import org.jutils.io.LogUtils;
 import org.jutils.task.IMultiTask;
 import org.jutils.task.ITask;
 
@@ -27,7 +28,7 @@ public class CreationTasksManager implements IMultiTask
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public ITask nextTask()
@@ -44,7 +45,7 @@ public class CreationTasksManager implements IMultiTask
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public int getTaskCount()
@@ -53,11 +54,29 @@ public class CreationTasksManager implements IMultiTask
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public String getTaskAction()
     {
         return "Generating checksum for";
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public void startup()
+    {
+        LogUtils.printDebug( "Starting up" );
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public void shutdown()
+    {
+        LogUtils.printDebug( "Shutting down" );
     }
 }

@@ -212,7 +212,7 @@ public class MultiTaskView implements IMultiTaskView
         mtv.addCancelListener( cl );
 
         runner.addFinishedListener(
-            new FinishedListener( dialog, runner.handler ) );
+            new FinishedListener( dialog, runner.getError() ) );
 
         dialog.setDefaultCloseOperation( JDialog.DO_NOTHING_ON_CLOSE );
         dialog.addWindowListener( new CancelListener( mtv, runner ) );
@@ -424,20 +424,20 @@ public class MultiTaskView implements IMultiTaskView
     private static class FinishedListener implements ActionListener
     {
         private final JDialog dialog;
-        private final MultiTaskHandler handler;
+        private final TaskError error;
 
-        public FinishedListener( JDialog dialog, MultiTaskHandler handler )
+        public FinishedListener( JDialog dialog, TaskError error )
         {
             this.dialog = dialog;
-            this.handler = handler;
+            this.error = error;
         }
 
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            if( handler.error != null )
+            if( error != null )
             {
-                TaskUtils.displayError( dialog, handler.error );
+                TaskUtils.displayError( dialog, error );
             }
 
             dialog.dispose();
