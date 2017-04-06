@@ -99,7 +99,7 @@ public class PositionIndicatorTestMain
             JPanel panel = new JPanel( new BorderLayout() );
 
             panel.add( createForm(), BorderLayout.CENTER );
-            panel.add( indicator, BorderLayout.SOUTH );
+            panel.add( indicator.getView(), BorderLayout.SOUTH );
 
             return panel;
         }

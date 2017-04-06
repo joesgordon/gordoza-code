@@ -174,15 +174,15 @@ public class HexFileView implements IDataView<File>
         // ---------------------------------------------------------------------
         // Setup progress bar.
         // ---------------------------------------------------------------------
-        progressBar.setLayout( new GridBagLayout() );
-        progressBar.add( offsetLabel,
+        progressBar.getView().setLayout( new GridBagLayout() );
+        progressBar.getView().add( offsetLabel,
             new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
                 GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets( 2, 10, 2, 10 ), 0, 0 ) );
 
         progressBar.setLength( 0 );
         progressBar.setOffset( 0 );
-        progressBar.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
+        progressBar.getView().setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
         progressBar.addPositionListener(
             ( e ) -> updatePosition( e.getItem() ) );
 
@@ -212,7 +212,7 @@ public class HexFileView implements IDataView<File>
         constraints = new GridBagConstraints( 0, 4, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 0, 0, 0 ), 0, 0 );
-        panel.add( progressBar, constraints );
+        panel.add( progressBar.getView(), constraints );
 
         return panel;
     }

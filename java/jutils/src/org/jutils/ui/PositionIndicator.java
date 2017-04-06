@@ -9,14 +9,13 @@ import javax.swing.border.LineBorder;
 
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class PositionIndicator extends JComponent
+public class PositionIndicator implements IView<JComponent>
 {
-    /**  */
-    private static final long serialVersionUID = 3185302681799744337L;
     /**  */
     private final JWindow posWin;
     /**  */
@@ -24,45 +23,25 @@ public class PositionIndicator extends JComponent
     /**  */
     private final ItemActionList<Long> posititonListeners;
     /**  */
-    private final Rectangle thumbRect;
-
-    /**  */
-    private Color thumbColor;
-    /**  */
-    private Color thumbShadow;
-    /**  */
-    private long length;
-    /**  */
-    private long unitLength;
-    /**  */
-    private long offset;
-    /**  */
-    private Long dragOffset;
+    private final PiComponent component;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public PositionIndicator()
     {
-        this.thumbRect = new Rectangle();
+        this.component = new PiComponent();
         this.posLabel = new JLabel();
         this.posWin = createWindow();
         this.posititonListeners = new ItemActionList<>();
 
-        this.thumbColor = UIManager.getColor( "ScrollBar.thumb" );
-        this.thumbShadow = UIManager.getColor( "ScrollBar.thumbShadow" );
-        this.unitLength = 10;
-        this.length = 0;
-        this.offset = 50;
-        this.dragOffset = null;
-
-        setMinimumSize( new Dimension( 20, 20 ) );
-        setPreferredSize( new Dimension( 20, 20 ) );
+        component.setMinimumSize( new Dimension( 20, 20 ) );
+        component.setPreferredSize( new Dimension( 20, 20 ) );
 
         MouseListener ml = new MouseListener( this );
 
-        this.addMouseListener( ml );
-        this.addMouseMotionListener( ml );
+        component.addMouseListener( ml );
+        component.addMouseMotionListener( ml );
     }
 
     /***************************************************************************
@@ -90,6 +69,15 @@ public class PositionIndicator extends JComponent
     }
 
     /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public JComponent getView()
+    {
+        return component;
+    }
+
+    /***************************************************************************
      * @param l
      **************************************************************************/
     public void addPositionListener( ItemActionListener<Long> l )
@@ -102,8 +90,8 @@ public class PositionIndicator extends JComponent
      **************************************************************************/
     public void setUnitColor( Color c )
     {
-        thumbColor = c;
-        repaint();
+        component.thumbColor = c;
+        component.repaint();
     }
 
     /***************************************************************************
@@ -111,13 +99,16 @@ public class PositionIndicator extends JComponent
      **************************************************************************/
     public void setLength( long l )
     {
-        length = l;
-        repaint();
+        component.length = l;
+        component.repaint();
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public long getLength()
     {
-        return length;
+        return component.length;
     }
 
     /***************************************************************************
@@ -125,13 +116,16 @@ public class PositionIndicator extends JComponent
      **************************************************************************/
     public void setUnitLength( long l )
     {
-        unitLength = l;
-        repaint();
+        component.unitLength = l;
+        component.repaint();
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public long getUnitLength()
     {
-        return unitLength;
+        return component.unitLength;
     }
 
     /***************************************************************************
@@ -139,13 +133,16 @@ public class PositionIndicator extends JComponent
      **************************************************************************/
     public void setOffset( long l )
     {
-        offset = l;
-        repaint();
+        component.offset = l;
+        component.repaint();
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public long getOffset()
     {
-        return offset;
+        return component.offset;
     }
 
     /***************************************************************************
@@ -155,7 +152,7 @@ public class PositionIndicator extends JComponent
     {
         long pos = getPosition( x );
 
-        if( pos != offset )
+        if( pos != component.offset )
         {
             posititonListeners.fireListeners( this, pos );
         }
@@ -167,7 +164,7 @@ public class PositionIndicator extends JComponent
      **************************************************************************/
     private long getPosition( final int x )
     {
-        int xCnt = getWidth() - 2;
+        int xCnt = component.getWidth() - 2;
         int xIdx = x - 1;
 
         if( xIdx < 0 )
@@ -181,95 +178,126 @@ public class PositionIndicator extends JComponent
 
         double xpc = xIdx / ( double )( xCnt );
 
-        int posCnt = getWidth() - 1 - thumbRect.width;
+        int posCnt = component.getWidth() - 1 - component.thumbRect.width;
         int posIdx = ( int )( xpc * posCnt );
         double posPc = posIdx / ( double )posCnt;
 
-        int unitCount = getUnitCount();
+        int unitCount = component.getUnitCount();
         int unitIdx = ( int )( posPc * unitCount );
-        long position = unitIdx * unitLength;
+        long position = unitIdx * component.unitLength;
 
         return position;
     }
 
     /***************************************************************************
-     * @return
+     * 
      **************************************************************************/
-    private int getUnitCount()
+    private static final class PiComponent extends JComponent
     {
-        int count = 0;
+        private static final long serialVersionUID = 3185302681799744337L;
 
-        if( unitLength != 0 )
+        private final Rectangle thumbRect;
+
+        private Color thumbColor;
+        private Color thumbShadow;
+        private long length;
+        private long unitLength;
+        private long offset;
+        private Long dragOffset;
+
+        public PiComponent()
         {
-            count = ( int )( ( length + unitLength - 1 ) / unitLength );
+            this.thumbRect = new Rectangle();
+
+            this.thumbColor = UIManager.getColor( "ScrollBar.thumb" );
+            this.thumbShadow = UIManager.getColor( "ScrollBar.thumbShadow" );
+            this.unitLength = 10;
+            this.length = 0;
+            this.offset = 50;
+            this.dragOffset = null;
         }
 
-        return count;
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        protected void paintComponent( Graphics g )
+        {
+            super.paintComponent( g );
+
+            Graphics2D g2 = ( Graphics2D )g;
+
+            Object aaHint = g2.getRenderingHint(
+                RenderingHints.KEY_ANTIALIASING );
+
+            g2.setRenderingHint( RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON );
+
+            long off = dragOffset == null ? offset : dragOffset;
+            int unitCount = getUnitCount();
+            int unitIndex = ( int )( ( double )unitCount * off / length );
+
+            if( length == 0 )
+            {
+                return;
+            }
+
+            int x = 0;
+            int y = 1;
+            int w = ( int )( getWidth() * unitLength / ( double )length ) - 2;
+            int h = getHeight() - 2;
+
+            if( unitLength > 0 )
+            {
+                w = Math.max( w, 16 );
+            }
+
+            x = ( int )( unitIndex / ( double )unitCount *
+                ( getWidth() - 2 ) ) + 1;
+
+            if( x < 1 )
+            {
+                x = 1;
+            }
+            else if( x + w + 1 > getWidth() )
+            {
+                x = getWidth() - w - 1;
+            }
+
+            thumbRect.x = x;
+            thumbRect.y = y;
+            thumbRect.width = w;
+            thumbRect.height = h;
+
+            g2.setColor( thumbShadow );
+            g2.fillRoundRect( x, y, w, h, 4, 4 );
+
+            g2.setColor( thumbColor );
+            g2.fillRoundRect( x + 1, y + 1, w - 2, h - 2, 4, 4 );
+
+            g2.setRenderingHint( RenderingHints.KEY_ANTIALIASING, aaHint );
+        }
+
+        /***************************************************************************
+         * @return
+         **************************************************************************/
+        private int getUnitCount()
+        {
+            int count = 0;
+
+            if( unitLength != 0 )
+            {
+                count = ( int )( ( length + unitLength - 1 ) / unitLength );
+            }
+
+            return count;
+        }
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    @Override
-    protected void paintComponent( Graphics g )
-    {
-        super.paintComponent( g );
-
-        Graphics2D g2 = ( Graphics2D )g;
-
-        Object aaHint = g2.getRenderingHint( RenderingHints.KEY_ANTIALIASING );
-
-        g2.setRenderingHint( RenderingHints.KEY_ANTIALIASING,
-            RenderingHints.VALUE_ANTIALIAS_ON );
-
-        long off = dragOffset == null ? offset : dragOffset;
-        int unitCount = getUnitCount();
-        int unitIndex = ( int )( ( double )unitCount * off / length );
-
-        if( length == 0 )
-        {
-            return;
-        }
-
-        int x = 0;
-        int y = 1;
-        int w = ( int )( getWidth() * unitLength / ( double )length ) - 2;
-        int h = getHeight() - 2;
-
-        if( unitLength > 0 )
-        {
-            w = Math.max( w, 16 );
-        }
-
-        x = ( int )( unitIndex / ( double )unitCount * ( getWidth() - 2 ) ) + 1;
-
-        if( x < 1 )
-        {
-            x = 1;
-        }
-        else if( x + w + 1 > getWidth() )
-        {
-            x = getWidth() - w - 1;
-        }
-
-        thumbRect.x = x;
-        thumbRect.y = y;
-        thumbRect.width = w;
-        thumbRect.height = h;
-
-        g2.setColor( thumbShadow );
-        g2.fillRoundRect( x, y, w, h, 4, 4 );
-
-        g2.setColor( thumbColor );
-        g2.fillRoundRect( x + 1, y + 1, w - 2, h - 2, 4, 4 );
-
-        g2.setRenderingHint( RenderingHints.KEY_ANTIALIASING, aaHint );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class MouseListener extends MouseAdapter
+    private static final class MouseListener extends MouseAdapter
     {
         private final PositionIndicator pi;
 
@@ -297,26 +325,26 @@ public class PositionIndicator extends JComponent
         @Override
         public void mouseDragged( MouseEvent e )
         {
-            if( start != null && pi.thumbRect.contains( start ) )
+            if( start != null && pi.component.thumbRect.contains( start ) )
             {
                 dragging = true;
             }
 
             if( dragging )
             {
-                pi.dragOffset = pi.getPosition( e.getX() );
+                pi.component.dragOffset = pi.getPosition( e.getX() );
 
-                pi.repaint();
+                pi.component.repaint();
 
                 pi.posLabel.setText(
                     String.format( "0x%016X", pi.getPosition( e.getX() ) ) );
 
-                Point csp = pi.getLocationOnScreen();
+                Point csp = pi.component.getLocationOnScreen();
                 Point msp = e.getLocationOnScreen();
 
-                msp.x = ( int )( csp.x + pi.getWidth() / 2.0 -
+                msp.x = ( int )( csp.x + pi.component.getWidth() / 2.0 -
                     pi.posWin.getWidth() / 2.0 );
-                msp.y = csp.y + pi.getHeight() + 2;
+                msp.y = csp.y + pi.component.getHeight() + 2;
 
                 pi.posWin.setLocation( msp );
                 pi.posWin.setVisible( true );
@@ -328,12 +356,12 @@ public class PositionIndicator extends JComponent
         {
             boolean fire = dragging;
 
-            pi.dragOffset = null;
+            pi.component.dragOffset = null;
             start = null;
             dragging = false;
             pi.posWin.setVisible( false );
 
-            pi.repaint();
+            pi.component.repaint();
 
             if( fire )
             {
