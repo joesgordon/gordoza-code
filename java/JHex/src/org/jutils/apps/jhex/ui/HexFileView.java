@@ -664,8 +664,12 @@ public class HexFileView implements IDataView<File>
 
             fileTitleView.setTitle( file.getName() );
             loadBuffer( 0 );
-            progressBar.setLength( buffer.getLength() );
-            progressBar.setUnitLength( buffer.getBufferSize() );
+
+            long len = buffer.getLength();
+            long size = buffer.getBufferSize();
+            long unitLen = size > len ? len : size;
+            progressBar.setLength( len );
+            progressBar.setUnitLength( unitLen );
         }
         finally
         {

@@ -115,6 +115,11 @@ public class PositionIndicator extends JComponent
         repaint();
     }
 
+    public long getLength()
+    {
+        return length;
+    }
+
     /***************************************************************************
      * @param l
      **************************************************************************/
@@ -124,6 +129,11 @@ public class PositionIndicator extends JComponent
         repaint();
     }
 
+    public long getUnitLength()
+    {
+        return unitLength;
+    }
+
     /***************************************************************************
      * @param l
      **************************************************************************/
@@ -131,6 +141,11 @@ public class PositionIndicator extends JComponent
     {
         offset = l;
         repaint();
+    }
+
+    public long getOffset()
+    {
+        return offset;
     }
 
     /***************************************************************************

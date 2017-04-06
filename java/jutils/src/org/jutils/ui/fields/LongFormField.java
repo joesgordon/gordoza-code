@@ -140,9 +140,11 @@ public class LongFormField implements IDataFormField<Long>
     {
         this.value = value;
 
+        IUpdater<Long> up = updater;
+        this.updater = null;
         String text = value == null ? "" : "" + value;
-
         textField.setText( text );
+        this.updater = up;
     }
 
     /***************************************************************************

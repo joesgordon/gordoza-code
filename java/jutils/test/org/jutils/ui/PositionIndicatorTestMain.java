@@ -1,14 +1,16 @@
 package org.jutils.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 
+import org.jutils.io.LogUtils;
 import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
-import org.jutils.ui.event.ItemActionEvent;
-import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.fields.HexLongFormField;
+import org.jutils.ui.fields.LongFormField;
+import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * 
@@ -37,44 +39,86 @@ public class PositionIndicatorTestMain
         public JFrame createFrame()
         {
             StandardFrameView view = new StandardFrameView();
-            JFrame frame = view.getView();
+            PositionIndicatorTestView testView = new PositionIndicatorTestView();
 
-            frame.setTitle( "Position Test Frame" );
-            frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+            view.setTitle( "Position Test Frame" );
+            view.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+            view.setSize( 700, 500 );
+            view.setContent( testView.getView() );
 
-            frame.setSize( 700, 500 );
+            return view.getView();
+        }
+    }
 
+    private static final class PositionIndicatorTestView
+        implements IView<JComponent>
+    {
+        private final JPanel view;
+        private final LongFormField lengthField;
+        private final LongFormField unitLengthField;
+        private final HexLongFormField offsetField;
+        private final PositionIndicator indicator;
+
+        private static final long LEN = 865716124;
+        private static final long SIZE = 4 * 1024 * 1024;
+
+        public PositionIndicatorTestView()
+        {
+            this.lengthField = new LongFormField( "Length" );
+            this.unitLengthField = new LongFormField( "Unit Length" );
+            this.offsetField = new HexLongFormField( "Offset" );
+            this.indicator = new PositionIndicator();
+            this.view = createView();
+
+            indicator.setLength( LEN );
+            indicator.setUnitLength( SIZE );
+            indicator.setOffset( 0L );
+
+            lengthField.setValue( indicator.getLength() );
+            unitLengthField.setValue( indicator.getUnitLength() );
+            offsetField.setValue( indicator.getOffset() );
+
+            indicator.addPositionListener(
+                ( e ) -> updatePosition( e.getItem() ) );
+
+            lengthField.setUpdater( ( n ) -> indicator.setLength( n ) );
+            unitLengthField.setUpdater( ( n ) -> indicator.setUnitLength( n ) );
+            offsetField.setUpdater( ( n ) -> indicator.setOffset( n ) );
+        }
+
+        private void updatePosition( long position )
+        {
+            offsetField.setValue( position );
+            indicator.setOffset( position );
+
+            LogUtils.printDebug( "new position: %d", position );
+        }
+
+        private JPanel createView()
+        {
             JPanel panel = new JPanel( new BorderLayout() );
-            final PositionIndicator pi = new PositionIndicator();
 
-            final long len = 865716124;
-            final long size = 4 * 1024 * 1024;
+            panel.add( createForm(), BorderLayout.CENTER );
+            panel.add( indicator, BorderLayout.SOUTH );
 
-            pi.setLength( len );
-            pi.setUnitLength( size );
+            return panel;
+        }
 
-            pi.addPositionListener( new ItemActionListener<Long>()
-            {
-                @Override
-                public void actionPerformed( ItemActionEvent<Long> event )
-                {
-                    final long position = event.getItem();
+        private Component createForm()
+        {
+            StandardFormView form = new StandardFormView();
 
-                    final double percent = position / ( double )len;
-                    final int uc = ( int )( ( len + size - 1 ) / size );
-                    final int ui = ( int )( percent * uc );
+            form.addField( lengthField );
+            form.addField( unitLengthField );
+            form.addField( offsetField );
 
-                    final long offset = ui * size;
+            return form.getView();
+        }
 
-                    pi.setOffset( offset );
-                }
-            } );
-
-            panel.add( pi, BorderLayout.CENTER );
-
-            frame.setContentPane( panel );
-
-            return frame;
+        @Override
+        public JComponent getView()
+        {
+            return view;
         }
     }
 }
