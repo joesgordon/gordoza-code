@@ -1,10 +1,8 @@
 package org.jutils.ui;
 
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.JFrame;
 
-import javax.swing.*;
+import org.jutils.SwingUtils;
 
 /*******************************************************************************
  * 
@@ -14,6 +12,7 @@ public class StandardUncaughtExceptionHandler
 {
     /**  */
     private final JFrame frame;
+    /**  */
     private final MessageExceptionView exView;
 
     /***************************************************************************
@@ -26,7 +25,7 @@ public class StandardUncaughtExceptionHandler
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void uncaughtException( Thread thread, Throwable ex )
@@ -57,64 +56,13 @@ public class StandardUncaughtExceptionHandler
 
         exView.setException( ex );
 
-        JOptionPane optionPane = new JOptionPane( exView.getView(),
-            JOptionPane.ERROR_MESSAGE );
-        JButton continueButton = new JButton( "Continue" );
-        JButton quitButton = new JButton( "Quit" );
+        String [] choices = new String[] { "Continue", "Quit" };
+        String choice = SwingUtils.showConfirmMessage( frame, exView.getView(),
+            "Unhandled Error", choices, choices[1], true );
 
-        Dimension cDim = continueButton.getPreferredSize();
-        Dimension qDim = quitButton.getPreferredSize();
-
-        cDim.width = Math.max( cDim.width, qDim.width ) + 10;
-        cDim.height = Math.max( cDim.height, qDim.height ) + 10;
-
-        continueButton.setPreferredSize( cDim );
-        continueButton.setMinimumSize( cDim );
-
-        quitButton.setPreferredSize( cDim );
-        quitButton.setMinimumSize( cDim );
-        quitButton.addActionListener( new QuitListener() );
-
-        optionPane.setOptions( new Object[] { continueButton, quitButton } );
-
-        JDialog dialog = optionPane.createDialog( frame, "ERROR" );
-
-        dialog.setResizable( true );
-
-        continueButton.addActionListener( new ContinueListener( dialog ) );
-
-        quitButton.requestFocus();
-        dialog.setVisible( true );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class QuitListener implements ActionListener
-    {
-        @Override
-        public void actionPerformed( ActionEvent e )
+        if( choice == null || choice.equals( choices[1] ) )
         {
             System.exit( 1 );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class ContinueListener implements ActionListener
-    {
-        private final JDialog dialog;
-
-        public ContinueListener( JDialog dialog )
-        {
-            this.dialog = dialog;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            dialog.dispose();
         }
     }
 }

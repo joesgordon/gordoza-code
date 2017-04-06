@@ -176,13 +176,21 @@ public final class SwingUtils
     public static String showConfirmMessage( Component parent, Object message,
         String title, String [] choices, String defaultChoice )
     {
+        return showConfirmMessage( parent, message, title, choices,
+            defaultChoice, false );
+    }
+
+    public static String showConfirmMessage( Component parent, Object message,
+        String title, String [] choices, String defaultChoice,
+        boolean resizable )
+    {
         JOptionPane jop = new JOptionPane( message,
             JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null,
             choices, defaultChoice );
 
         JDialog dialog = jop.createDialog( parent, title );
         dialog.setModalityType( ModalityType.DOCUMENT_MODAL );
-
+        dialog.setResizable( resizable );
         dialog.setVisible( true );
 
         Object valueObj = jop.getValue();
