@@ -12,6 +12,8 @@ public class FilePrintStream implements IPrintStream
     /** The buffer size used to create the underlying writer. */
     private static final int BUFFER_SIZE = 64 * 1024;
 
+    private final FileOutputStream fileStream;
+    private final OutputStreamWriter outputWriter;
     /** The buffer to use for printing. */
     private final BufferedWriter writer;
 
@@ -39,10 +41,10 @@ public class FilePrintStream implements IPrintStream
      **************************************************************************/
     public FilePrintStream( File file, boolean append ) throws IOException
     {
-        FileOutputStream fos = new FileOutputStream( file, append );
-        Writer w = new OutputStreamWriter( fos, IOUtils.US_ASCII );
-
-        writer = new BufferedWriter( w, BUFFER_SIZE );
+        this.fileStream = new FileOutputStream( file, append );
+        this.outputWriter = new OutputStreamWriter( fileStream,
+            IOUtils.US_ASCII );
+        this.writer = new BufferedWriter( outputWriter, BUFFER_SIZE );
     }
 
     /***************************************************************************
@@ -52,6 +54,8 @@ public class FilePrintStream implements IPrintStream
     public void close() throws IOException
     {
         writer.close();
+        outputWriter.close();
+        fileStream.close();
     }
 
     /***************************************************************************

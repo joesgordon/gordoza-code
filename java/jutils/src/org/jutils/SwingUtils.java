@@ -577,22 +577,23 @@ public final class SwingUtils
      * @param type the type of parent to be found.
      * @return the component of the type provided or {@code null} if not found.
      **************************************************************************/
-    public static Component getParentOfType( Component comp, Class<?> type )
+    public static <T extends Component> T getParentOfType( Component comp,
+        Class<T> type )
     {
-        Component parent = null;
         Component parentComp = comp;
 
         while( parentComp != null )
         {
             if( type.isAssignableFrom( parentComp.getClass() ) )
             {
-                parent = parentComp;
-                break;
+                @SuppressWarnings( "unchecked")
+                T parent = ( T )parentComp;
+                return parent;
             }
             parentComp = parentComp.getParent();
         }
 
-        return parent;
+        return null;
     }
 
     /***************************************************************************
