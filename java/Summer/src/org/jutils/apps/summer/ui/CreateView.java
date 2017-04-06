@@ -1,7 +1,12 @@
 package org.jutils.apps.summer.ui;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dialog.ModalityType;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -9,12 +14,32 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileSystemView;
 
-import org.jutils.*;
-import org.jutils.apps.summer.data.*;
+import org.jutils.IconConstants;
+import org.jutils.SwingUtils;
+import org.jutils.ValidationException;
+import org.jutils.apps.summer.data.ChecksumResult;
+import org.jutils.apps.summer.data.SumFile;
+import org.jutils.apps.summer.data.SumFilePathComparator;
+import org.jutils.apps.summer.data.SumFileSizeComparator;
 import org.jutils.apps.summer.io.ChecksumFileSerializer;
 import org.jutils.apps.summer.tasks.ChecksumCreationTask;
 import org.jutils.apps.summer.tasks.CreationTasksManager;
@@ -23,15 +48,28 @@ import org.jutils.io.cksum.ChecksumType;
 import org.jutils.task.MultiTaskView;
 import org.jutils.task.TaskMetrics;
 import org.jutils.time.TimeUtils;
-import org.jutils.ui.*;
-import org.jutils.ui.event.*;
+import org.jutils.ui.OkDialogView;
+import org.jutils.ui.StandardFormView;
+import org.jutils.ui.TitleView;
+import org.jutils.ui.event.ActionAdapter;
+import org.jutils.ui.event.DirectoryChooserListener;
+import org.jutils.ui.event.FileChooserListener;
 import org.jutils.ui.event.FileChooserListener.IFilesSelected;
 import org.jutils.ui.event.FileChooserListener.ILastFiles;
+import org.jutils.ui.event.FileDropTarget;
 import org.jutils.ui.event.FileDropTarget.DropActionType;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
-import org.jutils.ui.model.*;
+import org.jutils.ui.event.ItemActionEvent;
+import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.model.IDataView;
+import org.jutils.ui.model.ITableItemsConfig;
+import org.jutils.ui.model.ItemsTableModel;
+import org.jutils.ui.model.LabelTableCellRenderer;
 import org.jutils.ui.model.LabelTableCellRenderer.ITableCellLabelDecorator;
-import org.jutils.ui.validation.*;
+import org.jutils.ui.validation.IValidationField;
+import org.jutils.ui.validation.IValidityChangedListener;
+import org.jutils.ui.validation.Validity;
+import org.jutils.ui.validation.ValidityListenerList;
 
 /*******************************************************************************
  * 
@@ -376,7 +414,7 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
         Collections.sort( input.files, new SumFileSizeComparator() );
         TaskMetrics metrics = runCreate( view, input );
 
-        if( metrics != null )
+        if( metrics != null && !metrics.interrupted )
         {
             Collections.sort( input.files, new SumFilePathComparator() );
             displayChecksums( input, metrics );
@@ -414,6 +452,9 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
         return metrics;
     }
 
+    /***************************************************************************
+     * @param files
+     **************************************************************************/
     private void addDirs( File [] files )
     {
         view.setCursor( new Cursor( Cursor.WAIT_CURSOR ) );
