@@ -16,7 +16,8 @@ public class FilePrintStream implements IPrintStream
     private final BufferedWriter writer;
 
     /***************************************************************************
-     * Creates a new print string that writes to the provided file.
+     * Creates a new print string that writes to the provided file that will be
+     * overridden.
      * @param file the file to be written to.
      * @throws IOException if the file exists but is a directory rather than a
      * regular file, does not exist but cannot be created, or cannot be opened
@@ -24,14 +25,28 @@ public class FilePrintStream implements IPrintStream
      **************************************************************************/
     public FilePrintStream( File file ) throws IOException
     {
-        FileOutputStream fos = new FileOutputStream( file );
+        this( file, false );
+    }
+
+    /***************************************************************************
+     * Creates a new print string that writes to the provided file that will be
+     * appended according to the provided parameter.
+     * @param file the file to be written to.
+     * @param append appends the file if {@code true}; overwrites otherwise.s
+     * @throws IOException if the file exists but is a directory rather than a
+     * regular file, does not exist but cannot be created, or cannot be opened
+     * for any other reason.
+     **************************************************************************/
+    public FilePrintStream( File file, boolean append ) throws IOException
+    {
+        FileOutputStream fos = new FileOutputStream( file, append );
         Writer w = new OutputStreamWriter( fos, IOUtils.US_ASCII );
 
         writer = new BufferedWriter( w, BUFFER_SIZE );
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void close() throws IOException
@@ -40,7 +55,7 @@ public class FilePrintStream implements IPrintStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void print( String str )
@@ -49,7 +64,7 @@ public class FilePrintStream implements IPrintStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void println()
@@ -58,7 +73,7 @@ public class FilePrintStream implements IPrintStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void println( String line )
@@ -68,7 +83,7 @@ public class FilePrintStream implements IPrintStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void println( String format, Object... args )
@@ -77,7 +92,7 @@ public class FilePrintStream implements IPrintStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void print( String format, Object... args )
@@ -86,7 +101,7 @@ public class FilePrintStream implements IPrintStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void println( char [] chars )
