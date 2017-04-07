@@ -9,6 +9,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 
+import org.jutils.io.LogUtils;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.event.updater.UpdaterList;
 
@@ -25,7 +26,7 @@ public class CheckTreeManager implements TreeSelectionListener
     private final UpdaterList<TreePath> checkListeners;
 
     /**  */
-    private static final int HOTSPOT = new JCheckBox().getPreferredSize().width;
+    private final int defaultWidth;
 
     /***************************************************************************
      * @param tree JTree
@@ -35,6 +36,7 @@ public class CheckTreeManager implements TreeSelectionListener
         this.tree = tree;
         this.selectionModel = new CheckTreeSelectionModel( tree.getModel() );
         this.checkListeners = new UpdaterList<>();
+        this.defaultWidth = new JCheckBox().getPreferredSize().width;
 
         tree.setCellRenderer( new CheckTreeCellRenderer( tree.getCellRenderer(),
             selectionModel ) );
@@ -58,11 +60,13 @@ public class CheckTreeManager implements TreeSelectionListener
             {
                 if( selected )
                 {
-                    selectionModel.removeSelectionPath( path );
+                    selectionModel.addSelectionPaths( new TreePath[] { path } );
                 }
                 else
                 {
-                    selectionModel.addSelectionPath( path );
+                    LogUtils.printDebug( "removing %s",
+                        path.getLastPathComponent().toString() );
+                    selectionModel.removeSelectionPath( path );
                 }
             }
             finally
@@ -103,7 +107,7 @@ public class CheckTreeManager implements TreeSelectionListener
             return null;
         }
 
-        if( e.getX() > tree.getPathBounds( path ).x + HOTSPOT )
+        if( e.getX() > tree.getPathBounds( path ).x + defaultWidth )
         {
             return null;
         }
@@ -152,6 +156,7 @@ public class CheckTreeManager implements TreeSelectionListener
             {
                 boolean isSelected = manager.selectionModel.isPathSelected(
                     releasedPath, true );
+
                 manager.setPathSelected( releasedPath, !isSelected );
                 manager.checkListeners.fireListeners( releasedPath );
             }

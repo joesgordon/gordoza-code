@@ -60,7 +60,7 @@ public class CheckTreeSelectionModel implements TreeSelectionModel
     }
 
     /***************************************************************************
-     * tells whether given path is selected. if dig is true, then a path is
+     * Tells whether given path is selected. if dig is true, then a path is
      * assumed to be selected if one of its ancestors is selected.
      * @param path TreePathd
      * @param dig boolean
@@ -232,13 +232,15 @@ public class CheckTreeSelectionModel implements TreeSelectionModel
      **************************************************************************/
     private void toggleRemoveSelection( TreePath path )
     {
-        Stack<TreePath> stack = new Stack<TreePath>();
+        Stack<TreePath> stack = new Stack<>();
         TreePath parent = path.getParentPath();
+
         while( parent != null && !isPathSelected( parent ) )
         {
             stack.push( parent );
             parent = parent.getParentPath();
         }
+
         if( parent != null )
         {
             stack.push( parent );
@@ -268,6 +270,7 @@ public class CheckTreeSelectionModel implements TreeSelectionModel
             }
         }
         selectionModel.removeSelectionPaths( new TreePath[] { parent } );
+        selectionModel.removeSelectionPaths( new TreePath[] { path } );
     }
 
     @Override
@@ -297,7 +300,7 @@ public class CheckTreeSelectionModel implements TreeSelectionModel
     @Override
     public void removeSelectionPath( TreePath path )
     {
-        selectionModel.removeSelectionPath( path );
+        toggleRemoveSelection( path );
     }
 
     @Override
