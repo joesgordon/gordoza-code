@@ -5,7 +5,6 @@ import java.awt.Component;
 import javax.swing.border.TitledBorder;
 
 import org.jutils.ui.StandardFormView;
-import org.jutils.ui.event.updater.ReflectiveUpdater;
 import org.jutils.ui.fields.BooleanFormField;
 import org.jutils.ui.fields.StringFormField;
 import org.jutils.ui.model.IDataView;
@@ -49,10 +48,8 @@ public class ChatterboxOptionsView implements IDataView<ChatterboxOptions>
 
         setData( new ChatterboxOptions() );
 
-        nameField.setUpdater(
-            new ReflectiveUpdater<>( this, "config.displayName" ) );
-        popupField.setUpdater(
-            new ReflectiveUpdater<>( this, "config.showPopups" ) );
+        nameField.setUpdater( ( s ) -> config.displayName = s );
+        popupField.setUpdater( ( b ) -> config.showPopups = b );
     }
 
     /***************************************************************************

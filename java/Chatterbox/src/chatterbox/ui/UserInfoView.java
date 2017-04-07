@@ -3,7 +3,6 @@ package chatterbox.ui;
 import java.awt.Component;
 
 import org.jutils.ui.StandardFormView;
-import org.jutils.ui.event.updater.ReflectiveUpdater;
 import org.jutils.ui.fields.StringFormField;
 import org.jutils.ui.model.IDataView;
 
@@ -39,8 +38,7 @@ public class UserInfoView implements IDataView<ChatUser>
 
         setData( new ChatUser( "blah" ) );
 
-        nickNameField.setUpdater(
-            new ReflectiveUpdater<>( this, "user.nickName" ) );
+        nickNameField.setUpdater( ( s ) -> user.nickName = s );
     }
 
     /***************************************************************************

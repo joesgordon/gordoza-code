@@ -164,6 +164,9 @@ public class ListView<T> implements IDataView<List<T>>
         selectedListeners.addListener( l );
     }
 
+    /***************************************************************************
+     * @param l
+     **************************************************************************/
     public void addListChangedListener( ItemActionListener<ItemChange<T>> l )
     {
         changeListeners.addListener( l );
@@ -634,12 +637,18 @@ public class ListView<T> implements IDataView<List<T>>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public static enum ChangeType
     {
         ADDED,
         REMOVED;
     }
 
+    /***************************************************************************
+     * @param <T>
+     **************************************************************************/
     public static final class ItemChange<T>
     {
         public final ChangeType type;
