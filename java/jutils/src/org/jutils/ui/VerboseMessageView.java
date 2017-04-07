@@ -136,7 +136,7 @@ public class VerboseMessageView implements IView<JPanel>
         dialog.setSize( width, height );
         dialog.validate();
         dialog.setDefaultCloseOperation( JDialog.DISPOSE_ON_CLOSE );
-        dialog.setLocationRelativeTo( null );
+        dialog.setLocationRelativeTo( parent );
         dialog.setVisible( true );
         dialog.toFront();
     }

@@ -72,8 +72,7 @@ public class DirectoryChooser
     public DirectoryChooser( Window owner, String title, String message,
         String paths )
     {
-        this.dialog = new JDialog( owner, title,
-            ModalityType.APPLICATION_MODAL );
+        this.dialog = new JDialog( owner, title, ModalityType.DOCUMENT_MODAL );
         this.tree = new DirectoryTree();
         this.messageLabel = new JLabel();
         this.dirsField = new ValidationTextField();

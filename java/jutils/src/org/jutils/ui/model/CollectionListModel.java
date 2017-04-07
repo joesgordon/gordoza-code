@@ -164,4 +164,12 @@ public class CollectionListModel<T> extends AbstractListModel<T>
 
         fireIntervalRemoved( this, 0, getSize() );
     }
+
+    /***************************************************************************
+     * @param index
+     **************************************************************************/
+    public void refreshIndex( int index )
+    {
+        fireContentsChanged( null, index, index );
+    }
 }

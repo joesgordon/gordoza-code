@@ -46,6 +46,8 @@ public class ListView<T> implements IDataView<List<T>>
 
     /**  */
     private final ItemActionList<T> selectedListeners;
+    /**  */
+    private final ItemActionList<ItemChange<T>> changeListeners;
 
     /** The items to be displayed. */
     private List<T> items;
@@ -81,6 +83,7 @@ public class ListView<T> implements IDataView<List<T>>
         this.toolbar = createButtonsPanel();
 
         this.selectedListeners = new ItemActionList<>();
+        this.changeListeners = new ItemActionList<>();
 
         this.view = createView();
     }
@@ -129,7 +132,7 @@ public class ListView<T> implements IDataView<List<T>>
     private Action createRemoveAction()
     {
         Icon icon = IconConstants.getIcon( IconConstants.EDIT_DELETE_16 );
-        ActionListener listener = new DeleteItemListener( this );
+        ActionListener listener = new DeleteItemListener<>( this );
         return new ActionAdapter( listener, "Delete", icon );
     }
 
@@ -159,6 +162,11 @@ public class ListView<T> implements IDataView<List<T>>
     public void addSelectedListener( ItemActionListener<T> l )
     {
         selectedListeners.addListener( l );
+    }
+
+    public void addListChangedListener( ItemActionListener<ItemChange<T>> l )
+    {
+        changeListeners.addListener( l );
     }
 
     /***************************************************************************
@@ -381,6 +389,19 @@ public class ListView<T> implements IDataView<List<T>>
     }
 
     /***************************************************************************
+     * 
+     **************************************************************************/
+    public void refreshSelected()
+    {
+        int index = itemsList.getSelectedIndex();
+
+        if( index > -1 )
+        {
+            itemsListModel.refreshIndex( index );
+        }
+    }
+
+    /***************************************************************************
      * The model used for this view. This model does not provide the data, but
      * provides methods of accessing said data.
      **************************************************************************/
@@ -476,6 +497,8 @@ public class ListView<T> implements IDataView<List<T>>
                 itemListView.itemsListModel.add(
                     new DisplayItem<T>( item, itemListView.itemsModel ) );
                 itemListView.items.add( item );
+                itemListView.changeListeners.fireListeners( itemListView,
+                    new ItemChange<>( ChangeType.ADDED, item ) );
             }
         }
     }
@@ -483,11 +506,11 @@ public class ListView<T> implements IDataView<List<T>>
     /***************************************************************************
      * Defines the listener to be called when the delete button is pressed.
      **************************************************************************/
-    private static class DeleteItemListener implements ActionListener
+    private static class DeleteItemListener<T> implements ActionListener
     {
-        private final ListView<?> itemListView;
+        private final ListView<T> itemListView;
 
-        public DeleteItemListener( ListView<?> itemListView )
+        public DeleteItemListener( ListView<T> itemListView )
         {
             this.itemListView = itemListView;
         }
@@ -500,7 +523,9 @@ public class ListView<T> implements IDataView<List<T>>
             if( index > -1 )
             {
                 itemListView.itemsListModel.remove( index );
-                itemListView.items.remove( index );
+                T item = itemListView.items.remove( index );
+                itemListView.changeListeners.fireListeners( itemListView,
+                    new ItemChange<>( ChangeType.REMOVED, item ) );
             }
         }
     }
@@ -606,6 +631,24 @@ public class ListView<T> implements IDataView<List<T>>
 
             return renderer.getListCellRendererComponent( list, t, index,
                 isSelected, cellHasFocus, text );
+        }
+    }
+
+    public static enum ChangeType
+    {
+        ADDED,
+        REMOVED;
+    }
+
+    public static final class ItemChange<T>
+    {
+        public final ChangeType type;
+        public final T item;
+
+        public ItemChange( ChangeType type, T item )
+        {
+            this.type = type;
+            this.item = item;
         }
     }
 }

@@ -218,7 +218,7 @@ public class OkDialogView implements IView<JDialog>
 
         addOkListener( listener );
 
-        dialog.setLocationRelativeTo( null );
+        dialog.setLocationRelativeTo( dialog.getParent() );
         dialog.setVisible( true );
 
         okListeners.removeListener( listener );
