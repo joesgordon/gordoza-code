@@ -8,7 +8,6 @@ import javax.swing.JPanel;
 
 import org.budgey.data.Transaction;
 import org.jutils.ui.calendar.DateField;
-import org.jutils.ui.event.updater.ReflectiveUpdater;
 import org.jutils.ui.fields.StringFormField;
 import org.jutils.ui.model.IDataView;
 
@@ -45,14 +44,10 @@ public class TransactionView implements IDataView<Transaction>
 
         setData( new Transaction() );
 
-        secondPartyField.setUpdater(
-            new ReflectiveUpdater<>( this, "transaction.secondParty" ) );
-        tagField.setUpdater(
-            new ReflectiveUpdater<>( this, "transaction.tags" ) );
-        amountField.setUpdater(
-            new ReflectiveUpdater<>( this, "transaction.amount" ) );
-        dateField.setUpdater(
-            new ReflectiveUpdater<>( this, "transaction.date" ) );
+        secondPartyField.setUpdater( ( d ) -> transaction.setSecondParty( d ) );
+        tagField.setUpdater( ( d ) -> transaction.setTags( d ) );
+        amountField.setUpdater( ( d ) -> transaction.setAmount( d ) );
+        dateField.setUpdater( ( d ) -> transaction.setDate( d ) );
     }
 
     /***************************************************************************

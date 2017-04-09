@@ -2,12 +2,9 @@ package org.jutils.chart.ui;
 
 import java.awt.Component;
 
-import javax.swing.JCheckBox;
-
 import org.jutils.chart.model.Chart;
 import org.jutils.ui.StandardFormView;
-import org.jutils.ui.event.updater.CheckBoxUpdater;
-import org.jutils.ui.event.updater.ReflectiveUpdater;
+import org.jutils.ui.fields.BooleanFormField;
 import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
@@ -24,11 +21,11 @@ public class ChartPropertiesView implements IDataView<Chart>
     /**  */
     private final TextLabelField topBottomField;
     /**  */
-    private final JCheckBox gridlinesVisibleField;
+    private final BooleanFormField gridlinesVisibleField;
     /**  */
-    private final JCheckBox antiAliasField;
+    private final BooleanFormField antiAliasField;
     /**  */
-    private final JCheckBox textAntiAliasField;
+    private final BooleanFormField textAntiAliasField;
 
     /**  */
     private Chart chart;
@@ -41,23 +38,20 @@ public class ChartPropertiesView implements IDataView<Chart>
         this.titleField = new TextLabelField( "Title" );
         this.subtitleField = new TextLabelField( "Subtitle" );
         this.topBottomField = new TextLabelField( "Top/Bottom" );
-        this.gridlinesVisibleField = new JCheckBox();
-        this.antiAliasField = new JCheckBox();
-        this.textAntiAliasField = new JCheckBox();
+        this.gridlinesVisibleField = new BooleanFormField(
+            "Gridlines Visible" );
+        this.antiAliasField = new BooleanFormField( "Anti-Alias" );
+        this.textAntiAliasField = new BooleanFormField( "Text Anti-Alias" );
 
         this.form = createView();
 
         setData( new Chart() );
 
-        gridlinesVisibleField.addActionListener(
-            new CheckBoxUpdater( new ReflectiveUpdater<Boolean>( this,
-                "chart.options.gridlinesVisible" ) ) );
-        antiAliasField.addActionListener(
-            new CheckBoxUpdater( new ReflectiveUpdater<Boolean>( this,
-                "chart.options.antialias" ) ) );
-        textAntiAliasField.addActionListener(
-            new CheckBoxUpdater( new ReflectiveUpdater<Boolean>( this,
-                "chart.options.textAntiAlias" ) ) );
+        gridlinesVisibleField.setUpdater(
+            ( b ) -> chart.options.gridlinesVisible = b );
+        antiAliasField.setUpdater( ( b ) -> chart.options.antialias = b );
+        textAntiAliasField.setUpdater(
+            ( b ) -> chart.options.textAntiAlias = b );
 
     }
 
@@ -71,9 +65,9 @@ public class ChartPropertiesView implements IDataView<Chart>
         form.addField( titleField );
         form.addField( subtitleField );
         form.addField( topBottomField );
-        form.addField( "Gridlines Visible", gridlinesVisibleField );
-        form.addField( "Anti-Alias", antiAliasField );
-        form.addField( "Text Anti-Alias", textAntiAliasField );
+        form.addField( gridlinesVisibleField );
+        form.addField( antiAliasField );
+        form.addField( textAntiAliasField );
 
         return form;
     }
@@ -107,8 +101,8 @@ public class ChartPropertiesView implements IDataView<Chart>
         titleField.setValue( data.title );
         subtitleField.setValue( data.subtitle );
         topBottomField.setValue( data.topBottomLabel );
-        gridlinesVisibleField.setSelected( data.options.gridlinesVisible );
-        antiAliasField.setSelected( data.options.antialias );
-        textAntiAliasField.setSelected( data.options.textAntiAlias );
+        gridlinesVisibleField.setValue( data.options.gridlinesVisible );
+        antiAliasField.setValue( data.options.antialias );
+        textAntiAliasField.setValue( data.options.textAntiAlias );
     }
 }

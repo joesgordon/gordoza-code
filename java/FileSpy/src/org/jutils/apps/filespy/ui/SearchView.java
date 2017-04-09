@@ -15,7 +15,6 @@ import org.jutils.ui.StandardFormView;
 import org.jutils.ui.calendar.DateField;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
-import org.jutils.ui.event.updater.ReflectiveUpdater;
 import org.jutils.ui.fields.*;
 import org.jutils.ui.model.IDataView;
 
@@ -103,35 +102,23 @@ public class SearchView implements IDataView<SearchParams>
 
         setData( new SearchParams() );
 
-        filenameField.setUpdater(
-            new ReflectiveUpdater<>( this, "params.filename" ) );
-        contentsField.setUpdater(
-            new ReflectiveUpdater<>( this, "params.contents" ) );
-        pathField.setUpdater( new ReflectiveUpdater<>( this, "params.path" ) );
-        subfoldersField.setUpdater(
-            new ReflectiveUpdater<>( this, "params.searchSubfolders" ) );
+        filenameField.setUpdater( ( s ) -> params.filename = s );
+        contentsField.setUpdater( ( u ) -> params.contents.set( u ) );
+        pathField.setUpdater( ( f ) -> params.path = f );
+        subfoldersField.setUpdater( ( b ) -> params.searchSubfolders = b );
 
-        moreThanField.setUpdater(
-            new ReflectiveUpdater<>( this, "params.moreThan" ) );
-        lessThanField.setUpdater(
-            new ReflectiveUpdater<>( this, "params.lessThan" ) );
+        moreThanField.setUpdater( ( u ) -> params.moreThan.set( u ) );
+        lessThanField.setUpdater( ( u ) -> params.lessThan.set( u ) );
 
-        afterField.setUpdater(
-            new ReflectiveUpdater<>( this, "params.after" ) );
-        beforeField.setUpdater(
-            new ReflectiveUpdater<>( this, "params.before" ) );
+        afterField.setUpdater( ( u ) -> params.after.set( u ) );
+        beforeField.setUpdater( ( u ) -> params.before.set( u ) );
 
-        fileRegexCheckBox.setUpdater(
-            new ReflectiveUpdater<>( this, "params.filenameRegex" ) );
-        fileMatchCheckBox.setUpdater(
-            new ReflectiveUpdater<>( this, "params.filenameMatch" ) );
-        fileNotCheckBox.setUpdater(
-            new ReflectiveUpdater<>( this, "params.filenameNot" ) );
+        fileRegexCheckBox.setUpdater( ( b ) -> params.filenameRegex = b );
+        fileMatchCheckBox.setUpdater( ( b ) -> params.filenameMatch = b );
+        fileNotCheckBox.setUpdater( ( b ) -> params.filenameNot = b );
 
-        contentsRegexCheckBox.setUpdater(
-            new ReflectiveUpdater<>( this, "params.contentsRegex" ) );
-        contentsMatchCheckBox.setUpdater(
-            new ReflectiveUpdater<>( this, "params.contentsMatch" ) );
+        contentsRegexCheckBox.setUpdater( ( b ) -> params.contentsRegex = b );
+        contentsMatchCheckBox.setUpdater( ( b ) -> params.contentsMatch = b );
     }
 
     /***************************************************************************

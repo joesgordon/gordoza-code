@@ -28,6 +28,5 @@ public class WrappedUpdater<T> implements IUpdater<T>
     {
         this.baseUpdater.update( data );
         this.secUpdater.update( data );
-
     }
 }

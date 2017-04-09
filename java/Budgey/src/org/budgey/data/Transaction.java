@@ -60,4 +60,14 @@ public class Transaction
         m.hashCode();
         amount = m;
     }
+
+    public void setTags( String tags )
+    {
+        this.tags = tags;
+    }
+
+    public void setDate( LocalDate date )
+    {
+        this.date = date;
+    }
 }
