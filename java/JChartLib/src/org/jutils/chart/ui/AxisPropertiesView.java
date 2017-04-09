@@ -4,7 +4,6 @@ import java.awt.Component;
 
 import org.jutils.chart.model.Axis;
 import org.jutils.ui.StandardFormView;
-import org.jutils.ui.event.updater.WrappedUpdater;
 import org.jutils.ui.fields.BooleanFormField;
 import org.jutils.ui.fields.DoubleFormField;
 import org.jutils.ui.model.IDataView;
@@ -52,12 +51,14 @@ public class AxisPropertiesView implements IDataView<Axis>
 
         setData( new Axis() );
 
-        autoTicksField.setUpdater( new WrappedUpdater<>(
-            ( b ) -> setAutoTicksEnabled( b ), ( b ) -> axis.autoTicks = b ) );
+        autoTicksField.setUpdater( ( d ) -> {
+            setAutoTicksEnabled( d );
+            axis.autoTicks = d;
+        } );
         tickStartField.setUpdater( ( d ) -> axis.tickStart = d );
         tickEndField.setUpdater( ( d ) -> axis.tickEnd = d );
         tickWidthField.setUpdater( ( d ) -> axis.tickWidth = d );
-        dockZeroField.setUpdater( ( b ) -> axis.dockZero = b );
+        dockZeroField.setUpdater( ( d ) -> axis.dockZero = d );
     }
 
     /***************************************************************************
