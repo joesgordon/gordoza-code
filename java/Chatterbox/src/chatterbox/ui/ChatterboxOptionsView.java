@@ -41,7 +41,7 @@ public class ChatterboxOptionsView implements IDataView<ChatterboxOptions>
 
         form.addField( nameField );
         form.addField( popupField );
-        form.addField( null, inputsView.getView() );
+        form.addComponent( inputsView.getView() );
 
         inputsView.getView().setBorder(
             new TitledBorder( "Connection Options" ) );

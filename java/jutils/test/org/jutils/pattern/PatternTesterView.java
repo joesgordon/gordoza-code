@@ -124,7 +124,7 @@ public class PatternTesterView implements IView<JComponent>
         form.addField( testField );
         form.addField( patternField );
         form.addField( fieldResultField );
-        form.addField( null, viewview.getView() );
+        form.addComponent( viewview.getView() );
         form.addField( viewResultField );
 
         return form.getView();

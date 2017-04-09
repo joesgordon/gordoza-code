@@ -59,7 +59,7 @@ public class LegendPropertiesView implements IDataView<Legend>
             borderField.getView() );
 
         form.addField( visibleField );
-        form.addField( null, bordervView.getView() );
+        form.addComponent( bordervView.getView() );
         form.addField( sideField );
         form.addField( colorField );
 

@@ -73,11 +73,11 @@ public class SeriesView implements IDataView<Series>
         form.addField( visibleField );
         form.addField( primaryDomainField );
         form.addField( primaryRangeField );
-        form.addField( null,
+        form.addComponent(
             new TitleView( "Marker", markerView.getView() ).getView() );
-        form.addField( null,
+        form.addComponent(
             new TitleView( "Highlight", highlightView.getView() ).getView() );
-        form.addField( null,
+        form.addComponent(
             new TitleView( "Line", lineView.getView() ).getView() );
 
         return form.getView();

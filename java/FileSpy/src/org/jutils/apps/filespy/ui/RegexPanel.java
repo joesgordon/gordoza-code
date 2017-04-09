@@ -147,10 +147,10 @@ public class RegexPanel implements IView<JPanel>
         globalCheckBox.setToolTipText(
             ". matches any character, including a " + "line terminator." );
 
-        form.addField( null, caseCheckBox );
-        form.addField( null, multilineCheckBox );
-        form.addField( null, commentsCheckBox );
-        form.addField( null, globalCheckBox );
+        form.addComponent( caseCheckBox );
+        form.addComponent( multilineCheckBox );
+        form.addComponent( commentsCheckBox );
+        form.addComponent( globalCheckBox );
 
         form.getView().setBorder(
             BorderFactory.createTitledBorder( "Options" ) );

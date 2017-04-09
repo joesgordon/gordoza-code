@@ -63,7 +63,7 @@ public class ExtensionView implements IDataView<ExtensionConfig>
 
         form.addField( extField );
         form.addField( descField );
-        form.addField( null, titleView.getView() );
+        form.addComponent( titleView.getView() );
 
         return form.getView();
     }

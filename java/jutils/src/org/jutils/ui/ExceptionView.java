@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.border.MatteBorder;
 
 import org.jutils.Utils;
+import org.jutils.ui.fields.StringFormField;
 import org.jutils.ui.model.IView;
 
 public class ExceptionView implements IView<JComponent>
@@ -13,13 +14,13 @@ public class ExceptionView implements IView<JComponent>
     /**  */
     private final TitleView titlePanel;
     /**  */
-    private final JTextField messageField;
+    private final StringFormField messageField;
     /**  */
     private final JTextArea stacktraceField;
 
     public ExceptionView()
     {
-        this.messageField = new JTextField( 20 );
+        this.messageField = new StringFormField( "Message" );
         this.stacktraceField = new JTextArea();
         this.titlePanel = new TitleView( "", createView() );
 
@@ -60,7 +61,7 @@ public class ExceptionView implements IView<JComponent>
     {
         StandardFormView form = new StandardFormView();
 
-        form.addField( "Message", messageField );
+        form.addField( messageField );
 
         return form.getView();
     }
@@ -68,7 +69,7 @@ public class ExceptionView implements IView<JComponent>
     public void setException( Throwable th )
     {
         titlePanel.setTitle( th.getClass().getName() );
-        messageField.setText( th.getMessage() );
+        messageField.setValue( th.getMessage() );
         stacktraceField.setText( Utils.printStackTrace( th ) );
         stacktraceField.setCaretPosition( 0 );
     }
