@@ -13,7 +13,8 @@ import org.jutils.io.parsers.StringLengthParser;
 import org.jutils.ui.ColorButtonView;
 import org.jutils.ui.OkDialogView;
 import org.jutils.ui.event.*;
-import org.jutils.ui.event.updater.*;
+import org.jutils.ui.event.updater.IUpdater;
+import org.jutils.ui.fields.BooleanFormField;
 import org.jutils.ui.fields.IDataFormField;
 import org.jutils.ui.validation.*;
 import org.jutils.ui.validators.DataTextValidator;
@@ -30,7 +31,7 @@ public class TextLabelField implements IDataFormField<TextLabel>
     private final JPanel view;
 
     /**  */
-    private final JCheckBox visibleField;
+    private final BooleanFormField visibleField;
     /**  */
     private final ValidationTextField textField;
     /**  */
@@ -48,7 +49,7 @@ public class TextLabelField implements IDataFormField<TextLabel>
     {
         this.name = name;
 
-        this.visibleField = new JCheckBox();
+        this.visibleField = new BooleanFormField( "Visible" );
         this.textField = new ValidationTextField();
         this.fontAction = createFontAction();
         this.colorView = new ColorButtonView( Color.red, 16, false );
@@ -59,15 +60,14 @@ public class TextLabelField implements IDataFormField<TextLabel>
 
         ITextValidator itv;
 
-        visibleField.addActionListener( new CheckBoxUpdater(
-            new ReflectiveUpdater<Boolean>( this, "label.visible" ) ) );
+        visibleField.setUpdater( ( b ) -> label.visible = b );
 
         itv = new DataTextValidator<>( new StringLengthParser( 0, null ),
-            new ReflectiveUpdater<String>( this, "label.text" ) );
+            ( s ) -> label.text = s );
         textField.setValidator( itv );
 
-        colorView.addUpdateListener( new UpdaterItemListener<>(
-            new ReflectiveUpdater<Color>( this, "label.color" ) ) );
+        colorView.addUpdateListener(
+            new UpdaterItemListener<>( ( c ) -> label.color = c ) );
     }
 
     /***************************************************************************
@@ -81,7 +81,7 @@ public class TextLabelField implements IDataFormField<TextLabel>
         constraints = new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.NONE,
             new Insets( 0, 0, 0, 2 ), 0, 0 );
-        panel.add( visibleField, constraints );
+        panel.add( visibleField.getView(), constraints );
 
         constraints = new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
@@ -156,14 +156,14 @@ public class TextLabelField implements IDataFormField<TextLabel>
 
         if( value != null )
         {
-            visibleField.setSelected( value.visible );
+            visibleField.setValue( value.visible );
             textField.setText( value.text );
             textField.getView().setFont( value.font );
             colorView.setData( value.color );
         }
         else
         {
-            visibleField.setSelected( false );
+            visibleField.setValue( false );
             textField.setText( "" );
             colorView.setData( Color.black );
         }

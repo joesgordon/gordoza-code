@@ -8,7 +8,6 @@ import javax.swing.JPanel;
 import org.jutils.IconConstants;
 import org.jutils.ui.*;
 import org.jutils.ui.ListView.IItemListModel;
-import org.jutils.ui.event.updater.ReflectiveUpdater;
 import org.jutils.ui.explorer.data.ExtensionConfig;
 import org.jutils.ui.fields.StringFormField;
 import org.jutils.ui.model.IDataView;
@@ -42,9 +41,8 @@ public class ExtensionView implements IDataView<ExtensionConfig>
 
         setData( new ExtensionConfig( "a", "A File" ) );
 
-        extField.setUpdater( new ReflectiveUpdater<>( this, "extension.ext" ) );
-        descField.setUpdater(
-            new ReflectiveUpdater<>( this, "extension.description" ) );
+        extField.setUpdater( ( s ) -> extension.ext = s );
+        descField.setUpdater( ( s ) -> extension.description = s );
     }
 
     /***************************************************************************

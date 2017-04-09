@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import org.jutils.ui.event.updater.IUpdater;
-import org.jutils.ui.event.updater.ReflectiveUpdater;
 import org.jutils.ui.validation.*;
 import org.jutils.utils.Usable;
 
@@ -38,8 +37,7 @@ public class UsableFormField<T>
         this.usedField = new JCheckBox();
         this.panel = createView();
 
-        field.setUpdater( new DataUpdater<T>( this,
-            new ReflectiveUpdater<T>( this, "usable.data" ) ) );
+        field.setUpdater( new DataUpdater<>( this, ( d ) -> usable.data = d ) );
 
         setValue( new Usable<>() );
     }
@@ -51,7 +49,7 @@ public class UsableFormField<T>
     {
         JPanel panel = new JPanel( new BorderLayout() );
 
-        usedField.addActionListener( new CheckedListener<T>( this ) );
+        usedField.addActionListener( new CheckedListener<>( this ) );
 
         panel.add( usedField, BorderLayout.WEST );
         panel.add( field.getView(), BorderLayout.CENTER );

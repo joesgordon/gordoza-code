@@ -26,6 +26,8 @@ public class ColorButtonView implements IDataView<Color>
     /**  */
     private boolean showDescription;
 
+    // TODO make a form field rather than a button.
+
     /***************************************************************************
      * 
      **************************************************************************/
@@ -78,7 +80,7 @@ public class ColorButtonView implements IDataView<Color>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JButton getView()
@@ -87,7 +89,7 @@ public class ColorButtonView implements IDataView<Color>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public Color getData()
@@ -96,7 +98,7 @@ public class ColorButtonView implements IDataView<Color>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void setData( Color color )

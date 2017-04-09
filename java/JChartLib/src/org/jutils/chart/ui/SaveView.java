@@ -1,12 +1,10 @@
 package org.jutils.chart.ui;
 
 import java.awt.Component;
-import java.io.File;
 
 import org.jutils.chart.data.SaveOptions;
 import org.jutils.io.parsers.ExistenceType;
 import org.jutils.ui.StandardFormView;
-import org.jutils.ui.event.updater.ReflectiveUpdater;
 import org.jutils.ui.fields.FileFormField;
 import org.jutils.ui.fields.IntegerFormField;
 import org.jutils.ui.model.IDataView;
@@ -38,12 +36,9 @@ public class SaveView implements IDataView<SaveOptions>
 
         setData( new SaveOptions() );
 
-        outputField.setUpdater(
-            new ReflectiveUpdater<File>( this, "options.file" ) );
-        widthField.setUpdater(
-            new ReflectiveUpdater<Integer>( this, "options.size.width" ) );
-        heightField.setUpdater(
-            new ReflectiveUpdater<Integer>( this, "options.size.height" ) );
+        outputField.setUpdater( ( f ) -> options.file = f );
+        widthField.setUpdater( ( i ) -> options.size.width = i );
+        heightField.setUpdater( ( i ) -> options.size.height = i );
     }
 
     /***************************************************************************

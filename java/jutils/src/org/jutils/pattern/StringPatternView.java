@@ -5,7 +5,6 @@ import java.awt.Component;
 import javax.swing.JPanel;
 
 import org.jutils.ui.StandardFormView;
-import org.jutils.ui.event.updater.ReflectiveUpdater;
 import org.jutils.ui.fields.*;
 import org.jutils.ui.model.IDataView;
 
@@ -42,12 +41,10 @@ public class StringPatternView implements IDataView<StringPattern>
 
         setData( new StringPattern() );
 
-        typeField.setUpdater( new ReflectiveUpdater<>( this, "pattern.type" ) );
-        caseField.setUpdater(
-            new ReflectiveUpdater<>( this, "pattern.isCaseSensitive" ) );
-        patternField.setUpdater(
-            new ReflectiveUpdater<>( this, "pattern.patternText" ) );
-        nameField.setUpdater( new ReflectiveUpdater<>( this, "pattern.name" ) );
+        typeField.setUpdater( ( t ) -> pattern.type = t );
+        caseField.setUpdater( ( b ) -> pattern.isCaseSensitive = b );
+        patternField.setUpdater( ( s ) -> pattern.patternText = s );
+        nameField.setUpdater( ( s ) -> pattern.name = s );
     }
 
     /***************************************************************************

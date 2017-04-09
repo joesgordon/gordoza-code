@@ -5,7 +5,6 @@ import javax.swing.JComponent;
 import org.jutils.io.parsers.MulticastGroupParser;
 import org.jutils.net.MulticastInputs;
 import org.jutils.ui.StandardFormView;
-import org.jutils.ui.event.updater.ReflectiveUpdater;
 import org.jutils.ui.fields.*;
 import org.jutils.ui.model.IDataView;
 
@@ -55,11 +54,10 @@ public class MulticastInputsView implements IDataView<MulticastInputs>
 
         setData( new MulticastInputs() );
 
-        addressField.setUpdater(
-            new ReflectiveUpdater<>( this, "inputs.address" ) );
-        portField.setUpdater( new ReflectiveUpdater<>( this, "inputs.port" ) );
-        nicField.setUpdater( new ReflectiveUpdater<>( this, "inputs.nic" ) );
-        ttlField.setUpdater( new ReflectiveUpdater<>( this, "inputs.ttl" ) );
+        addressField.setUpdater( ( a ) -> inputs.address.set( a ) );
+        portField.setUpdater( ( i ) -> inputs.port = i );
+        nicField.setUpdater( ( n ) -> inputs.nic = n );
+        ttlField.setUpdater( ( i ) -> inputs.ttl = i );
     }
 
     /***************************************************************************

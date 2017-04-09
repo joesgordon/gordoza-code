@@ -7,7 +7,6 @@ import javax.swing.JPanel;
 
 import org.jutils.io.parsers.ExistenceType;
 import org.jutils.ui.StandardFormView;
-import org.jutils.ui.event.updater.ReflectiveUpdater;
 import org.jutils.ui.explorer.data.ApplicationConfig;
 import org.jutils.ui.fields.FileFormField;
 import org.jutils.ui.fields.StringFormField;
@@ -49,9 +48,9 @@ public class ApplicationView implements IDataView<ApplicationConfig>
             new File( "/Windows/System32/notepad.exe" ),
             "Opens/Edits ASCII files" ) );
 
-        nameField.setUpdater( new ReflectiveUpdater<>( this, "app.name" ) );
-        pathField.setUpdater( new ReflectiveUpdater<>( this, "app.path" ) );
-        argsField.setUpdater( new ReflectiveUpdater<>( this, "app.args" ) );
+        nameField.setUpdater( ( s ) -> app.name = s );
+        pathField.setUpdater( ( f ) -> app.path = f );
+        argsField.setUpdater( ( s ) -> app.args = s );
     }
 
     /***************************************************************************

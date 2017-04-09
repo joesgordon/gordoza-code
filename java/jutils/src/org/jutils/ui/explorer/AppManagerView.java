@@ -10,7 +10,6 @@ import org.jutils.SwingUtils;
 import org.jutils.io.XStreamUtils;
 import org.jutils.ui.OkDialogView;
 import org.jutils.ui.OkDialogView.OkDialogButtons;
-import org.jutils.ui.event.updater.ReflectiveUpdater;
 import org.jutils.ui.event.updater.WrappedUpdater;
 import org.jutils.ui.explorer.data.AppManagerConfig;
 import org.jutils.ui.fields.BooleanFormField;
@@ -50,9 +49,9 @@ public class AppManagerView implements IDataView<AppManagerConfig>
 
         setData( new AppManagerConfig() );
 
-        useCustomField.setUpdater( new WrappedUpdater<>(
-            new ReflectiveUpdater<>( this, "config.useCustom" ),
-            ( e ) -> setComponentsUsingAppManager( e ) ) );
+        useCustomField.setUpdater(
+            new WrappedUpdater<>( ( b ) -> config.useCustom = b,
+                ( b ) -> setComponentsUsingAppManager( b ) ) );
     }
 
     /***************************************************************************

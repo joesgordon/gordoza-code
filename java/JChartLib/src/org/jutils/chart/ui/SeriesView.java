@@ -3,7 +3,6 @@ package org.jutils.chart.ui;
 import java.awt.Component;
 import java.util.ArrayList;
 
-import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
 import org.jutils.chart.data.DefaultSeries;
@@ -11,8 +10,7 @@ import org.jutils.chart.data.XYPoint;
 import org.jutils.chart.model.Series;
 import org.jutils.ui.StandardFormView;
 import org.jutils.ui.TitleView;
-import org.jutils.ui.event.updater.CheckBoxUpdater;
-import org.jutils.ui.event.updater.ReflectiveUpdater;
+import org.jutils.ui.fields.BooleanFormField;
 import org.jutils.ui.fields.StringFormField;
 import org.jutils.ui.model.IDataView;
 
@@ -26,11 +24,11 @@ public class SeriesView implements IDataView<Series>
     /**  */
     private final StringFormField titleField;
     /**  */
-    private final JCheckBox visibleField;
+    private final BooleanFormField visibleField;
     /**  */
-    private final JCheckBox primaryDomainField;
+    private final BooleanFormField primaryDomainField;
     /**  */
-    private final JCheckBox primaryRangeField;
+    private final BooleanFormField primaryRangeField;
     /**  */
     private final MarkerStyleView markerView;
     /**  */
@@ -47,9 +45,9 @@ public class SeriesView implements IDataView<Series>
     public SeriesView()
     {
         this.titleField = new StringFormField( "Title" );
-        this.visibleField = new JCheckBox();
-        this.primaryDomainField = new JCheckBox();
-        this.primaryRangeField = new JCheckBox();
+        this.visibleField = new BooleanFormField( "Visible" );
+        this.primaryDomainField = new BooleanFormField( "Is Primary Domain" );
+        this.primaryRangeField = new BooleanFormField( "Is Primary Range" );
         this.markerView = new MarkerStyleView();
         this.highlightView = new MarkerStyleView();
         this.lineView = new LineStyleView();
@@ -58,18 +56,10 @@ public class SeriesView implements IDataView<Series>
 
         setData( new Series( new DefaultSeries( new ArrayList<XYPoint>() ) ) );
 
-        titleField.setUpdater(
-            new ReflectiveUpdater<String>( this, "series.name" ) );
-
-        visibleField.addActionListener( new CheckBoxUpdater(
-            new ReflectiveUpdater<Boolean>( this, "series.visible" ) ) );
-
-        primaryDomainField.addActionListener(
-            new CheckBoxUpdater( new ReflectiveUpdater<Boolean>( this,
-                "series.isPrimaryDomain" ) ) );
-
-        primaryRangeField.addActionListener( new CheckBoxUpdater(
-            new ReflectiveUpdater<Boolean>( this, "series.isPrimaryRange" ) ) );
+        titleField.setUpdater( ( s ) -> series.name = s );
+        visibleField.setUpdater( ( b ) -> series.visible = b );
+        primaryDomainField.setUpdater( ( b ) -> series.isPrimaryDomain = b );
+        primaryRangeField.setUpdater( ( b ) -> series.isPrimaryRange = b );
     }
 
     /***************************************************************************
@@ -80,9 +70,9 @@ public class SeriesView implements IDataView<Series>
         StandardFormView form = new StandardFormView();
 
         form.addField( titleField );
-        form.addField( "Visible", visibleField );
-        form.addField( "Is Primary Domain", primaryDomainField );
-        form.addField( "Is Primary Range", primaryRangeField );
+        form.addField( visibleField );
+        form.addField( primaryDomainField );
+        form.addField( primaryRangeField );
         form.addField( null,
             new TitleView( "Marker", markerView.getView() ).getView() );
         form.addField( null,
@@ -120,9 +110,9 @@ public class SeriesView implements IDataView<Series>
         this.series = data;
 
         titleField.setValue( data.name );
-        visibleField.setSelected( data.visible );
-        primaryDomainField.setSelected( data.isPrimaryDomain );
-        primaryRangeField.setSelected( data.isPrimaryRange );
+        visibleField.setValue( data.visible );
+        primaryDomainField.setValue( data.isPrimaryDomain );
+        primaryRangeField.setValue( data.isPrimaryRange );
         markerView.setData( data.marker );
         highlightView.setData( data.highlight );
         lineView.setData( data.line );

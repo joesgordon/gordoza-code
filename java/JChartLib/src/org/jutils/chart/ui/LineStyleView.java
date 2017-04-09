@@ -1,16 +1,15 @@
 package org.jutils.chart.ui;
 
-import java.awt.Color;
 import java.awt.Component;
 
-import javax.swing.*;
+import javax.swing.JPanel;
 
 import org.jutils.chart.model.LineStyle;
 import org.jutils.chart.model.LineType;
 import org.jutils.ui.ColorButtonView;
 import org.jutils.ui.StandardFormView;
-import org.jutils.ui.event.updater.*;
-import org.jutils.ui.fields.IntegerFormField;
+import org.jutils.ui.event.updater.ItemActionUpdater;
+import org.jutils.ui.fields.*;
 import org.jutils.ui.model.IDataView;
 
 /***************************************************************************
@@ -21,9 +20,9 @@ public class LineStyleView implements IDataView<LineStyle>
     /**  */
     private final JPanel view;
     /**  */
-    private final JCheckBox visibleField;
+    private final BooleanFormField visibleField;
     /**  */
-    private final JComboBox<LineType> shapeField;
+    private final ComboFormField<LineType> shapeField;
     /**  */
     private final IntegerFormField weightField;
     /**  */
@@ -37,8 +36,8 @@ public class LineStyleView implements IDataView<LineStyle>
      **************************************************************************/
     public LineStyleView()
     {
-        this.visibleField = new JCheckBox();
-        this.shapeField = new JComboBox<>( LineType.values() );
+        this.visibleField = new BooleanFormField( "Visible" );
+        this.shapeField = new ComboFormField<>( "Shape", LineType.values() );
         this.weightField = new IntegerFormField( "Weight", 1, 10 );
         this.colorField = new ColorButtonView();
 
@@ -46,14 +45,11 @@ public class LineStyleView implements IDataView<LineStyle>
 
         setData( new LineStyle() );
 
-        visibleField.addActionListener( new CheckBoxUpdater(
-            new ReflectiveUpdater<Boolean>( this, "line.visible" ) ) );
-        shapeField.addItemListener( new ComboBoxUpdater<>(
-            new ReflectiveUpdater<>( this, "line.type" ) ) );
-        weightField.setUpdater(
-            new ReflectiveUpdater<Integer>( this, "line.weight" ) );
-        colorField.addUpdateListener( new ItemActionUpdater<>(
-            new ReflectiveUpdater<Color>( this, "line.color" ) ) );
+        visibleField.setUpdater( ( b ) -> line.visible = b );
+        shapeField.setUpdater( ( t ) -> line.type = t );
+        weightField.setUpdater( ( i ) -> line.weight = i );
+        colorField.addUpdateListener(
+            new ItemActionUpdater<>( ( c ) -> line.color = c ) );
     }
 
     /***************************************************************************
@@ -63,8 +59,8 @@ public class LineStyleView implements IDataView<LineStyle>
     {
         StandardFormView form = new StandardFormView();
 
-        form.addField( "Visible", visibleField );
-        form.addField( "Shape", shapeField );
+        form.addField( visibleField );
+        form.addField( shapeField );
         form.addField( weightField );
         form.addField( "Color", colorField.getView() );
 
@@ -97,8 +93,8 @@ public class LineStyleView implements IDataView<LineStyle>
     {
         this.line = data;
 
-        visibleField.setSelected( data.visible );
-        shapeField.setSelectedItem( data.type );
+        visibleField.setValue( data.visible );
+        shapeField.setValue( data.type );
         weightField.setValue( data.weight );
         colorField.setData( data.color );
     }

@@ -5,7 +5,8 @@ import java.awt.*;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import org.jutils.ui.event.updater.*;
+import org.jutils.ui.event.updater.IUpdater;
+import org.jutils.ui.event.updater.WrappedUpdater;
 import org.jutils.ui.fields.*;
 import org.jutils.ui.validation.IValidityChangedListener;
 import org.jutils.ui.validation.Validity;
@@ -38,10 +39,8 @@ public class StringPatternField implements IDataFormField<StringPattern>
         setValue( new StringPattern() );
 
         patternField.setUpdater( new WrappedUpdater<>(
-            new ReflectiveUpdater<>( this, "pattern.patternText" ),
-            ( d ) -> invokeUpdater() ) );
-        typeField.setUpdater( new WrappedUpdater<>(
-            new ReflectiveUpdater<>( this, "pattern.type" ),
+            ( t ) -> pattern.patternText = t, ( d ) -> invokeUpdater() ) );
+        typeField.setUpdater( new WrappedUpdater<>( ( d ) -> pattern.type = d,
             ( d ) -> invokeUpdater() ) );
     }
 
