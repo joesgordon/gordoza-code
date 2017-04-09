@@ -12,8 +12,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.plaf.ColorUIResource;
 
-import org.jutils.ui.event.ItemActionEvent;
-import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.fields.ColorField;
 
 /*******************************************************************************
  * 
@@ -344,39 +343,13 @@ public class PropEditPanel
         public JComponent createWidget( Map<Object, Object> props, Object key,
             Color c )
         {
-            ColorButtonView button = new ColorButtonView();
+            ColorField button = new ColorField( "Color" );
 
-            button.setData( c );
+            button.setValue( c );
 
-            button.addUpdateListener(
-                new ButtonListener( button, props, key ) );
+            button.setUpdater( ( c1 ) -> props.put( key, c1 ) );
 
             return button.getView();
-        }
-
-        private static class ButtonListener implements ItemActionListener<Color>
-        {
-            private final ColorButtonView button;
-            private final Map<Object, Object> props;
-            private final Object key;
-
-            public ButtonListener( ColorButtonView button,
-                Map<Object, Object> props, Object key )
-            {
-                this.button = button;
-                this.props = props;
-                this.key = key;
-            }
-
-            @Override
-            public void actionPerformed( ItemActionEvent<Color> event )
-            {
-                Color c = event.getItem();
-
-                button.setData( c );
-
-                props.put( key, c );
-            }
         }
     }
 

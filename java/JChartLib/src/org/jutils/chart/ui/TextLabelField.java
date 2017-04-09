@@ -10,12 +10,10 @@ import javax.swing.*;
 import org.jutils.IconConstants;
 import org.jutils.chart.model.TextLabel;
 import org.jutils.io.parsers.StringLengthParser;
-import org.jutils.ui.ColorButtonView;
 import org.jutils.ui.OkDialogView;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.updater.IUpdater;
-import org.jutils.ui.fields.BooleanFormField;
-import org.jutils.ui.fields.IDataFormField;
+import org.jutils.ui.fields.*;
 import org.jutils.ui.validation.*;
 import org.jutils.ui.validators.DataTextValidator;
 import org.jutils.ui.validators.ITextValidator;
@@ -37,7 +35,7 @@ public class TextLabelField implements IDataFormField<TextLabel>
     /**  */
     private final Action fontAction;
     /**  */
-    private final ColorButtonView colorView;
+    private final ColorField colorView;
 
     /**  */
     private TextLabel label;
@@ -52,7 +50,7 @@ public class TextLabelField implements IDataFormField<TextLabel>
         this.visibleField = new BooleanFormField( "Visible" );
         this.textField = new ValidationTextField();
         this.fontAction = createFontAction();
-        this.colorView = new ColorButtonView( Color.red, 16, false );
+        this.colorView = new ColorField( "Color", Color.red, 16, false );
 
         this.view = createView();
 
@@ -66,8 +64,7 @@ public class TextLabelField implements IDataFormField<TextLabel>
             ( s ) -> label.text = s );
         textField.setValidator( itv );
 
-        colorView.addUpdateListener(
-            new UpdaterItemListener<>( ( c ) -> label.color = c ) );
+        colorView.setUpdater( ( c ) -> label.color = c );
     }
 
     /***************************************************************************
@@ -159,13 +156,13 @@ public class TextLabelField implements IDataFormField<TextLabel>
             visibleField.setValue( value.visible );
             textField.setText( value.text );
             textField.getView().setFont( value.font );
-            colorView.setData( value.color );
+            colorView.setValue( value.color );
         }
         else
         {
             visibleField.setValue( false );
             textField.setText( "" );
-            colorView.setData( Color.black );
+            colorView.setValue( Color.black );
         }
     }
 

@@ -6,9 +6,7 @@ import javax.swing.JPanel;
 
 import org.jutils.chart.model.LineStyle;
 import org.jutils.chart.model.LineType;
-import org.jutils.ui.ColorButtonView;
 import org.jutils.ui.StandardFormView;
-import org.jutils.ui.event.updater.ItemActionUpdater;
 import org.jutils.ui.fields.*;
 import org.jutils.ui.model.IDataView;
 
@@ -26,7 +24,7 @@ public class LineStyleView implements IDataView<LineStyle>
     /**  */
     private final IntegerFormField weightField;
     /**  */
-    private final ColorButtonView colorField;
+    private final ColorField colorField;
 
     /**  */
     private LineStyle line;
@@ -39,7 +37,7 @@ public class LineStyleView implements IDataView<LineStyle>
         this.visibleField = new BooleanFormField( "Visible" );
         this.shapeField = new ComboFormField<>( "Shape", LineType.values() );
         this.weightField = new IntegerFormField( "Weight", 1, 10 );
-        this.colorField = new ColorButtonView();
+        this.colorField = new ColorField( "Color" );
 
         this.view = createView();
 
@@ -48,8 +46,7 @@ public class LineStyleView implements IDataView<LineStyle>
         visibleField.setUpdater( ( b ) -> line.visible = b );
         shapeField.setUpdater( ( t ) -> line.type = t );
         weightField.setUpdater( ( i ) -> line.weight = i );
-        colorField.addUpdateListener(
-            new ItemActionUpdater<>( ( c ) -> line.color = c ) );
+        colorField.setUpdater( ( c ) -> line.color = c );
     }
 
     /***************************************************************************
@@ -62,7 +59,7 @@ public class LineStyleView implements IDataView<LineStyle>
         form.addField( visibleField );
         form.addField( shapeField );
         form.addField( weightField );
-        form.addField( "Color", colorField.getView() );
+        form.addField( colorField );
 
         return form.getView();
     }
@@ -96,6 +93,6 @@ public class LineStyleView implements IDataView<LineStyle>
         visibleField.setValue( data.visible );
         shapeField.setValue( data.type );
         weightField.setValue( data.weight );
-        colorField.setData( data.color );
+        colorField.setValue( data.color );
     }
 }

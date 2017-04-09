@@ -6,9 +6,7 @@ import javax.swing.JPanel;
 
 import org.jutils.chart.model.MarkerStyle;
 import org.jutils.chart.model.MarkerType;
-import org.jutils.ui.ColorButtonView;
 import org.jutils.ui.StandardFormView;
-import org.jutils.ui.event.updater.ItemActionUpdater;
 import org.jutils.ui.fields.*;
 import org.jutils.ui.model.IDataView;
 
@@ -23,7 +21,7 @@ public class MarkerStyleView implements IDataView<MarkerStyle>
     /**  */
     private final IntegerFormField weightField;
     /**  */
-    private final ColorButtonView colorField;
+    private final ColorField colorField;
 
     /**  */
     private MarkerStyle marker;
@@ -36,7 +34,7 @@ public class MarkerStyleView implements IDataView<MarkerStyle>
         this.visibleField = new BooleanFormField( "Visible" );
         this.shapeField = new ComboFormField<>( "Shape", MarkerType.values() );
         this.weightField = new IntegerFormField( "Size", 1, 20 );
-        this.colorField = new ColorButtonView();
+        this.colorField = new ColorField( "Color" );
 
         this.view = createView();
 
@@ -45,8 +43,7 @@ public class MarkerStyleView implements IDataView<MarkerStyle>
         visibleField.setUpdater( ( b ) -> marker.visible = b );
         shapeField.setUpdater( ( t ) -> marker.type = t );
         weightField.setUpdater( ( i ) -> marker.weight = i );
-        colorField.addUpdateListener(
-            new ItemActionUpdater<>( ( c ) -> marker.color = c ) );
+        colorField.setUpdater( ( c ) -> marker.color = c );
     }
 
     /***************************************************************************
@@ -59,7 +56,7 @@ public class MarkerStyleView implements IDataView<MarkerStyle>
         form.addField( visibleField );
         form.addField( shapeField );
         form.addField( weightField );
-        form.addField( "Color", colorField.getView() );
+        form.addField( colorField );
 
         return form.getView();
     }
@@ -93,6 +90,6 @@ public class MarkerStyleView implements IDataView<MarkerStyle>
         visibleField.setValue( data.visible );
         shapeField.setValue( data.type );
         weightField.setValue( data.weight );
-        colorField.setData( data.color );
+        colorField.setValue( data.color );
     }
 }

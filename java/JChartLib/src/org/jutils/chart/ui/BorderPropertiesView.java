@@ -1,18 +1,11 @@
 package org.jutils.chart.ui;
 
-import java.awt.Color;
 import java.awt.Component;
 
-import javax.swing.JCheckBox;
-
 import org.jutils.chart.model.WidgetBorder;
-import org.jutils.ui.ColorButtonView;
 import org.jutils.ui.StandardFormView;
-import org.jutils.ui.event.updater.CheckBoxUpdater;
-import org.jutils.ui.event.updater.ReflectiveUpdater;
-import org.jutils.ui.fields.IntegerFormField;
+import org.jutils.ui.fields.*;
 import org.jutils.ui.model.IDataView;
-import org.jutils.ui.validation.UpdaterItemListener;
 
 /*******************************************************************************
  * 
@@ -23,9 +16,9 @@ public class BorderPropertiesView implements IDataView<WidgetBorder>
     private final StandardFormView form;
 
     /**  */
-    private final JCheckBox visibleField;
+    private final BooleanFormField visibleField;
     /**  */
-    private final ColorButtonView colorField;
+    private final ColorField colorField;
     /**  */
     private final IntegerFormField thicknessField;
 
@@ -37,20 +30,17 @@ public class BorderPropertiesView implements IDataView<WidgetBorder>
      **************************************************************************/
     public BorderPropertiesView()
     {
-        this.visibleField = new JCheckBox();
-        this.colorField = new ColorButtonView();
+        this.visibleField = new BooleanFormField( "Visible" );
+        this.colorField = new ColorField( "Color" );
         this.thicknessField = new IntegerFormField( "Thickness" );
 
         this.form = createView();
 
         setData( new WidgetBorder() );
 
-        visibleField.addActionListener( new CheckBoxUpdater(
-            new ReflectiveUpdater<Boolean>( this, "border.visible" ) ) );
-        colorField.addUpdateListener( new UpdaterItemListener<Color>(
-            new ReflectiveUpdater<Color>( this, "border.color" ) ) );
-        thicknessField.setUpdater(
-            new ReflectiveUpdater<Integer>( this, "border.thickness" ) );
+        visibleField.setUpdater( ( b ) -> border.visible = b );
+        colorField.setUpdater( ( c ) -> border.color = c );
+        thicknessField.setUpdater( ( i ) -> border.thickness = i );
 
     }
 
@@ -61,8 +51,8 @@ public class BorderPropertiesView implements IDataView<WidgetBorder>
     {
         StandardFormView form = new StandardFormView();
 
-        form.addField( "Visible", visibleField );
-        form.addField( "Color", colorField.getView() );
+        form.addField( visibleField );
+        form.addField( colorField );
         form.addField( thicknessField );
 
         return form;
@@ -94,8 +84,8 @@ public class BorderPropertiesView implements IDataView<WidgetBorder>
     {
         this.border = border;
 
-        visibleField.setSelected( border.visible );
-        colorField.setData( border.color );
+        visibleField.setValue( border.visible );
+        colorField.setValue( border.color );
         thicknessField.setValue( border.thickness );
     }
 }

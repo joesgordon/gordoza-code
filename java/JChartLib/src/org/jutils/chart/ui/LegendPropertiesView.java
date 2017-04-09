@@ -1,15 +1,12 @@
 package org.jutils.chart.ui;
 
-import java.awt.Color;
 import java.awt.Component;
-
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 
 import org.jutils.chart.data.QuadSide;
 import org.jutils.chart.model.Legend;
-import org.jutils.ui.*;
-import org.jutils.ui.event.updater.*;
+import org.jutils.ui.StandardFormView;
+import org.jutils.ui.TitleView;
+import org.jutils.ui.fields.*;
 import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
@@ -21,13 +18,13 @@ public class LegendPropertiesView implements IDataView<Legend>
     private final StandardFormView form;
 
     /**  */
-    private final JCheckBox visibleField;
+    private final BooleanFormField visibleField;
     /**  */
     private final BorderPropertiesView borderField;
     /**  */
-    private final JComboBox<QuadSide> sideField;
+    private final ComboFormField<QuadSide> sideField;
     /**  */
-    private final ColorButtonView colorField;
+    private final ColorField colorField;
 
     /**  */
     private Legend legend;
@@ -37,21 +34,18 @@ public class LegendPropertiesView implements IDataView<Legend>
      **************************************************************************/
     public LegendPropertiesView()
     {
-        this.visibleField = new JCheckBox();
+        this.visibleField = new BooleanFormField( "Visible" );
         this.borderField = new BorderPropertiesView();
-        this.sideField = new JComboBox<>( QuadSide.values() );
-        this.colorField = new ColorButtonView();
+        this.sideField = new ComboFormField<>( "Side", QuadSide.values() );
+        this.colorField = new ColorField( "Color" );
 
         this.form = createView();
 
         setData( new Legend() );
 
-        visibleField.addActionListener( new CheckBoxUpdater(
-            new ReflectiveUpdater<Boolean>( this, "legend.visible" ) ) );
-        sideField.addItemListener( new ComboBoxUpdater<>(
-            new ReflectiveUpdater<>( this, "legend.side" ) ) );
-        colorField.addUpdateListener( new ItemActionUpdater<>(
-            new ReflectiveUpdater<Color>( this, "legend.fill" ) ) );
+        visibleField.setUpdater( ( b ) -> legend.visible = b );
+        sideField.setUpdater( ( t ) -> legend.side = t );
+        colorField.setUpdater( ( c ) -> legend.fill = c );
 
     }
 
@@ -64,10 +58,10 @@ public class LegendPropertiesView implements IDataView<Legend>
         TitleView bordervView = new TitleView( "Border",
             borderField.getView() );
 
-        form.addField( "Visible", visibleField );
+        form.addField( visibleField );
         form.addField( null, bordervView.getView() );
-        form.addField( "Side", sideField );
-        form.addField( "Color", colorField.getView() );
+        form.addField( sideField );
+        form.addField( colorField );
 
         return form;
     }
@@ -98,9 +92,9 @@ public class LegendPropertiesView implements IDataView<Legend>
     {
         this.legend = legend;
 
-        visibleField.setSelected( legend.visible );
+        visibleField.setValue( legend.visible );
         borderField.setData( legend.border );
-        sideField.setSelectedItem( legend.side );
-        colorField.setData( legend.fill );
+        sideField.setValue( legend.side );
+        colorField.setValue( legend.fill );
     }
 }
