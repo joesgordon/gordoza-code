@@ -420,7 +420,7 @@ public class HexFileView implements IDataView<File>
         HexBytesFormField hexField = new HexBytesFormField( "Hex Bytes" );
         StandardFormView form = new StandardFormView( true );
 
-        form.addField( hexField.getName(), hexField.getView() );
+        form.addField( hexField );
 
         hexField.getTextField().addAncestorListener(
             new RequestFocusListener() );

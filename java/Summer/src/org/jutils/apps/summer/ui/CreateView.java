@@ -1,12 +1,7 @@
 package org.jutils.apps.summer.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Cursor;
+import java.awt.*;
 import java.awt.Dialog.ModalityType;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -14,32 +9,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.Action;
-import javax.swing.Icon;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
-import javax.swing.KeyStroke;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileSystemView;
 
-import org.jutils.IconConstants;
-import org.jutils.SwingUtils;
-import org.jutils.ValidationException;
-import org.jutils.apps.summer.data.ChecksumResult;
-import org.jutils.apps.summer.data.SumFile;
-import org.jutils.apps.summer.data.SumFilePathComparator;
-import org.jutils.apps.summer.data.SumFileSizeComparator;
+import org.jutils.*;
+import org.jutils.apps.summer.data.*;
 import org.jutils.apps.summer.io.ChecksumFileSerializer;
 import org.jutils.apps.summer.tasks.ChecksumCreationTask;
 import org.jutils.apps.summer.tasks.CreationTasksManager;
@@ -48,28 +23,17 @@ import org.jutils.io.cksum.ChecksumType;
 import org.jutils.task.MultiTaskView;
 import org.jutils.task.TaskMetrics;
 import org.jutils.time.TimeUtils;
-import org.jutils.ui.OkDialogView;
-import org.jutils.ui.StandardFormView;
-import org.jutils.ui.TitleView;
-import org.jutils.ui.event.ActionAdapter;
-import org.jutils.ui.event.DirectoryChooserListener;
-import org.jutils.ui.event.FileChooserListener;
+import org.jutils.ui.*;
+import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileChooserListener.IFilesSelected;
 import org.jutils.ui.event.FileChooserListener.ILastFiles;
-import org.jutils.ui.event.FileDropTarget;
 import org.jutils.ui.event.FileDropTarget.DropActionType;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
-import org.jutils.ui.event.ItemActionEvent;
-import org.jutils.ui.event.ItemActionListener;
-import org.jutils.ui.model.IDataView;
-import org.jutils.ui.model.ITableItemsConfig;
-import org.jutils.ui.model.ItemsTableModel;
-import org.jutils.ui.model.LabelTableCellRenderer;
+import org.jutils.ui.fields.ComboFormField;
+import org.jutils.ui.fields.NamedItemDescriptor;
+import org.jutils.ui.model.*;
 import org.jutils.ui.model.LabelTableCellRenderer.ITableCellLabelDecorator;
-import org.jutils.ui.validation.IValidationField;
-import org.jutils.ui.validation.IValidityChangedListener;
-import org.jutils.ui.validation.Validity;
-import org.jutils.ui.validation.ValidityListenerList;
+import org.jutils.ui.validation.*;
 
 /*******************************************************************************
  * 
@@ -79,7 +43,7 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
     /**  */
     private final JPanel view;
     /**  */
-    private final JComboBox<ChecksumType> checksumTypeField;
+    private final ComboFormField<ChecksumType> checksumTypeField;
     /**  */
     private final PathView commonField;
     /**  */
@@ -102,8 +66,8 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
      **************************************************************************/
     public CreateView()
     {
-        this.checksumTypeField = new JComboBox<>(
-            SwingUtils.createModel( ChecksumType.values() ) );
+        this.checksumTypeField = new ComboFormField<>( "Checksum Method",
+            ChecksumType.values(), new NamedItemDescriptor<>() );
         this.commonField = new PathView();
         this.fileCountField = new JTextField();
         this.totalSizeField = new JTextField();
@@ -274,12 +238,12 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
     {
         StandardFormView form = new StandardFormView();
 
-        checksumTypeField.addActionListener( new TypeChanged( this ) );
+        checksumTypeField.setUpdater( ( d ) -> input.type = d );
         commonField.addSelectedListener( new CommonDirChanged( this ) );
         fileCountField.setEditable( false );
         totalSizeField.setEditable( false );
 
-        form.addField( "Checksum Method", checksumTypeField );
+        form.addField( checksumTypeField );
         form.addField( "Common Directory", commonField.getView() );
         form.addField( "File Count", fileCountField );
         form.addField( "Total Size", totalSizeField );
@@ -332,14 +296,14 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void setData( ChecksumResult data )
     {
         this.input = data;
 
-        checksumTypeField.setSelectedItem( data.type );
+        checksumTypeField.setValue( data.type );
         commonField.setData( data.commonDir );
         pathsModel.setItems( data.files );
 
@@ -484,7 +448,7 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
     {
         TextView textView = new TextView();
         String text = ChecksumFileSerializer.write( input );
-        ChecksumType type = ( ChecksumType )checksumTypeField.getSelectedItem();
+        ChecksumType type = checksumTypeField.getValue();
         String ext = type.toString().toLowerCase();
         String desc = type.toString() + " checksum file (*." + ext + ")";
         JFrame frame = SwingUtils.getComponentsJFrame( view );
@@ -713,7 +677,7 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
 
             input.setPaths( event.getItem() );
 
-            view.checksumTypeField.setSelectedItem( input.type );
+            view.checksumTypeField.setValue( input.type );
             view.pathsModel.setItems( input.files );
 
             view.fileCountField.setText( "" + input.files.size() );
@@ -721,27 +685,6 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
                 IOUtils.byteCount( input.calculateSize() ) );
 
             view.validate();
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class TypeChanged implements ActionListener
-    {
-        private final CreateView view;
-
-        private TypeChanged( CreateView view )
-        {
-            this.view = view;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent event )
-        {
-            ChecksumResult input = view.input;
-
-            input.type = ( ChecksumType )view.checksumTypeField.getSelectedItem();
         }
     }
 
