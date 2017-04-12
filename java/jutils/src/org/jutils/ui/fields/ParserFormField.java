@@ -22,6 +22,8 @@ public class ParserFormField<T> implements IDataFormField<T>
     private final ValidationTextComponentField<JTextComponent> textField;
     /**  */
     private final ValidationView view;
+    /**  */
+    private final IDescriptor<T> itemDescriptor;
 
     /**  */
     private IUpdater<T> updater;
@@ -34,7 +36,18 @@ public class ParserFormField<T> implements IDataFormField<T>
      **************************************************************************/
     public ParserFormField( String name, IParser<T> parser )
     {
-        this( name, parser, new JTextField( 20 ) );
+        this( name, parser, new DefaultItemDescriptor<>() );
+    }
+
+    /***************************************************************************
+     * @param name
+     * @param parser
+     * @param itemDescriptor
+     **************************************************************************/
+    public ParserFormField( String name, IParser<T> parser,
+        IDescriptor<T> itemDescriptor )
+    {
+        this( name, parser, new JTextField( 20 ), itemDescriptor );
     }
 
     /***************************************************************************
@@ -45,9 +58,23 @@ public class ParserFormField<T> implements IDataFormField<T>
     public ParserFormField( String name, IParser<T> parser,
         JTextComponent comp )
     {
+        this( name, parser, comp, new DefaultItemDescriptor<>() );
+    }
+
+    /***************************************************************************
+     * @param name
+     * @param parser
+     * @param comp
+     * @param itemDescriptor
+     **************************************************************************/
+    public ParserFormField( String name, IParser<T> parser, JTextComponent comp,
+        IDescriptor<T> itemDescriptor )
+    {
         this.name = name;
         this.textField = new ValidationTextComponentField<>( comp );
         this.view = new ValidationView( textField );
+        this.itemDescriptor = itemDescriptor == null
+            ? new DefaultItemDescriptor<T>() : itemDescriptor;
 
         ITextValidator textValidator;
         IUpdater<T> updater = ( d ) -> update( d );
@@ -91,9 +118,12 @@ public class ParserFormField<T> implements IDataFormField<T>
     {
         this.value = value;
 
-        String text = value == null ? "" : "" + value;
+        String text = itemDescriptor.getDescription( value );
 
+        IUpdater<T> updater = this.updater;
+        this.updater = null;
         textField.setText( text );
+        this.updater = updater;
     }
 
     /***************************************************************************

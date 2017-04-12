@@ -37,5 +37,4 @@ public class DataTextValidator<T> implements ITextValidator
 
         updater.update( data );
     }
-
 }
