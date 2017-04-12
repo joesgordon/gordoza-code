@@ -3,6 +3,7 @@ package org.jutils.ui.validation;
 import java.awt.Color;
 import java.awt.Font;
 
+import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
@@ -21,6 +22,10 @@ public class ValidationTextComponentField<T extends JTextComponent>
     /**  */
     private final ValidityListenerList listenerList;
 
+    // TODO add not-editable background color.
+
+    /**  */
+    private final Color nonEditableBackground;
     /**  */
     private Color validBackground;
     /**  */
@@ -36,6 +41,8 @@ public class ValidationTextComponentField<T extends JTextComponent>
         this.field = comp;
         this.listenerList = new ValidityListenerList();
 
+        this.nonEditableBackground = UIManager.getColor(
+            "TextField.inactiveBackground" );
         this.validBackground = field.getBackground();
         this.invalidBackground = Color.red;
 
@@ -110,9 +117,11 @@ public class ValidationTextComponentField<T extends JTextComponent>
         }
         else
         {
-            setComponentValid( true );
-            listenerList.signalValidity();
+            field.setBackground( nonEditableBackground );
         }
+
+        // LogUtils.printDebug( "Editable: %b: %s", editable,
+        // listenerList.getValidity().toString() );
     }
 
     /***************************************************************************

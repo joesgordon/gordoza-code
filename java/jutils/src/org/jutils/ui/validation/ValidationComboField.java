@@ -4,7 +4,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -21,9 +22,11 @@ import org.jutils.ui.model.ItemComboBoxModel;
 public final class ValidationComboField<T> implements IValidationField
 {
     /**  */
-    private final ItemComboBoxModel<DescriptorObject> model;
+    private final ItemComboBoxModel<T> model;
     /**  */
-    private final JComboBox<DescriptorObject> field;
+    private final JComboBox<T> field;
+    /**  */
+    private final ValidationComboRenderer renderer;
     /**  */
     private final ValidityListenerList listenerList;
     /**  */
@@ -56,15 +59,17 @@ public final class ValidationComboField<T> implements IValidationField
      **************************************************************************/
     public ValidationComboField( List<T> items, IDescriptor<T> descriptor )
     {
-        this.model = new ItemComboBoxModel<>( buildList( items ) );
+        this.model = new ItemComboBoxModel<>( items );
         this.field = new JComboBox<>( model );
         this.listenerList = new ValidityListenerList();
+        this.renderer = new ValidationComboRenderer();
         this.descriptor = descriptor != null ? descriptor
             : new ObjectDescriptor<T>();
 
         this.validBackground = field.getBackground();
         this.invalidBackground = Color.red;
 
+        field.setRenderer( renderer );
         field.setBackground( validBackground );
         field.addItemListener(
             new ComboBoxUpdater<T>( new ItemChangedListener<T>( this ) ) );
@@ -84,8 +89,7 @@ public final class ValidationComboField<T> implements IValidationField
      **************************************************************************/
     public T getSelectedItem()
     {
-        DescriptorObject obj = model.getSelectedItem();
-        return obj == null ? null : obj.item;
+        return model.getSelectedItem();
     }
 
     /***************************************************************************
@@ -93,7 +97,7 @@ public final class ValidationComboField<T> implements IValidationField
      **************************************************************************/
     public void setSelectedItem( T item )
     {
-        model.setSelectedItem( new DescriptorObject( item ) );
+        model.setSelectedItem( item );
     }
 
     /***************************************************************************
@@ -101,7 +105,7 @@ public final class ValidationComboField<T> implements IValidationField
      **************************************************************************/
     public void setItems( List<T> items )
     {
-        model.setItems( buildList( items ) );
+        model.setItems( items );
     }
 
     /***************************************************************************
@@ -153,27 +157,11 @@ public final class ValidationComboField<T> implements IValidationField
     }
 
     /***************************************************************************
-     * @param items
-     * @return
-     **************************************************************************/
-    private List<DescriptorObject> buildList( List<T> items )
-    {
-        List<DescriptorObject> listObjects = new ArrayList<>();
-
-        for( T item : items )
-        {
-            listObjects.add( new DescriptorObject( item ) );
-        }
-
-        return listObjects;
-    }
-
-    /***************************************************************************
      * @param renderer
      **************************************************************************/
     public void setRenderer( ListCellRenderer<Object> renderer )
     {
-        field.setRenderer( new DescriptorRenderer( renderer ) );
+        this.renderer.userRenderer = renderer;
     }
 
     /***************************************************************************
@@ -225,57 +213,6 @@ public final class ValidationComboField<T> implements IValidationField
     /***************************************************************************
      * 
      **************************************************************************/
-    private class DescriptorObject
-    {
-        public final T item;
-
-        public DescriptorObject( T item )
-        {
-            this.item = item;
-        }
-
-        @Override
-        public String toString()
-        {
-            return descriptor.getDescription( item );
-        }
-
-        @Override
-        public boolean equals( Object obj )
-        {
-            if( obj != null )
-            {
-                if( obj instanceof ValidationComboField.DescriptorObject )
-                {
-                    @SuppressWarnings( "unchecked")
-                    DescriptorObject dobj = ( DescriptorObject )obj;
-
-                    if( item == null && dobj.item == null )
-                    {
-                        return true;
-                    }
-                    else if( item == null || dobj.item == null )
-                    {
-                        return false;
-                    }
-
-                    return dobj.item.equals( item );
-                }
-            }
-
-            return false;
-        }
-
-        @Override
-        public int hashCode()
-        {
-            return item.hashCode();
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
     private static class ObjectDescriptor<T> implements IDescriptor<T>
     {
         @Override
@@ -293,22 +230,36 @@ public final class ValidationComboField<T> implements IValidationField
     /***************************************************************************
      * 
      **************************************************************************/
-    private class DescriptorRenderer implements ListCellRenderer<Object>
+    private class ValidationComboRenderer implements ListCellRenderer<T>
     {
-        private final ListCellRenderer<Object> renderer;
+        public ListCellRenderer<Object> userRenderer;
+        public final DefaultListCellRenderer defaultRenderer;
 
-        public DescriptorRenderer( ListCellRenderer<Object> renderer )
+        public ValidationComboRenderer()
         {
-            this.renderer = renderer;
+            this.userRenderer = null;
+            this.defaultRenderer = new DefaultListCellRenderer();
         }
 
         @Override
-        public Component getListCellRendererComponent(
-            JList<? extends Object> list, Object value, int index,
-            boolean isSelected, boolean cellHasFocus )
+        public Component getListCellRendererComponent( JList<? extends T> list,
+            T value, int index, boolean isSelected, boolean cellHasFocus )
         {
-            return renderer.getListCellRendererComponent( list, value, index,
-                isSelected, cellHasFocus );
+            Component c = null;
+
+            if( userRenderer == null )
+            {
+                c = defaultRenderer.getListCellRendererComponent( list, value,
+                    index, isSelected, cellHasFocus );
+                defaultRenderer.setText( descriptor.getDescription( value ) );
+            }
+            else
+            {
+                c = userRenderer.getListCellRendererComponent( list, value,
+                    index, isSelected, cellHasFocus );
+            }
+
+            return c;
         }
     }
 
@@ -336,28 +287,18 @@ public final class ValidationComboField<T> implements IValidationField
         @Override
         public void setItem( Object obj )
         {
-            DescriptorObject doItem;
-            if( obj != null )
-            {
-                @SuppressWarnings( "unchecked")
-                DescriptorObject item = ( DescriptorObject )obj;
-                doItem = item;
-            }
-            else
-            {
-                doItem = new DescriptorObject( null );
-            }
-
-            field.setText( doItem.toString() );
+            @SuppressWarnings( "unchecked")
+            T item = ( T )obj;
+            field.setText( descriptor.getDescription( item ) );
         }
 
         @Override
-        public DescriptorObject getItem()
+        public T getItem()
         {
             try
             {
                 T item = parser.parse( field.getText() );
-                return new DescriptorObject( item );
+                return item;
             }
             catch( ValidationException e )
             {

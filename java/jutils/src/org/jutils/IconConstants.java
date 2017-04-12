@@ -78,6 +78,8 @@ public final class IconConstants
 
     public final static String IM_USER_OFFLINE_32 = "im-invisible-user32.png";
 
+    public static final String INVALID_16 = "invalid16.png";
+
     public final static String IMPORT_16 = "document-import16.png";
 
     public final static String EXPORT_16 = "document-export16.png";

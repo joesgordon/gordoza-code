@@ -17,6 +17,8 @@ public class FileIcon implements Icon
     /**  */
     private final FileSystemView fileSys;
     /**  */
+    private final Icon defaultIcon;
+    /**  */
     private final Icon fileIcon;
     /**  */
     private final Icon dirIcon;
@@ -30,10 +32,11 @@ public class FileIcon implements Icon
     public FileIcon()
     {
         this.fileSys = FileSystemView.getFileSystemView();
+        this.defaultIcon = IconConstants.getIcon( IconConstants.INVALID_16 );
         this.fileIcon = IconConstants.getIcon( IconConstants.OPEN_FILE_16 );
         this.dirIcon = IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 );
 
-        this.icon = fileIcon;
+        this.icon = defaultIcon;
     }
 
     /***************************************************************************
@@ -70,7 +73,7 @@ public class FileIcon implements Icon
     {
         if( file == null )
         {
-            icon = fileIcon;
+            icon = defaultIcon;
         }
         else if( file.isDirectory() )
         {
@@ -85,5 +88,10 @@ public class FileIcon implements Icon
                 icon = fileIcon;
             }
         }
+    }
+
+    public void setDefaultIcon()
+    {
+        this.icon = defaultIcon;
     }
 }

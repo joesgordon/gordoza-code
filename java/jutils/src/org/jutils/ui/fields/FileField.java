@@ -31,6 +31,8 @@ public class FileField implements IDataView<File>, IValidationField
     /**  */
     private final ValidationTextComponentField<JTextField> field;
     /**  */
+    private final JButton button;
+    /**  */
     private final ItemActionList<File> changeListeners;
     /**  */
     private final FileChooserListener fileListener;
@@ -51,6 +53,7 @@ public class FileField implements IDataView<File>, IValidationField
 
         this.field = new ValidationTextComponentField<>( new JTextField() );
         this.textField = new IconTextField( field.getView() );
+        this.button = new JButton();
         this.fileListener = createFileListener( existence, isSave );
         this.view = createView( existence, required, isSave, showButton );
         this.icon = new FileIcon();
@@ -62,6 +65,13 @@ public class FileField implements IDataView<File>, IValidationField
         field.getView().setColumns( 20 );
 
         field.setText( "" );
+
+        field.addValidityChanged( ( v ) -> {
+            if( !v.isValid )
+            {
+                icon.setDefaultIcon();
+            }
+        } );
     }
 
     /***************************************************************************
@@ -96,7 +106,6 @@ public class FileField implements IDataView<File>, IValidationField
     {
         JPanel panel = new JPanel( new GridBagLayout() );
         GridBagConstraints constraints;
-        JButton button;
         ActionListener browseListener;
 
         if( existence == ExistenceType.DIRECTORY_ONLY )
@@ -125,7 +134,7 @@ public class FileField implements IDataView<File>, IValidationField
 
         if( showButton )
         {
-            button = new JButton(
+            button.setIcon(
                 IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
             button.addActionListener( browseListener );
             button.setToolTipText( "Browse (Right-click to open path)" );
@@ -224,6 +233,7 @@ public class FileField implements IDataView<File>, IValidationField
      **************************************************************************/
     public void setEditable( boolean editable )
     {
+        button.setEnabled( editable );
         field.setEditable( editable );
     }
 

@@ -1,16 +1,19 @@
 package org.jutils.ui.fields;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.jutils.SwingUtils;
 import org.jutils.io.parsers.ExistenceType;
 import org.jutils.ui.*;
 import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
+import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.hex.HexUtils;
 import org.jutils.ui.model.IView;
 import org.jutils.utils.BitArray;
@@ -26,13 +29,13 @@ public class FormFieldsTest
      **************************************************************************/
     public static void main( String [] args )
     {
-        FrameRunner.invokeLater( new IntegerFormFieldTestApp() );
+        FrameRunner.invokeLater( new FormFieldTestApp() );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private static final class IntegerFormFieldTestApp implements IFrameApp
+    private static final class FormFieldTestApp implements IFrameApp
     {
         @Override
         public JFrame createFrame()
@@ -51,33 +54,15 @@ public class FormFieldsTest
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class ViewItem
-    {
-        public final String name;
-        public final IView<?> view;
-
-        public ViewItem( String name, IView<?> view )
-        {
-            this.name = name;
-            this.view = view;
-        }
-
-        @Override
-        public String toString()
-        {
-            return name;
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
     private static class UiTestFrameView implements IView<JFrame>
     {
         private final StandardFrameView frameView;
-        private final DefaultListModel<ViewItem> itemsModel;
-        private final JList<ViewItem> itemsList;
+        private final DefaultListModel<IFormField> itemsModel;
+        private final JList<IFormField> itemsList;
         private final ComponentView cview;
+        private final Action editableAction;
+
+        private boolean editable;
 
         public UiTestFrameView()
         {
@@ -86,6 +71,9 @@ public class FormFieldsTest
             this.itemsList = new JList<>( itemsModel );
             this.cview = new ComponentView();
 
+            this.editableAction = createEditableAction();
+            this.editable = true;
+
             frameView.setContent( createContent() );
             frameView.setTitle( "Integer Form Field Test" );
             frameView.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
@@ -93,11 +81,54 @@ public class FormFieldsTest
 
             createViews( itemsModel );
 
+            itemsList.setCellRenderer( new ItemRenderer() );
             itemsList.addListSelectionListener(
-                new ItemSelectedListener( itemsList, cview ) );
+                new ItemSelectedListener( this ) );
         }
 
         private Container createContent()
+        {
+            JPanel panel = new JPanel( new BorderLayout() );
+
+            panel.add( createToolbar(), BorderLayout.NORTH );
+            panel.add( createSelectionPanel(), BorderLayout.CENTER );
+
+            return panel;
+        }
+
+        private Component createToolbar()
+        {
+            JToolBar toolbar = new JGoodiesToolBar();
+
+            SwingUtils.addActionToToolbar( toolbar, editableAction );
+
+            return toolbar;
+        }
+
+        private Action createEditableAction()
+        {
+            ActionListener listener = ( e ) -> toggleEditable();
+            Icon icon = new ColorIcon( Color.blue, 16 );
+            return new ActionAdapter( listener, "Toggle Editable", icon );
+        }
+
+        private void toggleEditable()
+        {
+            IFormField field = itemsList.getSelectedValue();
+
+            if( field != null && field instanceof IDataFormField )
+            {
+                IDataFormField<?> dff = ( IDataFormField<?> )field;
+                editable = !editable;
+                Color c = editable ? Color.blue : Color.red;
+                Icon icon = new ColorIcon( c, 16 );
+
+                editableAction.putValue( Action.SMALL_ICON, icon );
+                dff.setEditable( editable );
+            }
+        }
+
+        private JPanel createSelectionPanel()
         {
             JPanel panel = new JPanel( new GridBagLayout() );
             GridBagConstraints constraints;
@@ -123,14 +154,17 @@ public class FormFieldsTest
             return panel;
         }
 
-        private static void createViews( DefaultListModel<ViewItem> itemsModel )
+        private static void createViews(
+            DefaultListModel<IFormField> itemsModel )
         {
             itemsModel.addElement( createFormFieldItem(
                 new BitsFormField( "Bits Field" ), new BitArray( "FAF320" ) ) );
             itemsModel.addElement( createFormFieldItem(
                 new BooleanFormField( "Boolean Form Field" ), true ) );
-            itemsModel.addElement( createFormFieldItem( new ButtonedFormField<>(
-                new IntegerFormField( "Integer Form Field" ) ), 8 ) );
+            itemsModel.addElement( createFormFieldItem(
+                new ButtonedFormField<>(
+                    new IntegerFormField( "Buttoned Integer Form Field" ) ),
+                8 ) );
             itemsModel.addElement( createFormFieldItem(
                 new ComboFormField<>( "Combo Form Field",
                     Character.UnicodeScript.values() ),
@@ -139,6 +173,10 @@ public class FormFieldsTest
                 new FileFormField( "File Form Field (File/Save)",
                     ExistenceType.DO_NOT_CHECK ),
                 new File( "/" ) ) );
+            itemsModel.addElement( createFormFieldItem(
+                new FileFormField( "File Form Field (not set)",
+                    ExistenceType.DO_NOT_CHECK ),
+                null ) );
             itemsModel.addElement( createFormFieldItem(
                 new FileFormField( "File Form Field (Dir/Save)",
                     ExistenceType.DIRECTORY_ONLY ),
@@ -169,18 +207,12 @@ public class FormFieldsTest
                 new Usable<>( true, "Gibblidy Flibbets" ) ) );
         }
 
-        private static <D> ViewItem createFormFieldItem(
+        private static <D> IFormField createFormFieldItem(
             IDataFormField<D> field, D data )
         {
-            StandardFormView form = new StandardFormView();
-
             field.setValue( data );
 
-            // field.setUpdater( new ReflectiveUpdater<>( this, "testValue" ) );
-
-            form.addField( field );
-
-            return new ViewItem( field.getName(), form );
+            return field;
         }
 
         @Override
@@ -190,33 +222,65 @@ public class FormFieldsTest
         }
     }
 
+    private static final class ItemRenderer
+        implements ListCellRenderer<IFormField>
+    {
+        private final DefaultListCellRenderer renderer = new DefaultListCellRenderer();
+
+        @Override
+        public Component getListCellRendererComponent(
+            JList<? extends IFormField> list, IFormField value, int index,
+            boolean isSelected, boolean cellHasFocus )
+        {
+            Component c = renderer.getListCellRendererComponent( list, value,
+                index, isSelected, cellHasFocus );
+
+            String text = "";
+
+            if( value != null )
+            {
+                text = value.getName();
+            }
+
+            renderer.setText( text );
+
+            return c;
+        }
+    }
+
     /***************************************************************************
      * 
      **************************************************************************/
     private static final class ItemSelectedListener
         implements ListSelectionListener
     {
-        private final JList<ViewItem> list;
-        private final ComponentView view;
+        private final UiTestFrameView view;
 
-        public ItemSelectedListener( JList<ViewItem> list, ComponentView view )
+        public ItemSelectedListener( UiTestFrameView view )
         {
-            this.list = list;
             this.view = view;
         }
 
         @Override
         public void valueChanged( ListSelectionEvent e )
         {
-            ViewItem item = list.getSelectedValue();
+            IFormField field = view.itemsList.getSelectedValue();
 
-            if( item != null )
+            if( field != null )
             {
-                view.setComponent( item.view.getView() );
+                StandardFormView form = new StandardFormView();
+
+                form.addField( field );
+
+                view.cview.setComponent( form.getView() );
+                view.editable = false;
+                view.toggleEditable();
+                view.editableAction.setEnabled( true );
             }
             else
             {
-                view.setComponent( new JPanel() );
+                view.cview.setComponent( new JPanel() );
+                view.editableAction.setEnabled( false );
             }
         }
     }

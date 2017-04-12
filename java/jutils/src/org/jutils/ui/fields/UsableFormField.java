@@ -121,7 +121,8 @@ public class UsableFormField<T>
     @Override
     public void setEditable( boolean editable )
     {
-        field.setEditable( editable );
+        usedField.setEnabled( editable );
+        field.setEditable( editable && usable.isUsed );
     }
 
     /***************************************************************************

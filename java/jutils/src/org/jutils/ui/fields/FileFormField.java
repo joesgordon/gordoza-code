@@ -193,6 +193,7 @@ public class FileFormField implements IDataFormField<File>
     public void setEditable( boolean editable )
     {
         field.setEditable( editable );
+        view.setEditable( editable );
     }
 
     /***************************************************************************
