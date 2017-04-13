@@ -75,11 +75,11 @@ public class DataPlotView implements IView<JComponent>
         Icon icon;
         Action action;
 
-        icon = IconConstants.getIcon( IconConstants.BACK_16 );
+        icon = IconConstants.getIcon( IconConstants.NAV_PREVIOUS_16 );
         action = new ActionAdapter( ( e ) -> loadPrevious(), "Previous", icon );
         SwingUtils.addActionToToolbar( toolbar, action );
 
-        icon = IconConstants.getIcon( IconConstants.FORWARD_16 );
+        icon = IconConstants.getIcon( IconConstants.NAV_NEXT_16 );
         action = new ActionAdapter( ( e ) -> loadNext(), "Next", icon );
         SwingUtils.addActionToToolbar( toolbar, action );
 

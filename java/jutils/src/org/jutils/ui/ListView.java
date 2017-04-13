@@ -141,7 +141,7 @@ public class ListView<T> implements IDataView<List<T>>
      **************************************************************************/
     private Action createUpAction()
     {
-        Icon icon = IconConstants.getIcon( IconConstants.UP_16 );
+        Icon icon = IconConstants.getIcon( IconConstants.NAV_UP_16 );
         ActionListener listener = new MoveUpListener<T>( this );
         return new ActionAdapter( listener, "Move Up", icon );
     }
@@ -151,7 +151,7 @@ public class ListView<T> implements IDataView<List<T>>
      **************************************************************************/
     private Action createDownAction()
     {
-        Icon icon = IconConstants.getIcon( IconConstants.DOWN_16 );
+        Icon icon = IconConstants.getIcon( IconConstants.NAV_DOWN_16 );
         ActionListener listener = new MoveDownListener<T>( this );
         return new ActionAdapter( listener, "Move Down", icon );
     }

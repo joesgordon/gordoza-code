@@ -52,9 +52,13 @@ public class HexFileView implements IDataView<File>
     private final ValueView valuePanel;
 
     /**  */
+    public final Action firstAction;
+    /**  */
     public final Action prevAction;
     /**  */
     public final Action nextAction;
+    /**  */
+    public final Action lastAction;
     /**  */
     public final Action searchAction;
     /**  */
@@ -75,10 +79,18 @@ public class HexFileView implements IDataView<File>
      **************************************************************************/
     public HexFileView()
     {
+        this.firstAction = new ActionAdapter( ( e ) -> jumpFirst(),
+            "First Data Block",
+            IconConstants.getIcon( IconConstants.NAV_FIRST_16 ) );
         this.prevAction = new ActionAdapter( ( e ) -> jumpPrevious(),
-            "Previous Data Block", JHexIcons.getIcon( JHexIcons.JUMP_LEFT ) );
+            "Previous Data Block",
+            IconConstants.getIcon( IconConstants.NAV_PREVIOUS_16 ) );
         this.nextAction = new ActionAdapter( ( e ) -> jumpForward(),
-            "Next Data Block", JHexIcons.getIcon( JHexIcons.JUMP_RIGHT ) );
+            "Next Data Block",
+            IconConstants.getIcon( IconConstants.NAV_NEXT_16 ) );
+        this.lastAction = new ActionAdapter( ( e ) -> jumpLast(),
+            "Next Data Block",
+            IconConstants.getIcon( IconConstants.NAV_LAST_16 ) );
 
         this.searchAction = new ActionAdapter( ( e ) -> showSearchDialog(),
             "Search", IconConstants.getIcon( IconConstants.FIND_16 ) );
@@ -126,8 +138,10 @@ public class HexFileView implements IDataView<File>
         inMap.put( key, "findPrevAction" );
         acMap.put( "findPrevAction", action );
 
+        firstAction.setEnabled( false );
         prevAction.setEnabled( false );
         nextAction.setEnabled( false );
+        lastAction.setEnabled( false );
         searchAction.setEnabled( false );
         gotoAction.setEnabled( false );
         analyzeAction.setEnabled( false );
@@ -224,6 +238,13 @@ public class HexFileView implements IDataView<File>
     {
         JToolBar toolbar = new JGoodiesToolBar();
 
+        SwingUtils.addActionToToolbar( toolbar, firstAction );
+        SwingUtils.addActionToToolbar( toolbar, prevAction );
+        SwingUtils.addActionToToolbar( toolbar, nextAction );
+        SwingUtils.addActionToToolbar( toolbar, lastAction );
+
+        toolbar.addSeparator();
+
         JToggleButton jtb = new JToggleButton();
         jtb.setIcon( IconConstants.getIcon( IconConstants.SHOW_DATA ) );
         jtb.setToolTipText( "Show Data" );
@@ -231,16 +252,6 @@ public class HexFileView implements IDataView<File>
         jtb.setSelected( true );
         jtb.addActionListener( new ShowDataListener( this, jtb ) );
         toolbar.add( jtb );
-
-        SwingUtils.addActionToToolbar( toolbar, prevAction );
-
-        // SwingUtils.addActionToToolbar( toolbar, new ActionAdapter( null,
-        // "Previous Data", JHexIcons.getIcon( JHexIcons.INCH_LEFT ) ) );
-        //
-        // SwingUtils.addActionToToolbar( toolbar, new ActionAdapter( null,
-        // "Next Data", JHexIcons.getIcon( JHexIcons.INCH_RIGHT ) ) );
-
-        SwingUtils.addActionToToolbar( toolbar, nextAction );
 
         toolbar.addSeparator();
 
@@ -295,8 +306,10 @@ public class HexFileView implements IDataView<File>
             String.format( "Showing 0x%016X - 0x%016X of 0x%016X", position,
                 nextOffset - 1, buffer.getLength() ) );
 
-        prevAction.setEnabled( position > 0 );
+        firstAction.setEnabled( position > 0 );
+        prevAction.setEnabled( firstAction.isEnabled() );
         nextAction.setEnabled( position < buffer.getLastPosition() );
+        lastAction.setEnabled( nextAction.isEnabled() );
         progressBar.setOffset( position );
         progressBar.setUnitLength( block.buffer.length );
     }

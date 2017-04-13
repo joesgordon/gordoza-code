@@ -51,12 +51,14 @@ public class SliderTestFrame implements IView<JFrame>
     {
         JGoodiesToolBar toolbar = new JGoodiesToolBar();
 
-        lastButton.setIcon( IconConstants.getIcon( IconConstants.BACK_24 ) );
+        lastButton.setIcon(
+            IconConstants.getIcon( IconConstants.NAV_PREVIOUS_24 ) );
         lastButton.setFocusable( false );
         lastButton.addActionListener( new LastListener() );
         toolbar.add( lastButton );
 
-        nextButton.setIcon( IconConstants.getIcon( IconConstants.FORWARD_24 ) );
+        nextButton.setIcon(
+            IconConstants.getIcon( IconConstants.NAV_NEXT_24 ) );
         nextButton.setFocusable( false );
         nextButton.addActionListener( new NextListener() );
         toolbar.add( nextButton );

@@ -48,7 +48,7 @@ public class TaskTestApp implements IFrameApp
         String name;
 
         name = "Go";
-        icon = IconConstants.getIcon( IconConstants.FORWARD_16 );
+        icon = IconConstants.getIcon( IconConstants.NAV_NEXT_16 );
         listener = new GoListener( frame );
         action = new ActionAdapter( listener, name, icon );
 

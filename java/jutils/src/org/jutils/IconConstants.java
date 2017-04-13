@@ -20,9 +20,23 @@ public final class IconConstants
 
     public final static String ATOMIC_32 = "atomic32.png";
 
-    public final static String BACK_16 = "back16.png";
+    public static final String NAV_FIRST_16 = "nav_first16.png";
 
-    public final static String BACK_24 = "back24.png";
+    public final static String NAV_PREVIOUS_16 = "nav_previous16.png";
+
+    public final static String NAV_PREVIOUS_24 = "nav_previous24.png";
+
+    public final static String NAV_NEXT_16 = "nav_next16.png";
+
+    public final static String NAV_NEXT_24 = "nav_next24.png";
+
+    public final static String NAV_LAST_16 = "nav_last16.png";
+
+    public final static String NAV_DOWN_16 = "nav_down16.png";
+
+    public final static String NAV_UP_16 = "nav_up16.png";
+
+    public final static String NAV_UP_24 = "nav_up24.png";
 
     public final static String BINARY_32 = "binary32.png";
 
@@ -65,10 +79,6 @@ public final class IconConstants
     public final static String FONT_16 = "font16.png";
 
     public final static String FONT_24 = "font24.png";
-
-    public final static String FORWARD_16 = "forward16.png";
-
-    public final static String FORWARD_24 = "forward24.png";
 
     public final static String IM_USER_16 = "im-user16.png";
 
@@ -123,16 +133,6 @@ public final class IconConstants
     public final static String UNDO_16 = "undo16.png";
 
     public final static String REDO_16 = "redo16.png";
-
-    public final static String LEFT_16 = "arrow-left16.png";
-
-    public final static String RIGHT_16 = "arrow-right16.png";
-
-    public final static String DOWN_16 = "down16.png";
-
-    public final static String UP_16 = "arrow-up16.png";
-
-    public final static String UP_24 = "up24.png";
 
     /** The icon loader to be used to access icons in this project. */
     private final static IconLoader loader = new IconLoader(

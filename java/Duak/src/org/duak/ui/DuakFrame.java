@@ -139,7 +139,8 @@ public class DuakFrame implements IView<JFrame>
         action = new ActionAdapter( openListener, "Open", icon );
         SwingUtils.addActionToToolbar( toolbar, action );
 
-        button = new JButton( IconConstants.getIcon( IconConstants.BACK_16 ) );
+        button = new JButton(
+            IconConstants.getIcon( IconConstants.NAV_PREVIOUS_16 ) );
         button.setFocusable( false );
         button.addActionListener( new BackListener() );
         button.setEnabled( false );
@@ -147,7 +148,7 @@ public class DuakFrame implements IView<JFrame>
         previousButton = button;
 
         button = new JButton(
-            IconConstants.getIcon( IconConstants.FORWARD_16 ) );
+            IconConstants.getIcon( IconConstants.NAV_NEXT_16 ) );
         button.setFocusable( false );
         button.addActionListener( new ForwardListener() );
         button.setEnabled( false );

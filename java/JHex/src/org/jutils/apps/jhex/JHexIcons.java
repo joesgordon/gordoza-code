@@ -15,22 +15,11 @@ public class JHexIcons
     /**  */
     public static final IconLoader loader = new IconLoader( JHexIcons.class,
         "icons" );
-    /**  */
-    public static final String INCH_LEFT = "arrow-left.png";
-    /**  */
-    public static final String JUMP_LEFT = "arrow-left-double.png";
-
-    /**  */
-    public static final String INCH_RIGHT = "arrow-right.png";
-    /**  */
-    public static final String JUMP_RIGHT = "arrow-right-double.png";
 
     /**  */
     public static final String GOTO = "goto.png";
-
     /**  */
     public static final String APP_016 = "app_016.png";
-
     /**  */
     public static final String APP_024 = "app_024.png";
 

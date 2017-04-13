@@ -42,7 +42,8 @@ public class McInputPanel implements IView<JPanel>
 
         msgCountTextField.setEnabled( false );
         msgDelayTextField.setEnabled( false );
-        sendButton.setIcon( IconConstants.getIcon( IconConstants.FORWARD_24 ) );
+        sendButton.setIcon(
+            IconConstants.getIcon( IconConstants.NAV_NEXT_24 ) );
         sendButton.setText( "Send" );
 
         view.setBorder( BorderFactory.createTitledBorder( "" ) );

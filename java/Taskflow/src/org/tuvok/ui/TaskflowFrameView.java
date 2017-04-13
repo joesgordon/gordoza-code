@@ -52,13 +52,13 @@ public class TaskflowFrameView implements IView<JFrame>
             IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
 
         JButton upButton = new JButton(
-            IconConstants.getIcon( IconConstants.UP_16 ) );
+            IconConstants.getIcon( IconConstants.NAV_UP_16 ) );
 
         JButton leftButton = new JButton(
-            IconConstants.getIcon( IconConstants.LEFT_16 ) );
+            IconConstants.getIcon( IconConstants.NAV_PREVIOUS_16 ) );
 
         JButton rightButton = new JButton(
-            IconConstants.getIcon( IconConstants.RIGHT_16 ) );
+            IconConstants.getIcon( IconConstants.NAV_NEXT_16 ) );
 
         JButton undoButton = new JButton(
             IconConstants.getIcon( IconConstants.UNDO_16 ) );

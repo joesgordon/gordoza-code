@@ -96,11 +96,13 @@ public class JExplorerFrame implements IView<JFrame>
             treeScrollPane, tableScrollPane );
 
         this.prevAction = new ActionAdapter( ( e ) -> goPreviousDirectory(),
-            "Previous", IconConstants.getIcon( IconConstants.BACK_24 ) );
+            "Previous",
+            IconConstants.getIcon( IconConstants.NAV_PREVIOUS_24 ) );
         this.nextAction = new ActionAdapter( ( e ) -> goNextDirectory(), "Next",
-            IconConstants.getIcon( IconConstants.FORWARD_24 ) );
+            IconConstants.getIcon( IconConstants.NAV_NEXT_24 ) );
         this.upAction = new ActionAdapter( ( e ) -> goDirectoryUp(),
-            "Up a Directory", IconConstants.getIcon( IconConstants.UP_24 ) );
+            "Up a Directory",
+            IconConstants.getIcon( IconConstants.NAV_UP_24 ) );
 
         TreeSelectionListener dirTreeSelListener = ( e ) -> dirTreeChanged();
         MouseListener dirTreeMouseListener = new DirTreeMouseListener( this );
