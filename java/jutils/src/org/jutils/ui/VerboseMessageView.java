@@ -5,6 +5,7 @@ import java.awt.Dialog.ModalityType;
 
 import javax.swing.*;
 
+import org.jutils.data.UIProperty;
 import org.jutils.ui.app.AppRunner;
 import org.jutils.ui.app.IApplication;
 import org.jutils.ui.model.IView;
@@ -32,7 +33,7 @@ public class VerboseMessageView implements IView<JPanel>
         view = createView();
 
         verboseMessageField.setBackground(
-            UIManager.getColor( "TextField.inactiveBackground" ) );
+            UIProperty.TEXTFIELD_INACTIVEBACKGROUND.getColor() );
     }
 
     /***************************************************************************

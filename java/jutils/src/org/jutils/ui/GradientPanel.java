@@ -3,7 +3,8 @@ package org.jutils.ui;
 import java.awt.*;
 
 import javax.swing.JPanel;
-import javax.swing.UIManager;
+
+import org.jutils.data.UIProperty;
 
 /*******************************************************************************
  * 
@@ -63,9 +64,9 @@ public class GradientPanel extends JPanel
      **************************************************************************/
     private static Color getDefaultBackground()
     {
-        Color c = UIManager.getColor( "ProgressBar.foreground" );
+        Color c = UIProperty.PROGRESSBAR_FOREGROUND.getColor();
         return c != null ? c
-            : UIManager.getColor( "InternalFrame.activeTitleBackground" );
+            : UIProperty.INTERNALFRAME_ACTIVETITLEBACKGROUND.getColor();
     }
 
     /***************************************************************************
@@ -79,7 +80,7 @@ public class GradientPanel extends JPanel
         {
             return;
         }
-        Color control = UIManager.getColor( "control" );
+        Color control = UIProperty.CONTROL.getColor();
         int width = getWidth();
         int height = getHeight();
 

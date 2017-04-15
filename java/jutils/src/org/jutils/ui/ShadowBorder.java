@@ -2,8 +2,9 @@ package org.jutils.ui;
 
 import java.awt.*;
 
-import javax.swing.UIManager;
 import javax.swing.border.AbstractBorder;
+
+import org.jutils.data.UIProperty;
 
 /*******************************************************************************
  * 
@@ -31,7 +32,7 @@ public class ShadowBorder extends AbstractBorder
     public void paintBorder( Component c, Graphics g, int x, int y, int w,
         int h )
     {
-        Color shadow = UIManager.getColor( "controlShadow" );
+        Color shadow = UIProperty.CONTROLSHADOW.getColor();
         if( shadow == null )
         {
             shadow = Color.GRAY;

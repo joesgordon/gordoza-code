@@ -11,13 +11,14 @@ import javax.swing.JOptionPane;
 
 import org.jutils.Utils;
 import org.jutils.ValidationException;
+import org.jutils.data.SystemProperty;
 
 /*******************************************************************************
  * Utility class for general I/O functions.
  ******************************************************************************/
 public final class IOUtils
 {
-    /** The user directory as returned by {@link System#getProperty(String)}. */
+    /** The user directory as returned by {@link SystemProperty#USER_HOME}. */
     public static final File USERS_DIR;
     /** The installation directory of this class/jar. */
     public static final File INSTALL_DIR;
@@ -28,7 +29,7 @@ public final class IOUtils
 
     static
     {
-        USERS_DIR = new File( System.getProperty( "user.home" ) );
+        USERS_DIR = new File( SystemProperty.USER_HOME.getProperty() );
         INSTALL_DIR = getInstallDir( IOUtils.class );
     }
 

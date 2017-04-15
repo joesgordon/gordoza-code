@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
+import org.jutils.data.UIProperty;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.model.IView;
@@ -209,8 +210,8 @@ public class PositionIndicator implements IView<JComponent>
         {
             this.thumbRect = new Rectangle();
 
-            this.thumbColor = UIManager.getColor( "ScrollBar.thumb" );
-            this.thumbShadow = UIManager.getColor( "ScrollBar.thumbShadow" );
+            this.thumbColor = UIProperty.SCROLLBAR_THUMB.getColor();
+            this.thumbShadow = UIProperty.SCROLLBAR_THUMBSHADOW.getColor();
             this.unitLength = 10;
             this.length = 0;
             this.offset = 50;

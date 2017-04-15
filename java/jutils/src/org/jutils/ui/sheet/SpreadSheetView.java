@@ -8,8 +8,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableCellRenderer;
 
-import org.jutils.PropConstants;
 import org.jutils.Utils;
+import org.jutils.data.UIProperty;
 import org.jutils.ui.RowHeaderRenderer;
 import org.jutils.ui.event.ResizingTableModelListener;
 import org.jutils.ui.model.IDataView;
@@ -61,8 +61,7 @@ public class SpreadSheetView implements IDataView<ISpreadSheet>
         rowHeader.setCellRenderer( rhr );
         rowHeader.setFixedCellHeight( table.getRowHeight() );
         rowHeader.setMinimumSize( new Dimension( 50, 5 ) );
-        rowHeader.setBackground(
-            ( Color )UIManager.get( PropConstants.UI_PANEL_COLOR ) );
+        rowHeader.setBackground( UIProperty.PANEL_BACKGROUND.getColor() );
         rowHeader.setFixedCellWidth( 50 );
 
         table.addMouseListener( new TableMouseListener( this ) );

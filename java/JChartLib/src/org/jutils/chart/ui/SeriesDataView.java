@@ -7,6 +7,7 @@ import javax.swing.table.AbstractTableModel;
 
 import org.jutils.Utils;
 import org.jutils.chart.model.ISeriesData;
+import org.jutils.data.UIProperty;
 import org.jutils.ui.model.IDataView;
 import org.jutils.ui.model.LabelTableCellRenderer;
 import org.jutils.ui.model.LabelTableCellRenderer.ITableCellLabelDecorator;
@@ -189,7 +190,7 @@ public class SeriesDataView implements IDataView<ISeriesData<?>>
 
         public DataCellRenderer()
         {
-            this.defaultBackground = UIManager.getColor( "Label.background" );
+            this.defaultBackground = UIProperty.LABEL_BACKGROUND.getColor();
         }
 
         public void setSeries( ISeriesData<?> series )

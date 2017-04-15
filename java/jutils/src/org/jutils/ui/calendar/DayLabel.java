@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.time.LocalDate;
 
 import javax.swing.JLabel;
-import javax.swing.UIManager;
 
+import org.jutils.data.UIProperty;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
@@ -18,8 +18,7 @@ class DayLabel implements IView<JLabel>
     /**  */
     private static final Color dayFG = new Color( 0x00, 0x00, 0x00 );
     /**  */
-    private static final Color daySelectedBG = UIManager.getColor(
-        "TextArea.selectionBackground" );
+    private static final Color daySelectedBG = UIProperty.TEXTAREA_SELECTIONBACKGROUND.getColor();
     /**  */
     private static final Color daySelectedFG = new Color( 0xFF, 0xFF, 0xFF );
     /**  */

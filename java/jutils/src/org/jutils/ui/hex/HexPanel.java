@@ -6,8 +6,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableCellEditor;
 
-import org.jutils.PropConstants;
 import org.jutils.Utils;
+import org.jutils.data.UIProperty;
 import org.jutils.ui.RowHeaderRenderer;
 import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
 import org.jutils.ui.model.IView;
@@ -42,8 +42,7 @@ public class HexPanel implements IView<JComponent>
 
         table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
 
-        rowHeader.setBackground(
-            ( Color )UIManager.get( PropConstants.UI_PANEL_COLOR ) );
+        rowHeader.setBackground( UIProperty.PANEL_BACKGROUND.getColor() );
         rowHeader.setFixedCellWidth( 50 );
 
         // TODO select row when row header is selected

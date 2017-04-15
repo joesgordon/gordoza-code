@@ -19,9 +19,13 @@ public class UiPropertiesTest
             Object key = entry.getKey();
             Object val = entry.getValue();
 
-            printObj( key, "Key" );
-            printObj( val, "Val" );
-            System.out.println();
+            if( key.toString().toUpperCase().startsWith( "CONTROL" ) )
+            {
+                printObj( key, "Key" );
+                printObj( val, "Val" );
+
+                System.out.println( "---------------" );
+            }
         }
     }
 

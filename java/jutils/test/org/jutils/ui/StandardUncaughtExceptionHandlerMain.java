@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.*;
 
+import org.jutils.data.UIProperty;
 import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
@@ -30,7 +31,7 @@ public class StandardUncaughtExceptionHandlerMain
         public JFrame createFrame()
         {
             StandardFrameView frameView = new StandardFrameView();
-            Icon icon = UIManager.getIcon( "OptionPane.errorIcon" );
+            Icon icon = UIProperty.OPTIONPANE_ERRORICON.getIcon();
             JButton button = new JButton( "Push Me to Error!", icon );
             JPanel buttonPanel = new JPanel();
 

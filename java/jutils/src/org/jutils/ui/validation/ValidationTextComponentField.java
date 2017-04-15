@@ -3,12 +3,12 @@ package org.jutils.ui.validation;
 import java.awt.Color;
 import java.awt.Font;
 
-import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 
 import org.jutils.ValidationException;
+import org.jutils.data.UIProperty;
 import org.jutils.ui.validators.ITextValidator;
 
 /*******************************************************************************
@@ -41,8 +41,7 @@ public class ValidationTextComponentField<T extends JTextComponent>
         this.field = comp;
         this.listenerList = new ValidityListenerList();
 
-        this.nonEditableBackground = UIManager.getColor(
-            "TextField.inactiveBackground" );
+        this.nonEditableBackground = UIProperty.TEXTFIELD_INACTIVEBACKGROUND.getColor();
         this.validBackground = field.getBackground();
         this.invalidBackground = Color.red;
 

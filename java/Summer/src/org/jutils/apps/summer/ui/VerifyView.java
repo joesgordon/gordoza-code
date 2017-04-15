@@ -13,6 +13,7 @@ import org.jutils.*;
 import org.jutils.apps.summer.data.*;
 import org.jutils.apps.summer.io.ChecksumFileSerializer;
 import org.jutils.apps.summer.tasks.ChecksumVerificationTask;
+import org.jutils.data.UIProperty;
 import org.jutils.io.parsers.ExistenceType;
 import org.jutils.task.TaskView;
 import org.jutils.ui.StandardFormView;
@@ -469,9 +470,9 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
 
             this.view = view;
 
-            this.defaultFont = UIManager.getFont( "label.font" );
+            this.defaultFont = UIProperty.LABEL_FONT.getFont();
             this.fixedFont = new Font( Font.MONOSPACED, Font.PLAIN, 12 );
-            this.defaultBackground = UIManager.getColor( "label.background" );
+            this.defaultBackground = UIProperty.LABEL_BACKGROUND.getColor();
         }
 
         @Override

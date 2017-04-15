@@ -8,6 +8,7 @@ import java.util.Date;
 import javax.swing.*;
 import javax.swing.table.*;
 
+import org.jutils.data.UIProperty;
 import org.jutils.io.LogUtils;
 import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.app.FrameRunner;
@@ -118,7 +119,7 @@ public class TableButtonDemo implements IView<JComponent>
             {
                 renderButton.setForeground( table.getForeground() );
                 renderButton.setBackground(
-                    UIManager.getColor( "Button.background" ) );
+                    UIProperty.BUTTON_BACKGROUND.getColor() );
             }
             else if( isSelected )
             {
@@ -129,7 +130,7 @@ public class TableButtonDemo implements IView<JComponent>
             {
                 renderButton.setForeground( table.getForeground() );
                 renderButton.setBackground(
-                    UIManager.getColor( "Button.background" ) );
+                    UIProperty.BUTTON_BACKGROUND.getColor() );
             }
 
             renderButton.setText( ( value == null ) ? "" : value.toString() );

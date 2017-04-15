@@ -12,6 +12,7 @@ import javax.swing.event.CellEditorListener;
 import javax.swing.table.*;
 import javax.swing.text.*;
 
+import org.jutils.data.UIProperty;
 import org.jutils.ui.HighlightedLabel;
 
 /*******************************************************************************
@@ -62,7 +63,7 @@ public class HexTable extends JTable
         setModel( model );
 
         FontMetrics fm = getFontMetrics( getFont() );
-        Font headerFont = UIManager.getFont( "TableHeader.font" );
+        Font headerFont = UIProperty.TABLEHEADER_FONT.getFont();
         FontMetrics headerFM = getFontMetrics( headerFont );
 
         int w = Math.max( fm.stringWidth( "4444" ),

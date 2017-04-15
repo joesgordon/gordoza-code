@@ -7,9 +7,8 @@ import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ActionMapUIResource;
 
+import org.jutils.data.UIProperty;
 import org.jutils.ui.event.ActionAdapter;
-
-import com.jgoodies.looks.Options;
 
 /*******************************************************************************
  * Maintenance tip - There were some tricks to getting this code working: <ol>
@@ -63,8 +62,7 @@ public class TristateCheckBox extends JCheckBox
         setModel( model );
         setState( initial );
 
-        setIcon( new TristateIcon(
-            ( Icon )UIManager.getDefaults().get( "CheckBox.icon" ) ) );
+        setIcon( new TristateIcon( UIProperty.CHECKBOX_ICON.getIcon() ) );
     }
 
     /***************************************************************************
@@ -122,472 +120,376 @@ public class TristateCheckBox extends JCheckBox
         return model.getState();
     }
 
-    /***************************************************************************
-     * @param args String[]
-     * @throws Exception
-     **************************************************************************/
-    public static void main( String args[] ) throws Exception
+    private static final class TristateIcon implements Icon
     {
-        SwingUtilities.invokeLater( new Runnable()
+        /**  */
+        private Icon defaultIcon = null;
+
+        /**  */
+        private Color checkColor = null;
+
+        /***************************************************************************
+         * @param defaultIcon
+         **************************************************************************/
+        public TristateIcon( Icon defaultIcon )
         {
-            @Override
-            public void run()
+            this.defaultIcon = defaultIcon;
+            checkColor = UIManager.getColor( "CheckBox.check" );
+            if( checkColor == null )
             {
-                try
-                {
-                    // UIManager.setLookAndFeel( UIManager
-                    // .getSystemLookAndFeelClassName() );
-                    UIManager.setLookAndFeel( Options.PLASTICXP_NAME );
-                }
-                catch( Exception ex )
-                {
-                    ex.printStackTrace();
-                }
-
-                JFrame frame = new JFrame( "TristateCheckBoxTest" );
-                frame.getContentPane().setLayout( new GridBagLayout() );
-
-                final TristateCheckBox swingBox = new TristateCheckBox(
-                    "Testing the tristate checkbox" );
-
-                JRadioButton trueButton = new JRadioButton();
-                trueButton.setText( "True" );
-                trueButton.addActionListener( new ActionListener()
-                {
-                    @Override
-                    public void actionPerformed( ActionEvent e )
-                    {
-                        swingBox.setState( Boolean.TRUE );
-                    }
-                } );
-
-                JRadioButton falseButton = new JRadioButton();
-                falseButton.setText( "False" );
-                falseButton.addActionListener( new ActionListener()
-                {
-                    @Override
-                    public void actionPerformed( ActionEvent e )
-                    {
-                        swingBox.setState( Boolean.FALSE );
-                    }
-                } );
-
-                JRadioButton kindaButton = new JRadioButton();
-                kindaButton.setText( "Kinda" );
-                kindaButton.addActionListener( new ActionListener()
-                {
-                    @Override
-                    public void actionPerformed( ActionEvent e )
-                    {
-                        swingBox.setState( null );
-                    }
-                } );
-
-                ButtonGroup group = new ButtonGroup();
-                group.add( trueButton );
-                group.add( falseButton );
-                group.add( kindaButton );
-
-                frame.getContentPane().add( swingBox,
-                    new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-                        GridBagConstraints.WEST, GridBagConstraints.BOTH,
-                        new Insets( 10, 10, 10, 10 ), 0, 0 ) );
-                frame.getContentPane().add( trueButton,
-                    new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
-                        GridBagConstraints.WEST, GridBagConstraints.BOTH,
-                        new Insets( 10, 10, 5, 10 ), 0, 0 ) );
-                frame.getContentPane().add( falseButton,
-                    new GridBagConstraints( 0, 2, 1, 1, 0.0, 1.0,
-                        GridBagConstraints.WEST, GridBagConstraints.BOTH,
-                        new Insets( 5, 10, 5, 10 ), 0, 0 ) );
-                frame.getContentPane().add( kindaButton,
-                    new GridBagConstraints( 0, 3, 1, 1, 0.0, 0.0,
-                        GridBagConstraints.WEST, GridBagConstraints.BOTH,
-                        new Insets( 5, 10, 10, 10 ), 0, 0 ) );
-                frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-                frame.pack();
-                frame.setLocationRelativeTo( null );
-                frame.setVisible( true );
+                checkColor = Color.black;
             }
-        } );
-    }
-}
+        }
 
-class TristateIcon implements Icon
-{
-    /**  */
-    private Icon defaultIcon = null;
-
-    /**  */
-    private Color checkColor = null;
-
-    /***************************************************************************
-     * @param defaultIcon
-     **************************************************************************/
-    public TristateIcon( Icon defaultIcon )
-    {
-        this.defaultIcon = defaultIcon;
-        checkColor = UIManager.getColor( "CheckBox.check" );
-        if( checkColor == null )
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        public int getIconHeight()
         {
-            checkColor = Color.black;
+            return defaultIcon.getIconHeight();
+        }
+
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        public int getIconWidth()
+        {
+            return defaultIcon.getIconWidth();
+        }
+
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        public void paintIcon( Component c, Graphics g, int x, int y )
+        {
+            TristateCheckBox icon = ( TristateCheckBox )c;
+            defaultIcon.paintIcon( c, g, x, y );
+            if( icon.getState() == null )
+            {
+                drawBox( g, x, y );
+            }
+        }
+
+        /***************************************************************************
+         * @param g
+         * @param x
+         * @param y
+         **************************************************************************/
+        protected void drawBox( Graphics g, int x, int y )
+        {
+            int controlSize = getIconWidth();
+            int gap = 3;
+
+            g.setColor( checkColor );
+            g.fill3DRect( x + gap, y + gap, controlSize - 2 * gap,
+                controlSize - 2 * gap, true );
         }
     }
 
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public int getIconHeight()
+    /*******************************************************************************
+     * Exactly which Design Pattern is this? Is it an Adapter, a Proxy or a
+     * Decorator? In this case, my vote lies with the Decorator, because we are
+     * extending functionality and "decorating" the original model with a more
+     * powerful model.
+     ******************************************************************************/
+    private static final class TristateDecorator implements ButtonModel
     {
-        return defaultIcon.getIconHeight();
-    }
+        /**  */
+        private final ButtonModel other;
 
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public int getIconWidth()
-    {
-        return defaultIcon.getIconWidth();
-    }
+        /**  */
+        private Boolean state = null;
 
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void paintIcon( Component c, Graphics g, int x, int y )
-    {
-        TristateCheckBox icon = ( TristateCheckBox )c;
-        defaultIcon.paintIcon( c, g, x, y );
-        if( icon.getState() == null )
+        /***********************************************************************
+         * @param other ButtonModel
+         **********************************************************************/
+        public TristateDecorator( ButtonModel other )
         {
-            drawBox( g, x, y );
+            this.other = other;
         }
-    }
 
-    /***************************************************************************
-     * @param g
-     * @param x
-     * @param y
-     **************************************************************************/
-    protected void drawBox( Graphics g, int x, int y )
-    {
-        int controlSize = getIconWidth();
-        int gap = 3;
-
-        g.setColor( checkColor );
-        g.fill3DRect( x + gap, y + gap, controlSize - 2 * gap,
-            controlSize - 2 * gap, true );
-    }
-}
-
-/*******************************************************************************
- * Exactly which Design Pattern is this? Is it an Adapter, a Proxy or a
- * Decorator? In this case, my vote lies with the Decorator, because we are
- * extending functionality and "decorating" the original model with a more
- * powerful model.
- ******************************************************************************/
-class TristateDecorator implements ButtonModel
-{
-    /**  */
-    private final ButtonModel other;
-
-    /**  */
-    private Boolean state = null;
-
-    /***********************************************************************
-     * @param other ButtonModel
-     **********************************************************************/
-    public TristateDecorator( ButtonModel other )
-    {
-        this.other = other;
-    }
-
-    /***********************************************************************
-     * @param state Boolean
-     **********************************************************************/
-    public void setState( Boolean state )
-    {
-        this.state = state;
-
-        // other.setArmed( false );
-        // setPressed( false );
-        if( state == null )
+        /***********************************************************************
+         * @param state Boolean
+         **********************************************************************/
+        public void setState( Boolean state )
         {
-            // other.setArmed( true );
-            // setPressed( true );
-            setSelected( true );
-        }
-        else if( state.booleanValue() )
-        {
+            this.state = state;
+
             // other.setArmed( false );
             // setPressed( false );
-            setSelected( true );
+            if( state == null )
+            {
+                // other.setArmed( true );
+                // setPressed( true );
+                setSelected( true );
+            }
+            else if( state.booleanValue() )
+            {
+                // other.setArmed( false );
+                // setPressed( false );
+                setSelected( true );
+            }
+            else
+            {
+                // other.setArmed( false );
+                // setPressed( false );
+                setSelected( false );
+            }
         }
-        else
+
+        /***********************************************************************
+         * The current state is embedded in the selection / armed state of the
+         * model. We return the SELECTED state when the checkbox is selected but
+         * not armed, DONT_CARE state when the checkbox is selected and armed
+         * (grey) and NOT_SELECTED when the checkbox is deselected.
+         * @return Boolean
+         **********************************************************************/
+        public Boolean getState()
         {
-            // other.setArmed( false );
-            // setPressed( false );
-            setSelected( false );
+            return state;
+            // if( isSelected() && !isArmed() )
+            // {
+            // // normal black tick
+            // return Boolean.TRUE;
+            // }
+            // else if( isSelected() && isArmed() )
+            // {
+            // // don't care grey tick
+            // return null;
+            // }
+            // else
+            // {
+            // // normal deselected
+            // return Boolean.FALSE;
+            // }
         }
-    }
 
-    /***********************************************************************
-     * The current state is embedded in the selection / armed state of the
-     * model. We return the SELECTED state when the checkbox is selected but not
-     * armed, DONT_CARE state when the checkbox is selected and armed (grey) and
-     * NOT_SELECTED when the checkbox is deselected.
-     * @return Boolean
-     **********************************************************************/
-    public Boolean getState()
-    {
-        return state;
-        // if( isSelected() && !isArmed() )
-        // {
-        // // normal black tick
-        // return Boolean.TRUE;
-        // }
-        // else if( isSelected() && isArmed() )
-        // {
-        // // don't care grey tick
-        // return null;
-        // }
-        // else
-        // {
-        // // normal deselected
-        // return Boolean.FALSE;
-        // }
-    }
-
-    /***********************************************************************
-     * We rotate between NOT_SELECTED, SELECTED and DONT_CARE.
-     **********************************************************************/
-    public void nextState()
-    {
-        Boolean current = getState();
-        if( current == null )
+        /***********************************************************************
+         * We rotate between NOT_SELECTED, SELECTED and DONT_CARE.
+         **********************************************************************/
+        public void nextState()
         {
-            setState( Boolean.FALSE );
+            Boolean current = getState();
+            if( current == null )
+            {
+                setState( Boolean.FALSE );
+            }
+            else if( current.equals( Boolean.FALSE ) )
+            {
+                setState( Boolean.TRUE );
+            }
+            else if( current.equals( Boolean.TRUE ) )
+            {
+                setState( null );
+            }
+            else
+            {
+                throw new RuntimeException(
+                    "Boolean that is neither null, TRUE, or FALSE: " +
+                        current );
+            }
         }
-        else if( current.equals( Boolean.FALSE ) )
+
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        public void setArmed( boolean b )
         {
-            setState( Boolean.TRUE );
         }
-        else if( current.equals( Boolean.TRUE ) )
+
+        /***************************************************************************
+         * disable focusing on the component when it is not enabled.
+         **************************************************************************/
+        @Override
+        public void setEnabled( boolean b )
         {
-            setState( null );
+            // setFocusable(b);
+            other.setEnabled( b );
         }
-        else
+
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        public boolean isArmed()
         {
-            throw new RuntimeException(
-                "Boolean that is neither null, TRUE, or FALSE: " + current );
+            return other.isArmed();
+        }
+
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        public boolean isSelected()
+        {
+            return other.isSelected();
+        }
+
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        public boolean isEnabled()
+        {
+            return other.isEnabled();
+        }
+
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        public boolean isPressed()
+        {
+            return other.isPressed();
+        }
+
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        public boolean isRollover()
+        {
+            return other.isRollover();
+        }
+
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        public void setSelected( boolean b )
+        {
+            other.setSelected( b );
+        }
+
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        public void setPressed( boolean b )
+        {
+            other.setPressed( b );
+        }
+
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        public void setRollover( boolean b )
+        {
+            other.setRollover( b );
+        }
+
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        public void setMnemonic( int key )
+        {
+            other.setMnemonic( key );
+        }
+
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        public int getMnemonic()
+        {
+            return other.getMnemonic();
+        }
+
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        public void setActionCommand( String s )
+        {
+            other.setActionCommand( s );
+        }
+
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        public String getActionCommand()
+        {
+            return other.getActionCommand();
+        }
+
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        public void setGroup( ButtonGroup group )
+        {
+            other.setGroup( group );
+        }
+
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        public void addActionListener( ActionListener l )
+        {
+            other.addActionListener( l );
+        }
+
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        public void removeActionListener( ActionListener l )
+        {
+            other.removeActionListener( l );
+        }
+
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        public void addItemListener( ItemListener l )
+        {
+            other.addItemListener( l );
+        }
+
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        public void removeItemListener( ItemListener l )
+        {
+            other.removeItemListener( l );
+        }
+
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        public void addChangeListener( ChangeListener l )
+        {
+            other.addChangeListener( l );
+        }
+
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        public void removeChangeListener( ChangeListener l )
+        {
+            other.removeChangeListener( l );
+        }
+
+        /***************************************************************************
+         * 
+         **************************************************************************/
+        @Override
+        public Object [] getSelectedObjects()
+        {
+            return other.getSelectedObjects();
         }
     }
 
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setArmed( boolean b )
-    {
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public boolean isFocusTraversable()
-    {
-        return isEnabled();
-    }
-
-    /***************************************************************************
-     * disable focusing on the component when it is not enabled.
-     **************************************************************************/
-    @Override
-    public void setEnabled( boolean b )
-    {
-        // setFocusable(b);
-        other.setEnabled( b );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public boolean isArmed()
-    {
-        return other.isArmed();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public boolean isSelected()
-    {
-        return other.isSelected();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public boolean isEnabled()
-    {
-        return other.isEnabled();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public boolean isPressed()
-    {
-        return other.isPressed();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public boolean isRollover()
-    {
-        return other.isRollover();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setSelected( boolean b )
-    {
-        other.setSelected( b );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setPressed( boolean b )
-    {
-        other.setPressed( b );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setRollover( boolean b )
-    {
-        other.setRollover( b );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setMnemonic( int key )
-    {
-        other.setMnemonic( key );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public int getMnemonic()
-    {
-        return other.getMnemonic();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setActionCommand( String s )
-    {
-        other.setActionCommand( s );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public String getActionCommand()
-    {
-        return other.getActionCommand();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void setGroup( ButtonGroup group )
-    {
-        other.setGroup( group );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void addActionListener( ActionListener l )
-    {
-        other.addActionListener( l );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void removeActionListener( ActionListener l )
-    {
-        other.removeActionListener( l );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void addItemListener( ItemListener l )
-    {
-        other.addItemListener( l );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void removeItemListener( ItemListener l )
-    {
-        other.removeItemListener( l );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void addChangeListener( ChangeListener l )
-    {
-        other.addChangeListener( l );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void removeChangeListener( ChangeListener l )
-    {
-        other.removeChangeListener( l );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public Object [] getSelectedObjects()
-    {
-        return other.getSelectedObjects();
-    }
 }

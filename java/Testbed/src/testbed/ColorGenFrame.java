@@ -12,6 +12,7 @@ import javax.swing.*;
 import org.jutils.IconConstants;
 import org.jutils.Utils;
 import org.jutils.concurrent.*;
+import org.jutils.data.UIProperty;
 import org.jutils.ui.ColorIcon;
 import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.app.FrameRunner;
@@ -446,7 +447,7 @@ public class ColorGenFrame implements IView<JFrame>
          **********************************************************************/
         public ColorCellDecorator()
         {
-            Font f = UIManager.getFont( "Label.font" );
+            Font f = UIProperty.LABEL_FONT.getFont();
 
             this.icon = new ColorIcon( Color.white, 16 );
             this.boldFont = f.deriveFont( f.getStyle() | Font.BOLD );

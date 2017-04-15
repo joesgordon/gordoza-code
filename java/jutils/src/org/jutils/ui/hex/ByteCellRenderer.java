@@ -3,11 +3,12 @@ package org.jutils.ui.hex;
 import java.awt.Color;
 import java.awt.Component;
 
-import javax.swing.*;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
-import org.jutils.PropConstants;
+import org.jutils.data.UIProperty;
 
 /*******************************************************************************
  * 
@@ -38,7 +39,7 @@ public class ByteCellRenderer implements TableCellRenderer
         super();
 
         this.renderer = new DefaultTableCellRenderer();
-        this.nullColor = ( Color )UIManager.get( PropConstants.UI_PANEL_COLOR );
+        this.nullColor = UIProperty.PANEL_BACKGROUND.getColor();
 
         this.highlightColor = Color.yellow;
         this.offset = -1;

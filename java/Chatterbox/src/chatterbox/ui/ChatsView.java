@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
+import org.jutils.data.UIProperty;
 import org.jutils.ui.TitleView;
 import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.model.IDataView;
@@ -147,10 +148,10 @@ public class ChatsView implements IDataView<ChatterboxHandler>
         public ChatInfoCellRenderer()
         {
             this.view = new ChatInfoView();
-            this.bgColor = UIManager.getColor( "List.background" );
-            this.sbgColor = UIManager.getColor( "List.selectionBackground" );
-            this.fgColor = UIManager.getColor( "List.foreground" );
-            this.sfgColor = UIManager.getColor( "List.selectionForeground" );
+            this.bgColor = UIProperty.LIST_BACKGROUND.getColor();
+            this.sbgColor = UIProperty.LIST_SELECTIONBACKGROUND.getColor();
+            this.fgColor = UIProperty.LIST_FOREGROUND.getColor();
+            this.sfgColor = UIProperty.LIST_SELECTIONFOREGROUND.getColor();
         }
 
         @Override

@@ -3,11 +3,13 @@ package org.budgey.ui;
 import java.awt.Color;
 import java.awt.Font;
 
-import javax.swing.*;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.JTextComponent;
 
 import org.budgey.data.Money;
+import org.jutils.data.UIProperty;
 import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
@@ -33,7 +35,7 @@ public class MoneyLabel implements IDataView<Money>
     {
         this.moneyField = new JTextField();
         this.negativeColor = Color.red;
-        this.positiveColor = UIManager.getColor( "Panel.background" );
+        this.positiveColor = UIProperty.PANEL_BACKGROUND.getColor();
 
         moneyField.setOpaque( true );
         moneyField.setHorizontalAlignment( SwingConstants.RIGHT );

@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 import java.util.*;
 
 import org.jutils.IconConstants;
+import org.jutils.data.SystemProperty;
 import org.jutils.io.IOUtils;
 import org.jutils.io.options.OptionsSerializer;
 
@@ -22,8 +23,7 @@ public class ChatterboxConstants
     private static final File USER_FILE = IOUtils.getUsersFile( ".jutils",
         "chatterbox", "options.xml" );
     /**  */
-    public static final String DEFAULT_USERNAME = System.getProperty(
-        "user.name" );
+    public static final String DEFAULT_USERNAME = SystemProperty.USER_NAME.getProperty();
     /**  */
     public static final TimeZone UTC = TimeZone.getTimeZone( "UTC" );
 
@@ -68,7 +68,7 @@ public class ChatterboxConstants
     public static ChatUser createDefaultUser()
     {
         String system = getHostname();
-        String username = System.getProperty( "user.name" );
+        String username = DEFAULT_USERNAME;
         String userId = username + "@" + system;
         ChatUser user = new ChatUser( userId );
 

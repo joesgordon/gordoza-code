@@ -11,6 +11,8 @@ import java.util.List;
 
 import javax.swing.JTable;
 
+import org.jutils.data.SystemProperty;
+
 /*******************************************************************************
  * Utility class for general static functions.
  ******************************************************************************/
@@ -27,8 +29,8 @@ public final class Utils
     {
         REGEX_METAC = new char[] { '\\', '^', '|', '[', ']', '(', ')', '$', '.',
             '+', '*', '?', '{', '}' };
-        NEW_LINE = System.getProperty( PropConstants.SYS_LINE_SEP );
-        USER_HOME = System.getProperty( PropConstants.SYS_USER_DIR );
+        NEW_LINE = SystemProperty.LINE_SEPARATOR.getProperty();
+        USER_HOME = SystemProperty.USER_DIR.getProperty();
     }
 
     /***************************************************************************
