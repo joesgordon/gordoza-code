@@ -43,9 +43,9 @@ public class FileContextMenu
     private File file;
 
     // TODO Add Delete
+    // TODO Add Copy To...
+    // TODO Add Move To...
     // TODO Add Open With
-    // TODO Change Info to Properties
-    // TODO Create a better properties dialog.
 
     /***************************************************************************
      * @param parent

@@ -15,7 +15,7 @@ import org.jutils.IconConstants;
 public class FileIcon implements Icon
 {
     /**  */
-    private final FileSystemView fileSys;
+    public final FileSystemView fileSys;
     /**  */
     private final Icon defaultIcon;
     /**  */
