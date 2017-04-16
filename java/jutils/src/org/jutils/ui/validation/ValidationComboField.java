@@ -79,7 +79,7 @@ public final class ValidationComboField<T> implements IValidationField
      * 
      **************************************************************************/
     @Override
-    public JComponent getView()
+    public JComboBox<T> getView()
     {
         return field;
     }

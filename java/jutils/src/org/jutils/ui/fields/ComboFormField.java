@@ -82,7 +82,7 @@ public final class ComboFormField<T> implements IDataFormField<T>
      * 
      **************************************************************************/
     @Override
-    public JComponent getView()
+    public JComboBox<T> getView()
     {
         return field.getView();
     }
@@ -197,6 +197,14 @@ public final class ComboFormField<T> implements IDataFormField<T>
     }
 
     /***************************************************************************
+     * @return
+     **************************************************************************/
+    public int getSelectedIndex()
+    {
+        return field.getSelectedIndex();
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     private static class ComboValidListener<T> implements IUpdater<T>
@@ -244,13 +252,5 @@ public final class ComboFormField<T> implements IDataFormField<T>
 
             return item;
         }
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public int getSelectedIndex()
-    {
-        return field.getSelectedIndex();
     }
 }

@@ -19,7 +19,8 @@ public class UiPropertiesTest
             Object key = entry.getKey();
             Object val = entry.getValue();
 
-            if( key.toString().toUpperCase().startsWith( "CONTROL" ) )
+            // if( key.toString().toUpperCase().startsWith( "CONTROL" ) )
+            if( key.toString().toUpperCase().contains( "COMBO" ) )
             {
                 printObj( key, "Key" );
                 printObj( val, "Val" );
