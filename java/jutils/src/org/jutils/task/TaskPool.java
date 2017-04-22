@@ -29,8 +29,6 @@ public class TaskPool
     /***************************************************************************
      * @param tasker
      * @param numThreads
-     * @param stopManager
-     * @param view
      **************************************************************************/
     public TaskPool( IMultiTaskHandler tasker, int numThreads )
     {

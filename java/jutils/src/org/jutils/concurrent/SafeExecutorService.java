@@ -30,7 +30,7 @@ public class SafeExecutorService extends ThreadPoolExecutor
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     protected void afterExecute( Runnable r, Throwable t )

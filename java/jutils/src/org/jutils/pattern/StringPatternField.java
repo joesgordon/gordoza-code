@@ -23,6 +23,7 @@ public class StringPatternField implements IDataFormField<StringPattern>
 
     /**  */
     private StringPattern pattern;
+    /**  */
     private IUpdater<StringPattern> updater;
 
     /***************************************************************************

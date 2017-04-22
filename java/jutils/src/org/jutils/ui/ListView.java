@@ -86,6 +86,8 @@ public class ListView<T> implements IDataView<List<T>>
         this.changeListeners = new ItemActionList<>();
 
         this.view = createView();
+
+        setItemRenderer( new DefaultItemListCellRenderer<>() );
     }
 
     /***************************************************************************
@@ -557,6 +559,27 @@ public class ListView<T> implements IDataView<List<T>>
     }
 
     /***************************************************************************
+     * @param <T>
+     **************************************************************************/
+    private static final class DefaultItemListCellRenderer<T>
+        implements ItemListCellRenderer<T>
+    {
+        private final DefaultListCellRenderer renderer = new DefaultListCellRenderer();
+
+        @Override
+        public Component getListCellRendererComponent( JList<?> list, T value,
+            int index, boolean isSelected, boolean cellHasFocus, String text )
+        {
+            Component c = renderer.getListCellRendererComponent( list, value,
+                index, isSelected, cellHasFocus );
+
+            renderer.setText( text );
+
+            return c;
+        }
+    }
+
+    /***************************************************************************
      * Defines an Adapter to be a renderer for the DisplayItem<T> list that uses
      * a {@link ItemListCellRenderer} to render the cell.
      * @param <T> The type of item to be added to the list.
@@ -578,14 +601,13 @@ public class ListView<T> implements IDataView<List<T>>
             T value, int index, boolean isSelected, boolean cellHasFocus )
         {
             String text = null;
-            T t = null;
 
             if( value != null )
             {
                 text = model.getTitle( value );
             }
 
-            return renderer.getListCellRendererComponent( list, t, index,
+            return renderer.getListCellRendererComponent( list, value, index,
                 isSelected, cellHasFocus, text );
         }
     }

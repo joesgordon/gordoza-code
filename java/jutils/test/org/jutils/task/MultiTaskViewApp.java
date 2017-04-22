@@ -40,8 +40,8 @@ public class MultiTaskViewApp implements IApplication
         taskView = view.addTaskView( message );
         taskView.signalPercent( 34 );
 
-        message = "Set 6 of 120: 24 Parameters" + Utils.NEW_LINE;
-        message += "GPS01, GPS02, GPS03, GPS04, GPS05, GPS06, GPS07, GPS08, GPS09, GPS10, GPS11, GPS12, GPS13, GPS14, GPS15, GPS16, GPS17, GPS18, GPS19, GPS20, GPS21";
+        message = "Set 6 of 120: 21 Parameters" + Utils.NEW_LINE;
+        message += "G01, G02, G03, G04, G05, G06, G07, G08, G09, G10, G11, G12, G13, G14, G15, G16, G17, G18, G19, G20, G21";
         taskView = view.addTaskView( message );
         taskView.signalPercent( 10 );
 

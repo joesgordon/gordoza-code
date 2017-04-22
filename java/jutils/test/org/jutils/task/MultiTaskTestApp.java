@@ -99,8 +99,10 @@ public class MultiTaskTestApp implements IFrameApp
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            MultiTaskView.startAndShow( frame, new SampleTasker( 120 ),
-                "Testing 1... 2... 3..", 4 );
+            TaskMetrics metrics = MultiTaskView.startAndShow( frame,
+                new SampleTasker( 120 ), "Testing 1... 2... 3..", 4 );
+
+            LogUtils.printDebug( "Interrupted: %b", metrics.interrupted );
         }
     }
 
