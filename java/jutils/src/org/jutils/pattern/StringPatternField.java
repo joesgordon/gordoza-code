@@ -1,9 +1,9 @@
 package org.jutils.pattern;
 
 import java.awt.*;
+import java.awt.event.*;
 
-import javax.swing.JComponent;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.fields.*;
@@ -46,6 +46,29 @@ public class StringPatternField implements IDataFormField<StringPattern>
             pattern.type = d;
             invokeUpdater();
         } );
+
+        addMouseListener( patternField.getView(),
+            new FieldMouseListener( this ) );
+    }
+
+    private static void addMouseListener( Container container,
+        MouseListener listener )
+    {
+        container.addMouseListener( listener );
+
+        for( int i = 0; i < container.getComponentCount(); i++ )
+        {
+            Component comp = container.getComponent( i );
+
+            if( comp instanceof Container )
+            {
+                addMouseListener( ( Container )comp, listener );
+            }
+            else
+            {
+                comp.addMouseListener( listener );
+            }
+        }
     }
 
     /***************************************************************************
@@ -172,5 +195,38 @@ public class StringPatternField implements IDataFormField<StringPattern>
     public Validity getValidity()
     {
         return patternField.getValidity();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static final class FieldMouseListener extends MouseAdapter
+    {
+        private final StringPatternField field;
+        private final JCheckBoxMenuItem csButton;
+        private final JPopupMenu popup;
+
+        public FieldMouseListener( StringPatternField field )
+        {
+            this.field = field;
+            this.csButton = new JCheckBoxMenuItem( "Case Sensitive" );
+            this.popup = new JPopupMenu();
+
+            popup.add( csButton );
+
+            ActionListener listener = (
+                e ) -> field.pattern.isCaseSensitive = csButton.isSelected();
+            csButton.addActionListener( listener );
+        }
+
+        @Override
+        public void mousePressed( MouseEvent e )
+        {
+            if( SwingUtilities.isRightMouseButton( e ) )
+            {
+                csButton.setSelected( field.pattern.isCaseSensitive );
+                popup.show( e.getComponent(), e.getX(), e.getY() );
+            }
+        }
     }
 }

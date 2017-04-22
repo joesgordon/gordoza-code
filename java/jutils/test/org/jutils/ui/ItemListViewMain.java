@@ -1,7 +1,6 @@
 package org.jutils.ui;
 
 import java.awt.*;
-import java.util.Random;
 
 import javax.swing.*;
 
@@ -200,7 +199,6 @@ public class ItemListViewMain
         {
             Component c = renderer.getListCellRendererComponent( list, value,
                 index, isSelected, cellHasFocus );
-            Random r = new Random();
 
             icon.setColor( new Color( value.name.hashCode() ) );
             renderer.setIcon( icon );
