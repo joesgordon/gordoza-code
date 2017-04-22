@@ -272,6 +272,15 @@ public class StringPattern
             this.name = name;
             try
             {
+                if( !regex.startsWith( ".*" ) )
+                {
+                    regex = ".*" + regex;
+                }
+                if( !regex.endsWith( ".*" ) )
+                {
+                    regex += ".*";
+                }
+
                 this.pattern = Pattern.compile( regex, flags );
             }
             catch( IllegalArgumentException ex )
