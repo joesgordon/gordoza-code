@@ -43,6 +43,13 @@ public class StringPattern
         this.name = pattern.name;
     }
 
+    @Override
+    public String toString()
+    {
+        return String.format( "%s: %s{%s}[%b]", name, type.name, patternText,
+            isCaseSensitive );
+    }
+
     /***************************************************************************
      * @return
      * @throws ValidationException
@@ -276,6 +283,7 @@ public class StringPattern
                 {
                     regex = ".*" + regex;
                 }
+
                 if( !regex.endsWith( ".*" ) )
                 {
                     regex += ".*";

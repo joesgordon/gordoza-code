@@ -5,6 +5,8 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
+import org.jutils.ValidationException;
+import org.jutils.io.IParser;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.fields.*;
 import org.jutils.ui.validation.IValidityChangedListener;
@@ -15,9 +17,10 @@ import org.jutils.ui.validation.Validity;
  ******************************************************************************/
 public class StringPatternField implements IDataFormField<StringPattern>
 {
+    /**  */
     private final JPanel view;
     /**  */
-    private final StringFormField patternField;
+    private final ParserFormField<String> patternField;
     /**  */
     private final ComboFormField<StringPatternType> typeField;
 
@@ -26,22 +29,30 @@ public class StringPatternField implements IDataFormField<StringPattern>
     /**  */
     private IUpdater<StringPattern> updater;
 
+    // TODO Re-validate pattern when type changes.
+
     /***************************************************************************
      * 
      **************************************************************************/
     public StringPatternField( String name )
     {
-        this.patternField = new StringFormField( name, 0, null );
+        PatternTextParser parser = new PatternTextParser( this );
+        PatternTextDescriptor descriptor = new PatternTextDescriptor();
+
+        this.pattern = new StringPattern();
+
+        this.patternField = new ParserFormField<>( name, parser, descriptor );
         this.typeField = new ComboFormField<>( "Type",
             StringPatternType.values(), new NamedItemDescriptor<>() );
         this.view = createView();
 
-        setValue( new StringPattern() );
+        setValue( this.pattern );
 
         patternField.setUpdater( ( t ) -> {
             pattern.patternText = t;
             invokeUpdater();
         } );
+
         typeField.setUpdater( ( d ) -> {
             pattern.type = d;
             invokeUpdater();
@@ -51,6 +62,10 @@ public class StringPatternField implements IDataFormField<StringPattern>
             new FieldMouseListener( this ) );
     }
 
+    /***************************************************************************
+     * @param container
+     * @param listener
+     **************************************************************************/
     private static void addMouseListener( Container container,
         MouseListener listener )
     {
@@ -227,6 +242,46 @@ public class StringPatternField implements IDataFormField<StringPattern>
                 csButton.setSelected( field.pattern.isCaseSensitive );
                 popup.show( e.getComponent(), e.getX(), e.getY() );
             }
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static final class PatternTextParser implements IParser<String>
+    {
+        private final StringPatternField field;
+
+        public PatternTextParser( StringPatternField field )
+        {
+            this.field = field;
+        }
+
+        @Override
+        public String parse( String str ) throws ValidationException
+        {
+            StringPattern pattern = new StringPattern( field.pattern );
+
+            pattern.patternText = str;
+
+            // LogUtils.printDebug( "Testing %s", pattern );
+
+            pattern.createMatcher();
+
+            return str;
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static final class PatternTextDescriptor
+        implements IDescriptor<String>
+    {
+        @Override
+        public String getDescription( String item )
+        {
+            return item;
         }
     }
 }
