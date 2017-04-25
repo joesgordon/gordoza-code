@@ -3,35 +3,56 @@
     <!--this file was created by Eclipse Runnable JAR Export Wizard-->
     <!--ANT 1.7 is required                                        -->
 
-    <property name="proj_root" location=".." />
-    <property name="run_jar" location="./jutils.jar" />
-    <property name="src_jar" location="./jutils_src.jar" />
+    <property name="dir.proj" location=".." />
+    <property name="dir.src" location="${dir.proj}/src" />
+    <property name="dir.bin" location="./bin" />
+    <property name="jar.jgoodies" location="${dir.proj}/../libs/jgoodies.jar" />
+    <property name="jar.xstream" location="${dir.proj}/../libs/xstream_min.jar" />
+    <property name="jar.bin" location="./jutils.jar" />
+    <property name="jar.src" location="./jutils_src.jar" />
+    <property name="jar.all_bin" location="./jutils_all.jar" />
+    <property name="jar.all_src" location="./jutils_all_src.jar" />
+    
+    <target name="clean">
+        <delete dir="${dir.bin}" failonerror="false" quiet="true"/>
+        <delete file="${jar.bin}" failonerror="false" quiet="true"/>
+        <delete file="${jar.src}" failonerror="false" quiet="true"/>
+    </target>
+    
+    <target name="build_src">
+    	<mkdir dir="${dir.bin}" />
+        <javac srcdir="${dir.src}"
+            destdir="${dir.bin}"
+            classpath="${jar.jgoodies};${jar.xstream}"
+            debug="off"
+            source="1.8"
+        	target="1.8"
+    	    includeantruntime="false"/>
+    	<copy todir="${dir.bin}">
+            <fileset dir="${dir.src}" excludes="**/*.java"/>
+    	</copy>
+    </target>
 	
-	<target name="clean_jars">
-        <delete file="${run_jar}" failonerror="false" quiet="true"/>
-        <delete file="${src_jar}" failonerror="false" quiet="true"/>
-	</target>
-	
-    <target name="create_run_jar">
-        <jar destfile="${run_jar}" filesetmanifest="mergewithoutmain">
+    <target name="create_all_jar">
+        <jar destfile="${jar.bin}" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="org.jutils.ui.DirectoryChooser"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
-            <fileset dir="${proj_root}/bin"/>
-            <zipfileset excludes="META-INF/*.SF" src="${proj_root}/../libs/jgoodies.jar"/>
-            <zipfileset excludes="META-INF/*.SF,**/*.java" src="${proj_root}/../libs/xstream_min.jar"/>
+            <fileset dir="${dir.bin}"/>
+            <zipfileset excludes="META-INF/*.SF,**/*.java" src="${jar.jgoodies}"/>
+            <zipfileset excludes="META-INF/*.SF,**/*.java" src="${jar.xstream}"/>
         </jar>
     </target>
     
-    <target name="create_src_jar">
-        <jar destfile="${src_jar}" filesetmanifest="mergewithoutmain">
-            <fileset dir="${proj_root}/src"/>
-            <zipfileset excludes="META-INF/*.SF" src="${proj_root}/../libs/jgoodies.zip"/>
-            <zipfileset excludes="META-INF/*.SF,**/*.class" src="${proj_root}/../libs/xstream_min.jar"/>
+    <target name="create_all_src_jar">
+        <jar destfile="${jar.src}" filesetmanifest="mergewithoutmain">
+            <fileset dir="${dir.proj}/src"/>
+            <zipfileset excludes="META-INF/*.SF,**/*.class" src="${dir.proj}/../libs/jgoodies.zip"/>
+            <zipfileset excludes="META-INF/*.SF,**/*.class" src="${dir.proj}/../libs/xstream_min.jar"/>
         </jar>
     </target>
 
-    <target name="all" depends="clean_jars,create_run_jar,create_src_jar"/>
+    <target name="all" depends="clean,build_src,create_all_jar,create_all_src_jar"/>
 	
 </project>
