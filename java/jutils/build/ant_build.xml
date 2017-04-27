@@ -12,6 +12,7 @@
     <property name="jar.src" location="./jutils_src.jar" />
     <property name="jar.all_bin" location="./jutils_all.jar" />
     <property name="jar.all_src" location="./jutils_all_src.jar" />
+    <property name="file.version" location="${dir.src}/org/jutils/icons/info.properties" />
     
     <target name="clean">
         <delete dir="${dir.bin}" failonerror="false" quiet="true"/>
@@ -28,6 +29,13 @@
             source="1.8"
         	target="1.8"
     	    includeantruntime="false"/>
+        <propertyfile file="${file.version}">
+            <entry key="version" default="2.0" />
+            <entry key="buildtime"
+              type="date" default="now" pattern="yyyy-MM-dd HHmmss.SSS"
+              operation="=" value="0"/>
+            <entry key="subversion" type="int" default="0" operation="+"/>
+        </propertyfile>
     	<copy todir="${dir.bin}">
             <fileset dir="${dir.src}" excludes="**/*.java"/>
     	</copy>

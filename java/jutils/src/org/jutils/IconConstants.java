@@ -135,8 +135,8 @@ public final class IconConstants
     public final static String REDO_16 = "redo16.png";
 
     /** The icon loader to be used to access icons in this project. */
-    private final static IconLoader loader = new IconLoader(
-        IconConstants.class, "icons" );
+    public final static IconLoader loader = new IconLoader( IconConstants.class,
+        "icons" );
 
     /***************************************************************************
      * Private constructor to prevent instantiation.
