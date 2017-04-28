@@ -121,7 +121,7 @@ public class JHexFrame implements IView<JFrame>
     {
         createFileMenu( fileMenu );
         menubar.add( fileMenu );
-        menubar.add( createSearchMenu() );
+        menubar.add( createNavMenu() );
         menubar.add( createToolsMenu() );
 
         updateFileMenu();
@@ -168,15 +168,19 @@ public class JHexFrame implements IView<JFrame>
     /***************************************************************************
      * Creates the search menu.
      **************************************************************************/
-    private JMenu createSearchMenu()
+    private JMenu createNavMenu()
     {
         JMenu menu = new JMenu( "Navigate" );
-        JMenuItem item;
 
         menu.add( editor.gotoAction );
+        menu.add( editor.searchAction );
 
-        item = new JMenuItem( editor.searchAction );
-        menu.add( item );
+        menu.addSeparator();
+
+        menu.add( editor.firstAction );
+        menu.add( editor.prevAction );
+        menu.add( editor.nextAction );
+        menu.add( editor.lastAction );
 
         return menu;
     }
