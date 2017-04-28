@@ -1,9 +1,9 @@
 package org.jutils.task;
 
-import org.jutils.Stopwatch;
 import org.jutils.concurrent.ITaskStopManager;
 import org.jutils.concurrent.TaskStopManager;
 import org.jutils.ui.event.ItemActionListener;
+import org.jutils.utils.Stopwatch;
 
 /*******************************************************************************
  * 

@@ -44,7 +44,7 @@
     <target name="create_all_jar">
         <jar destfile="${jar.bin}" filesetmanifest="mergewithoutmain">
             <manifest>
-                <attribute name="Main-Class" value="org.jutils.ui.DirectoryChooser"/>
+                <attribute name="Main-Class" value="org.jutils.JUtilsInfoMain"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="${dir.bin}"/>

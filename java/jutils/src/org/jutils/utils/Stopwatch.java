@@ -1,4 +1,4 @@
-package org.jutils;
+package org.jutils.utils;
 
 import java.util.Date;
 

@@ -3,7 +3,7 @@ package org.duak;
 import java.awt.Image;
 import java.util.List;
 
-import org.jutils.IconLoader;
+import org.jutils.io.IconLoader;
 
 /*******************************************************************************
  * 

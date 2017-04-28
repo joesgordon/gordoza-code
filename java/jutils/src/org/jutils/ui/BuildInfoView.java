@@ -11,18 +11,25 @@ import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.fields.StringFormField;
 import org.jutils.ui.model.IView;
 
-/**
+/***************************************************************************
  * 
- */
+ **************************************************************************/
 public class BuildInfoView implements IView<JComponent>
 {
+    /**  */
     private final JPanel view;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public BuildInfoView()
     {
         this.view = createView();
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private JPanel createView()
     {
         StandardFormView form = new StandardFormView();
@@ -43,17 +50,26 @@ public class BuildInfoView implements IView<JComponent>
         return form.getView();
     }
 
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
     @Override
     public JComponent getView()
     {
         return view;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public static void show()
     {
         show( null );
     }
 
+    /***************************************************************************
+     * @param parent
+     **************************************************************************/
     private static void show( Component parent )
     {
         BuildInfoView view = new BuildInfoView();

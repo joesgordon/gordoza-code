@@ -1,6 +1,6 @@
 package org.cojo;
 
-import org.jutils.IconLoader;
+import org.jutils.io.IconLoader;
 
 public class CojoIconLoader extends IconLoader
 {

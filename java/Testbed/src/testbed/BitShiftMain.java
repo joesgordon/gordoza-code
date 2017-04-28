@@ -3,12 +3,12 @@ package testbed;
 import java.util.Arrays;
 import java.util.Random;
 
-import org.jutils.Stopwatch;
 import org.jutils.io.*;
 import org.jutils.io.bits.BitShifterFactory;
 import org.jutils.io.bits.IBitShifter;
 import org.jutils.time.TimeUtils;
 import org.jutils.utils.RunningStat;
+import org.jutils.utils.Stopwatch;
 import org.jutils.utils.RunningStat.Stats;
 
 /*******************************************************************************

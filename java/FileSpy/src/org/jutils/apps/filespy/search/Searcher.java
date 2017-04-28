@@ -1,12 +1,12 @@
 package org.jutils.apps.filespy.search;
 
-import org.jutils.Stopwatch;
 import org.jutils.apps.filespy.data.SearchParams;
 import org.jutils.apps.filespy.ui.ResultsView;
 import org.jutils.concurrent.Stoppable;
 import org.jutils.ui.StatusBarPanel;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
+import org.jutils.utils.Stopwatch;
 
 /*******************************************************************************
  * 

@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import org.jutils.*;
+import org.jutils.concurrent.GcThread;
 
 /*******************************************************************************
  *
