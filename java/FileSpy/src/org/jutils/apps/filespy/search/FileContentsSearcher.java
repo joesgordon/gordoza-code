@@ -8,7 +8,6 @@ import org.jutils.apps.filespy.data.SearchRecord;
 import org.jutils.concurrent.IConsumer;
 import org.jutils.concurrent.ITaskStopManager;
 import org.jutils.io.IOUtils;
-import org.jutils.io.LogUtils;
 import org.jutils.pattern.StringPattern.IMatcher;
 import org.jutils.pattern.StringPattern.Match;
 
@@ -110,7 +109,9 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
 
         boolean matched = false;
 
-        LogUtils.printDebug( "Searching file " + file.getAbsolutePath() );
+        // LogUtils.printDebug( "Searching file " + file.getAbsolutePath() );
+        searchHandler.updateStatus(
+            "Searching file " + file.getAbsolutePath() );
 
         if( IOUtils.isBinary( file ) )
         {
@@ -167,7 +168,7 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
             long count = fileCount.get();
             long searched = filesSearched.incrementAndGet();
 
-            LogUtils.printDebug( "Searched %d of %d", searched, count );
+            // LogUtils.printDebug( "Searched %d of %d", searched, count );
         }
     }
 }

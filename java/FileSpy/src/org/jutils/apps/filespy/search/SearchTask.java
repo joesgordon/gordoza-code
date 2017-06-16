@@ -8,7 +8,6 @@ import org.jutils.ValidationException;
 import org.jutils.apps.filespy.data.SearchParams;
 import org.jutils.apps.filespy.data.SearchRecord;
 import org.jutils.concurrent.*;
-import org.jutils.io.LogUtils;
 import org.jutils.pattern.StringPattern.IMatcher;
 import org.jutils.pattern.StringPattern.Match;
 import org.jutils.ui.MessageExceptionView;
@@ -96,7 +95,7 @@ public class SearchTask implements IStoppableTask
             }
         }
 
-        LogUtils.printDebug( "Found files. Awaiting contents search" );
+        // LogUtils.printDebug( "Found files. Awaiting contents search" );
 
         fileConsumer.signalInputFinished();
 
@@ -167,7 +166,7 @@ public class SearchTask implements IStoppableTask
     {
         boolean matched = false;
 
-        LogUtils.printDebug( "Testing file: %s", file.getAbsolutePath() );
+        // LogUtils.printDebug( "Testing file: %s", file.getAbsolutePath() );
 
         if( filenamePattern != null )
         {

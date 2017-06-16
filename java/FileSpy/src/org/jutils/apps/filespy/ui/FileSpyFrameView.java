@@ -15,7 +15,6 @@ import org.jutils.apps.filespy.FileSpyMain;
 import org.jutils.apps.filespy.data.FileSpyData;
 import org.jutils.apps.filespy.data.SearchParams;
 import org.jutils.apps.filespy.search.Searcher;
-import org.jutils.io.LogUtils;
 import org.jutils.io.XStreamUtils;
 import org.jutils.io.options.OptionsSerializer;
 import org.jutils.licensing.LicenseDialog;
@@ -485,7 +484,7 @@ public class FileSpyFrameView implements IView<JFrame>
 
         searcher.set( null );
 
-        LogUtils.printDebug( "Search Finished" );
+        // LogUtils.printDebug( "Search Finished" );
     }
 
     /***************************************************************************
