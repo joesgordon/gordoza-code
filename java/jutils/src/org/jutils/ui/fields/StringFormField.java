@@ -1,5 +1,7 @@
 package org.jutils.ui.fields;
 
+import java.awt.event.MouseListener;
+
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 
@@ -164,6 +166,14 @@ public class StringFormField implements IDataFormField<String>
     public JTextField getTextField()
     {
         return textField.getField().getView();
+    }
+
+    /***************************************************************************
+     * @param ml
+     **************************************************************************/
+    public void addMouseListener( MouseListener ml )
+    {
+        textField.getField().getView().addMouseListener( ml );
     }
 
     /***************************************************************************
