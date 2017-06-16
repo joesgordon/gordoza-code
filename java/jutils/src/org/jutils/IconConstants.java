@@ -9,6 +9,8 @@ import java.util.List;
 
 import javax.swing.Icon;
 
+import org.jutils.io.IconLoader;
+
 import com.sun.media.sound.JavaSoundAudioClip;
 
 /*******************************************************************************

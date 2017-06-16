@@ -3,8 +3,8 @@ package org.jutils.io;
 import java.io.*;
 import java.util.Random;
 
-import org.jutils.Stopwatch;
 import org.jutils.utils.ByteOrdering;
+import org.jutils.utils.Stopwatch;
 
 /*******************************************************************************
  * 

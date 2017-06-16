@@ -5,8 +5,7 @@ import java.awt.Container;
 
 import javax.swing.*;
 
-import org.jutils.apps.filespy.FileSpyMain;
-import org.jutils.apps.filespy.ui.SearchView;
+import org.jutils.apps.filespy.ui.SearchParamsView;
 import org.jutils.ui.StatusBarPanel;
 import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
@@ -42,7 +41,7 @@ public class LayeredPaneExample implements IFrameApp
     private static JLayeredPane createLayers()
     {
         JLayeredPane layeredPane = new JLayeredPane();
-        JPanel pane = new SearchView( FileSpyMain.getOptions() ).getView();
+        JPanel pane = new SearchParamsView().getView();
 
         pane.setBounds( 0, 0, 500, 500 );
 

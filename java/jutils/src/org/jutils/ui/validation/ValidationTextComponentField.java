@@ -179,7 +179,16 @@ public class ValidationTextComponentField<T extends JTextComponent>
     public void setText( String text )
     {
         field.setText( text );
-        validateText();
+
+        if( text == null )
+        {
+            listenerList.signalValidity();
+            setComponentValid( true );
+        }
+        else
+        {
+            validateText();
+        }
     }
 
     /***************************************************************************

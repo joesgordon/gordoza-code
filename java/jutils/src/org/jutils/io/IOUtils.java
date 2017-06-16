@@ -878,4 +878,59 @@ public final class IOUtils
 
         return url;
     }
+
+    public static boolean isBinary( File file )
+        throws FileNotFoundException, IOException
+    {
+        int len = file.length() < 2048 ? ( int )file.length() : 2048;
+        byte [] buf = new byte[len];
+        int threshold = ( int )( 0.25 * len );
+
+        int cnt = 0;
+
+        try( FileStream fs = new FileStream( file, true ) )
+        {
+            fs.read( buf );
+        }
+
+        for( int i = 0; i < len; i++ )
+        {
+            if( buf[i] == 0 )
+            {
+                return true;
+            }
+            else if( isNonPrintable( buf[i] ) )
+            {
+                cnt++;
+
+                if( cnt <= threshold )
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private static boolean isNonPrintable( byte b )
+    {
+
+        switch( b )
+        {
+            case 9:
+                return false;
+            case 10:
+                return false;
+            case 13:
+                return false;
+
+            default:
+                if( b > 19 && b < 127 )
+                {
+                    return false;
+                }
+                return true;
+        }
+    }
 }

@@ -25,26 +25,34 @@ public class RegexPanel implements IView<JPanel>
     private final JPanel view;
 
     /**  */
-    private SearchableTextArea regexTextArea = new SearchableTextArea();
+    private final SearchableTextArea regexTextArea;
     /**  */
-    private SearchableTextArea resultTextArea = new SearchableTextArea();
+    private final SearchableTextArea resultTextArea;
     /**  */
-    private SearchableTextArea testTextArea = new SearchableTextArea();
+    private final SearchableTextArea testTextArea;
 
     /**  */
-    private JCheckBox caseCheckBox = new JCheckBox();
+    private final JCheckBox caseCheckBox;
     /**  */
-    private JCheckBox multilineCheckBox = new JCheckBox();
+    private final JCheckBox multilineCheckBox;
     /**  */
-    private JCheckBox commentsCheckBox = new JCheckBox();
+    private final JCheckBox commentsCheckBox;
     /**  */
-    private JCheckBox globalCheckBox = new JCheckBox();
+    private final JCheckBox globalCheckBox;
 
     /***************************************************************************
      *
      **************************************************************************/
     public RegexPanel()
     {
+        this.regexTextArea = new SearchableTextArea();
+        this.resultTextArea = new SearchableTextArea();
+        this.testTextArea = new SearchableTextArea();
+        this.caseCheckBox = new JCheckBox();
+        this.multilineCheckBox = new JCheckBox();
+        this.commentsCheckBox = new JCheckBox();
+        this.globalCheckBox = new JCheckBox();
+
         this.view = createView();
     }
 

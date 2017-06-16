@@ -1,15 +1,16 @@
 package org.jutils.apps.filespy.search;
 
 import java.io.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.concurrent.atomic.AtomicLong;
 
-import org.jutils.apps.filespy.ByteCharSequence;
 import org.jutils.apps.filespy.data.LineMatch;
 import org.jutils.apps.filespy.data.SearchRecord;
 import org.jutils.concurrent.IConsumer;
 import org.jutils.concurrent.ITaskStopManager;
 import org.jutils.io.IOUtils;
+import org.jutils.io.LogUtils;
+import org.jutils.pattern.StringPattern.IMatcher;
+import org.jutils.pattern.StringPattern.Match;
 
 /*******************************************************************************
  * 
@@ -17,19 +18,26 @@ import org.jutils.io.IOUtils;
 public class FileContentsSearcher implements IConsumer<SearchRecord>
 {
     /**  */
-    private final Pattern contentsPattern;
+    private final IMatcher contentsPattern;
     /**  */
     private final SearchResultsHandler searchHandler;
+
+    /**  */
+    private final AtomicLong fileCount;
+    /**  */
+    private final AtomicLong filesSearched;
 
     /***************************************************************************
      * @param contentsPattern
      * @param searchHandler
      **************************************************************************/
-    public FileContentsSearcher( Pattern contentsPattern,
+    public FileContentsSearcher( IMatcher contentsPattern,
         SearchResultsHandler searchHandler )
     {
         this.contentsPattern = contentsPattern;
         this.searchHandler = searchHandler;
+        this.fileCount = new AtomicLong( 0L );
+        this.filesSearched = new AtomicLong( 0L );
     }
 
     /***************************************************************************
@@ -42,11 +50,9 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
         int lineNumber )
     {
         boolean matched = false;
-        byte [] chars = str.getBytes( IOUtils.US_ASCII );
-        ByteCharSequence sequence = new ByteCharSequence( chars );
-        Matcher matcher = contentsPattern.matcher( sequence );
+        Match m = contentsPattern.find( str );
 
-        if( matcher.find() )
+        if( m.matches )
         {
             matched = true;
 
@@ -54,7 +60,7 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
             // ", start: " + matcher.start() + ", end: " +
             // matcher.end() );
 
-            record.addLine( createLineMatch( chars, matcher, lineNumber ) );
+            record.addLine( createLineMatch( str, m, lineNumber ) );
         }
 
         str = null;
@@ -64,18 +70,17 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
     }
 
     /***************************************************************************
-     * @param chars
-     * @param matcher
+     * @param str
+     * @param m
      * @param lineNum
      * @return
      **************************************************************************/
-    private static LineMatch createLineMatch( byte [] chars, Matcher matcher,
-        int lineNum )
+    private static LineMatch createLineMatch( String str, Match m, int lineNum )
     {
         int lineStart = 0;
-        int lineEnd = chars.length;
-        int start = matcher.start();
-        int end = matcher.end();
+        int lineEnd = str.length();
+        int start = m.start;
+        int end = m.end;
         int length = end - start;
 
         if( length > 1024 )
@@ -86,10 +91,9 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
             lineEnd = end;
         }
 
-        String pre = new String( chars, lineStart, start, IOUtils.US_ASCII );
-        String mat = new String( chars, start, length, IOUtils.US_ASCII );
-        String pst = end == lineEnd ? ""
-            : new String( chars, end, lineEnd - end, IOUtils.US_ASCII );
+        String pre = str.substring( lineStart, start );
+        String mat = str.substring( start, end );
+        String pst = end == lineEnd ? "" : str.substring( end, lineEnd );
 
         return new LineMatch( lineNum, pre, mat, pst );
     }
@@ -106,7 +110,12 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
 
         boolean matched = false;
 
-        // LogUtils.printDebug( "Searching file " + file.getAbsolutePath() );
+        LogUtils.printDebug( "Searching file " + file.getAbsolutePath() );
+
+        if( IOUtils.isBinary( file ) )
+        {
+            return;
+        }
 
         try( InputStream is = new FileInputStream( file );
              Reader r = new InputStreamReader( is, IOUtils.US_ASCII );
@@ -134,6 +143,11 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
         }
     }
 
+    public void addFile()
+    {
+        fileCount.incrementAndGet();
+    }
+
     /***************************************************************************
      * 
      **************************************************************************/
@@ -147,6 +161,13 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
         catch( IOException ex )
         {
             SearchResultsHandler.addErrorMessage( ex.getMessage() );
+        }
+        finally
+        {
+            long count = fileCount.get();
+            long searched = filesSearched.incrementAndGet();
+
+            LogUtils.printDebug( "Searched %d of %d", searched, count );
         }
     }
 }

@@ -142,7 +142,7 @@ public class LongFormField implements IDataFormField<Long>
 
         IUpdater<Long> up = updater;
         this.updater = null;
-        String text = value == null ? "" : "" + value;
+        String text = value == null ? null : "" + value;
         textField.setText( text );
         this.updater = up;
     }

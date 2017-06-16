@@ -7,7 +7,7 @@ import java.net.URL;
 
 import javax.swing.*;
 
-import org.jutils.ResourceLoader;
+import org.jutils.io.ResourceLoader;
 import org.jutils.ui.ScrollableEditorPaneView;
 import org.jutils.ui.app.AppRunner;
 import org.jutils.ui.app.IApplication;

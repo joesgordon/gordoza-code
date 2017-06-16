@@ -26,7 +26,7 @@ public class StringPattern
      **************************************************************************/
     public StringPattern()
     {
-        this.type = StringPatternType.EXACT;
+        this.type = StringPatternType.CONTAINS;
         this.patternText = "";
         this.isCaseSensitive = false;
         this.name = "Phil";
@@ -37,10 +37,17 @@ public class StringPattern
      **************************************************************************/
     public StringPattern( StringPattern pattern )
     {
-        this.type = pattern.type;
-        this.isCaseSensitive = pattern.isCaseSensitive;
-        this.patternText = pattern.patternText;
-        this.name = pattern.name;
+        set( pattern );
+    }
+
+    /***************************************************************************
+     * @param name
+     **************************************************************************/
+    public StringPattern( String name )
+    {
+        this();
+
+        this.name = name;
     }
 
     /***************************************************************************
@@ -80,10 +87,49 @@ public class StringPattern
      **************************************************************************/
     public static interface IMatcher extends INamedItem
     {
+        /**
+         * @param str the string to be searched.
+         * @return {@code true} if the pattern matches the input, {@code false}
+         * otherwise.
+         */
         public boolean matches( String str );
 
+        /**
+         * @param str the string to be searched.
+         * @return results of search guaranteed to be non-null.
+         */
+        public Match find( String str );
+
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String getName();
+    }
+
+    /***************************************************************************
+     * Relates if and where the pattern matched the input string.
+     **************************************************************************/
+    public final static class Match
+    {
+        /** Whether the pattern matched the input string. */
+        public final boolean matches;
+        /** The inclusive start index. */
+        public final int start;
+        /** The exclusive end index. */
+        public final int end;
+
+        public Match()
+        {
+            this( false, 0, 0 );
+        }
+
+        public Match( boolean matches, int start, int end )
+        {
+            this.matches = matches;
+            this.start = start;
+            this.end = end;
+        }
     }
 
     /***************************************************************************
@@ -102,6 +148,12 @@ public class StringPattern
         public boolean matches( String str )
         {
             return true;
+        }
+
+        @Override
+        public Match find( String str )
+        {
+            return new Match( true, 0, str.length() );
         }
 
         @Override
@@ -142,6 +194,17 @@ public class StringPattern
         }
 
         @Override
+        public Match find( String str )
+        {
+            if( matches( str ) )
+            {
+                return new Match( true, 0, str.length() );
+            }
+
+            return new Match();
+        }
+
+        @Override
         public String getName()
         {
             return name;
@@ -168,14 +231,25 @@ public class StringPattern
         @Override
         public boolean matches( String str )
         {
-            String text = str;
+            return prepare( str ).contains( pattern );
+        }
 
-            if( !isCaseSensitive )
+        @Override
+        public Match find( String str )
+        {
+            int idx = prepare( str ).indexOf( pattern );
+
+            if( idx < 0 )
             {
-                text = str.toUpperCase();
+                return new Match();
             }
 
-            return text.contains( pattern );
+            return new Match( true, idx, idx + pattern.length() );
+        }
+
+        private String prepare( String str )
+        {
+            return isCaseSensitive ? str : str.toUpperCase();
         }
 
         @Override
@@ -243,6 +317,12 @@ public class StringPattern
         }
 
         @Override
+        public Match find( String str )
+        {
+            return matcher.find( str );
+        }
+
+        @Override
         public String getName()
         {
             return matcher.getName();
@@ -270,6 +350,17 @@ public class StringPattern
             int flags = isCaseSensitive ? 0 : Pattern.CASE_INSENSITIVE;
 
             this.name = name;
+
+            if( !regex.startsWith( ".*" ) )
+            {
+                regex = ".*" + regex;
+            }
+
+            if( !regex.endsWith( ".*" ) )
+            {
+                regex = regex + ".*";
+            }
+
             try
             {
                 this.pattern = Pattern.compile( regex, flags );
@@ -292,9 +383,35 @@ public class StringPattern
         }
 
         @Override
+        public Match find( String str )
+        {
+            Matcher matcher = pattern.matcher( str );
+
+            boolean matches = matcher.matches();
+            int start = 0;
+            int end = 0;
+
+            if( matches )
+            {
+                start = matcher.start();
+                end = matcher.end();
+            }
+
+            return new Match( matches, start, end );
+        }
+
+        @Override
         public String getName()
         {
             return name;
         }
+    }
+
+    public void set( StringPattern pattern )
+    {
+        this.type = pattern.type;
+        this.isCaseSensitive = pattern.isCaseSensitive;
+        this.patternText = pattern.patternText;
+        this.name = pattern.name;
     }
 }

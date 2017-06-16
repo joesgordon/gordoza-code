@@ -23,6 +23,7 @@ public class StringPatternField implements IDataFormField<StringPattern>
 
     /**  */
     private StringPattern pattern;
+    /**  */
     private IUpdater<StringPattern> updater;
 
     /***************************************************************************
@@ -38,11 +39,17 @@ public class StringPatternField implements IDataFormField<StringPattern>
         setValue( new StringPattern() );
 
         patternField.setUpdater( ( t ) -> {
-            pattern.patternText = t;
+            if( pattern != null )
+            {
+                pattern.patternText = t;
+            }
             invokeUpdater();
         } );
         typeField.setUpdater( ( d ) -> {
-            pattern.type = d;
+            if( pattern != null )
+            {
+                pattern.type = d;
+            }
             invokeUpdater();
         } );
     }
@@ -94,10 +101,18 @@ public class StringPatternField implements IDataFormField<StringPattern>
     @Override
     public void setValue( StringPattern value )
     {
-        this.pattern = new StringPattern( value );
+        this.pattern = value;
 
-        patternField.setValue( pattern.patternText );
-        typeField.setValue( pattern.type );
+        if( value != null )
+        {
+            patternField.setValue( pattern.patternText );
+            typeField.setValue( pattern.type );
+        }
+        else
+        {
+            patternField.setValue( null );
+            typeField.setValue( StringPatternType.CONTAINS );
+        }
     }
 
     /***************************************************************************

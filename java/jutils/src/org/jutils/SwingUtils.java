@@ -60,15 +60,10 @@ public final class SwingUtils
         JRootPane rootPane )
     {
         CloseActionListener closeListener = new CloseActionListener( win );
-        Action closeAction = new ActionAdapter( closeListener, "Close Action",
-            null );
         String mapKey = "com.spodding.tackline.dispatch:WINDOW_CLOSING";
-        KeyStroke escapeStroke = KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE,
-            0 );
+        Action closeAction = new ActionAdapter( closeListener, mapKey, null );
 
-        rootPane.getInputMap( JComponent.WHEN_IN_FOCUSED_WINDOW ).put(
-            escapeStroke, mapKey );
-        rootPane.getActionMap().put( mapKey, closeAction );
+        addKeyListener( rootPane, "ESCAPE", true, closeAction );
     }
 
     /***************************************************************************
@@ -709,6 +704,74 @@ public final class SwingUtils
     }
 
     /***************************************************************************
+     * @param treeNode
+     * @return
+     **************************************************************************/
+    public static TreePath getPath( TreeNode treeNode )
+    {
+        List<Object> nodes = new ArrayList<Object>();
+
+        if( treeNode != null )
+        {
+            nodes.add( treeNode );
+            treeNode = treeNode.getParent();
+            while( treeNode != null )
+            {
+                nodes.add( 0, treeNode );
+                treeNode = treeNode.getParent();
+            }
+        }
+
+        return nodes.isEmpty() ? null : new TreePath( nodes.toArray() );
+
+    }
+
+    /***************************************************************************
+     * @param view
+     * @param keystoke
+     * @param inWindow
+     * @param callback
+     * @param actionName
+     * @return
+     **************************************************************************/
+    public static Action addKeyListener( JComponent view, String keystoke,
+        boolean inWindow, ActionListener callback, String actionName )
+    {
+        Action action = new ActionAdapter( callback, actionName, null );
+
+        addKeyListener( view, keystoke, inWindow, action );
+
+        return action;
+    }
+
+    /***************************************************************************
+     * @param view
+     * @param keystoke
+     * @param inWindow
+     * @param action
+     **************************************************************************/
+    public static void addKeyListener( JComponent view, String keystoke,
+        boolean inWindow, Action action )
+    {
+        int condition = inWindow ? JComponent.WHEN_IN_FOCUSED_WINDOW
+            : JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT;
+        InputMap inMap = view.getInputMap( condition );
+        ActionMap acMap = view.getActionMap();
+        KeyStroke stroke = KeyStroke.getKeyStroke( keystoke );
+        String mapKey = action.getValue( Action.NAME ).toString();
+
+        if( stroke == null )
+        {
+            throw new IllegalArgumentException(
+                "Invalid keystroke: " + keystoke );
+        }
+
+        action.putValue( Action.ACCELERATOR_KEY, stroke );
+        inMap.put( stroke, mapKey );
+        acMap.put( mapKey, action );
+    }
+
+    /***************************************************************************
      * An action listener that copies data from a data view to the system
      * clipboard using XStream.
      **************************************************************************/
@@ -932,24 +995,5 @@ public final class SwingUtils
 
             return p;
         }
-    }
-
-    public static TreePath getPath( TreeNode treeNode )
-    {
-        List<Object> nodes = new ArrayList<Object>();
-
-        if( treeNode != null )
-        {
-            nodes.add( treeNode );
-            treeNode = treeNode.getParent();
-            while( treeNode != null )
-            {
-                nodes.add( 0, treeNode );
-                treeNode = treeNode.getParent();
-            }
-        }
-
-        return nodes.isEmpty() ? null : new TreePath( nodes.toArray() );
-
     }
 }

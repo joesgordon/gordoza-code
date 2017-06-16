@@ -3,12 +3,14 @@ package org.jutils.apps.filespy.search;
 import java.io.File;
 import java.time.*;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import org.jutils.ValidationException;
 import org.jutils.apps.filespy.data.SearchParams;
 import org.jutils.apps.filespy.data.SearchRecord;
 import org.jutils.concurrent.*;
+import org.jutils.io.LogUtils;
+import org.jutils.pattern.StringPattern.IMatcher;
+import org.jutils.pattern.StringPattern.Match;
 import org.jutils.ui.MessageExceptionView;
 
 /*******************************************************************************
@@ -23,7 +25,7 @@ public class SearchTask implements IStoppableTask
     /**  */
     private final SearchParams params;
     /**  */
-    private final Pattern filenamePattern;
+    private final IMatcher filenamePattern;
     /**  */
     private final Runnable finalizer;
 
@@ -34,9 +36,21 @@ public class SearchTask implements IStoppableTask
     public SearchTask( SearchResultsHandler handler, SearchParams params,
         Runnable finalizer )
     {
+        IMatcher fm = null;
+        try
+        {
+            fm = params.filename.createMatcher();
+        }
+        catch( ValidationException e )
+        {
+            fm = null;
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         this.searchHandler = handler;
         this.params = params;
-        this.filenamePattern = params.getFilenamePattern();
+        this.filenamePattern = fm;
         this.finalizer = finalizer;
     }
 
@@ -48,10 +62,20 @@ public class SearchTask implements IStoppableTask
     {
         IResultsConsumer fileConsumer = null;
 
-        if( params.contentsMatch )
+        if( params.contents.isUsed )
         {
-            fileConsumer = new FileContentsConsumer(
-                params.getContentsPattern(), searchHandler );
+            IMatcher contentsMatcher;
+            try
+            {
+                contentsMatcher = params.contents.data.createMatcher();
+                fileConsumer = new FileContentsConsumer( contentsMatcher,
+                    searchHandler );
+            }
+            catch( ValidationException e )
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
         else
         {
@@ -71,6 +95,8 @@ public class SearchTask implements IStoppableTask
                 findFiles( file, fileConsumer, stopper );
             }
         }
+
+        LogUtils.printDebug( "Found files. Awaiting contents search" );
 
         fileConsumer.signalInputFinished();
 
@@ -141,10 +167,12 @@ public class SearchTask implements IStoppableTask
     {
         boolean matched = false;
 
+        LogUtils.printDebug( "Testing file: %s", file.getAbsolutePath() );
+
         if( filenamePattern != null )
         {
-            Matcher matcher = filenamePattern.matcher( file.getName() );
-            matched = matcher.find() ^ params.filenameNot;
+            Match m = filenamePattern.find( file.getName() );
+            matched = m.matches ^ params.filenameNot;
 
             if( params.filenameNot )
             {
@@ -195,12 +223,11 @@ public class SearchTask implements IStoppableTask
         {
             searchHandler.updateStatus( "Finding: " + file.getAbsolutePath() );
         }
-
-        if( stopper.continueProcessing() && testMetrics( file ) )
+        else if( stopper.continueProcessing() && testMetrics( file ) )
         {
             SearchRecord record = new SearchRecord( file );
 
-            if( !isDir || !params.contentsMatch )
+            if( !isDir || !params.contents.isUsed )
             {
                 fileConsumer.consume( record, stopper );
             }
@@ -243,11 +270,11 @@ public class SearchTask implements IStoppableTask
         private final FileContentsSearcher contentsSearcher;
         private final SafeExecutorService contentsService;
 
-        public FileContentsConsumer( Pattern contentsPattern,
+        public FileContentsConsumer( IMatcher contentsMatcher,
             SearchResultsHandler searchHandler )
         {
             this.searchHandler = searchHandler;
-            this.contentsSearcher = new FileContentsSearcher( contentsPattern,
+            this.contentsSearcher = new FileContentsSearcher( contentsMatcher,
                 searchHandler );
             this.contentsService = new SafeExecutorService( 8,
                 new IFinishedHandler()
@@ -273,16 +300,11 @@ public class SearchTask implements IStoppableTask
 
             if( file.canRead() )
             {
+                contentsSearcher.addFile();
                 // LogUtils.printDebug( "Found record for file " +
                 // record.getFile().getAbsolutePath() );
-                contentsService.submit( new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        contentsSearcher.consume( record, stopper );
-                    }
-                } );
+                contentsService.submit(
+                    () -> contentsSearcher.consume( record, stopper ) );
             }
             else
             {
@@ -294,7 +316,7 @@ public class SearchTask implements IStoppableTask
         @Override
         public void signalInputFinished()
         {
-            // LogUtils.printDebug( "Shuting contents service down" );
+            // LogUtils.printDebug( "Shutting contents service down" );
             contentsService.shutdown();
 
             // LogUtils.printDebug( "awaiting contents service termination" );
@@ -309,7 +331,7 @@ public class SearchTask implements IStoppableTask
             catch( InterruptedException ex )
             {
                 // Ignore interrupt.
-                ex.printStackTrace();
+                // ex.printStackTrace();
             }
 
             searchHandler.updateStatus( "" );

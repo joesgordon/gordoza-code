@@ -7,9 +7,8 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import org.jutils.IconConstants;
-import org.jutils.apps.filespy.FileSpyMain;
 import org.jutils.apps.filespy.ui.RegexPanel;
-import org.jutils.apps.filespy.ui.SearchView;
+import org.jutils.apps.filespy.ui.SearchParamsView;
 import org.jutils.ui.*;
 import org.jutils.ui.model.IView;
 
@@ -116,7 +115,7 @@ public class SliderTestFrame implements IView<JFrame>
 
     private static JPanel createPanel3()
     {
-        SearchView panel = new SearchView( FileSpyMain.getOptions() );
+        SearchParamsView panel = new SearchParamsView();
 
         return panel.getView();
     }

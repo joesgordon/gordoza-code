@@ -2,8 +2,8 @@ package org.jutils.task;
 
 import java.awt.event.ActionListener;
 
-import org.jutils.Stopwatch;
 import org.jutils.ui.event.ActionListenerList;
+import org.jutils.utils.Stopwatch;
 
 /*******************************************************************************
  * 
