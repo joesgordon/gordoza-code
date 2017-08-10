@@ -4,8 +4,6 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Objects;
 
-import org.jutils.io.Ip4Address;
-
 /*******************************************************************************
  * 
  ******************************************************************************/

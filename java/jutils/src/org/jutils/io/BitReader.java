@@ -79,4 +79,80 @@ public class BitReader
     {
         return ( value & mask ) == mask;
     }
+
+    /***************************************************************************
+     * @param bit
+     * @param value
+     * @return
+     **************************************************************************/
+    public byte write( boolean bit, byte value )
+    {
+        if( bit )
+        {
+            value |= mask;
+        }
+        else
+        {
+            value &= ~mask;
+        }
+
+        return value;
+    }
+
+    /***************************************************************************
+     * @param bit
+     * @param value
+     * @return
+     **************************************************************************/
+    public short write( boolean bit, short value )
+    {
+        if( bit )
+        {
+            value |= mask;
+        }
+        else
+        {
+            value &= ~mask;
+        }
+
+        return value;
+    }
+
+    /***************************************************************************
+     * @param bit
+     * @param value
+     * @return
+     **************************************************************************/
+    public int write( boolean bit, int value )
+    {
+        if( bit )
+        {
+            value |= mask;
+        }
+        else
+        {
+            value &= ~mask;
+        }
+
+        return value;
+    }
+
+    /***************************************************************************
+     * @param bit
+     * @param value
+     * @return
+     **************************************************************************/
+    public long write( boolean bit, long value )
+    {
+        if( bit )
+        {
+            value |= mask;
+        }
+        else
+        {
+            value &= ~mask;
+        }
+
+        return value;
+    }
 }

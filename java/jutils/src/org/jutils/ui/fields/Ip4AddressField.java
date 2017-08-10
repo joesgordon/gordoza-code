@@ -4,8 +4,8 @@ import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 
 import org.jutils.io.IParser;
-import org.jutils.io.Ip4Address;
 import org.jutils.io.parsers.Ip4AddressParser;
+import org.jutils.net.Ip4Address;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.model.ParserTextFormatter;
 import org.jutils.ui.validation.IValidityChangedListener;

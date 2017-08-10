@@ -62,7 +62,7 @@ public class StringPatternField implements IDataFormField<StringPattern>
 
         MouseListener rcl = new RightClickListener(
             ( e ) -> showContextMenu( e.getComponent(), e.getPoint() ) );
-        typeField.getView().addMouseListener( rcl );
+        patternField.addMouseListener( rcl );
     }
 
     /***************************************************************************

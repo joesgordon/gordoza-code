@@ -7,8 +7,10 @@ import java.util.Arrays;
 
 import javax.swing.*;
 
+import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
 import org.jutils.concurrent.Stoppable;
+import org.jutils.io.LogUtils;
 import org.jutils.net.*;
 import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.event.ItemActionListener;
@@ -79,6 +81,10 @@ public class McFrame implements IView<JFrame>
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 new Insets( 0, 6, 6, 6 ), 0, 0 ) );
 
+        frameView.getView().setIconImages( IconConstants.getImages(
+            IconConstants.CHAT_16, IconConstants.CHAT_32, IconConstants.CHAT_48,
+            IconConstants.CHAT_64 ) );
+
         frameView.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         frameView.setSize( 500, 700 );
         frameView.setTitle( "MulticastConnect" );
@@ -102,6 +108,8 @@ public class McFrame implements IView<JFrame>
      **************************************************************************/
     public void addMessage( NetMessage msg )
     {
+        // LogUtils.printDebug(
+        // "rx'd msg: " + HexUtils.toHexString( msg.contents ) );
         messagesPanel.addMessage( msg );
     }
 
@@ -187,6 +195,7 @@ public class McFrame implements IView<JFrame>
             JOptionPane.showMessageDialog( getView(),
                 "ERROR: " + ex.getMessage() );
             bound = false;
+            ex.printStackTrace();
         }
 
         confPanel.setBound( bound );
@@ -199,6 +208,8 @@ public class McFrame implements IView<JFrame>
      **************************************************************************/
     private void displayErrorMessage( String errorMsg )
     {
+        LogUtils.printError( errorMsg );
+
         SwingUtils.showErrorMessage( getView(), errorMsg,
             "Communication Error" );
     }
