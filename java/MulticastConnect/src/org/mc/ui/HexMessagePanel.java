@@ -80,6 +80,9 @@ public class HexMessagePanel
         view.setOpaque( true );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public Component getListCellRendererComponent(
         JList<? extends NetMessage> list, NetMessage value, int index,
@@ -101,6 +104,9 @@ public class HexMessagePanel
         return view;
     }
 
+    /***************************************************************************
+     * @param msg
+     **************************************************************************/
     public void setMessage( NetMessage msg )
     {
         byte[] bytes = msg.contents;
@@ -111,6 +117,9 @@ public class HexMessagePanel
         timeField.setText( timeDesc.getDescription( msg.time ) );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Override
     public JPanel getView()
     {

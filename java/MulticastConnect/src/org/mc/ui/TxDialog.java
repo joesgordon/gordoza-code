@@ -1,6 +1,7 @@
 package org.mc.ui;
 
 import java.awt.*;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -26,9 +27,10 @@ public class TxDialog
     /**  */
     private final JDialog dialog;
 
-    public TxDialog( JFrame parent, ITaskStopManager stopper )
+    public TxDialog( Window parent, ITaskStopManager stopper )
     {
-        dialog = new JDialog( parent, "Sending Messages...", true );
+        dialog = new JDialog( parent, "Sending Messages...",
+            ModalityType.DOCUMENT_MODAL );
 
         progressBar = new JProgressBar();
         progressLabel = new JLabel();

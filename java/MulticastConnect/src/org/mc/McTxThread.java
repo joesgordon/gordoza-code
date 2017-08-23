@@ -1,8 +1,10 @@
 package org.mc;
 
+import java.awt.Window;
 import java.io.IOException;
 
-import javax.swing.*;
+import javax.swing.JDialog;
+import javax.swing.SwingUtilities;
 
 import org.jutils.concurrent.IStoppableTask;
 import org.jutils.concurrent.ITaskStopManager;
@@ -27,7 +29,7 @@ public class McTxThread implements IStoppableTask
     /**  */
     private final IConnection commModel;
     /**  */
-    private final JFrame frame;
+    private final Window frame;
 
     /***************************************************************************
      * @param count
@@ -37,7 +39,7 @@ public class McTxThread implements IStoppableTask
      * @param parent
      **************************************************************************/
     public McTxThread( int count, int delay, byte[] contents,
-        IConnection commModel, JFrame parent )
+        IConnection commModel, Window parent )
     {
         sendCount = 0;
         sendCountMax = count;

@@ -306,7 +306,7 @@ public class StringPattern
                 // LogUtils.printDebug( "regex: " + regex );
 
                 return new RegexMatcher( strPattern.name, regex,
-                    strPattern.isCaseSensitive );
+                    strPattern.isCaseSensitive, true );
             }
         }
 
@@ -347,18 +347,27 @@ public class StringPattern
         public RegexMatcher( String name, String regex,
             boolean isCaseSensitive ) throws ValidationException
         {
+            this( name, regex, isCaseSensitive, false );
+        }
+
+        public RegexMatcher( String name, String regex, boolean isCaseSensitive,
+            boolean exact ) throws ValidationException
+        {
             int flags = isCaseSensitive ? 0 : Pattern.CASE_INSENSITIVE;
 
             this.name = name;
 
-            if( !regex.startsWith( ".*" ) )
+            if( !exact )
             {
-                regex = ".*" + regex;
-            }
+                if( !regex.startsWith( ".*" ) )
+                {
+                    regex = ".*" + regex;
+                }
 
-            if( !regex.endsWith( ".*" ) )
-            {
-                regex = regex + ".*";
+                if( !regex.endsWith( ".*" ) )
+                {
+                    regex = regex + ".*";
+                }
             }
 
             try

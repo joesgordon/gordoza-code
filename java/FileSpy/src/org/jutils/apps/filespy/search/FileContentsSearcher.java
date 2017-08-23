@@ -166,12 +166,13 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
         {
             SearchResultsHandler.addErrorMessage( ex.getMessage() );
         }
-        // finally
-        // {
-        // long count = fileCount.get();
-        // long searched = filesSearched.incrementAndGet();
-        //
-        // LogUtils.printDebug( "Searched %d of %d", searched, count );
-        // }
+        finally
+        {
+            // long count = fileCount.get();
+            // long searched =
+            filesSearched.incrementAndGet();
+            //
+            // LogUtils.printDebug( "Searched %d of %d", searched, count );
+        }
     }
 }
