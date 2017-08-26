@@ -1,6 +1,7 @@
 package org.jutils.ui;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.*;
@@ -9,9 +10,10 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 
 import org.jutils.data.UIProperty;
-import org.jutils.io.LogUtils;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.event.updater.IUpdater;
+import org.jutils.ui.event.updater.UpdaterList;
 import org.jutils.ui.fields.IDescriptor;
 import org.jutils.ui.model.CollectionListModel;
 import org.jutils.ui.model.IView;
@@ -29,6 +31,8 @@ public class SplitButtonView<T> implements IView<JComponent>
     private final JButton arrowButton;
     /**  */
     private final ListPopup<T> popup;
+    /**  */
+    private final UpdaterList<T> selectedListeners;
 
     /***************************************************************************
      * @param text
@@ -43,6 +47,7 @@ public class SplitButtonView<T> implements IView<JComponent>
         this.arrowButton = new JButton( new ArrowIcon() );
         this.popup = new ListPopup<>( items );
         this.view = createView();
+        this.selectedListeners = new UpdaterList<>();
 
         arrowButton.addActionListener( ( e ) -> togglePopup() );
         // arrowButton.addMouseListener( new ArrowButtonMouseListener( this ) );
@@ -76,8 +81,8 @@ public class SplitButtonView<T> implements IView<JComponent>
     {
         popup.hide();
 
-        LogUtils.printDebug( "%s selected", item );
-        // TODO Auto-generated method stub
+        // LogUtils.printDebug( "%s selected", item );
+        selectedListeners.fireListeners( item );
     }
 
     /***************************************************************************
@@ -138,6 +143,16 @@ public class SplitButtonView<T> implements IView<JComponent>
 
         button.setFocusable( false );
         arrowButton.setFocusable( false );
+    }
+
+    public void addItemSelected( IUpdater<T> selectedListener )
+    {
+        selectedListeners.addUpdater( selectedListener );
+    }
+
+    public void addButtonListener( ActionListener listener )
+    {
+        button.addActionListener( listener );
     }
 
     /***************************************************************************

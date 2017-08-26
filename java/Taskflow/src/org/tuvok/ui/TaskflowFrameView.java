@@ -3,13 +3,17 @@ package org.tuvok.ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 
 import org.jutils.IconConstants;
-import org.jutils.ui.JGoodiesToolBar;
-import org.jutils.ui.StandardFrameView;
+import org.jutils.SwingUtils;
+import org.jutils.ui.*;
+import org.jutils.ui.event.ActionAdapter;
+import org.jutils.ui.event.FileChooserListener;
+import org.jutils.ui.event.FileChooserListener.IFileSelected;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
@@ -21,6 +25,8 @@ public class TaskflowFrameView implements IView<JFrame>
     private final StandardFrameView frameView;
     /**  */
     private final JFrame frame;
+    /**  */
+    private final SplitButtonView<File> recentButton;
 
     /***************************************************************************
      *
@@ -29,8 +35,11 @@ public class TaskflowFrameView implements IView<JFrame>
     {
         this.frameView = new StandardFrameView();
         this.frame = frameView.getView();
+        this.recentButton = new SplitButtonView<>( null,
+            IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ),
+            new ArrayList<>(), ( f ) -> f.getAbsolutePath() );
 
-        TaskflowPanel mainPanel = new TaskflowPanel();
+        TaskflowView mainPanel = new TaskflowView();
 
         createMenuBar( frameView.getMenuBar() );
 
@@ -46,46 +55,40 @@ public class TaskflowFrameView implements IView<JFrame>
     /***************************************************************************
      * @return
      **************************************************************************/
-    private static JToolBar createToolBar()
+    private JToolBar createToolBar()
     {
-        JButton openButton = new JButton(
-            IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
+        JToolBar toolbar = new JGoodiesToolBar();
 
-        JButton upButton = new JButton(
-            IconConstants.getIcon( IconConstants.NAV_UP_16 ) );
+        recentButton.install( toolbar );
+        IFileSelected ifsl = ( f ) -> openFile( f );
+        recentButton.addButtonListener(
+            new FileChooserListener( frame, "Open Tasks", false, ifsl ) );
+        // TODO add last file selected
+        recentButton.addItemSelected( ( f ) -> openFile( f ) );
 
-        JButton leftButton = new JButton(
-            IconConstants.getIcon( IconConstants.NAV_PREVIOUS_16 ) );
+        SwingUtils.addActionToToolbar( toolbar, createSaveAction() );
 
-        JButton rightButton = new JButton(
-            IconConstants.getIcon( IconConstants.NAV_NEXT_16 ) );
+        return toolbar;
+    }
 
-        JButton undoButton = new JButton(
-            IconConstants.getIcon( IconConstants.UNDO_16 ) );
+    private Action createSaveAction()
+    {
+        Icon icon = IconConstants.getIcon( IconConstants.SAVE_16 );
+        IFileSelected ifsl = ( f ) -> saveFile( f );
+        ActionListener listener = new FileChooserListener( frame, "Save Tasks",
+            true, ifsl );
+        // TODO add last file selected
+        return new ActionAdapter( listener, "Save", icon );
+    }
 
-        JButton redoButton = new JButton(
-            IconConstants.getIcon( IconConstants.REDO_16 ) );
+    private void openFile( File f )
+    {
+        // TODO Auto-generated method stub
+    }
 
-        JButton addButton = new JButton(
-            IconConstants.getIcon( IconConstants.EDIT_ADD_16 ) );
-
-        JButton removeButton = new JButton(
-            IconConstants.getIcon( IconConstants.EDIT_DELETE_16 ) );
-
-        JToolBar mainToolBar = new JGoodiesToolBar();
-        mainToolBar.add( openButton );
-        mainToolBar.addSeparator();
-        mainToolBar.add( upButton );
-        mainToolBar.add( leftButton );
-        mainToolBar.add( rightButton );
-        mainToolBar.addSeparator();
-        mainToolBar.add( undoButton );
-        mainToolBar.add( redoButton );
-        mainToolBar.addSeparator();
-        mainToolBar.add( addButton );
-        mainToolBar.add( removeButton );
-
-        return mainToolBar;
+    private void saveFile( File f )
+    {
+        // TODO Auto-generated method stub
     }
 
     /***************************************************************************

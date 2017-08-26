@@ -16,17 +16,32 @@ public class DefaultExplorerItem implements IExplorerItem
         "yyyy-MM-dd HH:mm" );
 
     /**  */
-    private File file = null;
-
+    private final File file;
     /**  */
-    private String systemName = null;
+    private final String lastModified;
+    /**  */
+    private final String parentPath;
+    /**  */
+    private final long sizeKb;
+    /**  */
+    private final String type;
+    /**  */
+    private final String systemName;
 
     /***************************************************************************
      * @param file
      **************************************************************************/
     public DefaultExplorerItem( File file )
     {
+        File parent = file.getParentFile();
+
         this.file = file;
+        this.lastModified = DATE_FORMAT.format(
+            new Date( file.lastModified() ) );
+        this.parentPath = parent == null ? "" : parent.getAbsolutePath();
+        this.sizeKb = getSizeInKb( file );
+        this.type = getType( file, getExtension() );
+        this.systemName = FILE_SYSTEM_VIEW.getSystemDisplayName( file );
     }
 
     /***************************************************************************
@@ -44,8 +59,7 @@ public class DefaultExplorerItem implements IExplorerItem
     @Override
     public String getLastModified()
     {
-        Date d = new Date( file.lastModified() );
-        return DATE_FORMAT.format( d );
+        return lastModified;
     }
 
     /***************************************************************************
@@ -54,8 +68,7 @@ public class DefaultExplorerItem implements IExplorerItem
     @Override
     public String getParentPath()
     {
-        File parent = file.getParentFile();
-        return parent == null ? "" : parent.getAbsolutePath();
+        return parentPath;
     }
 
     /***************************************************************************
@@ -64,12 +77,22 @@ public class DefaultExplorerItem implements IExplorerItem
     @Override
     public long getSizeInKb()
     {
+        return sizeKb;
+    }
+
+    /**
+     * @param file
+     * @return
+     */
+    public static long getSizeInKb( File file )
+    {
         long fileLen = file.length();
         long len = ( fileLen + 512 ) / 1024;
 
         len = fileLen > 0 && len == 0 ? 1 : len;
 
         return file.isDirectory() ? -1 : len;
+
     }
 
     /***************************************************************************
@@ -78,13 +101,18 @@ public class DefaultExplorerItem implements IExplorerItem
     @Override
     public String getType()
     {
+        return type;
+    }
+
+    public static String getType( File file, String ext )
+    {
         String desc = FILE_SYSTEM_VIEW.getSystemTypeDescription( file );
 
         if( desc == null )
         {
             if( file.isFile() )
             {
-                desc = getExtension();
+                desc = ext;
                 desc = desc.toUpperCase();
                 if( desc.length() > 0 )
                 {
@@ -127,10 +155,6 @@ public class DefaultExplorerItem implements IExplorerItem
     @Override
     public String getSystemName()
     {
-        if( systemName == null )
-        {
-            systemName = FILE_SYSTEM_VIEW.getSystemDisplayName( file );
-        }
         return systemName;
     }
 

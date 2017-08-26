@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
 import org.jutils.io.parsers.ExistenceType;
 import org.jutils.ui.*;
@@ -78,6 +79,8 @@ public class FormFieldsTest
             frameView.setTitle( "Integer Form Field Test" );
             frameView.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
             frameView.setSize( 600, 500 );
+            frameView.getView().setIconImages(
+                IconConstants.getPageMagImages() );
 
             createViews( itemsModel );
 

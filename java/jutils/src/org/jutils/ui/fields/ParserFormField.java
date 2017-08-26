@@ -58,7 +58,7 @@ public class ParserFormField<T> implements IDataFormField<T>
     public ParserFormField( String name, IParser<T> parser,
         JTextComponent comp )
     {
-        this( name, parser, comp, new DefaultItemDescriptor<>() );
+        this( name, parser, comp, new DefaultItemDescriptor<>( true ) );
     }
 
     /***************************************************************************

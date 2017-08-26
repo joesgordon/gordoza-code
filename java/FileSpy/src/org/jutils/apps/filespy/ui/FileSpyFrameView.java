@@ -44,7 +44,7 @@ public class FileSpyFrameView implements IView<JFrame>
     private final StatusBarPanel statusBar;
 
     /**  */
-    private final SearchView spyPanel;
+    private final SearchParamsView spyPanel;
     /**  */
     private final ResultsView resultsView;
 
@@ -62,7 +62,7 @@ public class FileSpyFrameView implements IView<JFrame>
         this.startIcon = IconConstants.getIcon( IconConstants.FIND_16 );
         this.stopIcon = IconConstants.getIcon( IconConstants.STOP_16 );
 
-        this.spyPanel = new SearchView( options );
+        this.spyPanel = new SearchParamsView();
         this.view = new StandardFrameView();
         this.statusBar = view.getStatusBar();
         this.resultsView = new ResultsView();
@@ -85,6 +85,8 @@ public class FileSpyFrameView implements IView<JFrame>
         view.setContent( createContent() );
 
         setSearchButtonState( true );
+
+        spyPanel.addStartListener( ( e ) -> stopStartSearch() );
     }
 
     /***************************************************************************
@@ -419,20 +421,6 @@ public class FileSpyFrameView implements IView<JFrame>
 
         setSearchButtonState( false );
 
-        FileSpyData configData = options.getOptions();
-
-        if( !configData.filenames.isEmpty() )
-        {
-            configData.filenames.push( params.filename );
-        }
-
-        if( params.contents.isUsed )
-        {
-            configData.contents.push( params.contents.data );
-        }
-
-        configData.folders.push( params.path.getAbsolutePath() );
-
         options.write();
     }
 
@@ -442,6 +430,23 @@ public class FileSpyFrameView implements IView<JFrame>
     private void stopSearch()
     {
         this.searcher.getAndSet( null ).cancel();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private void stopStartSearch()
+    {
+        Searcher s = searcher.get();
+
+        if( s == null )
+        {
+            startSearch();
+        }
+        else
+        {
+            stopSearch();
+        }
     }
 
     /***************************************************************************
@@ -476,6 +481,10 @@ public class FileSpyFrameView implements IView<JFrame>
         String elapsed = Utils.getElapsedString( new Date( millis ) );
 
         statusBar.setText( rowCount + " file(s) found in " + elapsed + "." );
+
+        searcher.set( null );
+
+        // LogUtils.printDebug( "Search Finished" );
     }
 
     /***************************************************************************
