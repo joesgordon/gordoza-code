@@ -334,7 +334,9 @@ public final class IOUtils
 
         try
         {
-            file = new File( url.toURI() ).getParentFile();
+            // LogUtils.printDebug( "uri: " + url.toURI().getPath() +
+            //     " for class " + installClass.toString() );
+            file = new File( url.toURI().getPath() ).getParentFile();
         }
         catch( URISyntaxException ex )
         {

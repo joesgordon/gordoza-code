@@ -21,7 +21,7 @@ public class UpdaterList<T>
     /***************************************************************************
      * @param l
      **************************************************************************/
-    public void addListener( IUpdater<T> l )
+    public void addUpdater( IUpdater<T> l )
     {
         listeners.addFirst( l );
     }

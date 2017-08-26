@@ -63,6 +63,7 @@ public class MultiTaskRunner implements Runnable
     public void stop()
     {
         pool.shutdown();
+        handler.stop();
     }
 
     /***************************************************************************

@@ -7,11 +7,10 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
+import javax.sound.sampled.*;
 import javax.swing.Icon;
 
 import org.jutils.io.IconLoader;
-
-import com.sun.media.sound.JavaSoundAudioClip;
 
 /*******************************************************************************
  * Defines the constants needed to access the icons in this library.
@@ -137,8 +136,8 @@ public final class IconConstants
     public final static String REDO_16 = "redo16.png";
 
     /** The icon loader to be used to access icons in this project. */
-    private final static IconLoader loader = new IconLoader(
-        IconConstants.class, "icons" );
+    public final static IconLoader loader = new IconLoader( IconConstants.class,
+        "icons" );
 
     /***************************************************************************
      * Private constructor to prevent instantiation.
@@ -163,18 +162,57 @@ public final class IconConstants
      **************************************************************************/
     public static void playNotify()
     {
-        try( InputStream is = loader.loader.getInputStream( "done.wav" ) )
-        {
-            new JavaSoundAudioClip( is ).play();
+        Runnable r = () -> {
+            try( InputStream is = loader.loader.getInputStream( "done.wav" ) )
+            {
+                // new JavaSoundAudioClip( is ).play();
 
-            // try( AudioStream audioStream = new AudioStream( is ) )
-            // {
-            // AudioPlayer.player.start( audioStream );
-            // }
-        }
-        catch( IOException ex )
-        {
-        }
+                // try( AudioStream audioStream = new AudioStream( is ) )
+                // {
+                // AudioPlayer.player.start( audioStream );
+                // }
+
+                try( AudioInputStream stream = AudioSystem.getAudioInputStream(
+                    is ) )
+                {
+                    AudioFormat format = stream.getFormat();
+                    DataLine.Info info = new DataLine.Info( Clip.class,
+                        format );
+
+                    try( Clip clip = ( Clip )AudioSystem.getLine( info ) )
+                    {
+                        clip.open( stream );
+                        clip.start();
+
+                        while( !clip.isRunning() )
+                        {
+                            Thread.sleep( 10 );
+                        }
+
+                        while( clip.isRunning() )
+                        {
+                            Thread.sleep( 10 );
+                        }
+                    }
+                    catch( LineUnavailableException ex )
+                    {
+                        ex.printStackTrace();
+                    }
+                    catch( InterruptedException ex )
+                    {
+                    }
+                }
+                catch( UnsupportedAudioFileException ex )
+                {
+                    ex.printStackTrace();
+                }
+            }
+            catch( IOException ex )
+            {
+                ex.printStackTrace();
+            }
+        };
+        new Thread( r, "Wave Player" ).start();
     }
 
     /***************************************************************************

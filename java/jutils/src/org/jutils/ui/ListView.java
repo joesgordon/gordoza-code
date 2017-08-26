@@ -25,9 +25,9 @@ public class ListView<T> implements IDataView<List<T>>
     /** The main component. */
     private final JPanel view;
     /** The model of the list. */
-    private final CollectionListModel<DisplayItem<T>> itemsListModel;
+    private final CollectionListModel<T> itemsListModel;
     /** The component to display the list. */
-    private final JList<DisplayItem<T>> itemsList;
+    private final JList<T> itemsList;
     /** The scroll pane containing the items. */
     private final JScrollPane itemsPane;
     /** The model for the items. */
@@ -86,6 +86,8 @@ public class ListView<T> implements IDataView<List<T>>
         this.changeListeners = new ItemActionList<>();
 
         this.view = createView();
+
+        setItemRenderer( new DefaultItemListCellRenderer<>() );
     }
 
     /***************************************************************************
@@ -256,10 +258,7 @@ public class ListView<T> implements IDataView<List<T>>
     {
         this.items = data;
 
-        List<DisplayItem<T>> ditems = DisplayItem.createList( data,
-            itemsModel );
-
-        itemsListModel.setData( ditems );
+        itemsListModel.setData( data );
         itemsList.clearSelection();
     }
 
@@ -269,7 +268,8 @@ public class ListView<T> implements IDataView<List<T>>
      **************************************************************************/
     public void setItemRenderer( ItemListCellRenderer<T> renderer )
     {
-        itemsList.setCellRenderer( new DisplayItemRenderer<T>( renderer ) );
+        itemsList.setCellRenderer(
+            new DisplayItemRenderer<T>( renderer, this.itemsModel ) );
     }
 
     /***************************************************************************
@@ -335,7 +335,7 @@ public class ListView<T> implements IDataView<List<T>>
      **************************************************************************/
     private boolean contains( String name )
     {
-        for( DisplayItem<T> t : itemsListModel )
+        for( T t : itemsListModel )
         {
             if( name.equals( t.toString() ) )
             {
@@ -350,14 +350,7 @@ public class ListView<T> implements IDataView<List<T>>
      **************************************************************************/
     public T getSelected()
     {
-        DisplayItem<T> item = itemsList.getSelectedValue();
-
-        if( item != null )
-        {
-            return item.item;
-        }
-
-        return null;
+        return itemsList.getSelectedValue();
     }
 
     /***************************************************************************
@@ -422,42 +415,6 @@ public class ListView<T> implements IDataView<List<T>>
     }
 
     /***************************************************************************
-     * Defines a class that contains the item along with a method for obtaining
-     * a string representation of that item that is not necessarily
-     * {@link Object#toString()}.
-     **************************************************************************/
-    private static class DisplayItem<T>
-    {
-        public final T item;
-        private final IItemListModel<T> model;
-
-        public DisplayItem( T item, IItemListModel<T> model )
-        {
-            this.item = item;
-            this.model = model;
-        }
-
-        @Override
-        public String toString()
-        {
-            return model.getTitle( item );
-        }
-
-        public static <P> List<DisplayItem<P>> createList( List<P> items,
-            IItemListModel<P> model )
-        {
-            List<DisplayItem<P>> ditems = new ArrayList<>();
-
-            for( P p : items )
-            {
-                ditems.add( new DisplayItem<P>( p, model ) );
-            }
-
-            return ditems;
-        }
-    }
-
-    /***************************************************************************
      * Defines the listener to be called when an item is selected.
      **************************************************************************/
     private static class ItemSelctedListener<T> implements ListSelectionListener
@@ -474,8 +431,7 @@ public class ListView<T> implements IDataView<List<T>>
         {
             if( !e.getValueIsAdjusting() )
             {
-                DisplayItem<T> di = view.itemsList.getSelectedValue();
-                T item = di == null ? null : di.item;
+                T item = view.itemsList.getSelectedValue();
 
                 view.selectedListeners.fireListeners( view, item );
             }
@@ -501,8 +457,7 @@ public class ListView<T> implements IDataView<List<T>>
 
             if( item != null )
             {
-                itemListView.itemsListModel.add(
-                    new DisplayItem<T>( item, itemListView.itemsModel ) );
+                itemListView.itemsListModel.add( item );
                 itemListView.items.add( item );
                 itemListView.changeListeners.fireListeners( itemListView,
                     new ItemChange<>( ChangeType.ADDED, item ) );
@@ -559,7 +514,7 @@ public class ListView<T> implements IDataView<List<T>>
                 T item = view.items.remove( idx );
                 view.items.add( idx - 1, item );
 
-                DisplayItem<T> di = view.itemsListModel.remove( idx );
+                T di = view.itemsListModel.remove( idx );
                 view.itemsListModel.add( di, idx - 1 );
 
                 view.itemsList.setSelectedIndex( idx - 1 );
@@ -589,7 +544,7 @@ public class ListView<T> implements IDataView<List<T>>
                 T item = view.items.remove( idx );
                 view.items.add( idx + 1, item );
 
-                DisplayItem<T> di = view.itemsListModel.remove( idx );
+                T di = view.itemsListModel.remove( idx );
                 view.itemsListModel.add( di, idx + 1 );
 
                 view.itemsList.setSelectedIndex( idx + 1 );
@@ -608,35 +563,55 @@ public class ListView<T> implements IDataView<List<T>>
     }
 
     /***************************************************************************
+     * @param <T>
+     **************************************************************************/
+    private static final class DefaultItemListCellRenderer<T>
+        implements ItemListCellRenderer<T>
+    {
+        private final DefaultListCellRenderer renderer = new DefaultListCellRenderer();
+
+        @Override
+        public Component getListCellRendererComponent( JList<?> list, T value,
+            int index, boolean isSelected, boolean cellHasFocus, String text )
+        {
+            Component c = renderer.getListCellRendererComponent( list, value,
+                index, isSelected, cellHasFocus );
+
+            renderer.setText( text );
+
+            return c;
+        }
+    }
+
+    /***************************************************************************
      * Defines an Adapter to be a renderer for the DisplayItem<T> list that uses
      * a {@link ItemListCellRenderer} to render the cell.
      * @param <T> The type of item to be added to the list.
      **************************************************************************/
-    private static class DisplayItemRenderer<T>
-        implements ListCellRenderer<DisplayItem<T>>
+    private static class DisplayItemRenderer<T> implements ListCellRenderer<T>
     {
         private final ItemListCellRenderer<T> renderer;
+        private final IItemListModel<T> model;
 
-        public DisplayItemRenderer( ItemListCellRenderer<T> renderer )
+        public DisplayItemRenderer( ItemListCellRenderer<T> renderer,
+            IItemListModel<T> model )
         {
             this.renderer = renderer;
+            this.model = model;
         }
 
         @Override
-        public Component getListCellRendererComponent(
-            JList<? extends DisplayItem<T>> list, DisplayItem<T> value,
-            int index, boolean isSelected, boolean cellHasFocus )
+        public Component getListCellRendererComponent( JList<? extends T> list,
+            T value, int index, boolean isSelected, boolean cellHasFocus )
         {
             String text = null;
-            T t = null;
 
             if( value != null )
             {
-                text = value.toString();
-                t = value.item;
+                text = model.getTitle( value );
             }
 
-            return renderer.getListCellRendererComponent( list, t, index,
+            return renderer.getListCellRendererComponent( list, value, index,
                 isSelected, cellHasFocus, text );
         }
     }

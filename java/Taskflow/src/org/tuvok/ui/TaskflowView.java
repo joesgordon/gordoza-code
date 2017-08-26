@@ -11,7 +11,7 @@ import org.tuvok.data.Project;
 /*******************************************************************************
  * Displays all the main components of the 2DLs interface.
  ******************************************************************************/
-public class TaskflowPanel implements IView<JPanel>
+public class TaskflowView implements IView<JPanel>
 {
     // -------------------------------------------------------------------------
     // GUI Components.
@@ -20,14 +20,8 @@ public class TaskflowPanel implements IView<JPanel>
     private final JPanel view;
     /** The split pane used to divide the tree view from the content pane. */
     private final JSplitPane mainSplitPane = new JSplitPane();
-    /** Scroll pane used to allow the tree to scroll. */
-    private final JScrollPane treeScrollPane = new JScrollPane();
-    /** Scroll pane used to allow the content pane to scroll. */
-    private final JScrollPane rightScrollPane = new JScrollPane();
     /** The tree contains all the open projects. */
     private final JList<String> tree = new JList<>();
-    /** Displays the context of the currently viewed item. */
-    private final JTextField addressTextField = new JTextField();
     // --------------------------------------------------------------------------
     // Supporting data shown in components.
     // --------------------------------------------------------------------------
@@ -37,28 +31,21 @@ public class TaskflowPanel implements IView<JPanel>
     /***************************************************************************
      * Creates a new panel.
      **************************************************************************/
-    public TaskflowPanel()
+    public TaskflowView()
     {
         this.view = new JPanel( new GridBagLayout() );
 
-        addressTextField.setText( "" );
-        addressTextField.setBorder( BorderFactory.createLoweredBevelBorder() );
-        addressTextField.setEditable( false );
+        JScrollPane treeScrollPane = new JScrollPane( tree );
+        JScrollPane rightScrollPane = new JScrollPane();
 
         treeScrollPane.setMinimumSize( new Dimension( 200, 200 ) );
-        treeScrollPane.setViewportView( tree );
         rightScrollPane.setMinimumSize( new Dimension( 300, 300 ) );
 
-        mainSplitPane.setOrientation( JSplitPane.VERTICAL_SPLIT );
+        mainSplitPane.setOrientation( JSplitPane.HORIZONTAL_SPLIT );
         mainSplitPane.setTopComponent( treeScrollPane );
         mainSplitPane.setBottomComponent( rightScrollPane );
         mainSplitPane.setOneTouchExpandable( true );
         // mainSplitPane.setDividerLocation( 200 );
-
-        view.add( addressTextField,
-            new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-                new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
         view.add( mainSplitPane,
             new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,

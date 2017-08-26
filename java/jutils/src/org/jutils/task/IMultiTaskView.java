@@ -32,11 +32,6 @@ public interface IMultiTaskView extends IView<JPanel>
     public void setPercent( int percent );
 
     /***************************************************************************
-     * @return
-     **************************************************************************/
-    public boolean canContinue();
-
-    /***************************************************************************
      * @param error
      **************************************************************************/
     public void signalError( TaskError error );

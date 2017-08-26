@@ -9,7 +9,6 @@ import javax.swing.*;
 
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
-import org.jutils.concurrent.TaskStopManager;
 
 /*******************************************************************************
  * 
@@ -29,9 +28,6 @@ public class MultiTaskView implements IMultiTaskView
     private final JButton cancelButton;
 
     /**  */
-    private final TaskStopManager stopManager;
-
-    /**  */
     private String title;
 
     /***************************************************************************
@@ -45,8 +41,6 @@ public class MultiTaskView implements IMultiTaskView
         this.cancelButton = new JButton();
 
         this.view = createView();
-
-        this.stopManager = new TaskStopManager();
 
         this.title = "";
     }
@@ -163,15 +157,6 @@ public class MultiTaskView implements IMultiTaskView
             progressBar.setIndeterminate( true );
             progressBar.setString( "" );
         }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public boolean canContinue()
-    {
-        return stopManager.continueProcessing();
     }
 
     /***************************************************************************
@@ -311,12 +296,6 @@ public class MultiTaskView implements IMultiTaskView
                 }
             };
             SwingUtilities.invokeLater( r );
-        }
-
-        @Override
-        public boolean canContinue()
-        {
-            return view.canContinue();
         }
 
         @Override

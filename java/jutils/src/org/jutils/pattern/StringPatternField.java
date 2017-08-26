@@ -2,10 +2,13 @@ package org.jutils.pattern;
 
 import java.awt.*;
 import java.awt.event.MouseListener;
+import java.awt.event.*;
 
 import javax.swing.*;
 
 import org.jutils.ui.event.RightClickListener;
+import org.jutils.ValidationException;
+import org.jutils.io.IParser;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.fields.*;
 import org.jutils.ui.validation.IValidityChangedListener;
@@ -16,9 +19,10 @@ import org.jutils.ui.validation.Validity;
  ******************************************************************************/
 public class StringPatternField implements IDataFormField<StringPattern>
 {
+    /**  */
     private final JPanel view;
     /**  */
-    private final StringFormField patternField;
+    private final ParserFormField<String> patternField;
     /**  */
     private final ComboFormField<StringPatternType> typeField;
     /**  */
@@ -31,19 +35,26 @@ public class StringPatternField implements IDataFormField<StringPattern>
     /**  */
     private IUpdater<StringPattern> updater;
 
+    // TODO Re-validate pattern when type changes.
+
     /***************************************************************************
      * 
      **************************************************************************/
     public StringPatternField( String name )
     {
-        this.patternField = new StringFormField( name, 0, null );
+        PatternTextParser parser = new PatternTextParser( this );
+        PatternTextDescriptor descriptor = new PatternTextDescriptor();
+
+        this.pattern = new StringPattern();
+
+        this.patternField = new ParserFormField<>( name, parser, descriptor );
         this.typeField = new ComboFormField<>( "Type",
             StringPatternType.values(), new NamedItemDescriptor<>() );
         this.view = createView();
         this.caseMenuItem = new JCheckBoxMenuItem();
         this.contextMenu = createContextMenu();
 
-        setValue( new StringPattern() );
+        setValue( this.pattern );
 
         patternField.setUpdater( ( t ) -> {
             if( pattern != null )
@@ -52,6 +63,7 @@ public class StringPatternField implements IDataFormField<StringPattern>
             }
             invokeUpdater();
         } );
+
         typeField.setUpdater( ( d ) -> {
             if( pattern != null )
             {
@@ -63,6 +75,33 @@ public class StringPatternField implements IDataFormField<StringPattern>
         MouseListener rcl = new RightClickListener(
             ( e ) -> showContextMenu( e.getComponent(), e.getPoint() ) );
         patternField.addMouseListener( rcl );
+
+        addMouseListener( patternField.getView(),
+            new FieldMouseListener( this ) );
+    }
+
+    /***************************************************************************
+     * @param container
+     * @param listener
+     **************************************************************************/
+    private static void addMouseListener( Container container,
+        MouseListener listener )
+    {
+        container.addMouseListener( listener );
+
+        for( int i = 0; i < container.getComponentCount(); i++ )
+        {
+            Component comp = container.getComponent( i );
+
+            if( comp instanceof Container )
+            {
+                addMouseListener( ( Container )comp, listener );
+            }
+            else
+            {
+                comp.addMouseListener( listener );
+            }
+        }
     }
 
     /***************************************************************************
@@ -225,5 +264,78 @@ public class StringPatternField implements IDataFormField<StringPattern>
     public Validity getValidity()
     {
         return patternField.getValidity();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static final class FieldMouseListener extends MouseAdapter
+    {
+        private final StringPatternField field;
+        private final JCheckBoxMenuItem csButton;
+        private final JPopupMenu popup;
+
+        public FieldMouseListener( StringPatternField field )
+        {
+            this.field = field;
+            this.csButton = new JCheckBoxMenuItem( "Case Sensitive" );
+            this.popup = new JPopupMenu();
+
+            popup.add( csButton );
+
+            ActionListener listener = (
+                e ) -> field.pattern.isCaseSensitive = csButton.isSelected();
+            csButton.addActionListener( listener );
+        }
+
+        @Override
+        public void mousePressed( MouseEvent e )
+        {
+            if( SwingUtilities.isRightMouseButton( e ) )
+            {
+                csButton.setSelected( field.pattern.isCaseSensitive );
+                popup.show( e.getComponent(), e.getX(), e.getY() );
+            }
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static final class PatternTextParser implements IParser<String>
+    {
+        private final StringPatternField field;
+
+        public PatternTextParser( StringPatternField field )
+        {
+            this.field = field;
+        }
+
+        @Override
+        public String parse( String str ) throws ValidationException
+        {
+            StringPattern pattern = new StringPattern( field.pattern );
+
+            pattern.patternText = str;
+
+            // LogUtils.printDebug( "Testing %s", pattern );
+
+            pattern.createMatcher();
+
+            return str;
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static final class PatternTextDescriptor
+        implements IDescriptor<String>
+    {
+        @Override
+        public String getDescription( String item )
+        {
+            return item;
+        }
     }
 }

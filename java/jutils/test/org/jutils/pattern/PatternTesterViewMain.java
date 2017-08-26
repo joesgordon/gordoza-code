@@ -15,7 +15,7 @@ import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.fields.StringFormField;
 import org.jutils.ui.model.IView;
 
-public class PatternTesterView implements IView<JComponent>
+public class PatternTesterViewMain implements IView<JComponent>
 {
     /**  */
     private final JPanel view;
@@ -34,7 +34,7 @@ public class PatternTesterView implements IView<JComponent>
     /***************************************************************************
      * 
      **************************************************************************/
-    public PatternTesterView()
+    public PatternTesterViewMain()
     {
         this.testField = new StringFormField( "Test String" );
         this.patternView = new StringPatternView();
@@ -156,7 +156,7 @@ public class PatternTesterView implements IView<JComponent>
         public JFrame createFrame()
         {
             StandardFrameView frameView = new StandardFrameView();
-            PatternTesterView ptv = new PatternTesterView();
+            PatternTesterViewMain ptv = new PatternTesterViewMain();
 
             frameView.setContent( ptv.getView() );
             frameView.setSize( 400, 600 );

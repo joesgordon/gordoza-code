@@ -170,6 +170,6 @@ public class CollectionListModel<T> extends AbstractListModel<T>
      **************************************************************************/
     public void refreshIndex( int index )
     {
-        fireContentsChanged( null, index, index );
+        fireContentsChanged( this, index, index );
     }
 }

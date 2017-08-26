@@ -1,5 +1,7 @@
 package org.jutils.ui.fields;
 
+import java.awt.event.MouseListener;
+
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
@@ -191,5 +193,13 @@ public class ParserFormField<T> implements IDataFormField<T>
         {
             updater.update( data );
         }
+    }
+
+    /***************************************************************************
+     * @param listener
+     **************************************************************************/
+    public void addMouseListener( MouseListener listener )
+    {
+        textField.getView().addMouseListener( listener );
     }
 }

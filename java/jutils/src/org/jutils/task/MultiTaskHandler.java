@@ -1,5 +1,7 @@
 package org.jutils.task;
 
+import org.jutils.concurrent.TaskStopManager;
+
 /*******************************************************************************
  * 
  ******************************************************************************/
@@ -9,6 +11,8 @@ public class MultiTaskHandler implements IMultiTaskHandler
     private final IMultiTask tasker;
     /**  */
     private final IMultiTaskView view;
+    /**  */
+    private final TaskStopManager stopManager;
 
     /**  */
     public TaskError error;
@@ -21,6 +25,8 @@ public class MultiTaskHandler implements IMultiTaskHandler
     {
         this.tasker = tasker;
         this.view = view;
+        this.stopManager = new TaskStopManager();
+        this.error = null;
     }
 
     /***************************************************************************
@@ -38,7 +44,7 @@ public class MultiTaskHandler implements IMultiTaskHandler
     @Override
     public boolean canContinue()
     {
-        return view.canContinue();
+        return stopManager.continueProcessing();
     }
 
     /***************************************************************************
@@ -96,5 +102,10 @@ public class MultiTaskHandler implements IMultiTaskHandler
     public void signalMessage( String message )
     {
         view.setTitle( message );
+    }
+
+    public void stop()
+    {
+        stopManager.stop();
     }
 }

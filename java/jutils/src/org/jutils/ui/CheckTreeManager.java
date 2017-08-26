@@ -124,7 +124,7 @@ public class CheckTreeManager implements TreeSelectionListener
      **************************************************************************/
     public void addCheckListener( IUpdater<TreePath> l )
     {
-        checkListeners.addListener( l );
+        checkListeners.addUpdater( l );
     }
 
     /***************************************************************************

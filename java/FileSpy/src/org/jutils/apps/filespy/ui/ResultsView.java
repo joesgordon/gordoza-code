@@ -9,10 +9,10 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.text.*;
 
-import org.jutils.GcThread;
 import org.jutils.Utils;
 import org.jutils.apps.filespy.data.LineMatch;
 import org.jutils.apps.filespy.data.SearchRecord;
+import org.jutils.concurrent.GcThread;
 import org.jutils.io.LogUtils;
 import org.jutils.ui.ScrollableEditorPaneView;
 import org.jutils.ui.explorer.*;

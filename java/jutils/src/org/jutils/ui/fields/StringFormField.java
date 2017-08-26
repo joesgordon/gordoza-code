@@ -103,7 +103,10 @@ public class StringFormField implements IDataFormField<String>
 
         String text = value == null ? "" : "" + value;
 
+        IUpdater<String> u = this.updater;
+        this.updater = null;
         textField.setText( text );
+        this.updater = u;
     }
 
     /***************************************************************************

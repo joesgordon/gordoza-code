@@ -50,9 +50,9 @@ public class FileChooserListener implements ActionListener
      * @param lastFile the listener called when the directory is selected.
      **************************************************************************/
     public FileChooserListener( Component parent, String title, boolean isSave,
-        IFileSelected lastFile )
+        IFileSelected fileSelected )
     {
-        this( parent, title, isSave, lastFile, null );
+        this( parent, title, isSave, fileSelected, null );
     }
 
     /***************************************************************************
