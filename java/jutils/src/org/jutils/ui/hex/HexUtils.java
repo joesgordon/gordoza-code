@@ -312,6 +312,16 @@ public final class HexUtils
         return ( byte )( ( ( ( b >>> 4 ) & 0x0F ) * 10 ) + ( b & 0x0F ) );
     }
 
+    // TODO comment
+    /***************************************************************************
+     * @param d
+     * @return
+     **************************************************************************/
+    public static byte toBcd( int d )
+    {
+        return ( byte )( ( ( d / 10 ) << 4 ) + ( d % 10 ) );
+    }
+
     /***************************************************************************
      * Helper class for creating and accessing a lookup table for hexadecimal
      * string representations of bytes.

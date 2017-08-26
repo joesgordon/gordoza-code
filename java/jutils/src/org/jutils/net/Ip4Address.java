@@ -1,4 +1,4 @@
-package org.jutils.io;
+package org.jutils.net;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

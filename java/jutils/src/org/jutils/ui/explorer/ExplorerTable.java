@@ -245,6 +245,8 @@ public class ExplorerTable implements IView<JTable>
             {
                 etable.table.setRowSelectionInterval( r, r );
 
+                r = etable.table.convertRowIndexToModel( r );
+
                 if( SwingUtilities.isRightMouseButton( e ) &&
                     e.getComponent() instanceof JTable )
                 {

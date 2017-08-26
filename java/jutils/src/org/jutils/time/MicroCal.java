@@ -8,6 +8,7 @@ import java.util.*;
  ******************************************************************************/
 public class MicroCal
 {
+    // TODO use LocalDateTime
     /** The date and time at the resolution of milliseconds. */
     private final GregorianCalendar calendar;
     /** The number of microseconds into the current millisecond. */

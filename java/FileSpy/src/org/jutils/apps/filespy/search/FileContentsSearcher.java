@@ -109,9 +109,12 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
 
         boolean matched = false;
 
+        long count = fileCount.get();
+        long searched = filesSearched.get();
+
         // LogUtils.printDebug( "Searching file " + file.getAbsolutePath() );
-        searchHandler.updateStatus(
-            "Searching file " + file.getAbsolutePath() );
+        searchHandler.updateStatus( "Searching file " + searched + " of " +
+            count + ": " + file.getAbsolutePath() );
 
         if( IOUtils.isBinary( file ) )
         {
@@ -163,12 +166,12 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
         {
             SearchResultsHandler.addErrorMessage( ex.getMessage() );
         }
-        finally
-        {
-            long count = fileCount.get();
-            long searched = filesSearched.incrementAndGet();
-
-            // LogUtils.printDebug( "Searched %d of %d", searched, count );
-        }
+        // finally
+        // {
+        // long count = fileCount.get();
+        // long searched = filesSearched.incrementAndGet();
+        //
+        // LogUtils.printDebug( "Searched %d of %d", searched, count );
+        // }
     }
 }

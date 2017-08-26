@@ -40,7 +40,7 @@ public class MulticastConnection implements IConnection
         }
 
         this.address = socket.address.getInetAddress();
-        this.rxBuffer = new byte[65535];
+        this.rxBuffer = new byte[2048];
         this.socket = new MulticastSocket( socket.port );
         this.rxPacket = new DatagramPacket( rxBuffer, rxBuffer.length, address,
             socket.port );
@@ -49,7 +49,7 @@ public class MulticastConnection implements IConnection
         this.socket.setReuseAddress( true );
         this.socket.setTimeToLive( socket.ttl );
         this.socket.joinGroup( address );
-        this.socket.setSoTimeout( 500 );
+        this.socket.setSoTimeout( 1000 );
 
         NetworkInterface nic = socket.getSystemNic();
 

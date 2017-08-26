@@ -23,7 +23,7 @@ public class SearchRecord implements IExplorerItem
     public SearchRecord( File file )
     {
         this.item = new DefaultExplorerItem( file );
-        this.linesFound = new ArrayList<LineMatch>();
+        this.linesFound = new ArrayList<>();
     }
 
     /***************************************************************************

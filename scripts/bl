@@ -1,15 +1,33 @@
-#! /bin/ksh -p
+#! /bin/bash
 
-CopyLink=""
-if [[ "$1" == "-l" ]] ; then
-   CopyLink=h
+link_path=$1
+
+if [[ -z "$link_path" ]] ; then
+    echo "ERROR: expected one argument"
+    exit -1
 fi
 
-for Arg ; do
-   if [[ -L "$Arg" ]] ; then
-      LinkedArg=`ls -ld "$Arg" | cut -f2 -d'>' | cut -c2-`
-      rm -f "$Arg"
-      cp -r$CopyLink "$LinkedArg" "$Arg"
-   fi
-done
+if [[ ! -e $link_path ]] ; then
+    echo "ERROR: $link_path does not exist"
+    exit -1
+fi
 
+if [[ ! -L "$link_path" ]] ; then
+    echo "ERROR: $link_path is not a link"
+    exit -1
+fi
+
+linked_target=`readlink -f $link_path`
+
+#linked_target=$link_path
+#while [[ -L $linked_target ]] ; do
+#    linked_target=`ls -l $linked_target | awk '{print $11}'`
+#done
+
+if [[ ! -e $linked_target ]] ; then
+	echo "ERROR: $linked_target does not exist"
+	return -1
+fi
+
+rm $link_path
+cp $linked_target $link_path

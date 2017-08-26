@@ -40,12 +40,13 @@ public class ConnectionReceiver implements IStoppableTask
         {
             try
             {
+                // LogUtils.printDebug( "Receiving message..." );
                 NetMessage msg = connection.rxMessage();
                 msgListeners.fireListeners( this, msg );
             }
             catch( SocketTimeoutException ex )
             {
-                ;
+                // LogUtils.printDebug( "Receive timed out..." );
             }
             catch( IOException ex )
             {
