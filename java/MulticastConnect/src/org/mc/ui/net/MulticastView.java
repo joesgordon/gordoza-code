@@ -1,8 +1,6 @@
 package org.mc.ui.net;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -45,9 +43,9 @@ public class MulticastView implements IConnectionView
 
         this.commModel = null;
 
-        confPanel.addBindActionListener( new BindListener() );
+        confPanel.addBindActionListener( ( e ) -> bindUnbind() );
 
-        inputPanel.addSendActionListener( new SendListener() );
+        inputPanel.addSendActionListener( ( e ) -> sendMessage() );
 
         // ---------------------------------------------------------------------
         // Setup main panel
@@ -152,7 +150,7 @@ public class MulticastView implements IConnectionView
             JOptionPane.showMessageDialog( getView(),
                 "ERROR: " + ex.getMessage() );
         }
-        inputPanel.setMessageText( "" );
+        inputPanel.selectAll();
     }
 
     /***************************************************************************
@@ -220,29 +218,5 @@ public class MulticastView implements IConnectionView
 
         commModel.close();
         commModel = null;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private class SendListener implements ActionListener
-    {
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            sendMessage();
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private class BindListener implements ActionListener
-    {
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            bindUnbind();
-        }
     }
 }

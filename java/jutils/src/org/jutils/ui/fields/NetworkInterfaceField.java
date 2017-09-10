@@ -1,13 +1,17 @@
 package org.jutils.ui.fields;
 
+import java.awt.event.MouseEvent;
 import java.net.*;
 import java.util.*;
 
-import javax.swing.JComponent;
+import javax.swing.*;
 
+import org.jutils.ui.event.RightClickListener;
 import org.jutils.ui.event.updater.IUpdater;
+import org.jutils.ui.hex.HexUtils;
 import org.jutils.ui.validation.IValidityChangedListener;
 import org.jutils.ui.validation.Validity;
+import org.jutils.utils.EnumerationIteratorAdapter;
 
 /*******************************************************************************
  * 
@@ -15,7 +19,9 @@ import org.jutils.ui.validation.Validity;
 public class NetworkInterfaceField implements IDataFormField<String>
 {
     /**  */
-    private final ComboFormField<NetworkInterface> nicField;
+    private final ComboFormField<NicChoice> nicField;
+    /**  */
+    private final NicChoiceDescriptor descriptor;
     /**  */
     private final NicUpdater updater;
 
@@ -24,23 +30,46 @@ public class NetworkInterfaceField implements IDataFormField<String>
      **************************************************************************/
     public NetworkInterfaceField( String name )
     {
+        this.descriptor = new NicChoiceDescriptor();
         this.nicField = new ComboFormField<>( name, buildNicList(),
-            new NicDescriptor() );
+            descriptor );
 
         this.updater = new NicUpdater();
 
         nicField.setUpdater( updater );
+
+        nicField.getView().getComponent( 0 ).addMouseListener(
+            new RightClickListener( ( e ) -> showMenu( e ) ) );
+    }
+
+    private void showMenu( MouseEvent e )
+    {
+        JPopupMenu menu = new JPopupMenu();
+
+        JCheckBoxMenuItem itemv6 = new JCheckBoxMenuItem( "Show IPv6",
+            descriptor.showIpv6 );
+        itemv6.addActionListener(
+            ( ae ) -> descriptor.showIpv6 = itemv6.isSelected() );
+        menu.add( itemv6 );
+
+        JCheckBoxMenuItem itemv4 = new JCheckBoxMenuItem( "Show IPv4",
+            descriptor.showIpv4 );
+        itemv4.addActionListener(
+            ( ae ) -> descriptor.showIpv4 = itemv4.isSelected() );
+        menu.add( itemv4 );
+
+        menu.show( e.getComponent(), e.getX(), e.getY() );
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    private static List<NetworkInterface> buildNicList()
+    private static List<NicChoice> buildNicList()
     {
-        List<NetworkInterface> nics = new ArrayList<>();
+        List<NicChoice> nics = new ArrayList<>();
         Enumeration<NetworkInterface> nets;
 
-        nics.add( null );
+        nics.add( new NicChoice( null ) );
 
         try
         {
@@ -51,7 +80,7 @@ public class NetworkInterfaceField implements IDataFormField<String>
                 Enumeration<InetAddress> inetAddresses = nic.getInetAddresses();
                 if( inetAddresses.hasMoreElements() )
                 {
-                    nics.add( nic );
+                    nics.add( new NicChoice( nic ) );
                 }
             }
         }
@@ -87,8 +116,9 @@ public class NetworkInterfaceField implements IDataFormField<String>
     @Override
     public String getValue()
     {
-        NetworkInterface nic = nicField.getValue();
-        return nic == null ? null : nic.getName();
+        NicChoice choice = nicField.getValue();
+
+        return choice == null ? null : choice.nic.getName();
     }
 
     /***************************************************************************
@@ -97,7 +127,6 @@ public class NetworkInterfaceField implements IDataFormField<String>
     @Override
     public void setValue( String value )
     {
-
         NetworkInterface nic = null;
 
         if( value != null )
@@ -112,7 +141,7 @@ public class NetworkInterfaceField implements IDataFormField<String>
             }
         }
 
-        nicField.setValue( nic );
+        nicField.setValue( new NicChoice( nic ) );
     }
 
     /***************************************************************************
@@ -169,36 +198,136 @@ public class NetworkInterfaceField implements IDataFormField<String>
         return nicField.getValidity();
     }
 
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class NicDescriptor implements IDescriptor<NetworkInterface>
+    private static class NicChoice
     {
-        @Override
-        public String getDescription( NetworkInterface nic )
+        private final NetworkInterface nic;
+        private final String name;
+        private final String v6Addr;
+        private final String v4Addr;
+
+        public NicChoice( NetworkInterface nic )
         {
-            if( nic == null )
+            String v6Addr = "N/A";
+            String v4Addr = "N/A";
+
+            if( nic != null )
             {
-                return "<< Use Routing Table >>";
+                Enumeration<InetAddress> addresses = nic.getInetAddresses();
+
+                for( InetAddress address : new EnumerationIteratorAdapter<>(
+                    addresses ) )
+                {
+                    if( address instanceof Inet4Address )
+                    {
+                        v4Addr = address.getHostAddress();
+                    }
+                    else if( address instanceof Inet6Address )
+                    {
+                        Inet6Address ina6 = ( Inet6Address )address;
+                        byte [] bytes = ina6.getAddress();
+                        v6Addr = "";
+
+                        for( int i = 0; i < bytes.length; i += 2 )
+                        {
+                            if( i > 0 )
+                            {
+                                v6Addr += ":";
+                            }
+                            v6Addr += HexUtils.toHexString( bytes[i] );
+                            v6Addr += HexUtils.toHexString( bytes[i + 1] );
+                        }
+                    }
+                }
             }
 
-            return nic.getDisplayName();
+            this.nic = nic;
+            this.name = nic == null ? "<< Use Routing Table >>"
+                : nic.getDisplayName();
+            this.v6Addr = v6Addr;
+            this.v4Addr = v4Addr;
+        }
+
+        public String getTitle( boolean showIpv6, boolean showIpv4 )
+        {
+            String title = name;
+
+            if( showIpv6 && showIpv4 )
+            {
+                title = String.format( "%s [%s | %s]", name, v6Addr, v4Addr );
+            }
+            else if( showIpv6 )
+            {
+                title = String.format( "%s [%s]", name, v6Addr );
+            }
+            else if( showIpv4 )
+            {
+                title = String.format( "%s [%s]", name, v4Addr );
+            }
+
+            return title;
+        }
+
+        @Override
+        public boolean equals( Object obj )
+        {
+            if( obj == this )
+            {
+                return true;
+            }
+            else if( obj == null || !( obj instanceof NicChoice ) )
+            {
+                return false;
+            }
+
+            NicChoice nc = ( NicChoice )obj;
+
+            if( nic == nc.nic )
+            {
+                return true;
+            }
+            else if( nic != null )
+            {
+                return nic.equals( nc.nic );
+            }
+
+            return false;
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return nic == null ? 0 : nic.hashCode();
         }
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private final static class NicUpdater implements IUpdater<NetworkInterface>
+    private static class NicChoiceDescriptor implements IDescriptor<NicChoice>
+    {
+        public boolean showIpv6;
+        public boolean showIpv4;
+
+        @Override
+        public String getDescription( NicChoice choice )
+        {
+            return choice.getTitle( showIpv6, showIpv4 );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private final static class NicUpdater implements IUpdater<NicChoice>
     {
         private IUpdater<String> updater;
 
         @Override
-        public void update( NetworkInterface data )
+        public void update( NicChoice choice )
         {
             if( updater != null )
             {
-                String name = data == null ? null : data.getName();
+                String name = choice.nic == null ? null : choice.nic.getName();
                 updater.update( name );
             }
         }

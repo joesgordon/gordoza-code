@@ -458,7 +458,7 @@ public class ListView<T> implements IDataView<List<T>>
             if( item != null )
             {
                 itemListView.itemsListModel.add( item );
-                itemListView.items.add( item );
+                // itemListView.items.add( item );
                 itemListView.changeListeners.fireListeners( itemListView,
                     new ItemChange<>( ChangeType.ADDED, item ) );
             }

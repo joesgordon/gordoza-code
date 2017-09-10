@@ -170,6 +170,14 @@ public class McInputPanel implements IView<JPanel>
     /***************************************************************************
      * 
      **************************************************************************/
+    public void selectAll()
+    {
+        sendTextArea.selectAll();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private class ScheduleCheckListener implements ActionListener
     {
         @Override
