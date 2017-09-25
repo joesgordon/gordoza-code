@@ -203,11 +203,6 @@ public class BitArrayView implements IDataView<BitArray>, IValidationField
         {
             view.bits.set( bits );
 
-            if( view.updater != null )
-            {
-                view.updater.update( view.bits );
-            }
-
             byte [] aligned;
 
             aligned = view.bits.getLeftAligned();
@@ -219,6 +214,11 @@ public class BitArrayView implements IDataView<BitArray>, IValidationField
             view.rightUpdater.setEnabled( false );
             view.rightField.setValue( aligned );
             view.rightUpdater.setEnabled( true );
+
+            if( view.updater != null )
+            {
+                view.updater.update( view.bits );
+            }
         }
     }
 
@@ -239,11 +239,6 @@ public class BitArrayView implements IDataView<BitArray>, IValidationField
         {
             view.bits.set( data );
 
-            if( view.updater != null )
-            {
-                view.updater.update( view.bits );
-            }
-
             view.bitsUpdater.setEnabled( false );
             view.bitsField.setValue( view.bits );
             view.bitsUpdater.setEnabled( true );
@@ -251,6 +246,11 @@ public class BitArrayView implements IDataView<BitArray>, IValidationField
             view.rightUpdater.setEnabled( false );
             view.rightField.setValue( view.bits.getRightAligned() );
             view.rightUpdater.setEnabled( true );
+
+            if( view.updater != null )
+            {
+                view.updater.update( view.bits );
+            }
         }
     }
 
@@ -271,11 +271,6 @@ public class BitArrayView implements IDataView<BitArray>, IValidationField
         {
             view.bits.set( data );
 
-            if( view.updater != null )
-            {
-                view.updater.update( view.bits );
-            }
-
             view.bitsUpdater.setEnabled( false );
             view.bitsField.setValue( view.bits );
             view.bitsUpdater.setEnabled( true );
@@ -283,6 +278,11 @@ public class BitArrayView implements IDataView<BitArray>, IValidationField
             view.leftUpdater.setEnabled( false );
             view.leftField.setValue( view.bits.getLeftAligned() );
             view.leftUpdater.setEnabled( true );
+
+            if( view.updater != null )
+            {
+                view.updater.update( view.bits );
+            }
         }
     }
 }

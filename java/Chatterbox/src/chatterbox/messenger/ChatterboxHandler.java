@@ -3,6 +3,8 @@ package chatterbox.messenger;
 import java.io.IOException;
 import java.util.*;
 
+import javax.swing.SwingUtilities;
+
 import org.jutils.ValidationException;
 import org.jutils.io.*;
 import org.jutils.io.options.OptionsSerializer;
@@ -67,8 +69,13 @@ public class ChatterboxHandler
     {
         try
         {
-            this.wire = new Multicaster( config, new RawReceiver( this ),
-                ( e ) -> displayErrorMessage( e.getItem() ) );
+            @SuppressWarnings( "resource")
+            IConnection connection = new MulticastConnection( config );
+            ItemActionListener<String> errorListener = (
+                e ) -> SwingUtilities.invokeLater(
+                    () -> displayErrorMessage( e.getItem() ) );
+            this.wire = new Multicaster( connection, new RawReceiver( this ),
+                errorListener );
         }
         catch( IOException ex )
         {
@@ -91,7 +98,7 @@ public class ChatterboxHandler
      **************************************************************************/
     private void displayErrorMessage( String errorMessage )
     {
-        // TODO Auto-generated method stub
+        // TODO Auto-generated method stub and run on swing event queue
     }
 
     /***************************************************************************
@@ -332,7 +339,7 @@ public class ChatterboxHandler
                     "Message is too long: " + msgBytes.length );
             }
 
-            wire.getConnection().txMessage( msgBytes );
+            wire.connection.txMessage( msgBytes );
         }
     }
 

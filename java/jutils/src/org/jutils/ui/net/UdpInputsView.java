@@ -2,8 +2,7 @@ package org.jutils.ui.net;
 
 import javax.swing.JComponent;
 
-import org.jutils.io.parsers.MulticastGroupParser;
-import org.jutils.net.MulticastInputs;
+import org.jutils.net.UdpInputs;
 import org.jutils.ui.StandardFormView;
 import org.jutils.ui.fields.*;
 import org.jutils.ui.model.IDataView;
@@ -11,67 +10,73 @@ import org.jutils.ui.model.IDataView;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class MulticastInputsView implements IDataView<MulticastInputs>
+public class UdpInputsView implements IDataView<UdpInputs>
 {
     /**  */
     private final StandardFormView form;
     /**  */
-    private final Ip4AddressField addressField;
-    /**  */
-    private final IntegerFormField portField;
+    private final IntegerFormField localPortField;
     /**  */
     private final IDataFormField<String> nicField;
     /**  */
-    private final IntegerFormField ttlField;
-    /**  */
     private final IntegerFormField timeoutField;
     /**  */
-    private final BooleanFormField loopbackField;
+    private final BooleanFormField reuseField;
+    /**  */
+    private final Ip4AddressField remoteAddressField;
+    /**  */
+    private final IntegerFormField remotePortField;
 
     /**  */
-    private MulticastInputs inputs;
+    private UdpInputs inputs;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public MulticastInputsView()
+    public UdpInputsView()
     {
-        this( true );
+        this( true, true );
     }
 
     /***************************************************************************
      * @param advanced shows time-to-live and timeout fields.
      **************************************************************************/
-    public MulticastInputsView( boolean advanced )
+    public UdpInputsView( boolean advanced, boolean showRemote )
     {
         this.form = new StandardFormView();
-        this.addressField = new Ip4AddressField( "Multicast Group",
-            new MulticastGroupParser() );
-        this.portField = new IntegerFormField( "Port", 0, 65535 );
-        this.nicField = new NetworkInterfaceField( "NIC" );
-        this.ttlField = new IntegerFormField( "TTL", 0, 255 );
-        this.timeoutField = new IntegerFormField( "Timeout", "ms", 0, null );
-        this.loopbackField = new BooleanFormField( "Loopback" );
 
-        form.addField( addressField );
-        form.addField( portField );
+        this.localPortField = new IntegerFormField( "Local Port", 0, 65535 );
+        this.nicField = new NetworkInterfaceField( "NIC" );
+
+        this.timeoutField = new IntegerFormField( "Timeout", "ms", 0, null );
+        this.reuseField = new BooleanFormField( "Reuse" );
+
+        this.remoteAddressField = new Ip4AddressField( "Remote Address" );
+        this.remotePortField = new IntegerFormField( "Remote Port", 0, 65535 );
+
+        form.addField( localPortField );
         form.addField( nicField );
+
+        if( showRemote )
+        {
+            form.addField( remoteAddressField );
+            form.addField( remotePortField );
+        }
 
         if( advanced )
         {
-            form.addField( ttlField );
             form.addField( timeoutField );
-            form.addField( loopbackField );
+            form.addField( reuseField );
         }
 
-        setData( new MulticastInputs() );
+        setData( new UdpInputs() );
 
-        addressField.setUpdater( ( d ) -> inputs.address.set( d ) );
-        portField.setUpdater( ( d ) -> inputs.port = d );
+        localPortField.setUpdater( ( d ) -> inputs.localPort = d );
         nicField.setUpdater( ( d ) -> inputs.nic = d );
-        ttlField.setUpdater( ( d ) -> inputs.ttl = d );
         timeoutField.setUpdater( ( d ) -> inputs.timeout = d );
-        loopbackField.setUpdater( ( d ) -> inputs.loopback = d );
+        reuseField.setUpdater( ( d ) -> inputs.reuse = d );
+        remoteAddressField.setUpdater( ( d ) -> inputs.remoteAddress.set( d ) );
+        remotePortField.setUpdater( ( d ) -> inputs.remotePort = d );
     }
 
     /***************************************************************************
@@ -87,7 +92,7 @@ public class MulticastInputsView implements IDataView<MulticastInputs>
      * 
      **************************************************************************/
     @Override
-    public MulticastInputs getData()
+    public UdpInputs getData()
     {
         return inputs;
     }
@@ -96,16 +101,18 @@ public class MulticastInputsView implements IDataView<MulticastInputs>
      * 
      **************************************************************************/
     @Override
-    public void setData( MulticastInputs data )
+    public void setData( UdpInputs data )
     {
         this.inputs = data;
 
-        addressField.setValue( inputs.address );
-        portField.setValue( inputs.port );
+        localPortField.setValue( inputs.localPort );
         nicField.setValue( inputs.nic );
-        ttlField.setValue( inputs.ttl );
+
         timeoutField.setValue( inputs.timeout );
-        loopbackField.setValue( inputs.loopback );
+        reuseField.setValue( inputs.reuse );
+
+        remoteAddressField.setValue( inputs.remoteAddress );
+        remotePortField.setValue( inputs.remotePort );
     }
 
     /***************************************************************************
@@ -113,11 +120,13 @@ public class MulticastInputsView implements IDataView<MulticastInputs>
      **************************************************************************/
     public void setEnabled( boolean enabled )
     {
-        addressField.setEditable( enabled );
-        portField.setEditable( enabled );
+        localPortField.setEditable( enabled );
         nicField.setEditable( enabled );
-        ttlField.setEditable( enabled );
+
         timeoutField.setEditable( enabled );
-        loopbackField.setEditable( enabled );
+        reuseField.setEditable( enabled );
+
+        remoteAddressField.setEditable( enabled );
+        remotePortField.setEditable( enabled );
     }
 }

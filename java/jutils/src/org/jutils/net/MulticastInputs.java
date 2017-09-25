@@ -15,8 +15,16 @@ public class MulticastInputs
     public int port;
     /**  */
     public String nic;
+    /**
+     * Indicates that the socket will receive the messages it sends or not. This
+     * flag may be ignored by the underlying subsystem because standards are
+     * great everyone should have one.
+     */
+    public boolean loopback;
     /**  */
     public int ttl;
+    /**  */
+    public int timeout;
 
     /***************************************************************************
      * 
@@ -27,6 +35,8 @@ public class MulticastInputs
         this.port = 2048;
         this.nic = null;
         this.ttl = 10;
+        this.loopback = true;
+        this.timeout = 500;
     }
 
     /***************************************************************************

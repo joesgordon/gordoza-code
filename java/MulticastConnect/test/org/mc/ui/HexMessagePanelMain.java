@@ -1,5 +1,6 @@
 package org.mc.ui;
 
+import java.net.*;
 import java.nio.charset.Charset;
 
 import javax.swing.JFrame;
@@ -40,7 +41,18 @@ public class HexMessagePanelMain
 
             byte[] contents = "So long and thanks f".getBytes(
                 Charset.forName( "US-ASCII" ) );
-            NetMessage msg = new NetMessage( contents );
+            InetAddress address;
+            try
+            {
+                address = Inet4Address.getLocalHost();
+            }
+            catch( UnknownHostException ex )
+            {
+                throw new RuntimeException( "Localhost should never be unknown",
+                    ex );
+            }
+            int port = 80;
+            NetMessage msg = new NetMessage( contents, address, port );
 
             panel.setMessage( msg );
 

@@ -46,29 +46,20 @@ public class MulticastConnection implements IConnection
             socket.port );
         this.port = socket.port;
 
-        this.socket.setReuseAddress( true );
+        this.socket.setLoopbackMode( !socket.loopback );
         this.socket.setTimeToLive( socket.ttl );
         this.socket.joinGroup( address );
-        this.socket.setSoTimeout( 1000 );
+        this.socket.setSoTimeout( socket.timeout );
 
-        NetworkInterface nic = socket.getSystemNic();
-
-        if( nic != null )
+        if( socket.nic != null )
         {
-            this.socket.setNetworkInterface( nic );
+            NetworkInterface nic = NetworkInterface.getByName( socket.nic );
+
+            if( nic != null )
+            {
+                this.socket.setNetworkInterface( nic );
+            }
         }
-        // else
-        // {
-        // InetAddress ina = this.socket.getInterface();
-        //
-        // nic = NetworkInterface.getByName( ina.getHostName() );
-        //
-        // if( nic == null )
-        // {
-        // throw new IOException( "No NIC configured for " +
-        // socket.address.toString() + ":" + port );
-        // }
-        // }
     }
 
     /***************************************************************************
@@ -84,7 +75,7 @@ public class MulticastConnection implements IConnection
 
         socket.send( pack );
 
-        NetMessage msg = new NetMessage( buf );
+        NetMessage msg = new NetMessage( buf, address, port );
 
         return msg;
     }
@@ -100,8 +91,10 @@ public class MulticastConnection implements IConnection
         socket.receive( rxPacket );
 
         byte [] contents = Arrays.copyOf( rxBuffer, rxPacket.getLength() );
+        InetAddress address = rxPacket.getAddress();
+        int port = rxPacket.getPort();
 
-        NetMessage msg = new NetMessage( contents );
+        NetMessage msg = new NetMessage( contents, address, port );
 
         return msg;
     }

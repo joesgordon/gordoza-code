@@ -357,4 +357,18 @@ public final class HexUtils
             return s;
         }
     }
+
+    public static void cleanAscii( byte [] buffer, int start, int count )
+    {
+        for( int i = start; i < count; i++ )
+        {
+            byte ch = buffer[i];
+            if( ch < 0x20 || ch > 0x7e )
+            {
+                ch = ' ';
+                // ch = ( char )( -1 );
+            }
+            buffer[i] = ch;
+        }
+    }
 }

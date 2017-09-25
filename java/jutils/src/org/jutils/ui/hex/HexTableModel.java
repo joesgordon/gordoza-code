@@ -1,5 +1,7 @@
 package org.jutils.ui.hex;
 
+import java.nio.charset.Charset;
+
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
@@ -15,14 +17,17 @@ public class HexTableModel extends AbstractTableModel
     /** The buffer to be displayed */
     private IByteBuffer buffer;
     /**  */
-    private final char [] asciiBuffer;
+    private final byte [] asciiBuffer;
+    /**  */
+    private final Charset utf8;
 
     /***************************************************************************
      * Creates the table model.
      **************************************************************************/
     public HexTableModel()
     {
-        asciiBuffer = new char[16];
+        this.asciiBuffer = new byte[16];
+        this.utf8 = Charset.forName( "UTF-8" );
     }
 
     /***************************************************************************
@@ -106,16 +111,12 @@ public class HexTableModel extends AbstractTableModel
 
             for( int i = 0; i < count; i++ )
             {
-                char ch = ( char )buffer.get( index + i );
-                if( ch < 0x20 || ch > 0x7e )
-                {
-                    ch = ' ';
-                    // ch = ( char )( -1 );
-                }
-                asciiBuffer[i] = ch;
+                asciiBuffer[i] = buffer.get( i + index );
             }
 
-            str = new String( asciiBuffer, 0, count );
+            HexUtils.cleanAscii( asciiBuffer, 0, count );
+
+            str = new String( asciiBuffer, 0, count, utf8 );
         }
 
         return str;

@@ -11,6 +11,7 @@ import org.jutils.concurrent.Stoppable;
 import org.jutils.io.LogUtils;
 import org.jutils.net.*;
 import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.net.MulticastInputsView;
 import org.mc.McTxThread;
 import org.mc.ui.*;
 
@@ -22,9 +23,11 @@ public class MulticastView implements IConnectionView
     /**  */
     private final JPanel view;
     /**  */
-    private final McConfigurationPanel confPanel;
+    private final MulticastInputsView inputsView;
     /**  */
-    private final NetMessagesPanel messagesPanel;
+    private final McConfigurationPanel configPanel;
+    /**  */
+    private final NetMessagesView messagesPanel;
     /**  */
     private final McInputPanel inputPanel;
 
@@ -37,13 +40,16 @@ public class MulticastView implements IConnectionView
     public MulticastView()
     {
         this.view = new JPanel();
-        this.confPanel = new McConfigurationPanel();
-        this.messagesPanel = new NetMessagesPanel();
+        this.inputsView = new MulticastInputsView();
+        this.configPanel = new McConfigurationPanel( inputsView );
+        this.messagesPanel = new NetMessagesView();
         this.inputPanel = new McInputPanel();
 
         this.commModel = null;
 
-        confPanel.addBindActionListener( ( e ) -> bindUnbind() );
+        inputsView.setEnabled( true );
+
+        configPanel.addBindActionListener( ( e ) -> bindUnbind() );
 
         inputPanel.addSendActionListener( ( e ) -> sendMessage() );
 
@@ -52,7 +58,7 @@ public class MulticastView implements IConnectionView
         // ---------------------------------------------------------------------
         view.setLayout( new GridBagLayout() );
 
-        view.add( confPanel.getView(),
+        view.add( configPanel.getView(),
             new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 new Insets( 6, 6, 6, 6 ), 0, 0 ) );
@@ -135,14 +141,14 @@ public class MulticastView implements IConnectionView
                 Window win = SwingUtils.getComponentsWindow( getView() );
 
                 McTxThread txThread = new McTxThread( msgCount, msgDelay,
-                    msgBytes, commModel.getConnection(), win );
+                    msgBytes, commModel.connection, win );
                 Stoppable stoppable = new Stoppable( txThread );
                 Thread thread = new Thread( stoppable );
                 thread.start();
             }
             else
             {
-                commModel.getConnection().txMessage( msgBytes );
+                commModel.connection.txMessage( msgBytes );
             }
         }
         catch( IOException ex )
@@ -160,7 +166,7 @@ public class MulticastView implements IConnectionView
     {
         boolean bound = ( commModel != null );
 
-        confPanel.setBindEnabled( false );
+        configPanel.setBindEnabled( false );
 
         try
         {
@@ -171,7 +177,9 @@ public class MulticastView implements IConnectionView
             }
             else
             {
-                MulticastInputs socket = confPanel.getSocket();
+                MulticastInputs socket = inputsView.getData();
+                @SuppressWarnings( "resource")
+                IConnection connection = new MulticastConnection( socket );
 
                 ItemActionListener<NetMessage> rxListener;
                 ItemActionListener<String> errListener;
@@ -181,9 +189,12 @@ public class MulticastView implements IConnectionView
                 errListener = ( e ) -> SwingUtilities.invokeLater(
                     () -> displayErrorMessage( e.getItem() ) );
 
-                commModel = new Multicaster( socket, rxListener, errListener );
+                commModel = new Multicaster( connection, rxListener,
+                    errListener );
                 bound = true;
             }
+
+            inputsView.setEnabled( !bound );
         }
         catch( IOException ex )
         {
@@ -193,9 +204,9 @@ public class MulticastView implements IConnectionView
             ex.printStackTrace();
         }
 
-        confPanel.setBound( bound );
+        configPanel.setBound( bound );
         inputPanel.setBound( bound );
-        confPanel.setBindEnabled( true );
+        configPanel.setBindEnabled( true );
     }
 
     /***************************************************************************

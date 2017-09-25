@@ -2,75 +2,65 @@ package org.mc.ui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.net.InetAddress;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.*;
 
 import org.jutils.SwingUtils;
 import org.jutils.net.NetMessage;
+import org.jutils.ui.event.ResizingTableModelListener;
 import org.jutils.ui.hex.ByteBuffer;
 import org.jutils.ui.hex.HexPanel;
-import org.jutils.ui.model.IView;
+import org.jutils.ui.model.*;
+import org.jutils.ui.model.LabelTableCellRenderer.ITableCellLabelDecorator;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class NetMessagesPanel implements IView<JPanel>
+public class NetMessagesView implements IView<JPanel>
 {
     /**  */
     private final JPanel view;
     /**  */
-    private final JCheckBox filterCheckBox;
+    private final ITableItemsConfig<NetMessage> tableCfg;
     /**  */
-    private final JList<NetMessage> displayList;
+    private final ItemsTableModel<NetMessage> tableModel;
     /**  */
-    private final DefaultListModel<NetMessage> msgModel;
-    /**  */
-    private final List<NetMessage> allMessages;
+    private final JTable table;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public NetMessagesPanel()
+    public NetMessagesView()
     {
-        this.view = new JPanel( new GridBagLayout() );
+        this.view = new JPanel( new BorderLayout() );
+        this.tableCfg = new NetMessagesTableConfig();
+        this.tableModel = new ItemsTableModel<>( tableCfg );
+        this.table = new JTable( tableModel );
+
+        table.setDefaultRenderer( LocalDateTime.class,
+            new LabelTableCellRenderer( new LocalDateTimeDecorator() ) );
+        table.setDefaultRenderer( InetAddress.class,
+            new LabelTableCellRenderer( new InetAddressDecorator() ) );
+
+        table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
 
         JButton clearButton = new JButton( "Clear" );
-        GridBagConstraints constraints;
 
-        msgModel = new DefaultListModel<NetMessage>();
-        allMessages = new ArrayList<NetMessage>( 100 );
-
-        displayList = new JList<NetMessage>( msgModel );
-        JScrollPane displayScrollPane = new JScrollPane( displayList );
+        JScrollPane displayScrollPane = new JScrollPane( table );
         JScrollBar vScrollBar = displayScrollPane.getVerticalScrollBar();
-        filterCheckBox = new JCheckBox( "Do not display sent messages" );
 
         clearButton.addActionListener( new ClearListener() );
 
-        displayList.setCellRenderer( new HexMessagePanel() );
-        displayList.addMouseListener( new MessageMouseListener() );
+        table.addMouseListener( new MessageMouseListener( this ) );
         vScrollBar.addAdjustmentListener( new EndScroller( vScrollBar ) );
-        filterCheckBox.addActionListener( new FilterCheckListener() );
 
         view.setBorder(
             BorderFactory.createTitledBorder( "Sent/Received Messages" ) );
 
-        constraints = new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.NONE,
-            new Insets( 6, 6, 6, 6 ), 0, 0 );
-        view.add( filterCheckBox, constraints );
-
-        constraints = new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.CENTER,
-            new Insets( 6, 0, 6, 6 ), 20, 10 );
-        view.add( clearButton, constraints );
-
-        constraints = new GridBagConstraints( 0, 1, 2, 1, 1.0, 1.0,
-            GridBagConstraints.WEST, GridBagConstraints.BOTH,
-            new Insets( 0, 6, 6, 6 ), 0, 0 );
-        view.add( displayScrollPane, constraints );
+        view.add( displayScrollPane, BorderLayout.CENTER );
 
         view.setMinimumSize( new Dimension( 625, 200 ) );
         view.setPreferredSize( new Dimension( 625, 200 ) );
@@ -86,28 +76,15 @@ public class NetMessagesPanel implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @param hide
-     **************************************************************************/
-    private void hideSelfMessages( boolean hide )
-    {
-        msgModel.clear();
-
-        for( NetMessage msg : allMessages )
-        {
-            msgModel.addElement( msg );
-        }
-    }
-
-    /***************************************************************************
      * @param msg
      **************************************************************************/
     public void addMessage( NetMessage msg )
     {
-        allMessages.add( msg );
-        if( !filterCheckBox.isSelected() )
-        {
-            msgModel.addElement( msg );
-        }
+        tableModel.addItem( msg );
+
+        // LogUtils.printDebug( "Resizing table" );
+
+        ResizingTableModelListener.resizeTable( table );
     }
 
     /***************************************************************************
@@ -115,8 +92,7 @@ public class NetMessagesPanel implements IView<JPanel>
      **************************************************************************/
     public void clearMessages()
     {
-        msgModel.clear();
-        allMessages.clear();
+        tableModel.clearItems();
     }
 
     /***************************************************************************
@@ -128,19 +104,6 @@ public class NetMessagesPanel implements IView<JPanel>
         public void actionPerformed( ActionEvent e )
         {
             clearMessages();
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private class FilterCheckListener implements ActionListener
-    {
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            JCheckBox cb = ( JCheckBox )e.getSource();
-            hideSelfMessages( cb.isSelected() );
         }
     }
 
@@ -173,19 +136,23 @@ public class NetMessagesPanel implements IView<JPanel>
     /***************************************************************************
      * 
      **************************************************************************/
-    private class MessageMouseListener extends MouseAdapter
+    private static class MessageMouseListener extends MouseAdapter
     {
+        private final NetMessagesView view;
+
+        public MessageMouseListener( NetMessagesView view )
+        {
+            this.view = view;
+        }
+
         @Override
         public void mouseClicked( MouseEvent e )
         {
             if( e.getClickCount() == 2 )
             {
-                Frame f = SwingUtils.getComponentsFrame( displayList );
-                int index = displayList.locationToIndex( e.getPoint() );
-                ListModel<NetMessage> dlm = displayList.getModel();
-                NetMessage item = dlm.getElementAt( index );
-
-                displayList.ensureIndexIsVisible( index );
+                Frame f = SwingUtils.getComponentsFrame( view.table );
+                int index = view.table.rowAtPoint( e.getPoint() );
+                NetMessage item = view.tableModel.getItem( index );
 
                 JDialog d = new JDialog( f, "Message Contents", true );
                 HexPanel p = new HexPanel();
@@ -196,6 +163,57 @@ public class NetMessagesPanel implements IView<JPanel>
                 d.setLocationRelativeTo( f );
                 d.setVisible( true );
             }
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class LocalDateTimeDecorator
+        implements ITableCellLabelDecorator
+    {
+        private final DateTimeFormatter dtf;
+
+        public LocalDateTimeDecorator()
+        {
+            this.dtf = DateTimeFormatter.ofPattern( "yyyy-MM-dd HH:mm:ss.SSS" );
+        }
+
+        @Override
+        public void decorate( JLabel label, JTable table, Object value,
+            boolean isSelected, boolean hasFocus, int row, int col )
+        {
+            String text = "";
+
+            if( value != null )
+            {
+                LocalDateTime ldt = ( LocalDateTime )value;
+                text = ldt.format( dtf );
+            }
+
+            label.setText( text );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class InetAddressDecorator
+        implements ITableCellLabelDecorator
+    {
+        @Override
+        public void decorate( JLabel label, JTable table, Object value,
+            boolean isSelected, boolean hasFocus, int row, int col )
+        {
+            String text = "";
+
+            if( value != null )
+            {
+                InetAddress address = ( InetAddress )value;
+                text = address.getHostAddress();
+            }
+
+            label.setText( text );
         }
     }
 }

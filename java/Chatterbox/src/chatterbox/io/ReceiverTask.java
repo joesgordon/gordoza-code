@@ -52,8 +52,11 @@ public class ReceiverTask implements IStoppableTask
                 byte[] messageBytes = Arrays.copyOf( rxPacket.getData(),
                     rxPacket.getLength() );
 
+                InetAddress address = rxPacket.getAddress();
+                int port = rxPacket.getPort();
+
                 rxListener.actionPerformed( new ItemActionEvent<NetMessage>(
-                    this, new NetMessage( messageBytes ) ) );
+                    this, new NetMessage( messageBytes, address, port ) ) );
             }
             catch( SocketTimeoutException ex )
             {

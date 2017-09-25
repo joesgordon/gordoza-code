@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.hex.BitArrayView;
+import org.jutils.utils.BitArray;
 
 /*******************************************************************************
  * 
@@ -39,6 +40,8 @@ public class BitArrayViewTest
             list.add( new byte[] { ( byte )0xBE, ( byte )0xEF } );
 
             BitArrayView view = new BitArrayView( list );
+
+            view.setData( new BitArray() );
 
             frame.setContentPane( view.getView() );
             frame.setSize( 500, 500 );

@@ -6,9 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import org.jutils.IconConstants;
-import org.jutils.net.MulticastInputs;
 import org.jutils.ui.model.IView;
-import org.jutils.ui.net.MulticastInputsView;
 
 /*******************************************************************************
  * 
@@ -28,13 +26,11 @@ public class McConfigurationPanel implements IView<JPanel>
     private final Icon checkIcon;
     /**  */
     private final Icon deleteIcon;
-    /**  */
-    private final MulticastInputsView multicastView;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public McConfigurationPanel()
+    public McConfigurationPanel( IView<?> dataView )
     {
         this.view = new JPanel( new GridBagLayout() );
 
@@ -42,14 +38,12 @@ public class McConfigurationPanel implements IView<JPanel>
         this.checkIcon = IconConstants.getIcon( IconConstants.CHECK_16 );
         this.deleteIcon = IconConstants.getIcon( IconConstants.STOP_16 );
 
-        this.multicastView = new MulticastInputsView();
-
         bindButton.setIcon( checkIcon );
         bindButton.setText( bindText );
 
         view.setBorder( BorderFactory.createTitledBorder( "Configuration" ) );
 
-        view.add( multicastView.getView(),
+        view.add( dataView.getView(),
             new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 new Insets( 6, 6, 6, 6 ), 0, 10 ) );
@@ -66,14 +60,6 @@ public class McConfigurationPanel implements IView<JPanel>
     public JPanel getView()
     {
         return view;
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public MulticastInputs getSocket()
-    {
-        return multicastView.getData();
     }
 
     /***************************************************************************
@@ -107,7 +93,5 @@ public class McConfigurationPanel implements IView<JPanel>
     {
         bindButton.setText( bound ? unbindText : bindText );
         bindButton.setIcon( bound ? deleteIcon : checkIcon );
-
-        multicastView.setEnabled( !bound );
     }
 }

@@ -57,6 +57,10 @@ public class ResizingTableModelListener implements TableModelListener
         TableCellRenderer tableCellRenderer;
         int defaultWidth;
 
+        int rrow = table.getRowCount();
+
+        rrow = rrow == 0 ? -1 : 0;
+
         // ---------------------------------------------------------------------
         // Compute all widths.
         // ---------------------------------------------------------------------
@@ -81,7 +85,7 @@ public class ResizingTableModelListener implements TableModelListener
                 horzSpace;
             widths[col] = Math.max( widths[col], defaultWidth );
 
-            tableCellRenderer = table.getCellRenderer( -1, col );
+            tableCellRenderer = table.getCellRenderer( rrow, col );
 
             // -----------------------------------------------------------------
             // check if cell values fit in their cells

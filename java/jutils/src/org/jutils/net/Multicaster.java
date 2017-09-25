@@ -12,9 +12,7 @@ import org.jutils.ui.event.ItemActionListener;
 public class Multicaster implements Closeable
 {
     /**  */
-    private final MulticastConnection connection;
-    /**  */
-    private final ConnectionReceiver receiver;
+    public final IConnection connection;
     /**  */
     private final Stoppable rxTask;
     /**  */
@@ -26,12 +24,14 @@ public class Multicaster implements Closeable
      * @param errListener
      * @throws IOException
      **************************************************************************/
-    public Multicaster( MulticastInputs socket,
+    public Multicaster( IConnection connection,
         ItemActionListener<NetMessage> msgListener,
         ItemActionListener<String> errListener ) throws IOException
     {
-        this.connection = new MulticastConnection( socket );
-        this.receiver = new ConnectionReceiver( connection );
+        this.connection = connection;
+
+        ConnectionReceiver receiver = new ConnectionReceiver( connection );
+
         this.rxTask = new Stoppable( receiver );
         this.rxThread = new Thread( rxTask );
 
@@ -42,28 +42,23 @@ public class Multicaster implements Closeable
     }
 
     /***************************************************************************
-     * @return
-     **************************************************************************/
-    public IConnection getConnection()
-    {
-        return connection;
-    }
-
-    /***************************************************************************
      * 
      **************************************************************************/
     @Override
     public void close() throws IOException
     {
-        rxTask.stop();
-        rxThread.interrupt();
         try
         {
+            rxTask.stop();
+            rxThread.interrupt();
             rxTask.stopAndWaitFor();
         }
         catch( InterruptedException e )
         {
         }
-        connection.close();
+        finally
+        {
+            connection.close();
+        }
     }
 }
