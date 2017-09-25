@@ -8,11 +8,11 @@ import java.util.List;
 
 import javax.swing.*;
 
-import org.jutils.IconConstants;
 import org.jutils.ui.OkDialogView;
 import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.model.IView;
+import org.mc.McIcons;
 import org.mc.ui.net.*;
 
 /*******************************************************************************
@@ -33,9 +33,7 @@ public class McFrame implements IView<JFrame>
         this.frameView = new StandardFrameView();
         this.views = new ArrayList<>();
 
-        frameView.getView().setIconImages( IconConstants.getImages(
-            IconConstants.CHAT_16, IconConstants.CHAT_32, IconConstants.CHAT_48,
-            IconConstants.CHAT_64 ) );
+        frameView.getView().setIconImages( McIcons.getMulticonImages() );
 
         frameView.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         frameView.setSize( 400, 400 );
