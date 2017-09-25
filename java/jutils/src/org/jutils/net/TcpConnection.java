@@ -3,10 +3,8 @@ package org.jutils.net;
 import java.io.*;
 import java.net.*;
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.jutils.io.IOUtils;
-import org.jutils.ui.event.updater.IUpdater;
 
 /*******************************************************************************
  * 
@@ -18,16 +16,14 @@ public class TcpConnection implements IConnection
     /**  */
     private final byte [] rxBuffer;
     /**  */
-    private final ITcpHandler handler;
-    /**  */
-    private final AtomicBoolean continueRx;
+    private final Runnable disconnetCallback;
 
     /**  */
     private Socket socket;
     /**  */
-    private InetAddress clientAddress;
+    private InetAddress remoteAddress;
     /**  */
-    private int clientPort;
+    private int remotePort;
     /**  */
     private BufferedInputStream input;
     /**  */
@@ -37,43 +33,31 @@ public class TcpConnection implements IConnection
      * @param port
      * @throws IOException
      **************************************************************************/
-    public TcpConnection( int port, ITcpHandler handler ) throws IOException
-    {
-        this( port, 500, handler );
-    }
-
-    /***************************************************************************
-     * @param port
-     * @param timeout
-     * @param handler
-     * @throws IOException
-     **************************************************************************/
-    public TcpConnection( int port, int timeout, ITcpHandler handler )
+    public TcpConnection( TcpInputs inputs, Runnable disconnetCallback )
         throws IOException
     {
-        this.handler = handler;
-        this.server = new ServerSocket( port );
+        ServerSocket server = null;
+        Socket socket = null;
+
+        InetAddress nicAddr = IConnection.getNicAddress( inputs.nic );
+
+        if( inputs.isServer )
+        {
+            server = new ServerSocket( inputs.localPort, 64, nicAddr );
+            server.setSoTimeout( inputs.timeout );
+        }
+        else
+        {
+            socket = new Socket( inputs.remoteAddress.getInetAddress(),
+                inputs.remotePort, nicAddr, inputs.localPort );
+            socket.setSoTimeout( inputs.timeout );
+            setSocket( socket );
+        }
+
+        this.disconnetCallback = disconnetCallback;
+        this.server = server;
+        this.socket = socket;
         this.rxBuffer = new byte[65535];
-        this.continueRx = new AtomicBoolean( false );
-
-        server.setSoTimeout( timeout );
-    }
-
-    /***************************************************************************
-     * @param port
-     * @throws IOException
-     **************************************************************************/
-    public TcpConnection( TcpClientInputs inputs, ITcpHandler handler )
-        throws IOException
-    {
-        this.handler = handler;
-        this.server = null;
-        this.socket = new Socket( inputs.address.getInetAddress(),
-            inputs.port );
-        this.rxBuffer = new byte[65535];
-        this.continueRx = new AtomicBoolean( false );
-
-        server.setSoTimeout( inputs.timeout );
     }
 
     /***************************************************************************
@@ -84,23 +68,9 @@ public class TcpConnection implements IConnection
     {
         if( this.socket == null )
         {
-            Socket socket;
-
             try
             {
-                socket = server.accept();
-
-                this.socket = socket;
-                this.clientAddress = socket.getInetAddress();
-                this.clientPort = socket.getPort();
-                this.input = new BufferedInputStream( socket.getInputStream(),
-                    IOUtils.DEFAULT_BUF_SIZE );
-                this.output = socket.getOutputStream();
-                this.continueRx.set( true );
-
-                Thread t = new Thread( () -> runReceive(), "TCP Rx Thread" );
-
-                t.start();
+                setSocket( server.accept() );
             }
             catch( SocketTimeoutException ex )
             {
@@ -112,13 +82,25 @@ public class TcpConnection implements IConnection
     }
 
     /***************************************************************************
+     * @param socket
+     * @throws IOException
+     **************************************************************************/
+    private void setSocket( Socket socket ) throws IOException
+    {
+        this.socket = socket;
+        this.remoteAddress = socket.getInetAddress();
+        this.remotePort = socket.getPort();
+        this.input = new BufferedInputStream( socket.getInputStream(),
+            IOUtils.DEFAULT_BUF_SIZE );
+        this.output = socket.getOutputStream();
+    }
+
+    /***************************************************************************
      * {@inheritDoc}
      **************************************************************************/
     @Override
     public void close() throws IOException
     {
-        continueRx.set( false );
-
         if( socket != null )
         {
             input.close();
@@ -130,7 +112,10 @@ public class TcpConnection implements IConnection
             input = null;
         }
 
-        server.close();
+        if( server != null )
+        {
+            server.close();
+        }
     }
 
     /***************************************************************************
@@ -145,37 +130,11 @@ public class TcpConnection implements IConnection
         }
         catch( SocketTimeoutException ex )
         {
-            handler.signalDisconnected();
+            disconnetCallback.run();
             return null;
         }
 
-        return new NetMessage( contents, clientAddress, clientPort );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private void runReceive()
-    {
-        while( continueRx.get() )
-        {
-            try
-            {
-                if( rxMessage() == null )
-                {
-                    break;
-                }
-            }
-            catch( SocketTimeoutException ex )
-            {
-                continue;
-            }
-            catch( IOException ex )
-            {
-                // TODO Auto-generated catch block
-                ex.printStackTrace();
-            }
-        }
+        return new NetMessage( contents, remoteAddress, remotePort );
     }
 
     /***************************************************************************
@@ -184,93 +143,24 @@ public class TcpConnection implements IConnection
     @Override
     public NetMessage rxMessage() throws IOException
     {
-        try( InputStream stream = socket.getInputStream() )
+        int len = input.read( rxBuffer );
+
+        if( len == -1 )
         {
-            int len = stream.read( rxBuffer );
-
-            if( len == -1 )
-            {
-                // connection closed.
-                handler.signalDisconnected();
-                return null;
-            }
-            else if( len == 0 )
-            {
-                throw new SocketTimeoutException();
-            }
-
-            byte [] contents = Arrays.copyOf( rxBuffer, len );
-
-            handler.signalReceived( contents );
-
-            return new NetMessage( Arrays.copyOf( contents, len ),
-                clientAddress, clientPort );
+            // connection closed?
+            // disconnetCallback.run();
+            // return null;
+            throw new SocketTimeoutException();
         }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public static interface ITcpHandler
-    {
-        /***********************************************************************
-         * 
-         **********************************************************************/
-        public void signalDisconnected();
-
-        /***********************************************************************
-         * @param data
-         **********************************************************************/
-        public void signalReceived( byte [] data );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public static class TcpHandlerFuncs implements ITcpHandler
-    {
-        private final Runnable disconnected;
-        private final IUpdater<byte []> rxd;
-
-        public TcpHandlerFuncs( Runnable disconnected, IUpdater<byte []> rxd )
+        else if( len == 0 )
         {
-            this.disconnected = disconnected;
-            this.rxd = rxd;
+            throw new SocketTimeoutException();
         }
 
-        @Override
-        public void signalDisconnected()
-        {
-            disconnected.run();
-        }
+        byte [] contents = Arrays.copyOf( rxBuffer, len );
 
-        @Override
-        public void signalReceived( byte [] data )
-        {
-            rxd.update( data );
-        }
-    }
+        return new NetMessage( Arrays.copyOf( contents, len ), remoteAddress,
+            remotePort );
 
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public static class TcpClientInputs
-    {
-        /**
-         * The number of milliseconds to block for communications. Must be > -1.
-         * 0 is interpreted as an infinite timeout.
-         */
-        public int timeout;
-        /**  */
-        public Ip4Address address;
-        /**  */
-        public int port;
-
-        public TcpClientInputs()
-        {
-            this.timeout = 0;
-            this.address = new Ip4Address( 127, 0, 0, 1 );
-            this.port = 80;
-        }
     }
 }

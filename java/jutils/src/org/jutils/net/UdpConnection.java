@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.net.*;
 import java.util.Arrays;
 
-/***************************************************************************
+/*******************************************************************************
  * 
- **************************************************************************/
+ ******************************************************************************/
 public class UdpConnection implements IConnection
 {
+    /**  */
     private final DatagramSocket socket;
+    /**  */
     private final byte [] rxBuffer;
 
     /**  */
@@ -17,6 +19,11 @@ public class UdpConnection implements IConnection
     /**  */
     public int remotePort;
 
+    /***************************************************************************
+     * @param inputs
+     * @throws IOException
+     * @throws SocketException
+     **************************************************************************/
     public UdpConnection( UdpInputs inputs ) throws IOException, SocketException
     {
         DatagramSocket socket;

@@ -13,16 +13,28 @@ import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.net.UdpInputsView;
 import org.mc.ui.*;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class UdpClientView implements IConnectionView
 {
+    /**  */
     private final JPanel view;
+    /**  */
     private final UdpInputsView inputsView;
+    /**  */
     private final McConfigurationPanel configPanel;
+    /**  */
     private final NetMessagesView messagesView;
+    /**  */
     private final MessageTextView textView;
 
+    /**  */
     private Multicaster commModel;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public UdpClientView()
     {
         this.inputsView = new UdpInputsView();
@@ -34,6 +46,9 @@ public class UdpClientView implements IConnectionView
         this.commModel = null;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private JPanel createView()
     {
         JPanel panel = new JPanel( new GridBagLayout() );
@@ -68,6 +83,9 @@ public class UdpClientView implements IConnectionView
         return panel;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private void bindUnbind()
     {
         boolean bound = ( commModel != null );
