@@ -9,10 +9,11 @@ import javax.swing.*;
 import org.jutils.io.LogUtils;
 import org.jutils.net.*;
 import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.net.NetMessagesView;
 import org.jutils.ui.net.TcpInputsView;
 import org.mc.ui.*;
 
-public class TcpIpClientView implements IConnectionView
+public class TcpClientView implements IConnectionView
 {
     /**  */
     private final JPanel view;
@@ -31,7 +32,7 @@ public class TcpIpClientView implements IConnectionView
     /***************************************************************************
      * 
      **************************************************************************/
-    public TcpIpClientView()
+    public TcpClientView()
     {
         this.inputsView = new TcpInputsView( false );
         this.configPanel = new McConfigurationPanel( inputsView );
@@ -206,5 +207,11 @@ public class TcpIpClientView implements IConnectionView
         // "Communication Error" );
 
         close();
+    }
+
+    @Override
+    public String getTitle()
+    {
+        return "TCP Client";
     }
 }

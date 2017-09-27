@@ -12,8 +12,6 @@ import org.jutils.io.IOUtils;
 public class TcpConnection implements IConnection
 {
     /**  */
-    private final ServerSocket server;
-    /**  */
     private final byte [] rxBuffer;
     /**  */
     private final Runnable disconnetCallback;
@@ -36,49 +34,31 @@ public class TcpConnection implements IConnection
     public TcpConnection( TcpInputs inputs, Runnable disconnetCallback )
         throws IOException
     {
-        ServerSocket server = null;
         Socket socket = null;
 
         InetAddress nicAddr = IConnection.getNicAddress( inputs.nic );
 
-        if( inputs.isServer )
-        {
-            server = new ServerSocket( inputs.localPort, 64, nicAddr );
-            server.setSoTimeout( inputs.timeout );
-        }
-        else
-        {
-            socket = new Socket( inputs.remoteAddress.getInetAddress(),
-                inputs.remotePort, nicAddr, inputs.localPort );
-            socket.setSoTimeout( inputs.timeout );
-            setSocket( socket );
-        }
+        socket = new Socket( inputs.remoteAddress.getInetAddress(),
+            inputs.remotePort, nicAddr, inputs.localPort );
+        socket.setSoTimeout( inputs.timeout );
 
         this.disconnetCallback = disconnetCallback;
-        this.server = server;
         this.socket = socket;
         this.rxBuffer = new byte[65535];
+
+        setSocket( socket );
     }
 
-    /***************************************************************************
-     * @return
-     * @throws IOException
-     **************************************************************************/
-    public boolean accept() throws IOException
+    TcpConnection( Socket socket, Runnable disconnetCallback )
+        throws IOException
     {
-        if( this.socket == null )
-        {
-            try
-            {
-                setSocket( server.accept() );
-            }
-            catch( SocketTimeoutException ex )
-            {
-                return false;
-            }
-        }
+        socket.setSoTimeout( 1000 );
 
-        return true;
+        this.disconnetCallback = disconnetCallback;
+        this.socket = socket;
+        this.rxBuffer = new byte[65535];
+
+        setSocket( socket );
     }
 
     /***************************************************************************
@@ -110,11 +90,6 @@ public class TcpConnection implements IConnection
             socket = null;
             output = null;
             input = null;
-        }
-
-        if( server != null )
-        {
-            server.close();
         }
     }
 
@@ -148,9 +123,9 @@ public class TcpConnection implements IConnection
         if( len == -1 )
         {
             // connection closed?
-            // disconnetCallback.run();
-            // return null;
-            throw new SocketTimeoutException();
+            disconnetCallback.run();
+            return null;
+            // throw new SocketTimeoutException();
         }
         else if( len == 0 )
         {
@@ -162,5 +137,24 @@ public class TcpConnection implements IConnection
         return new NetMessage( Arrays.copyOf( contents, len ), remoteAddress,
             remotePort );
 
+    }
+
+    public Ip4Address getRemoteAddress()
+    {
+        Ip4Address address = new Ip4Address();
+
+        address.set( socket.getInetAddress() );
+
+        return address;
+    }
+
+    public int getRemotePort()
+    {
+        return socket.getPort();
+    }
+
+    public void setTimeout( int millis ) throws SocketException
+    {
+        socket.setSoTimeout( millis );
     }
 }

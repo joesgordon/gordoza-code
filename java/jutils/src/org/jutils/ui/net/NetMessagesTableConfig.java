@@ -1,9 +1,10 @@
-package org.mc.ui;
+package org.jutils.ui.net;
 
 import java.net.InetAddress;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 
+import org.jutils.Utils;
 import org.jutils.net.NetMessage;
 import org.jutils.ui.hex.HexUtils;
 import org.jutils.ui.model.ITableItemsConfig;
@@ -14,10 +15,10 @@ import org.jutils.ui.model.ITableItemsConfig;
 public class NetMessagesTableConfig implements ITableItemsConfig<NetMessage>
 {
     /**  */
-    private static final String[] NAMES = new String[] { "Time", "Address",
+    private static final String [] NAMES = new String[] { "Time", "Address",
         "Port", "Contents" };
     /**  */
-    private static final Class<?>[] CLASSES = new Class<?>[] {
+    private static final Class<?> [] CLASSES = new Class<?>[] {
         LocalDateTime.class, InetAddress.class, Integer.class, String.class };
 
     /**  */
@@ -35,7 +36,7 @@ public class NetMessagesTableConfig implements ITableItemsConfig<NetMessage>
      * 
      **************************************************************************/
     @Override
-    public String[] getColumnNames()
+    public String [] getColumnNames()
     {
         return NAMES;
     }
@@ -44,7 +45,7 @@ public class NetMessagesTableConfig implements ITableItemsConfig<NetMessage>
      * 
      **************************************************************************/
     @Override
-    public Class<?>[] getColumnClasses()
+    public Class<?> [] getColumnClasses()
     {
         return CLASSES;
     }
@@ -69,8 +70,10 @@ public class NetMessagesTableConfig implements ITableItemsConfig<NetMessage>
             case 3:
             {
                 int cnt = Math.min( item.contents.length, 64 );
-                HexUtils.cleanAscii( item.contents, 0, cnt );
-                return new String( item.contents, 0, cnt, utf8 );
+                byte [] buf = new byte[cnt];
+                Utils.byteArrayCopy( item.contents, 0, buf, 0, buf.length );
+                HexUtils.cleanAscii( buf, 0, cnt );
+                return new String( buf, 0, cnt, utf8 );
             }
             default:
                 break;

@@ -1,4 +1,4 @@
-package org.mc.ui;
+package org.jutils.ui.net;
 
 import java.awt.*;
 import java.awt.event.*;

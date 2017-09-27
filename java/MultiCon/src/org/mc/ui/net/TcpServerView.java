@@ -2,6 +2,7 @@ package org.mc.ui.net;
 
 import java.awt.*;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
 
 import javax.swing.*;
@@ -11,13 +12,15 @@ import org.jutils.concurrent.*;
 import org.jutils.io.LogUtils;
 import org.jutils.net.*;
 import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.net.NetMessagesView;
 import org.jutils.ui.net.TcpInputsView;
-import org.mc.ui.*;
+import org.mc.ui.IConnectionView;
+import org.mc.ui.McConfigurationPanel;
 
 /***************************************************************************
  * 
  **************************************************************************/
-public class TcpIpServerView implements IConnectionView
+public class TcpServerView implements IConnectionView
 {
     private final JPanel view;
     private final TcpInputsView inputsView;
@@ -29,7 +32,7 @@ public class TcpIpServerView implements IConnectionView
     private Thread acceptThread;
     private Stoppable acceptTask;
 
-    public TcpIpServerView()
+    public TcpServerView()
     {
         this.inputsView = new TcpInputsView( true, true );
         this.configPanel = new McConfigurationPanel( inputsView );
@@ -46,7 +49,8 @@ public class TcpIpServerView implements IConnectionView
 
         inputsView.setEnabled( true );
 
-        configPanel.addBindActionListener( ( e ) -> bindUnbind() );
+        configPanel.addBindActionListener(
+            ( e ) -> bindUnbind( !isBinding() ) );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -61,31 +65,30 @@ public class TcpIpServerView implements IConnectionView
         return panel;
     }
 
-    private void bindUnbind()
+    private boolean isBinding()
     {
-        boolean bound = ( commModel != null || acceptTask != null );
+        return commModel != null || acceptTask != null;
+    }
 
+    private void bindUnbind( boolean bind )
+    {
         configPanel.setBindEnabled( false );
+
+        LogUtils.printDebug( "model %s, task %s", commModel, acceptTask );
+
+        boolean bound = !bind;
 
         try
         {
-            if( bound )
+            if( bind )
             {
-                close();
-                bound = false;
+                bind();
+                bound = true;
             }
             else
             {
-                TcpInputs inputs = inputsView.getData();
-                Runnable dc = () -> displayErrorMessage( "Disconnected" );
-                this.connection = new TcpConnection( inputs, dc );
-
-                AcceptTask task = new AcceptTask( connection, this );
-                this.acceptTask = new Stoppable( task );
-                this.acceptThread = new Thread( acceptTask );
-
-                acceptThread.start();
-                bound = true;
+                close();
+                bound = false;
             }
 
             inputsView.setEnabled( !bound );
@@ -101,6 +104,17 @@ public class TcpIpServerView implements IConnectionView
         configPanel.setBound( bound );
 
         configPanel.setBindEnabled( true );
+    }
+
+    private void bind() throws IOException
+    {
+        TcpInputs inputs = inputsView.getData();
+
+        AcceptTask task = new AcceptTask( inputs, this );
+        this.acceptTask = new Stoppable( task );
+        this.acceptThread = new Thread( acceptTask );
+
+        acceptThread.start();
     }
 
     /**  */
@@ -146,7 +160,9 @@ public class TcpIpServerView implements IConnectionView
             acceptThread.interrupt();
             try
             {
+                LogUtils.printDebug( "Waiting for" );
                 acceptTask.stopAndWaitFor();
+                LogUtils.printDebug( ">Waited for" );
             }
             catch( InterruptedException ex )
             {
@@ -210,39 +226,65 @@ public class TcpIpServerView implements IConnectionView
         acceptThread = null;
     }
 
+    public void handleDisconnected()
+    {
+        LogUtils.printDebug( "Disconnected" );
+        bindUnbind( false );
+    }
+
     /***************************************************************************
      * 
      **************************************************************************/
     private static class AcceptTask implements IStoppableTask
     {
-        private final TcpConnection connection;
-        private final TcpIpServerView view;
+        private final TcpInputs inputs;
+        private final TcpServerView view;
 
-        public AcceptTask( TcpConnection connection, TcpIpServerView view )
+        public AcceptTask( TcpInputs inputs, TcpServerView view )
         {
-            this.connection = connection;
+            this.inputs = inputs;
             this.view = view;
         }
 
         @Override
         public void run( ITaskStopManager stopManager )
         {
-            try
+            Runnable dc = () -> view.handleDisconnected();
+
+            try( TcpServer server = new TcpServer( inputs ) )
             {
                 boolean accepted = false;
 
                 while( !accepted && stopManager.continueProcessing() )
                 {
-                    accepted = connection.accept();
+                    try
+                    {
+                        @SuppressWarnings( "resource")
+                        TcpConnection connection = server.accept( dc );
+                        view.setAcceptedConnection( connection );
+                        accepted = true;
+                    }
+                    catch( SocketTimeoutException ex )
+                    {
+                    }
                 }
-
-                view.setAcceptedConnection( connection );
             }
             catch( IOException e )
             {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+            finally
+            {
+                view.acceptTask = null;
+                view.acceptThread = null;
+            }
         }
+    }
+
+    @Override
+    public String getTitle()
+    {
+        return "TCP Server";
     }
 }

@@ -65,7 +65,7 @@ public class TcpInputsView implements IDataView<TcpInputs>
             form.addField( timeoutField );
         }
 
-        setData( new TcpInputs( isServer ) );
+        setData( new TcpInputs() );
 
         localPortField.setUpdater( ( d ) -> inputs.localPort = d );
         nicField.setUpdater( ( d ) -> inputs.nic = d );

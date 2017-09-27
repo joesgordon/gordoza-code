@@ -10,6 +10,7 @@ import org.jutils.SwingUtils;
 import org.jutils.io.LogUtils;
 import org.jutils.net.*;
 import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.net.NetMessagesView;
 import org.jutils.ui.net.UdpInputsView;
 import org.mc.ui.*;
 
@@ -206,5 +207,11 @@ public class UdpClientView implements IConnectionView
 
         SwingUtils.showErrorMessage( getView(), errorMsg,
             "Communication Error" );
+    }
+
+    @Override
+    public String getTitle()
+    {
+        return "UDP Client";
     }
 }

@@ -12,6 +12,7 @@ import org.jutils.io.LogUtils;
 import org.jutils.net.*;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.net.MulticastInputsView;
+import org.jutils.ui.net.NetMessagesView;
 import org.mc.McTxThread;
 import org.mc.ui.*;
 
@@ -229,5 +230,11 @@ public class MulticastView implements IConnectionView
 
         commModel.close();
         commModel = null;
+    }
+
+    @Override
+    public String getTitle()
+    {
+        return "Multicast";
     }
 }

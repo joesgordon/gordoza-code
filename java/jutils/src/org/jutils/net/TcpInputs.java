@@ -6,9 +6,6 @@ package org.jutils.net;
 public class TcpInputs
 {
     /**  */
-    public final boolean isServer;
-
-    /**  */
     public String nic;
     /**  */
     public int localPort;
@@ -25,10 +22,8 @@ public class TcpInputs
     /***************************************************************************
      * 
      **************************************************************************/
-    public TcpInputs( boolean isServer )
+    public TcpInputs()
     {
-        this.isServer = isServer;
-
         this.nic = null;
         this.localPort = 0;
         this.remoteAddress = new Ip4Address( 127, 0, 0, 1 );

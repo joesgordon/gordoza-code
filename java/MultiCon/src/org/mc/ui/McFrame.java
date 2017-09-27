@@ -61,11 +61,11 @@ public class McFrame implements IView<JFrame>
         l = ( e ) -> showView( new UdpClientView() );
         addButton( panel, "UDP Client", l, r++ );
 
-        l = ( e ) -> showView( new TcpIpServerView() );
-        addButton( panel, "TCP/IP Server", l, r++ );
+        l = ( e ) -> showView( new TcpServerView() );
+        addButton( panel, "TCP Server", l, r++ );
 
-        l = ( e ) -> showView( new TcpIpClientView() );
-        addButton( panel, "TCP/IP Client", l, r++ );
+        l = ( e ) -> showView( new TcpClientView() );
+        addButton( panel, "TCP Client", l, r++ );
 
         return panel;
     }
@@ -91,6 +91,7 @@ public class McFrame implements IView<JFrame>
         OkDialogView odv = new OkDialogView( getView(), view.getView(),
             ModalityType.MODELESS, OkDialogButtons.OK_ONLY );
 
+        odv.setTitle( view.getTitle() );
         odv.setOkButtonText( "Close" );
 
         odv.addOkListener( ( b ) -> {

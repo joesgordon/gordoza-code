@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 
 import org.jutils.Utils;
+import org.jutils.io.LogUtils;
 
 /*******************************************************************************
  * 
@@ -121,5 +122,20 @@ public class Ip4Address
     public int hashCode()
     {
         return Arrays.hashCode( address );
+    }
+
+    public void set( InetAddress address )
+    {
+        byte [] octects = address.getAddress();
+
+        if( octects.length != this.address.length )
+        {
+            LogUtils.printError( "Invalid octet count: %d", octects.length );
+        }
+
+        for( int i = 0; i < this.address.length; i++ )
+        {
+            this.address[i] = octects[i];
+        }
     }
 }
