@@ -52,7 +52,7 @@ public class HexMessagePanelMain
                     ex );
             }
             int port = 80;
-            NetMessage msg = new NetMessage( contents, address, port );
+            NetMessage msg = new NetMessage( true, address, port, contents );
 
             panel.setMessage( msg );
 

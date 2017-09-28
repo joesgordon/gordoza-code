@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
  ******************************************************************************/
 public class NetMessage
 {
+    /**  */
+    public final boolean received;
     /** Time of transmission or reception. */
     public final LocalDateTime time;
     /**  */
@@ -20,8 +22,10 @@ public class NetMessage
     /***************************************************************************
      * 
      **************************************************************************/
-    public NetMessage( byte [] contents, InetAddress address, int port )
+    public NetMessage( boolean received, InetAddress address, int port,
+        byte [] contents )
     {
+        this.received = received;
         this.time = LocalDateTime.now();
         this.address = address;
         this.port = port;

@@ -34,6 +34,12 @@ public class UdpServerView implements IConnectionView
         this.view = createView();
 
         this.commModel = null;
+
+        UdpInputs inputs = inputsView.getData();
+
+        inputs.localPort = 5000;
+
+        inputsView.setData( inputs );
     }
 
     private JPanel createView()
@@ -108,7 +114,7 @@ public class UdpServerView implements IConnectionView
 
     private void rxMessage( NetMessage msg )
     {
-        messagesView.addMessage( msg );
+        addMessage( msg );
 
         byte[] response = new byte[PREFIX.length + msg.contents.length];
         Utils.byteArrayCopy( PREFIX, 0, response, 0, PREFIX.length );
@@ -118,13 +124,19 @@ public class UdpServerView implements IConnectionView
         try
         {
             msg = connection.txMessage( response, msg.address, msg.port );
+
+            addMessage( msg );
         }
         catch( IOException ex )
         {
             JOptionPane.showMessageDialog( getView(),
                 "ERROR: " + ex.getMessage() );
         }
-        messagesView.addMessage( msg );
+    }
+
+    private void addMessage( NetMessage msg )
+    {
+        SwingUtilities.invokeLater( () -> messagesView.addMessage( msg ) );
     }
 
     @Override

@@ -15,10 +15,10 @@ import org.jutils.ui.model.ITableItemsConfig;
 public class NetMessagesTableConfig implements ITableItemsConfig<NetMessage>
 {
     /**  */
-    private static final String [] NAMES = new String[] { "Time", "Address",
-        "Port", "Contents" };
+    private static final String [] NAMES = new String[] { "Tx/Rx", "Time",
+        "Address", "Port", "Contents" };
     /**  */
-    private static final Class<?> [] CLASSES = new Class<?>[] {
+    private static final Class<?> [] CLASSES = new Class<?>[] { String.class,
         LocalDateTime.class, InetAddress.class, Integer.class, String.class };
 
     /**  */
@@ -59,15 +59,18 @@ public class NetMessagesTableConfig implements ITableItemsConfig<NetMessage>
         switch( col )
         {
             case 0:
-                return item.time;
+                return item.received ? "Rx" : "Tx";
 
             case 1:
-                return item.address;
+                return item.time;
 
             case 2:
-                return item.port;
+                return item.address;
 
             case 3:
+                return item.port;
+
+            case 4:
             {
                 int cnt = Math.min( item.contents.length, 64 );
                 byte [] buf = new byte[cnt];
@@ -75,6 +78,7 @@ public class NetMessagesTableConfig implements ITableItemsConfig<NetMessage>
                 HexUtils.cleanAscii( buf, 0, cnt );
                 return new String( buf, 0, cnt, utf8 );
             }
+
             default:
                 break;
         }

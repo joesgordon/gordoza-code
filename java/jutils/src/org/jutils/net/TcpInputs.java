@@ -27,7 +27,7 @@ public class TcpInputs
         this.nic = null;
         this.localPort = 0;
         this.remoteAddress = new Ip4Address( 127, 0, 0, 1 );
-        this.remotePort = 80;
+        this.remotePort = 5000;
         this.timeout = 500;
     }
 }

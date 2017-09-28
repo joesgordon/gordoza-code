@@ -109,7 +109,7 @@ public class TcpConnection implements IConnection
             return null;
         }
 
-        return new NetMessage( contents, remoteAddress, remotePort );
+        return new NetMessage( false, remoteAddress, remotePort, contents );
     }
 
     /***************************************************************************
@@ -134,8 +134,7 @@ public class TcpConnection implements IConnection
 
         byte [] contents = Arrays.copyOf( rxBuffer, len );
 
-        return new NetMessage( Arrays.copyOf( contents, len ), remoteAddress,
-            remotePort );
+        return new NetMessage( true, remoteAddress, remotePort, contents );
 
     }
 

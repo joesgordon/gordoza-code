@@ -28,6 +28,6 @@ public class UdpInputs
         this.timeout = 500;
         this.reuse = true;
         this.remoteAddress = new Ip4Address( 127, 0, 0, 1 );
-        this.remotePort = 10000;
+        this.remotePort = 5000;
     }
 }

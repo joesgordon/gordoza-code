@@ -40,6 +40,12 @@ public class TcpServerView implements IConnectionView
         this.view = createView();
 
         this.commModel = null;
+
+        TcpInputs inputs = inputsView.getData();
+
+        inputs.localPort = 5000;
+
+        inputsView.setData( inputs );
     }
 
     private JPanel createView()

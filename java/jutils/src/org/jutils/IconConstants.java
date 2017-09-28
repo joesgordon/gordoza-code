@@ -65,6 +65,8 @@ public final class IconConstants
 
     public final static String EDIT_ADD_16 = "edit-add16.png";
 
+    public final static String EDIT_CLEAR_16 = "edit-clear16.png";
+
     public final static String EDIT_DELETE_16 = "edit-delete16.png";
 
     public final static String EDIT_COPY_16 = "edit-copy16.png";
