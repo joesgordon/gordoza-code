@@ -116,6 +116,7 @@ public class UdpClientView implements IConnectionView
 
                 commModel = new Multicaster( connection, rxListener,
                     errListener );
+                messagesView.clearMessages();
                 bound = true;
             }
 
@@ -185,8 +186,6 @@ public class UdpClientView implements IConnectionView
         {
             try
             {
-                messagesView.clearMessages();
-
                 commModel.close();
                 commModel = null;
             }

@@ -113,6 +113,9 @@ public class TcpClientView implements IConnectionView
 
                 commModel = new Multicaster( connection, rxListener,
                     errListener );
+
+                messagesView.clearMessages();
+
                 bound = true;
             }
 
@@ -183,8 +186,6 @@ public class TcpClientView implements IConnectionView
         {
             try
             {
-                messagesView.clearMessages();
-
                 commModel.close();
                 commModel = null;
             }

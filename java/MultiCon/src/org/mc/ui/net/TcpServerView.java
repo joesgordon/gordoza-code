@@ -120,6 +120,8 @@ public class TcpServerView implements IConnectionView
         this.acceptTask = new Stoppable( task );
         this.acceptThread = new Thread( acceptTask );
 
+        messagesView.clearMessages();
+
         acceptThread.start();
     }
 
@@ -182,8 +184,6 @@ public class TcpServerView implements IConnectionView
         {
             try
             {
-                messagesView.clearMessages();
-
                 commModel.close();
                 commModel = null;
             }
