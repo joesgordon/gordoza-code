@@ -75,7 +75,8 @@ public class MulticastConnection implements IConnection
 
         socket.send( pack );
 
-        NetMessage msg = new NetMessage( false, address, port, buf );
+        NetMessage msg = new NetMessage( false, address.getHostAddress(), port,
+            buf );
 
         return msg;
     }
@@ -94,7 +95,8 @@ public class MulticastConnection implements IConnection
         InetAddress address = rxPacket.getAddress();
         int port = rxPacket.getPort();
 
-        NetMessage msg = new NetMessage( true, address, port, contents );
+        NetMessage msg = new NetMessage( true, address.getHostAddress(), port,
+            contents );
 
         return msg;
     }

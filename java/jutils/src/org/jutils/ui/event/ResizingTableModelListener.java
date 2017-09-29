@@ -67,7 +67,7 @@ public class ResizingTableModelListener implements TableModelListener
         for( int col = 0; col < colCount; col++ )
         {
             colName = model.getColumnName( col );
-            defaultWidth = 65;
+            defaultWidth = 20;
 
             // -----------------------------------------------------------------
             // Compute header width.

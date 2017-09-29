@@ -1,4 +1,4 @@
-package org.mc.ui;
+package org.jutils.ui.net;
 
 import java.net.*;
 import java.nio.charset.Charset;
@@ -12,12 +12,12 @@ import org.jutils.ui.app.IFrameApp;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class HexMessagePanelMain
+public class NetMessageViewMain
 {
     /***************************************************************************
      * @param args ignored
      **************************************************************************/
-    public static void main( String[] args )
+    public static void main( String [] args )
     {
         FrameRunner.invokeLater( new HexMessageApp() );
     }
@@ -32,15 +32,15 @@ public class HexMessagePanelMain
         {
             JFrame frame = new JFrame();
 
-            HexMessagePanel panel = new HexMessagePanel();
+            NetMessageView panel = new NetMessageView();
 
             frame.setContentPane( panel.getView() );
 
-            frame.setSize( 600, 200 );
+            frame.setSize( 680, 400 );
             frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 
-            byte[] contents = "So long and thanks f".getBytes(
-                Charset.forName( "US-ASCII" ) );
+            byte [] contents = "So long and thanks f".getBytes(
+                Charset.forName( "UTF-8" ) );
             InetAddress address;
             try
             {
@@ -52,9 +52,10 @@ public class HexMessagePanelMain
                     ex );
             }
             int port = 80;
-            NetMessage msg = new NetMessage( true, address, port, contents );
+            NetMessage msg = new NetMessage( true, address.getHostAddress(),
+                port, contents );
 
-            panel.setMessage( msg );
+            panel.setData( msg );
 
             return frame;
         }

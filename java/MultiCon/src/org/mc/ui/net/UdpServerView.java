@@ -2,6 +2,7 @@ package org.mc.ui.net;
 
 import java.awt.*;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.nio.charset.Charset;
 
 import javax.swing.*;
@@ -123,7 +124,8 @@ public class UdpServerView implements IConnectionView
 
         try
         {
-            msg = connection.txMessage( response, msg.address, msg.port );
+            InetAddress addr = InetAddress.getByName( msg.address );
+            msg = connection.txMessage( response, addr, msg.port );
 
             addMessage( msg );
         }

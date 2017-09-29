@@ -1,6 +1,5 @@
 package org.jutils.net;
 
-import java.net.InetAddress;
 import java.time.LocalDateTime;
 
 /*******************************************************************************
@@ -13,7 +12,7 @@ public class NetMessage
     /** Time of transmission or reception. */
     public final LocalDateTime time;
     /**  */
-    public final InetAddress address;
+    public final String address;
     /**  */
     public final int port;
     /**  */
@@ -22,7 +21,7 @@ public class NetMessage
     /***************************************************************************
      * 
      **************************************************************************/
-    public NetMessage( boolean received, InetAddress address, int port,
+    public NetMessage( boolean received, String address, int port,
         byte [] contents )
     {
         this.received = received;

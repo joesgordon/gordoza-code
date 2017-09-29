@@ -2,7 +2,6 @@ package org.jutils.ui.net;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.net.InetAddress;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -13,8 +12,6 @@ import org.jutils.SwingUtils;
 import org.jutils.net.NetMessage;
 import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.event.ResizingTableModelListener;
-import org.jutils.ui.hex.ByteBuffer;
-import org.jutils.ui.hex.HexPanel;
 import org.jutils.ui.model.*;
 import org.jutils.ui.model.LabelTableCellRenderer.ITableCellLabelDecorator;
 
@@ -49,8 +46,6 @@ public class NetMessagesView implements IView<JPanel>
 
         table.setDefaultRenderer( LocalDateTime.class,
             new LabelTableCellRenderer( new LocalDateTimeDecorator() ) );
-        table.setDefaultRenderer( InetAddress.class,
-            new LabelTableCellRenderer( new InetAddressDecorator() ) );
 
         table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
 
@@ -60,6 +55,11 @@ public class NetMessagesView implements IView<JPanel>
         JScrollBar vScrollBar = displayScrollPane.getVerticalScrollBar();
 
         vScrollBar.addAdjustmentListener( new EndScroller( vScrollBar ) );
+
+        displayScrollPane.setVerticalScrollBarPolicy(
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
+        displayScrollPane.setHorizontalScrollBarPolicy(
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED );
 
         panel.setBorder(
             BorderFactory.createTitledBorder( "Sent/Received Messages" ) );
@@ -93,7 +93,7 @@ public class NetMessagesView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JPanel getView()
@@ -170,11 +170,11 @@ public class NetMessagesView implements IView<JPanel>
                 NetMessage item = view.tableModel.getItem( index );
 
                 JDialog d = new JDialog( f, "Message Contents", true );
-                HexPanel p = new HexPanel();
+                NetMessageView p = new NetMessageView();
 
-                p.setBuffer( new ByteBuffer( item.contents ) );
+                p.setData( item );
                 d.setContentPane( p.getView() );
-                d.setSize( 640, 300 );
+                d.setSize( 675, 400 );
                 d.setLocationRelativeTo( f );
                 d.setVisible( true );
             }
@@ -204,28 +204,6 @@ public class NetMessagesView implements IView<JPanel>
             {
                 LocalDateTime ldt = ( LocalDateTime )value;
                 text = ldt.format( dtf );
-            }
-
-            label.setText( text );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class InetAddressDecorator
-        implements ITableCellLabelDecorator
-    {
-        @Override
-        public void decorate( JLabel label, JTable table, Object value,
-            boolean isSelected, boolean hasFocus, int row, int col )
-        {
-            String text = "";
-
-            if( value != null )
-            {
-                InetAddress address = ( InetAddress )value;
-                text = address.getHostAddress();
             }
 
             label.setText( text );

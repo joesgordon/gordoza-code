@@ -1,6 +1,5 @@
 package org.jutils.ui.net;
 
-import java.net.InetAddress;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 
@@ -16,10 +15,11 @@ public class NetMessagesTableConfig implements ITableItemsConfig<NetMessage>
 {
     /**  */
     private static final String [] NAMES = new String[] { "Tx/Rx", "Time",
-        "Address", "Port", "Contents" };
+        "Address", "Port", "Length", "Contents" };
     /**  */
     private static final Class<?> [] CLASSES = new Class<?>[] { String.class,
-        LocalDateTime.class, InetAddress.class, Integer.class, String.class };
+        LocalDateTime.class, String.class, Integer.class, Integer.class,
+        String.class };
 
     /**  */
     private final Charset utf8;
@@ -71,6 +71,9 @@ public class NetMessagesTableConfig implements ITableItemsConfig<NetMessage>
                 return item.port;
 
             case 4:
+                return item.contents.length;
+
+            case 5:
             {
                 int cnt = Math.min( item.contents.length, 64 );
                 byte [] buf = new byte[cnt];

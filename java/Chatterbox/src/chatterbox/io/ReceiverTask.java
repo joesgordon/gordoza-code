@@ -56,8 +56,8 @@ public class ReceiverTask implements IStoppableTask
                 int port = rxPacket.getPort();
 
                 rxListener.actionPerformed(
-                    new ItemActionEvent<NetMessage>( this,
-                        new NetMessage( true, address, port, messageBytes ) ) );
+                    new ItemActionEvent<NetMessage>( this, new NetMessage( true,
+                        address.getHostAddress(), port, messageBytes ) ) );
             }
             catch( SocketTimeoutException ex )
             {
