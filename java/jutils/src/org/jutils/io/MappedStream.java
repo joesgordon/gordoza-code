@@ -35,7 +35,7 @@ public class MappedStream implements IDataStream
     /** The size of the buffer. */
     private final int bufferSize;
     /** The ordering of bytes in the stream. */
-    private final ByteOrdering order;
+    private ByteOrdering order;
 
     // TODO do not cache the length of the stream if this is to support writing.
     /** The cached length of the stream. */
@@ -510,5 +510,14 @@ public class MappedStream implements IDataStream
     public void writeDouble( double v ) throws IOException
     {
         throw new IOException( "Cannot write to a read only stream." );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void setOrder( ByteOrdering ordering )
+    {
+        this.order = ordering;
     }
 }

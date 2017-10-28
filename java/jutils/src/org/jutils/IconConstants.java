@@ -2,8 +2,7 @@ package org.jutils;
 
 import java.awt.Image;
 import java.awt.Window;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.util.List;
 
@@ -165,7 +164,8 @@ public final class IconConstants
     public static void playNotify()
     {
         Runnable r = () -> {
-            try( InputStream is = loader.loader.getInputStream( "done.wav" ) )
+            try( InputStream is = loader.loader.getInputStream( "done.wav" );
+                 BufferedInputStream sstream = new BufferedInputStream( is ) )
             {
                 // new JavaSoundAudioClip( is ).play();
 
@@ -175,7 +175,7 @@ public final class IconConstants
                 // }
 
                 try( AudioInputStream stream = AudioSystem.getAudioInputStream(
-                    is ) )
+                    sstream ) )
                 {
                     AudioFormat format = stream.getFormat();
                     DataLine.Info info = new DataLine.Info( Clip.class,

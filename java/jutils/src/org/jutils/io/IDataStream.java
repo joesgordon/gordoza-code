@@ -10,6 +10,12 @@ import org.jutils.utils.ByteOrdering;
 public interface IDataStream extends IStream
 {
     /***************************************************************************
+     * Sets the method of ordering bytes in this stream.
+     * @param ordering the byte order for fields.
+     **************************************************************************/
+    public void setOrder( ByteOrdering ordering );
+
+    /***************************************************************************
      * Returns the method of ordering bytes in this stream.
      **************************************************************************/
     public ByteOrdering getOrder();

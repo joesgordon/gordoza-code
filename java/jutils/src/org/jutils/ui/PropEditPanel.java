@@ -54,7 +54,7 @@ public class PropEditPanel
 
         propsScrollPane.setViewportView( propsPanel );
 
-        setProperties( null, null );
+        setProperties( null );
 
         defaultRenderers.assignRenderer( Boolean.class, new BooleanRenderer() );
         defaultRenderers.assignRenderer( Color.class, new ColorRenderer() );
@@ -73,17 +73,9 @@ public class PropEditPanel
 
     /***************************************************************************
      * @param p
-     **************************************************************************/
-    public void setProperties( Map<Object, Object> p )
-    {
-        setProperties( p, null );
-    }
-
-    /***************************************************************************
-     * @param p
      * @param toolTip
      **************************************************************************/
-    public void setProperties( Map<Object, Object> p, String toolTip )
+    public void setProperties( Map<Object, Object> p )
     {
         props = p;
 

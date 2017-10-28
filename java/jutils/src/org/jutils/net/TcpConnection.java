@@ -84,6 +84,7 @@ public class TcpConnection implements IConnection
         if( socket != null )
         {
             input.close();
+            output.flush();
             output.close();
             socket.close();
 

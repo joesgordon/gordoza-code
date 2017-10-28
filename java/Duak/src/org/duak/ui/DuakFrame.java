@@ -57,6 +57,7 @@ public class DuakFrame implements IView<JFrame>
 
         JFrame frame = frameView.getView();
 
+        frame.setSize( 600, 500 );
         frame.setIconImages( DuakIcons.getAppImages() );
         frame.setTitle( "Disk Usage Analysis Kit" );
         frame.setDropTarget( new FileDropTarget( new FileDropped( this ) ) );

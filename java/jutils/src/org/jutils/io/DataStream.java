@@ -300,4 +300,13 @@ public class DataStream implements IDataStream
     {
         return buffer.getOrder();
     }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void setOrder( ByteOrdering ordering )
+    {
+        buffer.setOrder( ordering );
+    }
 }

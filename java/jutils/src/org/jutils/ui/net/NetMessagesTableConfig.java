@@ -7,6 +7,7 @@ import org.jutils.Utils;
 import org.jutils.net.NetMessage;
 import org.jutils.ui.hex.HexUtils;
 import org.jutils.ui.model.ITableItemsConfig;
+import org.jutils.ui.net.NetMessagesView.IMessageFields;
 
 /***************************************************************************
  * 
@@ -23,13 +24,55 @@ public class NetMessagesTableConfig implements ITableItemsConfig<NetMessage>
 
     /**  */
     private final Charset utf8;
+    /**  */
+    private final IMessageFields fields;
+    /**  */
+    private final String [] names;
+    /**  */
+    private final Class<?> [] classes;
+
+    /**  */
+    private boolean isHex;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public NetMessagesTableConfig()
     {
+        this( null );
+    }
+
+    public NetMessagesTableConfig( IMessageFields fields )
+    {
+        this.fields = fields == null ? new EmptyMessageFields() : fields;
         this.utf8 = Charset.forName( "UTF-8" );
+        this.names = new String[NAMES.length + this.fields.getFieldCount()];
+        this.classes = new Class<?>[NAMES.length + this.fields.getFieldCount()];
+
+        this.isHex = true;
+
+        for( int i = 0; i < names.length; i++ )
+        {
+            String name = null;
+            Class<?> cls = null;
+            if( i < ( NAMES.length - 1 ) )
+            {
+                name = NAMES[i];
+                cls = CLASSES[i];
+            }
+            else if( i == names.length - 1 )
+            {
+                name = NAMES[NAMES.length - 1];
+                cls = CLASSES[NAMES.length - 1];
+            }
+            else
+            {
+                name = fields.getFieldName( i - NAMES.length + 1 );
+                cls = String.class;
+            }
+            names[i] = name;
+            classes[i] = cls;
+        }
     }
 
     /***************************************************************************
@@ -38,7 +81,7 @@ public class NetMessagesTableConfig implements ITableItemsConfig<NetMessage>
     @Override
     public String [] getColumnNames()
     {
-        return NAMES;
+        return names;
     }
 
     /***************************************************************************
@@ -47,7 +90,7 @@ public class NetMessagesTableConfig implements ITableItemsConfig<NetMessage>
     @Override
     public Class<?> [] getColumnClasses()
     {
-        return CLASSES;
+        return classes;
     }
 
     /***************************************************************************
@@ -56,34 +99,52 @@ public class NetMessagesTableConfig implements ITableItemsConfig<NetMessage>
     @Override
     public Object getItemData( NetMessage item, int col )
     {
-        switch( col )
+        int fieldStart = NAMES.length - 1;
+        int contentsCol = names.length - 1;
+
+        if( col < fieldStart )
         {
-            case 0:
-                return item.received ? "Rx" : "Tx";
-
-            case 1:
-                return item.time;
-
-            case 2:
-                return item.address;
-
-            case 3:
-                return item.port;
-
-            case 4:
-                return item.contents.length;
-
-            case 5:
+            switch( col )
             {
-                int cnt = Math.min( item.contents.length, 64 );
-                byte [] buf = new byte[cnt];
-                Utils.byteArrayCopy( item.contents, 0, buf, 0, buf.length );
+                case 0:
+                    return item.received ? "Rx" : "Tx";
+
+                case 1:
+                    return item.time;
+
+                case 2:
+                    return item.address;
+
+                case 3:
+                    return item.port;
+
+                case 4:
+                    return item.contents.length;
+
+                default:
+                    throw new IllegalStateException( "Programmer error" );
+            }
+        }
+        else if( col < contentsCol )
+        {
+            return fields.getFieldValue( item, col - fieldStart );
+        }
+        else if( col == contentsCol )
+        {
+            int cnt = Math.min( item.contents.length, 64 );
+            byte [] buf = new byte[cnt];
+
+            Utils.byteArrayCopy( item.contents, 0, buf, 0, buf.length );
+
+            if( isHex )
+            {
+                return HexUtils.toHexString( buf, " " );
+            }
+            else
+            {
                 HexUtils.cleanAscii( buf, 0, cnt );
                 return new String( buf, 0, cnt, utf8 );
             }
-
-            default:
-                break;
         }
 
         return null;
@@ -104,5 +165,34 @@ public class NetMessagesTableConfig implements ITableItemsConfig<NetMessage>
     public boolean isCellEditable( NetMessage item, int col )
     {
         return false;
+    }
+
+    public void setHexText( boolean isHex )
+    {
+        this.isHex = isHex;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static final class EmptyMessageFields implements IMessageFields
+    {
+        @Override
+        public int getFieldCount()
+        {
+            return 0;
+        }
+
+        @Override
+        public String getFieldName( int index )
+        {
+            return null;
+        }
+
+        @Override
+        public String getFieldValue( NetMessage message, int index )
+        {
+            return null;
+        }
     }
 }

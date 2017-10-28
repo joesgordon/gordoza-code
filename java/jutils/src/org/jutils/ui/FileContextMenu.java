@@ -198,7 +198,7 @@ public class FileContextMenu
     /***************************************************************************
      * @param file
      **************************************************************************/
-    private static void openPath( Component parentComp, File file )
+    public static void openPath( Component parentComp, File file )
     {
         if( !file.exists() )
         {
@@ -241,6 +241,12 @@ public class FileContextMenu
                         Utils.NEW_LINE + file.getAbsolutePath(),
                     "Error Opening File" );
             }
+        }
+        else
+        {
+            SwingUtils.showErrorMessage( parentComp,
+                "Unable to open files on this platform.",
+                "Error Opening File" );
         }
     }
 

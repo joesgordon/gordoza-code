@@ -13,7 +13,7 @@ import org.jutils.IconConstants;
 import org.jutils.Utils;
 import org.jutils.concurrent.*;
 import org.jutils.data.UIProperty;
-import org.jutils.ui.ColorIcon;
+import org.jutils.ui.LedIcon;
 import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
@@ -440,7 +440,9 @@ public class ColorGenFrame implements IView<JFrame>
         /**  */
         private final Font boldFont;
         /**  */
-        private ColorIcon icon;
+        // private ColorIcon icon;
+        /**  */
+        private LedIcon icon;
 
         /***********************************************************************
          *
@@ -449,7 +451,8 @@ public class ColorGenFrame implements IView<JFrame>
         {
             Font f = UIProperty.LABEL_FONT.getFont();
 
-            this.icon = new ColorIcon( Color.white, 16 );
+            // this.icon = new ColorIcon( Color.white, 16 );
+            this.icon = new LedIcon( Color.white, 16 );
             this.boldFont = f.deriveFont( f.getStyle() | Font.BOLD );
         }
 

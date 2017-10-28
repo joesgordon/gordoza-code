@@ -55,7 +55,7 @@ public class FileField implements IDataView<File>, IValidationField
         this.textField = new IconTextField( field.getView() );
         this.button = new JButton();
         this.fileListener = createFileListener( existence, isSave );
-        this.view = createView( existence, required, isSave, showButton );
+        this.view = createView( existence, required, showButton );
         this.icon = new FileIcon();
 
         textField.setIcon( icon );
@@ -102,7 +102,7 @@ public class FileField implements IDataView<File>, IValidationField
      * @return
      **************************************************************************/
     private JPanel createView( ExistenceType existence, boolean required,
-        boolean isSave, boolean showButton )
+        boolean showButton )
     {
         JPanel panel = new JPanel( new GridBagLayout() );
         GridBagConstraints constraints;
