@@ -12,7 +12,6 @@ import javax.swing.border.EmptyBorder;
 import org.jutils.SwingUtils;
 import org.jutils.io.IStringWriter;
 import org.jutils.net.NetMessage;
-import org.jutils.ui.StandardFormView;
 import org.jutils.ui.hex.ByteBuffer;
 import org.jutils.ui.hex.HexPanel;
 import org.jutils.ui.model.IDataView;
@@ -89,6 +88,8 @@ public class NetMessageView implements IDataView<NetMessage>
         panel.add( createInfoPanel(), BorderLayout.NORTH );
         panel.add( tabs, BorderLayout.CENTER );
 
+        tabs.requestFocusInWindow();
+
         return panel;
     }
 
@@ -97,14 +98,14 @@ public class NetMessageView implements IDataView<NetMessage>
      **************************************************************************/
     private JComponent createInfoPanel()
     {
-        StandardFormView form = new StandardFormView();
+        JPanel panel = new JPanel( new BorderLayout() );
 
         infoField.setEditable( false );
-        infoField.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
+        infoField.setBorder( new EmptyBorder( 0, 0, 4, 0 ) );
 
-        form.addComponent( infoField );
+        panel.add( infoField, BorderLayout.NORTH );
 
-        return form.getView();
+        return panel;
     }
 
     /***************************************************************************
@@ -166,6 +167,7 @@ public class NetMessageView implements IDataView<NetMessage>
         if( writer != null )
         {
             fieldsField.setText( writer.toString( msg ) );
+            fieldsField.setCaretPosition( 0 );
         }
 
         bytesField.setBuffer( new ByteBuffer( msg.contents ) );

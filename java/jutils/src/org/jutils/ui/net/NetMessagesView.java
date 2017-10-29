@@ -1,16 +1,21 @@
 package org.jutils.ui.net;
 
 import java.awt.*;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import javax.swing.*;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
 import org.jutils.io.IStringWriter;
 import org.jutils.net.NetMessage;
+import org.jutils.ui.OkDialogView;
+import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.event.ResizingTableModelListener;
 import org.jutils.ui.model.*;
@@ -31,8 +36,11 @@ public class NetMessagesView implements IView<JPanel>
     private final JTable table;
     /**  */
     private final JButton hexTextButton;
+
     /**  */
-    private final NetMessageView msgView;
+    private OkDialogView dialog;
+    /**  */
+    private final MessageNavView msgView;
 
     /**  */
     private boolean isHex;
@@ -55,7 +63,7 @@ public class NetMessagesView implements IView<JPanel>
         this.tableModel = new ItemsTableModel<>( tableCfg );
         this.table = new JTable( tableModel );
         this.hexTextButton = new JButton();
-        this.msgView = new NetMessageView( msgWriter );
+        this.msgView = new MessageNavView( this, msgWriter );
         this.view = createView();
     }
 
@@ -73,6 +81,13 @@ public class NetMessagesView implements IView<JPanel>
 
         table.addMouseListener( new MessageMouseListener( this ) );
 
+        TableColumnModel colModel = table.getColumnModel();
+        int lastColIdx = tableCfg.getColumnNames().length - 1;
+        TableColumn column = colModel.getColumn( lastColIdx );
+        LabelTableCellRenderer renderer = new LabelTableCellRenderer(
+            new FontLabelTableCellRenderer( SwingUtils.getFixedFont( 12 ) ) );
+        column.setCellRenderer( renderer );
+
         JScrollPane displayScrollPane = new JScrollPane( table );
         JScrollBar vScrollBar = displayScrollPane.getVerticalScrollBar();
 
@@ -83,8 +98,7 @@ public class NetMessagesView implements IView<JPanel>
         displayScrollPane.setHorizontalScrollBarPolicy(
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED );
 
-        panel.setBorder(
-            BorderFactory.createTitledBorder( "Sent/Received Messages" ) );
+        // panel.setBorder( new TitledBorder( "Sent/Received Messages" ) );
 
         panel.add( createToolbar(), BorderLayout.NORTH );
         panel.add( displayScrollPane, BorderLayout.CENTER );
@@ -166,18 +180,44 @@ public class NetMessagesView implements IView<JPanel>
         return new ActionAdapter( listener, "Clear", icon );
     }
 
-    public void showMessage( int index )
+    /***************************************************************************
+     * @param index
+     **************************************************************************/
+    private void showMessage( int index )
     {
+        if( index < 0 || index >= tableModel.getRowCount() )
+        {
+            return;
+        }
+
         Frame f = SwingUtils.getComponentsFrame( table );
         NetMessage item = tableModel.getItem( index );
 
-        JDialog d = new JDialog( f, "Message Contents", true );
-
         msgView.setData( item );
-        d.setContentPane( msgView.getView() );
-        d.setSize( 675, 400 );
-        d.setLocationRelativeTo( f );
+
+        if( this.dialog == null )
+        {
+            this.dialog = new OkDialogView( getView(), msgView.getView(),
+                ModalityType.MODELESS, OkDialogButtons.OK_ONLY );
+        }
+
+        JDialog d = dialog.getView();
+
+        if( d.isVisible() )
+        {
+            d.toFront();
+        }
+        else
+        {
+            d.setDefaultCloseOperation( JDialog.HIDE_ON_CLOSE );
+            d.setSize( 675, 400 );
+            d.setLocationRelativeTo( f );
+        }
+
+        d.setTitle( String.format( "Message %d", index + 1 ) );
         d.setVisible( true );
+
+        table.setRowSelectionInterval( index, index );
     }
 
     /***************************************************************************
@@ -298,6 +338,124 @@ public class NetMessagesView implements IView<JPanel>
             }
 
             label.setText( text );
+        }
+    }
+
+    private static final class MessageNavView implements IDataView<NetMessage>
+    {
+        private final NetMessagesView msgsView;
+
+        private final JPanel view;
+        private final NetMessageView msgView;
+
+        private final JButton prevButton;
+        private final JButton nextButton;
+
+        public MessageNavView( NetMessagesView msgsView,
+            IStringWriter<NetMessage> msgWriter )
+        {
+            this.msgsView = msgsView;
+            this.msgView = new NetMessageView( msgWriter );
+            this.prevButton = new JButton();
+            this.nextButton = new JButton();
+
+            this.view = createView();
+
+            setButtonsEnabled();
+        }
+
+        private JPanel createView()
+        {
+            JPanel panel = new JPanel( new BorderLayout() );
+
+            panel.add( createToolbar(), BorderLayout.NORTH );
+            panel.add( msgView.getView(), BorderLayout.CENTER );
+
+            return panel;
+        }
+
+        private JToolBar createToolbar()
+        {
+            JToolBar toolbar = new JToolBar();
+
+            SwingUtils.setToolbarDefaults( toolbar );
+
+            SwingUtils.addActionToToolbar( toolbar, createNavAction( false ),
+                prevButton );
+
+            SwingUtils.addActionToToolbar( toolbar, createNavAction( true ),
+                nextButton );
+
+            return toolbar;
+        }
+
+        private Action createNavAction( boolean forward )
+        {
+            ActionListener listener = ( e ) -> navigate( forward );
+            Icon icon = IconConstants.getIcon(
+                forward ? IconConstants.NAV_NEXT_16
+                    : IconConstants.NAV_PREVIOUS_16 );
+            String name = forward ? "Next Message" : "Previous Message";
+
+            return new ActionAdapter( listener, name, icon );
+        }
+
+        private void navigate( boolean forward )
+        {
+            int inc = forward ? 1 : -1;
+            int index = msgsView.table.getSelectedRow();
+            int nextIndex = index + inc;
+
+            msgsView.showMessage( nextIndex );
+
+            setButtonsEnabled();
+        }
+
+        private void setButtonsEnabled()
+        {
+            int index = msgsView.table.getSelectedRow();
+            int maxRow = msgsView.tableModel.getRowCount() - 1;
+
+            prevButton.setEnabled( index > 0 );
+            nextButton.setEnabled( index > -1 && index < maxRow );
+        }
+
+        @Override
+        public JPanel getView()
+        {
+            return view;
+        }
+
+        @Override
+        public NetMessage getData()
+        {
+            return msgView.getData();
+        }
+
+        @Override
+        public void setData( NetMessage data )
+        {
+            msgView.setData( data );
+
+            setButtonsEnabled();
+        }
+    }
+
+    private static final class FontLabelTableCellRenderer
+        implements ITableCellLabelDecorator
+    {
+        private final Font font;
+
+        public FontLabelTableCellRenderer( Font font )
+        {
+            this.font = font;
+        }
+
+        @Override
+        public void decorate( JLabel label, JTable table, Object value,
+            boolean isSelected, boolean hasFocus, int row, int col )
+        {
+            label.setFont( font );
         }
     }
 }

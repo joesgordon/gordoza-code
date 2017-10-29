@@ -131,7 +131,7 @@ public class NetMessagesTableConfig implements ITableItemsConfig<NetMessage>
         }
         else if( col == contentsCol )
         {
-            int cnt = Math.min( item.contents.length, 64 );
+            int cnt = Math.min( item.contents.length, isHex ? 32 : 64 );
             byte [] buf = new byte[cnt];
 
             Utils.byteArrayCopy( item.contents, 0, buf, 0, buf.length );
