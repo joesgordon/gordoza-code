@@ -24,8 +24,17 @@ public class NetMessage
     public NetMessage( boolean received, String address, int port,
         byte [] contents )
     {
+        this( received, LocalDateTime.now(), address, port, contents );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public NetMessage( boolean received, LocalDateTime time, String address,
+        int port, byte [] contents )
+    {
         this.received = received;
-        this.time = LocalDateTime.now();
+        this.time = time;
         this.address = address;
         this.port = port;
         this.contents = contents;

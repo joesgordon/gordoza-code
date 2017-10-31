@@ -1,16 +1,20 @@
 package org.jutils.ui.net;
 
+import java.awt.*;
 import java.nio.ByteBuffer;
 import java.util.Random;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 import org.jutils.IconConstants;
+import org.jutils.SwingUtils;
 import org.jutils.io.IStringWriter;
 import org.jutils.io.StringPrintStream;
 import org.jutils.net.NetMessage;
+import org.jutils.ui.JGoodiesToolBar;
 import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
+import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.net.NetMessagesView.IMessageFields;
 
 /*******************************************************************************
@@ -39,29 +43,52 @@ public class NetMessagesViewMain
             JFrame frame = new JFrame();
 
             // HexMessagePanel panel = new HexMessagePanel();
-            NetMessagesView panel = new NetMessagesView( new MessageFields(),
+            NetMessagesView view = new NetMessagesView( new MessageFields(),
                 new MsgWriter() );
 
-            frame.setContentPane( panel.getView() );
+            frame.setContentPane( createContent( view ) );
 
             frame.setTitle( "Net Messages View Test" );
             frame.setIconImages( IconConstants.getPageMagImages() );
             frame.setSize( 680, 400 );
             frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 
-            panel.addMessage( buildMessage() );
-            panel.addMessage( buildMessage() );
-            panel.addMessage( buildMessage() );
-            panel.addMessage( buildMessage() );
-            panel.addMessage( buildMessage() );
-            panel.addMessage( buildMessage() );
+            view.addMessage( buildMessage() );
+            view.addMessage( buildMessage() );
+            view.addMessage( buildMessage() );
+            view.addMessage( buildMessage() );
+            view.addMessage( buildMessage() );
+            view.addMessage( buildMessage() );
 
             return frame;
         }
 
+        private Container createContent( NetMessagesView view )
+        {
+            JPanel panel = new JPanel( new BorderLayout() );
+
+            panel.add( createToolbar( view ), BorderLayout.NORTH );
+            panel.add( view.getView(), BorderLayout.CENTER );
+
+            return panel;
+        }
+
+        private Component createToolbar( NetMessagesView view )
+        {
+            JToolBar toolbar = new JGoodiesToolBar();
+
+            Action action = new ActionAdapter(
+                ( e ) -> view.addMessage( buildMessage() ), "Add Message",
+                IconConstants.getIcon( IconConstants.EDIT_ADD_16 ) );
+
+            SwingUtils.addActionToToolbar( toolbar, action );
+
+            return toolbar;
+        }
+
         private NetMessage buildMessage()
         {
-            int len = rand.nextInt( 1024 );
+            int len = 20 + rand.nextInt( 1004 );
             byte [] bytes = new byte[len];
             rand.nextBytes( bytes );
 
@@ -75,6 +102,9 @@ public class NetMessagesViewMain
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class MessageFields implements IMessageFields
     {
         @Override
@@ -106,6 +136,9 @@ public class NetMessagesViewMain
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static final class MsgWriter implements IStringWriter<NetMessage>
     {
         @Override

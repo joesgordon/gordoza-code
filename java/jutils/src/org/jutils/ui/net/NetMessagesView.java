@@ -3,17 +3,19 @@ package org.jutils.ui.net;
 import java.awt.*;
 import java.awt.Dialog.ModalityType;
 import java.awt.event.*;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-import org.jutils.IconConstants;
-import org.jutils.SwingUtils;
-import org.jutils.io.IStringWriter;
+import org.jutils.*;
+import org.jutils.io.*;
 import org.jutils.net.NetMessage;
+import org.jutils.net.NetMessageSerializer;
 import org.jutils.ui.OkDialogView;
 import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.event.ActionAdapter;
@@ -35,6 +37,16 @@ public class NetMessagesView implements IView<JPanel>
     /**  */
     private final JTable table;
     /**  */
+    private final JButton navFirstButton;
+    /**  */
+    private final JButton navPreviousButton;
+    /**  */
+    private final JButton navNextButton;
+    /**  */
+    private final JButton navLastButton;
+    /**  */
+    private final JLabel pageLabel;
+    /**  */
     private final JButton hexTextButton;
 
     /**  */
@@ -43,7 +55,15 @@ public class NetMessagesView implements IView<JPanel>
     private final MessageNavView msgView;
 
     /**  */
+    private final ReferenceStream<NetMessage> msgsStream;
+
+    /**  */
     private boolean isHex;
+
+    /**  */
+    private int msgsPerPage;
+    /**  */
+    private long pageStartIndex;
 
     /***************************************************************************
      * 
@@ -55,6 +75,7 @@ public class NetMessagesView implements IView<JPanel>
 
     /***************************************************************************
      * @param fields
+     * @param msgWriter
      **************************************************************************/
     public NetMessagesView( IMessageFields fields,
         IStringWriter<NetMessage> msgWriter )
@@ -62,9 +83,30 @@ public class NetMessagesView implements IView<JPanel>
         this.tableCfg = new NetMessagesTableConfig( fields );
         this.tableModel = new ItemsTableModel<>( tableCfg );
         this.table = new JTable( tableModel );
+        this.navFirstButton = new JButton();
+        this.navPreviousButton = new JButton();
+        this.navNextButton = new JButton();
+        this.navLastButton = new JButton();
+        this.pageLabel = new JLabel( "Page 0 of 0" );
         this.hexTextButton = new JButton();
         this.msgView = new MessageNavView( this, msgWriter );
         this.view = createView();
+
+        ReferenceStream<NetMessage> refStream = null;
+
+        try
+        {
+            refStream = new ReferenceStream<>( new NetMessageSerializer() );
+        }
+        catch( IOException ex )
+        {
+            throw new RuntimeException( "Unable to create temp files", ex );
+        }
+
+        this.msgsStream = refStream;
+
+        this.msgsPerPage = 2;
+        this.pageStartIndex = 0;
     }
 
     /***************************************************************************
@@ -118,6 +160,28 @@ public class NetMessagesView implements IView<JPanel>
 
         SwingUtils.setToolbarDefaults( toolbar );
 
+        SwingUtils.addActionToToolbar( toolbar, createNavAction( true, false ),
+            navFirstButton );
+        navFirstButton.setText( "" );
+
+        SwingUtils.addActionToToolbar( toolbar, createNavAction( false, false ),
+            navPreviousButton );
+        navPreviousButton.setText( "" );
+
+        SwingUtils.addActionToToolbar( toolbar, createNavAction( false, true ),
+            navNextButton );
+        navNextButton.setText( "" );
+
+        SwingUtils.addActionToToolbar( toolbar, createNavAction( true, true ),
+            navLastButton );
+        navLastButton.setText( "" );
+
+        toolbar.addSeparator();
+
+        toolbar.add( pageLabel );
+
+        toolbar.addSeparator();
+
         SwingUtils.addActionToToolbar( toolbar, createClearAction() );
 
         SwingUtils.addActionToToolbar( toolbar, createTextHexAction(),
@@ -125,6 +189,161 @@ public class NetMessagesView implements IView<JPanel>
         hexTextButton.setText( "" );
 
         return toolbar;
+    }
+
+    /***************************************************************************
+     * @param absolute
+     * @param forward
+     * @return
+     **************************************************************************/
+    private Action createNavAction( boolean absolute, boolean forward )
+    {
+        ActionListener listener = ( e ) -> navigatePage( absolute, forward );
+        String iconName;
+        Icon icon;
+        String actionName;
+
+        if( absolute && !forward )
+        {
+            iconName = IconConstants.NAV_FIRST_16;
+            actionName = "First Page";
+        }
+        else if( !absolute && !forward )
+        {
+            iconName = IconConstants.NAV_PREVIOUS_16;
+            actionName = "Previous Page";
+        }
+        else if( !absolute && forward )
+        {
+            iconName = IconConstants.NAV_NEXT_16;
+            actionName = "Next Page";
+        }
+        else
+        {
+            iconName = IconConstants.NAV_LAST_16;
+            actionName = "Last Page";
+        }
+
+        icon = IconConstants.getIcon( iconName );
+
+        return new ActionAdapter( listener, actionName, icon );
+    }
+
+    /***************************************************************************
+     * @param absolute
+     * @param forward
+     * @return
+     **************************************************************************/
+    private void navigatePage( boolean absolute, boolean forward )
+    {
+        long index = -1;
+
+        if( absolute && !forward )
+        {
+            index = 0;
+        }
+        else if( !absolute && !forward )
+        {
+            index = pageStartIndex - msgsPerPage;
+        }
+        else if( !absolute && forward )
+        {
+            index = pageStartIndex + msgsPerPage;
+        }
+        else
+        {
+            index = msgsStream.getCount() - 1;
+            index = index - index % msgsPerPage;
+        }
+
+        if( index > -1 && index < msgsStream.getCount() )
+        {
+            setStartIndex( index );
+        }
+    }
+
+    /***************************************************************************
+     * @param page
+     **************************************************************************/
+    private void setStartIndex( long index )
+    {
+        if( this.pageStartIndex == index )
+        {
+            return;
+        }
+
+        LogUtils.printDebug( "Setting start index to %d from %d of %d", index,
+            pageStartIndex, msgsStream.getCount() );
+
+        this.pageStartIndex = index;
+
+        try
+        {
+            int count = ( int )Math.min( msgsPerPage,
+                msgsStream.getCount() - pageStartIndex );
+            List<NetMessage> msgs = msgsStream.read( pageStartIndex, count );
+            tableModel.setItems( msgs );
+        }
+        catch( IOException ex )
+        {
+            ex.printStackTrace();
+        }
+        catch( ValidationException ex )
+        {
+            ex.printStackTrace();
+        }
+
+        setNavButtonsEnabled();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private void setNavButtonsEnabled()
+    {
+        boolean hasPrev = hasPrevious();
+        boolean hasNext = hasNext();
+
+        navFirstButton.setEnabled( hasPrev );
+        navPreviousButton.setEnabled( hasPrev );
+        navNextButton.setEnabled( hasNext );
+        navLastButton.setEnabled( hasNext );
+
+        int pageIndex = ( int )( ( pageStartIndex + msgsPerPage - 1 ) /
+            msgsPerPage );
+
+        pageLabel.setText(
+            String.format( "Page %d of %d", pageIndex + 1, getPageCount() ) );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private boolean hasPrevious()
+    {
+        return pageStartIndex > 0;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private boolean hasNext()
+    {
+        long lastMsg = msgsStream.getCount() - 1;
+        long maxStartIndex = lastMsg - lastMsg % msgsPerPage;
+        return pageStartIndex < maxStartIndex;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private int getPageCount()
+    {
+        long count = msgsStream.getCount();
+
+        int max = ( int )( ( count + msgsPerPage - 1 ) / msgsPerPage );
+
+        return max;
     }
 
     /***************************************************************************
@@ -239,6 +458,27 @@ public class NetMessagesView implements IView<JPanel>
         // LogUtils.printDebug( "Resizing table" );
 
         ResizingTableModelListener.resizeTable( table );
+
+        try
+        {
+            msgsStream.write( msg );
+        }
+        catch( IOException ex )
+        {
+            ex.printStackTrace();
+        }
+
+        long index = msgsStream.getCount() - 1;
+        index = index - index % msgsPerPage;
+
+        long nextIndex = pageStartIndex + msgsPerPage;
+
+        if( index >= nextIndex )
+        {
+            setStartIndex( index );
+        }
+
+        setNavButtonsEnabled();
     }
 
     /***************************************************************************
@@ -247,6 +487,8 @@ public class NetMessagesView implements IView<JPanel>
     public void clearMessages()
     {
         tableModel.clearItems();
+
+        setNavButtonsEnabled();
     }
 
     /***************************************************************************
@@ -267,7 +509,10 @@ public class NetMessagesView implements IView<JPanel>
     private static class EndScroller implements AdjustmentListener
     {
         /**  */
-        private JScrollBar vScrollBar;
+        private final JScrollBar vScrollBar;
+
+        /**  */
+        private int lastScrollPos = 0;
         /**  */
         private int lastMaxScrollPos = 0;
 
@@ -279,11 +524,15 @@ public class NetMessagesView implements IView<JPanel>
         @Override
         public void adjustmentValueChanged( AdjustmentEvent e )
         {
-            if( vScrollBar.getMaximum() > lastMaxScrollPos )
+            int max = vScrollBar.getMaximum();
+
+            if( lastScrollPos == lastMaxScrollPos || lastMaxScrollPos > max )
             {
-                lastMaxScrollPos = vScrollBar.getMaximum();
+                lastMaxScrollPos = max;
                 vScrollBar.setValue( lastMaxScrollPos );
             }
+
+            lastScrollPos = vScrollBar.getValue();
         }
     }
 
@@ -341,6 +590,9 @@ public class NetMessagesView implements IView<JPanel>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static final class MessageNavView implements IDataView<NetMessage>
     {
         private final NetMessagesView msgsView;

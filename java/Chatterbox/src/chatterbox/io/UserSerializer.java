@@ -3,8 +3,7 @@ package chatterbox.io;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-import org.jutils.io.IDataSerializer;
-import org.jutils.io.IDataStream;
+import org.jutils.io.*;
 
 import chatterbox.data.ChatUser;
 
