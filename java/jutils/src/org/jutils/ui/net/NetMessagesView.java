@@ -87,6 +87,19 @@ public class NetMessagesView implements IView<JPanel>
     public NetMessagesView( IMessageFields fields,
         IStringWriter<NetMessage> msgWriter )
     {
+        ReferenceStream<NetMessage> refStream = null;
+
+        try
+        {
+            refStream = new ReferenceStream<>( new NetMessageSerializer() );
+        }
+        catch( IOException ex )
+        {
+            throw new RuntimeException( "Unable to create temp files", ex );
+        }
+
+        this.msgsStream = refStream;
+
         this.tableCfg = new NetMessagesTableConfig( fields );
         this.tableModel = new ItemsTableModel<>( tableCfg );
         this.table = new JTable( tableModel );
@@ -100,19 +113,6 @@ public class NetMessagesView implements IView<JPanel>
         this.hexTextButton = new JButton();
         this.msgView = new MessageNavView( this, msgWriter );
         this.view = createView();
-
-        ReferenceStream<NetMessage> refStream = null;
-
-        try
-        {
-            refStream = new ReferenceStream<>( new NetMessageSerializer() );
-        }
-        catch( IOException ex )
-        {
-            throw new RuntimeException( "Unable to create temp files", ex );
-        }
-
-        this.msgsStream = refStream;
 
         this.msgsPerPage = 500;
         this.pageStartIndex = 0;
@@ -339,11 +339,13 @@ public class NetMessagesView implements IView<JPanel>
         navNextButton.setEnabled( hasNext );
         navLastButton.setEnabled( hasNext );
 
+        int pageCount = getPageCount();
         int pageIndex = ( int )( ( pageStartIndex + msgsPerPage - 1 ) /
             msgsPerPage );
+        int pageNum = pageCount == 0 ? 0 : ( pageIndex + 1 );
 
         pageLabel.setText( String.format( "Page %d of %d (%d messages)",
-            pageIndex + 1, getPageCount(), msgsStream.getCount() ) );
+            pageNum, pageCount, msgsStream.getCount() ) );
     }
 
     /***************************************************************************
@@ -430,17 +432,25 @@ public class NetMessagesView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @param index
+     * @param msgIndex
      **************************************************************************/
-    private void showMessage( int index )
+    private void showMessage( long msgIndex )
     {
-        if( index < 0 || index >= tableModel.getRowCount() )
+        if( msgIndex < 0 || msgIndex >= msgsStream.getCount() )
         {
             return;
         }
 
+        if( !isPaged( msgIndex ) )
+        {
+            long start = msgIndex - msgIndex % msgsPerPage;
+            setStartIndex( start );
+        }
+
+        int tableIndex = ( int )( msgIndex - pageStartIndex );
+
         Frame f = SwingUtils.getComponentsFrame( table );
-        NetMessage item = tableModel.getItem( index );
+        NetMessage item = tableModel.getItem( tableIndex );
 
         msgView.setData( item );
 
@@ -463,10 +473,16 @@ public class NetMessagesView implements IView<JPanel>
             d.setLocationRelativeTo( f );
         }
 
-        d.setTitle( String.format( "Message %d", index + 1 ) );
+        d.setTitle( String.format( "Message %d", msgIndex + 1 ) );
         d.setVisible( true );
 
-        table.setRowSelectionInterval( index, index );
+        table.setRowSelectionInterval( tableIndex, tableIndex );
+    }
+
+    private boolean isPaged( long index )
+    {
+        return index > pageStartIndex &&
+            index < ( pageStartIndex + msgsPerPage );
     }
 
     /***************************************************************************
@@ -526,7 +542,23 @@ public class NetMessagesView implements IView<JPanel>
     {
         tableModel.clearItems();
 
+        try
+        {
+            msgsStream.removeAll();
+        }
+        catch( IOException ex )
+        {
+            ex.printStackTrace();
+        }
+
+        pageStartIndex = 0L;
         setNavButtonsEnabled();
+        updateRowHeader( 0 );
+
+        if( dialog.getView().isVisible() )
+        {
+            dialog.getView().setVisible( false );
+        }
     }
 
     /***************************************************************************
@@ -559,7 +591,8 @@ public class NetMessagesView implements IView<JPanel>
             if( SwingUtilities.isLeftMouseButton( e ) &&
                 e.getClickCount() == 2 )
             {
-                int index = view.table.rowAtPoint( e.getPoint() );
+                long index = view.table.rowAtPoint( e.getPoint() ) +
+                    view.pageStartIndex;
 
                 view.showMessage( index );
             }
@@ -660,8 +693,9 @@ public class NetMessagesView implements IView<JPanel>
         private void navigate( boolean forward )
         {
             int inc = forward ? 1 : -1;
-            int index = msgsView.table.getSelectedRow();
-            int nextIndex = index + inc;
+            long index = msgsView.table.getSelectedRow() +
+                msgsView.pageStartIndex;
+            long nextIndex = index + inc;
 
             msgsView.showMessage( nextIndex );
 
@@ -670,8 +704,9 @@ public class NetMessagesView implements IView<JPanel>
 
         private void setButtonsEnabled()
         {
-            int index = msgsView.table.getSelectedRow();
-            int maxRow = msgsView.tableModel.getRowCount() - 1;
+            long index = msgsView.table.getSelectedRow() +
+                msgsView.pageStartIndex;
+            long maxRow = msgsView.msgsStream.getCount() - 1;
 
             prevButton.setEnabled( index > 0 );
             nextButton.setEnabled( index > -1 && index < maxRow );
