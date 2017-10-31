@@ -13,13 +13,15 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 import org.jutils.*;
-import org.jutils.io.*;
+import org.jutils.data.UIProperty;
+import org.jutils.io.IStringWriter;
+import org.jutils.io.ReferenceStream;
 import org.jutils.net.NetMessage;
 import org.jutils.net.NetMessageSerializer;
 import org.jutils.ui.OkDialogView;
 import org.jutils.ui.OkDialogView.OkDialogButtons;
-import org.jutils.ui.event.ActionAdapter;
-import org.jutils.ui.event.ResizingTableModelListener;
+import org.jutils.ui.RowHeaderRenderer;
+import org.jutils.ui.event.*;
 import org.jutils.ui.model.*;
 import org.jutils.ui.model.LabelTableCellRenderer.ITableCellLabelDecorator;
 
@@ -36,6 +38,11 @@ public class NetMessagesView implements IView<JPanel>
     private final ItemsTableModel<NetMessage> tableModel;
     /**  */
     private final JTable table;
+    /**  */
+    private final JList<String> rowHeader;
+    /**  */
+    private final RowListModel rowModel;
+
     /**  */
     private final JButton navFirstButton;
     /**  */
@@ -83,6 +90,8 @@ public class NetMessagesView implements IView<JPanel>
         this.tableCfg = new NetMessagesTableConfig( fields );
         this.tableModel = new ItemsTableModel<>( tableCfg );
         this.table = new JTable( tableModel );
+        this.rowModel = new RowListModel();
+        this.rowHeader = new JList<>( rowModel );
         this.navFirstButton = new JButton();
         this.navPreviousButton = new JButton();
         this.navNextButton = new JButton();
@@ -105,7 +114,7 @@ public class NetMessagesView implements IView<JPanel>
 
         this.msgsStream = refStream;
 
-        this.msgsPerPage = 2;
+        this.msgsPerPage = 500;
         this.pageStartIndex = 0;
     }
 
@@ -133,7 +142,13 @@ public class NetMessagesView implements IView<JPanel>
         JScrollPane displayScrollPane = new JScrollPane( table );
         JScrollBar vScrollBar = displayScrollPane.getVerticalScrollBar();
 
-        vScrollBar.addAdjustmentListener( new EndScroller( vScrollBar ) );
+        vScrollBar.addAdjustmentListener( new BottomScroller( vScrollBar ) );
+
+        rowHeader.setCellRenderer( new RowHeaderRenderer( table ) );
+        rowHeader.setBackground( UIProperty.PANEL_BACKGROUND.getColor() );
+        rowHeader.setFixedCellHeight( table.getRowHeight() );
+
+        displayScrollPane.setRowHeaderView( rowHeader );
 
         displayScrollPane.setVerticalScrollBarPolicy(
             ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
@@ -272,17 +287,20 @@ public class NetMessagesView implements IView<JPanel>
             return;
         }
 
-        LogUtils.printDebug( "Setting start index to %d from %d of %d", index,
-            pageStartIndex, msgsStream.getCount() );
+        int count = ( int )Math.min( msgsPerPage,
+            msgsStream.getCount() - index );
+
+        // LogUtils.printDebug( "Setting start index to %d from %d of %d for
+        // %d",
+        // index, pageStartIndex, msgsStream.getCount(), count );
 
         this.pageStartIndex = index;
 
         try
         {
-            int count = ( int )Math.min( msgsPerPage,
-                msgsStream.getCount() - pageStartIndex );
             List<NetMessage> msgs = msgsStream.read( pageStartIndex, count );
             tableModel.setItems( msgs );
+            updateRowHeader( count );
         }
         catch( IOException ex )
         {
@@ -294,6 +312,18 @@ public class NetMessagesView implements IView<JPanel>
         }
 
         setNavButtonsEnabled();
+    }
+
+    /***************************************************************************
+     * @param count
+     **************************************************************************/
+    private void updateRowHeader( int count )
+    {
+        rowModel.setStart( pageStartIndex );
+        rowModel.setSize( count );
+        rowHeader.setFixedCellWidth( -1 );
+        rowHeader.setFixedCellWidth( rowHeader.getPreferredSize().width + 16 );
+        rowHeader.repaint();
     }
 
     /***************************************************************************
@@ -312,8 +342,8 @@ public class NetMessagesView implements IView<JPanel>
         int pageIndex = ( int )( ( pageStartIndex + msgsPerPage - 1 ) /
             msgsPerPage );
 
-        pageLabel.setText(
-            String.format( "Page %d of %d", pageIndex + 1, getPageCount() ) );
+        pageLabel.setText( String.format( "Page %d of %d (%d messages)",
+            pageIndex + 1, getPageCount(), msgsStream.getCount() ) );
     }
 
     /***************************************************************************
@@ -453,11 +483,8 @@ public class NetMessagesView implements IView<JPanel>
      **************************************************************************/
     public void addMessage( NetMessage msg )
     {
-        tableModel.addItem( msg );
-
-        // LogUtils.printDebug( "Resizing table" );
-
-        ResizingTableModelListener.resizeTable( table );
+        long lastStartIndex = Math.max( msgsStream.getCount() - 1, 0 );
+        lastStartIndex = lastStartIndex - lastStartIndex % msgsPerPage;
 
         try
         {
@@ -468,14 +495,25 @@ public class NetMessagesView implements IView<JPanel>
             ex.printStackTrace();
         }
 
-        long index = msgsStream.getCount() - 1;
-        index = index - index % msgsPerPage;
-
         long nextIndex = pageStartIndex + msgsPerPage;
 
-        if( index >= nextIndex )
+        // LogUtils.printDebug(
+        // "Adding message; last start = %d, next start = %d, current start =
+        // %d, count = %d",
+        // lastStartIndex, nextIndex, pageStartIndex, msgsStream.getCount() );
+
+        if( lastStartIndex == pageStartIndex )
         {
-            setStartIndex( index );
+            if( msgsStream.getCount() > nextIndex )
+            {
+                setStartIndex( msgsStream.getCount() - 1 );
+            }
+            else
+            {
+                tableModel.addItem( msg );
+                updateRowHeader( tableModel.getRowCount() );
+            }
+            ResizingTableModelListener.resizeTable( table );
         }
 
         setNavButtonsEnabled();
@@ -501,39 +539,6 @@ public class NetMessagesView implements IView<JPanel>
         public String getFieldName( int index );
 
         public String getFieldValue( NetMessage message, int index );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class EndScroller implements AdjustmentListener
-    {
-        /**  */
-        private final JScrollBar vScrollBar;
-
-        /**  */
-        private int lastScrollPos = 0;
-        /**  */
-        private int lastMaxScrollPos = 0;
-
-        public EndScroller( JScrollBar vert )
-        {
-            vScrollBar = vert;
-        }
-
-        @Override
-        public void adjustmentValueChanged( AdjustmentEvent e )
-        {
-            int max = vScrollBar.getMaximum();
-
-            if( lastScrollPos == lastMaxScrollPos || lastMaxScrollPos > max )
-            {
-                lastMaxScrollPos = max;
-                vScrollBar.setValue( lastMaxScrollPos );
-            }
-
-            lastScrollPos = vScrollBar.getValue();
-        }
     }
 
     /***************************************************************************
@@ -693,6 +698,9 @@ public class NetMessagesView implements IView<JPanel>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static final class FontLabelTableCellRenderer
         implements ITableCellLabelDecorator
     {
@@ -708,6 +716,47 @@ public class NetMessagesView implements IView<JPanel>
             boolean isSelected, boolean hasFocus, int row, int col )
         {
             label.setFont( font );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class RowListModel extends AbstractListModel<String>
+    {
+        /**  */
+        private static final long serialVersionUID = 404977197801943790L;
+        /**  */
+        private long rowStart;
+        /**  */
+        private int rowCount;
+
+        public RowListModel()
+        {
+            rowStart = 0;
+            rowCount = 1;
+        }
+
+        @Override
+        public int getSize()
+        {
+            return rowCount;
+        }
+
+        public void setSize( int count )
+        {
+            rowCount = count;
+        }
+
+        public void setStart( long start )
+        {
+            rowStart = start;
+        }
+
+        @Override
+        public String getElementAt( int index )
+        {
+            return Long.toString( rowStart + index + 1 );
         }
     }
 }

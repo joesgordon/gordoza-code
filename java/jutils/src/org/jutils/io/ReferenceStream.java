@@ -184,7 +184,8 @@ public final class ReferenceStream<T> implements IReferenceStream<T>
     {
         // TODO !!!! fix bug in BufferedStream.
         // To illustrate, start NetMessagesViewMain. Go back. Add.
-        return new DataStream( new BufferedStream( new FileStream( file ) ) );
-        // return new DataStream( new FileStream( file ) );
+        // return new DataStream( new BufferedStream( new FileStream( file ) )
+        // );
+        return new DataStream( new FileStream( file ) );
     }
 }
