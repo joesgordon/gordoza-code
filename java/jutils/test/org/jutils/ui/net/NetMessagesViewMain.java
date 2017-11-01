@@ -1,6 +1,5 @@
 package org.jutils.ui.net;
 
-import java.awt.*;
 import java.nio.ByteBuffer;
 import java.util.Random;
 
@@ -12,6 +11,7 @@ import org.jutils.io.IStringWriter;
 import org.jutils.io.StringPrintStream;
 import org.jutils.net.NetMessage;
 import org.jutils.ui.JGoodiesToolBar;
+import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.event.ActionAdapter;
@@ -40,18 +40,25 @@ public class NetMessagesViewMain
         @Override
         public JFrame createFrame()
         {
-            JFrame frame = new JFrame();
+            StandardFrameView frameView = new StandardFrameView();
 
             // HexMessagePanel panel = new HexMessagePanel();
             NetMessagesView view = new NetMessagesView( new MessageFields(),
                 new MsgWriter() );
 
-            frame.setContentPane( createContent( view ) );
+            frameView.setToolbar( createToolbar( view ) );
+            frameView.setContent( view.getView() );
 
-            frame.setTitle( "Net Messages View Test" );
+            frameView.setTitle( "Net Messages View Test" );
+            frameView.setSize( 680, 400 );
+            frameView.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+
+            JFrame frame = frameView.getView();
+
             frame.setIconImages( IconConstants.getPageMagImages() );
-            frame.setSize( 680, 400 );
-            frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+
+            view.clearMessages();
+            view.setOpenVisible( true );
 
             view.addMessage( buildMessage() );
             view.addMessage( buildMessage() );
@@ -63,17 +70,7 @@ public class NetMessagesViewMain
             return frame;
         }
 
-        private Container createContent( NetMessagesView view )
-        {
-            JPanel panel = new JPanel( new BorderLayout() );
-
-            panel.add( createToolbar( view ), BorderLayout.NORTH );
-            panel.add( view.getView(), BorderLayout.CENTER );
-
-            return panel;
-        }
-
-        private Component createToolbar( NetMessagesView view )
+        private JToolBar createToolbar( NetMessagesView view )
         {
             JToolBar toolbar = new JGoodiesToolBar();
 

@@ -7,11 +7,11 @@ package org.jutils.io;
 public class BitsReader
 {
     /** Masks needed to clear a particular bit. */
-    public static final int [] MASKS;
+    public static final long [] MASKS;
 
     static
     {
-        MASKS = new int[65];
+        MASKS = new long[65];
 
         for( int m = 0; m < MASKS.length; m++ )
         {
@@ -24,9 +24,9 @@ public class BitsReader
     }
 
     /** The mask for the bits of the sub-field. */
-    private final int mask;
+    private final long mask;
     /** The number of bytes to shift the sub-field down to bit zero. */
-    private final int shift;
+    private final long shift;
 
     /***************************************************************************
      * Creates a reader that reads the bits out of an integer from the start to
@@ -42,15 +42,15 @@ public class BitsReader
                 "End index must be greater than start index" );
         }
 
-        if( end >= Integer.SIZE )
+        if( end >= Long.SIZE )
         {
             throw new IllegalArgumentException(
-                "End index cannot be greater than " + ( Integer.SIZE - 1 ) );
+                "End index cannot be greater than " + ( Long.SIZE - 1 ) );
         }
 
         int len = end - start + 1;
 
-        int mask = MASKS[len];
+        long mask = MASKS[len];
         int shift = start;
 
         this.mask = mask << shift;
@@ -85,7 +85,7 @@ public class BitsReader
      **************************************************************************/
     public int read( int value )
     {
-        return ( value & mask ) >>> shift;
+        return ( int )( ( value & mask ) >>> shift );
     }
 
     /***************************************************************************

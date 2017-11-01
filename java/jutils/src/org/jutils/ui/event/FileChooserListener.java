@@ -132,7 +132,8 @@ public class FileChooserListener implements ActionListener
         this.fileSelected = fileSelected == null ? IFileSelected.nullSelector()
             : fileSelected;
         this.filesSelected = filesSelected == null
-            ? IFilesSelected.nullSelector() : filesSelected;
+            ? IFilesSelected.nullSelector()
+            : filesSelected;
         this.lastFile = lastFile == null ? ILastFile.nullSelector() : lastFile;
         this.lastFiles = lastFiles == null ? ILastFiles.nullSelector()
             : lastFiles;
@@ -247,7 +248,7 @@ public class FileChooserListener implements ActionListener
 
                 if( !chooser.getSelectedFile().equals( defaultFile ) ||
                     !chooser.getCurrentDirectory().equals(
-                        defaultFile.getParent() ) )
+                        defaultFile.getParentFile() ) )
                 {
                     chooser.setCurrentDirectory( defaultFile );
                 }

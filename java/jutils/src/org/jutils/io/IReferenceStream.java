@@ -1,7 +1,6 @@
 package org.jutils.io;
 
-import java.io.Closeable;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 import org.jutils.ValidationException;
@@ -16,4 +15,10 @@ public interface IReferenceStream<T> extends Closeable
 
     public List<T> read( long index, int count )
         throws IOException, ValidationException;
+
+    public IStream getItemsStream();
+
+    public void setItemsFile( File file ) throws IOException;
+
+    public void removeAll() throws IOException;
 }

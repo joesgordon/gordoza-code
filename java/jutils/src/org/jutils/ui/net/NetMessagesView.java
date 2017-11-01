@@ -3,7 +3,7 @@ package org.jutils.ui.net;
 import java.awt.*;
 import java.awt.Dialog.ModalityType;
 import java.awt.event.*;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -14,14 +14,14 @@ import javax.swing.table.TableColumnModel;
 
 import org.jutils.*;
 import org.jutils.data.UIProperty;
-import org.jutils.io.IStringWriter;
-import org.jutils.io.ReferenceStream;
+import org.jutils.io.*;
 import org.jutils.net.NetMessage;
 import org.jutils.net.NetMessageSerializer;
 import org.jutils.ui.OkDialogView;
 import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.RowHeaderRenderer;
 import org.jutils.ui.event.*;
+import org.jutils.ui.event.FileChooserListener.IFileSelected;
 import org.jutils.ui.model.*;
 import org.jutils.ui.model.LabelTableCellRenderer.ITableCellLabelDecorator;
 
@@ -54,6 +54,8 @@ public class NetMessagesView implements IView<JPanel>
     /**  */
     private final JLabel pageLabel;
     /**  */
+    private final JButton openButton;
+    /**  */
     private final JButton hexTextButton;
 
     /**  */
@@ -62,7 +64,7 @@ public class NetMessagesView implements IView<JPanel>
     private final MessageNavView msgView;
 
     /**  */
-    private final ReferenceStream<NetMessage> msgsStream;
+    private final IReferenceStream<NetMessage> msgsStream;
 
     /**  */
     private boolean isHex;
@@ -110,12 +112,15 @@ public class NetMessagesView implements IView<JPanel>
         this.navNextButton = new JButton();
         this.navLastButton = new JButton();
         this.pageLabel = new JLabel( "Page 0 of 0" );
+        this.openButton = new JButton();
         this.hexTextButton = new JButton();
         this.msgView = new MessageNavView( this, msgWriter );
         this.view = createView();
 
         this.msgsPerPage = 500;
-        this.pageStartIndex = 0;
+        this.pageStartIndex = -1;
+
+        setOpenVisible( false );
     }
 
     /***************************************************************************
@@ -197,6 +202,13 @@ public class NetMessagesView implements IView<JPanel>
 
         toolbar.addSeparator();
 
+        SwingUtils.addActionToToolbar( toolbar, createSaveAction() );
+
+        SwingUtils.addActionToToolbar( toolbar, createOpenAction(),
+            openButton );
+
+        toolbar.addSeparator();
+
         SwingUtils.addActionToToolbar( toolbar, createClearAction() );
 
         SwingUtils.addActionToToolbar( toolbar, createTextHexAction(),
@@ -245,6 +257,56 @@ public class NetMessagesView implements IView<JPanel>
     }
 
     /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createSaveAction()
+    {
+        IFileSelected ifs = ( f ) -> saveFile( f );
+        FileChooserListener listener = new FileChooserListener( getView(),
+            "Choose File", true, ifs );
+        Icon icon = IconConstants.getIcon( IconConstants.SAVE_16 );
+
+        return new ActionAdapter( listener, "Save", icon );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createOpenAction()
+    {
+        IFileSelected ifs = ( f ) -> openFile( f );
+        FileChooserListener listener = new FileChooserListener( getView(),
+            "Choose File", false, ifs );
+        Icon icon = IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 );
+
+        return new ActionAdapter( listener, "Open", icon );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createClearAction()
+    {
+        ActionListener listener = ( e ) -> clearMessages();
+        Icon icon = IconConstants.getIcon( IconConstants.EDIT_CLEAR_16 );
+
+        return new ActionAdapter( listener, "Clear", icon );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createTextHexAction()
+    {
+        ActionListener listener = ( e ) -> toggleHexText();
+        Icon icon = IconConstants.getIcon( IconConstants.FONT_16 );
+
+        isHex = true;
+
+        return new ActionAdapter( listener, "Show Text Contents", icon );
+    }
+
+    /***************************************************************************
      * @param absolute
      * @param forward
      * @return
@@ -273,28 +335,28 @@ public class NetMessagesView implements IView<JPanel>
 
         if( index > -1 && index < msgsStream.getCount() )
         {
-            setStartIndex( index );
+            navigatePage( index );
         }
     }
 
     /***************************************************************************
      * @param page
      **************************************************************************/
-    private void setStartIndex( long index )
+    private void navigatePage( long startIndex )
     {
-        if( this.pageStartIndex == index )
+        if( this.pageStartIndex == startIndex )
         {
             return;
         }
 
         int count = ( int )Math.min( msgsPerPage,
-            msgsStream.getCount() - index );
+            msgsStream.getCount() - startIndex );
 
         // LogUtils.printDebug( "Setting start index to %d from %d of %d for
         // %d",
         // index, pageStartIndex, msgsStream.getCount(), count );
 
-        this.pageStartIndex = index;
+        this.pageStartIndex = startIndex;
 
         try
         {
@@ -379,19 +441,6 @@ public class NetMessagesView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @return
-     **************************************************************************/
-    private Action createTextHexAction()
-    {
-        ActionListener listener = ( e ) -> toggleHexText();
-        Icon icon = IconConstants.getIcon( IconConstants.FONT_16 );
-
-        isHex = true;
-
-        return new ActionAdapter( listener, "Show Text Contents", icon );
-    }
-
-    /***************************************************************************
      * 
      **************************************************************************/
     private void toggleHexText()
@@ -421,17 +470,6 @@ public class NetMessagesView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @return
-     **************************************************************************/
-    private Action createClearAction()
-    {
-        ActionListener listener = ( e ) -> clearMessages();
-        Icon icon = IconConstants.getIcon( IconConstants.EDIT_CLEAR_16 );
-
-        return new ActionAdapter( listener, "Clear", icon );
-    }
-
-    /***************************************************************************
      * @param msgIndex
      **************************************************************************/
     private void showMessage( long msgIndex )
@@ -444,7 +482,7 @@ public class NetMessagesView implements IView<JPanel>
         if( !isPaged( msgIndex ) )
         {
             long start = msgIndex - msgIndex % msgsPerPage;
-            setStartIndex( start );
+            navigatePage( start );
         }
 
         int tableIndex = ( int )( msgIndex - pageStartIndex );
@@ -479,10 +517,74 @@ public class NetMessagesView implements IView<JPanel>
         table.setRowSelectionInterval( tableIndex, tableIndex );
     }
 
+    /***************************************************************************
+     * @param index
+     * @return
+     **************************************************************************/
     private boolean isPaged( long index )
     {
         return index > pageStartIndex &&
             index < ( pageStartIndex + msgsPerPage );
+    }
+
+    /***************************************************************************
+     * @param f
+     **************************************************************************/
+    private void saveFile( File file )
+    {
+        byte [] buf = new byte[IOUtils.DEFAULT_BUF_SIZE];
+
+        try( FileStream stream = new FileStream( file ) )
+        {
+            @SuppressWarnings( "resource")
+            IStream input = msgsStream.getItemsStream();
+
+            input.seek( 0L );
+
+            long length = input.getLength();
+            long written = 0;
+
+            while( written < length )
+            {
+                int count = input.read( buf );
+
+                stream.write( buf, 0, count );
+
+                written += count;
+            }
+        }
+        catch( FileNotFoundException ex )
+        {
+            // TODO Auto-generated catch block
+            ex.printStackTrace();
+        }
+        catch( IOException ex )
+        {
+            // TODO Auto-generated catch block
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * @param file
+     */
+    private void openFile( File file )
+    {
+        clearMessages();
+
+        try
+        {
+            msgsStream.setItemsFile( file );
+        }
+        catch( IOException ex )
+        {
+            // TODO Auto-generated catch block
+            ex.printStackTrace();
+        }
+
+        pageStartIndex = -1;
+        navigatePage( true, true );
+        ResizingTableModelListener.resizeTable( table );
     }
 
     /***************************************************************************
@@ -499,12 +601,14 @@ public class NetMessagesView implements IView<JPanel>
      **************************************************************************/
     public void addMessage( NetMessage msg )
     {
-        long lastStartIndex = Math.max( msgsStream.getCount() - 1, 0 );
+        long count = msgsStream.getCount();
+        long lastStartIndex = Math.max( count - 1, 0 );
         lastStartIndex = lastStartIndex - lastStartIndex % msgsPerPage;
 
         try
         {
             msgsStream.write( msg );
+            count++;
         }
         catch( IOException ex )
         {
@@ -520,9 +624,9 @@ public class NetMessagesView implements IView<JPanel>
 
         if( lastStartIndex == pageStartIndex )
         {
-            if( msgsStream.getCount() > nextIndex )
+            if( count > nextIndex )
             {
-                setStartIndex( msgsStream.getCount() - 1 );
+                navigatePage( count - 1 );
             }
             else
             {
@@ -555,10 +659,18 @@ public class NetMessagesView implements IView<JPanel>
         setNavButtonsEnabled();
         updateRowHeader( 0 );
 
-        if( dialog.getView().isVisible() )
+        if( dialog != null && dialog.getView().isVisible() )
         {
             dialog.getView().setVisible( false );
         }
+    }
+
+    /***************************************************************************
+     * @param visible
+     **************************************************************************/
+    public void setOpenVisible( boolean visible )
+    {
+        openButton.setVisible( visible );
     }
 
     /***************************************************************************

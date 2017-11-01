@@ -20,9 +20,9 @@ public final class ReferenceStream<T> implements IReferenceStream<T>
     /**  */
     private final IDataStream refStream;
     /**  */
-    private final File itemsFileToDelete;
+    private File itemsFileToDelete;
     /**  */
-    private final IDataStream itemsStream;
+    private IDataStream itemsStream;
 
     /**  */
     private long count;
@@ -154,7 +154,7 @@ public final class ReferenceStream<T> implements IReferenceStream<T>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void close() throws IOException
@@ -174,7 +174,7 @@ public final class ReferenceStream<T> implements IReferenceStream<T>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public long getCount()
@@ -183,7 +183,7 @@ public final class ReferenceStream<T> implements IReferenceStream<T>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void write( T item ) throws IOException
@@ -202,7 +202,7 @@ public final class ReferenceStream<T> implements IReferenceStream<T>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public T read( long index ) throws IOException, ValidationException
@@ -220,7 +220,7 @@ public final class ReferenceStream<T> implements IReferenceStream<T>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public List<T> read( long index, int count )
@@ -244,9 +244,10 @@ public final class ReferenceStream<T> implements IReferenceStream<T>
         return items;
     }
 
-    /**
-     * @throws IOException
-     */
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
     public void removeAll() throws IOException
     {
         count = 0;
@@ -254,11 +255,63 @@ public final class ReferenceStream<T> implements IReferenceStream<T>
         itemsStream.seek( 0L );
     }
 
-    /**
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public IStream getItemsStream()
+    {
+        return itemsStream;
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public void setItemsFile( File file ) throws IOException
+    {
+        this.itemsStream.close();
+
+        if( itemsFileToDelete != null )
+        {
+            itemsFileToDelete.delete();
+            itemsFileToDelete = null;
+        }
+
+        this.itemsStream = createStream( file );
+
+        this.itemStreamLength = itemsStream.getLength();
+
+        this.count = 0;
+        this.refStream.seek( 0L );
+
+        if( itemStreamLength > 0 )
+        {
+            long pos;
+            while( ( pos = itemsStream.getPosition() ) < itemStreamLength )
+            {
+                try
+                {
+                    refStream.writeLong( pos );
+                    serializer.read( itemsStream );
+                    count++;
+                }
+                catch( ValidationException ex )
+                {
+                    count = 0;
+                    throw new IOException( ex );
+                }
+            }
+
+            LogUtils.printDebug( "Read %d items", count );
+        }
+    }
+
+    /***************************************************************************
      * @param file
      * @return
      * @throws FileNotFoundException
-     */
+     **************************************************************************/
     @SuppressWarnings( "resource")
     private static IDataStream createStream( File file )
         throws FileNotFoundException
@@ -270,10 +323,10 @@ public final class ReferenceStream<T> implements IReferenceStream<T>
         return new DataStream( new FileStream( file ) );
     }
 
-    /**
+    /***************************************************************************
      * @return
      * @throws IOException
-     */
+     **************************************************************************/
     private static File createTempFile() throws IOException
     {
         LocalDateTime time = LocalDateTime.now();
