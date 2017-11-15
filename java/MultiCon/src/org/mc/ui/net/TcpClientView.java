@@ -195,6 +195,7 @@ public class TcpClientView implements IConnectionView
                     "Unable to close connection: " + ex.getMessage() );
             }
         }
+        configPanel.setBindEnabled( true );
     }
 
     /***************************************************************************

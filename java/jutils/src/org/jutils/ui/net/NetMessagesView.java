@@ -13,13 +13,12 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 import org.jutils.*;
-import org.jutils.data.UIProperty;
 import org.jutils.io.*;
 import org.jutils.net.NetMessage;
 import org.jutils.net.NetMessageSerializer;
 import org.jutils.ui.OkDialogView;
 import org.jutils.ui.OkDialogView.OkDialogButtons;
-import org.jutils.ui.RowHeaderRenderer;
+import org.jutils.ui.RowHeaderNumberView;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileChooserListener.IFileSelected;
 import org.jutils.ui.model.*;
@@ -39,9 +38,7 @@ public class NetMessagesView implements IView<JPanel>
     /**  */
     private final JTable table;
     /**  */
-    private final JList<String> rowHeader;
-    /**  */
-    private final RowListModel rowModel;
+    private final RowHeaderNumberView rowView;
 
     /**  */
     private final JButton navFirstButton;
@@ -105,8 +102,7 @@ public class NetMessagesView implements IView<JPanel>
         this.tableCfg = new NetMessagesTableConfig( fields );
         this.tableModel = new ItemsTableModel<>( tableCfg );
         this.table = new JTable( tableModel );
-        this.rowModel = new RowListModel();
-        this.rowHeader = new JList<>( rowModel );
+        this.rowView = new RowHeaderNumberView(table);
         this.navFirstButton = new JButton();
         this.navPreviousButton = new JButton();
         this.navNextButton = new JButton();
@@ -118,7 +114,7 @@ public class NetMessagesView implements IView<JPanel>
         this.view = createView();
 
         this.msgsPerPage = 500;
-        this.pageStartIndex = -1;
+        this.pageStartIndex = 0L;
 
         setOpenVisible( false );
     }
@@ -149,11 +145,7 @@ public class NetMessagesView implements IView<JPanel>
 
         vScrollBar.addAdjustmentListener( new BottomScroller( vScrollBar ) );
 
-        rowHeader.setCellRenderer( new RowHeaderRenderer( table ) );
-        rowHeader.setBackground( UIProperty.PANEL_BACKGROUND.getColor() );
-        rowHeader.setFixedCellHeight( table.getRowHeight() );
-
-        displayScrollPane.setRowHeaderView( rowHeader );
+        displayScrollPane.setRowHeaderView( rowView.getView() );
 
         displayScrollPane.setVerticalScrollBarPolicy(
             ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
@@ -381,11 +373,7 @@ public class NetMessagesView implements IView<JPanel>
      **************************************************************************/
     private void updateRowHeader( int count )
     {
-        rowModel.setStart( pageStartIndex );
-        rowModel.setSize( count );
-        rowHeader.setFixedCellWidth( -1 );
-        rowHeader.setFixedCellWidth( rowHeader.getPreferredSize().width + 16 );
-        rowHeader.repaint();
+        rowView.setData( pageStartIndex, count );
     }
 
     /***************************************************************************
@@ -582,7 +570,7 @@ public class NetMessagesView implements IView<JPanel>
             ex.printStackTrace();
         }
 
-        pageStartIndex = -1;
+        pageStartIndex = 0L;
         navigatePage( true, true );
         ResizingTableModelListener.resizeTable( table );
     }
@@ -863,47 +851,6 @@ public class NetMessagesView implements IView<JPanel>
             boolean isSelected, boolean hasFocus, int row, int col )
         {
             label.setFont( font );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class RowListModel extends AbstractListModel<String>
-    {
-        /**  */
-        private static final long serialVersionUID = 404977197801943790L;
-        /**  */
-        private long rowStart;
-        /**  */
-        private int rowCount;
-
-        public RowListModel()
-        {
-            rowStart = 0;
-            rowCount = 1;
-        }
-
-        @Override
-        public int getSize()
-        {
-            return rowCount;
-        }
-
-        public void setSize( int count )
-        {
-            rowCount = count;
-        }
-
-        public void setStart( long start )
-        {
-            rowStart = start;
-        }
-
-        @Override
-        public String getElementAt( int index )
-        {
-            return Long.toString( rowStart + index + 1 );
         }
     }
 }

@@ -20,7 +20,7 @@ public class ExceptionView implements IView<JComponent>
 
     public ExceptionView()
     {
-        this.messageField = new StringFormField( "Message" );
+        this.messageField = new StringFormField( "Message", 0, null );
         this.stacktraceField = new JTextArea();
         this.titlePanel = new TitleView( "", createView() );
 

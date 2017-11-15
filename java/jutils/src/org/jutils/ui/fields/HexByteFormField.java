@@ -178,7 +178,7 @@ public class HexByteFormField implements IDataFormField<Byte>
     @Override
     public void setEditable( boolean editable )
     {
-        textField.getField().setEditable( editable );
+        textField.setEditable( editable );
     }
 
     /***************************************************************************

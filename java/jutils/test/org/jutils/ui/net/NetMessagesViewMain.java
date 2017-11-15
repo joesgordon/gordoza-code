@@ -57,15 +57,15 @@ public class NetMessagesViewMain
 
             frame.setIconImages( IconConstants.getPageMagImages() );
 
-            view.clearMessages();
+            // view.clearMessages();
             view.setOpenVisible( true );
 
-            view.addMessage( buildMessage() );
-            view.addMessage( buildMessage() );
-            view.addMessage( buildMessage() );
-            view.addMessage( buildMessage() );
-            view.addMessage( buildMessage() );
-            view.addMessage( buildMessage() );
+            // view.addMessage( buildMessage() );
+            // view.addMessage( buildMessage() );
+            // view.addMessage( buildMessage() );
+            // view.addMessage( buildMessage() );
+            // view.addMessage( buildMessage() );
+            // view.addMessage( buildMessage() );
 
             return frame;
         }

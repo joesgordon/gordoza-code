@@ -105,7 +105,7 @@ public class BitsFormField implements IDataFormField<BitArray>
     @Override
     public void setEditable( boolean editable )
     {
-        textField.getField().setEditable( editable );
+        textField.setEditable( editable );
     }
 
     /***************************************************************************

@@ -183,7 +183,7 @@ public class HexLongFormField implements IDataFormField<Long>
     @Override
     public void setEditable( boolean editable )
     {
-        textField.getField().setEditable( editable );
+        textField.setEditable( editable );
     }
 
     /***************************************************************************

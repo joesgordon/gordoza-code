@@ -1,8 +1,14 @@
 package org.jutils.ui;
 
+import java.io.File;
+import java.io.IOException;
+
 import javax.swing.JFrame;
 
 import org.jutils.SwingUtils;
+import org.jutils.Utils;
+import org.jutils.io.FilePrintStream;
+import org.jutils.io.IOUtils;
 
 /*******************************************************************************
  * 
@@ -28,21 +34,43 @@ public class StandardUncaughtExceptionHandler
      * {@inheritDoc}
      **************************************************************************/
     @Override
-    public void uncaughtException( Thread thread, Throwable ex )
+    public void uncaughtException( Thread thread, Throwable th )
     {
-        ex.printStackTrace();
+        try
+        {
+            th.printStackTrace();
+
+            catchUncaughtException( thread, th );
+        }
+        catch( Throwable ex )
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    private void catchUncaughtException( Thread thread, Throwable th )
+    {
+        File exFile = IOUtils.getUsersFile( ".uncaught_exception" );
+
+        try( FilePrintStream stream = new FilePrintStream( exFile ) )
+        {
+            String name = thread.getName();
+
+            String trace = Utils.printStackTrace( th );
+
+            name = name == null ? "null" : name;
+
+            stream.println( "Thread %s", name );
+            stream.println( trace );
+        }
+        catch( IOException ex )
+        {
+            ex.printStackTrace();
+        }
 
         if( !exView.getView().isShowing() )
         {
-            try
-            {
-                displayException( ex );
-            }
-            catch( Throwable th )
-            {
-                th.printStackTrace();
-                System.exit( -2 );
-            }
+            displayException( th );
         }
     }
 

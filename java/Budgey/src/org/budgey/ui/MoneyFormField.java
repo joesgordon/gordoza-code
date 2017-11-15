@@ -103,7 +103,7 @@ public class MoneyFormField implements IDataFormField<Money>
     @Override
     public void setEditable( boolean editable )
     {
-        field.getField().setEditable( editable );
+        field.setEditable( editable );
     }
 
     /***************************************************************************
