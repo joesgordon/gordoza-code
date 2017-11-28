@@ -40,7 +40,7 @@ public class InputListPanel<T> implements IDataView<List<T>>
      * @param data
      * @param title
      **************************************************************************/
-    public InputListPanel( List<T> data, String title )
+    public InputListPanel( List<T> data )
     {
         this.textfield = new JTextField( 5 );
         this.itemsListModel = new CollectionListModel<>();

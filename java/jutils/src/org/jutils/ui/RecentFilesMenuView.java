@@ -10,6 +10,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.filechooser.FileSystemView;
 
+import org.jutils.ui.event.IRecentListener;
 import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
@@ -20,7 +21,7 @@ public class RecentFilesMenuView implements IDataView<List<File>>
     /**  */
     private final JMenu menu;
     /**  */
-    private final List<IRecentSelected> selectedListeners;
+    private final List<IRecentListener<File>> selectedListeners;
     /**  */
     private final int maxFileCount;
 
@@ -48,7 +49,7 @@ public class RecentFilesMenuView implements IDataView<List<File>>
     /***************************************************************************
      * @param l
      **************************************************************************/
-    public void addSelectedListener( IRecentSelected l )
+    public void addSelectedListener( IRecentListener<File> l )
     {
         selectedListeners.add( l );
     }
@@ -114,18 +115,10 @@ public class RecentFilesMenuView implements IDataView<List<File>>
      **************************************************************************/
     private void fireListeners( File file, boolean ctrlPressed )
     {
-        for( IRecentSelected irs : selectedListeners )
+        for( IRecentListener<File> irs : selectedListeners )
         {
             irs.selected( file, ctrlPressed );
         }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    public static interface IRecentSelected
-    {
-        public void selected( File file, boolean ctrlPressed );
     }
 
     /***************************************************************************

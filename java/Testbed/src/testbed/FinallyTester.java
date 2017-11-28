@@ -51,6 +51,11 @@ public class FinallyTester
      */
     public static void main( String[] args )
     {
+        test1();
+    }
+
+    private static void test1()
+    {
         List<Integer> ints = new ArrayList<Integer>();
         List<?> stuff = ints;
 
@@ -75,7 +80,8 @@ public class FinallyTester
     /**
      * @param args
      */
-    public static void main_orig( String[] args )
+    @SuppressWarnings( "unused")
+    private static void test2()
     {
         int i0 = 0xF6;
         byte b0 = ( byte )i0;

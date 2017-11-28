@@ -16,6 +16,8 @@ import org.jutils.apps.jhex.data.JHexOptions;
 import org.jutils.io.options.OptionsSerializer;
 import org.jutils.ui.*;
 import org.jutils.ui.event.*;
+import org.jutils.ui.event.FileChooserListener.IFileSelected;
+import org.jutils.ui.event.FileChooserListener.ILastFile;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
 import org.jutils.ui.hex.HexBufferSize;
 import org.jutils.ui.model.IView;
@@ -36,7 +38,7 @@ public class JHexFrame implements IView<JFrame>
     /** The serializer to access user options. */
     private final OptionsSerializer<JHexOptions> options;
     /** The recent files menu. */
-    private final RecentFilesMenuView recentFiles;
+    private final RecentFilesViews recentFiles;
 
     /** Index of the currently selected buffer size. */
     private HexBufferSize bufferSize;
@@ -58,7 +60,7 @@ public class JHexFrame implements IView<JFrame>
 
         this.frameView = new StandardFrameView();
         this.editor = new HexFileView();
-        this.recentFiles = new RecentFilesMenuView();
+        this.recentFiles = new RecentFilesViews();
 
         this.bufferSize = HexBufferSize.LARGE;
 
@@ -82,7 +84,7 @@ public class JHexFrame implements IView<JFrame>
 
         frame.setIconImages( JHexIcons.getAppImages() );
 
-        recentFiles.addSelectedListener( ( f, c ) -> openFile( f ) );
+        recentFiles.setListeners( ( f, c ) -> openFile( f ) );
         editor.getView().setDropTarget(
             new FileDropTarget( new FileDroppedListener( this ) ) );
     }
@@ -94,9 +96,7 @@ public class JHexFrame implements IView<JFrame>
     {
         JToolBar toolbar = new JGoodiesToolBar();
 
-        SwingUtils.addActionToToolbar( toolbar,
-            new ActionAdapter( ( e ) -> showOpenDialog(), "Open File",
-                IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) ) );
+        recentFiles.install( toolbar, createOpenListener() );
 
         // SwingUtils.addActionToToolbar( toolbar,
         // new ActionAdapter( ( e ) -> saveFile(), "Save File",
@@ -110,6 +110,16 @@ public class JHexFrame implements IView<JFrame>
                 IconConstants.getIcon( IconConstants.CONFIG_16 ) ) );
 
         return toolbar;
+    }
+
+    private FileChooserListener createOpenListener()
+    {
+        IFileSelected ifs = ( f ) -> openFile( f );
+        ILastFile ilf = () -> options.getOptions().lastAccessedFiles.first();
+        FileChooserListener fcl = new FileChooserListener( getView(),
+            "Open File", false, ifs, ilf );
+
+        return fcl;
     }
 
     /***************************************************************************
@@ -138,7 +148,7 @@ public class JHexFrame implements IView<JFrame>
         int idx = 0;
 
         item = new JMenuItem( "Open" );
-        item.addActionListener( ( e ) -> showOpenDialog() );
+        item.addActionListener( createOpenListener() );
         item.setIcon( IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
         fileMenu.add( item, idx++ );
 
@@ -147,7 +157,7 @@ public class JHexFrame implements IView<JFrame>
         item.setIcon( IconConstants.getIcon( IconConstants.SAVE_16 ) );
         // fileMenu.add( item, idx++ );
 
-        fileMenu.add( recentFiles.getView(), idx++ );
+        fileMenu.add( recentFiles.getMenu(), idx++ );
 
         fileMenu.add( new JSeparator(), idx++ );
     }
@@ -224,25 +234,6 @@ public class JHexFrame implements IView<JFrame>
         {
             bufferSize = ( HexBufferSize )ans;
             editor.setBufferSize( bufferSize.size );
-        }
-    }
-
-    /***************************************************************************
-     * Displays the dialog that allows the user to open a file.
-     **************************************************************************/
-    private void showOpenDialog()
-    {
-        JFileChooser chooser = new JFileChooser();
-        int choice = JFileChooser.CANCEL_OPTION;
-        JHexOptions options = this.options.getOptions();
-
-        chooser.setSelectedFile( options.getLastFile() );
-        choice = chooser.showOpenDialog( getView() );
-
-        if( choice == JFileChooser.APPROVE_OPTION )
-        {
-            File f = chooser.getSelectedFile();
-            openFile( f );
         }
     }
 

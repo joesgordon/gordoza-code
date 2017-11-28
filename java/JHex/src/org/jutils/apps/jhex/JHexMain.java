@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.jutils.apps.jhex.data.JHexOptions;
 import org.jutils.io.IOUtils;
+import org.jutils.io.options.IOptionsCreator;
 import org.jutils.io.options.OptionsSerializer;
 import org.jutils.ui.app.FrameRunner;
 
@@ -17,13 +18,7 @@ public class JHexMain
         ".jutils", "jhex", "options.xml" );
 
     /**  */
-    private static final OptionsSerializer<JHexOptions> OPTIONS;
-
-    static
-    {
-        OPTIONS = OptionsSerializer.getOptions( JHexOptions.class,
-            USER_OPTIONS_FILE );
-    }
+    private static OptionsSerializer<JHexOptions> OPTIONS;
 
     /***************************************************************************
      * @param args Program arguments.
@@ -52,6 +47,42 @@ public class JHexMain
      **************************************************************************/
     public static OptionsSerializer<JHexOptions> getOptions()
     {
+        if( OPTIONS == null )
+        {
+            OPTIONS = OptionsSerializer.getOptions( new JHexOptionsCreator(),
+                USER_OPTIONS_FILE );
+        }
         return OPTIONS;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static final class JHexOptionsCreator
+        implements IOptionsCreator<JHexOptions>
+    {
+
+        @Override
+        public JHexOptions createDefaultOptions()
+        {
+            return new JHexOptions();
+        }
+
+        @Override
+        public JHexOptions initialize( JHexOptions options )
+        {
+            options = new JHexOptions( options );
+
+            options.removeNonExistentRecents();
+
+            return options;
+        }
+
+        @Override
+        public void warn( String message )
+        {
+            // TODO Auto-generated method stub
+
+        }
     }
 }

@@ -17,16 +17,28 @@ import org.jutils.ui.net.UdpInputsView;
 import org.mc.ui.IConnectionView;
 import org.mc.ui.McConfigurationPanel;
 
+/***************************************************************************
+ * 
+ **************************************************************************/
 public class UdpServerView implements IConnectionView
 {
+    /**  */
     private final JPanel view;
+    /**  */
     private final UdpInputsView inputsView;
+    /**  */
     private final McConfigurationPanel configPanel;
+    /**  */
     private final NetMessagesView messagesView;
 
+    /**  */
     private Multicaster commModel;
+    /**  */
     private UdpConnection connection;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public UdpServerView()
     {
         this.inputsView = new UdpInputsView( true, false );
@@ -43,6 +55,9 @@ public class UdpServerView implements IConnectionView
         inputsView.setData( inputs );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private JPanel createView()
     {
         JPanel panel = new JPanel( new GridBagLayout() );
@@ -65,6 +80,9 @@ public class UdpServerView implements IConnectionView
         return panel;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private void bindUnbind()
     {
         boolean bound = ( commModel != null );
@@ -111,9 +129,13 @@ public class UdpServerView implements IConnectionView
         configPanel.setBindEnabled( true );
     }
 
+    /**  */
     private static final byte[] PREFIX = "Received: ".getBytes(
         Charset.forName( "UTF-8" ) );
 
+    /***************************************************************************
+     * @param msg
+     **************************************************************************/
     private void rxMessage( NetMessage msg )
     {
         addMessage( msg );
@@ -137,17 +159,26 @@ public class UdpServerView implements IConnectionView
         }
     }
 
+    /***************************************************************************
+     * @param msg
+     **************************************************************************/
     private void addMessage( NetMessage msg )
     {
         SwingUtilities.invokeLater( () -> messagesView.addMessage( msg ) );
     }
 
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
     @Override
     public JComponent getView()
     {
         return view;
     }
 
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
     @Override
     public void close()
     {
@@ -175,8 +206,13 @@ public class UdpServerView implements IConnectionView
 
         SwingUtils.showErrorMessage( getView(), errorMsg,
             "Communication Error" );
+
+        bindUnbind();
     }
 
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
     @Override
     public String getTitle()
     {

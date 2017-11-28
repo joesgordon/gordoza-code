@@ -3,7 +3,6 @@ package org.tuvok.ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -26,7 +25,7 @@ public class TaskflowFrameView implements IView<JFrame>
     /**  */
     private final JFrame frame;
     /**  */
-    private final SplitButtonView<File> recentButton;
+    private final RecentFilesViews recentFiles;
 
     /***************************************************************************
      *
@@ -35,9 +34,7 @@ public class TaskflowFrameView implements IView<JFrame>
     {
         this.frameView = new StandardFrameView();
         this.frame = frameView.getView();
-        this.recentButton = new SplitButtonView<>( null,
-            IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ),
-            new ArrayList<>(), ( f ) -> f.getAbsolutePath() );
+        this.recentFiles = new RecentFilesViews();
 
         TaskflowView mainPanel = new TaskflowView();
 
@@ -59,16 +56,38 @@ public class TaskflowFrameView implements IView<JFrame>
     {
         JToolBar toolbar = new JGoodiesToolBar();
 
-        recentButton.install( toolbar );
-        IFileSelected ifsl = ( f ) -> openFile( f );
-        recentButton.addButtonListener(
-            new FileChooserListener( frame, "Open Tasks", false, ifsl ) );
-        // TODO add last file selected
-        recentButton.addItemSelected( ( f ) -> openFile( f ) );
+        recentFiles.install( toolbar, createOpenListener() );
+        recentFiles.setListeners( ( f, c ) -> openFile( f ) );
 
         SwingUtils.addActionToToolbar( toolbar, createSaveAction() );
 
+        toolbar.addSeparator();
+
+        SwingUtils.addActionToToolbar( toolbar, createAddAction() );
+
         return toolbar;
+    }
+
+    private FileChooserListener createOpenListener()
+    {
+        IFileSelected ifsl = ( f ) -> openFile( f );
+        FileChooserListener fcl = new FileChooserListener( frame, "Open Tasks",
+            false, ifsl );
+        // TODO add last file selected
+        return fcl;
+    }
+
+    private Action createAddAction()
+    {
+        Icon icon = IconConstants.getIcon( IconConstants.EDIT_ADD_16 );
+        ActionListener listener = ( e ) -> showAddDialog();
+        // TODO add last file selected
+        return new ActionAdapter( listener, "Add Task", icon );
+    }
+
+    private void showAddDialog()
+    {
+        // TODO Auto-generated method stub
     }
 
     private Action createSaveAction()

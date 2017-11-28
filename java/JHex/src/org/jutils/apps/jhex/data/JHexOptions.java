@@ -17,7 +17,20 @@ public class JHexOptions
      **************************************************************************/
     public JHexOptions()
     {
-        lastAccessedFiles = new MaxQueue<File>( 10 );
+        this.lastAccessedFiles = new MaxQueue<File>( 10 );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public JHexOptions( JHexOptions options )
+    {
+        this();
+
+        if( options.lastAccessedFiles != null )
+        {
+            lastAccessedFiles.addAll( options.lastAccessedFiles );
+        }
     }
 
     /***************************************************************************
@@ -33,5 +46,16 @@ public class JHexOptions
         }
 
         return f;
+    }
+
+    public void removeNonExistentRecents()
+    {
+        for( File f : lastAccessedFiles )
+        {
+            if( !f.exists() )
+            {
+                lastAccessedFiles.remove( f );
+            }
+        }
     }
 }

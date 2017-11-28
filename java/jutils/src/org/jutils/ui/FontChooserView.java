@@ -68,8 +68,8 @@ public class FontChooserView implements IDataView<FontDescription>
      **************************************************************************/
     public FontChooserView()
     {
-        this.fontNameInputList = new InputListPanel<>( FONT_NAMES, "Name:" );
-        this.fontSizeInputList = new InputListPanel<>( FONT_SIZES, "Size:" );
+        this.fontNameInputList = new InputListPanel<>( FONT_NAMES );
+        this.fontSizeInputList = new InputListPanel<>( FONT_SIZES );
         this.boldCheckBox = new JCheckBox( "Bold" );
         this.italicCheckBox = new JCheckBox( "Italic" );
         this.underlineCheckBox = new JCheckBox( "Underline" );

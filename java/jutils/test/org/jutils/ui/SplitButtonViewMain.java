@@ -112,7 +112,7 @@ public final class SplitButtonViewMain
             }
 
             SplitButtonView<String> sbv = new SplitButtonView<>( text, icon,
-                items, ( s ) -> s );
+                items );
 
             return sbv;
         }
