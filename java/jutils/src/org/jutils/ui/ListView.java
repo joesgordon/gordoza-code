@@ -88,6 +88,8 @@ public class ListView<T> implements IDataView<List<T>>
         this.view = createView();
 
         setItemRenderer( new DefaultItemListCellRenderer<>() );
+
+        itemsListModel.setData( items );
     }
 
     /***************************************************************************
@@ -307,9 +309,9 @@ public class ListView<T> implements IDataView<List<T>>
                     }
                     else
                     {
-                        JOptionPane.showMessageDialog( view,
-                            "The name " + name +
-                                " already exists. Please Choose a different one.",
+                        JOptionPane.showMessageDialog( view, "The name " +
+                            name +
+                            " already exists. Please Choose a different one.",
                             "Name Exists", JOptionPane.ERROR_MESSAGE );
                     }
                 }

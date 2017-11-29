@@ -1,6 +1,7 @@
 package org.jutils.ui;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -58,24 +59,36 @@ public class ItemListViewMain
     private static final class AppView implements IView<JComponent>
     {
         private final JPanel view;
-        private final ItemListView<TestData> normalList;
-        private final ItemListView<TestData> rendererList;
+        private final ItemListView<TestData> normalItemList;
+        private final ItemListView<TestData> rendererItemList;
+        private final ListView<TestData> normalList;
+        private final ListView<TestData> rendererList;
 
         public AppView()
         {
             TestDataView ntdv = new TestDataView();
             TestDataView rtdv = new TestDataView();
 
-            this.normalList = new ItemListView<TestData>( ntdv,
+            this.normalItemList = new ItemListView<TestData>( ntdv,
                 new TestDataModel() );
-            this.rendererList = new ItemListView<TestData>( rtdv,
+            this.rendererItemList = new ItemListView<TestData>( rtdv,
                 new TestDataModel() );
+
+            this.normalList = new ListView<>( new TestDataModel() );
+            this.rendererList = new ListView<>( new TestDataModel() );
+
             this.view = createView();
 
-            ntdv.addNameUpdater( ( d ) -> normalList.refreshSelected() );
-            rtdv.addNameUpdater( ( d ) -> rendererList.refreshSelected() );
+            ntdv.addNameUpdater( ( d ) -> normalItemList.refreshSelected() );
+            rtdv.addNameUpdater( ( d ) -> rendererItemList.refreshSelected() );
 
+            rendererItemList.setItemRenderer( new TestDataRenderer() );
             rendererList.setItemRenderer( new TestDataRenderer() );
+
+            normalItemList.setData( new ArrayList<>() );
+            rendererItemList.setData( new ArrayList<>() );
+            normalList.setData( new ArrayList<>() );
+            rendererList.setData( new ArrayList<>() );
         }
 
         private JPanel createView()
@@ -83,7 +96,10 @@ public class ItemListViewMain
             JPanel panel = new JPanel( new BorderLayout() );
             JTabbedPane tabs = new JTabbedPane();
 
-            tabs.add( "Item List", normalList.getView() );
+            tabs.add( "Normal Item List", normalItemList.getView() );
+            tabs.add( "Rendered Item List", rendererItemList.getView() );
+
+            tabs.add( "Normal List", normalList.getView() );
             tabs.add( "Rendered List", rendererList.getView() );
 
             panel.add( tabs, BorderLayout.CENTER );
