@@ -30,7 +30,12 @@ public class RecentFilesViews
      **************************************************************************/
     public RecentFilesViews()
     {
-        this.menuView = new RecentFilesMenuView( 20 );
+        this( 20 );
+    }
+
+    public RecentFilesViews( int maxFileCount )
+    {
+        this.menuView = new RecentFilesMenuView( maxFileCount );
         this.buttonView = new SplitButtonView<>( null,
             IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ),
             new ArrayList<>(), new FileListItemModel() );
@@ -65,8 +70,18 @@ public class RecentFilesViews
 
     public void setData( List<File> files )
     {
-        menuView.setData( files );
-        buttonView.setData( files );
+        List<File> recentFiles = new ArrayList<>( files.size() );
+
+        for( File f : files )
+        {
+            if( f.exists() )
+            {
+                recentFiles.add( f );
+            }
+        }
+
+        menuView.setData( recentFiles );
+        buttonView.setData( recentFiles );
     }
 
     public void install( JToolBar toolbar, FileChooserListener listener )
