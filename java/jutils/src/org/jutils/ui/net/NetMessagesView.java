@@ -102,7 +102,7 @@ public class NetMessagesView implements IView<JPanel>
         this.tableCfg = new NetMessagesTableConfig( fields );
         this.tableModel = new ItemsTableModel<>( tableCfg );
         this.table = new JTable( tableModel );
-        this.rowView = new RowHeaderNumberView(table);
+        this.rowView = new RowHeaderNumberView( table );
         this.navFirstButton = new JButton();
         this.navPreviousButton = new JButton();
         this.navNextButton = new JButton();
@@ -553,10 +553,10 @@ public class NetMessagesView implements IView<JPanel>
         }
     }
 
-    /**
+    /***************************************************************************
      * @param file
-     */
-    private void openFile( File file )
+     **************************************************************************/
+    public void openFile( File file )
     {
         clearMessages();
 
