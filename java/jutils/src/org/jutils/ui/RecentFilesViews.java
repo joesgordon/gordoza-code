@@ -1,5 +1,6 @@
 package org.jutils.ui;
 
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,6 @@ import javax.swing.filechooser.FileSystemView;
 
 import org.jutils.IconConstants;
 import org.jutils.ui.SplitButtonView.IListItemModel;
-import org.jutils.ui.event.FileChooserListener;
 import org.jutils.ui.event.IRecentListener;
 
 /*******************************************************************************
@@ -33,6 +33,9 @@ public class RecentFilesViews
         this( 20 );
     }
 
+    /***************************************************************************
+     * @param maxFileCount
+     **************************************************************************/
     public RecentFilesViews( int maxFileCount )
     {
         this.menuView = new RecentFilesMenuView( maxFileCount );
@@ -50,6 +53,10 @@ public class RecentFilesViews
         buttonView.addItemSelected( ( f, c ) -> callSelected( f, c ) );
     }
 
+    /***************************************************************************
+     * @param f
+     * @param c
+     **************************************************************************/
     private void callSelected( File f, boolean c )
     {
         if( recentListener != null )
@@ -58,16 +65,25 @@ public class RecentFilesViews
         }
     }
 
+    /***************************************************************************
+     * @param irs
+     **************************************************************************/
     public void setListeners( IRecentListener<File> irs )
     {
         this.recentListener = irs;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public JMenu getMenu()
     {
         return menuView.getView();
     }
 
+    /***************************************************************************
+     * @param files
+     **************************************************************************/
     public void setData( List<File> files )
     {
         List<File> recentFiles = new ArrayList<>( files.size() );
@@ -84,13 +100,29 @@ public class RecentFilesViews
         buttonView.setData( recentFiles );
     }
 
-    public void install( JToolBar toolbar, FileChooserListener listener )
+    /***************************************************************************
+     * @param toolbar
+     * @param listener
+     **************************************************************************/
+    public void install( JToolBar toolbar, ActionListener listener )
     {
         buttonView.install( toolbar );
 
         buttonView.addButtonListener( listener );
     }
 
+    /***************************************************************************
+     * @param icon
+     **************************************************************************/
+    public void setIcon( Icon icon )
+    {
+        menuView.setIcon( icon );
+        buttonView.setIcon( icon );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static final class FileListItemModel implements IListItemModel<File>
     {
         private final FileSystemView fsv = FileSystemView.getFileSystemView();

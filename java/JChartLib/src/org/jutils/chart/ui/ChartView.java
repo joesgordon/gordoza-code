@@ -23,8 +23,7 @@ import org.jutils.chart.ui.event.SaveSeriesDataListener;
 import org.jutils.chart.ui.objects.*;
 import org.jutils.io.IOUtils;
 import org.jutils.io.options.OptionsSerializer;
-import org.jutils.ui.JGoodiesToolBar;
-import org.jutils.ui.OkDialogView;
+import org.jutils.ui.*;
 import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileChooserListener.IFilesSelected;
@@ -48,20 +47,14 @@ public class ChartView implements IView<JComponent>
     /**  */
     private final IPalette palette;
     /**  */
-    public final PropertiesView propertiesView;
+    private final PropertiesView propertiesView;
     /**  */
     private final JToolBar toolbar;
     /**  */
     private final JSeparator separator;
 
     /**  */
-    public final Action openAction;
-    /**  */
-    public final Action saveAction;
-    /**  */
-    public final Action saveDataAction;
-    /**  */
-    public final Action propertiesAction;
+    private final RecentFilesViews recentFiles;
 
     /**  */
     private final ItemActionList<File> fileLoadedListeners;
@@ -95,17 +88,16 @@ public class ChartView implements IView<JComponent>
         this.chartWidget = new ChartWidget( chart );
         this.palette = new PresetPalette();
         this.propertiesView = new PropertiesView( chart );
-
-        this.openAction = createOpenAction();
-        this.saveAction = createSaveAction();
-        this.saveDataAction = createSaveDataAction();
-        this.propertiesAction = createPropertiesAction();
+        this.recentFiles = new RecentFilesViews();
 
         this.toolbar = createToolbar( allowOpen, gradientToolbar );
         this.separator = new JSeparator();
         this.view = createView();
 
         this.fileLoadedListeners = new ItemActionList<>();
+
+        recentFiles.setData( options.getOptions().recentFiles.toList() );
+        recentFiles.setListeners( ( f, c ) -> importData( f, c ) );
 
         // mainPanel.setBorder( new LineBorder( Color.blue, 4 ) );
         mainPanel.setObject( chartWidget );
@@ -122,6 +114,7 @@ public class ChartView implements IView<JComponent>
 
         if( allowOpen )
         {
+            addFileLoadedListener( new FileLoadedListener( this ) );
             mainComp.setDropTarget(
                 new FileDropTarget( new ChartDropTarget( this ) ) );
         }
@@ -189,16 +182,16 @@ public class ChartView implements IView<JComponent>
 
         if( allowOpen )
         {
-            SwingUtils.addActionToToolbar( toolbar, openAction );
+            recentFiles.install( toolbar, createOpenListener() );
         }
 
-        SwingUtils.addActionToToolbar( toolbar, saveAction );
+        SwingUtils.addActionToToolbar( toolbar, createSaveAction() );
 
-        SwingUtils.addActionToToolbar( toolbar, saveDataAction );
+        SwingUtils.addActionToToolbar( toolbar, createSaveDataAction() );
 
         toolbar.addSeparator();
 
-        SwingUtils.addActionToToolbar( toolbar, propertiesAction );
+        SwingUtils.addActionToToolbar( toolbar, createPropertiesAction() );
 
         toolbar.addSeparator();
 
@@ -212,27 +205,32 @@ public class ChartView implements IView<JComponent>
     /***************************************************************************
      * @return
      **************************************************************************/
-    private Action createOpenAction()
+    public Action createOpenAction()
     {
         Action action;
-        FileChooserListener listener;
         Icon icon;
         String name;
-        OpenListener ol = new OpenListener( this );
 
         name = "Open";
         icon = IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 );
-        listener = new FileChooserListener( getView(), "Choose Data File",
-            false, ol, ol );
-        action = new ActionAdapter( listener, name, icon );
+        action = new ActionAdapter( createOpenListener(), name, icon );
 
         return action;
+    }
+
+    private ActionListener createOpenListener()
+    {
+        OpenListener ol = new OpenListener( this );
+        FileChooserListener listener = new FileChooserListener( getView(),
+            "Choose Data File", false, ol, ol );
+        // TODO Auto-generated method stub
+        return listener;
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    private Action createSaveAction()
+    public Action createSaveAction()
     {
         Action action;
         ActionListener listener;
@@ -250,7 +248,7 @@ public class ChartView implements IView<JComponent>
     /***************************************************************************
      * @return
      **************************************************************************/
-    private Action createSaveDataAction()
+    public Action createSaveDataAction()
     {
         Action action;
         ActionListener listener;
@@ -268,7 +266,7 @@ public class ChartView implements IView<JComponent>
     /***************************************************************************
      * @return
      **************************************************************************/
-    private Action createPropertiesAction()
+    public Action createPropertiesAction()
     {
         Action action;
         ActionListener listener;
@@ -708,6 +706,23 @@ public class ChartView implements IView<JComponent>
     }
 
     /***************************************************************************
+     * @param seriesIdx
+     * @param pointIdx
+     **************************************************************************/
+    public void setSelectedSeries( int seriesIdx, int pointIdx )
+    {
+        propertiesView.setSelected( seriesIdx, pointIdx );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public Component getOpenMenu()
+    {
+        return recentFiles.getMenu();
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     private static class ChartDropTarget
@@ -751,7 +766,8 @@ public class ChartView implements IView<JComponent>
         @Override
         public File [] getLastFiles()
         {
-            return new File[] { view.options.getOptions().recentFiles.first() };
+            File f = view.options.getOptions().recentFiles.first();
+            return f == null ? new File[] {} : new File[] { f };
         }
 
         @Override
@@ -1089,6 +1105,28 @@ public class ChartView implements IView<JComponent>
             boolean ctrl = ( mods & InputEvent.CTRL_MASK ) != 0;
 
             view.zoomOut( ZoomDirection.get( shift, ctrl ) );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class FileLoadedListener implements ItemActionListener<File>
+    {
+        private final ChartView view;
+
+        public FileLoadedListener( ChartView view )
+        {
+            this.view = view;
+        }
+
+        @Override
+        public void actionPerformed( ItemActionEvent<File> event )
+        {
+            view.options.getOptions().recentFiles.push( event.getItem() );
+            view.options.write();
+            view.recentFiles.setData(
+                view.options.getOptions().recentFiles.toList() );
         }
     }
 }

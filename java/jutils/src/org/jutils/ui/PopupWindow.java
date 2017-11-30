@@ -82,11 +82,24 @@ public class PopupWindow implements IView<JComponent>
     {
         JFrame w = ( JFrame )SwingUtilities.getRoot( parent );
         Point pos = new Point( x, y );
+        Component gp = w.getGlassPane();
 
-        pos = SwingUtilities.convertPoint( parent, pos, w.getGlassPane() );
+        pos = SwingUtilities.convertPoint( parent, pos, gp );
 
         view.revalidate();
-        view.setSize( view.getPreferredSize() );
+
+        // int maxWidth = gp.getWidth() - pos.x;
+        // int maxHeight = gp.getHeight() - pos.y;
+
+        Dimension size = view.getPreferredSize();
+        size.width += 12;
+
+        // TODO uncomment and fix
+        // size.width = Math.min( size.width, maxWidth );
+        // size.height = Math.min( size.height, maxHeight );
+        size.width = Math.max( size.width, 15 );
+        size.height = Math.max( size.height, 15 );
+        view.setSize( size );
 
         view.setBounds( pos.x, pos.y, view.getWidth(), view.getHeight() );
 

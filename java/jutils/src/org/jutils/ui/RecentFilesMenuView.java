@@ -6,8 +6,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
+import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 
 import org.jutils.ui.event.IRecentListener;
@@ -55,7 +54,7 @@ public class RecentFilesMenuView implements IDataView<List<File>>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JMenu getView()
@@ -64,7 +63,7 @@ public class RecentFilesMenuView implements IDataView<List<File>>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public List<File> getData()
@@ -73,7 +72,7 @@ public class RecentFilesMenuView implements IDataView<List<File>>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void setData( List<File> files )
@@ -119,6 +118,14 @@ public class RecentFilesMenuView implements IDataView<List<File>>
         {
             irs.selected( file, ctrlPressed );
         }
+    }
+
+    /***************************************************************************
+     * @param icon
+     **************************************************************************/
+    public void setIcon( Icon icon )
+    {
+        menu.setIcon( icon );
     }
 
     /***************************************************************************

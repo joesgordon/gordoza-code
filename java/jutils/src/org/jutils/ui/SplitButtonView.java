@@ -419,6 +419,18 @@ public class SplitButtonView<T> implements IView<JComponent>
             {
                 list.setSelectedIndex( index );
             }
+            else
+            {
+                list.clearSelection();
+            }
+        }
+
+        @Override
+        public void mouseExited( MouseEvent e )
+        {
+            @SuppressWarnings( "unchecked")
+            JList<T> list = ( JList<T> )e.getSource();
+            list.clearSelection();
         }
     }
 

@@ -343,7 +343,7 @@ public class ChartMouseListenter extends MouseAdapter
 
                     plot.setHighlightLocation( new Point( sp ) );
 
-                    view.propertiesView.setSelected( seriesIdx, idx );
+                    view.setSelectedSeries( seriesIdx, idx );
                 }
             }
             seriesIdx++;

@@ -3,20 +3,16 @@ package org.jutils.chart.app;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
 
 import javax.swing.*;
 
+import org.jutils.IconConstants;
 import org.jutils.chart.ChartIcons;
 import org.jutils.chart.ChartUtils;
 import org.jutils.chart.model.ISeriesData;
 import org.jutils.chart.model.Series;
 import org.jutils.chart.ui.ChartView;
-import org.jutils.io.options.OptionsSerializer;
-import org.jutils.ui.RecentFilesMenuView;
 import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.event.ItemActionEvent;
-import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
@@ -28,11 +24,6 @@ public class JChartFrameView implements IView<JFrame>
     private final StandardFrameView frameView;
     /**  */
     private final ChartView chartView;
-    /**  */
-    private final RecentFilesMenuView recentFiles;
-
-    /**  */
-    private final OptionsSerializer<UserData> options;
 
     /***************************************************************************
      * @param title
@@ -40,11 +31,8 @@ public class JChartFrameView implements IView<JFrame>
      **************************************************************************/
     public JChartFrameView( String title )
     {
-        this.options = JChartAppConstants.getOptions();
-
         this.frameView = new StandardFrameView();
         this.chartView = new ChartView();
-        this.recentFiles = new RecentFilesMenuView();
 
         createMenubar( frameView.getMenuBar(), frameView.getFileMenu() );
         frameView.setContent( chartView.getView() );
@@ -54,12 +42,6 @@ public class JChartFrameView implements IView<JFrame>
         frame.setTitle( title );
         frame.setIconImages( ChartIcons.getChartImages() );
         frame.addWindowListener( new ChartWindowListener( this ) );
-
-        chartView.addFileLoadedListener( new FileLoadedListener( this ) );
-
-        recentFiles.setData( options.getOptions().recentFiles.toList() );
-        recentFiles.addSelectedListener(
-            ( f, c ) -> chartView.importData( f, c ) );
 
         chartView.chart.domainAxis.title.visible = true;
         chartView.chart.domainAxis.title.text = "X Values";
@@ -156,16 +138,20 @@ public class JChartFrameView implements IView<JFrame>
         JMenuItem item;
         int i = 0;
 
-        item = new JMenuItem( chartView.openAction );
+        item = new JMenuItem( chartView.createOpenAction() );
         menu.add( item, i++ );
 
-        item = new JMenuItem( chartView.saveAction );
+        menu.add( chartView.getOpenMenu(), i++ );
+
+        item = new JMenuItem( chartView.createSaveAction() );
         menu.add( item, i++ );
 
-        menu.add( recentFiles.getView(), i++ );
+        item = new JMenuItem( chartView.createSaveDataAction() );
+        menu.add( item, i++ );
 
         item = new JMenuItem( "Clear" );
         item.addActionListener( ( e ) -> chartView.clear() );
+        item.setIcon( IconConstants.getIcon( IconConstants.EDIT_CLEAR_16 ) );
         menu.add( item, i++ );
 
         menu.add( new JSeparator(), i++ );
@@ -181,7 +167,7 @@ public class JChartFrameView implements IView<JFrame>
         JMenu menu = new JMenu( "View" );
         JMenuItem item;
 
-        item = new JMenuItem( chartView.propertiesAction );
+        item = new JMenuItem( chartView.createPropertiesAction() );
         menu.add( item );
 
         return menu;
@@ -194,28 +180,6 @@ public class JChartFrameView implements IView<JFrame>
     public JFrame getView()
     {
         return frameView.getView();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class FileLoadedListener implements ItemActionListener<File>
-    {
-        private final JChartFrameView view;
-
-        public FileLoadedListener( JChartFrameView view )
-        {
-            this.view = view;
-        }
-
-        @Override
-        public void actionPerformed( ItemActionEvent<File> event )
-        {
-            view.options.getOptions().recentFiles.push( event.getItem() );
-            view.options.write();
-            view.recentFiles.setData(
-                view.options.getOptions().recentFiles.toList() );
-        }
     }
 
     /***************************************************************************

@@ -11,7 +11,6 @@ import org.duak.data.FileInfo;
 import org.duak.task.DuakTask;
 import org.duak.utils.HistoryList;
 import org.jutils.IconConstants;
-import org.jutils.SwingUtils;
 import org.jutils.io.options.OptionsSerializer;
 import org.jutils.task.TaskView;
 import org.jutils.ui.*;
@@ -29,7 +28,7 @@ public class DuakFrame implements IView<JFrame>
     /**  */
     private StandardFrameView frameView;
     /**  */
-    private RecentFilesMenuView recentMenu;
+    private RecentFilesViews recentFiles;
     /**  */
     private JButton previousButton;
     /**  */
@@ -48,7 +47,7 @@ public class DuakFrame implements IView<JFrame>
     public DuakFrame()
     {
         this.frameView = new StandardFrameView();
-        this.recentMenu = new RecentFilesMenuView();
+        this.recentFiles = new RecentFilesViews();
         this.history = new HistoryList<FileInfo>();
         this.duakPanel = new DuakPanel();
         this.options = DuakConstants.getOptions();
@@ -66,8 +65,8 @@ public class DuakFrame implements IView<JFrame>
         frameView.setToolbar( createToolbar() );
         frameView.setContent( duakPanel.getView() );
 
-        recentMenu.setData( options.getOptions().recentDirs.toList() );
-        recentMenu.addSelectedListener( ( f, c ) -> open( f ) );
+        recentFiles.setData( options.getOptions().recentDirs.toList() );
+        recentFiles.setListeners( ( f, c ) -> open( f ) );
     }
 
     /***************************************************************************
@@ -78,7 +77,7 @@ public class DuakFrame implements IView<JFrame>
     {
         int i = 0;
 
-        fileMenu.add( recentMenu.getView(), i++ );
+        fileMenu.add( recentFiles.getMenu(), i++ );
 
         fileMenu.add( new JSeparator(), i++ );
     }
@@ -100,7 +99,7 @@ public class DuakFrame implements IView<JFrame>
         options.getOptions().recentDirs.push( file );
         options.write();
 
-        recentMenu.setData( options.getOptions().recentDirs.toList() );
+        recentFiles.setData( options.getOptions().recentDirs.toList() );
 
         DuakTask task = new DuakTask( file );
 
@@ -128,17 +127,13 @@ public class DuakFrame implements IView<JFrame>
     private JToolBar createToolbar()
     {
         JToolBar toolbar = new JGoodiesToolBar();
-        Action action;
-        Icon icon;
 
         JButton button;
         DirectoryChooserListener openListener;
 
         openListener = new DirectoryChooserListener( getView(),
             "Choose Directory", new OpenListener( this ) );
-        icon = IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 );
-        action = new ActionAdapter( openListener, "Open", icon );
-        SwingUtils.addActionToToolbar( toolbar, action );
+        recentFiles.install( toolbar, openListener );
 
         button = new JButton(
             IconConstants.getIcon( IconConstants.NAV_PREVIOUS_16 ) );
