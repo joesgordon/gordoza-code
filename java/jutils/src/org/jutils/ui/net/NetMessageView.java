@@ -9,8 +9,6 @@ import java.time.format.DateTimeFormatter;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import org.jutils.SwingUtils;
-import org.jutils.io.IStringWriter;
 import org.jutils.net.NetMessage;
 import org.jutils.ui.hex.ByteBuffer;
 import org.jutils.ui.hex.HexPanel;
@@ -22,14 +20,12 @@ import org.jutils.ui.model.IDataView;
 public class NetMessageView implements IDataView<NetMessage>
 {
     /** Callback that builds a string representation of the message content. */
-    private final IStringWriter<NetMessage> writer;
+    private final IDataView<NetMessage> msgView;
 
     /** The main panel for this view. */
     private final JPanel view;
     /** The field for message meta-data (e.g. Rx/Tx, time, remote IP/Port). */
     private final JTextField infoField;
-    /** The field for the string representation of the message content. */
-    private final JEditorPane fieldsField;
     /** The bytes of the message. */
     private final HexPanel bytesField;
 
@@ -41,20 +37,21 @@ public class NetMessageView implements IDataView<NetMessage>
      **************************************************************************/
     public NetMessageView()
     {
-        this( null );
+        this( null, false );
     }
 
     /***************************************************************************
      * @param msgWriter
+     * @param addScrollPane
      **************************************************************************/
-    public NetMessageView( IStringWriter<NetMessage> msgWriter )
+    public NetMessageView( IDataView<NetMessage> msgWriter,
+        boolean addScrollPane )
     {
-        this.writer = msgWriter;
+        this.msgView = msgWriter;
 
         this.infoField = new JTextField( 5 );
-        this.fieldsField = new JEditorPane();
         this.bytesField = new HexPanel();
-        this.view = createView();
+        this.view = createView( addScrollPane );
 
         try
         {
@@ -72,16 +69,17 @@ public class NetMessageView implements IDataView<NetMessage>
     }
 
     /***************************************************************************
+     * @param addScrollPane
      * @return
      **************************************************************************/
-    private JPanel createView()
+    private JPanel createView( boolean addScrollPane )
     {
         JPanel panel = new JPanel( new BorderLayout() );
         JTabbedPane tabs = new JTabbedPane();
 
-        if( writer != null )
+        if( msgView != null )
         {
-            tabs.add( "Fields", createFieldsPanel() );
+            tabs.add( "Fields", createFieldsPanel( addScrollPane ) );
         }
         tabs.add( "Bytes", createBytesPanel() );
 
@@ -109,17 +107,22 @@ public class NetMessageView implements IDataView<NetMessage>
     }
 
     /***************************************************************************
+     * @param addScrollPane
      * @return
      **************************************************************************/
-    private Component createFieldsPanel()
+    private Component createFieldsPanel( boolean addScrollPane )
     {
         JPanel panel = new JPanel( new BorderLayout() );
-        JScrollPane pane = new JScrollPane( fieldsField );
 
-        fieldsField.setEditable( false );
-        fieldsField.setFont( SwingUtils.getFixedFont( 12 ) );
+        Component comp = msgView.getView();
 
-        panel.add( pane, BorderLayout.CENTER );
+        if( addScrollPane )
+        {
+            JScrollPane pane = new JScrollPane( msgView.getView() );
+            comp = pane;
+        }
+
+        panel.add( comp, BorderLayout.CENTER );
 
         return panel;
     }
@@ -164,10 +167,9 @@ public class NetMessageView implements IDataView<NetMessage>
 
         infoField.setText( buildInfoText( msg ) );
 
-        if( writer != null )
+        if( msgView != null )
         {
-            fieldsField.setText( writer.toString( msg ) );
-            fieldsField.setCaretPosition( 0 );
+            msgView.setData( msg );
         }
 
         bytesField.setBuffer( new ByteBuffer( msg.contents ) );

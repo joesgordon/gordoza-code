@@ -303,7 +303,7 @@ public final class ReferenceStream<T> implements IReferenceStream<T>
                 }
             }
 
-            LogUtils.printDebug( "Read %d items", count );
+            // LogUtils.printDebug( "Read %d items", count );
         }
     }
 

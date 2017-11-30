@@ -118,8 +118,9 @@ public class FileStream implements IStream
     {
         if( pos < 0 )
         {
-            throw new IOException( "Negative seek offset" );
+            pos = getPosition() + pos;
         }
+
         raf.seek( pos );
     }
 

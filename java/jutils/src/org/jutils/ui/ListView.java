@@ -486,8 +486,8 @@ public class ListView<T> implements IDataView<List<T>>
 
             if( index > -1 )
             {
+                T item = itemListView.items.get( index );
                 itemListView.itemsListModel.remove( index );
-                T item = itemListView.items.remove( index );
                 itemListView.changeListeners.fireListeners( itemListView,
                     new ItemChange<>( ChangeType.REMOVED, item ) );
             }

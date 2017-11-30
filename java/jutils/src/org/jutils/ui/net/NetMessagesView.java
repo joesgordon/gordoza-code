@@ -76,7 +76,7 @@ public class NetMessagesView implements IView<JPanel>
      **************************************************************************/
     public NetMessagesView()
     {
-        this( null, null );
+        this( null, null, false );
     }
 
     /***************************************************************************
@@ -85,6 +85,13 @@ public class NetMessagesView implements IView<JPanel>
      **************************************************************************/
     public NetMessagesView( IMessageFields fields,
         IStringWriter<NetMessage> msgWriter )
+    {
+        this( fields, msgWriter == null ? null : new MsgStringView( msgWriter ),
+            true );
+    }
+
+    public NetMessagesView( IMessageFields fields,
+        IDataView<NetMessage> msgView, boolean addScrollPane )
     {
         ReferenceStream<NetMessage> refStream = null;
 
@@ -110,7 +117,7 @@ public class NetMessagesView implements IView<JPanel>
         this.pageLabel = new JLabel( "Page 0 of 0" );
         this.openButton = new JButton();
         this.hexTextButton = new JButton();
-        this.msgView = new MessageNavView( this, msgWriter );
+        this.msgView = new MessageNavView( this, msgView, addScrollPane );
         this.view = createView();
 
         this.msgsPerPage = 500;
@@ -736,16 +743,16 @@ public class NetMessagesView implements IView<JPanel>
         private final NetMessagesView msgsView;
 
         private final JPanel view;
-        private final NetMessageView msgView;
+        private final IDataView<NetMessage> msgView;
 
         private final JButton prevButton;
         private final JButton nextButton;
 
         public MessageNavView( NetMessagesView msgsView,
-            IStringWriter<NetMessage> msgWriter )
+            IDataView<NetMessage> msgView, boolean addScrollPane )
         {
             this.msgsView = msgsView;
-            this.msgView = new NetMessageView( msgWriter );
+            this.msgView = new NetMessageView( msgView, addScrollPane );
             this.prevButton = new JButton();
             this.nextButton = new JButton();
 
@@ -851,6 +858,48 @@ public class NetMessagesView implements IView<JPanel>
             boolean isSelected, boolean hasFocus, int row, int col )
         {
             label.setFont( font );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static final class MsgStringView implements IDataView<NetMessage>
+    {
+        /** The field for the string representation of the message content. */
+        private final JEditorPane editor;
+        private final IStringWriter<NetMessage> writer;
+
+        private NetMessage msg;
+
+        public MsgStringView( IStringWriter<NetMessage> writer )
+        {
+            this.writer = writer;
+            this.editor = new JEditorPane();
+
+            editor.setEditable( false );
+            editor.setFont( SwingUtils.getFixedFont( 12 ) );
+        }
+
+        @Override
+        public Component getView()
+        {
+            return editor;
+        }
+
+        @Override
+        public NetMessage getData()
+        {
+            return msg;
+        }
+
+        @Override
+        public void setData( NetMessage msg )
+        {
+            this.msg = msg;
+
+            editor.setText( writer.toString( msg ) );
+            editor.setCaretPosition( 0 );
         }
     }
 }
