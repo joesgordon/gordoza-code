@@ -19,6 +19,11 @@ public class LedIcon implements Icon
     /**  */
     private Color color;
     /**  */
+    private boolean round;
+    /**  */
+    private final Color borderColor;
+
+    /**  */
     private BufferedImage img;
 
     /***************************************************************************
@@ -45,13 +50,42 @@ public class LedIcon implements Icon
      **************************************************************************/
     public LedIcon( Color color, int width, int height )
     {
+        this( color, width, height, false );
+    }
+
+    /***************************************************************************
+     * @param color
+     * @param width
+     * @param height
+     * @param round
+     **************************************************************************/
+    public LedIcon( Color color, int width, int height, boolean round )
+    {
+        this( color, width, height, round, null );
+    }
+
+    /***************************************************************************
+     * @param color
+     * @param width
+     * @param height
+     * @param round
+     * @param borderColor
+     **************************************************************************/
+    public LedIcon( Color color, int width, int height, boolean round,
+        Color borderColor )
+    {
         this.color = color;
         this.width = width;
         this.height = height;
+        this.round = round;
+        this.borderColor = borderColor == null ? Color.darkGray : borderColor;
 
         drawImage();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private void drawImage()
     {
         // img = new BufferedImage( size.width, size.height,
@@ -65,11 +99,32 @@ public class LedIcon implements Icon
         graphics.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING,
             RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
 
-        graphics.setColor( this.color );
-        graphics.fillOval( 0, 0, width, height );
-        // g.setColor( Color.black );
-        // g2.setStroke( new BasicStroke( 1.25f ) );
-        // g.drawOval( x, y, getIconWidth(), getIconHeight() );
+        graphics.setColor( borderColor );
+
+        if( round )
+        {
+            graphics.fillOval( 0, 0, width, height );
+        }
+        else
+        {
+            graphics.fillRoundRect( 0, 0, width, height, 4, 4 );
+        }
+
+        Paint storedPaint = graphics.getPaint();
+        graphics.setPaint( new GradientPaint( 0, 0, this.color, width, height,
+            color.darker() ) );
+        // graphics.setColor( this.color );
+
+        if( round )
+        {
+            graphics.fillOval( 1, 1, width - 2, height - 2 );
+        }
+        else
+        {
+            graphics.fillRoundRect( 1, 1, width - 2, height - 2, 4, 4 );
+        }
+
+        graphics.setPaint( storedPaint );
 
         graphics.dispose();
     }

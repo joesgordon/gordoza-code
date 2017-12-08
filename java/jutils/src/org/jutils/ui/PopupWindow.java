@@ -129,10 +129,16 @@ public class PopupWindow implements IView<JComponent>
     public void hide()
     {
         JFrame w = ( JFrame )SwingUtilities.getRoot( view );
-        JPanel panel = new JPanel( null );
+        JPanel panel = new JPanel();
+
         panel.setOpaque( false );
+        panel.setFocusable( false );
+        panel.validate();
+        panel.setName( "null.glassPane" );
 
         w.setGlassPane( panel );
+        panel.setVisible( false );
+        w.validate();
     }
 
     /***************************************************************************
