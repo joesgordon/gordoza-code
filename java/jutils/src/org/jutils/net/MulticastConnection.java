@@ -48,7 +48,6 @@ public class MulticastConnection implements IConnection
 
         this.socket.setLoopbackMode( !socket.loopback );
         this.socket.setTimeToLive( socket.ttl );
-        this.socket.joinGroup( address );
         this.socket.setSoTimeout( socket.timeout );
 
         if( socket.nic != null )
@@ -60,6 +59,8 @@ public class MulticastConnection implements IConnection
                 this.socket.setNetworkInterface( nic );
             }
         }
+
+        this.socket.joinGroup( address );
     }
 
     /***************************************************************************

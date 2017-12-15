@@ -14,7 +14,7 @@
     <property name="jar.all_src" location="./jutils_all_src.jar" />
     <property name="file.version" location="${dir.src}/org/jutils/icons/info.properties" />
     
-    <target name="clean">
+    <target name="clean" description="Removes intermediate and compiled files">
         <delete dir="${dir.bin}" failonerror="false" quiet="true"/>
         <delete file="${jar.bin}" failonerror="false" quiet="true"/>
         <delete file="${jar.src}" failonerror="false" quiet="true"/>
