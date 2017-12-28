@@ -44,9 +44,22 @@ public class ItemListView<T> implements IDataView<List<T>>
      **************************************************************************/
     public ItemListView( IDataView<T> dataView, IItemListModel<T> itemsModel )
     {
+        this( dataView, itemsModel, true, true );
+    }
+
+    /***************************************************************************
+     * Creates a new view with the provided data view and model.
+     * @param dataView the view that displays an individual item when selected.
+     * @param itemsModel the model for this view.
+     * @param canAddRemove shows add/remove buttons if {@code true}.
+     * @param canOrder shows order buttons if {@code true}.
+     **************************************************************************/
+    public ItemListView( IDataView<T> dataView, IItemListModel<T> itemsModel,
+        boolean canAddRemove, boolean canOrder )
+    {
         this.dataView = dataView;
 
-        this.itemsView = new ListView<T>( itemsModel );
+        this.itemsView = new ListView<T>( itemsModel, canAddRemove, canOrder );
         this.items = new ArrayList<>();
         this.nullSelectionPanel = createNullSelectionPanel();
         this.itempane = new JScrollPane( nullSelectionPanel );

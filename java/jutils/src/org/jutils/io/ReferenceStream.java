@@ -29,36 +29,36 @@ public final class ReferenceStream<T> implements IReferenceStream<T>
     /**  */
     private long itemStreamLength = 0;
 
-    /**
+    /***************************************************************************
      * @param serializer
      * @throws FileNotFoundException
      * @throws IOException
-     */
+     **************************************************************************/
     public ReferenceStream( IDataSerializer<T> serializer )
         throws FileNotFoundException, IOException
     {
         this( serializer, createTempFile(), true );
     }
 
-    /**
+    /***************************************************************************
      * @param serializer
      * @param itemsFile
      * @throws FileNotFoundException
      * @throws IOException
-     */
+     **************************************************************************/
     public ReferenceStream( IDataSerializer<T> serializer, File itemsFile )
         throws FileNotFoundException, IOException
     {
         this( serializer, itemsFile, false );
     }
 
-    /**
+    /***************************************************************************
      * @param serializer
      * @param itemsFile
      * @param referenceFile
      * @throws FileNotFoundException
      * @throws IOException
-     */
+     **************************************************************************/
     public ReferenceStream( IDataSerializer<T> serializer, File itemsFile,
         File referenceFile ) throws FileNotFoundException, IOException
     {
@@ -66,32 +66,32 @@ public final class ReferenceStream<T> implements IReferenceStream<T>
             referenceFile, false, createStream( referenceFile ) );
     }
 
-    /**
+    /***************************************************************************
      * @param serializer
      * @param refStream
      * @param itemsStream
      * @throws IOException
-     */
+     **************************************************************************/
     public ReferenceStream( IDataSerializer<T> serializer,
         IDataStream refStream, IDataStream itemsStream ) throws IOException
     {
         this( serializer, null, false, refStream, null, false, itemsStream );
     }
 
-    /**
+    /***************************************************************************
      * @param serializer
      * @param itemsFile
      * @param deleteItems
      * @throws FileNotFoundException
      * @throws IOException
-     */
+     **************************************************************************/
     private ReferenceStream( IDataSerializer<T> serializer, File itemsFile,
         boolean deleteItems ) throws FileNotFoundException, IOException
     {
         this( serializer, itemsFile, deleteItems, createTempFile(), true );
     }
 
-    /**
+    /***************************************************************************
      * @param serializer
      * @param itemsFile
      * @param deleteItems
@@ -99,7 +99,7 @@ public final class ReferenceStream<T> implements IReferenceStream<T>
      * @param deleteReference
      * @throws FileNotFoundException
      * @throws IOException
-     */
+     **************************************************************************/
     private ReferenceStream( IDataSerializer<T> serializer, File itemsFile,
         boolean deleteItems, File referenceFile, boolean deleteReference )
         throws FileNotFoundException, IOException
@@ -108,7 +108,7 @@ public final class ReferenceStream<T> implements IReferenceStream<T>
             referenceFile, deleteReference, createStream( referenceFile ) );
     }
 
-    /**
+    /***************************************************************************
      * @param serializer
      * @param itemsFile
      * @param deleteItems
@@ -118,7 +118,7 @@ public final class ReferenceStream<T> implements IReferenceStream<T>
      * @param referenceStream
      * @throws FileNotFoundException
      * @throws IOException
-     */
+     **************************************************************************/
     private ReferenceStream( IDataSerializer<T> serializer, File itemsFile,
         boolean deleteItems, IDataStream itemsStream, File referenceFile,
         boolean deleteReference, IDataStream referenceStream )
@@ -290,6 +290,7 @@ public final class ReferenceStream<T> implements IReferenceStream<T>
             long pos;
             while( ( pos = itemsStream.getPosition() ) < itemStreamLength )
             {
+                // LogUtils.printDebug( "Reading item @ 0x%016X", pos );
                 try
                 {
                     refStream.writeLong( pos );

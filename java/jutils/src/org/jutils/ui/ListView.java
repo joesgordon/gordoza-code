@@ -62,9 +62,10 @@ public class ListView<T> implements IDataView<List<T>>
     }
 
     /***************************************************************************
-     * @param itemsModel
-     * @param canAddRemove
-     * @param canOrder
+     * Creates a new view with the provided data view and model.
+     * @param itemsModel the model for this view.
+     * @param canAddRemove shows add/remove buttons if {@code true}.
+     * @param canOrder shows order buttons if {@code true}.
      **************************************************************************/
     public ListView( IItemListModel<T> itemsModel, boolean canAddRemove,
         boolean canOrder )
@@ -80,7 +81,7 @@ public class ListView<T> implements IDataView<List<T>>
         this.upAction = canOrder ? createUpAction() : null;
         this.downAction = canOrder ? createDownAction() : null;
 
-        this.toolbar = createButtonsPanel( canOrder );
+        this.toolbar = createButtonsPanel( canAddRemove, canOrder );
 
         this.selectedListeners = new ItemActionList<>();
         this.changeListeners = new ItemActionList<>();
@@ -90,6 +91,11 @@ public class ListView<T> implements IDataView<List<T>>
         setItemRenderer( new DefaultItemListCellRenderer<>() );
 
         itemsListModel.setData( items );
+
+        if( toolbar.getComponentCount() == 0 )
+        {
+            toolbar.setVisible( false );
+        }
     }
 
     /***************************************************************************
@@ -182,6 +188,10 @@ public class ListView<T> implements IDataView<List<T>>
     public void addToToolbar( JButton button )
     {
         toolbar.add( button );
+        if( toolbar.isVisible() )
+        {
+            toolbar.setVisible( true );
+        }
     }
 
     /***************************************************************************
@@ -190,6 +200,10 @@ public class ListView<T> implements IDataView<List<T>>
     public void addSeparatorToToolbar()
     {
         toolbar.addSeparator();
+        if( toolbar.isVisible() )
+        {
+            toolbar.setVisible( true );
+        }
     }
 
     /***************************************************************************
@@ -209,15 +223,20 @@ public class ListView<T> implements IDataView<List<T>>
     /***************************************************************************
      * Creates the component that provides add/remove buttons.
      * @param canOrder
+     * @param canOrder2
      **************************************************************************/
-    private JToolBar createButtonsPanel( boolean canOrder )
+    private JToolBar createButtonsPanel( boolean canAddRemove,
+        boolean canOrder )
     {
         JToolBar toolbar = new JToolBar();
 
         SwingUtils.setToolbarDefaults( toolbar );
 
-        SwingUtils.addActionToToolbar( toolbar, addAction );
-        SwingUtils.addActionToToolbar( toolbar, removeAction );
+        if( canAddRemove )
+        {
+            SwingUtils.addActionToToolbar( toolbar, addAction );
+            SwingUtils.addActionToToolbar( toolbar, removeAction );
+        }
 
         if( toolbar.getComponentCount() > 0 )
         {

@@ -38,6 +38,8 @@ public class NetMessagesView implements IView<JPanel>
     /**  */
     private final JTable table;
     /**  */
+    private final JScrollPane tablePane;
+    /**  */
     private final RowHeaderNumberView rowView;
 
     /**  */
@@ -90,6 +92,11 @@ public class NetMessagesView implements IView<JPanel>
             true );
     }
 
+    /***************************************************************************
+     * @param fields
+     * @param msgView
+     * @param addScrollPane
+     **************************************************************************/
     public NetMessagesView( IMessageFields fields,
         IDataView<NetMessage> msgView, boolean addScrollPane )
     {
@@ -109,6 +116,7 @@ public class NetMessagesView implements IView<JPanel>
         this.tableCfg = new NetMessagesTableConfig( fields );
         this.tableModel = new ItemsTableModel<>( tableCfg );
         this.table = new JTable( tableModel );
+        this.tablePane = new JScrollPane( table );
         this.rowView = new RowHeaderNumberView( table );
         this.navFirstButton = new JButton();
         this.navPreviousButton = new JButton();
@@ -120,7 +128,7 @@ public class NetMessagesView implements IView<JPanel>
         this.msgView = new MessageNavView( this, msgView, addScrollPane );
         this.view = createView();
 
-        this.msgsPerPage = 500;
+        this.msgsPerPage = 50;
         this.pageStartIndex = 0L;
 
         setOpenVisible( false );
@@ -147,22 +155,21 @@ public class NetMessagesView implements IView<JPanel>
             new FontLabelTableCellRenderer( SwingUtils.getFixedFont( 12 ) ) );
         column.setCellRenderer( renderer );
 
-        JScrollPane displayScrollPane = new JScrollPane( table );
-        JScrollBar vScrollBar = displayScrollPane.getVerticalScrollBar();
+        JScrollBar vScrollBar = tablePane.getVerticalScrollBar();
 
         vScrollBar.addAdjustmentListener( new BottomScroller( vScrollBar ) );
 
-        displayScrollPane.setRowHeaderView( rowView.getView() );
+        tablePane.setRowHeaderView( rowView.getView() );
 
-        displayScrollPane.setVerticalScrollBarPolicy(
+        tablePane.setVerticalScrollBarPolicy(
             ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
-        displayScrollPane.setHorizontalScrollBarPolicy(
+        tablePane.setHorizontalScrollBarPolicy(
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED );
 
         // panel.setBorder( new TitledBorder( "Sent/Received Messages" ) );
 
         panel.add( createToolbar(), BorderLayout.NORTH );
-        panel.add( displayScrollPane, BorderLayout.CENTER );
+        panel.add( tablePane, BorderLayout.CENTER );
 
         panel.setMinimumSize( new Dimension( 625, 200 ) );
         panel.setPreferredSize( new Dimension( 625, 200 ) );
@@ -353,15 +360,20 @@ public class NetMessagesView implements IView<JPanel>
 
         // LogUtils.printDebug( "Setting start index to %d from %d of %d for
         // %d",
-        // index, pageStartIndex, msgsStream.getCount(), count );
+        // startIndex, pageStartIndex, msgsStream.getCount(), count );
 
         this.pageStartIndex = startIndex;
 
         try
         {
-            List<NetMessage> msgs = msgsStream.read( pageStartIndex, count );
+            List<NetMessage> msgs = null;
+            synchronized( msgsStream )
+            {
+                msgs = msgsStream.read( pageStartIndex, count );
+            }
             tableModel.setItems( msgs );
             updateRowHeader( count );
+            ResizingTableModelListener.resizeTable( table );
         }
         catch( IOException ex )
         {
@@ -529,34 +541,37 @@ public class NetMessagesView implements IView<JPanel>
     {
         byte [] buf = new byte[IOUtils.DEFAULT_BUF_SIZE];
 
-        try( FileStream stream = new FileStream( file ) )
+        synchronized( msgsStream )
         {
-            @SuppressWarnings( "resource")
-            IStream input = msgsStream.getItemsStream();
-
-            input.seek( 0L );
-
-            long length = input.getLength();
-            long written = 0;
-
-            while( written < length )
+            try( FileStream stream = new FileStream( file ) )
             {
-                int count = input.read( buf );
+                @SuppressWarnings( "resource")
+                IStream input = msgsStream.getItemsStream();
 
-                stream.write( buf, 0, count );
+                input.seek( 0L );
 
-                written += count;
+                long length = input.getLength();
+                long written = 0;
+
+                while( written < length )
+                {
+                    int count = input.read( buf );
+
+                    stream.write( buf, 0, count );
+
+                    written += count;
+                }
             }
-        }
-        catch( FileNotFoundException ex )
-        {
-            // TODO Auto-generated catch block
-            ex.printStackTrace();
-        }
-        catch( IOException ex )
-        {
-            // TODO Auto-generated catch block
-            ex.printStackTrace();
+            catch( FileNotFoundException ex )
+            {
+                // TODO Auto-generated catch block
+                ex.printStackTrace();
+            }
+            catch( IOException ex )
+            {
+                // TODO Auto-generated catch block
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -569,7 +584,10 @@ public class NetMessagesView implements IView<JPanel>
 
         try
         {
-            msgsStream.setItemsFile( file );
+            synchronized( msgsStream )
+            {
+                msgsStream.setItemsFile( file );
+            }
         }
         catch( IOException ex )
         {
@@ -577,7 +595,7 @@ public class NetMessagesView implements IView<JPanel>
             ex.printStackTrace();
         }
 
-        pageStartIndex = 0L;
+        pageStartIndex = -1L;
         navigatePage( true, true );
         ResizingTableModelListener.resizeTable( table );
     }
@@ -602,7 +620,10 @@ public class NetMessagesView implements IView<JPanel>
 
         try
         {
-            msgsStream.write( msg );
+            synchronized( msgsStream )
+            {
+                msgsStream.write( msg );
+            }
             count++;
         }
         catch( IOException ex )
@@ -610,7 +631,7 @@ public class NetMessagesView implements IView<JPanel>
             ex.printStackTrace();
         }
 
-        long nextIndex = pageStartIndex + msgsPerPage;
+        long nextPageStartIndex = pageStartIndex + msgsPerPage;
 
         // LogUtils.printDebug(
         // "Adding message; last start = %d, next start = %d, current start =
@@ -619,19 +640,32 @@ public class NetMessagesView implements IView<JPanel>
 
         if( lastStartIndex == pageStartIndex )
         {
-            if( count > nextIndex )
+            if( count > nextPageStartIndex )
             {
-                navigatePage( count - 1 );
+                if( isAtBottom() )
+                {
+                    navigatePage( count - 1 );
+                }
             }
             else
             {
                 tableModel.addItem( msg );
                 updateRowHeader( tableModel.getRowCount() );
+                ResizingTableModelListener.resizeTable( table );
             }
-            ResizingTableModelListener.resizeTable( table );
         }
 
         setNavButtonsEnabled();
+    }
+
+    private boolean isAtBottom()
+    {
+        JScrollBar bar = tablePane.getVerticalScrollBar();
+        int value = bar.getValue();
+        int extent = bar.getModel().getExtent();
+        int max = bar.getMaximum() - extent;
+
+        return value >= max;
     }
 
     /***************************************************************************
@@ -643,7 +677,10 @@ public class NetMessagesView implements IView<JPanel>
 
         try
         {
-            msgsStream.removeAll();
+            synchronized( msgsStream )
+            {
+                msgsStream.removeAll();
+            }
         }
         catch( IOException ex )
         {
