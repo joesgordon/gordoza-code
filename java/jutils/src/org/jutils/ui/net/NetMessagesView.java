@@ -128,7 +128,7 @@ public class NetMessagesView implements IView<JPanel>
         this.msgView = new MessageNavView( this, msgView, addScrollPane );
         this.view = createView();
 
-        this.msgsPerPage = 50;
+        this.msgsPerPage = 500;
         this.pageStartIndex = 0L;
 
         setOpenVisible( false );
