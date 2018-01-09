@@ -30,4 +30,16 @@ public class TcpInputs
         this.remotePort = 5000;
         this.timeout = 500;
     }
+
+    /***************************************************************************
+     * @param inputs
+     **************************************************************************/
+    public TcpInputs( TcpInputs inputs )
+    {
+        this.nic = inputs.nic;
+        this.localPort = inputs.localPort;
+        this.remoteAddress = new Ip4Address( inputs.remoteAddress );
+        this.remotePort = inputs.remotePort;
+        this.timeout = inputs.timeout;
+    }
 }

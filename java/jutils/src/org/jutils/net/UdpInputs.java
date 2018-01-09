@@ -30,4 +30,17 @@ public class UdpInputs
         this.remoteAddress = new Ip4Address( 127, 0, 0, 1 );
         this.remotePort = 5000;
     }
+
+    /***************************************************************************
+     * @param inputs
+     **************************************************************************/
+    public UdpInputs( UdpInputs inputs )
+    {
+        this.localPort = inputs.localPort;
+        this.nic = inputs.nic;
+        this.timeout = inputs.timeout;
+        this.reuse = inputs.reuse;
+        this.remoteAddress = inputs.remoteAddress;
+        this.remotePort = inputs.remotePort;
+    }
 }

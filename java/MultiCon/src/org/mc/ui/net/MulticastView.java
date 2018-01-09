@@ -9,11 +9,12 @@ import javax.swing.*;
 import org.jutils.SwingUtils;
 import org.jutils.concurrent.Stoppable;
 import org.jutils.io.LogUtils;
+import org.jutils.io.options.OptionsSerializer;
 import org.jutils.net.*;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.net.MulticastInputsView;
 import org.jutils.ui.net.NetMessagesView;
-import org.mc.McTxThread;
+import org.mc.*;
 import org.mc.ui.*;
 
 /*******************************************************************************
@@ -26,14 +27,14 @@ public class MulticastView implements IConnectionView
     /**  */
     private final MulticastInputsView inputsView;
     /**  */
-    private final McConfigurationPanel configPanel;
+    private final BindView configPanel;
     /**  */
     private final NetMessagesView messagesPanel;
     /**  */
     private final McInputPanel inputPanel;
 
     /**  */
-    private Multicaster commModel;
+    private ConnectionListener commModel;
 
     /***************************************************************************
      * 
@@ -42,7 +43,7 @@ public class MulticastView implements IConnectionView
     {
         this.view = new JPanel();
         this.inputsView = new MulticastInputsView();
-        this.configPanel = new McConfigurationPanel( inputsView );
+        this.configPanel = new BindView( inputsView );
         this.messagesPanel = new NetMessagesView();
         this.inputPanel = new McInputPanel();
 
@@ -50,7 +51,7 @@ public class MulticastView implements IConnectionView
 
         inputsView.setEnabled( true );
 
-        configPanel.addBindActionListener( ( e ) -> bindUnbind() );
+        configPanel.setCallback( ( b ) -> bindUnbind( b ) );
 
         inputPanel.addSendActionListener( ( e ) -> sendMessage() );
 
@@ -71,6 +72,10 @@ public class MulticastView implements IConnectionView
             new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 new Insets( 0, 6, 6, 6 ), 0, 0 ) );
+
+        OptionsSerializer<McOptions> userio = McMain.getUserData();
+
+        inputsView.setData( userio.getOptions().multicastInputs );
     }
 
     /***************************************************************************
@@ -102,6 +107,15 @@ public class MulticastView implements IConnectionView
                     "Unbind Error" );
             }
         }
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public String getTitle()
+    {
+        return "Multicast";
     }
 
     /***************************************************************************
@@ -161,26 +175,27 @@ public class MulticastView implements IConnectionView
     }
 
     /***************************************************************************
-     * 
+     * @param bind
      **************************************************************************/
-    private void bindUnbind()
+    private void bindUnbind( boolean bind )
     {
-        boolean bound = ( commModel != null );
-
         configPanel.setBindEnabled( false );
+
+        boolean bound = bind;
 
         try
         {
-            if( bound )
+            if( bind )
             {
-                unbindSocket();
-                bound = false;
-            }
-            else
-            {
-                MulticastInputs socket = inputsView.getData();
+                MulticastInputs inputs = inputsView.getData();
+
+                OptionsSerializer<McOptions> userio = McMain.getUserData();
+                McOptions options = userio.getOptions();
+                options.multicastInputs = inputs;
+                userio.write( options );
+
                 @SuppressWarnings( "resource")
-                IConnection connection = new MulticastConnection( socket );
+                IConnection connection = new MulticastConnection( inputs );
 
                 ItemActionListener<NetMessage> rxListener;
                 ItemActionListener<String> errListener;
@@ -190,9 +205,14 @@ public class MulticastView implements IConnectionView
                 errListener = ( e ) -> SwingUtilities.invokeLater(
                     () -> displayErrorMessage( e.getItem() ) );
 
-                commModel = new Multicaster( connection, rxListener,
+                commModel = new ConnectionListener( connection, rxListener,
                     errListener );
                 bound = true;
+            }
+            else
+            {
+                unbindSocket();
+                bound = false;
             }
 
             inputsView.setEnabled( !bound );
@@ -230,11 +250,5 @@ public class MulticastView implements IConnectionView
 
         commModel.close();
         commModel = null;
-    }
-
-    @Override
-    public String getTitle()
-    {
-        return "Multicast";
     }
 }

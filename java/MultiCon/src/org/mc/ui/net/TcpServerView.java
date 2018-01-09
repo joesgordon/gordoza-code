@@ -10,44 +10,59 @@ import javax.swing.*;
 import org.jutils.Utils;
 import org.jutils.concurrent.*;
 import org.jutils.io.LogUtils;
+import org.jutils.io.options.OptionsSerializer;
 import org.jutils.net.*;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.net.NetMessagesView;
 import org.jutils.ui.net.TcpInputsView;
+import org.mc.McMain;
+import org.mc.McOptions;
+import org.mc.ui.BindView;
 import org.mc.ui.IConnectionView;
-import org.mc.ui.McConfigurationPanel;
 
-/***************************************************************************
+/*******************************************************************************
  * 
- **************************************************************************/
+ ******************************************************************************/
 public class TcpServerView implements IConnectionView
 {
+    /**  */
     private final JPanel view;
+    /**  */
     private final TcpInputsView inputsView;
-    private final McConfigurationPanel configPanel;
+    /**  */
+    private final BindView configPanel;
+    /**  */
     private final NetMessagesView messagesView;
 
-    private Multicaster commModel;
+    /**  */
+    private ConnectionListener commModel;
+    /**  */
     private TcpConnection connection;
+    /**  */
     private Thread acceptThread;
+    /**  */
     private Stoppable acceptTask;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public TcpServerView()
     {
         this.inputsView = new TcpInputsView( true, true );
-        this.configPanel = new McConfigurationPanel( inputsView );
+        this.configPanel = new BindView( inputsView );
         this.messagesView = new NetMessagesView();
         this.view = createView();
 
         this.commModel = null;
 
-        TcpInputs inputs = inputsView.getData();
+        OptionsSerializer<McOptions> userio = McMain.getUserData();
 
-        inputs.localPort = 5000;
-
-        inputsView.setData( inputs );
+        inputsView.setData( userio.getOptions().tcpServerInputs );
     }
 
+    /**
+     * @return
+     */
     private JPanel createView()
     {
         JPanel panel = new JPanel( new GridBagLayout() );
@@ -55,8 +70,7 @@ public class TcpServerView implements IConnectionView
 
         inputsView.setEnabled( true );
 
-        configPanel.addBindActionListener(
-            ( e ) -> bindUnbind( !isBinding() ) );
+        configPanel.setCallback( ( b ) -> bindUnbind( b ) );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -71,11 +85,9 @@ public class TcpServerView implements IConnectionView
         return panel;
     }
 
-    private boolean isBinding()
-    {
-        return commModel != null || acceptTask != null;
-    }
-
+    /**
+     * @param bind
+     */
     private void bindUnbind( boolean bind )
     {
         configPanel.setBindEnabled( false );
@@ -112,9 +124,17 @@ public class TcpServerView implements IConnectionView
         configPanel.setBindEnabled( true );
     }
 
+    /***************************************************************************
+     * @throws IOException
+     **************************************************************************/
     private void bind() throws IOException
     {
         TcpInputs inputs = inputsView.getData();
+
+        OptionsSerializer<McOptions> userio = McMain.getUserData();
+        McOptions options = userio.getDefault();
+        options.tcpServerInputs = inputs;
+        userio.write( options );
 
         AcceptTask task = new AcceptTask( inputs, this );
         this.acceptTask = new Stoppable( task );
@@ -129,9 +149,9 @@ public class TcpServerView implements IConnectionView
     private static final byte[] PREFIX = "Received: ".getBytes(
         Charset.forName( "UTF-8" ) );
 
-    /**
+    /***************************************************************************
      * @param msg
-     */
+     **************************************************************************/
     private void rxMessage( NetMessage msg )
     {
         messagesView.addMessage( msg );
@@ -153,12 +173,18 @@ public class TcpServerView implements IConnectionView
         messagesView.addMessage( msg );
     }
 
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
     @Override
     public JComponent getView()
     {
         return view;
     }
 
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
     @Override
     public void close()
     {
@@ -196,6 +222,15 @@ public class TcpServerView implements IConnectionView
     }
 
     /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public String getTitle()
+    {
+        return "TCP Server";
+    }
+
+    /***************************************************************************
      * @param errorMsg
      **************************************************************************/
     private void displayErrorMessage( String errorMsg )
@@ -208,6 +243,9 @@ public class TcpServerView implements IConnectionView
         close();
     }
 
+    /***************************************************************************
+     * @param connection
+     **************************************************************************/
     private void setAcceptedConnection( TcpConnection connection )
     {
         this.connection = connection;
@@ -222,7 +260,7 @@ public class TcpServerView implements IConnectionView
 
         try
         {
-            commModel = new Multicaster( connection, rxListener, errListener );
+            commModel = new ConnectionListener( connection, rxListener, errListener );
         }
         catch( IOException ex )
         {
@@ -232,7 +270,10 @@ public class TcpServerView implements IConnectionView
         acceptThread = null;
     }
 
-    public void handleDisconnected()
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private void handleDisconnected()
     {
         LogUtils.printDebug( "Disconnected" );
         bindUnbind( false );
@@ -286,11 +327,5 @@ public class TcpServerView implements IConnectionView
                 view.acceptThread = null;
             }
         }
-    }
-
-    @Override
-    public String getTitle()
-    {
-        return "TCP Server";
     }
 }

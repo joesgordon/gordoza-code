@@ -10,16 +10,19 @@ import javax.swing.*;
 import org.jutils.SwingUtils;
 import org.jutils.Utils;
 import org.jutils.io.LogUtils;
+import org.jutils.io.options.OptionsSerializer;
 import org.jutils.net.*;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.net.NetMessagesView;
 import org.jutils.ui.net.UdpInputsView;
+import org.mc.McMain;
+import org.mc.McOptions;
+import org.mc.ui.BindView;
 import org.mc.ui.IConnectionView;
-import org.mc.ui.McConfigurationPanel;
 
-/***************************************************************************
+/*******************************************************************************
  * 
- **************************************************************************/
+ ******************************************************************************/
 public class UdpServerView implements IConnectionView
 {
     /**  */
@@ -27,12 +30,12 @@ public class UdpServerView implements IConnectionView
     /**  */
     private final UdpInputsView inputsView;
     /**  */
-    private final McConfigurationPanel configPanel;
+    private final BindView configPanel;
     /**  */
     private final NetMessagesView messagesView;
 
     /**  */
-    private Multicaster commModel;
+    private ConnectionListener commModel;
     /**  */
     private UdpConnection connection;
 
@@ -42,17 +45,15 @@ public class UdpServerView implements IConnectionView
     public UdpServerView()
     {
         this.inputsView = new UdpInputsView( true, false );
-        this.configPanel = new McConfigurationPanel( inputsView );
+        this.configPanel = new BindView( inputsView );
         this.messagesView = new NetMessagesView();
         this.view = createView();
 
         this.commModel = null;
 
-        UdpInputs inputs = inputsView.getData();
+        OptionsSerializer<McOptions> userio = McMain.getUserData();
 
-        inputs.localPort = 5000;
-
-        inputsView.setData( inputs );
+        inputsView.setData( userio.getOptions().udpServerInputs );
     }
 
     /***************************************************************************
@@ -65,7 +66,7 @@ public class UdpServerView implements IConnectionView
 
         inputsView.setEnabled( true );
 
-        configPanel.addBindActionListener( ( e ) -> bindUnbind() );
+        configPanel.setCallback( ( b ) -> bindUnbind( b ) );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -83,22 +84,25 @@ public class UdpServerView implements IConnectionView
     /***************************************************************************
      * 
      **************************************************************************/
-    private void bindUnbind()
+    private void bindUnbind( boolean bind )
     {
-        boolean bound = ( commModel != null );
+        boolean bound = bind;
+
+        LogUtils.printDebug( "UDP Server %s", bind ? "binding" : "unbinding" );
 
         configPanel.setBindEnabled( false );
 
         try
         {
-            if( bound )
-            {
-                close();
-                bound = false;
-            }
-            else
+            if( bind )
             {
                 UdpInputs inputs = inputsView.getData();
+
+                OptionsSerializer<McOptions> userio = McMain.getUserData();
+                McOptions options = userio.getOptions();
+                options.udpServerInputs = inputs;
+                userio.write( options );
+
                 this.connection = new UdpConnection( inputs );
 
                 ItemActionListener<NetMessage> rxListener;
@@ -109,10 +113,15 @@ public class UdpServerView implements IConnectionView
                 errListener = ( e ) -> SwingUtilities.invokeLater(
                     () -> displayErrorMessage( e.getItem() ) );
 
-                commModel = new Multicaster( connection, rxListener,
+                commModel = new ConnectionListener( connection, rxListener,
                     errListener );
                 messagesView.clearMessages();
                 bound = true;
+            }
+            else
+            {
+                close();
+                bound = false;
             }
 
             inputsView.setEnabled( !bound );
@@ -207,7 +216,7 @@ public class UdpServerView implements IConnectionView
         SwingUtils.showErrorMessage( getView(), errorMsg,
             "Communication Error" );
 
-        bindUnbind();
+        bindUnbind( false );
     }
 
     /***************************************************************************

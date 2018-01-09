@@ -9,7 +9,7 @@ import org.jutils.ui.event.ItemActionListener;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class Multicaster implements Closeable
+public class ConnectionListener implements Closeable
 {
     /**  */
     public final IConnection connection;
@@ -24,7 +24,7 @@ public class Multicaster implements Closeable
      * @param errListener
      * @throws IOException
      **************************************************************************/
-    public Multicaster( IConnection connection,
+    public ConnectionListener( IConnection connection,
         ItemActionListener<NetMessage> msgListener,
         ItemActionListener<String> errListener ) throws IOException
     {
@@ -47,10 +47,12 @@ public class Multicaster implements Closeable
     @Override
     public void close() throws IOException
     {
+        rxThread.interrupt();
+        rxTask.stop();
+        connection.close();
+
         try
         {
-            rxTask.stop();
-            rxThread.interrupt();
             rxTask.stopAndWaitFor();
         }
         catch( InterruptedException e )
@@ -58,7 +60,6 @@ public class Multicaster implements Closeable
         }
         finally
         {
-            connection.close();
         }
     }
 }

@@ -48,6 +48,8 @@ public class MulticastInputs
         this.port = inputs.port;
         this.nic = inputs.nic;
         this.ttl = inputs.ttl;
+        this.loopback = inputs.loopback;
+        this.timeout = inputs.timeout;
     }
 
     /***************************************************************************

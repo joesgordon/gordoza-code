@@ -35,7 +35,7 @@ public class ChatterboxHandler
     private final MessageSerializer msgSerializer;
 
     /**  */
-    private Multicaster wire;
+    private ConnectionListener wire;
     /**  */
     private UserCheckTask userTask;
     /**  */
@@ -74,7 +74,7 @@ public class ChatterboxHandler
             ItemActionListener<String> errorListener = (
                 e ) -> SwingUtilities.invokeLater(
                     () -> displayErrorMessage( e.getItem() ) );
-            this.wire = new Multicaster( connection, new RawReceiver( this ),
+            this.wire = new ConnectionListener( connection, new RawReceiver( this ),
                 errorListener );
         }
         catch( IOException ex )

@@ -8,10 +8,13 @@ import javax.swing.*;
 
 import org.jutils.SwingUtils;
 import org.jutils.io.LogUtils;
+import org.jutils.io.options.OptionsSerializer;
 import org.jutils.net.*;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.net.NetMessagesView;
 import org.jutils.ui.net.UdpInputsView;
+import org.mc.McMain;
+import org.mc.McOptions;
 import org.mc.ui.*;
 
 /*******************************************************************************
@@ -24,14 +27,14 @@ public class UdpClientView implements IConnectionView
     /**  */
     private final UdpInputsView inputsView;
     /**  */
-    private final McConfigurationPanel configPanel;
+    private final BindView configPanel;
     /**  */
     private final NetMessagesView messagesView;
     /**  */
     private final MessageTextView textView;
 
     /**  */
-    private Multicaster commModel;
+    private ConnectionListener commModel;
 
     /***************************************************************************
      * 
@@ -39,12 +42,16 @@ public class UdpClientView implements IConnectionView
     public UdpClientView()
     {
         this.inputsView = new UdpInputsView();
-        this.configPanel = new McConfigurationPanel( inputsView );
+        this.configPanel = new BindView( inputsView );
         this.messagesView = new NetMessagesView();
         this.textView = new MessageTextView();
         this.view = createView();
 
         this.commModel = null;
+
+        OptionsSerializer<McOptions> userio = McMain.getUserData();
+
+        inputsView.setData( userio.getOptions().udpClientInputs );
     }
 
     /***************************************************************************
@@ -57,7 +64,7 @@ public class UdpClientView implements IConnectionView
 
         inputsView.setEnabled( true );
 
-        configPanel.addBindActionListener( ( e ) -> bindUnbind() );
+        configPanel.setCallback( ( b ) -> bindUnbind( b ) );
 
         textView.addEnterListener( ( e ) -> sendMessage() );
 
@@ -85,24 +92,25 @@ public class UdpClientView implements IConnectionView
     }
 
     /***************************************************************************
-     * 
+     * @param bind
      **************************************************************************/
-    private void bindUnbind()
+    private void bindUnbind( boolean bind )
     {
-        boolean bound = ( commModel != null );
+        boolean bound = bind;
 
         configPanel.setBindEnabled( false );
 
         try
         {
-            if( bound )
-            {
-                close();
-                bound = false;
-            }
-            else
+            if( bind )
             {
                 UdpInputs inputs = inputsView.getData();
+
+                OptionsSerializer<McOptions> userio = McMain.getUserData();
+                McOptions options = userio.getOptions();
+                options.udpClientInputs = inputs;
+                userio.write( options );
+
                 @SuppressWarnings( "resource")
                 IConnection connection = new UdpConnection( inputs );
 
@@ -114,10 +122,15 @@ public class UdpClientView implements IConnectionView
                 errListener = ( e ) -> SwingUtilities.invokeLater(
                     () -> displayErrorMessage( e.getItem() ) );
 
-                commModel = new Multicaster( connection, rxListener,
+                commModel = new ConnectionListener( connection, rxListener,
                     errListener );
                 messagesView.clearMessages();
                 bound = true;
+            }
+            else
+            {
+                close();
+                bound = false;
             }
 
             inputsView.setEnabled( !bound );

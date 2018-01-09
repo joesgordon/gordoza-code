@@ -140,11 +140,9 @@ public class NetMessagesTableConfig implements ITableItemsConfig<NetMessage>
             {
                 return HexUtils.toHexString( buf, " " );
             }
-            else
-            {
-                HexUtils.cleanAscii( buf, 0, cnt );
-                return new String( buf, 0, cnt, utf8 );
-            }
+
+            HexUtils.cleanAscii( buf, 0, cnt );
+            return new String( buf, 0, cnt, utf8 );
         }
 
         return null;

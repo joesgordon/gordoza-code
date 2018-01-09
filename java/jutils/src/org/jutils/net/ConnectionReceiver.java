@@ -1,6 +1,7 @@
 package org.jutils.net;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 import org.jutils.concurrent.IStoppableTask;
@@ -52,8 +53,13 @@ public class ConnectionReceiver implements IStoppableTask
             {
                 // LogUtils.printDebug( "Receive timed out..." );
             }
+            catch( SocketException ex )
+            {
+                // LogUtils.printDebug( "Receive timed out..." );
+            }
             catch( IOException ex )
             {
+                ex.printStackTrace();
                 errListeners.fireListeners( this,
                     "Error receiving packet: " + ex.getMessage() );
             }

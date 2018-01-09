@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.jutils.apps.jhex.data.JHexOptions;
 import org.jutils.io.IOUtils;
+import org.jutils.io.LogUtils;
 import org.jutils.io.options.IOptionsCreator;
 import org.jutils.io.options.OptionsSerializer;
 import org.jutils.ui.app.FrameRunner;
@@ -81,8 +82,7 @@ public class JHexMain
         @Override
         public void warn( String message )
         {
-            // TODO Auto-generated method stub
-
+            LogUtils.printWarning( message );
         }
     }
 }

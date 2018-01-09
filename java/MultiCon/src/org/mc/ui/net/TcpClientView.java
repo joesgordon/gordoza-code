@@ -7,12 +7,18 @@ import java.util.Arrays;
 import javax.swing.*;
 
 import org.jutils.io.LogUtils;
+import org.jutils.io.options.OptionsSerializer;
 import org.jutils.net.*;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.net.NetMessagesView;
 import org.jutils.ui.net.TcpInputsView;
+import org.mc.McMain;
+import org.mc.McOptions;
 import org.mc.ui.*;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class TcpClientView implements IConnectionView
 {
     /**  */
@@ -20,14 +26,14 @@ public class TcpClientView implements IConnectionView
     /**  */
     private final TcpInputsView inputsView;
     /**  */
-    private final McConfigurationPanel configPanel;
+    private final BindView configPanel;
     /**  */
     private final NetMessagesView messagesView;
     /**  */
     private final MessageTextView textView;
 
     /**  */
-    private Multicaster commModel;
+    private ConnectionListener commModel;
 
     /***************************************************************************
      * 
@@ -35,12 +41,16 @@ public class TcpClientView implements IConnectionView
     public TcpClientView()
     {
         this.inputsView = new TcpInputsView( false );
-        this.configPanel = new McConfigurationPanel( inputsView );
+        this.configPanel = new BindView( inputsView );
         this.messagesView = new NetMessagesView();
         this.textView = new MessageTextView();
         this.view = createView();
 
         this.commModel = null;
+
+        OptionsSerializer<McOptions> userio = McMain.getUserData();
+
+        inputsView.setData( userio.getOptions().tcpClientInputs );
     }
 
     /***************************************************************************
@@ -53,7 +63,7 @@ public class TcpClientView implements IConnectionView
 
         inputsView.setEnabled( true );
 
-        configPanel.addBindActionListener( ( e ) -> bindUnbind() );
+        configPanel.setCallback( ( b ) -> bindUnbind( b ) );
 
         textView.addEnterListener( ( e ) -> sendMessage() );
 
@@ -81,24 +91,25 @@ public class TcpClientView implements IConnectionView
     }
 
     /***************************************************************************
-     * 
+     * @param b
      **************************************************************************/
-    private void bindUnbind()
+    private void bindUnbind( boolean bind )
     {
-        boolean bound = ( commModel != null );
+        boolean bound = bind;
 
         configPanel.setBindEnabled( false );
 
         try
         {
-            if( bound )
-            {
-                close();
-                bound = false;
-            }
-            else
+            if( bind )
             {
                 TcpInputs inputs = inputsView.getData();
+
+                OptionsSerializer<McOptions> userio = McMain.getUserData();
+                McOptions options = userio.getOptions();
+                options.tcpClientInputs = inputs;
+                userio.write( options );
+
                 Runnable dc = () -> displayErrorMessage( "Disconnected" );
                 @SuppressWarnings( "resource")
                 IConnection connection = new TcpConnection( inputs, dc );
@@ -111,12 +122,17 @@ public class TcpClientView implements IConnectionView
                 errListener = ( e ) -> SwingUtilities.invokeLater(
                     () -> displayErrorMessage( e.getItem() ) );
 
-                commModel = new Multicaster( connection, rxListener,
+                commModel = new ConnectionListener( connection, rxListener,
                     errListener );
 
                 messagesView.clearMessages();
 
                 bound = true;
+            }
+            else
+            {
+                close();
+                bound = false;
             }
 
             inputsView.setEnabled( !bound );
