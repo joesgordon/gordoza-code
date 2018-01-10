@@ -595,7 +595,7 @@ public class NetMessagesView implements IView<JPanel>
             ex.printStackTrace();
         }
 
-        pageStartIndex = -1L;
+        pageStartIndex = 0L;
         navigatePage( true, true );
         ResizingTableModelListener.resizeTable( table );
     }
