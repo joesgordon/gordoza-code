@@ -7,7 +7,9 @@ import java.awt.event.KeyEvent;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
 
+import org.jutils.SwingUtils;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.model.IDataView;
@@ -17,6 +19,8 @@ import org.jutils.ui.model.IDataView;
  ******************************************************************************/
 public class MessageTextView implements IDataView<String>
 {
+    private final String CR = "" + ( char )0xD;
+
     /**  */
     private final JPanel view;
     /**  */
@@ -43,8 +47,33 @@ public class MessageTextView implements IDataView<String>
 
         textField.getDocument().addDocumentListener(
             new TextChangedListener( () -> updateData() ) );
+        SwingUtils.addKeyListener( textField, "shift ENTER", false,
+            ( e ) -> insertText( "\n" ), "Shift+Enter Listener" );
+        SwingUtils.addKeyListener( textField, "control ENTER", false,
+            ( e ) -> insertText( CR ), "Control+Enter Listener" );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private void insertText( String text )
+    {
+        int offset = textField.getCaretPosition();
+        try
+        {
+
+            textField.getDocument().insertString( offset, text, null );
+        }
+        catch( BadLocationException ex )
+        {
+            // TODO Auto-generated catch block
+            ex.printStackTrace();
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private void updateData()
     {
         if( updater != null )
@@ -81,6 +110,9 @@ public class MessageTextView implements IDataView<String>
         return contentPanel;
     }
 
+    /***************************************************************************
+     * @param updater
+     **************************************************************************/
     public void setUpdater( IUpdater<String> updater )
     {
         this.updater = updater;

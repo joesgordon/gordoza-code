@@ -152,9 +152,14 @@ public class UdpClientView implements IConnectionView
      **************************************************************************/
     private void sendMessage()
     {
+        if( commModel == null )
+        {
+            return;
+        }
+
         String msgStr = textView.getData();
 
-        msgStr = msgStr.trim();
+        // msgStr = msgStr.trim();
 
         if( msgStr.length() < 1 )
         {

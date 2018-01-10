@@ -1,11 +1,8 @@
 package org.jutils.ui;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 import javax.swing.Icon;
-
-import org.jutils.Utils;
 
 /*******************************************************************************
  * 
@@ -22,9 +19,6 @@ public class LedIcon implements Icon
     private boolean round;
     /**  */
     private final Color borderColor;
-
-    /**  */
-    private BufferedImage img;
 
     /***************************************************************************
      * @param color
@@ -79,20 +73,74 @@ public class LedIcon implements Icon
         this.height = height;
         this.round = round;
         this.borderColor = borderColor == null ? Color.darkGray : borderColor;
+    }
 
-        drawImage();
+    /***************************************************************************
+     * @param color
+     **************************************************************************/
+    public void setColor( Color color )
+    {
+        this.color = color;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public Color getColor()
+    {
+        return this.color;
+    }
+
+    /***************************************************************************
+     * @param height
+     **************************************************************************/
+    public void setIconHeight( int height )
+    {
+        this.height = height;
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private void drawImage()
+    @Override
+    public int getIconHeight()
     {
-        // img = new BufferedImage( size.width, size.height,
-        // BufferedImage.TYPE_INT_RGB );
-        img = Utils.createTransparentImage( width, height );
+        return height;
+    }
 
-        Graphics2D graphics = img.createGraphics();
+    /***************************************************************************
+     * @param width
+     **************************************************************************/
+    public void setIconWidth( int width )
+    {
+        this.width = width;
+    }
+
+    /***************************************************************************
+     * @param width
+     **************************************************************************/
+    public void setIconSize( int size )
+    {
+        this.height = size;
+        this.width = size;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public int getIconWidth()
+    {
+        return width;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    @Override
+    public void paintIcon( Component c, Graphics g, int x, int y )
+    {
+        Graphics2D graphics = ( Graphics2D )g.create( x, y, width, height );
 
         graphics.setRenderingHint( RenderingHints.KEY_ANTIALIASING,
             RenderingHints.VALUE_ANTIALIAS_ON );
@@ -127,79 +175,5 @@ public class LedIcon implements Icon
         graphics.setPaint( storedPaint );
 
         graphics.dispose();
-    }
-
-    /***************************************************************************
-     * @param color
-     **************************************************************************/
-    public void setColor( Color color )
-    {
-        this.color = color;
-        drawImage();
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public Color getColor()
-    {
-        return this.color;
-    }
-
-    /***************************************************************************
-     * @param height
-     **************************************************************************/
-    public void setIconHeight( int height )
-    {
-        this.height = height;
-        drawImage();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public int getIconHeight()
-    {
-        return height;
-    }
-
-    /***************************************************************************
-     * @param width
-     **************************************************************************/
-    public void setIconWidth( int width )
-    {
-        this.width = width;
-        drawImage();
-    }
-
-    /***************************************************************************
-     * @param width
-     **************************************************************************/
-    public void setIconSize( int size )
-    {
-        this.height = size;
-        this.width = size;
-        drawImage();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public int getIconWidth()
-    {
-        return width;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void paintIcon( Component c, Graphics g, int x, int y )
-    {
-        Graphics2D g2 = ( Graphics2D )g;
-
-        g2.drawImage( img, x, y, null );
     }
 }
