@@ -1,36 +1,37 @@
-package org.jutils.ui;
+package org.jutils.data;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-
-import javax.swing.JComponent;
+import org.jutils.INamedItem;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class PaintingComponent extends JComponent
+public enum ColorMapType implements INamedItem
 {
+    STANDARD( "Standard" ),
+    QUADRATIC( "RGB Quadratic" ),
+    LINEAR_STEP( "Linear Step" ),
+    GRAYSCALE( "Grayscale" ),
+    MATLAB_HOT( "Matlab Hot" ),
+    MATLAB_DEFAULT( "Matlab Default" ),
+    NIGHT_VISION( "Night Vision" );
+
     /**  */
-    private static final long serialVersionUID = -4340666978067812946L;
-    /**  */
-    private final IPaintable paintable;
+    public final String name;
 
     /***************************************************************************
-     * @param paintable
+     * @param name
      **************************************************************************/
-    public PaintingComponent( IPaintable paintable )
+    private ColorMapType( String name )
     {
-        this.paintable = paintable;
+        this.name = name;
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     @Override
-    public void paintComponent( Graphics g )
+    public String getName()
     {
-        super.paintComponent( g );
-
-        paintable.paint( this, ( Graphics2D )g );
+        return name;
     }
 }

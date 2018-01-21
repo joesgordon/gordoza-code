@@ -165,7 +165,7 @@ public class ChatView implements IDataView<ChatHandler>
         SimpleAttributeSet a = new SimpleAttributeSet();
         ChatUser localUser = conversation.getLocalUser();
         ChatUser sender = conversation.getChat().getUser( message.sender );
-        boolean isLocal = localUser.equals( message.sender );
+        boolean isLocal = localUser.userId.equals( message.sender );
         Color fg = isLocal ? Color.blue : Color.red;
         String username = isLocal
             ? conversation.getChat().getLocalUser().displayName

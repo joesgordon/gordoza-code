@@ -2,7 +2,7 @@ package org.mc.ui.net;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.Arrays;
+import java.nio.charset.Charset;
 
 import javax.swing.*;
 
@@ -170,8 +170,7 @@ public class UdpClientView implements IConnectionView
 
         try
         {
-            byte[] strBytes = msgStr.getBytes();
-            byte[] msgBytes = Arrays.copyOf( strBytes, strBytes.length + 1 );
+            byte[] msgBytes = msgStr.getBytes( Charset.forName( "UTF-8" ) );
 
             NetMessage msg = commModel.connection.txMessage( msgBytes );
 

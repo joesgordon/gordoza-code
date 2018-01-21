@@ -20,11 +20,12 @@ import org.jutils.ui.model.IDataView;
 public class MessageTextView implements IDataView<String>
 {
     private final String CR = "" + ( char )0xD;
+    private final String LF = "" + ( char )0xA;
 
     /**  */
     private final JPanel view;
     /**  */
-    private final JTextPane textField;
+    private final JTextArea textField;
     /**  */
     private final ItemActionList<String> enterListeners;
 
@@ -36,7 +37,7 @@ public class MessageTextView implements IDataView<String>
      **************************************************************************/
     public MessageTextView()
     {
-        this.textField = new JTextPane();
+        this.textField = new JTextArea();
         this.view = createView();
         this.enterListeners = new ItemActionList<>();
 
@@ -48,7 +49,7 @@ public class MessageTextView implements IDataView<String>
         textField.getDocument().addDocumentListener(
             new TextChangedListener( () -> updateData() ) );
         SwingUtils.addKeyListener( textField, "shift ENTER", false,
-            ( e ) -> insertText( "\n" ), "Shift+Enter Listener" );
+            ( e ) -> insertText( LF ), "Shift+Enter Listener" );
         SwingUtils.addKeyListener( textField, "control ENTER", false,
             ( e ) -> insertText( CR ), "Control+Enter Listener" );
     }
@@ -121,7 +122,7 @@ public class MessageTextView implements IDataView<String>
     /***************************************************************************
      * @param textPane
      **************************************************************************/
-    private void addEnterHook( JTextPane textPane )
+    private void addEnterHook( JTextArea textPane )
     {
         KeyStroke ks;
         String aname;
