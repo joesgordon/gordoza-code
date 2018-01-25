@@ -14,6 +14,9 @@ import org.jutils.ui.model.IView;
  ******************************************************************************/
 public class StandardFormView implements IView<JPanel>
 {
+    public static final int DEFAULT_FIELD_MARGIN = 4;
+    public static final int DEFAULT_FORM_MARGIN = 8;
+
     /**  */
     private final GridBagLayout layout;
     /**  */
@@ -35,7 +38,7 @@ public class StandardFormView implements IView<JPanel>
      **************************************************************************/
     public StandardFormView()
     {
-        this( 4 );
+        this( DEFAULT_FIELD_MARGIN );
     }
 
     /***************************************************************************
@@ -43,7 +46,7 @@ public class StandardFormView implements IView<JPanel>
      **************************************************************************/
     public StandardFormView( boolean vertical )
     {
-        this( 4, 8, vertical );
+        this( DEFAULT_FIELD_MARGIN, DEFAULT_FORM_MARGIN, vertical );
     }
 
     /***************************************************************************

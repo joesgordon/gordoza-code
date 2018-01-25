@@ -22,9 +22,6 @@ public class ColorMapFactory
 
         IMapCreator imc;
 
-        imc = ( l, u ) -> createStdColorModel();
-        maps.put( ColorMapType.STANDARD, imc );
-
         imc = ( l, u ) -> createQuadraticMap();
         maps.put( ColorMapType.QUADRATIC, imc );
 

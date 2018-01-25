@@ -70,7 +70,7 @@ public final class ComboFormField<T> implements IDataFormField<T>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public String getName()
@@ -79,7 +79,7 @@ public final class ComboFormField<T> implements IDataFormField<T>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JComboBox<T> getView()
@@ -88,7 +88,7 @@ public final class ComboFormField<T> implements IDataFormField<T>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public T getValue()
@@ -97,7 +97,7 @@ public final class ComboFormField<T> implements IDataFormField<T>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void setValue( T value )
@@ -106,7 +106,7 @@ public final class ComboFormField<T> implements IDataFormField<T>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void setUpdater( IUpdater<T> updater )
@@ -115,7 +115,7 @@ public final class ComboFormField<T> implements IDataFormField<T>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public IUpdater<T> getUpdater()
@@ -124,7 +124,7 @@ public final class ComboFormField<T> implements IDataFormField<T>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void setEditable( boolean editable )
@@ -133,7 +133,7 @@ public final class ComboFormField<T> implements IDataFormField<T>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void addValidityChanged( IValidityChangedListener l )
@@ -142,7 +142,7 @@ public final class ComboFormField<T> implements IDataFormField<T>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void removeValidityChanged( IValidityChangedListener l )
@@ -151,7 +151,7 @@ public final class ComboFormField<T> implements IDataFormField<T>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public Validity getValidity()

@@ -9,7 +9,7 @@ import javax.swing.*;
 import org.jutils.Utils;
 import org.jutils.data.ColorMapFactory;
 import org.jutils.data.ColorMapType;
-import org.jutils.ui.fields.ComboFormField;
+import org.jutils.ui.fields.ComboNavFormField;
 import org.jutils.ui.fields.NamedItemDescriptor;
 import org.jutils.ui.model.IView;
 
@@ -22,7 +22,7 @@ public class ColorMapView implements IView<JComponent>
     private final JComponent view;
 
     /**  */
-    private final ComboFormField<ColorMapType> colorMapField;
+    private final ComboNavFormField<ColorMapType> colorMapField;
 
     /**  */
     private final ComponentView exampleView;
@@ -38,17 +38,49 @@ public class ColorMapView implements IView<JComponent>
      **************************************************************************/
     public ColorMapView()
     {
-        this.colorMapField = new ComboFormField<>( "Color Map",
+        this.colorMapField = new ComboNavFormField<>( "Color Map",
             ColorMapType.values(), new NamedItemDescriptor<ColorMapType>() );
         this.exampleView = new ComponentView();
         this.legendView = new ComponentView();
         this.mapFactory = new ColorMapFactory();
         this.view = createView();
 
-        colorMapField.setValue( ColorMapType.STANDARD );
+        colorMapField.setValue( ColorMapType.GRAYSCALE );
         colorMapField.setUpdater( ( m ) -> setModel( m ) );
 
-        setModel( ColorMapType.STANDARD );
+        setModel( ColorMapType.GRAYSCALE );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private JComponent createView()
+    {
+
+        JPanel mapPanel = new JPanel( new GridBagLayout() );
+        GridBagConstraints constraints;
+
+        constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+            GridBagConstraints.SOUTHEAST, GridBagConstraints.NONE,
+            new Insets( 0, 6, 6, 40 ), 0, 0 );
+        mapPanel.add( exampleView.getView(), constraints );
+
+        constraints = new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
+            GridBagConstraints.SOUTHWEST, GridBagConstraints.NONE,
+            new Insets( 0, 0, 6, 6 ), 0, 0 );
+        mapPanel.add( legendView.getView(), constraints );
+
+        constraints = new GridBagConstraints( 0, 1, 2, 1, 1.0, 1.0,
+            GridBagConstraints.CENTER, GridBagConstraints.NONE,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
+        mapPanel.add( Box.createHorizontalStrut( 0 ), constraints );
+
+        JPanel panel = new JPanel( new BorderLayout() );
+
+        panel.add( createOptions(), BorderLayout.NORTH );
+        panel.add( mapPanel, BorderLayout.CENTER );
+
+        return panel;
     }
 
     /***************************************************************************
@@ -156,33 +188,6 @@ public class ColorMapView implements IView<JComponent>
     /***************************************************************************
      * @return
      **************************************************************************/
-    private JComponent createView()
-    {
-
-        JPanel mapPanel = new JPanel( new GridBagLayout() );
-        GridBagConstraints constraints;
-
-        constraints = new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.SOUTH, GridBagConstraints.NONE,
-            new Insets( 0, 6, 6, 40 ), 0, 0 );
-        mapPanel.add( exampleView.getView(), constraints );
-
-        constraints = new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.SOUTH, GridBagConstraints.NONE,
-            new Insets( 0, 0, 6, 6 ), 0, 0 );
-        mapPanel.add( legendView.getView(), constraints );
-
-        JPanel panel = new JPanel( new BorderLayout() );
-
-        panel.add( createOptions(), BorderLayout.NORTH );
-        panel.add( mapPanel, BorderLayout.CENTER );
-
-        return panel;
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
     private Component createOptions()
     {
         StandardFormView form = new StandardFormView();
@@ -193,7 +198,7 @@ public class ColorMapView implements IView<JComponent>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JComponent getView()
