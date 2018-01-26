@@ -7,10 +7,10 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
+import org.jutils.SwingUtils;
 import org.jutils.data.ColorMapType;
 import org.jutils.drawing.HistogramView.HistogramConfig;
 import org.jutils.drawing.HistogramView.Threshold;
-import org.jutils.io.LogUtils;
 import org.jutils.ui.IPaintable;
 import org.jutils.ui.PaintingComponent;
 import org.jutils.ui.model.IDataView;
@@ -71,6 +71,15 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
         ImageMouseListener mouseListener = new ImageMouseListener( this );
         imgView.addMouseListener( mouseListener );
         imgView.addMouseMotionListener( mouseListener );
+
+        SwingUtils.addKeyListener( view, "control UP", true,
+            ( e ) -> mouseListener.updateZoom( 0, 1 ), "Zoom Up" );
+        SwingUtils.addKeyListener( view, "control LEFT", true,
+            ( e ) -> mouseListener.updateZoom( -1, 0 ), "Zoom Left" );
+        SwingUtils.addKeyListener( view, "control DOWN", true,
+            ( e ) -> mouseListener.updateZoom( 0, -1 ), "Zoom Down" );
+        SwingUtils.addKeyListener( view, "control RIGHT", true,
+            ( e ) -> mouseListener.updateZoom( 1, 0 ), "Zoom Right" );
     }
 
     /***************************************************************************
@@ -321,7 +330,6 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
             g.setStroke( new BasicStroke( 2, BasicStroke.CAP_SQUARE,
                 BasicStroke.JOIN_ROUND ) );
             g.drawRect( x, y, view.zoomPixelSize + 2, view.zoomPixelSize + 2 );
-            // TODO Auto-generated method stub
         }
     }
 
@@ -332,26 +340,52 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
     {
         private final SingleChannelImageView view;
 
+        private boolean captureZoom;
+        private int lastX;
+        private int lastY;
+
         public ImageMouseListener( SingleChannelImageView view )
         {
             this.view = view;
+            this.captureZoom = true;
         }
 
         @Override
         public void mouseClicked( MouseEvent e )
         {
-            LogUtils.printDebug( "Mouse moved %d,%d", e.getX(), e.getY() );
+            captureZoom = !captureZoom;
+            if( captureZoom )
+            {
+                lastX = e.getX();
+                lastY = e.getY();
+                view.captureZoom( lastX, lastY );
+            }
         }
 
         @Override
         public void mouseMoved( MouseEvent e )
         {
-            view.captureZoom( e.getX(), e.getY() );
+            if( captureZoom )
+            {
+                lastX = e.getX();
+                lastY = e.getY();
+                view.captureZoom( lastX, lastY );
+            }
         }
 
         @Override
         public void mouseExited( MouseEvent e )
         {
+        }
+
+        private void updateZoom( int x, int y )
+        {
+            if( !captureZoom )
+            {
+                lastX += x;
+                lastY -= y;
+                view.captureZoom( lastX, lastY );
+            }
         }
     }
 }
