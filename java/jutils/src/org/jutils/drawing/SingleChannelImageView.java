@@ -5,15 +5,18 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 
 import org.jutils.SwingUtils;
 import org.jutils.data.ColorMapType;
 import org.jutils.drawing.HistogramView.HistogramConfig;
 import org.jutils.drawing.HistogramView.Threshold;
+import org.jutils.io.StringPrintStream;
 import org.jutils.ui.IPaintable;
 import org.jutils.ui.PaintingComponent;
 import org.jutils.ui.model.IDataView;
+import org.jutils.utils.RunningStat.Stats;
 
 /*******************************************************************************
  * 
@@ -34,6 +37,9 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
     private final PaintingComponent zoomView;
     /**  */
     private final JLabel zoomLabel;
+
+    /**  */
+    private final JTextArea statsField;
 
     /**  */
     private final ColorModelFactory modelFactory;
@@ -60,6 +66,8 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
         this.zoomPaintable = new ZoomPaintable( this );
         this.zoomView = new PaintingComponent( zoomPaintable );
         this.zoomLabel = new JLabel( "N/A" );
+
+        this.statsField = new JTextArea();
 
         this.modelFactory = new ColorModelFactory();
         this.view = createView();
@@ -92,7 +100,7 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
 
         imgView.setBorder( new LineBorder( Color.darkGray ) );
 
-        constraints = new GridBagConstraints( 0, 0, 1, 2, 0.0, 0.0,
+        constraints = new GridBagConstraints( 0, 0, 1, 3, 0.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.NONE,
             new Insets( 0, 0, 0, 0 ), 0, 0 );
         panel.add( imgView, constraints );
@@ -108,6 +116,14 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
             GridBagConstraints.NORTH, GridBagConstraints.NONE,
             new Insets( 0, 10, 0, 0 ), 0, 0 );
         panel.add( zoomLabel, constraints );
+
+        statsField.setBorder( new EtchedBorder() );
+        statsField.setEditable( false );
+
+        constraints = new GridBagConstraints( 1, 2, 1, 1, 0.0, 0.0,
+            GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
+            new Insets( 2, 10, 0, 0 ), 0, 0 );
+        panel.add( statsField, constraints );
 
         return panel;
     }
@@ -147,6 +163,20 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
         this.image = image;
 
         imgPaintable.setImage( image );
+    }
+
+    public void setStats( Stats stats )
+    {
+        try( StringPrintStream text = new StringPrintStream() )
+        {
+            text.println( "Mean = %.3f", stats.mean );
+            text.println( "Rage = (%.0f, %.0f) = %.0f", stats.min, stats.max,
+                stats.getRange() );
+            text.println( "Variance = %.3f", stats.variance );
+            text.print( "Stddev = %.3f", stats.getStddev() );
+
+            statsField.setText( text.toString() );
+        }
     }
 
     /***************************************************************************

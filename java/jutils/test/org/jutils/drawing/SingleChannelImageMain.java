@@ -69,13 +69,16 @@ public class SingleChannelImageMain
             ImageStats imgStats = img.getStats( histConfig );
 
             imgView.setData( img );
+            imgView.setStats( imgStats.stats );
 
             histView.setData( histConfig );
             histView.setHistogram( imgStats.histogram );
             histView.setLowUpdater( ( d ) -> imgView.setLowThreshold( d ) );
             histView.setHighUpdater( ( d ) -> imgView.setHighThreshold( d ) );
-            histView.setBinCountUpdater( ( d ) -> histView.setHistogram(
-                img.getStats( histConfig ).histogram ) );
+            histView.setBinCountUpdater( ( d ) -> {
+                ImageStats stats = img.getStats( histConfig );
+                histView.setHistogram( stats.histogram );
+            } );
             histView.setColorModelUpdater(
                 ( d ) -> imgView.setColorModel( d ) );
             histView.setContrastUpdater( ( d ) -> imgView.setContrast( d ) );
