@@ -2,20 +2,17 @@ package org.jutils.ui;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 
-import org.jutils.io.ResourceLoader;
+import org.jutils.drawing.HistogramView;
 import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
 /*******************************************************************************
  * Defines a test application for {@link ColorMapView}
  ******************************************************************************/
-public class ColorMapMain
+public class HistogramViewMain
 {
     /***************************************************************************
      * The application entry point.
@@ -24,20 +21,6 @@ public class ColorMapMain
     public static void main( String [] args )
     {
         FrameRunner.invokeLater( new ColorMapApp() );
-    }
-
-    public static BufferedImage getTestImage()
-    {
-        ResourceLoader rl = new ResourceLoader( ColorMapMain.class, "." );
-
-        try( InputStream is = rl.getInputStream( "pollen.bmp" ) )
-        {
-            return ImageIO.read( is );
-        }
-        catch( IOException ex )
-        {
-            throw new IllegalStateException( ex );
-        }
     }
 
     /***************************************************************************
@@ -59,11 +42,15 @@ public class ColorMapMain
             return frame;
         }
 
+        /**
+         * @return
+         */
         private Container createView()
         {
             ColorMapView mapView = new ColorMapView();
+            int [] hist = new int[256];
 
-            BufferedImage img = getTestImage();
+            BufferedImage img = ColorMapMain.getTestImage();
             mapView.setImage( img );
 
             int [] pixel = new int[1];
@@ -72,8 +59,13 @@ public class ColorMapMain
                 for( int y = 0; y < img.getRaster().getHeight(); y++ )
                 {
                     img.getRaster().getPixel( x, y, pixel );
+                    hist[pixel[0]]++;
                 }
             }
+
+            HistogramView histView = new HistogramView( 8 );
+
+            histView.setHistogram( hist );
 
             JPanel view = new JPanel( new GridBagLayout() );
             GridBagConstraints constraints;
@@ -82,6 +74,11 @@ public class ColorMapMain
                 GridBagConstraints.SOUTH, GridBagConstraints.NONE,
                 new Insets( 0, 0, 0, 0 ), 0, 0 );
             view.add( mapView.getView(), constraints );
+
+            constraints = new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
+                new Insets( 0, 0, 0, 0 ), 0, 0 );
+            view.add( histView.getView(), constraints );
 
             constraints = new GridBagConstraints( 0, 2, 2, 1, 0.0, 1.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,

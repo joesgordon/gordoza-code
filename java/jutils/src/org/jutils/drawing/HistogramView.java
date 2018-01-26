@@ -7,8 +7,11 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
+import org.jutils.data.ColorMapType;
 import org.jutils.drawing.HistogramView.HistogramConfig;
 import org.jutils.ui.*;
+import org.jutils.ui.event.updater.IUpdater;
+import org.jutils.ui.fields.ComboNavFormField;
 import org.jutils.ui.fields.IntegerFormField;
 import org.jutils.ui.model.IDataView;
 
@@ -23,15 +26,6 @@ public class HistogramView implements IDataView<HistogramConfig>
     private static final Color DEFAULT_LOW_COLOR = Color.blue;
 
     private static final Color DEFAULT_HIGH_COLOR = Color.red;
-
-    /**  */
-    public final int pixelDepth;
-    /**  */
-    public final int maxPixelValue;
-    /**
-     * The maximum number of bins allowed for the provided {@link #pixelDepth}.
-     */
-    public final int maxBinCount;
 
     /**  */
     private final JPanel view;
@@ -61,19 +55,25 @@ public class HistogramView implements IDataView<HistogramConfig>
     private final IntegerFormField binCountField;
 
     /**  */
-    private final JSlider brightnessBar;
-    /**  */
-    private final IntegerFormField brightnessField;
-
-    /**  */
     private final JSlider contrastBar;
     /**  */
     private final IntegerFormField contrastField;
 
     /**  */
+    private final ComboNavFormField<ColorMapType> colorMapField;
+
+    /**  */
+    private DepthMetrics pixelMetrics;
+    /**  */
     private HistogramConfig config;
     /**  */
     private boolean isUpdating;
+
+    private IUpdater<Threshold> lowUpdater;
+
+    private IUpdater<Threshold> highUpdater;
+
+    private IUpdater<Integer> binUpdater;
 
     /***************************************************************************
      * 
@@ -88,51 +88,56 @@ public class HistogramView implements IDataView<HistogramConfig>
      **************************************************************************/
     public HistogramView( int pixelDepth )
     {
-        this.pixelDepth = pixelDepth;
-        this.maxPixelValue = ( int )Math.pow( 2, pixelDepth ) - 1;
-        this.maxBinCount = pixelDepth > 16 ? MAX_BIN_COUNT : maxPixelValue;
+        this.pixelMetrics = new DepthMetrics( pixelDepth );
 
         this.paintable = new HistogramPaintable();
         this.histComp = new PaintingComponent( paintable );
 
         this.lowButton = new LedColorButton( DEFAULT_LOW_COLOR );
-        this.lowBar = new JSlider( JSlider.HORIZONTAL, 0, maxPixelValue, 0 );
+        this.lowBar = new JSlider( JSlider.HORIZONTAL, 0,
+            pixelMetrics.pixelValueMax, 0 );
         this.lowField = new IntegerFormField( "Low Threshold", null, 6, 0,
-            maxPixelValue );
+            pixelMetrics.pixelValueMax );
 
         this.highButton = new LedColorButton( DEFAULT_HIGH_COLOR );
-        this.highBar = new JSlider( JSlider.HORIZONTAL, 0, maxPixelValue, 0 );
+        this.highBar = new JSlider( JSlider.HORIZONTAL, 0,
+            pixelMetrics.pixelValueMax, 0 );
         this.highField = new IntegerFormField( "High Threshold", null, 6, 0,
-            maxPixelValue );
+            pixelMetrics.pixelValueMax );
 
-        this.binCountBar = new JSlider( JSlider.HORIZONTAL, 1, maxPixelValue,
-            1 );
+        this.binCountBar = new JSlider( JSlider.HORIZONTAL, 1,
+            pixelMetrics.maxBinCount, 1 );
         this.binCountField = new IntegerFormField( "Bin Count", null, 6, 0,
-            maxBinCount );
+            pixelMetrics.maxBinCount );
 
-        this.brightnessBar = new JSlider( JSlider.HORIZONTAL, 0, maxPixelValue,
-            0 );
-        this.brightnessField = new IntegerFormField( "Brightness", null, 6, 0,
-            maxBinCount );
-
-        this.contrastBar = new JSlider( JSlider.HORIZONTAL, 0, maxPixelValue,
-            0 );
+        this.contrastBar = new JSlider( JSlider.HORIZONTAL, 0,
+            pixelMetrics.pixelValueMax, 0 );
         this.contrastField = new IntegerFormField( "Contrast", null, 6, 0,
-            maxBinCount );
+            pixelMetrics.pixelValueMax );
+
+        this.colorMapField = new ComboNavFormField<>( "Color Map",
+            ColorMapType.values() );
 
         this.view = createView();
 
         this.config = null;
         this.isUpdating = false;
+        this.lowUpdater = null;
+        this.highUpdater = null;
+        this.binUpdater = null;
 
         HistogramConfig histCfg = new HistogramConfig();
-        histCfg.low = 0;
-        histCfg.high = maxPixelValue;
+        histCfg.lowThreshold.value = 0;
+        histCfg.highThreshold.value = pixelMetrics.pixelValueMax;
         setData( histCfg );
 
         lowButton.setUpdater( ( v ) -> {
-            config.lowColor = v;
+            config.lowThreshold.color = v;
             histComp.repaint();
+            if( lowUpdater != null )
+            {
+                lowUpdater.update( config.lowThreshold );
+            }
         } );
         lowBar.addChangeListener( ( e ) -> {
             if( !isUpdating )
@@ -144,6 +149,14 @@ public class HistogramView implements IDataView<HistogramConfig>
             setLowValue( true, false, v );
         } );
 
+        highButton.setUpdater( ( v ) -> {
+            config.highThreshold.color = v;
+            histComp.repaint();
+            if( highUpdater != null )
+            {
+                highUpdater.update( config.highThreshold );
+            }
+        } );
         highBar.addChangeListener( ( e ) -> {
             if( !isUpdating )
             {
@@ -153,10 +166,6 @@ public class HistogramView implements IDataView<HistogramConfig>
         highField.setUpdater( ( v ) -> {
             setHighValue( true, false, v );
         } );
-        highButton.setUpdater( ( v ) -> {
-            config.highColor = v;
-            histComp.repaint();
-        } );
 
         binCountBar.addChangeListener( ( e ) -> {
             if( !isUpdating )
@@ -165,6 +174,10 @@ public class HistogramView implements IDataView<HistogramConfig>
                 config.binCount = binCountBar.getValue();
                 binCountField.setValue( config.binCount );
                 isUpdating = false;
+                if( binUpdater != null )
+                {
+                    binUpdater.update( config.binCount );
+                }
             }
         } );
         binCountField.setUpdater( ( v ) -> {
@@ -174,25 +187,10 @@ public class HistogramView implements IDataView<HistogramConfig>
                 config.binCount = v;
                 binCountBar.setValue( config.binCount );
                 isUpdating = false;
-            }
-        } );
-
-        brightnessBar.addChangeListener( ( e ) -> {
-            if( !isUpdating )
-            {
-                isUpdating = true;
-                config.brightness = brightnessBar.getValue();
-                brightnessField.setValue( config.brightness );
-                isUpdating = false;
-            }
-        } );
-        brightnessField.setUpdater( ( v ) -> {
-            if( !isUpdating )
-            {
-                isUpdating = true;
-                config.brightness = v;
-                brightnessBar.setValue( config.brightness );
-                isUpdating = false;
+                if( binUpdater != null )
+                {
+                    binUpdater.update( config.binCount );
+                }
             }
         } );
 
@@ -218,7 +216,7 @@ public class HistogramView implements IDataView<HistogramConfig>
 
     private void setLowValue( boolean setBar, boolean setField, int value )
     {
-        config.low = value;
+        config.lowThreshold.value = value;
 
         if( setBar )
         {
@@ -232,16 +230,20 @@ public class HistogramView implements IDataView<HistogramConfig>
             lowField.setValue( value );
         }
 
-        if( config.low > config.high )
+        if( config.lowThreshold.value > config.highThreshold.value )
         {
             setHighValue( true, true, value );
         }
         histComp.repaint();
+        if( lowUpdater != null )
+        {
+            lowUpdater.update( config.lowThreshold );
+        }
     }
 
     private void setHighValue( boolean setBar, boolean setField, int value )
     {
-        config.high = value;
+        config.highThreshold.value = value;
 
         if( setBar )
         {
@@ -255,11 +257,15 @@ public class HistogramView implements IDataView<HistogramConfig>
             highField.setValue( value );
         }
 
-        if( config.low > config.high )
+        if( config.lowThreshold.value > config.highThreshold.value )
         {
             setLowValue( true, true, value );
         }
         histComp.repaint();
+        if( highUpdater != null )
+        {
+            highUpdater.update( config.highThreshold );
+        }
     }
 
     /***************************************************************************
@@ -284,7 +290,7 @@ public class HistogramView implements IDataView<HistogramConfig>
         constraints = new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( StandardFormView.DEFAULT_FORM_MARGIN, 0, 0, 0 ), 0, 0 );
-        panel.add( createThreshPanel(), constraints );
+        panel.add( createFieldsPanel(), constraints );
 
         return panel;
     }
@@ -292,7 +298,7 @@ public class HistogramView implements IDataView<HistogramConfig>
     /***************************************************************************
      * @return
      **************************************************************************/
-    private Component createThreshPanel()
+    private Component createFieldsPanel()
     {
         JPanel panel = new JPanel( new GridBagLayout() );
         int fm = StandardFormView.DEFAULT_FIELD_MARGIN;
@@ -357,25 +363,6 @@ public class HistogramView implements IDataView<HistogramConfig>
 
         // ---------------------------------------------------------------------
 
-        constraints = new GridBagConstraints( 0, 4, 1, 1, 0.0, 0.0,
-            GridBagConstraints.EAST, GridBagConstraints.NONE,
-            new Insets( fm, 0, 0, fm ), 0, 0 );
-        panel.add( new JLabel( "Brightness: " ), constraints );
-
-        brightnessBar.setPreferredSize( lowBar.getPreferredSize() );
-
-        constraints = new GridBagConstraints( 1, 4, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( fm, 0, 0, fm ), 0, 0 );
-        panel.add( brightnessBar, constraints );
-
-        constraints = new GridBagConstraints( 2, 4, 1, 1, 0.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.NONE,
-            new Insets( fm, 0, 0, 0 ), 0, 0 );
-        panel.add( brightnessField.getView(), constraints );
-
-        // ---------------------------------------------------------------------
-
         constraints = new GridBagConstraints( 0, 5, 1, 1, 0.0, 0.0,
             GridBagConstraints.EAST, GridBagConstraints.NONE,
             new Insets( fm, 0, 0, fm ), 0, 0 );
@@ -392,6 +379,18 @@ public class HistogramView implements IDataView<HistogramConfig>
             GridBagConstraints.CENTER, GridBagConstraints.NONE,
             new Insets( fm, 0, 0, 0 ), 0, 0 );
         panel.add( contrastField.getView(), constraints );
+
+        // ---------------------------------------------------------------------
+
+        constraints = new GridBagConstraints( 0, 6, 1, 1, 0.0, 0.0,
+            GridBagConstraints.EAST, GridBagConstraints.NONE,
+            new Insets( fm, 0, 0, fm ), 0, 0 );
+        panel.add( new JLabel( "Color Map: " ), constraints );
+
+        constraints = new GridBagConstraints( 1, 6, 2, 1, 1.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets( fm, 0, 0, 0 ), 0, 0 );
+        panel.add( colorMapField.getView(), constraints );
 
         return panel;
     }
@@ -422,22 +421,21 @@ public class HistogramView implements IDataView<HistogramConfig>
     {
         this.config = config;
 
-        lowButton.setData( config.lowColor );
-        lowBar.setValue( config.low );
-        lowField.setValue( config.low );
+        lowButton.setData( config.lowThreshold.color );
+        lowBar.setValue( config.lowThreshold.value );
+        lowField.setValue( config.lowThreshold.value );
 
-        highButton.setData( config.highColor );
-        highBar.setValue( config.high );
-        highField.setValue( config.high );
+        highButton.setData( config.highThreshold.color );
+        highBar.setValue( config.highThreshold.value );
+        highField.setValue( config.highThreshold.value );
 
         binCountBar.setValue( config.binCount );
         binCountField.setValue( config.binCount );
 
-        brightnessBar.setValue( config.brightness );
-        brightnessField.setValue( config.brightness );
-
         contrastBar.setValue( config.contrast );
         contrastField.setValue( config.contrast );
+
+        colorMapField.setValue( config.colorMap );
 
         paintable.setData( config );
     }
@@ -447,9 +445,30 @@ public class HistogramView implements IDataView<HistogramConfig>
      * {@link #maxBinCount}.
      * @param hist
      **************************************************************************/
-    public void setHistogram( int [] hist )
+    public void setHistogram( int [] histogram )
     {
-        paintable.setHistogram( hist );
+        paintable.setHistogram( histogram );
+        histComp.repaint();
+    }
+
+    public void setLowUpdater( IUpdater<Threshold> updater )
+    {
+        this.lowUpdater = updater;
+    }
+
+    public void setHighUpdater( IUpdater<Threshold> updater )
+    {
+        this.highUpdater = updater;
+    }
+
+    public void setBinCountUpdater( IUpdater<Integer> updater )
+    {
+        this.binUpdater = updater;
+    }
+
+    public void setColorModelUpdater( IUpdater<ColorMapType> updater )
+    {
+        colorMapField.setUpdater( updater );
     }
 
     /***************************************************************************
@@ -457,11 +476,7 @@ public class HistogramView implements IDataView<HistogramConfig>
      **************************************************************************/
     private void resetHistogram()
     {
-        config.binCount = 255;
-        config.low = 0;
-        config.high = 255;
-        config.contrast = 128;
-        config.brightness = 128;
+        config.reset();
 
         setData( config );
     }
@@ -469,30 +484,77 @@ public class HistogramView implements IDataView<HistogramConfig>
     /***************************************************************************
      * 
      **************************************************************************/
+    public static class DepthMetrics
+    {
+        /**  */
+        public final int pixelDepth;
+        /**  */
+        public final int pixelValueCnt;
+        /**  */
+        public final int pixelValueMax;
+        /**
+         * The maximum number of bins allowed for the provided
+         * {@link #pixelDepth}.
+         */
+        public final int maxBinCount;
+
+        public DepthMetrics( int pixelDepth )
+        {
+            this.pixelDepth = pixelDepth;
+            this.pixelValueCnt = ( int )Math.pow( 2, pixelDepth );
+            this.pixelValueMax = pixelValueCnt - 1;
+            this.maxBinCount = pixelDepth > 16 ? MAX_BIN_COUNT : pixelValueCnt;
+        }
+    }
+
+    public static class Threshold
+    {
+        public int value;
+        public Color color;
+
+        public Threshold()
+        {
+            this( 0, Color.GREEN );
+        }
+
+        public Threshold( int value, Color color )
+        {
+            this.value = value;
+            this.color = color;
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public static class HistogramConfig
     {
-        public int low;
-        public Color lowColor;
-
-        public int high;
-        public Color highColor;
+        public final Threshold lowThreshold;
+        public final Threshold highThreshold;
 
         public int binCount;
 
-        public int brightness;
         public int contrast;
+
+        public ColorMapType colorMap;
 
         public HistogramConfig()
         {
-            this.low = 0;
-            this.lowColor = Color.blue;
+            this.lowThreshold = new Threshold( 0, Color.blue );
+            this.highThreshold = new Threshold( 255, Color.red );
 
-            this.high = 255 - 1;
-            this.highColor = Color.red;
+            this.binCount = 256;
 
-            this.binCount = 255;
+            this.contrast = 128;
 
-            this.brightness = 128;
+            this.colorMap = ColorMapType.GRAYSCALE;
+        }
+
+        public void reset()
+        {
+            this.binCount = 256;
+            this.lowThreshold.value = 0;
+            this.highThreshold.value = 255;
             this.contrast = 128;
         }
     }
@@ -510,20 +572,6 @@ public class HistogramView implements IDataView<HistogramConfig>
         {
             this.hist = new int[256];
             this.histMax = 0;
-
-            double sig = 34;
-            double mean = 128;
-            for( int i = 0; i < hist.length; i++ )
-            {
-                double cnt = 1.0 / ( sig * Math.sqrt( 2 * Math.PI ) ) *
-                    Math.exp( -0.5 * Math.pow( ( i - mean ) / sig, 2 ) );
-                // LogUtils.printDebug( "hist[%d]: %f", i, cnt );
-                hist[i] = ( int )( cnt * 80000 );
-            }
-
-            this.setHistogram( hist );
-
-            // LogUtils.printDebug( "here" );
         }
 
         @Override
@@ -537,45 +585,58 @@ public class HistogramView implements IDataView<HistogramConfig>
 
             float ys = ( c.getHeight() - 4 ) / ( float )histMax;
 
-            if( config.low > 0 )
-            {
-                g.setColor( config.lowColor );
+            float binScale = 255.0f / hist.length;
+            int i = 0;
 
-                for( int i = 0; i < config.low; i++ )
+            g.setColor( config.lowThreshold.color );
+            for( ; i < config.binCount; i++ )
+            {
+                int bin = Math.round( binScale * i );
+                if( bin < config.lowThreshold.value )
                 {
                     paintBin( c, g, i, xs, ys, width );
+                }
+                else
+                {
+                    break;
                 }
             }
 
             g.setColor( Color.black );
-            for( int i = config.low; i <= config.high; i++ )
+            for( ; i < config.binCount; i++ )
+            {
+                int bin = Math.round( binScale * i );
+
+                if( bin < config.highThreshold.value )
+                {
+                    paintBin( c, g, i, xs, ys, width );
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            g.setColor( config.highThreshold.color );
+            for( ; i < config.binCount; i++ )
             {
                 paintBin( c, g, i, xs, ys, width );
             }
 
-            if( config.high < 255 )
+            if( config.lowThreshold.value > 0 )
             {
-                g.setColor( config.highColor );
-                for( int i = config.high + 1; i < hist.length; i++ )
-                {
-                    paintBin( c, g, i, xs, ys, width );
-                }
-            }
+                int w = ( int )( config.lowThreshold.value * xs );
 
-            if( config.low > 0 )
-            {
-                int w = ( int )( config.low * xs );
-
-                g.setColor( config.lowColor );
-                g.fillRect( 0, c.getHeight() - 3, w, 2 );
+                g.setColor( config.lowThreshold.color );
+                g.fillRect( 0, 0, w, 2 );
                 g.fillRect( w, 0, 2, c.getHeight() );
             }
 
-            if( config.high < 255 )
+            if( config.highThreshold.value < 255 )
             {
-                int w = ( int )( config.high * xs );
+                int w = ( int )( config.highThreshold.value * xs );
 
-                g.setColor( config.highColor );
+                g.setColor( config.highThreshold.color );
                 g.fillRect( w, 0, c.getWidth() - w, 2 );
                 g.fillRect( w, 0, 2, c.getHeight() );
             }
@@ -584,15 +645,23 @@ public class HistogramView implements IDataView<HistogramConfig>
         private void paintBin( JComponent c, Graphics2D g, int i, float xs,
             float ys, int width )
         {
-            int x = ( int )( i * xs );
-            int height = ( int )( ys * hist[i] );
-            int y = ( int )( c.getHeight() - height );
-            g.fillRect( x, y, width, height );
+            try
+            {
+                int x = ( int )( i * xs );
+                int height = ( int )( ys * hist[i] );
+                int y = ( int )( c.getHeight() - height );
+                g.fillRect( x, y, width, height );
+            }
+            catch( ArrayIndexOutOfBoundsException ex )
+            {
+                ex.printStackTrace();
+            }
         }
 
         public void setHistogram( int [] hist )
         {
             this.hist = hist;
+            this.histMax = 0;
 
             for( int i = 0; i < hist.length; i++ )
             {
