@@ -75,6 +75,8 @@ public class HistogramView implements IDataView<HistogramConfig>
 
     private IUpdater<Integer> binUpdater;
 
+    private IUpdater<Integer> contrastUpdater;
+
     /***************************************************************************
      * 
      **************************************************************************/
@@ -110,10 +112,9 @@ public class HistogramView implements IDataView<HistogramConfig>
         this.binCountField = new IntegerFormField( "Bin Count", null, 6, 0,
             pixelMetrics.maxBinCount );
 
-        this.contrastBar = new JSlider( JSlider.HORIZONTAL, 0,
-            pixelMetrics.pixelValueMax, 0 );
-        this.contrastField = new IntegerFormField( "Contrast", null, 6, 0,
-            pixelMetrics.pixelValueMax );
+        this.contrastBar = new JSlider( JSlider.HORIZONTAL, -100, 100, 0 );
+        this.contrastField = new IntegerFormField( "Contrast", null, 6, -100,
+            100 );
 
         this.colorMapField = new ComboNavFormField<>( "Color Map",
             ColorMapType.values() );
@@ -125,6 +126,7 @@ public class HistogramView implements IDataView<HistogramConfig>
         this.lowUpdater = null;
         this.highUpdater = null;
         this.binUpdater = null;
+        this.contrastUpdater = null;
 
         HistogramConfig histCfg = new HistogramConfig();
         histCfg.lowThreshold.value = 0;
@@ -201,6 +203,11 @@ public class HistogramView implements IDataView<HistogramConfig>
                 config.contrast = contrastBar.getValue();
                 contrastField.setValue( config.contrast );
                 isUpdating = false;
+                histComp.repaint();
+                if( contrastUpdater != null )
+                {
+                    contrastUpdater.update( config.contrast );
+                }
             }
         } );
         contrastField.setUpdater( ( v ) -> {
@@ -210,6 +217,11 @@ public class HistogramView implements IDataView<HistogramConfig>
                 config.contrast = v;
                 contrastBar.setValue( config.contrast );
                 isUpdating = false;
+                histComp.repaint();
+                if( contrastUpdater != null )
+                {
+                    contrastUpdater.update( config.contrast );
+                }
             }
         } );
     }
@@ -466,6 +478,11 @@ public class HistogramView implements IDataView<HistogramConfig>
         this.binUpdater = updater;
     }
 
+    public void setContrastUpdater( IUpdater<Integer> updater )
+    {
+        this.contrastUpdater = updater;
+    }
+
     public void setColorModelUpdater( IUpdater<ColorMapType> updater )
     {
         colorMapField.setUpdater( updater );
@@ -545,7 +562,7 @@ public class HistogramView implements IDataView<HistogramConfig>
 
             this.binCount = 256;
 
-            this.contrast = 128;
+            this.contrast = 0;
 
             this.colorMap = ColorMapType.GRAYSCALE;
         }
@@ -555,7 +572,25 @@ public class HistogramView implements IDataView<HistogramConfig>
             this.binCount = 256;
             this.lowThreshold.value = 0;
             this.highThreshold.value = 255;
-            this.contrast = 128;
+            this.contrast = 0;
+        }
+
+        public double [] calcContrastLine()
+        {
+            return calcContrastLine( contrast );
+        }
+
+        public static double [] calcContrastLine( int contrast )
+        {
+            double angleMin = Math.atan( 1 / 255.0 );
+            double angleMax = Math.atan( 255.0 );
+
+            double angle = angleMax +
+                ( contrast - 100 ) * ( angleMax - angleMin ) / 200.0;
+            double m = Math.tan( angle );
+            double b = 128.0 - m * 128.0;
+
+            return new double[] { m, b };
         }
     }
 
@@ -577,13 +612,16 @@ public class HistogramView implements IDataView<HistogramConfig>
         @Override
         public void paint( JComponent c, Graphics2D g )
         {
-            g.setBackground( Color.white );
-            g.clearRect( 0, 0, c.getWidth(), c.getHeight() );
+            int w = c.getWidth();
+            int h = c.getHeight();
 
-            float xs = c.getWidth() / ( float )hist.length;
+            g.setBackground( Color.white );
+            g.clearRect( 0, 0, w, h );
+
+            float xs = w / ( float )hist.length;
             int width = 1 + ( int )xs;
 
-            float ys = ( c.getHeight() - 4 ) / ( float )histMax;
+            float ys = ( h - 4 ) / ( float )histMax;
 
             float binScale = 255.0f / hist.length;
             int i = 0;
@@ -625,21 +663,29 @@ public class HistogramView implements IDataView<HistogramConfig>
 
             if( config.lowThreshold.value > 0 )
             {
-                int w = ( int )( config.lowThreshold.value * xs );
+                int xl = ( int )( config.lowThreshold.value * xs );
 
                 g.setColor( config.lowThreshold.color );
-                g.fillRect( 0, 0, w, 2 );
-                g.fillRect( w, 0, 2, c.getHeight() );
+                g.fillRect( 0, 0, xl, 2 );
+                g.fillRect( xl, 0, 2, h );
             }
 
             if( config.highThreshold.value < 255 )
             {
-                int w = ( int )( config.highThreshold.value * xs );
+                int xh = ( int )( config.highThreshold.value * xs );
 
                 g.setColor( config.highThreshold.color );
-                g.fillRect( w, 0, c.getWidth() - w, 2 );
-                g.fillRect( w, 0, 2, c.getHeight() );
+                g.fillRect( xh, 0, w - xh, 2 );
+                g.fillRect( xh, 0, 2, h );
             }
+
+            g.setColor( Color.gray );
+            double [] mb = config.calcContrastLine();
+            int cx1 = 0;
+            int cy1 = ( int )( mb[1] * h / 256.0 );
+            int cx2 = ( int )( hist.length * w / 256.0 );
+            int cy2 = ( int )( h / 256.0 * ( mb[0] * hist.length + mb[1] ) );
+            g.drawLine( cx1, h - cy1, cx2, h - cy2 );
         }
 
         private void paintBin( JComponent c, Graphics2D g, int i, float xs,

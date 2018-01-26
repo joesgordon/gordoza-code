@@ -80,6 +80,7 @@ public class SingleChannelImageMain
                 img.getStats( histConfig ).histogram ) );
             histView.setColorModelUpdater(
                 ( d ) -> imgView.setColorModel( d ) );
+            histView.setContrastUpdater( ( d ) -> imgView.setContrast( d ) );
 
             JPanel view = new JPanel( new GridBagLayout() );
             GridBagConstraints constraints;
@@ -91,7 +92,7 @@ public class SingleChannelImageMain
 
             constraints = new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
                 GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
-                new Insets( 20, 20, 20, 20 ), 0, 0 );
+                new Insets( 10, 20, 20, 20 ), 0, 0 );
             view.add( histView.getView(), constraints );
 
             constraints = new GridBagConstraints( 0, 2, 2, 1, 0.0, 1.0,

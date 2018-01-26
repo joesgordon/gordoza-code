@@ -70,6 +70,12 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
         view.repaint();
     }
 
+    public void setContrast( int contrast )
+    {
+        colorModel.setContrast( contrast );
+        view.repaint();
+    }
+
     public void setColorModel( ColorMapType mapType )
     {
         HistogramConfig histConfig = new HistogramConfig();

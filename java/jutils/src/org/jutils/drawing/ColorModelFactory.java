@@ -300,6 +300,7 @@ public class ColorModelFactory
         private final double scale;
 
         private HistogramConfig histCfg;
+        private double [] contrast;
 
         public SeedColorModel( int [] seeds, int pixelDepth )
         {
@@ -308,6 +309,7 @@ public class ColorModelFactory
             this.scale = seeds.length / ( double )pixelMax;
 
             this.histCfg = new HistogramConfig();
+            setContrast( histCfg.contrast );
         }
 
         @Override
@@ -322,7 +324,12 @@ public class ColorModelFactory
                 return histCfg.highThreshold.color;
             }
 
+            pixel = ( int )Math.round( contrast[0] * pixel + contrast[1] );
+
             int index = ( int )( scale * pixel );
+
+            index = Math.min( index, seeds.length - 1 );
+            index = Math.max( index, 0 );
 
             return new Color( seeds[index] );
         }
@@ -330,7 +337,7 @@ public class ColorModelFactory
         @Override
         public void setContrast( int contrast )
         {
-            // TODO Auto-generated method stub
+            this.contrast = HistogramConfig.calcContrastLine( contrast );
         }
 
         @Override
