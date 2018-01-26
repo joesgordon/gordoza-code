@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 
 import org.jutils.drawing.HistogramView.HistogramConfig;
 import org.jutils.drawing.SingleChannelImage.ImageStats;
@@ -69,7 +68,6 @@ public class SingleChannelImageMain
 
             ImageStats imgStats = img.getStats( histConfig );
 
-            imgView.getView().setBorder( new LineBorder( Color.darkGray ) );
             imgView.setData( img );
 
             histView.setData( histConfig );
