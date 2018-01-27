@@ -69,12 +69,13 @@ public class HistogramView implements IDataView<HistogramConfig>
     /**  */
     private boolean isUpdating;
 
+    /**  */
     private IUpdater<Threshold> lowUpdater;
-
+    /**  */
     private IUpdater<Threshold> highUpdater;
-
+    /**  */
     private IUpdater<Integer> binUpdater;
-
+    /**  */
     private IUpdater<Integer> contrastUpdater;
 
     /***************************************************************************
@@ -286,38 +287,26 @@ public class HistogramView implements IDataView<HistogramConfig>
     private JPanel createView()
     {
         JPanel panel = new JPanel( new GridBagLayout() );
-
         GridBagConstraints constraints;
+
+        int fm = StandardFormView.DEFAULT_FIELD_MARGIN;
+        int r = 0;
 
         histComp.setBorder( new LineBorder( Color.black ) );
         histComp.setPreferredSize( new Dimension( 100, 100 ) );
         histComp.setMinimumSize( histComp.getPreferredSize() );
         histComp.addMouseListener( new HistMouseListener( this ) );
 
-        constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+        constraints = new GridBagConstraints( 0, r, 3, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( 0, 0, 0, 0 ), 0, 0 );
+            new Insets( 0, 0, 8, 0 ), 0, 0 );
         panel.add( histComp, constraints );
 
-        constraints = new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets( StandardFormView.DEFAULT_FORM_MARGIN, 0, 0, 0 ), 0, 0 );
-        panel.add( createFieldsPanel(), constraints );
+        r++;
 
-        return panel;
-    }
+        // ---------------------------------------------------------------------
 
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    private Component createFieldsPanel()
-    {
-        JPanel panel = new JPanel( new GridBagLayout() );
-        int fm = StandardFormView.DEFAULT_FIELD_MARGIN;
-
-        GridBagConstraints constraints;
-
-        constraints = new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+        constraints = new GridBagConstraints( 0, r, 1, 1, 0.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 0, 0, fm ), 0, 0 );
         panel.add( lowButton.getView(), constraints );
@@ -325,84 +314,94 @@ public class HistogramView implements IDataView<HistogramConfig>
         lowBar.setPreferredSize(
             new Dimension( 200, lowBar.getPreferredSize().height ) );
 
-        constraints = new GridBagConstraints( 1, 0, 1, 1, 1.0, 0.0,
+        constraints = new GridBagConstraints( 1, r, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( 0, 0, 0, fm ), 0, 0 );
         panel.add( lowBar, constraints );
 
-        constraints = new GridBagConstraints( 2, 0, 1, 1, 0.0, 0.0,
+        constraints = new GridBagConstraints( 2, r, 1, 1, 0.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.NONE,
             new Insets( 0, 0, 0, 0 ), 0, 0 );
         panel.add( lowField.getView(), constraints );
 
+        r++;
+
         // ---------------------------------------------------------------------
 
-        constraints = new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
+        constraints = new GridBagConstraints( 0, r, 1, 1, 0.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( fm, 0, 0, fm ), 0, 0 );
         panel.add( highButton.getView(), constraints );
 
         highBar.setPreferredSize( lowBar.getPreferredSize() );
 
-        constraints = new GridBagConstraints( 1, 1, 1, 1, 1.0, 0.0,
+        constraints = new GridBagConstraints( 1, r, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( fm, 0, 0, fm ), 0, 0 );
         panel.add( highBar, constraints );
 
-        constraints = new GridBagConstraints( 2, 1, 1, 1, 0.0, 0.0,
+        constraints = new GridBagConstraints( 2, r, 1, 1, 0.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.NONE,
             new Insets( fm, 0, 0, 0 ), 0, 0 );
         panel.add( highField.getView(), constraints );
 
+        r++;
+
         // ---------------------------------------------------------------------
 
-        constraints = new GridBagConstraints( 0, 3, 1, 1, 0.0, 0.0,
+        constraints = new GridBagConstraints( 0, r, 1, 1, 0.0, 0.0,
             GridBagConstraints.EAST, GridBagConstraints.NONE,
             new Insets( fm, 0, 0, fm ), 0, 0 );
         panel.add( new JLabel( "Bin Count: " ), constraints );
 
         binCountBar.setPreferredSize( lowBar.getPreferredSize() );
 
-        constraints = new GridBagConstraints( 1, 3, 1, 1, 1.0, 0.0,
+        constraints = new GridBagConstraints( 1, r, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( fm, 0, 0, fm ), 0, 0 );
         panel.add( binCountBar, constraints );
 
-        constraints = new GridBagConstraints( 2, 3, 1, 1, 0.0, 0.0,
+        constraints = new GridBagConstraints( 2, r, 1, 1, 0.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.NONE,
             new Insets( fm, 0, 0, 0 ), 0, 0 );
         panel.add( binCountField.getView(), constraints );
 
+        r++;
+
         // ---------------------------------------------------------------------
 
-        constraints = new GridBagConstraints( 0, 5, 1, 1, 0.0, 0.0,
+        constraints = new GridBagConstraints( 0, r, 1, 1, 0.0, 0.0,
             GridBagConstraints.EAST, GridBagConstraints.NONE,
             new Insets( fm, 0, 0, fm ), 0, 0 );
         panel.add( new JLabel( "Contrast: " ), constraints );
 
         contrastBar.setPreferredSize( lowBar.getPreferredSize() );
 
-        constraints = new GridBagConstraints( 1, 5, 1, 1, 1.0, 0.0,
+        constraints = new GridBagConstraints( 1, r, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( fm, 0, 0, fm ), 0, 0 );
         panel.add( contrastBar, constraints );
 
-        constraints = new GridBagConstraints( 2, 5, 1, 1, 0.0, 0.0,
+        constraints = new GridBagConstraints( 2, r, 1, 1, 0.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.NONE,
             new Insets( fm, 0, 0, 0 ), 0, 0 );
         panel.add( contrastField.getView(), constraints );
 
+        r++;
+
         // ---------------------------------------------------------------------
 
-        constraints = new GridBagConstraints( 0, 6, 1, 1, 0.0, 0.0,
+        constraints = new GridBagConstraints( 0, r, 1, 1, 0.0, 0.0,
             GridBagConstraints.EAST, GridBagConstraints.NONE,
             new Insets( fm, 0, 0, fm ), 0, 0 );
         panel.add( new JLabel( "Color Map: " ), constraints );
 
-        constraints = new GridBagConstraints( 1, 6, 2, 1, 1.0, 0.0,
+        constraints = new GridBagConstraints( 1, r, 2, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets( fm, 0, 0, 0 ), 0, 0 );
         panel.add( colorMapField.getView(), constraints );
+
+        r++;
 
         return panel;
     }

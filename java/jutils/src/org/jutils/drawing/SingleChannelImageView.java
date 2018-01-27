@@ -32,6 +32,16 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
     private final PaintingComponent imgView;
 
     /**  */
+    private final StripPaintable xStripPaintable;
+    /**  */
+    private final PaintingComponent xStripView;
+
+    /**  */
+    private final StripPaintable yStripPaintable;
+    /**  */
+    private final PaintingComponent yStripView;
+
+    /**  */
     private final ZoomPaintable zoomPaintable;
     /**  */
     private final PaintingComponent zoomView;
@@ -46,6 +56,10 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
 
     /**  */
     private SingleChannelImage image;
+    /**  */
+    private SingleChannelImage xStripImage;
+    /**  */
+    private SingleChannelImage yStripImage;
     /**  */
     private SingleChannelImage zoomImage;
     /**  */
@@ -62,6 +76,12 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
     {
         this.imgPaintable = new ImagePaintable( this );
         this.imgView = new PaintingComponent( imgPaintable );
+
+        this.xStripPaintable = new StripPaintable( this, true );
+        this.xStripView = new PaintingComponent( xStripPaintable );
+
+        this.yStripPaintable = new StripPaintable( this, false );
+        this.yStripView = new PaintingComponent( yStripPaintable );
 
         this.zoomPaintable = new ZoomPaintable( this );
         this.zoomView = new PaintingComponent( zoomPaintable );
@@ -80,13 +100,13 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
         imgView.addMouseListener( mouseListener );
         imgView.addMouseMotionListener( mouseListener );
 
-        SwingUtils.addKeyListener( view, "control UP", true,
+        SwingUtils.addKeyListener( view, "control alt UP", true,
             ( e ) -> mouseListener.updateZoom( 0, 1 ), "Zoom Up" );
-        SwingUtils.addKeyListener( view, "control LEFT", true,
+        SwingUtils.addKeyListener( view, "control alt LEFT", true,
             ( e ) -> mouseListener.updateZoom( -1, 0 ), "Zoom Left" );
-        SwingUtils.addKeyListener( view, "control DOWN", true,
+        SwingUtils.addKeyListener( view, "control alt DOWN", true,
             ( e ) -> mouseListener.updateZoom( 0, -1 ), "Zoom Down" );
-        SwingUtils.addKeyListener( view, "control RIGHT", true,
+        SwingUtils.addKeyListener( view, "control alt RIGHT", true,
             ( e ) -> mouseListener.updateZoom( 1, 0 ), "Zoom Right" );
     }
 
@@ -98,12 +118,10 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
         JPanel panel = new JPanel( new GridBagLayout() );
         GridBagConstraints constraints;
 
-        imgView.setBorder( new LineBorder( Color.darkGray ) );
-
         constraints = new GridBagConstraints( 0, 0, 1, 3, 0.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.NONE,
             new Insets( 0, 0, 0, 0 ), 0, 0 );
-        panel.add( imgView, constraints );
+        panel.add( createImagePanel(), constraints );
 
         zoomView.setBorder( new LineBorder( Color.darkGray ) );
 
@@ -119,11 +137,38 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
 
         statsField.setBorder( new EtchedBorder() );
         statsField.setEditable( false );
+        statsField.setFont( SwingUtils.getFixedFont( 12 ) );
 
         constraints = new GridBagConstraints( 1, 2, 1, 1, 0.0, 0.0,
             GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
             new Insets( 2, 10, 0, 0 ), 0, 0 );
         panel.add( statsField, constraints );
+
+        return panel;
+    }
+
+    private Component createImagePanel()
+    {
+        JPanel panel = new JPanel( new GridBagLayout() );
+        GridBagConstraints constraints;
+
+        imgView.setBorder( new LineBorder( Color.darkGray ) );
+        imgView.setFocusable( true );
+
+        constraints = new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.NONE,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
+        panel.add( yStripView, constraints );
+
+        constraints = new GridBagConstraints( 1, 0, 1, 1, 0.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.NONE,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
+        panel.add( imgView, constraints );
+
+        constraints = new GridBagConstraints( 1, 1, 1, 1, 0.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.NONE,
+            new Insets( 0, 0, 0, 0 ), 0, 0 );
+        panel.add( xStripView, constraints );
 
         return panel;
     }
@@ -152,28 +197,57 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
     @Override
     public void setData( SingleChannelImage image )
     {
-        Dimension ps = new Dimension( image.getWidth(), image.getHeight() );
+        this.image = image;
+
+        Dimension ps;
+
+        imgPaintable.setImage( image );
+
+        ps = new Dimension( image.getWidth(), image.getHeight() );
 
         imgView.setPreferredSize( ps );
         imgView.setMinimumSize( ps );
         imgView.setMaximumSize( ps );
+        imgView.invalidate();
         imgView.repaint();
-        imgView.validate();
 
-        this.image = image;
+        this.xStripImage = new SingleChannelImage( image.getWidth(), 30,
+            image.getPixelDepth() );
 
-        imgPaintable.setImage( image );
+        ps = new Dimension( xStripImage.getWidth(), xStripImage.getHeight() );
+
+        xStripView.setPreferredSize( ps );
+        xStripView.setMinimumSize( ps );
+        xStripView.setMaximumSize( ps );
+        xStripView.invalidate();
+        xStripView.repaint();
+
+        this.yStripImage = new SingleChannelImage( 30, image.getHeight(),
+            image.getPixelDepth() );
+
+        ps = new Dimension( yStripImage.getWidth(), yStripImage.getHeight() );
+
+        yStripView.setPreferredSize( ps );
+        yStripView.setMinimumSize( ps );
+        yStripView.setMaximumSize( ps );
+        yStripView.invalidate();
+        yStripView.repaint();
+
+        view.invalidate();
+        view.repaint();
     }
 
+    /***************************************************************************
+     * @param stats
+     **************************************************************************/
     public void setStats( Stats stats )
     {
         try( StringPrintStream text = new StringPrintStream() )
         {
-            text.println( "Mean = %.3f", stats.mean );
-            text.println( "Rage = (%.0f, %.0f) = %.0f", stats.min, stats.max,
-                stats.getRange() );
-            text.println( "Variance = %.3f", stats.variance );
-            text.print( "Stddev = %.3f", stats.getStddev() );
+            text.println( "    Range = (%.0f, %.0f) = %.0f", stats.min,
+                stats.max, stats.getRange() );
+            text.println( "    Mean = %.3f", stats.mean );
+            text.print( "  Stddev = %.3f", stats.getStddev() );
 
             statsField.setText( text.toString() );
         }
@@ -231,8 +305,12 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
         this.zoomImage = new SingleChannelImage( new int[totalArea],
             zoomPixelArea, zoomPixelArea, pixelDepth );
         this.zoomPaintable.setImage( zoomImage );
-        this.zoomView.setPreferredSize(
-            new Dimension( zoomPixelArea, zoomPixelArea ) );
+
+        Dimension dim = new Dimension( zoomPixelArea, zoomPixelArea );
+
+        this.zoomView.setPreferredSize( dim );
+        this.zoomView.setMinimumSize( dim );
+        this.zoomView.setMaximumSize( dim );
     }
 
     private void captureZoom( int x, int y )
@@ -327,6 +405,9 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class ZoomPaintable extends ImagePaintable
     {
         public ZoomPaintable( SingleChannelImageView view )
@@ -358,8 +439,29 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
             x = w / 2 - 1 - view.zoomPixelSize / 2;
             y = h / 2 - 1 - view.zoomPixelSize / 2;
             g.setStroke( new BasicStroke( 2, BasicStroke.CAP_SQUARE,
-                BasicStroke.JOIN_ROUND ) );
+                BasicStroke.JOIN_MITER ) );
             g.drawRect( x, y, view.zoomPixelSize + 2, view.zoomPixelSize + 2 );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class StripPaintable implements IPaintable
+    {
+        private final SingleChannelImageView view;
+        private final boolean horiz;
+
+        public StripPaintable( SingleChannelImageView view, boolean horizontal )
+        {
+            this.view = view;
+            this.horiz = horizontal;
+        }
+
+        @Override
+        public void paint( JComponent c, Graphics2D g )
+        {
+            // TODO Auto-generated method stub
         }
     }
 
@@ -389,6 +491,10 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
                 lastX = e.getX();
                 lastY = e.getY();
                 view.captureZoom( lastX, lastY );
+            }
+            else
+            {
+                view.imgView.requestFocus();
             }
         }
 

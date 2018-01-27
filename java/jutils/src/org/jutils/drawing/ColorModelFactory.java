@@ -7,6 +7,9 @@ import java.util.Map;
 import org.jutils.data.ColorMapType;
 import org.jutils.drawing.HistogramView.HistogramConfig;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class ColorModelFactory
 {
     /**  */

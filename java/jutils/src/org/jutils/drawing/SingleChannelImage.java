@@ -1,5 +1,7 @@
 package org.jutils.drawing;
 
+import java.awt.image.BufferedImage;
+
 import org.jutils.drawing.HistogramView.HistogramConfig;
 import org.jutils.utils.RunningStat;
 import org.jutils.utils.RunningStat.Stats;
@@ -23,7 +25,17 @@ public class SingleChannelImage
      **************************************************************************/
     public SingleChannelImage()
     {
-        this( new int[20 * 20], 20, 20, 8 );
+        this( 20, 20, 8 );
+    }
+
+    /***************************************************************************
+     * @param width
+     * @param height
+     * @param pixelDepth
+     **************************************************************************/
+    public SingleChannelImage( int width, int height, int pixelDepth )
+    {
+        this( new int[width * height], width, height, pixelDepth );
 
         for( int i = 0; i < pixels.length; i++ )
         {
@@ -62,6 +74,9 @@ public class SingleChannelImage
         return height;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public int getPixelDepth()
     {
         return pixelDepth;
@@ -141,6 +156,35 @@ public class SingleChannelImage
         }
 
         return new ImageStats( rstat.calcStats(), hist );
+    }
+
+    /***************************************************************************
+     * @param img
+     * @return the new single channel image
+     **************************************************************************/
+    public static SingleChannelImage fromBufferedImage( BufferedImage img )
+    {
+        int w = img.getWidth();
+        int h = img.getHeight();
+
+        int [] pixels = new int[w * h];
+
+        int [] pixel = new int[1];
+        for( int x = 0; x < img.getRaster().getWidth(); x++ )
+        {
+            for( int y = 0; y < img.getRaster().getHeight(); y++ )
+            {
+                int idx = y * w + x;
+
+                img.getRaster().getPixel( x, y, pixel );
+                pixels[idx] = pixel[0];
+            }
+        }
+
+        SingleChannelImage sci = new SingleChannelImage( pixels, w, h,
+            img.getColorModel().getPixelSize() );
+
+        return sci;
     }
 
     /***************************************************************************
