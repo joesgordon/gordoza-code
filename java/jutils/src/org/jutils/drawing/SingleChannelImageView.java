@@ -548,6 +548,9 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
                 }
             }
 
+            int boxx = w / 2 - 1 - zoomPixelSize / 2;
+            int boxy = h / 2 - 1 - zoomPixelSize / 2;
+
             int x;
             int y;
 
@@ -555,17 +558,23 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
 
             x = w / 2 - 1;
             y = 0;
-            g.fillRect( x, y, 2, h );
+            g.fillRect( x, y, 2, boxy );
 
             x = 0;
             y = h / 2 - 1;
-            g.fillRect( x, y, w, 2 );
+            g.fillRect( x, y, boxx, 2 );
 
-            x = w / 2 - 1 - zoomPixelSize / 2;
-            y = h / 2 - 1 - zoomPixelSize / 2;
+            x = w / 2 - 1;
+            y = boxy + zoomPixelSize + 2;
+            g.fillRect( x, y, 2, boxy );
+
+            x = boxx + zoomPixelSize + 2;
+            y = h / 2 - 1;
+            g.fillRect( x, y, boxx, 2 );
+
             g.setStroke( new BasicStroke( 2, BasicStroke.CAP_SQUARE,
                 BasicStroke.JOIN_MITER ) );
-            g.drawRect( x, y, zoomPixelSize + 2, zoomPixelSize + 2 );
+            g.drawRect( boxx, boxy, zoomPixelSize + 2, zoomPixelSize + 2 );
         }
 
         /**
