@@ -27,7 +27,7 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
     private final JPanel view;
 
     /**  */
-    private final JLabel imgView;
+    private final ImageView imgView;
     /**  */
     private final StripView xStripView;
     /**  */
@@ -55,7 +55,7 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
      **************************************************************************/
     public SingleChannelImageView()
     {
-        this.imgView = new JLabel();
+        this.imgView = new ImageView();
         this.xStripView = new StripView( this, true );
         this.yStripView = new StripView( this, false );
 
@@ -67,13 +67,14 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
         this.modelFactory = new ColorModelFactory();
         this.view = createView();
 
+        this.colorModel = modelFactory.get( ColorMapType.GRAYSCALE, 8 );
+
         setData( new SingleChannelImage() );
         zoomArea.setZoom( 7, 32, 8 );
-        setColorModel( ColorMapType.GRAYSCALE );
 
         ImageMouseListener mouseListener = new ImageMouseListener( this );
-        imgView.addMouseListener( mouseListener );
-        imgView.addMouseMotionListener( mouseListener );
+        imgView.getView().addMouseListener( mouseListener );
+        imgView.getView().addMouseMotionListener( mouseListener );
 
         SwingUtils.addKeyListener( view, "control alt UP", true,
             ( e ) -> mouseListener.updateZoom( 0, 1 ), "Zoom Up" );
@@ -129,11 +130,8 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
         // JPanel panel = new JPanel( new GridBagLayout() );
         // GridBagConstraints constraints;
 
-        JScrollPane pane = new JScrollPane( imgView );
+        JScrollPane pane = new JScrollPane( imgView.getView() );
         pane.getVerticalScrollBar().setUnitIncrement( 12 );
-
-        // imgView.setBorder( new LineBorder( Color.darkGray ) );
-        imgView.setFocusable( true );
 
         pane.setRowHeaderView( yStripView.getView() );
         pane.setColumnHeaderView( xStripView.getView() );
@@ -182,19 +180,8 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
     {
         this.image = image;
 
-        Dimension ps;
-
-        ps = new Dimension( image.getWidth(), image.getHeight() );
-
-        imgView.setPreferredSize( ps );
-        imgView.setMinimumSize( ps );
-        imgView.setMaximumSize( ps );
-        imgView.invalidate();
-        imgView.repaint();
-
-        this.buffImage = new BufferedScImage( image );
-        this.buffImage.setModel( colorModel );
-        imgView.setIcon( new ImageIcon( buffImage.getBufferedImage() ) );
+        this.buffImage = new BufferedScImage( image, colorModel );
+        imgView.setImage( buffImage );
 
         xStripView.update( image );
         yStripView.update( image );
@@ -228,7 +215,7 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
     {
         colorModel.setLowThreshold( t.value, t.color );
         buffImage.updateBufferedImage();
-        imgView.repaint();
+        imgView.getView().repaint();
     }
 
     /***************************************************************************
@@ -238,7 +225,7 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
     {
         colorModel.setHighThreshold( t.value, t.color );
         buffImage.updateBufferedImage();
-        imgView.repaint();
+        imgView.getView().repaint();
     }
 
     /***************************************************************************
@@ -248,7 +235,7 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
     {
         colorModel.setContrast( contrast );
         buffImage.updateBufferedImage();
-        imgView.repaint();
+        imgView.getView().repaint();
     }
 
     /***************************************************************************
@@ -265,7 +252,52 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
         this.colorModel.setHistogramConfig( histConfig );
         buffImage.setModel( colorModel );
         buffImage.updateBufferedImage();
-        imgView.repaint();
+        imgView.getView().repaint();
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class ImageView implements IView<JComponent>
+    {
+        private final PaintingComponent view;
+        private final ImagePaintable paintable;
+
+        public ImageView()
+        {
+            this.paintable = new ImagePaintable();
+            this.view = new PaintingComponent( paintable );
+
+            // view.setBorder( new LineBorder( Color.darkGray ) );
+            view.setFocusable( true );
+        }
+
+        public void setImage( BufferedScImage image )
+        {
+            Dimension ps;
+
+            paintable.setImage( image );
+
+            ps = new Dimension( image.getWidth(), image.getHeight() );
+
+            view.setPreferredSize( ps );
+            view.setMinimumSize( ps );
+            view.setMaximumSize( ps );
+            view.invalidate();
+            view.repaint();
+        }
+
+        @Override
+        public JComponent getView()
+        {
+            return view;
+        }
+
+        public void setCursor( int x, int y )
+        {
+            paintable.setCursor( x, y );
+            view.repaint();
+        }
     }
 
     /***************************************************************************
@@ -274,17 +306,27 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
     private static class ImagePaintable implements IPaintable
     {
         /**  */
-        protected IColorModel colorModel;
+        private BufferedScImage image;
 
         /**  */
-        private BufferedScImage image;
+        private int mousex;
+        /**  */
+        private int mousey;
 
         /**
          * 
          */
         public ImagePaintable()
         {
-            this.setImage( new SingleChannelImage() );
+            this.setImage( new BufferedScImage( new SingleChannelImage() ) );
+            this.mousex = -1;
+            this.mousey = -1;
+        }
+
+        public void setCursor( int x, int y )
+        {
+            this.mousex = x;
+            this.mousey = y;
         }
 
         /**
@@ -296,55 +338,23 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
             int w = c.getWidth();
             int h = c.getHeight();
 
-            // g.setBackground( Color.WHITE );
-            // g.clearRect( 0, 0, w, h );
-
-            // int lastPixel = -1;
-            // Color color = Color.black;
-            //
-            // for( int x = 0; x < image.getWidth(); x++ )
-            // {
-            // for( int y = 0; y < image.getHeight(); y++ )
-            // {
-            // int pixel = image.getPixel( x, y );
-            // if( pixel != lastPixel )
-            // {
-            // color = view.colorModel.getColor( pixel );
-            // }
-            //
-            // g.setColor( color );
-            // g.fillRect( x, y, 1, 1 );
-            // }
-            // }
-
             image.draw( g, c );
-        }
 
-        /**
-         * @param image
-         */
-        public void setImage( SingleChannelImage image )
-        {
-            if( this.image == null ||
-                image.getWidth() != this.image.getWidth() ||
-                image.getHeight() != this.image.getHeight() ||
-                image.getPixelDepth() != this.image.getPixelDepth() )
+            g.setColor( Color.yellow );
+
+            if( mousex > -1 )
             {
-                this.image = new BufferedScImage( image );
-            }
-            else
-            {
-                this.image.setPixels( image.getPixels() );
+                g.drawLine( 0, mousey, w, mousey );
+                g.drawLine( mousex, 0, mousex, h );
             }
         }
 
         /**
-         * @param colorModel
+         * @param img
          */
-        public void setColorModel( IColorModel colorModel )
+        public void setImage( BufferedScImage img )
         {
-            this.colorModel = colorModel;
-            image.setModel( colorModel );
+            this.image = img;
         }
     }
 
@@ -383,11 +393,11 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
             {
                 lastX = e.getX();
                 lastY = e.getY();
-                view.zoomArea.captureZoom( lastX, lastY, view.buffImage );
+                view.captureZoom( lastX, lastY );
             }
             else
             {
-                view.imgView.requestFocus();
+                view.imgView.getView().requestFocus();
             }
         }
 
@@ -401,7 +411,7 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
             {
                 lastX = e.getX();
                 lastY = e.getY();
-                view.zoomArea.captureZoom( lastX, lastY, view.buffImage );
+                view.captureZoom( lastX, lastY );
             }
         }
 
@@ -423,7 +433,7 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
             {
                 lastX += x;
                 lastY -= y;
-                view.zoomArea.captureZoom( lastX, lastY, view.buffImage );
+                view.captureZoom( lastX, lastY );
             }
         }
     }
@@ -691,5 +701,11 @@ public class SingleChannelImageView implements IDataView<SingleChannelImage>
                 x + ", " + coordY + " = " + buffImage.getRawPixel( x, y ) );
             zoomView.repaint();
         }
+    }
+
+    public void captureZoom( int x, int y )
+    {
+        zoomArea.captureZoom( x, y, buffImage );
+        imgView.setCursor( x, y );
     }
 }

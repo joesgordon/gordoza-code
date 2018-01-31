@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.*;
 
+import org.jutils.io.LogUtils;
+
 /***************************************************************************
  *
  **************************************************************************/
@@ -34,12 +36,15 @@ public class BufferedScImage
      **************************************************************************/
     public BufferedScImage( SingleChannelImage image )
     {
+        this( image,
+            ColorModelFactory.createGrayscaleMap( image.getPixelDepth() ) );
+    }
+
+    public BufferedScImage( SingleChannelImage image, IColorModel colorModel )
+    {
         this.image = image;
         this.buff = new int[image.getPixels().length];
-        this.colorModel = null;
-
-        colorModel = ColorModelFactory.createGrayscaleMap(
-            image.getPixelDepth() );
+        this.colorModel = colorModel;
 
         BufferedImage gsImage;
 
@@ -57,9 +62,8 @@ public class BufferedScImage
         // gsImage = new BufferedImage( image.getWidth(), image.getHeight(),
         // BufferedImage.TYPE_INT_RGB );
 
-        // LogUtils.printDebug( "%s %s",
-        // gsImage.getColorModel().getClass().toString(),
-        // gsImage.getSampleModel().getClass() );
+        LogUtils.printDebug( "Created buffered image of size %d x %d = %d",
+            image.getWidth(), image.getHeight(), buff.length );
 
         this.buffImage = gsImage;
 
