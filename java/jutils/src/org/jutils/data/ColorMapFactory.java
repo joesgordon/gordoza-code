@@ -28,7 +28,7 @@ public class ColorMapFactory
         imc = ( l, u ) -> createLinearStepMap();
         maps.put( ColorMapType.LINEAR_STEP, imc );
 
-        imc = ( l, u ) -> createGrayscaleMap( l, u );
+        imc = ( l, u ) -> createGrayscaleMap( l, u, 8 );
         maps.put( ColorMapType.GRAYSCALE, imc );
 
         imc = ( l, u ) -> createMatlabHotMap( l, u );
@@ -94,7 +94,8 @@ public class ColorMapFactory
     /***************************************************************************
      * @return
      **************************************************************************/
-    public static IndexColorModel createGrayscaleMap( int lower, int upper )
+    public static IndexColorModel createGrayscaleMap( int lower, int upper,
+        int bits )
     {
         int [] cmap = new int[256];
         int cnt = upper - lower + 1;
@@ -121,7 +122,7 @@ public class ColorMapFactory
             cmap[i] = -1;
         }
 
-        return new IndexColorModel( 8, 256, cmap, 0, false, -1,
+        return new IndexColorModel( bits, 256, cmap, 0, false, -1,
             DataBuffer.TYPE_BYTE );
     }
 

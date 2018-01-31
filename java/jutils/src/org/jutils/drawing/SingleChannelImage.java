@@ -92,6 +92,14 @@ public class SingleChannelImage
         return pixels[y * width + x];
     }
 
+    /**
+     * @return
+     */
+    public int [] getPixels()
+    {
+        return pixels;
+    }
+
     /***************************************************************************
      * @param x
      * @param y
@@ -195,6 +203,10 @@ public class SingleChannelImage
         public final Stats stats;
         public final int [] histogram;
 
+        /**
+         * @param stats
+         * @param histogram
+         */
         public ImageStats( Stats stats, int [] histogram )
         {
             this.stats = stats;

@@ -8,6 +8,8 @@ public interface IColorModel
 {
     public Color getColor( int pixel );
 
+    public int getColorValue( int pixel );
+
     public void setContrast( int contrast );
 
     public void setLowThreshold( int pixel, Color thresholdColor );

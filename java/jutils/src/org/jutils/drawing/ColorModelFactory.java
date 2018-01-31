@@ -318,23 +318,7 @@ public class ColorModelFactory
         @Override
         public Color getColor( int pixel )
         {
-            if( pixel < histCfg.lowThreshold.value )
-            {
-                return histCfg.lowThreshold.color;
-            }
-            else if( pixel > histCfg.highThreshold.value )
-            {
-                return histCfg.highThreshold.color;
-            }
-
-            pixel = ( int )Math.round( contrast[0] * pixel + contrast[1] );
-
-            int index = ( int )( scale * pixel );
-
-            index = Math.min( index, seeds.length - 1 );
-            index = Math.max( index, 0 );
-
-            return new Color( seeds[index] );
+            return new Color( getColorValue( pixel ) );
         }
 
         @Override
@@ -371,6 +355,28 @@ public class ColorModelFactory
         public HistogramConfig getHistogramConfig()
         {
             return histCfg;
+        }
+
+        @Override
+        public int getColorValue( int pixel )
+        {
+            if( pixel < histCfg.lowThreshold.value )
+            {
+                return histCfg.lowThreshold.color.getRGB();
+            }
+            else if( pixel > histCfg.highThreshold.value )
+            {
+                return histCfg.highThreshold.color.getRGB();
+            }
+
+            pixel = ( int )Math.round( contrast[0] * pixel + contrast[1] );
+
+            int index = ( int )( scale * pixel );
+
+            index = Math.min( index, seeds.length - 1 );
+            index = Math.max( index, 0 );
+
+            return seeds[index];
         }
     }
 }

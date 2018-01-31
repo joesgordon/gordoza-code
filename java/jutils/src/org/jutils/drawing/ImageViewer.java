@@ -13,7 +13,7 @@ import org.jutils.ui.model.IView;
  ******************************************************************************/
 public class ImageViewer implements IView<JComponent>
 {
-    /** The panel that contins all the items in this view. */
+    /** The panel that contains all the items in this view. */
     private final JPanel view;
     /** The display of the current image. */
     private final SingleChannelImageView imgView;
@@ -31,14 +31,7 @@ public class ImageViewer implements IView<JComponent>
         this.imgView = new SingleChannelImageView();
         this.histView = new HistogramView();
         this.view = createView();
-    }
 
-    /***************************************************************************
-     * Creates the panel that contains all the items in this view.
-     * @return the panel that contains all the items in this view.
-     **************************************************************************/
-    private JPanel createView()
-    {
         histView.setLowUpdater( ( d ) -> imgView.setLowThreshold( d ) );
         histView.setHighUpdater( ( d ) -> imgView.setHighThreshold( d ) );
         histView.setBinCountUpdater( ( d ) -> {
@@ -47,21 +40,28 @@ public class ImageViewer implements IView<JComponent>
         } );
         histView.setColorModelUpdater( ( d ) -> imgView.setColorModel( d ) );
         histView.setContrastUpdater( ( d ) -> imgView.setContrast( d ) );
+    }
 
+    /***************************************************************************
+     * Creates the panel that contains all the items in this view.
+     * @return the panel that contains all the items in this view.
+     **************************************************************************/
+    private JPanel createView()
+    {
         JPanel view = new JPanel( new GridBagLayout() );
         GridBagConstraints constraints;
 
-        constraints = new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
-            GridBagConstraints.SOUTH, GridBagConstraints.NONE,
-            new Insets( 10, 20, 0, 20 ), 0, 0 );
+        constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
+            GridBagConstraints.SOUTH, GridBagConstraints.BOTH,
+            new Insets( 10, 10, 0, 20 ), 0, 0 );
         view.add( imgView.getView(), constraints );
 
         constraints = new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
-            GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
-            new Insets( 0, 20, 20, 20 ), 0, 0 );
+            GridBagConstraints.NORTH, GridBagConstraints.NONE,
+            new Insets( 10, 10, 10, 10 ), 0, 0 );
         view.add( histView.getView(), constraints );
 
-        constraints = new GridBagConstraints( 0, 2, 2, 1, 0.0, 1.0,
+        constraints = new GridBagConstraints( 0, 2, 2, 1, 0.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets( 0, 0, 0, 0 ), 0, 0 );
         view.add( Box.createHorizontalStrut( 0 ), constraints );
@@ -73,7 +73,7 @@ public class ImageViewer implements IView<JComponent>
      * {@inheritDoc}
      **************************************************************************/
     @Override
-    public JPanel getView()
+    public JComponent getView()
     {
         return view;
     }

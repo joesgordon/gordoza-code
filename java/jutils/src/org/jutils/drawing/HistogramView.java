@@ -293,7 +293,7 @@ public class HistogramView implements IDataView<HistogramConfig>
         int r = 0;
 
         histComp.setBorder( new LineBorder( Color.black ) );
-        histComp.setPreferredSize( new Dimension( 100, 100 ) );
+        histComp.setPreferredSize( new Dimension( 400, 100 ) );
         histComp.setMinimumSize( histComp.getPreferredSize() );
         histComp.addMouseListener( new HistMouseListener( this ) );
 

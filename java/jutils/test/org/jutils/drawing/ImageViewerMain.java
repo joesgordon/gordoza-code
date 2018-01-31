@@ -1,5 +1,6 @@
 package org.jutils.drawing;
 
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -17,6 +18,7 @@ import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.event.FileChooserListener;
 import org.jutils.ui.event.FileChooserListener.IFileSelected;
+import org.jutils.ui.event.FileChooserListener.ILastFile;
 import org.jutils.utils.MaxQueue;
 
 /*******************************************************************************
@@ -66,6 +68,8 @@ public class ImageViewerMain
         /**  */
         private ImageViewer viewer;
         /**  */
+        // private LabelImage viewer;
+        /**  */
         private RecentFilesViews recentFiles;
 
         /**
@@ -76,10 +80,11 @@ public class ImageViewerMain
         {
             this.frameView = new StandardFrameView();
             this.viewer = new ImageViewer();
+            // this.viewer = new LabelImage();
             this.recentFiles = new RecentFilesViews( 20 );
-            JScrollPane pane = new JScrollPane( viewer.getView() );
+            // JScrollPane pane = new JScrollPane( viewer.getView() );
 
-            pane.getVerticalScrollBar().setUnitIncrement( 12 );
+            // pane.getVerticalScrollBar().setUnitIncrement( 12 );
 
             SingleChannelImage img = getTestImage();
 
@@ -87,7 +92,7 @@ public class ImageViewerMain
 
             frameView.setTitle( "ImageViewer App" );
             frameView.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-            frameView.setContent( pane );
+            frameView.setContent( viewer.getView() );
             frameView.setToolbar( createToolbar() );
 
             return frameView.getView();
@@ -115,8 +120,10 @@ public class ImageViewerMain
         private ActionListener createOpenAction()
         {
             IFileSelected fileSelected = ( f ) -> openFile( f );
+            ILastFile lastFile = () -> getUserOptions().getOptions().recentFiles.first();
             FileChooserListener listener = new FileChooserListener(
-                frameView.getView(), "Open Image", false, fileSelected );
+                frameView.getView(), "Open Image", false, fileSelected,
+                lastFile );
 
             return listener;
         }
@@ -192,6 +199,27 @@ public class ImageViewerMain
             {
                 this.recentFiles.addAll( data.recentFiles );
             }
+        }
+    }
+
+    private static final class LabelImage
+    {
+        private final JLabel label;
+
+        public LabelImage()
+        {
+            this.label = new JLabel();
+        }
+
+        public Component getView()
+        {
+            return label;
+        }
+
+        public void setImage( SingleChannelImage img )
+        {
+            BufferedScImage bsi = new BufferedScImage( img );
+            label.setIcon( new ImageIcon( bsi.getBufferedImage() ) );
         }
     }
 }
