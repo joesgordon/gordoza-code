@@ -42,7 +42,7 @@ public class WidgetPanel implements IView<JComponent>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JComponent getView()
@@ -58,6 +58,9 @@ public class WidgetPanel implements IView<JComponent>
         this.object = obj;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static final class WidgetPainter implements IPaintable
     {
         private final WidgetPanel panel;

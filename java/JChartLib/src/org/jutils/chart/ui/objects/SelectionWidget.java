@@ -70,9 +70,10 @@ public class SelectionWidget implements IChartWidget
             int wp = Math.abs( e.x - s.x );
             int hp = Math.abs( e.y - s.y );
 
-            graphics.setStroke( borderStroke );
             graphics.setColor( color );
             graphics.fillRect( xp, yp, wp, hp );
+
+            graphics.setStroke( borderStroke );
             graphics.setColor( border );
             graphics.drawRect( xp, yp, wp, hp );
         }

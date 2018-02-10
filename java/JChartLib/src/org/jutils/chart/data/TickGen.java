@@ -96,7 +96,7 @@ public class TickGen
 
     /***************************************************************************
      * @param dist
-     * @param coords
+     * @param span
      * @return
      **************************************************************************/
     TickMetrics generateTickMetrics( int dist, Interval span )

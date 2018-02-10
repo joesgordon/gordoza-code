@@ -26,6 +26,9 @@ public class ColorMapMain
         FrameRunner.invokeLater( new ColorMapApp() );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public static BufferedImage getTestImage()
     {
         ResourceLoader rl = new ResourceLoader( ColorMapMain.class, "." );
@@ -45,6 +48,9 @@ public class ColorMapMain
      **************************************************************************/
     private static class ColorMapApp implements IFrameApp
     {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public JFrame createFrame()
         {
@@ -59,6 +65,9 @@ public class ColorMapMain
             return frame;
         }
 
+        /**
+         * @return
+         */
         private Container createView()
         {
             ColorMapView mapView = new ColorMapView();
@@ -91,6 +100,9 @@ public class ColorMapMain
             return view;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void finalizeGui()
         {

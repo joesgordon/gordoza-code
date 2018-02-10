@@ -1,6 +1,8 @@
 package org.jutils.apps.jhex.data;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jutils.utils.MaxQueue;
 
@@ -50,12 +52,17 @@ public class JHexOptions
 
     public void removeNonExistentRecents()
     {
+        List<File> toRemove = new ArrayList<File>();
         for( File f : lastAccessedFiles )
         {
             if( !f.exists() )
             {
-                lastAccessedFiles.remove( f );
+                toRemove.add( f );
             }
+        }
+        for( File f : toRemove )
+        {
+            lastAccessedFiles.remove( f );
         }
     }
 }
