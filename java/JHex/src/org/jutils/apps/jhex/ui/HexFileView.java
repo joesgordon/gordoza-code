@@ -195,7 +195,7 @@ public class HexFileView implements IDataView<File>
                 new Insets( 2, 10, 2, 10 ), 0, 0 ) );
 
         progressBar.setLength( 0 );
-        progressBar.setOffset( 0 );
+        progressBar.setPosition( 0 );
         progressBar.getView().setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
         progressBar.addPositionListener(
             ( e ) -> updatePosition( e.getItem() ) );
@@ -310,7 +310,7 @@ public class HexFileView implements IDataView<File>
         prevAction.setEnabled( firstAction.isEnabled() );
         nextAction.setEnabled( position < buffer.getLastPosition() );
         lastAction.setEnabled( nextAction.isEnabled() );
-        progressBar.setOffset( position );
+        progressBar.setPosition( position );
         progressBar.setUnitLength( block.buffer.length );
     }
 

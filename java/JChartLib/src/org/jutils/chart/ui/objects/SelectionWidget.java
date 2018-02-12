@@ -39,7 +39,7 @@ public class SelectionWidget implements IChartWidget
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public Dimension calculateSize( Dimension canvasSize )
@@ -48,7 +48,7 @@ public class SelectionWidget implements IChartWidget
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void draw( Graphics2D graphics, Point unusedPoint,

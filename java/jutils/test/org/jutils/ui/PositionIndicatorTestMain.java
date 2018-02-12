@@ -75,24 +75,24 @@ public class PositionIndicatorTestMain
 
             indicator.setLength( LEN );
             indicator.setUnitLength( SIZE );
-            indicator.setOffset( 0L );
+            indicator.setPosition( 0L );
 
             lengthField.setValue( indicator.getLength() );
             unitLengthField.setValue( indicator.getUnitLength() );
-            offsetField.setValue( indicator.getOffset() );
+            offsetField.setValue( indicator.getPosition() );
 
             indicator.addPositionListener(
                 ( e ) -> updatePosition( e.getItem() ) );
 
             lengthField.setUpdater( ( n ) -> indicator.setLength( n ) );
             unitLengthField.setUpdater( ( n ) -> indicator.setUnitLength( n ) );
-            offsetField.setUpdater( ( n ) -> indicator.setOffset( n ) );
+            offsetField.setUpdater( ( n ) -> indicator.setPosition( n ) );
         }
 
         private void updatePosition( long position )
         {
             offsetField.setValue( position );
-            indicator.setOffset( position );
+            indicator.setPosition( position );
 
             LogUtils.printDebug( "new position: %d", position );
         }

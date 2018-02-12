@@ -10,43 +10,78 @@ import javax.swing.border.LineBorder;
 import org.jutils.data.UIProperty;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.fields.IDescriptor;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
- * 
+ * Defines a control similar to a horizontal scroll-bar that pops-up the
+ * position when moved. The position will be adjusted to the previous unit
+ * increment value. For example a item of length 100 and unit length 10 will
+ * have a position of 40 when set to 42.
  ******************************************************************************/
 public class PositionIndicator implements IView<JComponent>
 {
-    /**  */
-    private final JWindow posWin;
-    /**  */
+    /** The window that pops up when the position indicator is moved. */
+    private final JWindow positionWindow;
+    /** The label that shows the position in the popup window. */
     private final JLabel posLabel;
-    /**  */
+    /** The list of listers to be notified when the position changes. */
     private final ItemActionList<Long> posititonListeners;
-    /**  */
-    private final PiComponent component;
+    /** The object that draws the component. */
+    private final PositionIndicatorPaintable paintable;
+    /** The control to be drawn. */
+    private final PaintingComponent component;
+
+    // TODO install escape key listener to abort dragging.
 
     /***************************************************************************
-     * 
+     * Creates a new control with the default descriptor.
+     * @see #createDefaultPositionDescriptor()
      **************************************************************************/
     public PositionIndicator()
     {
-        this.component = new PiComponent();
+        this( null );
+    }
+
+    /***************************************************************************
+     * Creates a new control with the provided descriptor.
+     * @param positionDescriptor converts a {@link Long} into a {@link String}.
+     **************************************************************************/
+    public PositionIndicator( IDescriptor<Long> positionDescriptor )
+    {
+        IDescriptor<Long> descriptor = positionDescriptor == null
+            ? createDefaultPositionDescriptor()
+            : positionDescriptor;
+
+        this.paintable = new PositionIndicatorPaintable();
+        this.component = new PaintingComponent( paintable );
         this.posLabel = new JLabel();
-        this.posWin = createWindow();
+        this.positionWindow = createWindow();
         this.posititonListeners = new ItemActionList<>();
 
         component.setMinimumSize( new Dimension( 20, 20 ) );
         component.setPreferredSize( new Dimension( 20, 20 ) );
 
-        MouseListener ml = new MouseListener( this );
+        MouseListener ml = new MouseListener( this, descriptor );
 
         component.addMouseListener( ml );
         component.addMouseMotionListener( ml );
     }
 
     /***************************************************************************
-     * @return
+     * Creates a position indicator descriptor that displays the position in a
+     * zero-padded hexadecimal string.
+     * @return the default position descriptor.
+     **************************************************************************/
+    private IDescriptor<Long> createDefaultPositionDescriptor()
+    {
+        return ( v ) -> String.format( "0x%016X", v );
+    }
+
+    /***************************************************************************
+     * Creates the windows that displays the position while dragging the thumb.
+     * @return the created window.
+     * @see #positionWindow
      **************************************************************************/
     private JWindow createWindow()
     {
@@ -79,7 +114,8 @@ public class PositionIndicator implements IView<JComponent>
     }
 
     /***************************************************************************
-     * @param l
+     * Add the provided listener to be called when the position is updated.
+     * @param l the listener to be added.
      **************************************************************************/
     public void addPositionListener( ItemActionListener<Long> l )
     {
@@ -87,81 +123,104 @@ public class PositionIndicator implements IView<JComponent>
     }
 
     /***************************************************************************
-     * @param c
+     * Sets the color of the "Thumb" that represents the position.
+     * @param c the new color of the "Thumb"
      **************************************************************************/
     public void setUnitColor( Color c )
     {
-        component.thumbColor = c;
+        paintable.thumbColor = c;
         component.repaint();
     }
 
     /***************************************************************************
-     * @param l
+     * Sets the length of the item containing the indicated position.
+     * @param length the length of the item.
      **************************************************************************/
-    public void setLength( long l )
+    public void setLength( long length )
     {
-        component.length = l;
+        paintable.length = length;
         component.repaint();
     }
 
     /***************************************************************************
-     * @return
+     * Returns the previously set length of the item containing the indicated
+     * position.
+     * @return the length of the item.
      **************************************************************************/
     public long getLength()
     {
-        return component.length;
+        return paintable.length;
     }
 
     /***************************************************************************
-     * @param l
+     * Sets the length of the units that break up the length of the item.
+     * @param length the length of a unit.
+     * @throws IllegalArgumentException if the provided length is less than 1.
      **************************************************************************/
-    public void setUnitLength( long l )
+    public void setUnitLength( long length ) throws IllegalArgumentException
     {
-        component.unitLength = l;
-        component.repaint();
+        if( length > 0 )
+        {
+            paintable.unitLength = length;
+            component.repaint();
+        }
+        else
+        {
+            throw new IllegalArgumentException(
+                "The unit increment length must be greater than 0" );
+        }
     }
 
     /***************************************************************************
-     * @return
+     * Returns the previously set length of the units that break up the length
+     * of the item.
+     * @return the length of a unit.
      **************************************************************************/
     public long getUnitLength()
     {
-        return component.unitLength;
+        return paintable.unitLength;
     }
 
     /***************************************************************************
-     * @param l
+     * Sets the indicated position.
+     * @param position the position to be displayed.
      **************************************************************************/
-    public void setOffset( long l )
+    public void setPosition( long position )
     {
-        component.offset = l;
+        paintable.position = position;
         component.repaint();
     }
 
     /***************************************************************************
-     * @return
+     * Returns the previously set indicated position.
+     * @return the position being displayed.
      **************************************************************************/
-    public long getOffset()
+    public long getPosition()
     {
-        return component.offset;
+        return paintable.position;
     }
 
     /***************************************************************************
-     * @param x
+     * Invokes the callback on all listeners to the position change based on the
+     * x-coordinate of the thumb.
+     * @param x the x-position in the {@link #component}'s coordinate space of
+     * the left of the thumb.
      **************************************************************************/
     private void fireThumbMoved( int x )
     {
         long pos = getPosition( x );
 
-        if( pos != component.offset )
+        if( pos != paintable.position )
         {
             posititonListeners.fireListeners( this, pos );
         }
     }
 
     /***************************************************************************
-     * @param x
-     * @return
+     * Gets the indicated position based on the x-coordinate of the thumb.
+     * @param x the x-position in the {@link #component}'s coordinate space of
+     * the left of the thumb.
+     * @return the calculated position.
      **************************************************************************/
     private long getPosition( final int x )
     {
@@ -179,34 +238,42 @@ public class PositionIndicator implements IView<JComponent>
 
         double xpc = xIdx / ( double )( xCnt );
 
-        int posCnt = component.getWidth() - 1 - component.thumbRect.width;
+        int posCnt = component.getWidth() - 1 - paintable.thumbRect.width;
         int posIdx = ( int )( xpc * posCnt );
         double posPc = posIdx / ( double )posCnt;
 
-        int unitCount = component.getUnitCount();
+        int unitCount = paintable.getUnitCount();
         int unitIdx = ( int )( posPc * unitCount );
-        long position = unitIdx * component.unitLength;
+        long position = unitIdx * paintable.unitLength;
 
         return position;
     }
 
     /***************************************************************************
-     * 
+     * Defines the object that draws the control.
      **************************************************************************/
-    private static final class PiComponent extends JComponent
+    private static final class PositionIndicatorPaintable implements IPaintable
     {
-        private static final long serialVersionUID = 3185302681799744337L;
-
+        /** The bounds of the thumb. Defaults to zeros. */
         private final Rectangle thumbRect;
 
+        /** The color of the thumb. */
         private Color thumbColor;
+        /** The color of the shadow of the thumb. */
         private Color thumbShadow;
+        /** The length of the item containing the indicated position. */
         private long length;
+        /** The length of units which break up the item's length. */
         private long unitLength;
-        private long offset;
-        private Long dragOffset;
+        /** The current indicated position. */
+        private long position;
+        /** The indicated position of the item while dragging. */
+        private Long dragPosition;
 
-        public PiComponent()
+        /**
+         * Creates a new paintable.
+         */
+        public PositionIndicatorPaintable()
         {
             this.thumbRect = new Rectangle();
 
@@ -214,19 +281,19 @@ public class PositionIndicator implements IView<JComponent>
             this.thumbShadow = UIProperty.SCROLLBAR_THUMBSHADOW.getColor();
             this.unitLength = 10;
             this.length = 0;
-            this.offset = 50;
-            this.dragOffset = null;
+            this.position = 50;
+            this.dragPosition = null;
         }
 
-        /***************************************************************************
-         * 
-         **************************************************************************/
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        protected void paintComponent( Graphics g )
+        public void paint( JComponent c, Graphics2D g )
         {
-            super.paintComponent( g );
-
             Graphics2D g2 = ( Graphics2D )g;
+            int width = c.getWidth();
+            int height = c.getHeight();
 
             Object aaHint = g2.getRenderingHint(
                 RenderingHints.KEY_ANTIALIASING );
@@ -234,7 +301,7 @@ public class PositionIndicator implements IView<JComponent>
             g2.setRenderingHint( RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON );
 
-            long off = dragOffset == null ? offset : dragOffset;
+            long off = dragPosition == null ? position : dragPosition;
             int unitCount = getUnitCount();
             int unitIndex = ( int )( ( double )unitCount * off / length );
 
@@ -245,24 +312,23 @@ public class PositionIndicator implements IView<JComponent>
 
             int x = 0;
             int y = 1;
-            int w = ( int )( getWidth() * unitLength / ( double )length ) - 2;
-            int h = getHeight() - 2;
+            int w = ( int )( width * unitLength / ( double )length ) - 2;
+            int h = height - 2;
 
             if( unitLength > 0 )
             {
                 w = Math.max( w, 16 );
             }
 
-            x = ( int )( unitIndex / ( double )unitCount *
-                ( getWidth() - 2 ) ) + 1;
+            x = ( int )( unitIndex / ( double )unitCount * ( width - 2 ) ) + 1;
 
             if( x < 1 )
             {
                 x = 1;
             }
-            else if( x + w + 1 > getWidth() )
+            else if( x + w + 1 > width )
             {
-                x = getWidth() - w - 1;
+                x = width - w - 1;
             }
 
             thumbRect.x = x;
@@ -279,9 +345,10 @@ public class PositionIndicator implements IView<JComponent>
             g2.setRenderingHint( RenderingHints.KEY_ANTIALIASING, aaHint );
         }
 
-        /***************************************************************************
-         * @return
-         **************************************************************************/
+        /**
+         * Calculates and returns the number of units for the item length.
+         * @return the number of units.
+         */
         private int getUnitCount()
         {
             int count = 0;
@@ -296,77 +363,119 @@ public class PositionIndicator implements IView<JComponent>
     }
 
     /***************************************************************************
-     * 
+     * Defines the mouse listener to move and interact with the thumb.
      **************************************************************************/
     private static final class MouseListener extends MouseAdapter
     {
+        /** The position indicator listened to. */
         private final PositionIndicator pi;
+        /** The descriptor used to create a string for a position. */
+        private final IDescriptor<Long> positionDescriptor;
 
+        /** The last point at which the mouse was pressed. */
         private Point start;
+        /**  */
         private boolean dragging = false;
 
-        public MouseListener( PositionIndicator pi )
+        /**
+         * Creates a new listener with the provided indicator and description.
+         * @param pi the position indicator listened to.
+         * @param descriptor the descriptor used to create a string for a
+         * position.
+         */
+        public MouseListener( PositionIndicator pi,
+            IDescriptor<Long> descriptor )
         {
             this.pi = pi;
+            this.positionDescriptor = descriptor;
             this.start = null;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void mouseClicked( MouseEvent e )
         {
             pi.fireThumbMoved( e.getX() );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void mousePressed( MouseEvent e )
         {
             start = e.getPoint();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void mouseDragged( MouseEvent e )
         {
-            if( start != null && pi.component.thumbRect.contains( start ) )
+            if( start != null && pi.paintable.thumbRect.contains( start ) )
             {
                 dragging = true;
             }
 
             if( dragging )
             {
-                pi.component.dragOffset = pi.getPosition( e.getX() );
+                pi.paintable.dragPosition = pi.getPosition( e.getX() );
 
                 pi.component.repaint();
 
+                long position = pi.getPosition( e.getX() );
                 pi.posLabel.setText(
-                    String.format( "0x%016X", pi.getPosition( e.getX() ) ) );
+                    positionDescriptor.getDescription( position ) );
 
                 Point csp = pi.component.getLocationOnScreen();
                 Point msp = e.getLocationOnScreen();
 
                 msp.x = ( int )( csp.x + pi.component.getWidth() / 2.0 -
-                    pi.posWin.getWidth() / 2.0 );
+                    pi.positionWindow.getWidth() / 2.0 );
                 msp.y = csp.y + pi.component.getHeight() + 2;
 
-                pi.posWin.setLocation( msp );
-                pi.posWin.setVisible( true );
+                pi.positionWindow.setLocation( msp );
+                pi.positionWindow.setVisible( true );
             }
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void mouseReleased( MouseEvent e )
         {
             boolean fire = dragging;
 
-            pi.component.dragOffset = null;
+            pi.paintable.dragPosition = null;
             start = null;
             dragging = false;
-            pi.posWin.setVisible( false );
+            pi.positionWindow.setVisible( false );
 
             pi.component.repaint();
 
             if( fire )
             {
                 pi.fireThumbMoved( e.getX() );
+            }
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void mouseMoved( MouseEvent e )
+        {
+            if( pi.paintable.thumbRect.contains( e.getPoint() ) )
+            {
+                pi.component.setCursor( new Cursor( Cursor.HAND_CURSOR ) );
+            }
+            else
+            {
+                pi.component.setCursor( new Cursor( Cursor.DEFAULT_CURSOR ) );
             }
         }
     }
