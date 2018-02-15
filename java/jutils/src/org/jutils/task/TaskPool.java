@@ -249,8 +249,14 @@ public class TaskPool
     {
         /**  */
         private final TaskHandler handler;
+        /**  */
         private final TaskPool pool;
 
+        /**
+         * @param view
+         * @param stopManager
+         * @param pool
+         */
         public TaskHandlerWrapper( ITaskView view, TaskStopManager stopManager,
             TaskPool pool )
         {
@@ -289,7 +295,7 @@ public class TaskPool
             handler.signalFinished();
         }
 
-        @Override
+        // @Override
         public void stop()
         {
             handler.stop();

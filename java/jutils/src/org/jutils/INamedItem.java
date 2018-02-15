@@ -1,12 +1,13 @@
 package org.jutils;
 
 /*******************************************************************************
- * Defines an object that has a name.
+ * Defines an item that has a name.
  ******************************************************************************/
 public interface INamedItem
 {
     /***************************************************************************
-     * Returns the name of this object.
+     * Returns the name of this item.
+     * @return the name of this item.
      **************************************************************************/
     public String getName();
 }

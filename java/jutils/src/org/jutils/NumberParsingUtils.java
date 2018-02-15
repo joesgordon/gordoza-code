@@ -1,5 +1,7 @@
 package org.jutils;
 
+import org.jutils.io.LogUtils;
+
 /*******************************************************************************
  * Static helper class for parsing numbers. This class exists because the java
  * standard library is, IMHO, broken. If you have a long (int, short, and byte
@@ -70,45 +72,60 @@ public final class NumberParsingUtils
     /***************************************************************************
      * @param s the string to be parsed. If the string contains &quot;0x&quot;
      * at the beginning it will be ignored.
-     * @param maxLen
+     * @param limit the maximum number (inclusive) of hexadecimal digits.
      * @return the long parsed.
-     * @throws NumberFormatException any error in the format of the number.
+     * @throws NumberFormatException any error in the format of the number: <ul>
+     * <li>Any non-hexadecimal character other than space, tab, or a leading
+     * "0x"</li><li>More than {@code limit} digits are encountered</li></ul>
      **************************************************************************/
-    public static long parseHex( String s, int maxLen )
+    public static long parseHex( String s, int limit )
         throws NumberFormatException
     {
-        int len;
 
         if( s.startsWith( "0x" ) )
         {
             s = s.substring( 2 );
         }
 
-        len = s.length();
-
-        if( len > maxLen )
-        {
-            throw new NumberFormatException(
-                "The number may be no longer than " + maxLen +
-                    " hexadecimal characters: [" + len + "] '" + s + "'" );
-        }
-        else if( len == 0 )
-        {
-            throw new NumberFormatException( "Empty string" );
-        }
-
         long result = 0;
         long digit = 0;
         char c;
+        int len = 0;
 
-        for( int i = 0; i < len; i++ )
+        for( int i = 0; i < s.length(); i++ )
         {
             c = s.charAt( i );
 
+            if( c == ' ' || c == '\t' )
+            {
+                continue;
+            }
+
             digit = digitFromHex( c );
 
-            result |= ( digit << ( ( len - i - 1 ) * 4 ) );
+            if( ++len > limit )
+            {
+                continue;
+            }
+
+            result |= ( digit << ( ( len - 1 ) * 4 ) );
+
+            LogUtils.printDebug( "Len: %d, digit: %d, result: %d", len, digit,
+                result );
         }
+
+        if( len == 0 )
+        {
+            throw new NumberFormatException( "Empty string" );
+        }
+        else if( len > limit )
+        {
+            throw new NumberFormatException(
+                "The number may be no longer than " + limit +
+                    " hexadecimal characters: [" + len + "] '" + s + "'" );
+        }
+
+        // Utils.printStackTrace();
 
         return result;
     }

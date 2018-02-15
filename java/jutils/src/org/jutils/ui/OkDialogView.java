@@ -2,7 +2,8 @@ package org.jutils.ui;
 
 import java.awt.*;
 import java.awt.Dialog.ModalityType;
-import java.awt.event.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
 import javax.swing.*;
@@ -34,6 +35,69 @@ public class OkDialogView implements IView<JDialog>
     private final OkDialogButtons buttons;
 
     /***************************************************************************
+     * Creates a {@link ModalityType#APPLICATION_MODAL} dialog whose owner is
+     * the window containing the provided component.
+     * @param parent determines the {@link Frame} in which the dialog is
+     * displayed; if the {@code parent} has no {@link Frame}, a default
+     * {@link Frame} is used.
+     * @param content the component to be displayed in this dialog.
+     **************************************************************************/
+    public OkDialogView( Component parent, Component content )
+    {
+        this( parent, content, ModalityType.DOCUMENT_MODAL );
+    }
+
+    /***************************************************************************
+     * Creates a dialog with the provided {@link ModalityType} whose owner is
+     * the window containing the provided component and displays an Ok button.
+     * @param parent determines the {@link Frame} in which the dialog is
+     * displayed; if the {@code parent} has no {@link Frame}, a default
+     * {@link Frame} is used.
+     * @param content the component to be displayed in this dialog.
+     * @param modalityType the modality of this dialog.
+     **************************************************************************/
+    public OkDialogView( Component parent, Component content,
+        ModalityType modalityType )
+    {
+        this( parent, content, modalityType, OkDialogButtons.OK_ONLY );
+    }
+
+    /***************************************************************************
+     * Creates a dialog whose owner is the window containing the provided
+     * {@code parent} and displays the provided button(s). The modality type is
+     * set according to {@link OkDialogButtons}. To override the default
+     * modality type, use
+     * @param parent determines the {@link Frame} in which the dialog is
+     * displayed; if the {@code parent} has no {@link Frame}, a default
+     * {@link Frame} is used.
+     * @param content the component to be displayed in this dialog.
+     * @param buttons defines the buttons to be shown.
+     **************************************************************************/
+    public OkDialogView( Component parent, Component content,
+        OkDialogButtons buttons )
+    {
+        this( parent, content, buttons.getModalityType(), buttons );
+    }
+
+    /***************************************************************************
+     * Creates a dialog with the provided {@link ModalityType} whose owner is
+     * the window containing the provided {@code parent} and displays the
+     * provided button(s).
+     * @param parent determines the {@link Frame} in which the dialog is
+     * displayed; if the {@code parent} has no {@link Frame}, a default
+     * {@link Frame} is used.
+     * @param content the component to be displayed in this dialog.
+     * @param modalityType the modality of this dialog.
+     * @param buttons defines the buttons to be shown.
+     **************************************************************************/
+    public OkDialogView( Component parent, Component content,
+        ModalityType modalityType, OkDialogButtons buttons )
+    {
+        this( SwingUtils.getComponentsWindow( parent ), content, modalityType,
+            buttons );
+    }
+
+    /***************************************************************************
      * Creates a {@link ModalityType#APPLICATION_MODAL} dialog with the provided
      * owner.
      * @param owner the owner of this dialog.
@@ -57,9 +121,13 @@ public class OkDialogView implements IView<JDialog>
     }
 
     /***************************************************************************
-     * @param owner
-     * @param content
-     * @param buttons
+     * Creates a dialog with the provided buttons and owner. The modality type
+     * is set according to {@link OkDialogButtons}. To override the default
+     * modality type, use
+     * {@link #OkDialogView(Window, Component, ModalityType, OkDialogButtons)}.
+     * @param owner the owner of this dialog.
+     * @param content the component to be displayed in this dialog.
+     * @param buttons defines the buttons to be shown.
      **************************************************************************/
     public OkDialogView( Window owner, Component content,
         OkDialogButtons buttons )
@@ -68,58 +136,10 @@ public class OkDialogView implements IView<JDialog>
     }
 
     /***************************************************************************
-     * Creates a {@link ModalityType#APPLICATION_MODAL} dialog whose owner is
-     * the window containing the provided component.
-     * @param parent a component in the window to be the owner of this dialog.
-     * @param content the component to be displayed in this dialog.
-     **************************************************************************/
-    public OkDialogView( Component parent, Component content )
-    {
-        this( parent, content, ModalityType.DOCUMENT_MODAL );
-    }
-
-    /***************************************************************************
-     * Creates a dialog with the provided {@link ModalityType} whose owner is
-     * the window containing the provided component.
-     * @param parent a component in the window to be the owner of this dialog.
+     * @param owner the owner of this dialog.
      * @param content the component to be displayed in this dialog.
      * @param modalityType the modality of this dialog.
-     **************************************************************************/
-    public OkDialogView( Component parent, Component content,
-        ModalityType modalityType )
-    {
-        this( parent, content, modalityType, OkDialogButtons.OK_ONLY );
-    }
-
-    /***************************************************************************
-     * @param parent
-     * @param content
-     * @param buttons
-     **************************************************************************/
-    public OkDialogView( Component parent, Component content,
-        OkDialogButtons buttons )
-    {
-        this( parent, content, ModalityType.DOCUMENT_MODAL, buttons );
-    }
-
-    /***************************************************************************
-     * @param parent
-     * @param content
-     * @param modalityType
-     * @param buttons
-     **************************************************************************/
-    public OkDialogView( Component parent, Component content,
-        ModalityType modalityType, OkDialogButtons buttons )
-    {
-        this( SwingUtils.getComponentsWindow( parent ), content, modalityType,
-            buttons );
-    }
-
-    /***************************************************************************
-     * @param owner
-     * @param content
-     * @param modalityType
-     * @param buttons
+     * @param buttons defines the buttons to be shown.
      **************************************************************************/
     public OkDialogView( Window owner, Component content,
         ModalityType modalityType, OkDialogButtons buttons )
@@ -131,9 +151,9 @@ public class OkDialogView implements IView<JDialog>
         this.applyButton = new JButton();
         this.buttons = buttons;
 
-        dialog.setDefaultCloseOperation( JDialog.DISPOSE_ON_CLOSE );
+        dialog.setDefaultCloseOperation( JDialog.DO_NOTHING_ON_CLOSE );
 
-        dialog.addWindowListener( new DialogListener() );
+        dialog.addWindowListener( new DialogListener( this ) );
 
         dialog.setContentPane( createContentPane( content ) );
 
@@ -290,6 +310,7 @@ public class OkDialogView implements IView<JDialog>
     /***************************************************************************
      * Creates the content pane for this dialog.
      * @param content the user content to be displayed.
+     * @return
      **************************************************************************/
     private Container createContentPane( Component content )
     {
@@ -316,6 +337,7 @@ public class OkDialogView implements IView<JDialog>
 
     /***************************************************************************
      * Creates the button panel for this dialog.
+     * @return
      **************************************************************************/
     private Component createButtonPanel()
     {
@@ -325,17 +347,19 @@ public class OkDialogView implements IView<JDialog>
         okButton.setText( "OK" );
         // okButton.setIcon( IconConstants.loader.getIcon(
         // IconConstants.CHECK_16 ) );
-        okButton.addActionListener( new OkListener( this ) );
+        okButton.addActionListener( ( e ) -> handleButtonAction( true, true ) );
 
         cancelButton.setText( "Cancel" );
         // cancelButton.setIcon( IconConstants.loader.getIcon(
         // IconConstants.CHECK_16 ) );
-        cancelButton.addActionListener( new CancelListener( this ) );
+        cancelButton.addActionListener(
+            ( e ) -> handleButtonAction( true, false ) );
 
         applyButton.setText( "Apply" );
         // applyButton.setIcon( IconConstants.loader.getIcon(
         // IconConstants.CHECK_16 ) );
-        applyButton.addActionListener( new ApplyListener( this ) );
+        applyButton.addActionListener(
+            ( e ) -> handleButtonAction( true, true ) );
 
         SwingUtils.setMaxComponentSize( okButton, cancelButton, applyButton );
 
@@ -371,69 +395,26 @@ public class OkDialogView implements IView<JDialog>
         return panel;
     }
 
+    /***************************************************************************
+     * @param closeDialog
+     * @param okIndicated
+     **************************************************************************/
+    private void handleButtonAction( boolean closeDialog, boolean okIndicated )
+    {
+        if( closeDialog )
+        {
+            dialog.dispose();
+        }
+
+        okListeners.fireListeners( this, true );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public void pack()
     {
         dialog.pack();
-    }
-
-    /***************************************************************************
-     * Listener added to the ok button to programmatically close the dialog and
-     * call the close listeners.
-     **************************************************************************/
-    private static class OkListener implements ActionListener
-    {
-        private final OkDialogView view;
-
-        public OkListener( OkDialogView view )
-        {
-            this.view = view;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            SwingUtils.closeWindow( view.dialog );
-            view.okListeners.fireListeners( view, true );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class CancelListener implements ActionListener
-    {
-        private final OkDialogView view;
-
-        public CancelListener( OkDialogView view )
-        {
-            this.view = view;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            SwingUtils.closeWindow( view.dialog );
-            view.okListeners.fireListeners( view, false );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class ApplyListener implements ActionListener
-    {
-        private final OkDialogView view;
-
-        public ApplyListener( OkDialogView view )
-        {
-            this.view = view;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            view.okListeners.fireListeners( view, true );
-        }
     }
 
     /***************************************************************************
@@ -442,27 +423,55 @@ public class OkDialogView implements IView<JDialog>
      **************************************************************************/
     private static class DialogListener extends WindowAdapter
     {
-        @Override
-        public void windowClosed( WindowEvent e )
+        /**  */
+        private final OkDialogView view;
+
+        /**
+         * @param view
+         */
+        public DialogListener( OkDialogView view )
         {
-            System.gc();
+            this.view = view;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void windowClosing( WindowEvent e )
+        {
+            view.handleButtonAction( true, false );
         }
     }
 
     /***************************************************************************
-     * 
+     * Defines the button(s) to be shown in an {@link OkDialogView}. Each button
+     * type defines a default modality of {@link ModalityType#MODELESS} when an
+     * "Apply" is shown and {@link ModalityType#DOCUMENT_MODAL} otherwise.
      **************************************************************************/
     public static enum OkDialogButtons
     {
+        /**  */
         OK_ONLY( true, false, false ),
+        /**  */
         OK_CANCEL( true, false, true ),
+        /**  */
         OK_APPLY_CANCEL( true, true, true ),
+        /**  */
         OK_APPLY( true, true, false );
 
+        /**  */
         public final boolean hasOk;
+        /**  */
         public final boolean hasApply;
+        /**  */
         public final boolean hasCancel;
 
+        /**
+         * @param hasOk
+         * @param hasApply
+         * @param hasCancel
+         */
         private OkDialogButtons( boolean hasOk, boolean hasApply,
             boolean hasCancel )
         {
@@ -471,10 +480,13 @@ public class OkDialogView implements IView<JDialog>
             this.hasCancel = hasCancel;
         }
 
+        /**
+         * @return
+         */
         public ModalityType getModalityType()
         {
             return hasApply ? ModalityType.MODELESS
-                : ModalityType.APPLICATION_MODAL;
+                : ModalityType.DOCUMENT_MODAL;
         }
     }
 
@@ -483,19 +495,29 @@ public class OkDialogView implements IView<JDialog>
      **************************************************************************/
     private static class StateListener implements ItemActionListener<Boolean>
     {
+        /**  */
         private boolean selection;
 
+        /**
+         * 
+         */
         public StateListener()
         {
             this.selection = false;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ItemActionEvent<Boolean> event )
         {
             this.selection = event.getItem();
         }
 
+        /**
+         * @return
+         */
         public boolean getSelection()
         {
             return this.selection;

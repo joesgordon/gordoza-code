@@ -5,12 +5,13 @@ import org.jutils.ui.app.AppRunner;
 import org.jutils.ui.app.IApplication;
 
 /*******************************************************************************
- * 
+ * Defines an application to display the current version of this library.
  ******************************************************************************/
 public class JUtilsInfoMain
 {
     /***************************************************************************
-     * @param args
+     * Defines the application entry point.
+     * @param args ignored
      **************************************************************************/
     public static void main( String [] args )
     {
@@ -18,16 +19,22 @@ public class JUtilsInfoMain
     }
 
     /***************************************************************************
-     * 
+     * Defines the app that builds the UI to be displayed.
      **************************************************************************/
-    public static final class BuildInfoMainApp implements IApplication
+    private static final class BuildInfoMainApp implements IApplication
     {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String getLookAndFeelName()
         {
             return null;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void createAndShowUi()
         {

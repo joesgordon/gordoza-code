@@ -21,6 +21,8 @@ public interface IMemberAccessor<T, M>
     /***************************************************************************
      * Creates a list of all members returned by the provided accessor by each
      * item in the provided list.
+     * @param <T> the type of the object containing the member to be accessed.
+     * @param <M> the type of the member to be accessed.
      * @param items the list containing the object instances.
      * @param ima the accessor to the member instances desired.
      * @return the list of members.

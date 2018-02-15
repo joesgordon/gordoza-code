@@ -210,9 +210,18 @@ public class PositionIndicator implements IView<JComponent>
     {
         long pos = getPosition( x );
 
-        if( pos != paintable.position )
+        fireThumbMoved( pos );
+    }
+
+    /***************************************************************************
+     * Invokes the callback on all listeners to the position change.
+     * @param position the new indicated positon.
+     **************************************************************************/
+    private void fireThumbMoved( long position )
+    {
+        if( position != paintable.position )
         {
-            posititonListeners.fireListeners( this, pos );
+            posititonListeners.fireListeners( this, position );
         }
     }
 
@@ -439,6 +448,8 @@ public class PositionIndicator implements IView<JComponent>
 
                 pi.positionWindow.setLocation( msp );
                 pi.positionWindow.setVisible( true );
+
+                pi.fireThumbMoved( position );
             }
         }
 

@@ -59,7 +59,7 @@ public final class SwingUtils
     private static void installEscapeCloseOperation( Window win,
         JRootPane rootPane )
     {
-        CloseActionListener closeListener = new CloseActionListener( win );
+        ActionListener closeListener = ( e ) -> closeWindow( win );
         String mapKey = "com.spodding.tackline.dispatch:WINDOW_CLOSING";
         Action closeAction = new ActionAdapter( closeListener, mapKey, null );
 
@@ -67,9 +67,14 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * @param parent
-     * @param message
-     * @param title
+     * Shows the provided message in a {@link ModalityType#DOCUMENT_MODAL}
+     * JDialog with an error icon.
+     * @param parent determines the {@link Frame} in which the dialog is
+     * displayed; if the {@code parent} has no {@link Frame}, a default
+     * {@link Frame} is used.
+     * @param message the {@link String} or {@link Component} that represents
+     * the message to be displayed.
+     * @param title the title of the dialog displayed.
      **************************************************************************/
     public static void showErrorMessage( Component parent, Object message,
         String title )
@@ -86,7 +91,10 @@ public final class SwingUtils
     /***************************************************************************
      * Displays an OK/Cancel option dialog with the provided message, title, and
      * choices.
-     * @param parent the parent component of the dialog to be displayed.
+     * @param <T> the data type of the choices presented.
+     * @param parent determines the {@link Frame} in which the dialog is
+     * displayed; if the {@code parent} has no {@link Frame}, a default
+     * {@link Frame} is used.
      * @param message the message to be displayed in the dialog.
      * @param title the title of the dialog.
      * @param choices the choices to be displayed in combo box.
@@ -161,7 +169,9 @@ public final class SwingUtils
     /***************************************************************************
      * Displays an question dialog with the provided message, title, and button
      * choices.
-     * @param parent the parent component of the dialog to be displayed.
+     * @param parent determines the {@link Frame} in which the dialog is
+     * displayed; if the {@code parent} has no {@link Frame}, a default
+     * {@link Frame} is used.
      * @param message the String or JComponent to be displayed in the dialog.
      * @param title the title of the dialog.
      * @param choices the choices to be displayed in buttons.
@@ -175,6 +185,19 @@ public final class SwingUtils
             defaultChoice, false );
     }
 
+    /***************************************************************************
+     * @param parent determines the {@link Frame} in which the dialog is
+     * displayed; if the {@code parent} has no {@link Frame}, a default
+     * {@link Frame} is used.
+     * @param message the {@link String} or {@link Component} that represents
+     * the message to be displayed.
+     * @param title the title of the dialog.
+     * @param choices the choices to be displayed in buttons.
+     * @param defaultChoice the choice to be selected by default.
+     * @param resizable indicates that the dialog is resizable with
+     * {@code true}.
+     * @return the user's choice or null if the user closes the dialog.
+     **************************************************************************/
     public static String showConfirmMessage( Component parent, Object message,
         String title, String [] choices, String defaultChoice,
         boolean resizable )
@@ -202,7 +225,10 @@ public final class SwingUtils
     /***************************************************************************
      * Displays an OK/Cancel dialog with the provided message, title, and data
      * view.
-     * @param parent the parent component of the dialog to be displayed.
+     * @param <T> the type of data displayed in the provided view.
+     * @param parent determines the {@link Frame} in which the dialog is
+     * displayed; if the {@code parent} has no {@link Frame}, a default
+     * {@link Frame} is used.
      * @param message the message to be displayed above the data view.
      * @param title the title of the dialog.
      * @param view the data view to be displayed
@@ -241,7 +267,9 @@ public final class SwingUtils
     /***************************************************************************
      * Displays an OK/Cancel dialog with the provided message, title, and data
      * view.
-     * @param parent the parent component of the dialog to be displayed.
+     * @param parent determines the {@link Frame} in which the dialog is
+     * displayed; if the {@code parent} has no {@link Frame}, a default
+     * {@link Frame} is used.
      * @param message the message to be displayed above the data view.
      * @param title the title of the dialog.
      * @param okText the text of the OK button.
@@ -519,6 +547,8 @@ public final class SwingUtils
     /***************************************************************************
      * Creates an action to copy data from the provided view to the system
      * clipboard.
+     * @param <T>
+     * @param view
      * @return the created action.
      **************************************************************************/
     public static <T> Action createCopyAction( IDataView<T> view )
@@ -533,6 +563,8 @@ public final class SwingUtils
     /***************************************************************************
      * Creates an action to paste data from the system clipboard to the provided
      * listener.
+     * @param <T>
+     * @param itemListener
      * @return the created action.
      **************************************************************************/
     public static <T> Action createPasteAction(
@@ -547,6 +579,7 @@ public final class SwingUtils
 
     /***************************************************************************
      * Creates a {@link ComboBoxModel} with the provided array of items.
+     * @param <T>
      * @param items the items to be contained within the model.
      * @return the model containing the items.
      **************************************************************************/
@@ -576,6 +609,7 @@ public final class SwingUtils
     /***************************************************************************
      * Search the component's parent tree looking for an object of the provided
      * type.
+     * @param <T>
      * @param comp the child component.
      * @param type the type of parent to be found.
      * @return the component of the type provided or {@code null} if not found.
@@ -627,6 +661,7 @@ public final class SwingUtils
      * Returns the {@link JFrame} containing the provided component or
      * {@code null} if none exists.
      * @param comp the child component.
+     * @return
      **************************************************************************/
     public static JFrame getComponentsJFrame( Component comp )
     {
@@ -774,16 +809,24 @@ public final class SwingUtils
     /***************************************************************************
      * An action listener that copies data from a data view to the system
      * clipboard using XStream.
+     * @param <T>
      **************************************************************************/
     public static class CopyListener<T> implements ActionListener
     {
+        /**  */
         private final IDataView<T> view;
 
+        /**
+         * @param view
+         */
         public CopyListener( IDataView<T> view )
         {
             this.view = view;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ActionEvent e )
         {
@@ -801,23 +844,30 @@ public final class SwingUtils
             {
                 ex.printStackTrace();
             }
-
         }
     }
 
     /***************************************************************************
      * An action listener that copies data from the system clipboard to the item
      * listener using XStream.
+     * @param <T>
      **************************************************************************/
     public static class PasteListener<T> implements ActionListener
     {
+        /**  */
         private final ItemActionListener<T> listener;
 
+        /**
+         * @param listener
+         */
         public PasteListener( ItemActionListener<T> listener )
         {
             this.listener = listener;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ActionEvent e )
         {
@@ -840,13 +890,20 @@ public final class SwingUtils
      **************************************************************************/
     public static class ShowFrameListener implements ActionListener
     {
-        private JFrame f;
+        /**  */
+        private final JFrame f;
 
+        /**
+         * @param frame
+         */
         public ShowFrameListener( JFrame frame )
         {
             f = frame;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ActionEvent e )
         {
@@ -867,13 +924,20 @@ public final class SwingUtils
      **************************************************************************/
     protected static class MiniMaximizeListener implements ActionListener
     {
-        private JFrame f;
+        /**  */
+        private final JFrame f;
 
+        /**
+         * @param frame
+         */
         public MiniMaximizeListener( JFrame frame )
         {
             f = frame;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ActionEvent e )
         {
@@ -887,13 +951,20 @@ public final class SwingUtils
      **************************************************************************/
     protected static class HideOnMinimizeListener extends WindowAdapter
     {
-        private JFrame frame;
+        /**  */
+        private final JFrame frame;
 
+        /**
+         * @param f
+         */
         public HideOnMinimizeListener( JFrame f )
         {
             frame = f;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void windowIconified( WindowEvent e )
         {
@@ -902,33 +973,18 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * An action that invokes the window's default close operation when run.
-     **************************************************************************/
-    private static class CloseActionListener implements ActionListener
-    {
-        private final Window win;
-
-        public CloseActionListener( Window win )
-        {
-            this.win = win;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent event )
-        {
-            win.dispatchEvent(
-                new WindowEvent( win, WindowEvent.WINDOW_CLOSING ) );
-        }
-    }
-
-    /***************************************************************************
      * A mouse listener display the popup menu on right-click.
      **************************************************************************/
     private static class TrayMouseListener extends MouseAdapter
     {
+        /**  */
         private final JPopupMenu popup;
+        /**  */
         private final JDialog dialog;
 
+        /**
+         * @param popup
+         */
         public TrayMouseListener( JPopupMenu popup )
         {
             this.popup = popup;
@@ -955,6 +1011,9 @@ public final class SwingUtils
             } );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void mouseReleased( MouseEvent e )
         {
@@ -973,6 +1032,11 @@ public final class SwingUtils
             }
         }
 
+        /**
+         * @param p
+         * @param loc
+         * @return
+         */
         private Point calcLocation( Point p, Point loc )
         {
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();

@@ -19,6 +19,7 @@ public final class ListUtils
 
     /***************************************************************************
      * Creates a list from the provided iterable.
+     * @param <T> the type of item iterated.
      * @param items the iteration of items to seed the list.
      * @return the list of items.
      **************************************************************************/
@@ -37,6 +38,9 @@ public final class ListUtils
     /***************************************************************************
      * Create a list of items from a type that contains both the key and the
      * value.
+     * @param <K> The type of the key in the new map.
+     * @param <V> The type of the value in the new map.
+     * @param <T> The type of the items that contain keys and values.
      * @param items the items to seed the map.
      * @param kv the key/value accessor.
      * @return the map of key/value pairs.
@@ -71,20 +75,23 @@ public final class ListUtils
         /***********************************************************************
          * Returns the key of the provided item.
          * @param item the item containing a key.
+         * @return the key from the item.
          **********************************************************************/
         public K getKey( T item );
 
         /***********************************************************************
-         * Return
-         * @param item
-         * @param oldValue
-         * @return
+         * Returns the value of the provided item
+         * @param item the item containing a value.
+         * @param oldValue the
+         * @return the value from the item.
          **********************************************************************/
         public V getValue( T item, V oldValue );
     }
 
     /***************************************************************************
      * Finds the maximum found key in the provided map of key/count values.
+     * @param <K> The type of the keys in the map.
+     * @param <V> The type of the values in the map.
      * @param map the map of key/counts.
      * @return the 2-tuple containing the key with the highest count.
      **************************************************************************/
