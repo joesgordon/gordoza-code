@@ -43,7 +43,7 @@ public class ChecksumCreationTask implements ITask
      * 
      **************************************************************************/
     @Override
-    public void run( ITaskHandler handler )
+    public void run( ITaskStatusHandler handler )
     {
         try
         {
@@ -65,7 +65,7 @@ public class ChecksumCreationTask implements ITask
      * @return
      * @throws IOException
      **************************************************************************/
-    public static void createChecksums( ITaskHandler handler,
+    public static void createChecksums( ITaskStatusHandler handler,
         ChecksumResult input ) throws IOException
     {
         TaskUpdater updater = new TaskUpdater( handler, input.calculateSize() );

@@ -40,7 +40,7 @@ public class SearchTask implements ITask
      * 
      **************************************************************************/
     @Override
-    public void run( ITaskHandler handler )
+    public void run( ITaskStatusHandler handler )
     {
         try
         {
@@ -64,7 +64,7 @@ public class SearchTask implements ITask
      * @param handler
      * @throws IOException
      **************************************************************************/
-    private void search( ITaskHandler handler ) throws IOException
+    private void search( ITaskStatusHandler handler ) throws IOException
     {
         // @SuppressWarnings( "resource")
         // BufferedStream stream = new BufferedStream( this.stream,

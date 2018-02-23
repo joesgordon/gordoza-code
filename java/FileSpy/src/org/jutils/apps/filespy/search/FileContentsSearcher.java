@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.jutils.apps.filespy.data.LineMatch;
 import org.jutils.apps.filespy.data.SearchRecord;
 import org.jutils.concurrent.IConsumer;
-import org.jutils.concurrent.ITaskStopManager;
+import org.jutils.concurrent.ITaskHandler;
 import org.jutils.io.IOUtils;
 import org.jutils.pattern.StringPattern.IMatcher;
 import org.jutils.pattern.StringPattern.Match;
@@ -101,7 +101,7 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
      * @param file
      * @throws IOException
      **************************************************************************/
-    private void searchFile( SearchRecord record, ITaskStopManager stopper )
+    private void searchFile( SearchRecord record, ITaskHandler stopper )
         throws IOException
     {
         File file = record.getFile();
@@ -126,7 +126,7 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
              LineNumberReader lineReader = new LineNumberReader( r ) )
         {
             while( ( line = lineReader.readLine() ) != null &&
-                stopper.continueProcessing() )
+                stopper.canContinue() )
             {
                 if( searchString( line, record, lineReader.getLineNumber() ) )
                 {
@@ -156,7 +156,7 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
      * 
      **************************************************************************/
     @Override
-    public void consume( SearchRecord data, ITaskStopManager stopper )
+    public void consume( SearchRecord data, ITaskHandler stopper )
     {
         try
         {

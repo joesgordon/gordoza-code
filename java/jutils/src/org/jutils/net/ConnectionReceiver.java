@@ -5,7 +5,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 import org.jutils.concurrent.IStoppableTask;
-import org.jutils.concurrent.ITaskStopManager;
+import org.jutils.concurrent.ITaskHandler;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
 
@@ -35,9 +35,9 @@ public class ConnectionReceiver implements IStoppableTask
      * 
      **************************************************************************/
     @Override
-    public void run( ITaskStopManager stopper )
+    public void run( ITaskHandler stopper )
     {
-        while( stopper.continueProcessing() )
+        while( stopper.canContinue() )
         {
             try
             {

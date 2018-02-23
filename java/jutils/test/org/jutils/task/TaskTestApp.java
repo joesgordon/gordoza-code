@@ -85,7 +85,7 @@ public class TaskTestApp implements IFrameApp
     private static class SampleTask implements ITask
     {
         @Override
-        public void run( ITaskHandler handler )
+        public void run( ITaskStatusHandler handler )
         {
             handler.signalMessage( "Executing" );
 

@@ -5,7 +5,6 @@ import java.awt.datatransfer.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
@@ -54,18 +53,9 @@ public final class Utils
     }
 
     /***************************************************************************
-     * Returns the elapsed time in the default formatted string.
-     * @return the elapsed time in the default formatted string.
-     **************************************************************************/
-    public static String getElapsedString( Date d )
-    {
-        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "HH:mm:ss:SSS" );
-        DATE_FORMAT.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
-        return DATE_FORMAT.format( d );
-    }
-
-    /***************************************************************************
-     * Prints the stack trace from the caller.
+     * Creates a multi-line string representing the stack trace from the point
+     * of the caller.
+     * @return a multi-line string of the stack.
      **************************************************************************/
     public static String getStackTrace()
     {

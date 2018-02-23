@@ -5,7 +5,7 @@ import java.net.*;
 import java.util.Arrays;
 
 import org.jutils.concurrent.IStoppableTask;
-import org.jutils.concurrent.ITaskStopManager;
+import org.jutils.concurrent.ITaskHandler;
 import org.jutils.net.NetMessage;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
@@ -41,9 +41,9 @@ public class ReceiverTask implements IStoppableTask
      * 
      **************************************************************************/
     @Override
-    public void run( ITaskStopManager stopManager )
+    public void run( ITaskHandler stopManager )
     {
-        while( stopManager.continueProcessing() )
+        while( stopManager.canContinue() )
         {
             try
             {

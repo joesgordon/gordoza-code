@@ -17,9 +17,9 @@ public final class StoppableTest
     public void testCanContinue()
     {
         TaskStopManager stopper = new TaskStopManager();
-        boolean canContinuePrior = stopper.continueProcessing();
+        boolean canContinuePrior = stopper.canContinue();
         stopper.stop();
-        boolean canContinuePost = stopper.continueProcessing();
+        boolean canContinuePost = stopper.canContinue();
         assertTrue( canContinuePrior && !canContinuePost );
     }
 
@@ -48,13 +48,7 @@ public final class StoppableTest
         stopper.stop();
         stopper.signalFinished();
 
-        try
-        {
-            stopper.waitFor();
-        }
-        catch( InterruptedException e )
-        {
-        }
+        stopper.waitFor();
 
         assertTrue( stopper.isFinished() );
     }

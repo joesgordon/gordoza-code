@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jutils.task.ITaskHandler;
+import org.jutils.task.ITaskStatusHandler;
 
 public class FileInfo implements Comparable<FileInfo>
 {
@@ -58,7 +58,7 @@ public class FileInfo implements Comparable<FileInfo>
         this.size = size;
     }
 
-    public void refresh( ITaskHandler handler )
+    public void refresh( ITaskStatusHandler handler )
     {
         if( dir.isDirectory() && handler.canContinue() )
         {

@@ -206,8 +206,8 @@ public class ColorGenFrame implements IView<JFrame>
     public void generateColors()
     {
         ColorGenerator generator = new ColorGenerator( this );
-        Stoppable stoppable = new Stoppable( generator );
-        Thread thread = new Thread( stoppable );
+        StoppableThread thread = new StoppableThread( generator,
+            "Color Generator" );
 
         progressBar.setIndeterminate( true );
         thread.start();
@@ -286,7 +286,7 @@ public class ColorGenFrame implements IView<JFrame>
          * 
          **********************************************************************/
         @Override
-        public void run( ITaskStopManager stopper )
+        public void run( ITaskHandler stopper )
         {
             colors = getColors();
 

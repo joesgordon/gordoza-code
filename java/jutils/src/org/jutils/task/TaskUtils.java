@@ -14,11 +14,15 @@ import org.jutils.ui.VerboseMessageView;
  ******************************************************************************/
 public final class TaskUtils
 {
+    /***************************************************************************
+     * Private constructor to prevent instantiation.
+     **************************************************************************/
     private TaskUtils()
     {
     }
 
     /***************************************************************************
+     * @param comp
      * @param error
      **************************************************************************/
     public static void displayError( Component comp, TaskError error )

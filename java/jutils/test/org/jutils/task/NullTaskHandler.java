@@ -5,10 +5,10 @@ import org.jutils.ui.event.ItemActionListener;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class NullTaskHandler implements ITaskHandler
+public class NullTaskHandler implements ITaskStatusHandler
 {
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public boolean canContinue()
@@ -17,7 +17,7 @@ public class NullTaskHandler implements ITaskHandler
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void signalMessage( String message )
@@ -25,7 +25,7 @@ public class NullTaskHandler implements ITaskHandler
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public boolean signalPercent( int percent )
@@ -34,7 +34,7 @@ public class NullTaskHandler implements ITaskHandler
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void signalError( TaskError error )
@@ -43,7 +43,7 @@ public class NullTaskHandler implements ITaskHandler
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void signalFinished()
@@ -51,7 +51,7 @@ public class NullTaskHandler implements ITaskHandler
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void stop()
@@ -59,15 +59,16 @@ public class NullTaskHandler implements ITaskHandler
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
-    public void stopAndWait() throws InterruptedException
+    public boolean stopAndWaitFor()
     {
+        return true;
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void addFinishedListener( ItemActionListener<Boolean> l )
@@ -75,10 +76,37 @@ public class NullTaskHandler implements ITaskHandler
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void removeFinishedListener( ItemActionListener<Boolean> l )
     {
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public boolean isFinished()
+    {
+        return true;
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public boolean waitFor()
+    {
+        return true;
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public boolean waitFor( long milliseconds )
+    {
+        return true;
     }
 }

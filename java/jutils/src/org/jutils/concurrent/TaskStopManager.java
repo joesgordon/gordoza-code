@@ -1,5 +1,6 @@
 package org.jutils.concurrent;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -10,17 +11,20 @@ import org.jutils.ui.event.ItemActionListener;
  * This class is a sort of semaphore that represents the execution state
  * (executing or stopped) and the methods to modify said state.
  ******************************************************************************/
-public final class TaskStopManager implements ITaskStopManager
+public final class TaskStopManager implements ITaskHandler
 {
     /**
      * Execution continues as long as {@code continueRunning} is {@code true}.
      */
     private volatile boolean continueRunning;
-    /** {@code true} after {@link #run()} returns {@code false} otherwise. */
+    /**
+     * {@code true} after {@link #signalFinished()} called; {@code false}
+     * otherwise.
+     */
     private volatile boolean isFinished;
     /** Lock used to protect the finished flag and the stop condition. */
     private final ReentrantLock stopLock;
-    /** Condition used to signal that {@link #run()} is complete. */
+    /** Condition used to signal that execution is complete. */
     private final Condition stopCondition;
     /**
      * List of listeners to be called when {@link #signalFinished()} is called.
@@ -40,7 +44,7 @@ public final class TaskStopManager implements ITaskStopManager
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void addFinishedListener( ItemActionListener<Boolean> l )
@@ -49,25 +53,16 @@ public final class TaskStopManager implements ITaskStopManager
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
-    public void removeFinishedListener( ItemActionListener<Boolean> l )
+    public boolean canContinue()
     {
-        finishedListeners.removeListener( l );
+        return continueRunning;
     }
 
     /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void stop()
-    {
-        continueRunning = false;
-    }
-
-    /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public boolean isFinished()
@@ -76,47 +71,16 @@ public final class TaskStopManager implements ITaskStopManager
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
-    public void waitFor() throws InterruptedException
+    public void removeFinishedListener( ItemActionListener<Boolean> l )
     {
-        stopLock.lock();
-
-        try
-        {
-            while( !isFinished )
-            {
-                stopCondition.await();
-            }
-        }
-        finally
-        {
-            stopLock.unlock();
-        }
+        finishedListeners.removeListener( l );
     }
 
     /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public void stopAndWait() throws InterruptedException
-    {
-        stop();
-        waitFor();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public boolean continueProcessing()
-    {
-        return continueRunning;
-    }
-
-    /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void signalFinished()
@@ -135,5 +99,86 @@ public final class TaskStopManager implements ITaskStopManager
         finishedListeners.fireListeners( this, continueRunning );
 
         finishedListeners.removeAll();
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public void stop()
+    {
+        continueRunning = false;
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public boolean stopAndWaitFor()
+    {
+        stop();
+        return waitFor();
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public boolean waitFor()
+    {
+        boolean stopped = true;
+
+        stopLock.lock();
+
+        try
+        {
+            while( !isFinished )
+            {
+                try
+                {
+                    stopCondition.await();
+                }
+                catch( InterruptedException ex )
+                {
+                    stopped = false;
+                    break;
+                }
+            }
+        }
+        finally
+        {
+            stopLock.unlock();
+        }
+
+        return stopped;
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public boolean waitFor( long milliseconds )
+    {
+        boolean stopped = true;
+
+        stopLock.lock();
+
+        try
+        {
+            try
+            {
+                stopCondition.await( milliseconds, TimeUnit.MILLISECONDS );
+            }
+            catch( InterruptedException ex )
+            {
+                stopped = false;
+            }
+        }
+        finally
+        {
+            stopLock.unlock();
+        }
+
+        return stopped;
     }
 }

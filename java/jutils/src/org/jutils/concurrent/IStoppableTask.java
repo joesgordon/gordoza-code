@@ -10,5 +10,5 @@ public interface IStoppableTask
      * @param stopManager the object that contains the execution state for this
      * task.
      **************************************************************************/
-    public void run( ITaskStopManager stopManager );
+    public void run( ITaskHandler stopManager );
 }

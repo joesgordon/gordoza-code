@@ -8,12 +8,13 @@ import org.jutils.ui.event.ItemActionListener;
 public class Stoppable implements Runnable
 {
     /** Object used to hold the continue/stop state. */
-    private final ITaskStopManager stopper;
+    private final ITaskHandler stopper;
     /** The task to run */
     private final IStoppableTask task;
 
     /***************************************************************************
-     * Creates the {@link Runnable}
+     * Creates the {@link Runnable} to execute the provided task.
+     * @param task the task to be executed.
      **************************************************************************/
     public Stoppable( IStoppableTask task )
     {
@@ -21,8 +22,19 @@ public class Stoppable implements Runnable
     }
 
     /***************************************************************************
+     * Creates the {@link Runnable} to execute the provided task.
+     * @param task the task to be executed.
+     * @param stopManager the object that manages the stopping of this task.
+     **************************************************************************/
+    public Stoppable( IStoppableTask task, ITaskHandler stopManager )
+    {
+        this.stopper = stopManager;
+        this.task = task;
+    }
+
+    /***************************************************************************
      * Adds a listener to be called when the task completes; reports
-     * {@code true} if the process was not stopped preemptively, {@link false}
+     * {@code true} if the process was not stopped preemptively, {@code false}
      * otherwise.
      * @param l the listener to be added.
      **************************************************************************/
@@ -41,16 +53,7 @@ public class Stoppable implements Runnable
     }
 
     /***************************************************************************
-     * Creates the {@link Runnable}
-     **************************************************************************/
-    public Stoppable( IStoppableTask task, ITaskStopManager stopper )
-    {
-        this.stopper = stopper;
-        this.task = task;
-    }
-
-    /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void run()
@@ -66,7 +69,7 @@ public class Stoppable implements Runnable
     }
 
     /***************************************************************************
-     * @see TaskStopManager#stop()
+     * @see ITaskHandler#stop()
      **************************************************************************/
     public void stop()
     {
@@ -74,7 +77,9 @@ public class Stoppable implements Runnable
     }
 
     /***************************************************************************
-     * @see TaskStopManager#isFinished()
+     * Returns whether the task is finished.
+     * @return {@code true} if the task is finished, {@code false} otherwise.
+     * @see ITaskHandler#isFinished()
      **************************************************************************/
     public boolean isFinished()
     {
@@ -82,18 +87,36 @@ public class Stoppable implements Runnable
     }
 
     /***************************************************************************
-     * @see TaskStopManager#waitFor()
+     * Waits for the task to complete.
+     * @return {@code true} if the thread completed or {@code false} if the
+     * thread waiting on the task to complete was interrupted.
+     * @see ITaskHandler#waitFor()
      **************************************************************************/
-    public void waitFor() throws InterruptedException
+    public boolean waitFor()
     {
-        stopper.waitFor();
+        return stopper.waitFor();
     }
 
     /***************************************************************************
-     * @see TaskStopManager#stopAndWait()
+     * Waits for the task to complete.
+     * @param milliseconds the amount of time to wait.
+     * @return {@code true} if the thread completed or {@code false} if the
+     * thread waiting on the task to complete was interrupted.
+     * @see ITaskHandler#waitFor()
      **************************************************************************/
-    public void stopAndWaitFor() throws InterruptedException
+    public boolean waitFor( long milliseconds )
     {
-        stopper.stopAndWait();
+        return stopper.waitFor( milliseconds );
+    }
+
+    /***************************************************************************
+     * Signals the task to stop and waits for it to complete.
+     * @return {@code true} if the thread completed or {@code false} if the
+     * thread waiting on the task to complete was interrupted.
+     * @see ITaskHandler#stopAndWaitFor()
+     **************************************************************************/
+    public boolean stopAndWaitFor()
+    {
+        return stopper.stopAndWaitFor();
     }
 }

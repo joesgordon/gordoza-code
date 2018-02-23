@@ -7,7 +7,7 @@ import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
 
 import org.jutils.concurrent.IStoppableTask;
-import org.jutils.concurrent.ITaskStopManager;
+import org.jutils.concurrent.ITaskHandler;
 import org.jutils.net.IConnection;
 import org.mc.ui.TxDialog;
 
@@ -53,7 +53,7 @@ public class McTxThread implements IStoppableTask
      * 
      **************************************************************************/
     @Override
-    public void run( final ITaskStopManager stopper )
+    public void run( final ITaskHandler stopper )
     {
         SwingUtilities.invokeLater( new Runnable()
         {
@@ -72,7 +72,7 @@ public class McTxThread implements IStoppableTask
             }
         } );
 
-        while( stopper.continueProcessing() && sendCount < sendCountMax )
+        while( stopper.canContinue() && sendCount < sendCountMax )
         {
             try
             {

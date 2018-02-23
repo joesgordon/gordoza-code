@@ -43,7 +43,8 @@ public class HexUtilsTest
 
             if( num != i )
             {
-                Assert.assertEquals( i, num );
+                String msg = String.format( "%d != %d for %s", i, num, str );
+                Assert.assertEquals( msg, i, num );
             }
         }
         long estTime = System.nanoTime() - start;

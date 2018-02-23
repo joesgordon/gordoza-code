@@ -32,7 +32,7 @@ public class CreationFileTask implements ITask
      * 
      **************************************************************************/
     @Override
-    public void run( ITaskHandler handler )
+    public void run( ITaskStatusHandler handler )
     {
         TaskUpdater updater = new TaskUpdater( handler, sumFile.length );
         ChecksumGenenerator generator = new ChecksumGenenerator( checksummer,

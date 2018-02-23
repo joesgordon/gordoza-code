@@ -1,14 +1,14 @@
 package chatterbox.messenger;
 
 import org.jutils.concurrent.TaskStopManager;
-import org.jutils.task.ITaskHandler;
+import org.jutils.task.ITaskStatusHandler;
 import org.jutils.task.TaskError;
 import org.jutils.ui.event.ItemActionListener;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class SignalerTaskHander implements ITaskHandler
+public class SignalerTaskHander implements ITaskStatusHandler
 {
     /**  */
     private final ISignaler signaler;
@@ -25,7 +25,7 @@ public class SignalerTaskHander implements ITaskHandler
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void signalMessage( String message )
@@ -34,7 +34,7 @@ public class SignalerTaskHander implements ITaskHandler
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public boolean signalPercent( int percent )
@@ -43,7 +43,7 @@ public class SignalerTaskHander implements ITaskHandler
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void signalError( TaskError error )
@@ -52,7 +52,7 @@ public class SignalerTaskHander implements ITaskHandler
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void signalFinished()
@@ -62,16 +62,16 @@ public class SignalerTaskHander implements ITaskHandler
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public boolean canContinue()
     {
-        return stopManager.continueProcessing();
+        return stopManager.canContinue();
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void stop()
@@ -80,16 +80,16 @@ public class SignalerTaskHander implements ITaskHandler
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
-    public void stopAndWait() throws InterruptedException
+    public boolean stopAndWaitFor()
     {
-        stopManager.stopAndWait();
+        return stopManager.stopAndWaitFor();
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void addFinishedListener( ItemActionListener<Boolean> l )
@@ -98,11 +98,38 @@ public class SignalerTaskHander implements ITaskHandler
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void removeFinishedListener( ItemActionListener<Boolean> l )
     {
         stopManager.removeFinishedListener( l );
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public boolean isFinished()
+    {
+        return stopManager.isFinished();
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public boolean waitFor()
+    {
+        return stopManager.waitFor();
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public boolean waitFor( long milliseconds )
+    {
+        return stopManager.waitFor( milliseconds );
     }
 }

@@ -29,7 +29,7 @@ public class DataDistributionTask implements ITask
      * 
      **************************************************************************/
     @Override
-    public void run( ITaskHandler handler )
+    public void run( ITaskStatusHandler handler )
     {
         try
         {
@@ -46,7 +46,7 @@ public class DataDistributionTask implements ITask
      * @param handler
      * @throws IOException
      **************************************************************************/
-    private void readStream( ITaskHandler handler ) throws IOException
+    private void readStream( ITaskStatusHandler handler ) throws IOException
     {
         TaskUpdater updater = new TaskUpdater( handler, stream.getLength() );
         byte [] buffer = new byte[2 * 1024 * 1024];

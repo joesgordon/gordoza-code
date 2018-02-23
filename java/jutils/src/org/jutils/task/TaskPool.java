@@ -105,7 +105,7 @@ public class TaskPool
                 ITaskView view = tasker.createView( task.getName() );
 
                 TaskStopManager stopManager = new TaskStopManager();
-                ITaskHandler handler = new TaskHandlerWrapper( view,
+                ITaskStatusHandler handler = new TaskHandlerWrapper( view,
                     stopManager, this );
                 TaskRunner runner = new TaskRunner( task, handler );
 
@@ -199,9 +199,9 @@ public class TaskPool
      **************************************************************************/
     private static class CancelListener implements ActionListener
     {
-        private ITaskStopManager stopManager;
+        private ITaskHandler stopManager;
 
-        public CancelListener( ITaskStopManager stopManager )
+        public CancelListener( ITaskHandler stopManager )
         {
             this.stopManager = stopManager;
         }
@@ -245,7 +245,7 @@ public class TaskPool
         }
     }
 
-    private static class TaskHandlerWrapper implements ITaskHandler
+    private static class TaskHandlerWrapper implements ITaskStatusHandler
     {
         /**  */
         private final TaskHandler handler;
@@ -295,16 +295,16 @@ public class TaskPool
             handler.signalFinished();
         }
 
-        // @Override
+        @Override
         public void stop()
         {
             handler.stop();
         }
 
         @Override
-        public void stopAndWait() throws InterruptedException
+        public boolean stopAndWaitFor()
         {
-            handler.stopAndWait();
+            return handler.stopAndWaitFor();
         }
 
         @Override
@@ -317,6 +317,24 @@ public class TaskPool
         public void removeFinishedListener( ItemActionListener<Boolean> l )
         {
             handler.removeFinishedListener( l );
+        }
+
+        @Override
+        public boolean isFinished()
+        {
+            return handler.isFinished();
+        }
+
+        @Override
+        public boolean waitFor()
+        {
+            return handler.waitFor();
+        }
+
+        @Override
+        public boolean waitFor( long milliseconds )
+        {
+            return handler.waitFor( milliseconds );
         }
     }
 }

@@ -46,11 +46,11 @@ public class ConsumerTask<T> implements IStoppableTask
      * be called by {@link Thread#start()}.
      **************************************************************************/
     @Override
-    public final void run( ITaskStopManager stopper )
+    public final void run( ITaskHandler stopper )
     {
         T obj = null;
 
-        while( stopper.continueProcessing() )
+        while( stopper.canContinue() )
         {
             if( acceptInput.get() )
             {

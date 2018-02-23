@@ -171,7 +171,7 @@ public class MultiTaskTestApp implements IFrameApp
         }
 
         @Override
-        public void run( ITaskHandler handler )
+        public void run( ITaskStatusHandler handler )
         {
             for( int i = 0; i < 10 && handler.canContinue(); i++ )
             {

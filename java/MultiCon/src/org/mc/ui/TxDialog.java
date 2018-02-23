@@ -2,13 +2,11 @@ package org.mc.ui;
 
 import java.awt.*;
 import java.awt.Dialog.ModalityType;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
 import org.jutils.IconConstants;
-import org.jutils.concurrent.ITaskStopManager;
+import org.jutils.concurrent.ITaskHandler;
 
 public class TxDialog
 {
@@ -22,12 +20,12 @@ public class TxDialog
 
     private String maxText;
 
-    private final ITaskStopManager stopper;
+    private final ITaskHandler stopper;
 
     /**  */
     private final JDialog dialog;
 
-    public TxDialog( Window parent, ITaskStopManager stopper )
+    public TxDialog( Window parent, ITaskHandler stopper )
     {
         dialog = new JDialog( parent, "Sending Messages...",
             ModalityType.DOCUMENT_MODAL );
@@ -43,21 +41,7 @@ public class TxDialog
 
         progressBar.setMinimum( 0 );
         cancelButton.setIcon( IconConstants.getIcon( IconConstants.CLOSE_16 ) );
-        cancelButton.addActionListener( new ActionListener()
-        {
-            @Override
-            public void actionPerformed( ActionEvent e )
-            {
-                try
-                {
-                    TxDialog.this.stopper.stopAndWait();
-                }
-                catch( InterruptedException ex )
-                {
-                }
-                TxDialog.this.dialog.setVisible( false );
-            }
-        } );
+        cancelButton.addActionListener( ( e ) -> handleCancel() );
 
         mainPanel.add( progressLabel,
             new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
@@ -74,6 +58,12 @@ public class TxDialog
 
         dialog.setContentPane( mainPanel );
         dialog.setResizable( false );
+    }
+
+    private void handleCancel()
+    {
+        TxDialog.this.stopper.stopAndWaitFor();
+        TxDialog.this.dialog.setVisible( false );
     }
 
     public JDialog getView()

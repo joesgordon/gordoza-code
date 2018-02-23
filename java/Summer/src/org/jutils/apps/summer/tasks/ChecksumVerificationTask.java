@@ -43,7 +43,7 @@ public class ChecksumVerificationTask implements ITask
      * 
      **************************************************************************/
     @Override
-    public void run( ITaskHandler handler )
+    public void run( ITaskStatusHandler handler )
     {
         ChecksumResult calcInput = new ChecksumResult( input );
 

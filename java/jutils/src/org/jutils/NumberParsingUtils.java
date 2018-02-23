@@ -1,7 +1,5 @@
 package org.jutils;
 
-import org.jutils.io.LogUtils;
-
 /*******************************************************************************
  * Static helper class for parsing numbers. This class exists because the java
  * standard library is, IMHO, broken. If you have a long (int, short, and byte
@@ -81,7 +79,6 @@ public final class NumberParsingUtils
     public static long parseHex( String s, int limit )
         throws NumberFormatException
     {
-
         if( s.startsWith( "0x" ) )
         {
             s = s.substring( 2 );
@@ -108,10 +105,12 @@ public final class NumberParsingUtils
                 continue;
             }
 
-            result |= ( digit << ( ( len - 1 ) * 4 ) );
+            result <<= 4;
+            result |= digit;
 
-            LogUtils.printDebug( "Len: %d, digit: %d, result: %d", len, digit,
-                result );
+            // LogUtils.printDebug(
+            // "Len: %02d, digit: %02d, result: 0x%016X with char %c", len,
+            // digit, result, c );
         }
 
         if( len == 0 )

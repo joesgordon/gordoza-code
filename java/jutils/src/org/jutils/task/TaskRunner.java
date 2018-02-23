@@ -1,6 +1,6 @@
 package org.jutils.task;
 
-import org.jutils.concurrent.ITaskStopManager;
+import org.jutils.concurrent.ITaskHandler;
 import org.jutils.concurrent.TaskStopManager;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.utils.Stopwatch;
@@ -13,7 +13,7 @@ public class TaskRunner implements Runnable
     /**  */
     private final ITask task;
     /**  */
-    private final ITaskHandler handler;
+    private final ITaskStatusHandler handler;
 
     /**  */
     private TaskMetrics metrics;
@@ -32,8 +32,7 @@ public class TaskRunner implements Runnable
      * @param view
      * @param stopManager
      **************************************************************************/
-    public TaskRunner( ITask task, ITaskView view,
-        ITaskStopManager stopManager )
+    public TaskRunner( ITask task, ITaskView view, ITaskHandler stopManager )
     {
         this( task, new TaskHandler( view, stopManager ) );
     }
@@ -42,7 +41,7 @@ public class TaskRunner implements Runnable
      * @param task
      * @param handler
      **************************************************************************/
-    public TaskRunner( ITask task, ITaskHandler handler )
+    public TaskRunner( ITask task, ITaskStatusHandler handler )
     {
         this.task = task;
         this.handler = handler;
@@ -93,7 +92,7 @@ public class TaskRunner implements Runnable
      **************************************************************************/
     public void stopAndWait() throws InterruptedException
     {
-        handler.stopAndWait();
+        handler.stopAndWaitFor();
     }
 
     /***************************************************************************

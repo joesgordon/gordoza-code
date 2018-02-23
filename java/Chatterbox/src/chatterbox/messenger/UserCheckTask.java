@@ -92,7 +92,7 @@ public class UserCheckTask implements ITask
      * 
      **************************************************************************/
     @Override
-    public void run( ITaskHandler handler )
+    public void run( ITaskStatusHandler handler )
     {
         while( handler.canContinue() )
         {
@@ -138,7 +138,7 @@ public class UserCheckTask implements ITask
     /***************************************************************************
      * @param handler
      **************************************************************************/
-    private void sendAvailable( ITaskHandler handler )
+    private void sendAvailable( ITaskStatusHandler handler )
     {
         ChatUser user = chat.getLocalUser();
         UserAvailableMessage message = new UserAvailableMessage( user );

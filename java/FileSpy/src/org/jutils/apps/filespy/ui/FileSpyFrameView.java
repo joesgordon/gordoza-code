@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.*;
@@ -18,6 +17,7 @@ import org.jutils.apps.filespy.search.Searcher;
 import org.jutils.io.XStreamUtils;
 import org.jutils.io.options.OptionsSerializer;
 import org.jutils.licensing.LicenseDialog;
+import org.jutils.time.TimeUtils;
 import org.jutils.ui.*;
 import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.explorer.AppManagerView;
@@ -478,7 +478,7 @@ public class FileSpyFrameView implements IView<JFrame>
         startButton.setActionCommand( "Start" );
 
         int rowCount = resultsView.getRecordCount();
-        String elapsed = Utils.getElapsedString( new Date( millis ) );
+        String elapsed = TimeUtils.millisToString( millis );
 
         statusBar.setText( rowCount + " file(s) found in " + elapsed + "." );
 

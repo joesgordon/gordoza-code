@@ -57,7 +57,7 @@ public class SearchTask implements IStoppableTask
      *
      **************************************************************************/
     @Override
-    public void run( ITaskStopManager stopper )
+    public void run( ITaskHandler stopper )
     {
         IResultsConsumer fileConsumer = null;
 
@@ -212,7 +212,7 @@ public class SearchTask implements IStoppableTask
      * @param file
      **********************************************************************/
     private void findFiles( File file, IResultsConsumer fileConsumer,
-        ITaskStopManager stopper )
+        ITaskHandler stopper )
     {
         boolean isDir = file.isDirectory();
 
@@ -222,7 +222,7 @@ public class SearchTask implements IStoppableTask
         {
             searchHandler.updateStatus( "Finding: " + file.getAbsolutePath() );
         }
-        else if( stopper.continueProcessing() && testMetrics( file ) )
+        else if( stopper.canContinue() && testMetrics( file ) )
         {
             SearchRecord record = new SearchRecord( file );
 
@@ -232,7 +232,7 @@ public class SearchTask implements IStoppableTask
             }
         }
 
-        if( stopper.continueProcessing() && isDir && params.searchSubfolders )
+        if( stopper.canContinue() && isDir && params.searchSubfolders )
         {
             File [] children = file.listFiles();
 
@@ -293,7 +293,7 @@ public class SearchTask implements IStoppableTask
         }
 
         @Override
-        public void consume( SearchRecord record, ITaskStopManager stopper )
+        public void consume( SearchRecord record, ITaskHandler stopper )
         {
             File file = record.getFile();
 
@@ -350,7 +350,7 @@ public class SearchTask implements IStoppableTask
         }
 
         @Override
-        public void consume( SearchRecord record, ITaskStopManager stopper )
+        public void consume( SearchRecord record, ITaskHandler stopper )
         {
             searchHandler.addFile( record );
         }

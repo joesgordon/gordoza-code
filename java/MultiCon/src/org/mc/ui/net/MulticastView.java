@@ -7,7 +7,7 @@ import java.util.Arrays;
 import javax.swing.*;
 
 import org.jutils.SwingUtils;
-import org.jutils.concurrent.Stoppable;
+import org.jutils.concurrent.StoppableThread;
 import org.jutils.io.LogUtils;
 import org.jutils.io.options.OptionsSerializer;
 import org.jutils.net.*;
@@ -157,8 +157,8 @@ public class MulticastView implements IConnectionView
 
                 McTxThread txThread = new McTxThread( msgCount, msgDelay,
                     msgBytes, commModel.connection, win );
-                Stoppable stoppable = new Stoppable( txThread );
-                Thread thread = new Thread( stoppable );
+                StoppableThread thread = new StoppableThread( txThread,
+                    "Multicast Tx Thread" );
                 thread.start();
             }
             else

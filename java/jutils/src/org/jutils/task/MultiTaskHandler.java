@@ -44,7 +44,7 @@ public class MultiTaskHandler implements IMultiTaskHandler
     @Override
     public boolean canContinue()
     {
-        return stopManager.continueProcessing();
+        return stopManager.canContinue();
     }
 
     /***************************************************************************

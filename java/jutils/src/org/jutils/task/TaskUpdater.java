@@ -6,7 +6,7 @@ package org.jutils.task;
 public class TaskUpdater
 {
     /**  */
-    public final ITaskHandler handler;
+    public final ITaskStatusHandler handler;
     /**  */
     public final Number length;
 
@@ -19,7 +19,7 @@ public class TaskUpdater
      * @param handler
      * @param length
      **************************************************************************/
-    public TaskUpdater( ITaskHandler handler, Number length )
+    public TaskUpdater( ITaskStatusHandler handler, Number length )
     {
         this.handler = handler;
         this.length = length;

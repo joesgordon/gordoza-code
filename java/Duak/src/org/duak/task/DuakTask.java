@@ -29,7 +29,7 @@ public class DuakTask implements ITask
      * @param handler
      **************************************************************************/
     @Override
-    public void run( ITaskHandler handler )
+    public void run( ITaskStatusHandler handler )
     {
         results = new FileInfo( dir );
 
@@ -46,7 +46,7 @@ public class DuakTask implements ITask
      * @param i
      * @param len
      **************************************************************************/
-    private int getSize( FileInfo fileInfo, ITaskHandler handler, int i,
+    private int getSize( FileInfo fileInfo, ITaskStatusHandler handler, int i,
         int len )
     {
         if( !handler.canContinue() )

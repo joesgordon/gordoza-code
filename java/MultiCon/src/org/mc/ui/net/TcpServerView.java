@@ -39,9 +39,7 @@ public class TcpServerView implements IConnectionView
     /**  */
     private TcpConnection connection;
     /**  */
-    private Thread acceptThread;
-    /**  */
-    private Stoppable acceptTask;
+    private StoppableThread acceptThread;
 
     /***************************************************************************
      * 
@@ -92,7 +90,7 @@ public class TcpServerView implements IConnectionView
     {
         configPanel.setBindEnabled( false );
 
-        LogUtils.printDebug( "model %s, task %s", commModel, acceptTask );
+        // LogUtils.printDebug( "model %s, task %s", commModel, acceptThread );
 
         boolean bound = !bind;
 
@@ -137,8 +135,7 @@ public class TcpServerView implements IConnectionView
         userio.write( options );
 
         AcceptTask task = new AcceptTask( inputs, this );
-        this.acceptTask = new Stoppable( task );
-        this.acceptThread = new Thread( acceptTask );
+        this.acceptThread = new StoppableThread( task, "TCP Server Accept" );
 
         messagesView.clearMessages();
 
@@ -190,19 +187,12 @@ public class TcpServerView implements IConnectionView
     {
         if( acceptThread != null )
         {
-            acceptTask.stop();
+            acceptThread.stop();
             acceptThread.interrupt();
-            try
-            {
-                LogUtils.printDebug( "Waiting for" );
-                acceptTask.stopAndWaitFor();
-                LogUtils.printDebug( ">Waited for" );
-            }
-            catch( InterruptedException ex )
-            {
-            }
+            LogUtils.printDebug( "Waiting for" );
+            acceptThread.stopAndWait();
+            LogUtils.printDebug( ">Waited for" );
 
-            this.acceptTask = null;
             this.acceptThread = null;
         }
 
@@ -260,7 +250,8 @@ public class TcpServerView implements IConnectionView
 
         try
         {
-            commModel = new ConnectionListener( connection, rxListener, errListener );
+            commModel = new ConnectionListener( connection, rxListener,
+                errListener );
         }
         catch( IOException ex )
         {
@@ -294,7 +285,7 @@ public class TcpServerView implements IConnectionView
         }
 
         @Override
-        public void run( ITaskStopManager stopManager )
+        public void run( ITaskHandler stopManager )
         {
             Runnable dc = () -> view.handleDisconnected();
 
@@ -302,7 +293,7 @@ public class TcpServerView implements IConnectionView
             {
                 boolean accepted = false;
 
-                while( !accepted && stopManager.continueProcessing() )
+                while( !accepted && stopManager.canContinue() )
                 {
                     try
                     {
@@ -323,7 +314,6 @@ public class TcpServerView implements IConnectionView
             }
             finally
             {
-                view.acceptTask = null;
                 view.acceptThread = null;
             }
         }

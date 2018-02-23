@@ -1,23 +1,23 @@
 package org.jutils.task;
 
-import org.jutils.concurrent.ITaskStopManager;
+import org.jutils.concurrent.ITaskHandler;
 import org.jutils.ui.event.ItemActionListener;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class TaskHandler implements ITaskHandler
+public class TaskHandler implements ITaskStatusHandler
 {
     /**  */
     private final ITaskView view;
     /**  */
-    final ITaskStopManager stopManager;
+    final ITaskHandler stopManager;
 
     /***************************************************************************
      * @param view
      * @param stopManager
      **************************************************************************/
-    public TaskHandler( ITaskView view, ITaskStopManager stopManager )
+    public TaskHandler( ITaskView view, ITaskHandler stopManager )
     {
         this.view = view;
         this.stopManager = stopManager;
@@ -29,7 +29,7 @@ public class TaskHandler implements ITaskHandler
     @Override
     public boolean canContinue()
     {
-        return stopManager.continueProcessing();
+        return stopManager.canContinue();
     }
 
     /***************************************************************************
@@ -81,9 +81,27 @@ public class TaskHandler implements ITaskHandler
      * 
      **************************************************************************/
     @Override
-    public void stopAndWait() throws InterruptedException
+    public boolean stopAndWaitFor()
     {
-        stopManager.stopAndWait();
+        return stopManager.stopAndWaitFor();
+    }
+
+    @Override
+    public boolean isFinished()
+    {
+        return stopManager.isFinished();
+    }
+
+    @Override
+    public boolean waitFor()
+    {
+        return stopManager.waitFor();
+    }
+
+    @Override
+    public boolean waitFor( long milliseconds )
+    {
+        return stopManager.waitFor( milliseconds );
     }
 
     /***************************************************************************

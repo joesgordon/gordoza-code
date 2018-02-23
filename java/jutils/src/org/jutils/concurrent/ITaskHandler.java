@@ -1,64 +1,62 @@
-package org.jutils.task;
+package org.jutils.concurrent;
 
 import org.jutils.ui.event.ItemActionListener;
 
 /*******************************************************************************
- * Defines a set of common functions an {@link ITask} needs to report status and
- * determine if it should stop.
+ * Represents the execution state (executing or stopped) and the methods to
+ * modify said state.
  ******************************************************************************/
 public interface ITaskHandler
 {
     /***************************************************************************
-     * Issues the provided status message to any listeners. Intended for
-     * messages such as "Loading file 1 of 34: config.xml"
-     * @param message the status message from the task.
-     **************************************************************************/
-    public void signalMessage( String message );
-
-    /***************************************************************************
-     * Issues the provided percent complete to any listeners if the provided
-     * percent is different from the previous percent. A percent of -1 indicates
-     * an indeterminate percent.
-     * @param percent the current percent complete of the task, range (-1, 100).
-     * @return {@code true} if the percent complete changed enough to issue the
-     * update; {@code false} otherwise.
-     **************************************************************************/
-    public boolean signalPercent( int percent );
-
-    /***************************************************************************
-     * Issues the provided error to any listeners. This will normally result in
-     * the task stopping prematurely.
-     * @param error the error from the task.
-     * @see #signalFinished()
-     **************************************************************************/
-    public void signalError( TaskError error );
-
-    /***************************************************************************
-     * Invoked by the task when it has finished processing and is about to
-     * return.
-     **************************************************************************/
-    public void signalFinished();
-
-    /***************************************************************************
-     * Called by the task to see if it should continue processing or if an
-     * external entity has requested that it cease.
+     * Indicates that the task should continue processing or that it has been
+     * requested that it cease.
      * @return {@code true} if the task can continue, {@code false} otherwise.
      **************************************************************************/
     public boolean canContinue();
 
     /***************************************************************************
-     * Stops the task being handled. Indicates to the handler that an external
-     * entity requests the thread cease processing.
+     * Returns whether the task has finished.
+     * @return {@code true} if the task is finished, {@code false} otherwise
+     **************************************************************************/
+    public boolean isFinished();
+
+    /***************************************************************************
+     * Invoked to indicate the task has finished processing and is about to
+     * return.
+     **************************************************************************/
+    public void signalFinished();
+
+    /***************************************************************************
+     * Asynchronously requests that the task stop and returns immediately.
      **************************************************************************/
     public void stop();
 
     /***************************************************************************
-     * Stops the task being handled and waits for {@link #signalFinished()} to
-     * be invoked.
-     * @throws InterruptedException if the thread waiting on the task to finish
-     * is interrupted. In most cases, this can be ignored.
+     * Stops the task and waits for {@link #signalFinished()} to be invoked.
+     * Calls {@link #stop()} and then {@link #waitFor()}. Recommend checking
+     * {@link #isFinished()} if {@code false} is returned.
+     * @return {@code true} if the thread completed or {@code false} if the
+     * thread waiting on the task to complete was interrupted.
      **************************************************************************/
-    public void stopAndWait() throws InterruptedException;
+    public boolean stopAndWaitFor();
+
+    /***************************************************************************
+     * Waits for {@link #signalFinished()} to be invoked. Recommend checking
+     * {@link #isFinished()} if {@code false} is returned.
+     * @return {@code true} if the thread completed or {@code false} if the
+     * thread waiting on the task to complete was interrupted.
+     **************************************************************************/
+    public boolean waitFor();
+
+    /***************************************************************************
+     * Waits for {@link #signalFinished()} to be invoked for the specified time.
+     * Recommend checking {@link #isFinished()} if {@code false} is returned.
+     * @param milliseconds the amount of time to wait or indefinitely if < 0.
+     * @return {@code true} if the thread completed or {@code false} if the
+     * thread waiting on the task to complete was interrupted.
+     **************************************************************************/
+    public boolean waitFor( long milliseconds );
 
     /***************************************************************************
      * Adds the provided listener to a list that is notified when the task
@@ -70,8 +68,7 @@ public interface ITaskHandler
     public void addFinishedListener( ItemActionListener<Boolean> l );
 
     /***************************************************************************
-     * Removes any listener added by
-     * {@link #addFinishedListener(ItemActionListener)}.
+     * Removes the supplied listener from the list of finished listeners.
      * @param l the listener to be removed.
      **************************************************************************/
     public void removeFinishedListener( ItemActionListener<Boolean> l );

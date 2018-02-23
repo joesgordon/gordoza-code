@@ -406,7 +406,7 @@ public class OkDialogView implements IView<JDialog>
             dialog.dispose();
         }
 
-        okListeners.fireListeners( this, true );
+        okListeners.fireListeners( this, okIndicated );
     }
 
     /***************************************************************************
