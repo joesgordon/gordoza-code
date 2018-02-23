@@ -6,7 +6,7 @@ import java.io.IOException;
 import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
 
-import org.jutils.concurrent.IStoppableTask;
+import org.jutils.concurrent.ITask;
 import org.jutils.concurrent.ITaskHandler;
 import org.jutils.net.IConnection;
 import org.mc.ui.TxDialog;
@@ -14,7 +14,7 @@ import org.mc.ui.TxDialog;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class McTxThread implements IStoppableTask
+public class McTxThread implements ITask
 {
     /**  */
     private int sendCount;

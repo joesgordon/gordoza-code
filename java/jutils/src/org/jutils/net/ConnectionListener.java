@@ -3,7 +3,7 @@ package org.jutils.net;
 import java.io.Closeable;
 import java.io.IOException;
 
-import org.jutils.concurrent.StoppableThread;
+import org.jutils.concurrent.TaskThread;
 import org.jutils.ui.event.ItemActionListener;
 
 /*******************************************************************************
@@ -14,7 +14,7 @@ public class ConnectionListener implements Closeable
     /**  */
     public final IConnection connection;
     /**  */
-    private final StoppableThread rxThread;
+    private final TaskThread rxThread;
 
     /***************************************************************************
      * @param socket
@@ -30,7 +30,7 @@ public class ConnectionListener implements Closeable
 
         ConnectionReceiver receiver = new ConnectionReceiver( connection );
 
-        this.rxThread = new StoppableThread( receiver, "Connection Receiver" );
+        this.rxThread = new TaskThread( receiver, "Connection Receiver" );
 
         receiver.addMessageListener( msgListener );
         receiver.addErrorListener( errListener );

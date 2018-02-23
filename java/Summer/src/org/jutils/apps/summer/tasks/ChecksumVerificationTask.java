@@ -10,7 +10,7 @@ import org.jutils.task.*;
 /*******************************************************************************
  * 
  *******************************************************************************/
-public class ChecksumVerificationTask implements ITask
+public class ChecksumVerificationTask implements IStatusTask
 {
     /**  */
     private final ChecksumResult input;

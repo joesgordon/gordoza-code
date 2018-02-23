@@ -1,6 +1,6 @@
 package chatterbox.messenger;
 
-import org.jutils.concurrent.TaskStopManager;
+import org.jutils.concurrent.TaskHandler;
 import org.jutils.task.ITaskStatusHandler;
 import org.jutils.task.TaskError;
 import org.jutils.ui.event.ItemActionListener;
@@ -13,7 +13,7 @@ public class SignalerTaskHander implements ITaskStatusHandler
     /**  */
     private final ISignaler signaler;
     /**  */
-    private final TaskStopManager stopManager;
+    private final TaskHandler stopManager;
 
     /***************************************************************************
      * @param signaler
@@ -21,7 +21,7 @@ public class SignalerTaskHander implements ITaskStatusHandler
     public SignalerTaskHander( ISignaler signaler )
     {
         this.signaler = signaler;
-        this.stopManager = new TaskStopManager();
+        this.stopManager = new TaskHandler();
     }
 
     /***************************************************************************

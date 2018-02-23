@@ -9,7 +9,7 @@ import org.jutils.task.*;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class DuakTask implements ITask
+public class DuakTask implements IStatusTask
 {
     /**  */
     private final File dir;

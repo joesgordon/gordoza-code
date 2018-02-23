@@ -6,7 +6,7 @@ import org.jutils.ui.event.ItemActionListener;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class TaskHandler implements ITaskStatusHandler
+public class TaskStatusHandler implements ITaskStatusHandler
 {
     /**  */
     private final ITaskView view;
@@ -17,7 +17,7 @@ public class TaskHandler implements ITaskStatusHandler
      * @param view
      * @param stopManager
      **************************************************************************/
-    public TaskHandler( ITaskView view, ITaskHandler stopManager )
+    public TaskStatusHandler( ITaskView view, ITaskHandler stopManager )
     {
         this.view = view;
         this.stopManager = stopManager;

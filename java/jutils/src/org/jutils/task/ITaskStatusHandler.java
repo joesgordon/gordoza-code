@@ -3,7 +3,7 @@ package org.jutils.task;
 import org.jutils.concurrent.ITaskHandler;
 
 /*******************************************************************************
- * Defines a set of common functions an {@link ITask} needs to report status and
+ * Defines a set of common functions an {@link IStatusTask} needs to report status and
  * determine if it should stop.
  ******************************************************************************/
 public interface ITaskStatusHandler extends ITaskHandler

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.*;
 import java.util.Arrays;
 
-import org.jutils.concurrent.IStoppableTask;
+import org.jutils.concurrent.ITask;
 import org.jutils.concurrent.ITaskHandler;
 import org.jutils.net.NetMessage;
 import org.jutils.ui.event.ItemActionEvent;
@@ -13,7 +13,7 @@ import org.jutils.ui.event.ItemActionListener;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ReceiverTask implements IStoppableTask
+public class ReceiverTask implements ITask
 {
     /**  */
     private final ItemActionListener<NetMessage> rxListener;

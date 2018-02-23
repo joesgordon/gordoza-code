@@ -11,7 +11,7 @@ import org.jutils.ui.hex.HexUtils;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class CreationFileTask implements ITask
+public class CreationFileTask implements IStatusTask
 {
     /**  */
     private final SumFile sumFile;

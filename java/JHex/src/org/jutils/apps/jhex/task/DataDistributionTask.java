@@ -10,7 +10,7 @@ import org.jutils.task.*;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class DataDistributionTask implements ITask
+public class DataDistributionTask implements IStatusTask
 {
     /**  */
     private final IStream stream;

@@ -8,7 +8,7 @@ import org.jutils.task.*;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class SearchTask implements ITask
+public class SearchTask implements IStatusTask
 {
     /**  */
     private final byte [] bytes;

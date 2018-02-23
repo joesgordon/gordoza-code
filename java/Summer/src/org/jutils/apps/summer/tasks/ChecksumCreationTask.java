@@ -11,7 +11,7 @@ import org.jutils.ui.hex.HexUtils;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ChecksumCreationTask implements ITask
+public class ChecksumCreationTask implements IStatusTask
 {
     /**  */
     public static final int NUM_THREADS = 8;

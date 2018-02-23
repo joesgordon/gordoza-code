@@ -39,7 +39,7 @@ public class TcpServerView implements IConnectionView
     /**  */
     private TcpConnection connection;
     /**  */
-    private StoppableThread acceptThread;
+    private TaskThread acceptThread;
 
     /***************************************************************************
      * 
@@ -135,7 +135,7 @@ public class TcpServerView implements IConnectionView
         userio.write( options );
 
         AcceptTask task = new AcceptTask( inputs, this );
-        this.acceptThread = new StoppableThread( task, "TCP Server Accept" );
+        this.acceptThread = new TaskThread( task, "TCP Server Accept" );
 
         messagesView.clearMessages();
 
@@ -273,7 +273,7 @@ public class TcpServerView implements IConnectionView
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class AcceptTask implements IStoppableTask
+    private static class AcceptTask implements ITask
     {
         private final TcpInputs inputs;
         private final TcpServerView view;

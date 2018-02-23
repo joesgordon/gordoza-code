@@ -82,7 +82,7 @@ public class TaskTestApp implements IFrameApp
         }
     }
 
-    private static class SampleTask implements ITask
+    private static class SampleTask implements IStatusTask
     {
         @Override
         public void run( ITaskStatusHandler handler )

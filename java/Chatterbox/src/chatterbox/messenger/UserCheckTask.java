@@ -20,7 +20,7 @@ import chatterbox.data.messages.UserAvailableMessage;
  * <li>sends the user's availability periodically, and <li>maintains the list of
  * active users.</ol>
  ******************************************************************************/
-public class UserCheckTask implements ITask
+public class UserCheckTask implements IStatusTask
 {
     /** The period of time between checks in milliseconds. Run at 1 Hz. */
     private static final long CHECK_PERIOD = 1000;

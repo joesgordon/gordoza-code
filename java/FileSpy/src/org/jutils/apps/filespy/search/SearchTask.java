@@ -15,7 +15,7 @@ import org.jutils.ui.MessageExceptionView;
 /*******************************************************************************
  *
  ******************************************************************************/
-public class SearchTask implements IStoppableTask
+public class SearchTask implements ITask
 {
     /**  */
     private static final ZoneId GMT = ZoneId.of( "GMT" );

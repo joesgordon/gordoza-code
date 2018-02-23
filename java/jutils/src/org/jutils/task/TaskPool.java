@@ -91,7 +91,7 @@ public class TaskPool
      **************************************************************************/
     private void startNext()
     {
-        ITask task = null;
+        IStatusTask task = null;
 
         synchronized( this )
         {
@@ -104,7 +104,7 @@ public class TaskPool
             {
                 ITaskView view = tasker.createView( task.getName() );
 
-                TaskStopManager stopManager = new TaskStopManager();
+                TaskHandler stopManager = new TaskHandler();
                 ITaskStatusHandler handler = new TaskHandlerWrapper( view,
                     stopManager, this );
                 TaskRunner runner = new TaskRunner( task, handler );
@@ -248,7 +248,7 @@ public class TaskPool
     private static class TaskHandlerWrapper implements ITaskStatusHandler
     {
         /**  */
-        private final TaskHandler handler;
+        private final TaskStatusHandler handler;
         /**  */
         private final TaskPool pool;
 
@@ -257,10 +257,10 @@ public class TaskPool
          * @param stopManager
          * @param pool
          */
-        public TaskHandlerWrapper( ITaskView view, TaskStopManager stopManager,
+        public TaskHandlerWrapper( ITaskView view, TaskHandler stopManager,
             TaskPool pool )
         {
-            this.handler = new TaskHandler( view, stopManager );
+            this.handler = new TaskStatusHandler( view, stopManager );
             this.pool = pool;
         }
 

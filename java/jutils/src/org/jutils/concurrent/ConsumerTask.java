@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * {@link #processData(Object)} function.
  * @param <T> the type of items to be consumed.
  ******************************************************************************/
-public class ConsumerTask<T> implements IStoppableTask
+public class ConsumerTask<T> implements ITask
 {
     /** {@code true} if input should be accepted, {@code false} otherwise. */
     private final AtomicBoolean acceptInput;

@@ -212,7 +212,7 @@ public class TaskView implements ITaskView
      * @param title
      * @return
      **************************************************************************/
-    public static TaskMetrics startAndShow( Component comp, ITask task,
+    public static TaskMetrics startAndShow( Component comp, IStatusTask task,
         String title )
     {
         return startAndShow( comp, task, title, false );
@@ -225,7 +225,7 @@ public class TaskView implements ITaskView
      * @param playNotify
      * @return
      **************************************************************************/
-    public static TaskMetrics startAndShow( Component comp, ITask task,
+    public static TaskMetrics startAndShow( Component comp, IStatusTask task,
         String title, boolean playNotify )
     {
         Window parent = SwingUtils.getComponentsWindow( comp );

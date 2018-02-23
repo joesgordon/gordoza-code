@@ -1,7 +1,7 @@
 package org.jutils.task;
 
 import org.jutils.concurrent.ITaskHandler;
-import org.jutils.concurrent.TaskStopManager;
+import org.jutils.concurrent.TaskHandler;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.utils.Stopwatch;
 
@@ -11,7 +11,7 @@ import org.jutils.utils.Stopwatch;
 public class TaskRunner implements Runnable
 {
     /**  */
-    private final ITask task;
+    private final IStatusTask task;
     /**  */
     private final ITaskStatusHandler handler;
 
@@ -22,9 +22,9 @@ public class TaskRunner implements Runnable
      * @param task
      * @param view
      **************************************************************************/
-    public TaskRunner( ITask task, ITaskView view )
+    public TaskRunner( IStatusTask task, ITaskView view )
     {
-        this( task, view, new TaskStopManager() );
+        this( task, view, new TaskHandler() );
     }
 
     /***************************************************************************
@@ -32,16 +32,16 @@ public class TaskRunner implements Runnable
      * @param view
      * @param stopManager
      **************************************************************************/
-    public TaskRunner( ITask task, ITaskView view, ITaskHandler stopManager )
+    public TaskRunner( IStatusTask task, ITaskView view, ITaskHandler stopManager )
     {
-        this( task, new TaskHandler( view, stopManager ) );
+        this( task, new TaskStatusHandler( view, stopManager ) );
     }
 
     /***************************************************************************
      * @param task
      * @param handler
      **************************************************************************/
-    public TaskRunner( ITask task, ITaskStatusHandler handler )
+    public TaskRunner( IStatusTask task, ITaskStatusHandler handler )
     {
         this.task = task;
         this.handler = handler;

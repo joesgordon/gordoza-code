@@ -2,7 +2,7 @@ package org.jutils.apps.filespy.search;
 
 import org.jutils.apps.filespy.data.SearchParams;
 import org.jutils.apps.filespy.ui.ResultsView;
-import org.jutils.concurrent.StoppableThread;
+import org.jutils.concurrent.TaskThread;
 import org.jutils.ui.StatusBarPanel;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
@@ -19,7 +19,7 @@ public class Searcher
     private final StatusBarPanel statusBar;
 
     /**  */
-    private StoppableThread searchThread;
+    private TaskThread searchThread;
 
     /***************************************************************************
      * @param resultsView
@@ -50,7 +50,7 @@ public class Searcher
 
         SearchTask searchTask = new SearchTask( handler, params, finalizer );
 
-        searchThread = new StoppableThread( searchTask,
+        searchThread = new TaskThread( searchTask,
             "FileSpy Search Thread" );
         searchThread.start();
     }

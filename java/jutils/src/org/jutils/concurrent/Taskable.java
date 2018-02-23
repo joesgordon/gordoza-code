@@ -5,20 +5,20 @@ import org.jutils.ui.event.ItemActionListener;
 /*******************************************************************************
  * {@link Runnable} that may be stopped synchronously or asynchronously.
  ******************************************************************************/
-public class Stoppable implements Runnable
+public class Taskable implements Runnable
 {
     /** Object used to hold the continue/stop state. */
     private final ITaskHandler stopper;
     /** The task to run */
-    private final IStoppableTask task;
+    private final ITask task;
 
     /***************************************************************************
      * Creates the {@link Runnable} to execute the provided task.
      * @param task the task to be executed.
      **************************************************************************/
-    public Stoppable( IStoppableTask task )
+    public Taskable( ITask task )
     {
-        this( task, new TaskStopManager() );
+        this( task, new TaskHandler() );
     }
 
     /***************************************************************************
@@ -26,7 +26,7 @@ public class Stoppable implements Runnable
      * @param task the task to be executed.
      * @param stopManager the object that manages the stopping of this task.
      **************************************************************************/
-    public Stoppable( IStoppableTask task, ITaskHandler stopManager )
+    public Taskable( ITask task, ITaskHandler stopManager )
     {
         this.stopper = stopManager;
         this.task = task;

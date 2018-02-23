@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
-import org.jutils.concurrent.IStoppableTask;
+import org.jutils.concurrent.ITask;
 import org.jutils.concurrent.ITaskHandler;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
@@ -12,7 +12,7 @@ import org.jutils.ui.event.ItemActionListener;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ConnectionReceiver implements IStoppableTask
+public class ConnectionReceiver implements ITask
 {
     /**  */
     private final IConnection connection;

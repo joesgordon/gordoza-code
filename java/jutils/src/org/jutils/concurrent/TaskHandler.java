@@ -11,7 +11,7 @@ import org.jutils.ui.event.ItemActionListener;
  * This class is a sort of semaphore that represents the execution state
  * (executing or stopped) and the methods to modify said state.
  ******************************************************************************/
-public final class TaskStopManager implements ITaskHandler
+public final class TaskHandler implements ITaskHandler
 {
     /**
      * Execution continues as long as {@code continueRunning} is {@code true}.
@@ -34,7 +34,7 @@ public final class TaskStopManager implements ITaskHandler
     /***************************************************************************
      * Creates a new object.
      **************************************************************************/
-    public TaskStopManager()
+    public TaskHandler()
     {
         this.continueRunning = true;
         this.isFinished = false;

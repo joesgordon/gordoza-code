@@ -3,7 +3,7 @@ package org.jutils;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.jutils.concurrent.TaskStopManager;
+import org.jutils.concurrent.TaskHandler;
 
 /*******************************************************************************
  * 
@@ -11,12 +11,12 @@ import org.jutils.concurrent.TaskStopManager;
 public final class StoppableTest
 {
     /***************************************************************************
-     * Test method for {@link org.jutils.concurrent.Stoppable#canContinue()}.
+     * Test method for {@link org.jutils.concurrent.Taskable#canContinue()}.
      **************************************************************************/
     @Test
     public void testCanContinue()
     {
-        TaskStopManager stopper = new TaskStopManager();
+        TaskHandler stopper = new TaskHandler();
         boolean canContinuePrior = stopper.canContinue();
         stopper.stop();
         boolean canContinuePost = stopper.canContinue();
@@ -24,12 +24,12 @@ public final class StoppableTest
     }
 
     /***************************************************************************
-     * Test method for {@link org.jutils.concurrent.Stoppable#isFinished()}.
+     * Test method for {@link org.jutils.concurrent.Taskable#isFinished()}.
      **************************************************************************/
     @Test
     public void testIsFinished()
     {
-        TaskStopManager stopper = new TaskStopManager();
+        TaskHandler stopper = new TaskHandler();
 
         boolean isFinishedPrior = stopper.isFinished();
         stopper.signalFinished();
@@ -38,12 +38,12 @@ public final class StoppableTest
     }
 
     /***************************************************************************
-     * Test method for {@link org.jutils.concurrent.Stoppable#stop()}.
+     * Test method for {@link org.jutils.concurrent.Taskable#stop()}.
      **************************************************************************/
     @Test
     public void testStop()
     {
-        TaskStopManager stopper = new TaskStopManager();
+        TaskHandler stopper = new TaskHandler();
 
         stopper.stop();
         stopper.signalFinished();

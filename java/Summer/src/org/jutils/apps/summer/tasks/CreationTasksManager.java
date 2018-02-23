@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.jutils.apps.summer.data.ChecksumResult;
 import org.jutils.io.LogUtils;
 import org.jutils.task.IMultiTask;
-import org.jutils.task.ITask;
+import org.jutils.task.IStatusTask;
 
 /*******************************************************************************
  * 
@@ -31,9 +31,9 @@ public class CreationTasksManager implements IMultiTask
      * {@inheritDoc}
      **************************************************************************/
     @Override
-    public ITask nextTask()
+    public IStatusTask nextTask()
     {
-        ITask task = null;
+        IStatusTask task = null;
         int index = this.index.getAndIncrement();
 
         if( index < input.files.size() )

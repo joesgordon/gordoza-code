@@ -1,12 +1,12 @@
 package org.jutils.concurrent;
 
 /*******************************************************************************
- * Defines a thread for {@link IStoppableTask}s.
+ * Defines a thread for {@link ITask}s.
  ******************************************************************************/
-public class StoppableThread
+public class TaskThread
 {
     /** The {@link Runnable} that can be stopped. */
-    private final Stoppable runnable;
+    private final Taskable runnable;
     /** The thread running the task. */
     private final Thread thread;
 
@@ -15,9 +15,9 @@ public class StoppableThread
      * @param task the task to be executed.
      * @param name the name of the thread.
      **************************************************************************/
-    public StoppableThread( IStoppableTask task, String name )
+    public TaskThread( ITask task, String name )
     {
-        this.runnable = new Stoppable( task );
+        this.runnable = new Taskable( task );
         this.thread = new Thread( runnable, name );
     }
 

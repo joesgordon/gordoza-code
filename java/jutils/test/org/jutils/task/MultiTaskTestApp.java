@@ -128,7 +128,7 @@ public class MultiTaskTestApp implements IFrameApp
         }
 
         @Override
-        public ITask nextTask()
+        public IStatusTask nextTask()
         {
             return i < tasks.size() ? tasks.get( i++ ) : null;
         }
@@ -159,7 +159,7 @@ public class MultiTaskTestApp implements IFrameApp
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class SampleTask implements ITask
+    private static class SampleTask implements IStatusTask
     {
         private final String name;
         private final long millis;

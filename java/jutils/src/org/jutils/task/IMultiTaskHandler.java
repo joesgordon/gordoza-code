@@ -11,7 +11,7 @@ public interface IMultiTaskHandler
      * function is guaranteed to be called in a thread-safe manner.
      * @return the next task in the queue.
      **************************************************************************/
-    public ITask nextTask();
+    public IStatusTask nextTask();
 
     /***************************************************************************
      * Returns {@code true} if processing can continue; {@code false} otherwise.
