@@ -315,7 +315,7 @@ public class SplitButtonView<T> implements IView<JComponent>
 
             list.addMouseListener( lml );
             list.addMouseMotionListener( lml );
-            list.setCellRenderer( new LabelListCellRenderer(
+            list.setCellRenderer( new LabelListCellRenderer<T>(
                 new DescriptorListCellLabelDecorator<T>( descriptor ) ) );
             list.setFixedCellHeight( 24 );
 
@@ -456,11 +456,8 @@ public class SplitButtonView<T> implements IView<JComponent>
 
             if( value != null )
             {
-                @SuppressWarnings( "unchecked")
-                T item = ( T )value;
-
-                icon = descriptor.getIcon( item );
-                text = descriptor.getName( item );
+                icon = descriptor.getIcon( value );
+                text = descriptor.getName( value );
             }
 
             label.setIcon( icon );

@@ -11,9 +11,6 @@ import javax.swing.*;
 public class LabelListCellRenderer<T> implements ListCellRenderer<T>
 {
     /**  */
-    private static final long serialVersionUID = 5590004130642461784L;
-
-    /**  */
     private final DefaultListCellRenderer renderer;
     /** The decorator to be used to render cells. */
     private final IListCellLabelDecorator<T> decorator;

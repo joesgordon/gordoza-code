@@ -44,8 +44,8 @@ public class HexBytesField implements IDataFormField<byte []>
         this.bytesField = new HexBytesFormField( "" );
         this.view = new ValidationView( bytesField, null, comboField );
 
-        comboField.setRenderer(
-            new LabelListCellRenderer( new HexBytesCellDecorator() ) );
+        comboField.setRenderer( new LabelListCellRenderer<HexBytesItem>(
+            new HexBytesCellDecorator() ) );
 
         comboField.setEditable( true );
         comboField.setEditor( new HexBytesComboEditor( bytesField ) );
