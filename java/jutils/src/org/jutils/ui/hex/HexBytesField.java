@@ -228,15 +228,14 @@ public class HexBytesField implements IDataFormField<byte []>
      * 
      **************************************************************************/
     private static class HexBytesCellDecorator
-        implements IListCellLabelDecorator
+        implements IListCellLabelDecorator<HexBytesItem>
     {
         @Override
-        public void decorate( JLabel label, JList<?> list, Object value,
-            int index, boolean isSelected, boolean cellHasFocus )
+        public void decorate( JLabel label, JList<? extends HexBytesItem> list,
+            HexBytesItem value, int index, boolean isSelected,
+            boolean cellHasFocus )
         {
-            HexBytesItem bytes = ( HexBytesItem )value;
-
-            label.setText( bytes.toString() );
+            label.setText( value.toString() );
         }
     }
 
