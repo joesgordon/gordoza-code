@@ -438,7 +438,7 @@ public class SplitButtonView<T> implements IView<JComponent>
      * 
      **************************************************************************/
     private static final class DescriptorListCellLabelDecorator<T>
-        implements IListCellLabelDecorator
+        implements IListCellLabelDecorator<T>
     {
         private final IListItemModel<T> descriptor;
 
@@ -448,7 +448,7 @@ public class SplitButtonView<T> implements IView<JComponent>
         }
 
         @Override
-        public void decorate( JLabel label, JList<?> list, Object value,
+        public void decorate( JLabel label, JList<? extends T> list, T value,
             int index, boolean isSelected, boolean cellHasFocus )
         {
             Icon icon = null;
