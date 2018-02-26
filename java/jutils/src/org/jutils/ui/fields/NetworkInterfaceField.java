@@ -200,11 +200,18 @@ public class NetworkInterfaceField implements IDataFormField<String>
 
     private static class NicChoice
     {
+        /**  */
         private final NetworkInterface nic;
+        /**  */
         private final String name;
+        /**  */
         private final String v6Addr;
+        /**  */
         private final String v4Addr;
 
+        /**
+         * @param nic
+         */
         public NicChoice( NetworkInterface nic )
         {
             String v6Addr = "N/A";
@@ -247,6 +254,11 @@ public class NetworkInterfaceField implements IDataFormField<String>
             this.v4Addr = v4Addr;
         }
 
+        /**
+         * @param showIpv6
+         * @param showIpv4
+         * @return
+         */
         public String getTitle( boolean showIpv6, boolean showIpv4 )
         {
             String title = name;
@@ -305,9 +317,14 @@ public class NetworkInterfaceField implements IDataFormField<String>
      **************************************************************************/
     private static class NicChoiceDescriptor implements IDescriptor<NicChoice>
     {
+        /**  */
         public boolean showIpv6;
+        /**  */
         public boolean showIpv4;
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String getDescription( NicChoice choice )
         {

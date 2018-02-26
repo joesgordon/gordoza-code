@@ -10,7 +10,7 @@ import chatterbox.data.ChatUser;
 /***************************************************************************
  * 
  **************************************************************************/
-public class UserListCellDecorator implements IListCellLabelDecorator
+public class UserListCellDecorator implements IListCellLabelDecorator<ChatUser>
 {
     /**  */
     private final Icon userAvailableIcon;
@@ -31,8 +31,8 @@ public class UserListCellDecorator implements IListCellLabelDecorator
      * 
      **************************************************************************/
     @Override
-    public void decorate( JLabel label, JList<?> list, Object value, int index,
-        boolean isSelected, boolean cellHasFocus )
+    public void decorate( JLabel label, JList<? extends ChatUser> list,
+        ChatUser value, int index, boolean isSelected, boolean cellHasFocus )
     {
         ChatUser user = ( ChatUser )value;
 

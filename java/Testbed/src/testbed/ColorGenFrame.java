@@ -206,8 +206,7 @@ public class ColorGenFrame implements IView<JFrame>
     public void generateColors()
     {
         ColorGenerator generator = new ColorGenerator( this );
-        TaskThread thread = new TaskThread( generator,
-            "Color Generator" );
+        TaskThread thread = new TaskThread( generator, "Color Generator" );
 
         progressBar.setIndeterminate( true );
         thread.start();
@@ -435,7 +434,8 @@ public class ColorGenFrame implements IView<JFrame>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class ColorCellDecorator implements IListCellLabelDecorator
+    private static class ColorCellDecorator
+        implements IListCellLabelDecorator<GenericColor>
     {
         /**  */
         private final Font boldFont;
@@ -460,8 +460,9 @@ public class ColorGenFrame implements IView<JFrame>
          * 
          **********************************************************************/
         @Override
-        public void decorate( JLabel label, JList<?> list, Object value,
-            int index, boolean isSelected, boolean cellHasFocus )
+        public void decorate( JLabel label, JList<? extends GenericColor> list,
+            GenericColor value, int index, boolean isSelected,
+            boolean cellHasFocus )
         {
             if( value != null )
             {

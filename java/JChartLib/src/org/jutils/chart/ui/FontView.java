@@ -56,7 +56,7 @@ public class FontView implements IDataView<Font>
         JScrollPane sizesPane = new JScrollPane( sizesField );
 
         namesField.setCellRenderer(
-            new LabelListCellRenderer( new FontCellDecorator() ) );
+            new LabelListCellRenderer<>( new FontCellDecorator() ) );
 
         form.addField( "Name", namesPane );
         form.addField( "Size", sizesPane );
@@ -100,11 +100,12 @@ public class FontView implements IDataView<Font>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class FontCellDecorator implements IListCellLabelDecorator
+    private static class FontCellDecorator
+        implements IListCellLabelDecorator<String>
     {
         @Override
-        public void decorate( JLabel label, JList<?> list, Object value,
-            int index, boolean isSelected, boolean cellHasFocus )
+        public void decorate( JLabel label, JList<? extends String> list,
+            String value, int index, boolean isSelected, boolean cellHasFocus )
         {
             Font f = new Font( value.toString(), Font.PLAIN, 16 );
 
