@@ -181,6 +181,7 @@ public class MultiTaskView implements IMultiTaskView
      * @param tasker
      * @param title
      * @param numThreads
+     * @return
      **************************************************************************/
     public static TaskMetrics startAndShow( Component comp, IMultiTask tasker,
         String title, int numThreads )
@@ -196,8 +197,7 @@ public class MultiTaskView implements IMultiTaskView
 
         mtv.addCancelListener( cl );
 
-        runner.addFinishedListener(
-            new FinishedListener( dialog, runner.getError() ) );
+        runner.addFinishedListener( new FinishedListener( dialog, runner ) );
 
         dialog.setDefaultCloseOperation( JDialog.DO_NOTHING_ON_CLOSE );
         dialog.addWindowListener( new CancelListener( mtv, runner ) );
@@ -402,18 +402,26 @@ public class MultiTaskView implements IMultiTaskView
      **************************************************************************/
     private static class FinishedListener implements ActionListener
     {
+        /**  */
         private final JDialog dialog;
-        private final TaskError error;
+        /**  */
+        private final MultiTaskRunner runner;
 
-        public FinishedListener( JDialog dialog, TaskError error )
+        /**
+         * @param dialog
+         * @param runner
+         */
+        public FinishedListener( JDialog dialog, MultiTaskRunner runner )
         {
             this.dialog = dialog;
-            this.error = error;
+            this.runner = runner;
         }
 
         @Override
         public void actionPerformed( ActionEvent e )
         {
+            TaskError error = runner.getError();
+
             if( error != null )
             {
                 TaskUtils.displayError( dialog, error );

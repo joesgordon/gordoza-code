@@ -3,7 +3,6 @@ package org.jutils.apps.summer.tasks;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jutils.apps.summer.data.ChecksumResult;
-import org.jutils.io.LogUtils;
 import org.jutils.task.IMultiTask;
 import org.jutils.task.IStatusTask;
 
@@ -68,7 +67,7 @@ public class CreationTasksManager implements IMultiTask
     @Override
     public void startup()
     {
-        LogUtils.printDebug( "Starting up" );
+        // LogUtils.printDebug( "Starting up" );
     }
 
     /***************************************************************************
@@ -77,6 +76,6 @@ public class CreationTasksManager implements IMultiTask
     @Override
     public void shutdown()
     {
-        LogUtils.printDebug( "Shutting down" );
+        // LogUtils.printDebug( "Shutting down" );
     }
 }

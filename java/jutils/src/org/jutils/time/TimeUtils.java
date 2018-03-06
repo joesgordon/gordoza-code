@@ -1,5 +1,7 @@
 package org.jutils.time;
 
+import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /*******************************************************************************
@@ -232,5 +234,20 @@ public final class TimeUtils
         long millis = doy.getTimeInMillis() - yearStartMillis( year );
 
         return millis;
+    }
+
+    /***************************************************************************
+     * @param ldt
+     * @return
+     **************************************************************************/
+    public static LocalDateTime getBeginningOfWeek( LocalDateTime ldt )
+    {
+        int days = ldt.getDayOfWeek().getValue();
+
+        days = days < 7 ? days : 0;
+
+        LocalDate date = ldt.toLocalDate().minus( days, ChronoUnit.DAYS );
+
+        return LocalDateTime.of( date, LocalTime.MIDNIGHT );
     }
 }

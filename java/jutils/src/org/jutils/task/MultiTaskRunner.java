@@ -52,7 +52,8 @@ public class MultiTaskRunner implements Runnable
         tasker.shutdown();
         stop = watch.stop();
 
-        metrics = new TaskMetrics( start, stop, !handler.canContinue() );
+        metrics = new TaskMetrics( start, stop,
+            !handler.canContinue() || handler.error != null );
 
         finishedListeners.fireListeners( this, 0, null );
     }

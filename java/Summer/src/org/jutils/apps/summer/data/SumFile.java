@@ -22,6 +22,10 @@ public class SumFile
      **************************************************************************/
     public SumFile()
     {
+        this.file = null;
+        this.path = null;
+        this.length = -1L;
+        this.checksum = null;
     }
 
     /***************************************************************************

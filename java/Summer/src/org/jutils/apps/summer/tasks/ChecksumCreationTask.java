@@ -87,6 +87,11 @@ public class ChecksumCreationTask implements IStatusTask
             csBytes = generator.generateChecksum( sf.file, bytesProcessed );
             cs = HexUtils.toHexString(
                 HexUtils.asList( csBytes ) ).toLowerCase();
+
+            if( cs == null )
+            {
+                throw new IllegalStateException( "checksum null" );
+            }
             sf.checksum = cs;
 
             bytesProcessed += sf.length;

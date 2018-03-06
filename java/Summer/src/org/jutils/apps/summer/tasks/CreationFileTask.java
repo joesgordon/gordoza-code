@@ -47,11 +47,13 @@ public class CreationFileTask implements IStatusTask
         }
         catch( FileNotFoundException ex )
         {
+            ex.printStackTrace();
             handler.signalError(
                 new TaskError( "File Not Found", ex.getMessage() ) );
         }
         catch( IOException ex )
         {
+            ex.printStackTrace();
             handler.signalError(
                 new TaskError( "I/O Error", ex.getMessage() ) );
         }

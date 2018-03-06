@@ -25,7 +25,7 @@ import org.jutils.ui.model.*;
 import org.jutils.ui.model.LabelTableCellRenderer.ITableCellLabelDecorator;
 
 /*******************************************************************************
- * 
+ * Defines UI that displays {@link NetMessage}s.
  ******************************************************************************/
 public class NetMessagesView implements IView<JPanel>
 {
@@ -354,7 +354,8 @@ public class NetMessagesView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @param page
+     * @param startIndex
+     * @param ignoreIndexCheck
      **************************************************************************/
     private void navigatePage( long startIndex, boolean ignoreIndexCheck )
     {
@@ -370,8 +371,12 @@ public class NetMessagesView implements IView<JPanel>
         // %d",
         // startIndex, pageStartIndex, msgsStream.getCount(), count );
 
-        this.pageStartIndex = startIndex;
+        if( startIndex < 0 || startIndex >= msgsStream.getCount() )
+        {
+            return;
+        }
 
+        this.pageStartIndex = startIndex;
         try
         {
             List<NetMessage> msgs = null;
