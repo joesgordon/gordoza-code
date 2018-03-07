@@ -28,6 +28,15 @@ public class NanoTime
     }
 
     /***************************************************************************
+     * @param time
+     **************************************************************************/
+    public NanoTime( LocalDateTime time )
+    {
+        this();
+        this.setLocalDateTime( time );
+    }
+
+    /***************************************************************************
      * @return the time as a {@link LocalDateTime}.
      **************************************************************************/
     public LocalDateTime toLocalDateTime()

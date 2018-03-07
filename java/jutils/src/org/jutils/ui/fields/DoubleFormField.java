@@ -21,6 +21,8 @@ public class DoubleFormField implements IDataFormField<Double>
     /**  */
     private IUpdater<Double> updater;
 
+    private String format;
+
     /**  */
     private double value;
 
@@ -92,7 +94,10 @@ public class DoubleFormField implements IDataFormField<Double>
     {
         this.name = name;
         this.textField = new ValidationTextView( units, columns );
+
         this.updater = updater;
+        this.format = null;
+        this.value = 0.0;
 
         ITextValidator textValidator;
 
@@ -136,7 +141,20 @@ public class DoubleFormField implements IDataFormField<Double>
     {
         this.value = value == null ? this.value : value;
 
-        String text = value == null ? "" : "" + value;
+        String text = "";
+
+        if( value != null )
+        {
+            if( format != null )
+            {
+                text = String.format( format, value );
+            }
+            else
+            {
+                text = Double.toString( value );
+            }
+        }
+
         IUpdater<Double> updater = this.updater;
 
         this.updater = null;
@@ -196,6 +214,11 @@ public class DoubleFormField implements IDataFormField<Double>
     public Validity getValidity()
     {
         return textField.getField().getValidity();
+    }
+
+    public void setFormat( String format )
+    {
+        this.format = format;
     }
 
     /***************************************************************************
