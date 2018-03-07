@@ -386,8 +386,9 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
     }
 
     /***************************************************************************
-     * @param comp
+     * @param parent
      * @param input
+     * @return
      **************************************************************************/
     public static TaskMetrics runCreate( Component parent,
         ChecksumResult input )
@@ -441,13 +442,13 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
     }
 
     /***************************************************************************
+     * @param result
      * @param metrics
-     * @param checksums
      **************************************************************************/
-    private void displayChecksums( ChecksumResult input, TaskMetrics metrics )
+    private void displayChecksums( ChecksumResult result, TaskMetrics metrics )
     {
         TextView textView = new TextView();
-        String text = ChecksumFileSerializer.write( input );
+        String text = ChecksumFileSerializer.write( result );
         ChecksumType type = checksumTypeField.getValue();
         String ext = type.toString().toLowerCase();
         String desc = type.toString() + " checksum file (*." + ext + ")";
@@ -472,10 +473,10 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
         dialog.toFront();
 
         File cksmFile = null;
-        if( input.commonDir != null )
+        if( result.commonDir != null )
         {
-            String fileName = input.commonDir.getName() + "." + ext;
-            cksmFile = new File( input.commonDir, fileName );
+            String fileName = result.commonDir.getName() + "." + ext;
+            cksmFile = new File( result.commonDir, fileName );
         }
 
         textView.showSave( cksmFile );

@@ -80,10 +80,10 @@ public class ChecksumFileSerializer implements IReader<ChecksumResult, File>
     }
 
     /***************************************************************************
-     * @param input
+     * @param results
      * @return
      **************************************************************************/
-    public static String write( ChecksumResult input )
+    public static String write( ChecksumResult results )
     {
         StringBuilder str = new StringBuilder();
 
@@ -95,8 +95,18 @@ public class ChecksumFileSerializer implements IReader<ChecksumResult, File>
         str.append( Utils.NEW_LINE );
         str.append( Utils.NEW_LINE );
 
-        for( SumFile sf : input.files )
+        for( SumFile sf : results.files )
         {
+            if( sf == null )
+            {
+                throw new IllegalStateException( "SumFile null" );
+            }
+            else if( sf.checksum == null )
+            {
+                throw new IllegalStateException(
+                    "checksum null for file " + sf.file );
+            }
+
             str.append( sf.checksum.toLowerCase() );
             str.append( " *" );
             str.append( sf.path );

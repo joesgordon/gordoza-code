@@ -42,7 +42,7 @@ public class AppGalleryView implements IComponentView
         JScrollPane pane = new JScrollPane( list );
 
         list.setCellRenderer(
-            new LabelListCellRenderer( new AppCellDecorator() ) );
+            new LabelListCellRenderer<ILibraryApp>( new AppCellDecorator() ) );
         list.setListData( apps.toArray( new ILibraryApp[apps.size()] ) );
         list.addMouseListener( new ListMouseListener( list ) );
 
@@ -98,11 +98,13 @@ public class AppGalleryView implements IComponentView
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class AppCellDecorator implements IListCellLabelDecorator
+    private static class AppCellDecorator
+        implements IListCellLabelDecorator<ILibraryApp>
     {
         @Override
-        public void decorate( JLabel label, JList<?> list, Object value,
-            int index, boolean isSelected, boolean cellHasFocus )
+        public void decorate( JLabel label, JList<? extends ILibraryApp> list,
+            ILibraryApp value, int index, boolean isSelected,
+            boolean cellHasFocus )
         {
             if( value != null )
             {

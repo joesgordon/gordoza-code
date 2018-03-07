@@ -1,24 +1,24 @@
 package org.jutils.ui;
 
 /*******************************************************************************
- * @param <F> Type to be converted from.
- * @param <T> Type to be converted to.
+ * @param <A> Type to be converted from.
+ * @param <B> Type to be converted to.
  ******************************************************************************/
-public interface IConverter<F, T>
+public interface IConverter<A, B>
 {
     /***************************************************************************
-     * Converts {@code to} to {@code from}, setting {@code from} if possible.
-     * @param to
-     * @param from
-     * @return
+     * Converts {@code from} to {@code to}, setting {@code to} if possible.
+     * @param from quantity to convert from.
+     * @param to quantity to convert to (filled if mutable).
+     * @return the value converted to.
      **************************************************************************/
-    public F convTo( T to, F from );
+    public B convFrom( A from, B to );
 
     /***************************************************************************
-     * Converts {@code from} to {@code to}, setting {@code to} if possible.
-     * @param from
-     * @param to
-     * @return
+     * Converts {@code to} to {@code from}, setting {@code from} if possible.
+     * @param from quantity to convert from.
+     * @param to quantity to convert to (filled if mutable).
+     * @return the value converted to.
      **************************************************************************/
-    public T convFrom( F from, T to );
+    public A convTo( B from, A to );
 }
