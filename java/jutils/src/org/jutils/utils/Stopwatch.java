@@ -31,7 +31,12 @@ public class Stopwatch
      **************************************************************************/
     public long start()
     {
-        this.startTime = System.currentTimeMillis();
+        return start( System.currentTimeMillis() );
+    }
+
+    public long start( long now )
+    {
+        this.startTime = now;
         this.elapsed = 0;
         this.state = WatchState.STARTED;
 
@@ -60,6 +65,12 @@ public class Stopwatch
     public void pauseResume()
     {
         long now = System.currentTimeMillis();
+
+        pauseResume( now );
+    }
+
+    public void pauseResume( long now )
+    {
         long tempElapsed = now - startTime;
 
         switch( state )
@@ -79,11 +90,28 @@ public class Stopwatch
     }
 
     /***************************************************************************
+     * @return {@code true} if the watch is started and not paused;
+     * {@code false} otherwise.
+     **************************************************************************/
+    public boolean isStarted()
+    {
+        return state == WatchState.STARTED;
+    }
+
+    /***************************************************************************
      * @return {@code true} if the watch is stopped; {@code false} otherwise.
      **************************************************************************/
     public boolean isStopped()
     {
         return state == WatchState.STOPPED;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public boolean isPaused()
+    {
+        return state == WatchState.PAUSED;
     }
 
     /***************************************************************************
@@ -101,6 +129,16 @@ public class Stopwatch
     public long getElapsed()
     {
         long now = System.currentTimeMillis();
+
+        return getElapsed( now );
+    }
+
+    /***************************************************************************
+     * @param now
+     * @return the elapsed time in milliseconds
+     **************************************************************************/
+    public long getElapsed( long now )
+    {
         long finalTime = elapsed;
 
         if( state == WatchState.STARTED )
