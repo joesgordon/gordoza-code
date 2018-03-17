@@ -547,13 +547,28 @@ public final class SwingUtils
     /***************************************************************************
      * Creates an action to copy data from the provided view to the system
      * clipboard.
-     * @param <T>
-     * @param view
+     * @param <T> the type of data to be copied.
+     * @param view the view containing the data to be copied.
      * @return the created action.
      **************************************************************************/
     public static <T> Action createCopyAction( IDataView<T> view )
     {
-        ActionListener listener = new CopyListener<T>( view );
+        ActionListener listener = ( e ) -> {
+            T data = view.getData();
+            try
+            {
+                String str = XStreamUtils.writeObjectXStream( data );
+                Utils.setClipboardText( str );
+            }
+            catch( XStreamException ex )
+            {
+                ex.printStackTrace();
+            }
+            catch( IOException ex )
+            {
+                ex.printStackTrace();
+            }
+        };
         Icon icon = IconConstants.getIcon( IconConstants.EDIT_COPY_16 );
         Action action = new ActionAdapter( listener, "Copy", icon );
 
@@ -563,14 +578,26 @@ public final class SwingUtils
     /***************************************************************************
      * Creates an action to paste data from the system clipboard to the provided
      * listener.
-     * @param <T>
-     * @param itemListener
+     * @param <T> the type of data to be pasted.
+     * @param itemListener the listener to be called when the action is invoked.
      * @return the created action.
      **************************************************************************/
     public static <T> Action createPasteAction(
         ItemActionListener<T> itemListener )
     {
-        ActionListener listener = new PasteListener<T>( itemListener );
+        ActionListener listener = ( e ) -> {
+            try
+            {
+                String str = Utils.getClipboardText();
+                T data = XStreamUtils.readObjectXStream( str );
+
+                itemListener.actionPerformed(
+                    new ItemActionEvent<T>( itemListener, data ) );
+            }
+            catch( XStreamException ex )
+            {
+            }
+        };
         Icon icon = IconConstants.getIcon( IconConstants.EDIT_PASTE_16 );
         Action action = new ActionAdapter( listener, "Paste", icon );
 
@@ -579,7 +606,7 @@ public final class SwingUtils
 
     /***************************************************************************
      * Creates a {@link ComboBoxModel} with the provided array of items.
-     * @param <T>
+     * @param <T> the type of data in the model.
      * @param items the items to be contained within the model.
      * @return the model containing the items.
      **************************************************************************/
@@ -609,7 +636,7 @@ public final class SwingUtils
     /***************************************************************************
      * Search the component's parent tree looking for an object of the provided
      * type.
-     * @param <T>
+     * @param <T> the type of parent desired.
      * @param comp the child component.
      * @param type the type of parent to be found.
      * @return the component of the type provided or {@code null} if not found.
@@ -661,7 +688,7 @@ public final class SwingUtils
      * Returns the {@link JFrame} containing the provided component or
      * {@code null} if none exists.
      * @param comp the child component.
-     * @return
+     * @return the frame containing the provided component.
      **************************************************************************/
     public static JFrame getComponentsJFrame( Component comp )
     {
@@ -708,19 +735,36 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * @param frame
+     * Make the provided frame full screen on it's screen or the default
+     * {@link GraphicsDevice} if the frame's screen is not accessible (e.g. it
+     * hasn't been shown).
+     * @param frame the frame to make full screen.
      **************************************************************************/
     public static void setFullScreen( JFrame frame )
     {
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
+        GraphicsConfiguration gc;
+        GraphicsDevice gd = null;
 
-        setFullScreen( frame, defaultScreen );
+        gc = frame.getGraphicsConfiguration();
+        if( gc != null )
+        {
+            gd = gc.getDevice();
+        }
+
+        if( gd == null )
+        {
+            GraphicsEnvironment ge;
+            ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            gd = ge.getDefaultScreenDevice();
+        }
+
+        setFullScreen( frame, gd );
     }
 
     /***************************************************************************
-     * @param frame
-     * @param device
+     * Makes the provided frame full screen on the provided device.
+     * @param frame the frame to make full screen.
+     * @param device the screen on which the frame shall be full screen.
      **************************************************************************/
     public static void setFullScreen( JFrame frame, GraphicsDevice device )
     {
@@ -739,21 +783,22 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * @param treeNode
-     * @return
+     * Builds a {@link TreePath} for the provided node.
+     * @param node the node for which a path is to be built.
+     * @return the path to the provided node.
      **************************************************************************/
-    public static TreePath getPath( TreeNode treeNode )
+    public static TreePath getPath( TreeNode node )
     {
         List<Object> nodes = new ArrayList<Object>();
 
-        if( treeNode != null )
+        if( node != null )
         {
-            nodes.add( treeNode );
-            treeNode = treeNode.getParent();
-            while( treeNode != null )
+            nodes.add( node );
+            node = node.getParent();
+            while( node != null )
             {
-                nodes.add( 0, treeNode );
-                treeNode = treeNode.getParent();
+                nodes.add( 0, node );
+                node = node.getParent();
             }
         }
 
@@ -762,12 +807,15 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * @param view
-     * @param keystoke
-     * @param inWindow
-     * @param callback
-     * @param actionName
-     * @return
+     * Binds a listener to a key on a component.
+     * @param view the component on which to bind the key.
+     * @param keystoke the key to be bound.
+     * @param inWindow uses {@link JComponent#WHEN_IN_FOCUSED_WINDOW} for
+     * binding if {@code true};
+     * {@link JComponent#WHEN_ANCESTOR_OF_FOCUSED_COMPONENT} otherwise.
+     * @param callback the listener to be called when the key is pressed.
+     * @param actionName the name of the action used to bind the listener.
+     * @return the action created.
      **************************************************************************/
     public static Action addKeyListener( JComponent view, String keystoke,
         boolean inWindow, ActionListener callback, String actionName )
@@ -780,10 +828,12 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * @param view
-     * @param keystoke
-     * @param inWindow
-     * @param action
+     * Binds a listener to a key on a component.
+     * @param view the component on which to bind the key.
+     * @param keystoke the key to be bound.
+     * @param inWindow uses {@link JComponent#WHEN_IN_FOCUSED_WINDOW} for
+     * binding if {@code true};
+     * @param action the action to be bound to the key.
      **************************************************************************/
     public static void addKeyListener( JComponent view, String keystoke,
         boolean inWindow, Action action )
@@ -807,94 +857,17 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * An action listener that copies data from a data view to the system
-     * clipboard using XStream.
-     * @param <T>
-     **************************************************************************/
-    public static class CopyListener<T> implements ActionListener
-    {
-        /**  */
-        private final IDataView<T> view;
-
-        /**
-         * @param view
-         */
-        public CopyListener( IDataView<T> view )
-        {
-            this.view = view;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            T data = view.getData();
-            try
-            {
-                String str = XStreamUtils.writeObjectXStream( data );
-                Utils.setClipboardText( str );
-            }
-            catch( XStreamException ex )
-            {
-                ex.printStackTrace();
-            }
-            catch( IOException ex )
-            {
-                ex.printStackTrace();
-            }
-        }
-    }
-
-    /***************************************************************************
-     * An action listener that copies data from the system clipboard to the item
-     * listener using XStream.
-     * @param <T>
-     **************************************************************************/
-    public static class PasteListener<T> implements ActionListener
-    {
-        /**  */
-        private final ItemActionListener<T> listener;
-
-        /**
-         * @param listener
-         */
-        public PasteListener( ItemActionListener<T> listener )
-        {
-            this.listener = listener;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            try
-            {
-                String str = Utils.getClipboardText();
-                T data = XStreamUtils.readObjectXStream( str );
-
-                listener.actionPerformed(
-                    new ItemActionEvent<T>( this, data ) );
-            }
-            catch( XStreamException ex )
-            {
-            }
-        }
-    }
-
-    /***************************************************************************
-     * An action listener to display a frame when run.
+     * An action listener to display a frame (or bring it to the front) when
+     * invoked.
      **************************************************************************/
     public static class ShowFrameListener implements ActionListener
     {
-        /**  */
+        /** The frame to be shown. */
         private final JFrame f;
 
         /**
-         * @param frame
+         * Creates a new listener.
+         * @param frame the frame to be shown.
          */
         public ShowFrameListener( JFrame frame )
         {
@@ -920,15 +893,16 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * An action listener to toggle a frames visiblity when run.
+     * An action listener to toggle a frames visibility when run.
      **************************************************************************/
     protected static class MiniMaximizeListener implements ActionListener
     {
-        /**  */
+        /** The frame to restore/hide. */
         private final JFrame f;
 
         /**
-         * @param frame
+         * Creates a new listener.
+         * @param frame the frame to restore/hide.
          */
         public MiniMaximizeListener( JFrame frame )
         {
@@ -947,15 +921,16 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * An action listener that sets a frame's visiblity to false when run.
+     * An action listener that sets a frame's visibility to false when run.
      **************************************************************************/
     protected static class HideOnMinimizeListener extends WindowAdapter
     {
-        /**  */
+        /** The frame to be hidden. */
         private final JFrame frame;
 
         /**
-         * @param f
+         * Creates a new listener.
+         * @param f the frame to be hidden.
          */
         public HideOnMinimizeListener( JFrame f )
         {
@@ -977,13 +952,14 @@ public final class SwingUtils
      **************************************************************************/
     private static class TrayMouseListener extends MouseAdapter
     {
-        /**  */
+        /** The popup to be shown on right-click. */
         private final JPopupMenu popup;
-        /**  */
+        /** A dialog to be the parent of the popup. Needed for reasons. */
         private final JDialog dialog;
 
         /**
-         * @param popup
+         * Creates the new listener.
+         * @param popup the popup to be shown on right-click.
          */
         public TrayMouseListener( JPopupMenu popup )
         {
@@ -1033,11 +1009,14 @@ public final class SwingUtils
         }
 
         /**
-         * @param p
-         * @param loc
-         * @return
+         * Calculates the point at which the popup menu should be shown based on
+         * the location of right-click.
+         * @param srcLoc the right-click location relative to the source of the
+         * right-click.
+         * @param scnLoc the right-click location relative to the screen.
+         * @return the calculated point.
          */
-        private Point calcLocation( Point p, Point loc )
+        private Point calcLocation( Point srcLoc, Point scnLoc )
         {
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             GraphicsDevice [] gs = ge.getScreenDevices();
@@ -1048,16 +1027,16 @@ public final class SwingUtils
                 GraphicsConfiguration gc = gs[i].getDefaultConfiguration();
                 Rectangle r = new Rectangle( gc.getBounds() );
 
-                if( r.contains( loc ) )
+                if( r.contains( scnLoc ) )
                 {
-                    if( ( dm.getHeight() + popup.getHeight() + 8 ) > p.y )
+                    if( ( dm.getHeight() + popup.getHeight() + 8 ) > srcLoc.y )
                     {
-                        p.y -= ( popup.getHeight() + 8 );
+                        srcLoc.y -= ( popup.getHeight() + 8 );
                     }
                 }
             }
 
-            return p;
+            return srcLoc;
         }
     }
 }

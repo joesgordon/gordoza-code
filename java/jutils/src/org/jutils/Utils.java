@@ -96,8 +96,9 @@ public final class Utils
 
     /***************************************************************************
      * Determines the maximum size from the provided sizes.
-     * @param max
-     * @param sizes
+     * @param max the dimension to set as the maximum (output). Not used in the
+     * maximum calculation.
+     * @param sizes the sizes to iterate over to get a maximum size.
      **************************************************************************/
     public static void getMaxSize( Dimension max, Dimension... sizes )
     {
@@ -114,6 +115,7 @@ public final class Utils
     /***************************************************************************
      * Returns the maximum value of the provided list.
      * @param values list of values to find a maximum.
+     * @return the maximum of the provided values.
      **************************************************************************/
     public static int max( int... values )
     {
@@ -144,7 +146,6 @@ public final class Utils
      * Splits the provided string into multiple fields delimited by spaces,
      * retaining empty fields as empty strings.
      * @param str the delimited string of items.
-     * @param delimeters the list of characters that could separate each item.
      * @return the list of items found.
      **************************************************************************/
     public static List<String> split( String str )
@@ -415,6 +416,7 @@ public final class Utils
      * Creates a transparent buffered image for the current device.
      * @param width the width of the image to be created.
      * @param height the height of the image to be created.
+     * @return the newly created image.
      **************************************************************************/
     public static BufferedImage createTransparentImage( int width, int height )
     {
@@ -430,12 +432,16 @@ public final class Utils
      * Wraps {@code System#arraycopy(Object, int, Object, int, int)} because it
      * does not provide any information when an
      * {@link ArrayIndexOutOfBoundsException} occurs.
+     * @param <T> the type of elements to be copied.
      * @param src the source array.
      * @param srcPos the starting position in the source array.
      * @param dest the destination array.
      * @param destPos the starting position in the destination array.
      * @param length the number of items to be copied.
-     * @throws ArrayIndexOutOfBoundsException
+     * @throws ArrayIndexOutOfBoundsException if writing the provided number of
+     * elements to the destination array at the destination position from the
+     * source array at the source position would result in an index out of
+     * bounds of either the source read or the destination write.
      **************************************************************************/
     public static <T> void arrayCopy( T [] src, int srcPos, T [] dest,
         int destPos, int length ) throws ArrayIndexOutOfBoundsException
@@ -484,6 +490,7 @@ public final class Utils
     /***************************************************************************
      * Creates a new array containing the provided item followed by the provided
      * array.
+     * @param <T> the type of item to be added.
      * @param array the items to which the item shall be added.
      * @param item the item to push to beginning of the array.
      * @return the new array.
@@ -498,7 +505,11 @@ public final class Utils
     }
 
     /***************************************************************************
-     * Returns the text on the system clipboard.
+     * Returns a plain text representation of the item currently on the system
+     * clipboard if one is available. Returns a zero-length string if it is not
+     * available or if any error occurs from
+     * {@link Transferable#getTransferData(DataFlavor)}.
+     * @return the plain text currently on the system clipboard.
      **************************************************************************/
     public static String getClipboardText()
     {
@@ -551,9 +562,12 @@ public final class Utils
      * prior to making this call. If it is not sorted, the results are
      * undefined. If the list contains multiple elements equal to the specified
      * object, there is no guarantee which one will be found.</p>
-     * @param items
-     * @param key
-     * @param c
+     * @param <T> the type of items to be searched.
+     * @param <K> the type of the key to be compared to each item in the list.
+     * @param items the list to be searched.
+     * @param key the item to be searched for.
+     * @param c the method of comparing items of type {@code T} against items of
+     * type {@code K}.
      * @return the index of the search key, if it is contained in the list;
      * otherwise, <tt>(-(<i>insertion point</i>) - 1)</tt>. The <i>insertion
      * point</i> is defined as the point at which the key would be inserted into
@@ -591,12 +605,14 @@ public final class Utils
     }
 
     /***************************************************************************
-     * Returns the mask needed to remove the upper bits from the provided value.
-     * @param v the value for which the mask will be generated.
+     * Returns the mask needed to remove the upper bits for values up to the
+     * provided maximum value.
+     * @param maxValue the value for which the mask will be generated.
+     * @return the generated mask.
      **************************************************************************/
-    public static int getMaskForValue( int v )
+    public static int getMaskForValue( int maxValue )
     {
-        v--;
+        int v = maxValue--;
         v |= v >> 1;
         v |= v >> 2;
         v |= v >> 4;
@@ -611,6 +627,7 @@ public final class Utils
      * Returns a list containing the font family names of all available
      * monospace fonts that can display the ASCII numbers, lower case, and upper
      * case values.
+     * @return the generated list.
      **************************************************************************/
     public static List<String> getMonospacedFonts()
     {
@@ -735,22 +752,31 @@ public final class Utils
     }
 
     /***************************************************************************
-     * @param data
-     * @param obj
-     * @return
+     * Tests the provided object and returns its cast to the type of the data
+     * provided if it is assignable.
+     * @param <T> The type of the data to be tested.
+     * @param data the data to be cast to.
+     * @param obj the object to be tested.
+     * @return obj cast to {@code <T>} or {@code null} if it is not assignable.
      **************************************************************************/
-    public static <T> boolean standardEquals( T data, Object obj )
+    public static <T> T isAssignable( T data, Object obj )
     {
-        if( obj == null )
+        if( obj != null && data.getClass().isAssignableFrom( obj.getClass() ) )
         {
-            return false;
+            @SuppressWarnings( "unchecked")
+            T item = ( T )obj;
+
+            return item;
         }
-        return data.getClass().isAssignableFrom( obj.getClass() );
+
+        return null;
     }
 
     /***************************************************************************
      * Object that can compare an item object to a key object. Used for sorting
      * or searching a list of the items type by a field of the item.
+     * @param <T> the type of key to be compared.
+     * @param <K> the type of item to be compared.
      * @see Comparator#compare(Object, Object)
      **************************************************************************/
     public static interface IComparator<T, K>
@@ -760,9 +786,10 @@ public final class Utils
          * integer if {@code thisKey < thatItem}</li> <li>zero if
          * {@code thisKey == thatItem}, or </li> <li>a positive integer if
          * {@code thisKey > thatItem},</li> </ul>
-         * @param item
-         * @param key
-         * @return
+         * @param thisKey the key to be tested.
+         * @param thatItem the item to be tested.
+         * @return a negative integer, zero, or a positive integer as the key is
+         * less than, equal to, or greater than the item.
          **********************************************************************/
         public int compare( K thisKey, T thatItem );
     }

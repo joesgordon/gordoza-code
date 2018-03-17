@@ -88,10 +88,9 @@ public class FontDescription
     @Override
     public boolean equals( Object obj )
     {
-        if( Utils.standardEquals( this, obj ) )
+        FontDescription fd = Utils.isAssignable( this, obj );
+        if( fd != null )
         {
-            FontDescription fd = ( FontDescription )obj;
-
             if( name.equals( fd.name ) && size == fd.size && bold == fd.bold &&
                 italic == fd.italic && underline == fd.underline &&
                 strikeThrough == fd.strikeThrough &&
