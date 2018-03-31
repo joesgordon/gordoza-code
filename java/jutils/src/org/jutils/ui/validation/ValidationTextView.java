@@ -19,7 +19,7 @@ public class ValidationTextView implements IView<JPanel>
     private final ValidationView view;
 
     /***************************************************************************
-     * Creates a view with no units and {@link DEFAULT_COLUMN_COUNT} columns.
+     * Creates a view with no units and {@link #DEFAULT_COLUMN_COUNT} columns.
      **************************************************************************/
     public ValidationTextView()
     {

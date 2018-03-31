@@ -1,87 +1,121 @@
 package testbed;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import org.jutils.ui.IPaintable;
+import org.jutils.ui.PaintingComponent;
+import org.jutils.ui.app.FrameRunner;
+import org.jutils.ui.app.IFrameApp;
+
 /**
- * @see http://stackoverflow.com/questions/5069152
+ * @see <a href="http://stackoverflow.com/questions/5069152">StackOverflow
+ * Question 5069152</a>
  */
 public class SplitPaneTest
 {
-    double ratio = 0.9;
-    double delta = ratio / 80;
-
-    private void create()
+    /**
+     * 
+     */
+    private static class ColorXPaintable implements IPaintable
     {
-        JFrame f = new JFrame( "JSplitPane" );
-        f.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-
-        MyPanel p1 = new MyPanel( Color.red );
-        MyPanel p2 = new MyPanel( Color.blue );
-        final JSplitPane jsp = new JSplitPane( JSplitPane.HORIZONTAL_SPLIT,
-            true, p1, p2 );
-        Timer timer = new Timer( 50, new ActionListener()
-        {
-
-            @Override
-            public void actionPerformed( ActionEvent e )
-            {
-                ratio += delta;
-                if( ratio >= 1.0 )
-                {
-                    ratio = 1.0;
-                    delta = -delta;
-                }
-                else if( ratio <= 0 )
-                {
-                    delta = -delta;
-                    ratio = 0;
-                }
-                jsp.setDividerLocation( ratio );
-            }
-        } );
-
-        f.add( jsp );
-        f.pack();
-        f.setLocationRelativeTo( null );
-        f.setVisible( true );
-        timer.start();
-    }
-
-    private static class MyPanel extends JPanel
-    {
-        private static final long serialVersionUID = 1L;
+        /**  */
         private final Color color;
 
-        public MyPanel( Color color )
+        /**
+         * @param color
+         */
+        public ColorXPaintable( Color color )
         {
             this.color = color;
-            this.setPreferredSize( new Dimension( 300, 300 ) );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public void paintComponent( Graphics g )
+        public void paint( JComponent c, Graphics2D g )
         {
-            super.paintComponent( g );
             g.setColor( color );
-            g.drawLine( 0, 0, getWidth(), getHeight() );
-            g.drawLine( getWidth(), 0, 0, getHeight() );
+            g.drawLine( 0, 0, c.getWidth(), c.getHeight() );
+            g.drawLine( c.getWidth(), 0, 0, c.getHeight() );
         }
+
     }
 
+    /**
+     * @param args
+     */
     public static void main( String[] args )
     {
-        EventQueue.invokeLater( new Runnable()
-        {
+        FrameRunner.invokeLater( new SplitPaneTestApp(), false );
+    }
 
-            @Override
-            public void run()
+    /**
+     * 
+     */
+    private static final class SplitPaneTestApp implements IFrameApp
+    {
+        /**  */
+        private double ratio = 0.9;
+        /**  */
+        private double delta = ratio / 80;
+
+        /**
+         * @param jsp
+         */
+        private void updateLocation( JSplitPane jsp )
+        {
+            ratio += delta;
+            if( ratio >= 1.0 )
             {
-                new SplitPaneTest().create();
+                ratio = 1.0;
+                delta = -delta;
             }
-        } );
+            else if( ratio <= 0 )
+            {
+                delta = -delta;
+                ratio = 0;
+            }
+            jsp.setDividerLocation( ratio );
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public JFrame createFrame()
+        {
+            JFrame f = new JFrame( "JSplitPane" );
+            f.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+
+            PaintingComponent p1 = new PaintingComponent(
+                new ColorXPaintable( Color.red ) );
+            PaintingComponent p2 = new PaintingComponent(
+                new ColorXPaintable( Color.blue ) );
+
+            p1.setPreferredSize( new Dimension( 300, 300 ) );
+            p2.setPreferredSize( new Dimension( 300, 300 ) );
+
+            final JSplitPane jsp = new JSplitPane( JSplitPane.HORIZONTAL_SPLIT,
+                true, p1, p2 );
+            Timer timer = new Timer( 50, ( e ) -> {
+                updateLocation( jsp );
+            } );
+
+            f.add( jsp );
+            timer.start();
+
+            return f;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void finalizeGui()
+        {
+        }
     }
 }

@@ -28,7 +28,7 @@ public class ValidationComboView<T> implements IView<JPanel>
     // }
 
     /***************************************************************************
-     * @param units
+     * @param items
      **************************************************************************/
     public ValidationComboView( T [] items )
     {
@@ -36,8 +36,7 @@ public class ValidationComboView<T> implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @param units
-     * @param columns
+     * @param items
      **************************************************************************/
     public ValidationComboView( List<T> items )
     {
@@ -46,7 +45,7 @@ public class ValidationComboView<T> implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @param text
+     * @param item
      **************************************************************************/
     public void setSelectedItem( T item )
     {
@@ -54,7 +53,7 @@ public class ValidationComboView<T> implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @param text
+     * @return
      **************************************************************************/
     public T getSelectedItem()
     {

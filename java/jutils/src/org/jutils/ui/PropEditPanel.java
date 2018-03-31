@@ -73,7 +73,6 @@ public class PropEditPanel
 
     /***************************************************************************
      * @param p
-     * @param toolTip
      **************************************************************************/
     public void setProperties( Map<Object, Object> p )
     {

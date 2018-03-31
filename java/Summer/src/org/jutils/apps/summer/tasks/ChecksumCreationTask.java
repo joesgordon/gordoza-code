@@ -19,11 +19,7 @@ public class ChecksumCreationTask implements IStatusTask
     private final ChecksumResult input;
 
     /***************************************************************************
-     * @param files
-     * @param metrics
-     * @param type
-     * @param commonDir
-     * @param resultListener
+     * @param input
      **************************************************************************/
     public ChecksumCreationTask( ChecksumResult input )
     {
@@ -31,7 +27,7 @@ public class ChecksumCreationTask implements IStatusTask
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public String getName()
@@ -40,7 +36,7 @@ public class ChecksumCreationTask implements IStatusTask
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void run( ITaskStatusHandler handler )
@@ -60,9 +56,8 @@ public class ChecksumCreationTask implements IStatusTask
     }
 
     /***************************************************************************
-     * @param stopper
-     * @param progress
-     * @return
+     * @param handler
+     * @param input
      * @throws IOException
      **************************************************************************/
     public static void createChecksums( ITaskStatusHandler handler,

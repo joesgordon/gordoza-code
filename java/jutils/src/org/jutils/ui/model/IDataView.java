@@ -4,7 +4,7 @@ import java.awt.Component;
 
 /*******************************************************************************
  * Defines a view that allows for display and optionally editing of data.
- * @param <T> the type of the data to be displayed/edited.
+ * @param <D> the type of the data to be displayed/edited.
  ******************************************************************************/
 public interface IDataView<D> extends IView<Component>
 {

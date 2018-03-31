@@ -201,25 +201,39 @@ public class PropertiesView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @param T
+     * 
      **************************************************************************/
     private static interface IListNode
     {
+        /**
+         * @return
+         */
         public IView<?> getView();
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String toString();
     }
 
     /***************************************************************************
-     * @param T
+     * @param <T>
      **************************************************************************/
     private static class ListNode<T> implements IListNode
     {
+        /**  */
         private final String name;
+        /**  */
         private final T data;
+        /**  */
         private final IDataView<T> view;
 
+        /**
+         * @param name
+         * @param data
+         * @param view
+         */
         public ListNode( String name, T data, IDataView<T> view )
         {
             this.name = name;
@@ -227,6 +241,9 @@ public class PropertiesView implements IView<JPanel>
             this.view = view;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public IView<?> getView()
         {
@@ -238,6 +255,9 @@ public class PropertiesView implements IView<JPanel>
             return view;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String toString()
         {
@@ -245,23 +265,38 @@ public class PropertiesView implements IView<JPanel>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class SeriesNode implements IListNode
     {
+        /**  */
         private final Series s;
+        /**  */
         private final IDataView<Series> view;
 
+        /**
+         * @param s
+         * @param view
+         */
         public SeriesNode( Series s, IDataView<Series> view )
         {
             this.s = s;
             this.view = view;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public IView<?> getView()
         {
             return view;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String toString()
         {
@@ -274,13 +309,20 @@ public class PropertiesView implements IView<JPanel>
      **************************************************************************/
     private static class NavSelected implements ListSelectionListener
     {
+        /**  */
         private final PropertiesView view;
 
+        /**
+         * @param view
+         */
         public NavSelected( PropertiesView view )
         {
             this.view = view;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void valueChanged( ListSelectionEvent e )
         {

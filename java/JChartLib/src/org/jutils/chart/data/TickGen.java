@@ -29,11 +29,9 @@ public class TickGen
     }
 
     /***************************************************************************
-     * @param offset
+     * @param axis
      * @param dist
-     * @param coords
-     * @param range
-     * @return
+     * @param ticks
      **************************************************************************/
     public void genTicks( Axis axis, int dist, List<Tick> ticks )
     {

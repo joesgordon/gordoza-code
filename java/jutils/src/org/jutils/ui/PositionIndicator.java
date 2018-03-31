@@ -35,8 +35,8 @@ public class PositionIndicator implements IView<JComponent>
     // TODO install escape key listener to abort dragging.
 
     /***************************************************************************
-     * Creates a new control with the default descriptor.
-     * @see #createDefaultPositionDescriptor()
+     * Creates a new control with the default descriptor (which displays the
+     * position in a zero-padded hexadecimal string).
      **************************************************************************/
     public PositionIndicator()
     {
@@ -50,8 +50,7 @@ public class PositionIndicator implements IView<JComponent>
     public PositionIndicator( IDescriptor<Long> positionDescriptor )
     {
         IDescriptor<Long> descriptor = positionDescriptor == null
-            ? createDefaultPositionDescriptor()
-            : positionDescriptor;
+            ? createDefaultPositionDescriptor() : positionDescriptor;
 
         this.paintable = new PositionIndicatorPaintable();
         this.component = new PaintingComponent( paintable );
@@ -298,9 +297,8 @@ public class PositionIndicator implements IView<JComponent>
          * {@inheritDoc}
          */
         @Override
-        public void paint( JComponent c, Graphics2D g )
+        public void paint( JComponent c, Graphics2D g2 )
         {
-            Graphics2D g2 = ( Graphics2D )g;
             int width = c.getWidth();
             int height = c.getHeight();
 

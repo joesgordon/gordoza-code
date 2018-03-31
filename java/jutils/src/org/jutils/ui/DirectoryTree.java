@@ -363,8 +363,7 @@ public class DirectoryTree implements IView<JTree>
     }
 
     /***************************************************************************
-     * @param event TreeExpansionEvent
-     * @throws ExpandVetoException
+     * @param path
      **************************************************************************/
     private static void expandDirectoryPath( TreePath path )
     {
@@ -382,10 +381,17 @@ public class DirectoryTree implements IView<JTree>
      **************************************************************************/
     private static final class FileTreeNode implements TreeNode
     {
+        /**  */
         public final FileTreeNode parent;
+        /**  */
         public final File file;
+
+        /**  */
         private final List<FileTreeNode> children;
 
+        /**
+         * 
+         */
         public FileTreeNode()
         {
             this( null, null );

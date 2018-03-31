@@ -8,7 +8,7 @@ import org.jutils.ValidationException;
 import org.jutils.io.IParser;
 
 /*******************************************************************************
- * 
+ * @param <T>
  ******************************************************************************/
 public class ParserTextFormatter<T> extends AbstractFormatter
 {
@@ -26,7 +26,7 @@ public class ParserTextFormatter<T> extends AbstractFormatter
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public T stringToValue( String text ) throws ParseException
@@ -42,7 +42,7 @@ public class ParserTextFormatter<T> extends AbstractFormatter
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public String valueToString( Object value ) throws ParseException

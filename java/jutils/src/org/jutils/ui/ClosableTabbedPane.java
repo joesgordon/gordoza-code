@@ -169,22 +169,27 @@ public class ClosableTabbedPane extends JTabbedPane
 class CloseTabIcon implements Icon
 {
     // public static final Color highlightColor = new Color( 58, 110, 165 );
+    /**  */
     public static final Color highlightColor = Color.red;
 
+    /**  */
     private int width;
-
+    /**  */
     private int height;
-
+    /**  */
     private Icon fileIcon;
-
+    /**  */
     private boolean hovering = false;
-
+    /**  */
     private Component c;
-
+    /**  */
     private int x_pos;
-
+    /**  */
     private int y_pos;
 
+    /**
+     * @param fileIcon
+     */
     public CloseTabIcon( Icon fileIcon )
     {
         this.fileIcon = fileIcon;
@@ -192,11 +197,17 @@ class CloseTabIcon implements Icon
         height = 16;
     }
 
+    /**
+     * @param hovering
+     */
     public void setHovering( boolean hovering )
     {
         this.hovering = hovering;
     }
 
+    /**
+     * 
+     */
     public void repaint()
     {
         paintIcon( c, c.getGraphics(), x_pos, y_pos );
@@ -204,6 +215,17 @@ class CloseTabIcon implements Icon
         // LogUtils.printDebug( "Class: " + c.getClass().toString() );
     }
 
+    /**
+     * @return
+     */
+    public Rectangle getBounds()
+    {
+        return new Rectangle( x_pos, y_pos, width, height );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void paintIcon( Component c, Graphics g, int x, int y )
     {
@@ -252,20 +274,21 @@ class CloseTabIcon implements Icon
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getIconWidth()
     {
         return width + ( fileIcon != null ? fileIcon.getIconWidth() : 0 );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getIconHeight()
     {
         return height;
-    }
-
-    public Rectangle getBounds()
-    {
-        return new Rectangle( x_pos, y_pos, width, height );
     }
 }

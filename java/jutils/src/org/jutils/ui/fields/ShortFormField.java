@@ -26,8 +26,6 @@ public class ShortFormField implements IDataFormField<Short>
 
     /***************************************************************************
      * @param name
-     * @param units
-     * @param columns
      **************************************************************************/
     public ShortFormField( String name )
     {

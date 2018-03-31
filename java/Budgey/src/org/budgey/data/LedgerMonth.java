@@ -130,7 +130,7 @@ public class LedgerMonth
     }
 
     /***************************************************************************
-     * @param time
+     * @param date
      **************************************************************************/
     public void setDate( LocalDate date )
     {
@@ -138,8 +138,14 @@ public class LedgerMonth
         year = date.getYear();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private class TransactionComparable implements Comparator<Transaction>
     {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public int compare( Transaction thisTrans, Transaction thatTrans )
         {

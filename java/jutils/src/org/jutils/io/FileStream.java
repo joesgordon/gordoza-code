@@ -44,7 +44,7 @@ public class FileStream implements IStream
      * Sets the length of the file to the provided value.
      * @param length the new length of the file.
      * @throws IOException if any I/O exception occurs.
-     * @see {@link RandomAccessFile#setLength(long)}
+     * @see RandomAccessFile#setLength(long)
      **************************************************************************/
     public void setLength( long length ) throws IOException
     {

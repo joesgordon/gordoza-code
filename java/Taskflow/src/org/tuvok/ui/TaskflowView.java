@@ -22,9 +22,9 @@ public class TaskflowView implements IView<JPanel>
     private final JSplitPane mainSplitPane = new JSplitPane();
     /** The tree contains all the open projects. */
     private final JList<String> tree = new JList<>();
-    // --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // Supporting data shown in components.
-    // --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     /** Vector of project currently displayed in this panel */
     private Vector<Project> projects = new Vector<Project>();
 

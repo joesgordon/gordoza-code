@@ -50,7 +50,7 @@ public class UserListView implements IDataView<List<ChatUser>>
         userScrollPane.setMinimumSize( new Dimension( 100, 100 ) );
 
         userList.setCellRenderer(
-            new LabelListCellRenderer( new UserListCellDecorator() ) );
+            new LabelListCellRenderer<>( new UserListCellDecorator() ) );
         userList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
         userList.addMouseListener( new UsersMouseListener( this ) );
 

@@ -35,6 +35,8 @@ public interface IStream extends Closeable
      * Fills the entire buffer with the next consecutive bytes from this stream
      * or throws and EOFException if the end-of-file is reached first.
      * @param buf the buffer into which the data is read.
+     * @throws EOFException If the end of file is reached before all of the
+     * bytes in the provided buffer are read.
      * @throws IOException If the first byte cannot be read for any reason other
      * than end of file, or if the stream has been closed, or if some other I/O
      * error occurs.
@@ -63,6 +65,8 @@ public interface IStream extends Closeable
      * @param off the start offset in array {@code buf} at which the data is
      * written.
      * @param len the maximum number of bytes to read.
+     * @throws EOFException If the end of file is reached before the provided
+     * number of bytes are read.
      * @throws IOException If the first byte cannot be read for any reason other
      * than end of file, or if the stream has been closed, or if some other I/O
      * error occurs.

@@ -7,9 +7,9 @@ import org.jutils.ui.model.LabelListCellRenderer.IListCellLabelDecorator;
 
 import chatterbox.data.ChatUser;
 
-/***************************************************************************
+/*******************************************************************************
  * 
- **************************************************************************/
+ ******************************************************************************/
 public class UserListCellDecorator implements IListCellLabelDecorator<ChatUser>
 {
     /**  */
@@ -32,10 +32,8 @@ public class UserListCellDecorator implements IListCellLabelDecorator<ChatUser>
      **************************************************************************/
     @Override
     public void decorate( JLabel label, JList<? extends ChatUser> list,
-        ChatUser value, int index, boolean isSelected, boolean cellHasFocus )
+        ChatUser user, int index, boolean isSelected, boolean cellHasFocus )
     {
-        ChatUser user = ( ChatUser )value;
-
         label.setText( user.nickName );
 
         if( user.available )

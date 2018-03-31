@@ -27,8 +27,6 @@ public class HexBytesFormField implements IDataFormField<byte []>
 
     /***************************************************************************
      * @param name
-     * @param units
-     * @param columns
      **************************************************************************/
     public HexBytesFormField( String name )
     {
@@ -46,7 +44,6 @@ public class HexBytesFormField implements IDataFormField<byte []>
 
     /***************************************************************************
      * @param name
-     * @param units
      * @param columns
      * @param updater
      **************************************************************************/

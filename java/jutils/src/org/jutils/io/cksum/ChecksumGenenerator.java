@@ -21,7 +21,6 @@ public class ChecksumGenenerator
     /***************************************************************************
      * @param checksummer
      * @param updater
-     * @param stopper
      **************************************************************************/
     public ChecksumGenenerator( IChecksum checksummer, TaskUpdater updater )
     {

@@ -32,6 +32,7 @@ public class ItemsListField<T> implements IDataFormField<T>
     private IUpdater<T> updater;
 
     /***************************************************************************
+     * @param name
      * @param config
      **************************************************************************/
     public ItemsListField( String name, List<T> choices )
@@ -39,6 +40,11 @@ public class ItemsListField<T> implements IDataFormField<T>
         this( name, choices, null );
     }
 
+    /***************************************************************************
+     * @param name
+     * @param choices
+     * @param descriptor
+     **************************************************************************/
     public ItemsListField( String name, List<T> choices,
         IDescriptor<T> descriptor )
     {
@@ -84,12 +90,23 @@ public class ItemsListField<T> implements IDataFormField<T>
         return panel;
     }
 
+    /***************************************************************************
+     * @param selected
+     **************************************************************************/
     private void fireUpdaters( List<T> selected )
     {
         if( updater != null )
         {
             updater.update( selected.get( 0 ) );
         }
+    }
+
+    /***************************************************************************
+     * @param decorator
+     **************************************************************************/
+    public void setDecorator( IListCellLabelDecorator<T> decorator )
+    {
+        this.decorator.setDecorator( decorator );
     }
 
     /***************************************************************************
@@ -101,9 +118,85 @@ public class ItemsListField<T> implements IDataFormField<T>
         return view;
     }
 
-    public void setDecorator( IListCellLabelDecorator<T> decorator )
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public T getValue()
     {
-        this.decorator.setDecorator( decorator );
+        return itemsList.getSelectedValue();
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public void setValue( T value )
+    {
+        itemsList.setSelectedValue( value, true );
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public void setUpdater( IUpdater<T> updater )
+    {
+        this.updater = updater;
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public IUpdater<T> getUpdater()
+    {
+        return updater;
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public void setEditable( boolean editable )
+    {
+        itemsList.setEnabled( editable );
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public String getName()
+    {
+        return itemsList.getName();
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public void addValidityChanged( IValidityChangedListener l )
+    {
+        listenerList.addListener( l );
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public void removeValidityChanged( IValidityChangedListener l )
+    {
+        listenerList.removeListener( l );
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public Validity getValidity()
+    {
+        return listenerList.getValidity();
     }
 
     /***************************************************************************
@@ -127,6 +220,9 @@ public class ItemsListField<T> implements IDataFormField<T>
             this.additionalDecorator = null;
         }
 
+        /**
+         * @param decorator
+         */
         public void setDecorator( IListCellLabelDecorator<T> decorator )
         {
             this.additionalDecorator = decorator;
@@ -135,6 +231,7 @@ public class ItemsListField<T> implements IDataFormField<T>
         /**
          * {@inheritDoc}
          */
+        @Override
         public void decorate( JLabel label, JList<? extends T> list, T value,
             int index, boolean isSelected, boolean cellHasFocus )
         {
@@ -146,59 +243,5 @@ public class ItemsListField<T> implements IDataFormField<T>
                     isSelected, cellHasFocus );
             }
         }
-    }
-
-    @Override
-    public T getValue()
-    {
-        return itemsList.getSelectedValue();
-    }
-
-    @Override
-    public void setValue( T value )
-    {
-        itemsList.setSelectedValue( value, true );
-    }
-
-    @Override
-    public void setUpdater( IUpdater<T> updater )
-    {
-        this.updater = updater;
-    }
-
-    @Override
-    public IUpdater<T> getUpdater()
-    {
-        return updater;
-    }
-
-    @Override
-    public void setEditable( boolean editable )
-    {
-        itemsList.setEnabled( editable );
-    }
-
-    @Override
-    public String getName()
-    {
-        return itemsList.getName();
-    }
-
-    @Override
-    public void addValidityChanged( IValidityChangedListener l )
-    {
-        listenerList.addListener( l );
-    }
-
-    @Override
-    public void removeValidityChanged( IValidityChangedListener l )
-    {
-        listenerList.removeListener( l );
-    }
-
-    @Override
-    public Validity getValidity()
-    {
-        return listenerList.getValidity();
     }
 }

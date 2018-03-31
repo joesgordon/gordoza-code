@@ -137,7 +137,7 @@ class DayLabel implements IView<JLabel>
     }
 
     /***************************************************************************
-     * @param text
+     * @param date
      **************************************************************************/
     public void setDate( LocalDate date )
     {

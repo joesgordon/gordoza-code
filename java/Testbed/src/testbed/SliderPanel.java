@@ -9,18 +9,33 @@ import javax.swing.*;
 
 import org.jutils.io.LogUtils;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class SliderPanel extends JPanel
 {
+    /**  */
     private static final long serialVersionUID = 1L;
+    /**  */
     private GridLayout gl;
+    /**  */
     private List<JComponent> panels;
+    /**  */
     private JScrollPane scrollPane;
+    /**  */
     private MultiPanel scrollPanel;
+    /**  */
     private Timer swingTimer;
+    /**  */
     private PanelMover mover;
+    /**  */
     private int currentPanel;
+    /**  */
     private JViewport viewport;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public SliderPanel()
     {
         super( new GridBagLayout() );
@@ -44,6 +59,9 @@ public class SliderPanel extends JPanel
         swingTimer.setRepeats( true );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private void createScrollPane()
     {
         gl = new GridLayout( 1, 0 );
@@ -58,6 +76,9 @@ public class SliderPanel extends JPanel
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER );
     }
 
+    /***************************************************************************
+     * @param comp
+     **************************************************************************/
     public void addPanel( JComponent comp )
     {
         panels.add( comp );
@@ -67,6 +88,9 @@ public class SliderPanel extends JPanel
         scrollPanel.add( comp );
     }
 
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
     @Override
     public void setSize( Dimension dim )
     {
@@ -80,6 +104,9 @@ public class SliderPanel extends JPanel
         scrollPanel.setMinimumSize( spDim );
     }
 
+    /***************************************************************************
+     * @param comp
+     **************************************************************************/
     public void removePanel( JComponent comp )
     {
         int index = panels.indexOf( comp );
@@ -98,12 +125,18 @@ public class SliderPanel extends JPanel
         }
     }
 
+    /***************************************************************************
+     * @param comp
+     **************************************************************************/
     public void setPanel( JComponent comp )
     {
         int index = panels.indexOf( comp );
         setPanel( index );
     }
 
+    /***************************************************************************
+     * @param index
+     **************************************************************************/
     public void setPanel( int index )
     {
         if( index > -1 )
@@ -119,16 +152,25 @@ public class SliderPanel extends JPanel
         }
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public int getCurrentPanel()
     {
         return currentPanel;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public boolean canMoveForward()
     {
         return currentPanel + 1 < panels.size();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public void next()
     {
         if( !canMoveForward() )
@@ -144,11 +186,17 @@ public class SliderPanel extends JPanel
         // swingTimer.start();
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public boolean canMoveBackward()
     {
         return currentPanel > 0;
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public void last()
     {
         if( !canMoveBackward() )
@@ -164,8 +212,14 @@ public class SliderPanel extends JPanel
         // swingTimer.start();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private class ResizeListener extends ComponentAdapter
     {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void componentResized( ComponentEvent e )
         {
@@ -180,15 +234,25 @@ public class SliderPanel extends JPanel
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private class MultiPanel extends JPanel
     {
+        /**  */
         private static final long serialVersionUID = 1L;
 
+        /**
+         * @param layout
+         */
         public MultiPanel( LayoutManager layout )
         {
             super( layout );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public Dimension getPreferredSize()
         {
@@ -199,20 +263,33 @@ public class SliderPanel extends JPanel
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private class PanelMover implements ActionListener
     {
+        /**  */
         private int direction;
 
+        /**
+         * 
+         */
         public PanelMover()
         {
             direction = 1;
         }
 
+        /**
+         * @param b
+         */
         public void setDirectionForward( boolean b )
         {
             direction = b ? 1 : -1;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ActionEvent e )
         {

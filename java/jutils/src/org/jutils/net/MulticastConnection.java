@@ -21,38 +21,35 @@ public class MulticastConnection implements IConnection
     private final DatagramPacket rxPacket;
 
     /***************************************************************************
-     * @param group
-     * @param port
-     * @param ttl
-     * @param msgLength
+     * @param inputs
      * @throws IOException
      **************************************************************************/
-    public MulticastConnection( MulticastInputs socket ) throws IOException
+    public MulticastConnection( MulticastInputs inputs ) throws IOException
     {
-        if( socket.port < 1 || socket.port > 65535 )
+        if( inputs.port < 1 || inputs.port > 65535 )
         {
-            throw new IOException( "Invalid port: " + socket.port );
+            throw new IOException( "Invalid port: " + inputs.port );
         }
 
-        if( socket.ttl < 0 || socket.ttl > 255 )
+        if( inputs.ttl < 0 || inputs.ttl > 255 )
         {
-            throw new IOException( "Invalid Time to Live: " + socket.ttl );
+            throw new IOException( "Invalid Time to Live: " + inputs.ttl );
         }
 
-        this.address = socket.address.getInetAddress();
+        this.address = inputs.address.getInetAddress();
         this.rxBuffer = new byte[2048];
-        this.socket = new MulticastSocket( socket.port );
+        this.socket = new MulticastSocket( inputs.port );
         this.rxPacket = new DatagramPacket( rxBuffer, rxBuffer.length, address,
-            socket.port );
-        this.port = socket.port;
+            inputs.port );
+        this.port = inputs.port;
 
-        this.socket.setLoopbackMode( !socket.loopback );
-        this.socket.setTimeToLive( socket.ttl );
-        this.socket.setSoTimeout( socket.timeout );
+        this.socket.setLoopbackMode( !inputs.loopback );
+        this.socket.setTimeToLive( inputs.ttl );
+        this.socket.setSoTimeout( inputs.timeout );
 
-        if( socket.nic != null )
+        if( inputs.nic != null )
         {
-            NetworkInterface nic = NetworkInterface.getByName( socket.nic );
+            NetworkInterface nic = NetworkInterface.getByName( inputs.nic );
 
             if( nic != null )
             {

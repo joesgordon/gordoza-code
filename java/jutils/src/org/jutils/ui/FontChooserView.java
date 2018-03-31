@@ -10,7 +10,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.text.*;
 
 import org.jutils.data.FontDescription;
-import org.jutils.ui.app.AppRunnable;
+import org.jutils.ui.app.AppRunner;
 import org.jutils.ui.app.IApplication;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.model.*;
@@ -328,7 +328,7 @@ public class FontChooserView implements IDataView<FontDescription>
                 return null;
             }
         };
-        SwingUtilities.invokeLater( new AppRunnable( app ) );
+        AppRunner.invokeLater( app );
     }
 
     /***************************************************************************

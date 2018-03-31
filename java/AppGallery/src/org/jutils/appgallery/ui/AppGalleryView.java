@@ -103,12 +103,11 @@ public class AppGalleryView implements IComponentView
     {
         @Override
         public void decorate( JLabel label, JList<? extends ILibraryApp> list,
-            ILibraryApp value, int index, boolean isSelected,
+            ILibraryApp app, int index, boolean isSelected,
             boolean cellHasFocus )
         {
-            if( value != null )
+            if( app != null )
             {
-                ILibraryApp app = ( ILibraryApp )value;
                 label.setIcon( app.getIcon32() );
                 label.setText( app.getName() );
             }

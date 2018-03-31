@@ -7,8 +7,7 @@ import java.util.Map.Entry;
 import javax.swing.*;
 
 import org.jutils.io.LogUtils;
-import org.jutils.ui.app.AppRunnable;
-import org.jutils.ui.app.IApplication;
+import org.jutils.ui.app.*;
 
 public class PropEditMain
 {
@@ -30,8 +29,7 @@ public class PropEditMain
             }
         };
 
-        AppRunnable appr = new AppRunnable( app );
-        SwingUtilities.invokeLater( appr );
+        AppRunner.invokeLater( app );
     }
 
     private static void findInDefaults()

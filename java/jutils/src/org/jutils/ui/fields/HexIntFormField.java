@@ -26,8 +26,6 @@ public class HexIntFormField implements IDataFormField<Integer>
 
     /***************************************************************************
      * @param name
-     * @param units
-     * @param columns
      **************************************************************************/
     public HexIntFormField( String name )
     {

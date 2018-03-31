@@ -44,7 +44,6 @@ public class UserCheckTask implements IStatusTask
 
     /***************************************************************************
      * @param chat
-     * @param user
      **************************************************************************/
     public UserCheckTask( ChatterboxHandler chat )
     {

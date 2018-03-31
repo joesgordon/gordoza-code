@@ -272,7 +272,7 @@ public class ByteCache
      * Returns the size of this cache. This is not necessarily the filled
      * length.
      * @return the size of this cache.
-     * @see {@link #getReadLength()}
+     * @see #getReadLength()
      **************************************************************************/
     public int getSize()
     {

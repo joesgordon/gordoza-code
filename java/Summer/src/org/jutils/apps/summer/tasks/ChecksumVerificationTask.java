@@ -19,9 +19,7 @@ public class ChecksumVerificationTask implements IStatusTask
     public final List<InvalidChecksum> invalidSums;
 
     /***************************************************************************
-     * @param sums
-     * @param commonDir
-     * @param type
+     * @param input
      **************************************************************************/
     public ChecksumVerificationTask( ChecksumResult input )
     {
@@ -31,7 +29,7 @@ public class ChecksumVerificationTask implements IStatusTask
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public String getName()
@@ -40,7 +38,7 @@ public class ChecksumVerificationTask implements IStatusTask
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void run( ITaskStatusHandler handler )

@@ -306,7 +306,7 @@ public class ListView<T> implements IDataView<List<T>>
 
     /***************************************************************************
      * Prompts for a name of an item using a {@link JOptionPane}.
-     * @param type the type of item that needs a name (cat, dog, bird, etc.).
+     * @param message the type of item that needs a name (cat, dog, bird, etc.).
      * @return the name entered by the user or {@code null} if cancelled.
      **************************************************************************/
     public String promptForString( String message )
@@ -328,9 +328,9 @@ public class ListView<T> implements IDataView<List<T>>
                     }
                     else
                     {
-                        JOptionPane.showMessageDialog( view, "The name " +
-                            name +
-                            " already exists. Please Choose a different one.",
+                        JOptionPane.showMessageDialog( view,
+                            "The name " + name +
+                                " already exists. Please Choose a different one.",
                             "Name Exists", JOptionPane.ERROR_MESSAGE );
                     }
                 }
@@ -579,6 +579,15 @@ public class ListView<T> implements IDataView<List<T>>
      **************************************************************************/
     public static interface ItemListCellRenderer<T>
     {
+        /**
+         * @param list
+         * @param value
+         * @param index
+         * @param isSelected
+         * @param cellHasFocus
+         * @param text
+         * @return
+         */
         public Component getListCellRendererComponent( JList<?> list, T value,
             int index, boolean isSelected, boolean cellHasFocus, String text );
     }
@@ -606,14 +615,20 @@ public class ListView<T> implements IDataView<List<T>>
 
     /***************************************************************************
      * Defines an Adapter to be a renderer for the DisplayItem<T> list that uses
-     * a {@link ItemListCellRenderer} to render the cell.
+     * a {@link ListView.ItemListCellRenderer} to render the cell.
      * @param <T> The type of item to be added to the list.
      **************************************************************************/
     private static class DisplayItemRenderer<T> implements ListCellRenderer<T>
     {
+        /**  */
         private final ItemListCellRenderer<T> renderer;
+        /**  */
         private final IItemListModel<T> model;
 
+        /**
+         * @param renderer
+         * @param model
+         */
         public DisplayItemRenderer( ItemListCellRenderer<T> renderer,
             IItemListModel<T> model )
         {
@@ -621,6 +636,9 @@ public class ListView<T> implements IDataView<List<T>>
             this.model = model;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public Component getListCellRendererComponent( JList<? extends T> list,
             T value, int index, boolean isSelected, boolean cellHasFocus )

@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /*******************************************************************************
  * Used to process data that is collected by a separate thread. When this task
  * has data AND has a chance to process said data, it will call the sub-class's
- * {@link #processData(Object)} function.
+ * {@link #addData(Object)} function.
  * @param <T> the type of items to be consumed.
  ******************************************************************************/
 public class ConsumerTask<T> implements ITask

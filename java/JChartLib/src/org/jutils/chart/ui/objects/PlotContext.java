@@ -30,7 +30,10 @@ public class PlotContext
     public final IAxisCoords secRangeCoords;
 
     /***************************************************************************
-     * 
+     * @param domainAxis
+     * @param rangeAxis
+     * @param secDomainAxis
+     * @param secRangeAxis
      **************************************************************************/
     public PlotContext( Axis domainAxis, Axis rangeAxis, Axis secDomainAxis,
         Axis secRangeAxis )
@@ -48,7 +51,7 @@ public class PlotContext
     }
 
     /***************************************************************************
-     * @param chart
+     * @param series
      **************************************************************************/
     public void calculateAutoBounds( List<Series> series )
     {
@@ -89,7 +92,10 @@ public class PlotContext
     }
 
     /***************************************************************************
-     * 
+     * @param series
+     * @param isDomain
+     * @param isPrimary
+     * @return
      **************************************************************************/
     public static List<Interval> getIntervals( List<Series> series,
         boolean isDomain, boolean isPrimary )
@@ -322,17 +328,27 @@ public class PlotContext
      **************************************************************************/
     static class DomainDimensionCoords extends AbrstractCoords
     {
+        /**
+         * @param axis
+         * @param isPrimary
+         */
         public DomainDimensionCoords( Axis axis, boolean isPrimary )
         {
             super( axis, true, isPrimary );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public double fromScreen( int s )
         {
             return s / stats.scale + stats.bounds.min;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public int fromCoord( double c )
         {
@@ -346,17 +362,27 @@ public class PlotContext
      **************************************************************************/
     private static class RangeDimensionCoords extends AbrstractCoords
     {
+        /**
+         * @param axis
+         * @param isPrimary
+         */
         public RangeDimensionCoords( Axis axis, boolean isPrimary )
         {
             super( axis, false, isPrimary );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public double fromScreen( int s )
         {
             return stats.bounds.max - s / stats.scale;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public int fromCoord( double c )
         {
@@ -372,10 +398,17 @@ public class PlotContext
      **************************************************************************/
     private static class DimensionStats
     {
+        /**  */
         public final Interval bounds;
+        /**  */
         public final double scale;
+        /**  */
         public final int length;
 
+        /**
+         * @param bounds
+         * @param length
+         */
         public DimensionStats( Interval bounds, int length )
         {
             this.bounds = bounds;

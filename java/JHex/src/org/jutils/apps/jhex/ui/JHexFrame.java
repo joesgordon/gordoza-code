@@ -165,8 +165,6 @@ public class JHexFrame implements IView<JFrame>
     /***************************************************************************
      * Replaces the recently opened files in the file menu with those in the
      * user data.
-     * @param menu the file menu
-     * @return
      **************************************************************************/
     private void updateFileMenu()
     {
@@ -177,6 +175,7 @@ public class JHexFrame implements IView<JFrame>
 
     /***************************************************************************
      * Creates the search menu.
+     * @return
      **************************************************************************/
     private JMenu createNavMenu()
     {
@@ -197,6 +196,7 @@ public class JHexFrame implements IView<JFrame>
 
     /***************************************************************************
      * Creates the tools menu.
+     * @return
      **************************************************************************/
     private JMenu createToolsMenu()
     {
@@ -212,7 +212,7 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JFrame getView()

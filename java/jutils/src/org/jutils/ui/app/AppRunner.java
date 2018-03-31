@@ -130,6 +130,7 @@ public final class AppRunner
     }
 
     /***************************************************************************
+     * @param <T>
      * @param message
      * @param title
      * @param options
@@ -148,6 +149,7 @@ public final class AppRunner
     }
 
     /***************************************************************************
+     * @param <T>
      * @param message
      * @param title
      * @param options
@@ -191,7 +193,7 @@ public final class AppRunner
      **************************************************************************/
     public static void invokeLater( IApplication app )
     {
-        SwingUtilities.invokeLater( new AppRunnable( app ) );
+        SwingUtilities.invokeLater( () -> runApp( app ) );
     }
 
     /***************************************************************************
@@ -201,7 +203,7 @@ public final class AppRunner
     {
         try
         {
-            SwingUtilities.invokeAndWait( new AppRunnable( app ) );
+            SwingUtilities.invokeAndWait( () -> runApp( app ) );
         }
         catch( InvocationTargetException ex )
         {
@@ -212,11 +214,32 @@ public final class AppRunner
     }
 
     /***************************************************************************
+     * @param app
+     **************************************************************************/
+    private static void runApp( IApplication app )
+    {
+        try
+        {
+            AppRunner.setDefaultLaf( app.getLookAndFeelName() );
+
+            app.createAndShowUi();
+        }
+        catch( IllegalStateException ex )
+        {
+            ex.printStackTrace();
+            System.exit( 1 );
+        }
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     private static class ScrollPaneFocusListener
         implements PropertyChangeListener
     {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void propertyChange( PropertyChangeEvent evt )
         {
@@ -247,10 +270,18 @@ public final class AppRunner
      **************************************************************************/
     private static class MessageApp implements IApplication
     {
+        /**  */
         private final String message;
+        /**  */
         private final String title;
+        /**  */
         private final int type;
 
+        /**
+         * @param message
+         * @param title
+         * @param type
+         */
         public MessageApp( String message, String title, int type )
         {
             this.message = message;
@@ -258,12 +289,18 @@ public final class AppRunner
             this.type = type;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String getLookAndFeelName()
         {
             return null;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void createAndShowUi()
         {
@@ -276,13 +313,24 @@ public final class AppRunner
      **************************************************************************/
     private static class InputApp<T> implements IApplication
     {
+        /**  */
         private final String message;
+        /**  */
         private final String title;
+        /**  */
         private final T [] selections;
+        /**  */
         private final T defaultValue;
 
+        /**  */
         private T answer;
 
+        /**
+         * @param message
+         * @param title
+         * @param selections
+         * @param defaultValue
+         */
         public InputApp( String message, String title, T [] selections,
             T defaultValue )
         {
@@ -292,20 +340,30 @@ public final class AppRunner
             this.defaultValue = defaultValue;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String getLookAndFeelName()
         {
             return null;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        @SuppressWarnings( "unchecked")
         public void createAndShowUi()
         {
-            answer = ( T )JOptionPane.showInputDialog( null, message, title,
+            @SuppressWarnings( "unchecked")
+            T ans = ( T )JOptionPane.showInputDialog( null, message, title,
                 JOptionPane.QUESTION_MESSAGE, null, selections, defaultValue );
+            answer = ans;
         }
 
+        /**
+         * @return
+         */
         public T getAnswer()
         {
             return answer;
@@ -317,13 +375,24 @@ public final class AppRunner
      **************************************************************************/
     private static class OptionsApp<T> implements IApplication
     {
+        /**  */
         private final String message;
+        /**  */
         private final String title;
+        /**  */
         private final T [] selections;
+        /**  */
         private final T defaultValue;
 
+        /**  */
         private T answer;
 
+        /**
+         * @param message
+         * @param title
+         * @param selections
+         * @param defaultValue
+         */
         public OptionsApp( String message, String title, T [] selections,
             T defaultValue )
         {
@@ -333,12 +402,18 @@ public final class AppRunner
             this.defaultValue = defaultValue;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String getLookAndFeelName()
         {
             return null;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void createAndShowUi()
         {
@@ -356,6 +431,9 @@ public final class AppRunner
             }
         }
 
+        /**
+         * @return
+         */
         public T getAnswer()
         {
             return answer;

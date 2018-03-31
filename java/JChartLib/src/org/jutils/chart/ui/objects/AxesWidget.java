@@ -545,11 +545,11 @@ public class AxesWidget implements IChartWidget
     }
 
     /***************************************************************************
-     * @param trans
      * @param g2d
-     * @param x
+     * @param t
      * @param y
      * @param h
+     * @param canvasSize
      **************************************************************************/
     private void drawDomainLabel( Graphics2D g2d, Tick t, int y, int h,
         Dimension canvasSize )
@@ -579,12 +579,12 @@ public class AxesWidget implements IChartWidget
     }
 
     /***************************************************************************
-     * @param trans
      * @param g2d
+     * @param t
      * @param x
+     * @param w
      * @param leftAlign
-     * @param y
-     * @param h
+     * @param canvasSize
      **************************************************************************/
     private void drawRangeLabel( Graphics2D g2d, Tick t, int x, int w,
         boolean leftAlign, Dimension canvasSize )
@@ -666,8 +666,9 @@ public class AxesWidget implements IChartWidget
     }
 
     /***************************************************************************
-     * @param value
-     * @return
+     * @param t
+     * @param w
+     * @param size
      **************************************************************************/
     private static void getTickSize( Tick t, TextWidget w, Dimension size )
     {

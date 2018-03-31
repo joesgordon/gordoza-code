@@ -118,7 +118,8 @@ public class ChecksumFileSerializer implements IReader<ChecksumResult, File>
 
     /***************************************************************************
      * @param input
-     * @return
+     * @param outputFile
+     * @throws FileNotFoundException
      **************************************************************************/
     public static void write( ChecksumResult input, File outputFile )
         throws FileNotFoundException

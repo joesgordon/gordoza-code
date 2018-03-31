@@ -12,7 +12,7 @@ import javax.swing.*;
 import org.jutils.*;
 import org.jutils.io.IOUtils;
 import org.jutils.io.LogUtils;
-import org.jutils.ui.app.AppRunnable;
+import org.jutils.ui.app.AppRunner;
 import org.jutils.ui.app.IApplication;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
@@ -242,7 +242,7 @@ public class DirectoryChooser
             }
         };
 
-        SwingUtilities.invokeLater( new AppRunnable( app ) );
+        AppRunner.invokeLater( app );
     }
 
     /***************************************************************************
