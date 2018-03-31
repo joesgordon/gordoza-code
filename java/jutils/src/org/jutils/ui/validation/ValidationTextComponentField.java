@@ -34,7 +34,7 @@ public class ValidationTextComponentField<T extends JTextComponent>
     private ITextValidator validator;
 
     /***************************************************************************
-     * 
+     * @param comp
      **************************************************************************/
     public ValidationTextComponentField( T comp )
     {
@@ -55,7 +55,7 @@ public class ValidationTextComponentField<T extends JTextComponent>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public T getView()
@@ -64,7 +64,7 @@ public class ValidationTextComponentField<T extends JTextComponent>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public Validity getValidity()
@@ -146,7 +146,7 @@ public class ValidationTextComponentField<T extends JTextComponent>
     }
 
     /***************************************************************************
-     * @param vcl
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void addValidityChanged( IValidityChangedListener vcl )
@@ -155,7 +155,7 @@ public class ValidationTextComponentField<T extends JTextComponent>
     }
 
     /***************************************************************************
-     * @param vcl
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void removeValidityChanged( IValidityChangedListener vcl )
@@ -212,14 +212,21 @@ public class ValidationTextComponentField<T extends JTextComponent>
      **************************************************************************/
     private static class ValidationDocumentListener implements DocumentListener
     {
+        /**  */
         private ValidationTextComponentField<?> field;
 
+        /**
+         * @param field
+         */
         public ValidationDocumentListener(
             ValidationTextComponentField<?> field )
         {
             this.field = field;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void removeUpdate( DocumentEvent e )
         {
@@ -227,6 +234,9 @@ public class ValidationTextComponentField<T extends JTextComponent>
             field.validateText();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void insertUpdate( DocumentEvent e )
         {
@@ -234,6 +244,9 @@ public class ValidationTextComponentField<T extends JTextComponent>
             field.validateText();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void changedUpdate( DocumentEvent e )
         {

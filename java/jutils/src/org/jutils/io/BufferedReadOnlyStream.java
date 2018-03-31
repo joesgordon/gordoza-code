@@ -26,7 +26,7 @@ public class BufferedReadOnlyStream implements IStream
 
     /***************************************************************************
      * Creates a new buffered stream with the provided underlying stream using a
-     * buffer of {@link #DEFAULT_BUFFER_SIZE} size.
+     * buffer of {@link IOUtils#DEFAULT_BUF_SIZE} size.
      * @param stream the underlying stream.
      **************************************************************************/
     public BufferedReadOnlyStream( IStream stream )

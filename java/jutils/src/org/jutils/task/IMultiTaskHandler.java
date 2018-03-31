@@ -15,6 +15,7 @@ public interface IMultiTaskHandler
 
     /***************************************************************************
      * Returns {@code true} if processing can continue; {@code false} otherwise.
+     * @return
      **************************************************************************/
     public boolean canContinue();
 
@@ -26,7 +27,7 @@ public interface IMultiTaskHandler
     public ITaskView createView( String taskName );
 
     /***************************************************************************
-     * @param taskError
+     * @param error
      **************************************************************************/
     public void signalError( TaskError error );
 
@@ -41,7 +42,7 @@ public interface IMultiTaskHandler
     public int getTaskCount();
 
     /***************************************************************************
-     * @param l
+     * @param percent
      **************************************************************************/
     public void signalPercent( int percent );
 

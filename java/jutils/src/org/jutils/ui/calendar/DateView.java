@@ -221,7 +221,6 @@ public class DateView implements IDataView<LocalDate>
 
     /***************************************************************************
      * @param label JLabel
-     * @param text String
      **************************************************************************/
     private static void initHeaderLabel( JLabel label )
     {
@@ -234,14 +233,13 @@ public class DateView implements IDataView<LocalDate>
     }
 
     /***************************************************************************
-     * @param label JLabel
-     * @param text String
+     * @param labelView JLabel
      **************************************************************************/
-    private void initDayLabel( DayLabel dl )
+    private void initDayLabel( DayLabel labelView )
     {
-        JLabel label = dl.getView();
+        JLabel label = labelView.getView();
         label.setHorizontalAlignment( JLabel.CENTER );
-        label.addMouseListener( new DayLabelMouseListener( this, dl ) );
+        label.addMouseListener( new DayLabelMouseListener( this, labelView ) );
         label.addKeyListener( new DayLabelKeyListener( this ) );
 
         initLabel( label );
@@ -249,7 +247,6 @@ public class DateView implements IDataView<LocalDate>
 
     /***************************************************************************
      * @param label JLabel
-     * @param text String
      **************************************************************************/
     private static void initLabel( JLabel label )
     {

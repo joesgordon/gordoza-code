@@ -6,7 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import javax.swing.*;
 
 import org.jutils.ValidationException;
-import org.jutils.ui.app.AppRunnable;
+import org.jutils.ui.app.AppRunner;
 import org.jutils.ui.app.IApplication;
 import org.jutils.ui.model.IView;
 
@@ -129,7 +129,7 @@ public class MessageExceptionView implements IView<JComponent>
     {
         IApplication app = new DefaultApp( ex, title, message );
 
-        SwingUtilities.invokeLater( new AppRunnable( app ) );
+        AppRunner.invokeLater( app );
     }
 
     /***************************************************************************
@@ -144,7 +144,7 @@ public class MessageExceptionView implements IView<JComponent>
     {
         IApplication app = new DefaultApp( ex, title, message );
 
-        SwingUtilities.invokeAndWait( new AppRunnable( app ) );
+        AppRunner.invokeAndWait( app );
     }
 
     /***************************************************************************

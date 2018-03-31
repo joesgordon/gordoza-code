@@ -32,10 +32,8 @@ public class ChatHandler
     protected List<IUserListener> userListeners;
 
     /***************************************************************************
-     * @param id
-     * @param remoteId
      * @param chat
-     * @param users
+     * @param info
      **************************************************************************/
     public ChatHandler( ChatterboxHandler chat, ChatInfo info )
     {

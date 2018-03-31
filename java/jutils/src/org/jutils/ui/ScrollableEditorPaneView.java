@@ -27,20 +27,19 @@ public class ScrollableEditorPaneView implements IView<JTextPane>
 
     /***************************************************************************
      * @param text
-     * @param a
-     * @throws BadLocationException
+     * @param attributes
      **************************************************************************/
-    public void appendText( String text, AttributeSet a )
+    public void appendText( String text, AttributeSet attributes )
     {
         try
         {
             Document doc = pane.getDocument();
 
-            doc.insertString( doc.getLength(), text, a );
+            doc.insertString( doc.getLength(), text, attributes );
         }
         catch( BadLocationException ex )
         {
-            ex.printStackTrace();
+            throw new RuntimeException( ex );
         }
     }
 

@@ -2,18 +2,22 @@ package org.tuvok.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.io.*;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
+import org.jutils.io.XStreamUtils;
 import org.jutils.ui.*;
 import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.event.FileChooserListener;
 import org.jutils.ui.event.FileChooserListener.IFileSelected;
 import org.jutils.ui.model.IView;
+import org.tuvok.data.Project;
+
+import com.thoughtworks.xstream.XStreamException;
 
 /*******************************************************************************
  *
@@ -23,7 +27,7 @@ public class TaskflowFrameView implements IView<JFrame>
     /**  */
     private final StandardFrameView frameView;
     /**  */
-    private final JFrame frame;
+    private final TaskflowView mainPanel;
     /**  */
     private final RecentFilesViews recentFiles;
 
@@ -33,20 +37,18 @@ public class TaskflowFrameView implements IView<JFrame>
     public TaskflowFrameView()
     {
         this.frameView = new StandardFrameView();
-        this.frame = frameView.getView();
         this.recentFiles = new RecentFilesViews();
-
-        TaskflowView mainPanel = new TaskflowView();
+        this.mainPanel = new TaskflowView();
 
         createMenuBar( frameView.getMenuBar() );
 
         frameView.setToolbar( createToolBar() );
         frameView.setContent( mainPanel.getView() );
 
-        frame.setTitle( "Taskflow" );
+        frameView.setTitle( "Taskflow" );
 
-        frame.setIconImages( IconConstants.getImages( IconConstants.CALENDAR_16,
-            IconConstants.CALENDAR_32 ) );
+        frameView.getView().setIconImages( IconConstants.getImages(
+            IconConstants.CALENDAR_16, IconConstants.CALENDAR_32 ) );
     }
 
     /***************************************************************************
@@ -68,15 +70,21 @@ public class TaskflowFrameView implements IView<JFrame>
         return toolbar;
     }
 
+    /**
+     * @return
+     */
     private FileChooserListener createOpenListener()
     {
         IFileSelected ifsl = ( f ) -> openFile( f );
-        FileChooserListener fcl = new FileChooserListener( frame, "Open Tasks",
-            false, ifsl );
+        FileChooserListener fcl = new FileChooserListener( getView(),
+            "Open Tasks", false, ifsl );
         // TODO add last file selected
         return fcl;
     }
 
+    /**
+     * @return
+     */
     private Action createAddAction()
     {
         Icon icon = IconConstants.getIcon( IconConstants.EDIT_ADD_16 );
@@ -85,34 +93,65 @@ public class TaskflowFrameView implements IView<JFrame>
         return new ActionAdapter( listener, "Add Task", icon );
     }
 
+    /**
+     * 
+     */
     private void showAddDialog()
     {
         // TODO Auto-generated method stub
     }
 
+    /**
+     * @return
+     */
     private Action createSaveAction()
     {
         Icon icon = IconConstants.getIcon( IconConstants.SAVE_16 );
         IFileSelected ifsl = ( f ) -> saveFile( f );
-        ActionListener listener = new FileChooserListener( frame, "Save Tasks",
-            true, ifsl );
+        ActionListener listener = new FileChooserListener( getView(),
+            "Save Tasks", true, ifsl );
         // TODO add last file selected
         return new ActionAdapter( listener, "Save", icon );
     }
 
+    /**
+     * @param f
+     */
     private void openFile( File f )
     {
         // TODO Auto-generated method stub
+        try
+        {
+            Project proj = XStreamUtils.readObjectXStream( f );
+            mainPanel.addProject( proj );
+        }
+        catch( XStreamException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch( FileNotFoundException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch( IOException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
+    /**
+     * @param f
+     */
     private void saveFile( File f )
     {
         // TODO Auto-generated method stub
     }
 
     /***************************************************************************
-     * @param jMenuBar
-     * @return
+     * @param menuBar
      **************************************************************************/
     private void createMenuBar( JMenuBar menuBar )
     {
@@ -124,8 +163,7 @@ public class TaskflowFrameView implements IView<JFrame>
     }
 
     /***************************************************************************
-     * @param jMenu
-     * @return
+     * @param fileMenu
      **************************************************************************/
     private void createFileMenu( JMenu fileMenu )
     {
@@ -214,7 +252,7 @@ public class TaskflowFrameView implements IView<JFrame>
         {
             JFileChooser jfc = new JFileChooser();
             jfc.setFileFilter( new TdlFileFilter() );
-            jfc.showSaveDialog( view.frame );
+            jfc.showSaveDialog( view.getView() );
         }
     }
 
@@ -235,7 +273,7 @@ public class TaskflowFrameView implements IView<JFrame>
         {
             JFileChooser jfc = new JFileChooser();
             jfc.setFileFilter( new TdlFileFilter() );
-            jfc.showOpenDialog( view.frame );
+            jfc.showOpenDialog( view.getView() );
         }
     }
 

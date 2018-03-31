@@ -138,6 +138,7 @@ public class ByteArrayStream implements IStream
     /***************************************************************************
      * Returns the number of bytes available for reading/writing in the current
      * buffer.
+     * @return
      **************************************************************************/
     private long getAvailableByteCount()
     {
@@ -145,16 +146,15 @@ public class ByteArrayStream implements IStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void close()
     {
-        ;
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public long getPosition()
@@ -163,7 +163,7 @@ public class ByteArrayStream implements IStream
     }
 
     /***************************************************************************
-     * @throws EOFException
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public byte read() throws EOFException
@@ -177,7 +177,7 @@ public class ByteArrayStream implements IStream
     }
 
     /***************************************************************************
-     * @throws EOFException
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public int read( byte [] buf ) throws EOFException
@@ -186,7 +186,7 @@ public class ByteArrayStream implements IStream
     }
 
     /***************************************************************************
-     * @throws EOFException
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public int read( byte [] buf, int off, int len ) throws EOFException
@@ -211,7 +211,7 @@ public class ByteArrayStream implements IStream
     }
 
     /***************************************************************************
-     * @throws IOException
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void readFully( byte [] buf ) throws EOFException
@@ -220,7 +220,7 @@ public class ByteArrayStream implements IStream
     }
 
     /***************************************************************************
-     * @throws IOException
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void readFully( byte [] buf, int off, int len ) throws EOFException
@@ -238,7 +238,7 @@ public class ByteArrayStream implements IStream
     }
 
     /***************************************************************************
-     * @throws ArrayIndexOutOfBoundsException
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void seek( long pos ) throws ArrayIndexOutOfBoundsException
@@ -321,6 +321,7 @@ public class ByteArrayStream implements IStream
     /***************************************************************************
      * Returns a copy of the current buffer trimmed to the length of this
      * stream.
+     * @return
      **************************************************************************/
     public byte [] toByteArray()
     {
@@ -333,6 +334,7 @@ public class ByteArrayStream implements IStream
 
     /***************************************************************************
      * Returns the buffer that backs this stream.
+     * @return
      **************************************************************************/
     public byte [] getBuffer()
     {
@@ -352,6 +354,7 @@ public class ByteArrayStream implements IStream
     /***************************************************************************
      * Returns the size of the buffer as a signed 32-bit value (integer version
      * of {@link #getLength()}.
+     * @return
      **************************************************************************/
     public int getSize()
     {
@@ -375,6 +378,7 @@ public class ByteArrayStream implements IStream
     /***************************************************************************
      * Returns the number of bytes left in the stream (integer version of
      * {@link #getAvailable()}).
+     * @return
      **************************************************************************/
     public int getRemainingSize()
     {
@@ -383,6 +387,7 @@ public class ByteArrayStream implements IStream
 
     /***************************************************************************
      * Returns the 32-bit signed representation of {@link #getPosition()}.
+     * @return
      **************************************************************************/
     public int getIndex()
     {
@@ -391,6 +396,7 @@ public class ByteArrayStream implements IStream
 
     /***************************************************************************
      * Returns the number of bytes left in the buffer underlying this stream.
+     * @return
      **************************************************************************/
     public int getRemainingBuffer()
     {

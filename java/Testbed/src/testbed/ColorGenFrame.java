@@ -114,7 +114,7 @@ public class ColorGenFrame implements IView<JFrame>
 
         colorList.setFixedCellHeight( 30 );
         colorList.setCellRenderer(
-            new LabelListCellRenderer( new ColorCellDecorator() ) );
+            new LabelListCellRenderer<>( new ColorCellDecorator() ) );
 
         // ---------------------------------------------------------------------
         // Setup main panel.
@@ -461,19 +461,18 @@ public class ColorGenFrame implements IView<JFrame>
          **********************************************************************/
         @Override
         public void decorate( JLabel label, JList<? extends GenericColor> list,
-            GenericColor value, int index, boolean isSelected,
+            GenericColor color, int index, boolean isSelected,
             boolean cellHasFocus )
         {
-            if( value != null )
+            if( color != null )
             {
                 label.setIcon( icon );
-                GenericColor c = ( GenericColor )value;
                 label.setText(
                     "The quick brown fox jumped over the lazy dog. (" +
-                        c.toString() + ")" );
+                        color.toString() + ")" );
                 label.setFont( boldFont );
-                label.setForeground( c.getColor() );
-                icon.setColor( c.getColor() );
+                label.setForeground( color.getColor() );
+                icon.setColor( color.getColor() );
             }
         }
     }

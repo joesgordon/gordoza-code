@@ -26,8 +26,6 @@ public class LongFormField implements IDataFormField<Long>
 
     /***************************************************************************
      * @param name
-     * @param units
-     * @param columns
      **************************************************************************/
     public LongFormField( String name )
     {

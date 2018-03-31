@@ -42,6 +42,9 @@ public class NetworkInterfaceField implements IDataFormField<String>
             new RightClickListener( ( e ) -> showMenu( e ) ) );
     }
 
+    /***************************************************************************
+     * @param e
+     **************************************************************************/
     private void showMenu( MouseEvent e )
     {
         JPopupMenu menu = new JPopupMenu();
@@ -198,6 +201,9 @@ public class NetworkInterfaceField implements IDataFormField<String>
         return nicField.getValidity();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private static class NicChoice
     {
         /**  */
@@ -279,6 +285,9 @@ public class NetworkInterfaceField implements IDataFormField<String>
             return title;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public boolean equals( Object obj )
         {
@@ -305,6 +314,9 @@ public class NetworkInterfaceField implements IDataFormField<String>
             return false;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public int hashCode()
         {
@@ -337,8 +349,12 @@ public class NetworkInterfaceField implements IDataFormField<String>
      **************************************************************************/
     private final static class NicUpdater implements IUpdater<NicChoice>
     {
+        /**  */
         private IUpdater<String> updater;
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void update( NicChoice choice )
         {
@@ -349,11 +365,17 @@ public class NetworkInterfaceField implements IDataFormField<String>
             }
         }
 
+        /**
+         * @return
+         */
         public IUpdater<String> getUpdater()
         {
             return updater;
         }
 
+        /**
+         * @param updater
+         */
         public void setUpdater( IUpdater<String> updater )
         {
             this.updater = updater;

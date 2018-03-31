@@ -38,7 +38,6 @@ public class InputListPanel<T> implements IDataView<List<T>>
 
     /***************************************************************************
      * @param data
-     * @param title
      **************************************************************************/
     public InputListPanel( List<T> data )
     {

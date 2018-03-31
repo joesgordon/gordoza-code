@@ -10,8 +10,7 @@ import org.jutils.ui.model.IView;
 public interface IMultiTaskView extends IView<JPanel>
 {
     /***************************************************************************
-     * @param title
-     * @param message
+     * @param taskName
      * @return
      **************************************************************************/
     public ITaskView addTaskView( String taskName );

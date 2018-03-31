@@ -251,7 +251,7 @@ public class FileField implements IDataView<File>, IValidationField
      * @param description the description of the file type denoted by the
      * extension list.
      * @param extensions the list of extensions of a file type.
-     * @throws if this field was initialized with
+     * @throws IllegalStateException if this field was initialized with
      * {@link ExistenceType#DIRECTORY_ONLY}.
      * @see FileChooserListener#addExtension(String, String...)
      **************************************************************************/

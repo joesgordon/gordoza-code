@@ -32,16 +32,16 @@ public final class ValidityUtils
     }
 
     /***************************************************************************
-     * @param a
+     * @param button
      * @param v
      * @param validTip
      **************************************************************************/
-    public static void setButtonValidity( JButton b, Validity v,
+    public static void setButtonValidity( JButton button, Validity v,
         String validTip )
     {
         String tip = v.choose( validTip, v.reason );
 
-        b.setEnabled( v.isValid );
-        b.setToolTipText( tip );
+        button.setEnabled( v.isValid );
+        button.setToolTipText( tip );
     }
 }

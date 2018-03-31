@@ -15,6 +15,7 @@ import org.jutils.ui.validators.ITextValidator;
 /*******************************************************************************
  * Defines an {@link IFormField} that allows the user to define an object that
  * has the provided parser.
+ * @param <T>
  ******************************************************************************/
 public class ParserFormField<T> implements IDataFormField<T>
 {

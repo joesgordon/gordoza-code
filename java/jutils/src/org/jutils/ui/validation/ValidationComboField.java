@@ -93,7 +93,7 @@ public final class ValidationComboField<T> implements IValidationField
     }
 
     /***************************************************************************
-     * @return
+     * @param item
      **************************************************************************/
     public void setSelectedItem( T item )
     {

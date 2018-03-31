@@ -33,6 +33,7 @@ public class CollectionTogglePanel<T> implements IView<JPanel>
 
     /***************************************************************************
      * Creates an empty panel.
+     * @param useToggles
      **************************************************************************/
     public CollectionTogglePanel( boolean useToggles )
     {
@@ -42,6 +43,7 @@ public class CollectionTogglePanel<T> implements IView<JPanel>
     /***************************************************************************
      * Creates a panel which displays the list of values as choices to the user.
      * @param vals The choices from which the user may choose only one.
+     * @param useToggles
      **************************************************************************/
     public CollectionTogglePanel( List<T> vals, boolean useToggles )
     {
@@ -135,7 +137,6 @@ public class CollectionTogglePanel<T> implements IView<JPanel>
 
     /***************************************************************************
      * Removes the old buttons, if appropriate, and generates the new buttons.
-     * @param useToggles
      **************************************************************************/
     private void createGui()
     {
@@ -224,9 +225,14 @@ public class CollectionTogglePanel<T> implements IView<JPanel>
     private static final class CollectionToggleFrameView
         implements IView<JFrame>
     {
+        /**  */
         private final StandardFrameView frame;
+        /**  */
         private final JLabel label;
 
+        /**
+         * 
+         */
         public CollectionToggleFrameView()
         {
             this.frame = new StandardFrameView();
@@ -273,6 +279,10 @@ public class CollectionTogglePanel<T> implements IView<JPanel>
             frame.setContent( panel );
         }
 
+        /**
+         * @param dst
+         * @param src
+         */
         private void toggleOtherPanel( CollectionTogglePanel<TestEnum> dst,
             CollectionTogglePanel<TestEnum> src )
         {
@@ -284,6 +294,9 @@ public class CollectionTogglePanel<T> implements IView<JPanel>
             dst.setValue( te );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public JFrame getView()
         {
@@ -296,10 +309,15 @@ public class CollectionTogglePanel<T> implements IView<JPanel>
      **************************************************************************/
     private static enum TestEnum
     {
+        /**  */
         FIRST,
+        /**  */
         SECOND,
+        /**  */
         THIRD,
+        /**  */
         FORTH,
+        /**  */
         FIFTH_SIXTH_SEVENTH;
 
         @Override
@@ -328,29 +346,50 @@ public class CollectionTogglePanel<T> implements IView<JPanel>
      **************************************************************************/
     private static interface UserValueStorage<T> extends IView<JToggleButton>
     {
-
+        /**
+         * @param value
+         */
         public void setValue( T value );
 
+        /**
+         * @return
+         */
         public T getValue();
 
+        /**
+         * @return
+         */
         public boolean isSelected();
 
+        /**
+         * @param selected
+         */
         public void setSelected( boolean selected );
 
+        /**
+         * @param l
+         */
         public void addActionListener( ActionListener l );
 
+        /**
+         * @param l
+         */
         public void removeActionListener( ActionListener l );
     }
 
     /***************************************************************************
      * @param <T>
-     * @param <B>
      **************************************************************************/
     private static final class ValueButton<T> implements UserValueStorage<T>
     {
+        /**  */
         private final JToggleButton button;
+        /**  */
         private T userValue;
 
+        /**
+         * @param button
+         */
         public ValueButton( JToggleButton button )
         {
             this.button = button;
@@ -358,42 +397,63 @@ public class CollectionTogglePanel<T> implements IView<JPanel>
             this.userValue = null;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void setValue( T value )
         {
             userValue = value;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public T getValue()
         {
             return userValue;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public JToggleButton getView()
         {
             return button;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public boolean isSelected()
         {
             return button.isSelected();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void setSelected( boolean selected )
         {
             button.setSelected( selected );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void addActionListener( ActionListener l )
         {
             button.addActionListener( l );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void removeActionListener( ActionListener l )
         {

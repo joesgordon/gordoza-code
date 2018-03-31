@@ -73,7 +73,6 @@ public class StfsPanel implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @param tableModel
      * @return
      **************************************************************************/
     private JPanel createMainPanel()

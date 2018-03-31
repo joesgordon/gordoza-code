@@ -63,7 +63,8 @@ public class ChatterboxHandler
     }
 
     /***************************************************************************
-     * {@inheritDoc}
+     * @param config
+     * @throws IOException
      **************************************************************************/
     public void connect( MulticastInputs config ) throws IOException
     {
@@ -74,8 +75,8 @@ public class ChatterboxHandler
             ItemActionListener<String> errorListener = (
                 e ) -> SwingUtilities.invokeLater(
                     () -> displayErrorMessage( e.getItem() ) );
-            this.wire = new ConnectionListener( connection, new RawReceiver( this ),
-                errorListener );
+            this.wire = new ConnectionListener( connection,
+                new RawReceiver( this ), errorListener );
         }
         catch( IOException ex )
         {

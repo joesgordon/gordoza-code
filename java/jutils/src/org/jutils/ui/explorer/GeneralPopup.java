@@ -21,9 +21,9 @@ public class GeneralPopup implements IView<JPopupMenu>
     /**  */
     private final JMenuItem newFileItem;
 
-    /**
-     * @param table
-     */
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public GeneralPopup()
     {
         this.menu = new JPopupMenu();
@@ -40,6 +40,9 @@ public class GeneralPopup implements IView<JPopupMenu>
         menu.add( newFileItem );
     }
 
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
     @Override
     public JPopupMenu getView()
     {

@@ -26,8 +26,6 @@ public class HexLongFormField implements IDataFormField<Long>
 
     /***************************************************************************
      * @param name
-     * @param units
-     * @param columns
      **************************************************************************/
     public HexLongFormField( String name )
     {

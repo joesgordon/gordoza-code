@@ -313,9 +313,15 @@ public class StandardFormView implements IView<JPanel>
      **************************************************************************/
     private static class FieldInfo
     {
+        /**  */
         public final JLabel label;
+        /**  */
         public final IFormField field;
 
+        /**
+         * @param label
+         * @param field
+         */
         public FieldInfo( JLabel label, IFormField field )
         {
             this.label = label;
@@ -328,21 +334,33 @@ public class StandardFormView implements IView<JPanel>
      **************************************************************************/
     public static class DefaultFormField implements IFormField
     {
+        /**  */
         public String name;
+        /**  */
         public JComponent comp;
 
+        /**
+         * @param name
+         * @param comp
+         */
         public DefaultFormField( String name, JComponent comp )
         {
             this.name = name;
             this.comp = comp;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String getName()
         {
             return name;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public JComponent getView()
         {

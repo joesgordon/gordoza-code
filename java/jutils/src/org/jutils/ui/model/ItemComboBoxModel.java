@@ -10,7 +10,7 @@ import org.jutils.ListUtils;
 import org.jutils.io.IStringWriter;
 
 /*******************************************************************************
- * @param T
+ * @param <T>
  ******************************************************************************/
 public class ItemComboBoxModel<T> implements List<T>, MutableComboBoxModel<T>
 {

@@ -122,7 +122,7 @@ public class DistributionBuilder
     }
 
     /***************************************************************************
-     * {@link Compartor} used to sort {@link DataRecord}s.
+     * {@link Comparator} used to sort {@link DataRecord}s.
      **************************************************************************/
     private static class CountComparator implements Comparator<DataRecord>
     {

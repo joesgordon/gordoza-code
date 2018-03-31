@@ -5,8 +5,14 @@ import org.junit.Test;
 import org.jutils.NumberParsingUtils;
 import org.jutils.io.LogUtils;
 
+/*******************************************************************************
+ * 
+ ******************************************************************************/
 public class HexUtilsTest
 {
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testToUnsigned()
     {
@@ -25,6 +31,9 @@ public class HexUtilsTest
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     @Test
     public void testStuff()
     {
@@ -58,8 +67,8 @@ public class HexUtilsTest
      * @param s the string containing no more than 16 hexadecimal characters
      * (and no other characters) to be parsed as a 64 signed integral value.
      * @return the long parsed.
-     * @throws if the string is empty or if the provided characters cannot be
-     * parsed as a long value.
+     * @throws NumberFormatException if the string is empty or if the provided
+     * characters cannot be parsed as a long value.
      * @see Long#parseLong(String, int)
      **************************************************************************/
     public static long parseHexLong2( String s ) throws NumberFormatException
