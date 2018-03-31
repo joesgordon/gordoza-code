@@ -10,9 +10,9 @@ import org.jutils.net.Ip4Address;
 public class MulticastGroupParser implements IParser<Ip4Address>
 {
     /**  */
-    private static final int[] MINS = new int[] { 224, 0, 0, 0, };
+    private static final int [] MINS = new int[] { 224, 0, 0, 0, };
     /**  */
-    private static final int[] MAXS = new int[] { 239, 255, 255, 255 };
+    private static final int [] MAXS = new int[] { 239, 255, 255, 255 };
 
     /**  */
     private final Ip4AddressParser parser;

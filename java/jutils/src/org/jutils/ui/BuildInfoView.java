@@ -9,21 +9,31 @@ import javax.swing.JPanel;
 import org.jutils.data.BuildInfo;
 import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.fields.StringFormField;
-import org.jutils.ui.model.IView;
+import org.jutils.ui.model.IDataView;
 
-/***************************************************************************
+/*******************************************************************************
  * 
- **************************************************************************/
-public class BuildInfoView implements IView<JComponent>
+ ******************************************************************************/
+public class BuildInfoView implements IDataView<BuildInfo>
 {
     /**  */
     private final JPanel view;
+    /**  */
+    private final StringFormField versionField;
+    /**  */
+    private final StringFormField dateField;
+
+    /**  */
+    private BuildInfo info;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public BuildInfoView()
     {
+        this.versionField = new StringFormField( "Version" );
+        this.dateField = new StringFormField( "Build Date" );
+
         this.view = createView();
     }
 
@@ -33,19 +43,12 @@ public class BuildInfoView implements IView<JComponent>
     private JPanel createView()
     {
         StandardFormView form = new StandardFormView();
-        StringFormField versionField = new StringFormField( "Version" );
-        StringFormField dateField = new StringFormField( "Build Date" );
 
         versionField.setEditable( false );
         dateField.setEditable( false );
 
         form.addField( versionField );
         form.addField( dateField );
-
-        BuildInfo info = BuildInfo.load();
-
-        versionField.setValue( info.version );
-        dateField.setValue( info.buildDate );
 
         return form.getView();
     }
@@ -60,21 +63,43 @@ public class BuildInfoView implements IView<JComponent>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
-    public static void show()
+    @Override
+    public BuildInfo getData()
     {
-        show( null );
+        return info;
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public void setData( BuildInfo info )
+    {
+        this.info = info;
+        versionField.setValue( info.version );
+        dateField.setValue( info.buildDate );
+    }
+
+    /***************************************************************************
+     * @param info
+     **************************************************************************/
+    public static void show( BuildInfo info )
+    {
+        show( null, info );
     }
 
     /***************************************************************************
      * @param parent
      **************************************************************************/
-    private static void show( Component parent )
+    private static void show( Component parent, BuildInfo info )
     {
         BuildInfoView view = new BuildInfoView();
         OkDialogView dialog = new OkDialogView( parent, view.createView(),
             ModalityType.DOCUMENT_MODAL, OkDialogButtons.OK_ONLY );
+
+        view.setData( info );
 
         dialog.show( "JUtils Build Info", null );
     }

@@ -7,7 +7,6 @@ import java.nio.charset.Charset;
 
 import javax.swing.*;
 
-import org.jutils.Utils;
 import org.jutils.concurrent.*;
 import org.jutils.io.LogUtils;
 import org.jutils.io.options.OptionsSerializer;
@@ -36,8 +35,6 @@ public class TcpServerView implements IConnectionView
 
     /**  */
     private ConnectionListener commModel;
-    /**  */
-    private TcpConnection connection;
     /**  */
     private TaskThread acceptThread;
 
@@ -153,21 +150,22 @@ public class TcpServerView implements IConnectionView
     {
         messagesView.addMessage( msg );
 
-        byte[] response = new byte[PREFIX.length + msg.contents.length];
-        Utils.byteArrayCopy( PREFIX, 0, response, 0, PREFIX.length );
-        Utils.byteArrayCopy( msg.contents, 0, response, PREFIX.length,
-            msg.contents.length );
-
-        try
-        {
-            msg = connection.txMessage( response );
-        }
-        catch( IOException ex )
-        {
-            JOptionPane.showMessageDialog( getView(),
-                "ERROR: " + ex.getMessage() );
-        }
-        messagesView.addMessage( msg );
+        // byte[] response = new byte[PREFIX.length + msg.contents.length];
+        // Utils.byteArrayCopy( PREFIX, 0, response, 0, PREFIX.length );
+        // Utils.byteArrayCopy( msg.contents, 0, response, PREFIX.length,
+        // msg.contents.length );
+        //
+        // try
+        // {
+        // msg = connection.txMessage( response );
+        // }
+        // catch( IOException ex )
+        // {
+        // JOptionPane.showMessageDialog( getView(),
+        // "ERROR: " + ex.getMessage() );
+        // }
+        //
+        // messagesView.addMessage( msg );
     }
 
     /***************************************************************************
@@ -238,8 +236,6 @@ public class TcpServerView implements IConnectionView
      **************************************************************************/
     private void setAcceptedConnection( TcpConnection connection )
     {
-        this.connection = connection;
-
         ItemActionListener<NetMessage> rxListener;
         ItemActionListener<String> errListener;
 
@@ -275,15 +271,24 @@ public class TcpServerView implements IConnectionView
      **************************************************************************/
     private static class AcceptTask implements ITask
     {
+        /**  */
         private final TcpInputs inputs;
+        /**  */
         private final TcpServerView view;
 
+        /**
+         * @param inputs
+         * @param view
+         */
         public AcceptTask( TcpInputs inputs, TcpServerView view )
         {
             this.inputs = inputs;
             this.view = view;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void run( ITaskHandler stopManager )
         {

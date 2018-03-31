@@ -1,49 +1,24 @@
 package org.jutils.data;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Properties;
-
-import org.jutils.IconConstants;
-
+/*******************************************************************************
+ * Defines an immutable build information object.
+ ******************************************************************************/
 public class BuildInfo
 {
-    private static final String FILE_NAME = "info.properties";
+    /** The version of the build. */
     public final String version;
+    /** The build date. */
     public final String buildDate;
 
+    /***************************************************************************
+     * Creates a new build information object with the provided version and
+     * date.
+     * @param version the version of the build.
+     * @param date the build date.
+     **************************************************************************/
     public BuildInfo( String version, String date )
     {
         this.version = version;
         this.buildDate = date;
-    }
-
-    public static BuildInfo load()
-    {
-        URL url = IconConstants.loader.loader.getUrl( FILE_NAME );
-
-        try( InputStream stream = url.openStream() )
-        {
-            Properties props = new Properties();
-
-            props.load( stream );
-
-            String version = props.getProperty( "version" );
-            String date = props.getProperty( "buildtime" );
-            String sub = props.getProperty( "subversion" );
-
-            if( sub != null )
-            {
-                version += "." + sub;
-            }
-
-            return new BuildInfo( version, date );
-        }
-        catch( IOException ex )
-        {
-            throw new IllegalStateException(
-                "Unable to open/parse build information.", ex );
-        }
     }
 }

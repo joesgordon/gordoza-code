@@ -207,8 +207,9 @@ public final class IOUtils
 
     /***************************************************************************
      * Returns a path to a file in the user's home directory
-     * {@code/names[0]/names[1]/.../names[n]}. @param names the names of each
-     * part of the relative path within the user's home directory.
+     * {@code /names[0]/names[1]/.../names[n]}.
+     * @param names the names of each part of the relative path within the
+     * user's home directory.
      * @return a path to a file in the user's home directory.
      **************************************************************************/
     public static File getUsersFile( String... names )
@@ -335,7 +336,7 @@ public final class IOUtils
         try
         {
             // LogUtils.printDebug( "uri: " + url.toURI().getPath() +
-            //     " for class " + installClass.toString() );
+            // " for class " + installClass.toString() );
             file = new File( url.toURI().getPath() ).getParentFile();
         }
         catch( URISyntaxException ex )
@@ -541,17 +542,17 @@ public final class IOUtils
         if( !file.exists() )
         {
             throw new ValidationException( "The specified " + name +
-                " file does not exist: " + file.getName() );
+                " file does not exist: " + file.getAbsolutePath() );
         }
         else if( !file.isFile() )
         {
             throw new ValidationException( "The specified " + name +
-                " file exists, but is not a file: " + file.getName() );
+                " file exists, but is not a file: " + file.getAbsolutePath() );
         }
         else if( !file.canRead() )
         {
             throw new ValidationException( "Cannot read from the specified " +
-                name + " file: " + file.getName() );
+                name + " file: " + file.getAbsolutePath() );
         }
     }
 
@@ -568,17 +569,18 @@ public final class IOUtils
         if( !dir.exists() )
         {
             throw new ValidationException( "The specified " + name +
-                " directory does not exist: " + dir.getName() );
+                " directory does not exist: " + dir.getAbsolutePath() );
         }
         else if( !dir.isDirectory() )
         {
             throw new ValidationException( "The specified " + name +
-                " directory exists, but is not a directory: " + dir.getName() );
+                " directory exists, but is not a directory: " +
+                dir.getAbsolutePath() );
         }
         else if( !dir.canRead() )
         {
             throw new ValidationException( "Cannot read from the specified " +
-                name + " directory: " + dir.getName() );
+                name + " directory: " + dir.getAbsolutePath() );
         }
     }
 
@@ -600,24 +602,25 @@ public final class IOUtils
             {
                 throw new ValidationException( "The specified " + name +
                     " file's parent directory does not exist: " +
-                    parent.getName() );
+                    parent.getAbsolutePath() );
             }
             else if( !parent.canWrite() )
             {
                 throw new ValidationException(
                     "Cannot write to the specified " + name +
-                        " file's parent directory: " + parent.getName() );
+                        " file's parent directory: " +
+                        parent.getAbsolutePath() );
             }
         }
         else if( !file.isFile() )
         {
             throw new ValidationException( "The specified " + name +
-                " file is not a file: " + file.getName() );
+                " file is not a file: " + file.getAbsolutePath() );
         }
         else if( !file.canWrite() )
         {
             throw new ValidationException( "Cannot write to the specified " +
-                name + " file: " + file.getName() );
+                name + " file: " + file.getAbsolutePath() );
         }
     }
 
@@ -634,17 +637,18 @@ public final class IOUtils
         if( !dir.exists() )
         {
             throw new ValidationException( "The specified " + name +
-                " directory does not exist: " + dir.getName() );
+                " directory does not exist: " + dir.getAbsolutePath() );
         }
         else if( !dir.isDirectory() )
         {
             throw new ValidationException( "The specified " + name +
-                " directory directory is not a directory: " + dir.getName() );
+                " directory directory is not a directory: " +
+                dir.getAbsolutePath() );
         }
         else if( !dir.canWrite() )
         {
             throw new ValidationException( "Cannot write to the specified " +
-                name + " directory: " + dir.getName() );
+                name + " directory: " + dir.getAbsolutePath() );
         }
     }
 

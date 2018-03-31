@@ -25,8 +25,9 @@ public class LocalDateTimeSerializer implements IDataSerializer<LocalDateTime>
 
         doy++;
 
-        LogUtils.printDebug( "Read year %d, nanos %d -> doy %d, nod %d ", year,
-            noy, doy, nod );
+        // LogUtils.printDebug( "Read year %d, nanos %d -> doy %d, nod %d ",
+        // year,
+        // noy, doy, nod );
 
         LocalDate date = LocalDate.ofYearDay( year, doy );
         LocalTime time = LocalTime.ofNanoOfDay( nod );
@@ -45,8 +46,9 @@ public class LocalDateTimeSerializer implements IDataSerializer<LocalDateTime>
         int doy = time.getDayOfYear() - 1;
         long noy = doy * NANOS_PER_DAY + time.toLocalTime().toNanoOfDay();
 
-        LogUtils.printDebug( "Wrote year %d, nanos %d for day of year %d", year,
-            noy, doy + 1 );
+        // LogUtils.printDebug( "Wrote year %d, nanos %d for day of year %d",
+        // year,
+        // noy, doy + 1 );
 
         stream.writeShort( ( short )year );
         stream.writeLong( noy );

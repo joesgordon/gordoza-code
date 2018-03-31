@@ -13,7 +13,9 @@ public interface IConsumer<T>
      * synchronized block that synchronizes on the object passed to it: </p>
      * <hr> <blockquote> <pre> synchronized( obj ) { //Function body would
      * normally go here. . . . } </pre> </blockquote>
-     * @param obj The data to be processed.
+     * @param data The data to be processed.
+     * @param handler the handler to signal errors/messages and test if
+     * processing should continue.
      **************************************************************************/
-    public void consume( T data, ITaskHandler stopper );
+    public void consume( T data, ITaskHandler handler );
 }

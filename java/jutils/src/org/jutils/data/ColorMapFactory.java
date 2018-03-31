@@ -6,15 +6,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /*******************************************************************************
- * 
+ * Defines methods of generating different types of color maps.
  ******************************************************************************/
 public class ColorMapFactory
 {
-    /**  */
+    /** Set of map creators associated with their type. */
     private final Map<ColorMapType, IMapCreator> maps;
 
     /***************************************************************************
-     * 
+     * Creates a new factory.
      **************************************************************************/
     public ColorMapFactory()
     {
@@ -42,8 +42,12 @@ public class ColorMapFactory
     }
 
     /***************************************************************************
-     * @param map
-     * @return
+     * Creates a new color map with of the provided type with the provided lower
+     * and upper bounds.
+     * @param map the type of map to be created.
+     * @param lower values <= this bound will have the lowest value of the map.
+     * @param upper values >= this bound will have the highest value of the map.
+     * @return the generated map.
      **************************************************************************/
     public IndexColorModel get( ColorMapType map, int lower, int upper )
     {
@@ -58,48 +62,19 @@ public class ColorMapFactory
     }
 
     /***************************************************************************
-     * @return
-     **************************************************************************/
-    public static IndexColorModel createStdColorModel()
-    {
-        // Create a 6x6x6 color cube
-        int [] cmap = new int[256];
-        int i = 0;
-        for( int r = 0; r < 256; r += 51 )
-        {
-            for( int g = 0; g < 256; g += 51 )
-            {
-                for( int b = 0; b < 256; b += 51 )
-                {
-                    cmap[i++] = ( r << 16 ) | ( g << 8 ) | b;
-                }
-            }
-        }
-
-        // And populate the rest of the cmap with gray values
-        int grayIncr = 256 / ( 256 - i );
-
-        // The gray ramp will be between 18 and 252
-        int gray = grayIncr * 3;
-        for( ; i < 256; i++ )
-        {
-            cmap[i] = ( gray << 16 ) | ( gray << 8 ) | gray;
-            gray += grayIncr;
-        }
-
-        return new IndexColorModel( 8, 256, cmap, 0, false, -1,
-            DataBuffer.TYPE_BYTE );
-    }
-
-    /***************************************************************************
+     * @param lower
+     * @param upper
+     * @param bits
      * @return
      **************************************************************************/
     public static IndexColorModel createGrayscaleMap( int lower, int upper,
         int bits )
     {
-        int [] cmap = new int[256];
+        int count = 1 << bits;
+        int lastIndex = count - 1;
+        int [] cmap = new int[count];
         int cnt = upper - lower + 1;
-        double grayIncr = 255.0 / cnt;
+        double grayIncr = lastIndex / ( double )cnt;
 
         // The gray ramp will be between lower and upper
         double gray = 0.0;
@@ -122,7 +97,7 @@ public class ColorMapFactory
             cmap[i] = -1;
         }
 
-        return new IndexColorModel( bits, 256, cmap, 0, false, -1,
+        return new IndexColorModel( bits, count, cmap, 0, false, -1,
             DataBuffer.TYPE_BYTE );
     }
 
@@ -200,20 +175,14 @@ public class ColorMapFactory
             cmap[midx] = seed[sidx];
         }
 
+        // ---------------------------------------------------------------------
+        // Copy last seed until end.
+        // ---------------------------------------------------------------------
         sidx = seed.length - 1;
         for( ; midx < cmap.length; midx++ )
         {
             cmap[midx] = seed[sidx];
         }
-
-        // for( int i = 255; i > -1; i -= 8 )
-        // {
-        // int idx = i / 4;
-        // for( int j = 0; j < 8; j++ )
-        // {
-        // cmap[i - j] = seed[idx];
-        // }
-        // }
 
         return new IndexColorModel( 8, 256, cmap, 0, false, -1,
             DataBuffer.TYPE_BYTE );
@@ -340,6 +309,11 @@ public class ColorMapFactory
      **************************************************************************/
     private static interface IMapCreator
     {
+        /**
+         * @param lower
+         * @param upper
+         * @return
+         */
         IndexColorModel createMap( int lower, int upper );
     }
 }

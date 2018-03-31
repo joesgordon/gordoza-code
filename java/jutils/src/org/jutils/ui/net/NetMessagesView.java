@@ -210,6 +210,8 @@ public class NetMessagesView implements IView<JPanel>
 
         SwingUtils.addActionToToolbar( toolbar, createSaveAction() );
 
+        SwingUtils.addActionToToolbar( toolbar, createSaveAsAction() );
+
         SwingUtils.addActionToToolbar( toolbar, createOpenAction(),
             openButton );
 
@@ -273,6 +275,19 @@ public class NetMessagesView implements IView<JPanel>
         Icon icon = IconConstants.getIcon( IconConstants.SAVE_16 );
 
         return new ActionAdapter( listener, "Save", icon );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createSaveAsAction()
+    {
+        IFileSelected ifs = ( f ) -> saveBinFile( f );
+        FileChooserListener listener = new FileChooserListener( getView(),
+            "Choose Binary File", true, ifs );
+        Icon icon = IconConstants.getIcon( IconConstants.SAVE_AS_16 );
+
+        return new ActionAdapter( listener, "Save As", icon );
     }
 
     /***************************************************************************
@@ -588,6 +603,40 @@ public class NetMessagesView implements IView<JPanel>
         }
     }
 
+    public void saveBinFile( File file )
+    {
+        byte [] buf = new byte[IOUtils.DEFAULT_BUF_SIZE];
+
+        synchronized( msgsStream )
+        {
+            try( FileStream stream = new FileStream( file ) )
+            {
+                for( long i = 0L; i < msgsStream.getCount(); i++ )
+                {
+                    NetMessage msg = msgsStream.read( i );
+
+                    stream.write( msg.contents );
+                }
+            }
+            catch( FileNotFoundException ex )
+            {
+                // TODO Auto-generated catch block
+                ex.printStackTrace();
+            }
+            catch( IOException ex )
+            {
+                // TODO Auto-generated catch block
+                ex.printStackTrace();
+            }
+            catch( ValidationException e )
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+    }
+
     /***************************************************************************
      * @param file
      **************************************************************************/
@@ -762,13 +811,20 @@ public class NetMessagesView implements IView<JPanel>
     private static class LocalDateTimeDecorator
         implements ITableCellLabelDecorator
     {
+        /**  */
         private final DateTimeFormatter dtf;
 
+        /**
+         * 
+         */
         public LocalDateTimeDecorator()
         {
             this.dtf = DateTimeFormatter.ofPattern( "yyyy-MM-dd HH:mm:ss.SSS" );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void decorate( JLabel label, JTable table, Object value,
             boolean isSelected, boolean hasFocus, int row, int col )

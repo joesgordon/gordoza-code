@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /*******************************************************************************
  * Used to process data that is collected by a separate thread. When this task
  * has data AND has a chance to process said data, it will call the sub-class's
- * {@link #processData(Object)} function.
+ * {@link #addData(Object)} function.
  * @param <T> the type of items to be consumed.
  ******************************************************************************/
 public class ConsumerTask<T> implements ITask
@@ -21,8 +21,8 @@ public class ConsumerTask<T> implements ITask
     private final Runnable finalizer;
 
     /***************************************************************************
-     * Creates a new consumer task with no finalizer.
-     * @param consumer
+     * Creates a new consumer task with no finished callback.
+     * @param consumer called when there is data to be processed.
      **************************************************************************/
     public ConsumerTask( IConsumer<T> consumer )
     {
@@ -30,7 +30,9 @@ public class ConsumerTask<T> implements ITask
     }
 
     /***************************************************************************
-     * Creates a new consumer task with the provided finalizer.
+     * Creates a new consumer task with the provided finished callback.
+     * @param consumer called when there is data to be processed.
+     * @param finalizer called when processing is complete.
      **************************************************************************/
     public ConsumerTask( IConsumer<T> consumer, Runnable finalizer )
     {
@@ -42,15 +44,14 @@ public class ConsumerTask<T> implements ITask
     }
 
     /***************************************************************************
-     * Called by the start() function. DO NOT CALL DIRECTLY. This function is to
-     * be called by {@link Thread#start()}.
+     * {@inheritDoc}
      **************************************************************************/
     @Override
-    public final void run( ITaskHandler stopper )
+    public final void run( ITaskHandler handler )
     {
         T obj = null;
 
-        while( stopper.canContinue() )
+        while( handler.canContinue() )
         {
             if( acceptInput.get() )
             {
@@ -70,7 +71,7 @@ public class ConsumerTask<T> implements ITask
 
             if( obj != null )
             {
-                consumer.consume( obj, stopper );
+                consumer.consume( obj, handler );
                 obj = null;
             }
             else
@@ -86,7 +87,7 @@ public class ConsumerTask<T> implements ITask
             finalizer.run();
         }
 
-        stopper.signalFinished();
+        handler.signalFinished();
     }
 
     /***************************************************************************

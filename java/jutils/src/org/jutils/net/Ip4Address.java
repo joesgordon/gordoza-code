@@ -1,11 +1,11 @@
 package org.jutils.net;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Arrays;
+import java.net.*;
+import java.util.*;
 
 import org.jutils.Utils;
 import org.jutils.io.LogUtils;
+import org.jutils.utils.EnumerationIteratorAdapter;
 
 /*******************************************************************************
  * 
@@ -50,27 +50,6 @@ public class Ip4Address
     }
 
     /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public String toString()
-    {
-        String str = "";
-
-        for( byte b : address )
-        {
-            if( !str.isEmpty() )
-            {
-                str += ".";
-            }
-
-            str += Integer.toString( Byte.toUnsignedInt( b ) );
-        }
-
-        return str;
-    }
-
-    /***************************************************************************
      * @return
      * @throws UnknownHostException
      **************************************************************************/
@@ -101,6 +80,30 @@ public class Ip4Address
         Utils.byteArrayCopy( address.address, 0, this.address, 0, 4 );
     }
 
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public String toString()
+    {
+        String str = "";
+
+        for( byte b : address )
+        {
+            if( !str.isEmpty() )
+            {
+                str += ".";
+            }
+
+            str += Integer.toString( Byte.toUnsignedInt( b ) );
+        }
+
+        return str;
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
     @Override
     public boolean equals( Object obj )
     {
@@ -118,12 +121,18 @@ public class Ip4Address
         return false;
     }
 
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
     @Override
     public int hashCode()
     {
         return Arrays.hashCode( address );
     }
 
+    /***************************************************************************
+     * @param address
+     **************************************************************************/
     public void set( InetAddress address )
     {
         byte [] octects = address.getAddress();
@@ -136,6 +145,116 @@ public class Ip4Address
         for( int i = 0; i < this.address.length; i++ )
         {
             this.address[i] = octects[i];
+        }
+    }
+
+    /***************************************************************************
+     * @param address
+     * @return
+     **************************************************************************/
+    public static Ip4Nic getNic( Ip4Address address )
+    {
+        Ip4Address mask = new Ip4Address( 255, 255, 255, 0 );
+
+        return getNic( address, mask );
+    }
+
+    /***************************************************************************
+     * @param address
+     * @param mask
+     * @return
+     **************************************************************************/
+    public static Ip4Nic getNic( Ip4Address address, Ip4Address mask )
+    {
+        String nicName = null;
+        String loopbackName = null;
+        Enumeration<NetworkInterface> nets;
+        Ip4Address nicAddress = new Ip4Address( 127, 0, 0, 1 );
+
+        try
+        {
+            nets = NetworkInterface.getNetworkInterfaces();
+
+            for( NetworkInterface nic : Collections.list( nets ) )
+            {
+                if( nic.isLoopback() )
+                {
+                    loopbackName = nic.getName();
+                }
+
+                Enumeration<InetAddress> addresses = nic.getInetAddresses();
+                Iterable<InetAddress> addressList = new EnumerationIteratorAdapter<>(
+                    addresses );
+                for( InetAddress ina : addressList )
+                {
+                    if( ina instanceof Inet4Address )
+                    {
+                        Inet4Address ina4 = ( Inet4Address )ina;
+                        byte [] abs = ina4.getAddress();
+                        boolean matched = true;
+
+                        for( int i = 0; i < abs.length; i++ )
+                        {
+                            int no = Byte.toUnsignedInt( abs[i] );
+                            int mo = Byte.toUnsignedInt( mask.address[i] );
+                            int ao = Byte.toUnsignedInt( address.address[i] );
+
+                            if( ( no & mo ) != ( ao & mo ) )
+                            {
+                                matched = false;
+                                break;
+                            }
+                        }
+
+                        if( matched )
+                        {
+                            nicName = nic.getName();
+                            nicAddress.set( Byte.toUnsignedInt( abs[0] ),
+                                Byte.toUnsignedInt( abs[1] ),
+                                Byte.toUnsignedInt( abs[2] ),
+                                Byte.toUnsignedInt( abs[3] ) );
+                        }
+
+                        break;
+                    }
+                }
+
+                if( nicName != null )
+                {
+                    break;
+                }
+            }
+        }
+        catch( SocketException ex )
+        {
+            ;
+        }
+
+        Ip4Nic nic = nicName == null
+            ? new Ip4Nic( new Ip4Address( 127, 0, 0, 1 ), loopbackName )
+            : new Ip4Nic( nicAddress, nicName );
+
+        return nic;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public static final class Ip4Nic
+    {
+        /**  */
+        public final Ip4Address address;
+        /**  */
+        public final String nic;
+
+        /**
+         * @param address
+         * @param nic
+         */
+        public Ip4Nic( Ip4Address address, String nic )
+        {
+            this.address = address;
+            this.nic = nic;
         }
     }
 }

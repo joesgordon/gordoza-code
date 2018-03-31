@@ -42,6 +42,9 @@ public class NetMessagesTableConfig implements ITableItemsConfig<NetMessage>
         this( null );
     }
 
+    /***************************************************************************
+     * @param fields
+     **************************************************************************/
     public NetMessagesTableConfig( IMessageFields fields )
     {
         this.fields = fields == null ? new EmptyMessageFields() : fields;
