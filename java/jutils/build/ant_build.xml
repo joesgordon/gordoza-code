@@ -9,26 +9,20 @@
     <property name="jar.jgoodies" location="${dir.proj}/../libs/jgoodies.jar" />
     <property name="jar.xstream" location="${dir.proj}/../libs/xstream_min.jar" />
     <property name="jar.bin" location="./jutils.jar" />
+    <property name="jar.dbg" location="./jutils_dbg.jar" />
     <property name="jar.src" location="./jutils_src.jar" />
     <property name="jar.all_bin" location="./jutils_all.jar" />
     <property name="jar.all_src" location="./jutils_all_src.jar" />
     <property name="file.version" location="${dir.src}/org/jutils/icons/info.properties" />
-    
+	
     <target name="clean" description="Removes intermediate and compiled files">
         <delete dir="${dir.bin}" failonerror="false" quiet="true"/>
         <delete file="${jar.bin}" failonerror="false" quiet="true"/>
+        <delete file="${jar.dbg}" failonerror="false" quiet="true"/>
         <delete file="${jar.src}" failonerror="false" quiet="true"/>
     </target>
-    
-    <target name="build_src">
-    	<mkdir dir="${dir.bin}" />
-        <javac srcdir="${dir.src}"
-            destdir="${dir.bin}"
-            classpath="${jar.jgoodies};${jar.xstream}"
-            debug="off"
-            source="1.8"
-        	target="1.8"
-    	    includeantruntime="false"/>
+	
+	<target name="update_ver">
         <propertyfile file="${file.version}">
             <entry key="version" default="2.0" />
             <entry key="buildtime"
@@ -36,13 +30,48 @@
               operation="=" value="0"/>
             <entry key="subversion" type="int" default="0" operation="+"/>
         </propertyfile>
+	</target>
+    
+    <target name="build_src">
+    	<echo message="Setting debug to ${debug_flag}" />
+    	<mkdir dir="${dir.bin}" />
+        <javac srcdir="${dir.src}"
+            destdir="${dir.bin}"
+            classpath="${jar.jgoodies};${jar.xstream}"
+            debug="${debug_flag}"
+        	debuglevel="${debug_lvl}"
+            source="1.8"
+        	target="1.8"
+    	    includeantruntime="false"/>
     	<copy todir="${dir.bin}">
             <fileset dir="${dir.src}" excludes="**/*.java"/>
     	</copy>
     </target>
 	
     <target name="create_all_jar">
+        <delete dir="${dir.bin}" failonerror="false" quiet="true"/>
+        <antcall target="build_src" inheritall="true" inheritrefs="true">
+            <param name="debug_flag" value="false"/>
+            <param name="debug_lvl" value="none"/>
+        </antcall>
         <jar destfile="${jar.bin}" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="org.jutils.JUtilsInfoMain"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="${dir.bin}"/>
+            <zipfileset excludes="META-INF/*.SF,**/*.java" src="${jar.jgoodies}"/>
+            <zipfileset excludes="META-INF/*.SF,**/*.java" src="${jar.xstream}"/>
+        </jar>
+    </target>
+	
+    <target name="create_debug_jar">
+        <delete dir="${dir.bin}" failonerror="false" quiet="true"/>
+    	<antcall target="build_src" inheritall="true" inheritrefs="true">
+    		<param name="debug_flag" value="true"/>
+            <param name="debug_lvl" value="lines,vars,source"/>
+    	</antcall>
+        <jar destfile="${jar.dbg}" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="org.jutils.JUtilsInfoMain"/>
                 <attribute name="Class-Path" value="."/>
@@ -61,6 +90,6 @@
         </jar>
     </target>
 
-    <target name="all" depends="clean,build_src,create_all_jar,create_all_src_jar"/>
+    <target name="all" depends="clean,update_ver,create_all_jar,create_debug_jar,create_all_src_jar"/>
 	
 </project>

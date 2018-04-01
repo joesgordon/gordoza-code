@@ -1,6 +1,7 @@
 package org.jutils.ui;
 
 import java.awt.*;
+import java.awt.dnd.DropTarget;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -198,6 +199,14 @@ public class SplitButtonView<T> implements IView<JComponent>
     public void setIcon( Icon icon )
     {
         button.setIcon( icon );
+    }
+
+    /***************************************************************************
+     * @param target
+     **************************************************************************/
+    public void setDropTarget( DropTarget target )
+    {
+        button.setDropTarget( target );
     }
 
     /***************************************************************************

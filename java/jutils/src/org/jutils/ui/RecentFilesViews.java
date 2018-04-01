@@ -10,6 +10,7 @@ import javax.swing.filechooser.FileSystemView;
 
 import org.jutils.IconConstants;
 import org.jutils.ui.SplitButtonView.IListItemModel;
+import org.jutils.ui.event.FileDropTarget;
 import org.jutils.ui.event.IRecentListener;
 
 /*******************************************************************************
@@ -51,6 +52,9 @@ public class RecentFilesViews
 
         menuView.addSelectedListener( ( f, c ) -> callSelected( f, c ) );
         buttonView.addItemSelected( ( f, c ) -> callSelected( f, c ) );
+
+        buttonView.setDropTarget( new FileDropTarget(
+            ( e ) -> callSelected( e.getItem().getFiles().get( 0 ), false ) ) );
     }
 
     /***************************************************************************
