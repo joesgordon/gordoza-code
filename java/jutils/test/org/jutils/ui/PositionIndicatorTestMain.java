@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 
 import org.jutils.io.LogUtils;
 import org.jutils.ui.app.FrameRunner;
@@ -18,7 +19,7 @@ import org.jutils.ui.model.IView;
 public class PositionIndicatorTestMain
 {
     /***************************************************************************
-     * @param args
+     * @param args ignored
      **************************************************************************/
     public static void main( String [] args )
     {
@@ -30,11 +31,9 @@ public class PositionIndicatorTestMain
      **************************************************************************/
     private static final class PositionIndicatorApp implements IFrameApp
     {
-        @Override
-        public void finalizeGui()
-        {
-        }
-
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public JFrame createFrame()
         {
@@ -48,6 +47,14 @@ public class PositionIndicatorTestMain
 
             return view.getView();
         }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void finalizeGui()
+        {
+        }
     }
 
     /***************************************************************************
@@ -56,15 +63,25 @@ public class PositionIndicatorTestMain
     private static final class PositionIndicatorTestView
         implements IView<JComponent>
     {
+        /**  */
         private final JPanel view;
+        /**  */
         private final LongFormField lengthField;
+        /**  */
         private final LongFormField unitLengthField;
+        /**  */
         private final HexLongFormField offsetField;
+        /**  */
         private final PositionIndicator indicator;
 
+        /**  */
         private static final long LEN = 865716124;
+        /**  */
         private static final long SIZE = 4 * 1024 * 1024;
 
+        /**
+         * 
+         */
         public PositionIndicatorTestView()
         {
             this.lengthField = new LongFormField( "Length" );
@@ -76,6 +93,7 @@ public class PositionIndicatorTestMain
             indicator.setLength( LEN );
             indicator.setUnitLength( SIZE );
             indicator.setPosition( 0L );
+            indicator.getView().setBorder( new EtchedBorder() );
 
             lengthField.setValue( indicator.getLength() );
             unitLengthField.setValue( indicator.getUnitLength() );
@@ -89,6 +107,9 @@ public class PositionIndicatorTestMain
             offsetField.setUpdater( ( n ) -> indicator.setPosition( n ) );
         }
 
+        /**
+         * @param position
+         */
         private void updatePosition( long position )
         {
             offsetField.setValue( position );
@@ -97,6 +118,9 @@ public class PositionIndicatorTestMain
             LogUtils.printDebug( "new position: %d", position );
         }
 
+        /**
+         * @return
+         */
         private JPanel createView()
         {
             JPanel panel = new JPanel( new BorderLayout() );
@@ -107,6 +131,9 @@ public class PositionIndicatorTestMain
             return panel;
         }
 
+        /**
+         * @return
+         */
         private Component createForm()
         {
             StandardFormView form = new StandardFormView();
@@ -118,6 +145,9 @@ public class PositionIndicatorTestMain
             return form.getView();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public JComponent getView()
         {

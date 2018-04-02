@@ -50,7 +50,8 @@ public class PositionIndicator implements IView<JComponent>
     public PositionIndicator( IDescriptor<Long> positionDescriptor )
     {
         IDescriptor<Long> descriptor = positionDescriptor == null
-            ? createDefaultPositionDescriptor() : positionDescriptor;
+            ? createDefaultPositionDescriptor()
+            : positionDescriptor;
 
         this.paintable = new PositionIndicatorPaintable();
         this.component = new PaintingComponent( paintable );
@@ -299,8 +300,16 @@ public class PositionIndicator implements IView<JComponent>
         @Override
         public void paint( JComponent c, Graphics2D g2 )
         {
-            int width = c.getWidth();
-            int height = c.getHeight();
+            Rectangle bounds = c.getBounds();
+            Insets insets = c.getInsets();
+
+            bounds.x = insets.left;
+            bounds.y = insets.top;
+            bounds.width -= ( insets.left + insets.right );
+            bounds.height -= ( insets.top + insets.bottom );
+
+            int width = bounds.width;
+            int height = bounds.height;
 
             Object aaHint = g2.getRenderingHint(
                 RenderingHints.KEY_ANTIALIASING );
@@ -317,25 +326,26 @@ public class PositionIndicator implements IView<JComponent>
                 return;
             }
 
-            int x = 0;
-            int y = 1;
+            int x = bounds.x;
+            int y = bounds.y;
             int w = ( int )( width * unitLength / ( double )length ) - 2;
-            int h = height - 2;
+            int h = height;
 
             if( unitLength > 0 )
             {
                 w = Math.max( w, 16 );
             }
 
-            x = ( int )( unitIndex / ( double )unitCount * ( width - 2 ) ) + 1;
+            x = ( int )( unitIndex / ( double )unitCount * ( width - 2 ) ) +
+                bounds.x;
 
-            if( x < 1 )
+            if( x < bounds.x )
             {
-                x = 1;
+                x = bounds.x;
             }
-            else if( x + w + 1 > width )
+            else if( x + w + bounds.x > bounds.x + bounds.width )
             {
-                x = width - w - 1;
+                x = bounds.x + width - w - 1;
             }
 
             thumbRect.x = x;
@@ -344,7 +354,7 @@ public class PositionIndicator implements IView<JComponent>
             thumbRect.height = h;
 
             g2.setColor( thumbShadow );
-            g2.fillRoundRect( x, y, w, h, 4, 4 );
+            g2.fillRoundRect( x, y, w, h, 5, 5 );
 
             g2.setColor( thumbColor );
             g2.fillRoundRect( x + 1, y + 1, w - 2, h - 2, 4, 4 );
@@ -404,7 +414,11 @@ public class PositionIndicator implements IView<JComponent>
         @Override
         public void mouseClicked( MouseEvent e )
         {
-            pi.fireThumbMoved( e.getX() );
+            if( e.isConsumed() && SwingUtilities.isLeftMouseButton( e ) &&
+                !pi.paintable.thumbRect.contains( e.getPoint() ) )
+            {
+                pi.fireThumbMoved( e.getX() );
+            }
         }
 
         /**
@@ -413,7 +427,10 @@ public class PositionIndicator implements IView<JComponent>
         @Override
         public void mousePressed( MouseEvent e )
         {
-            start = e.getPoint();
+            if( SwingUtilities.isLeftMouseButton( e ) )
+            {
+                start = e.getPoint();
+            }
         }
 
         /**
@@ -422,6 +439,11 @@ public class PositionIndicator implements IView<JComponent>
         @Override
         public void mouseDragged( MouseEvent e )
         {
+            if( !SwingUtilities.isLeftMouseButton( e ) )
+            {
+                return;
+            }
+
             if( start != null && pi.paintable.thumbRect.contains( start ) )
             {
                 dragging = true;

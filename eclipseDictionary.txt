@@ -26,3 +26,5 @@ popup
 callbacks
 accessor
 clipboard
+southwest
+southeast
