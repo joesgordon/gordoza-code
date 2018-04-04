@@ -8,8 +8,9 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 
 import org.jutils.data.UIProperty;
-import org.jutils.ui.event.ItemActionList;
-import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.event.*;
+import org.jutils.ui.event.updater.IUpdater;
+import org.jutils.ui.event.updater.UpdaterList;
 import org.jutils.ui.fields.IDescriptor;
 import org.jutils.ui.model.IView;
 
@@ -31,6 +32,8 @@ public class PositionIndicator implements IView<JComponent>
     private final PositionIndicatorPaintable paintable;
     /** The control to be drawn. */
     private final PaintingComponent component;
+    /**  */
+    private final PiMouseListener mouseListener;
 
     // TODO install escape key listener to abort dragging.
 
@@ -58,14 +61,13 @@ public class PositionIndicator implements IView<JComponent>
         this.posLabel = new JLabel();
         this.positionWindow = createWindow();
         this.posititonListeners = new ItemActionList<>();
+        this.mouseListener = new PiMouseListener( this, descriptor );
 
         component.setMinimumSize( new Dimension( 20, 20 ) );
         component.setPreferredSize( new Dimension( 20, 20 ) );
 
-        MouseListener ml = new MouseListener( this, descriptor );
-
-        component.addMouseListener( ml );
-        component.addMouseMotionListener( ml );
+        component.addMouseListener( mouseListener );
+        component.addMouseMotionListener( mouseListener );
     }
 
     /***************************************************************************
@@ -120,6 +122,15 @@ public class PositionIndicator implements IView<JComponent>
     public void addPositionListener( ItemActionListener<Long> l )
     {
         posititonListeners.addListener( l );
+    }
+
+    /***************************************************************************
+     * Adds a method to be invoked when the tab is right-clicked.
+     * @param callback the method to be invoked.
+     **************************************************************************/
+    public void addRightClick( IUpdater<MouseEvent> callback )
+    {
+        mouseListener.addRightClick( callback );
     }
 
     /***************************************************************************
@@ -382,12 +393,14 @@ public class PositionIndicator implements IView<JComponent>
     /***************************************************************************
      * Defines the mouse listener to move and interact with the thumb.
      **************************************************************************/
-    private static final class MouseListener extends MouseAdapter
+    private static final class PiMouseListener extends MouseAdapter
     {
         /** The position indicator listened to. */
         private final PositionIndicator pi;
         /** The descriptor used to create a string for a position. */
         private final IDescriptor<Long> positionDescriptor;
+        /**  */
+        private final UpdaterList<MouseEvent> rightClickListeners;
 
         /** The last point at which the mouse was pressed. */
         private Point start;
@@ -400,12 +413,22 @@ public class PositionIndicator implements IView<JComponent>
          * @param descriptor the descriptor used to create a string for a
          * position.
          */
-        public MouseListener( PositionIndicator pi,
+        public PiMouseListener( PositionIndicator pi,
             IDescriptor<Long> descriptor )
         {
             this.pi = pi;
             this.positionDescriptor = descriptor;
             this.start = null;
+            this.rightClickListeners = new UpdaterList<>();
+        }
+
+        /**
+         * Adds a method to be invoked when the tab is right-clicked.
+         * @param callback the method to be invoked.
+         */
+        public void addRightClick( IUpdater<MouseEvent> callback )
+        {
+            this.rightClickListeners.addUpdater( callback );
         }
 
         /**
@@ -418,6 +441,10 @@ public class PositionIndicator implements IView<JComponent>
                 !pi.paintable.thumbRect.contains( e.getPoint() ) )
             {
                 pi.fireThumbMoved( e.getX() );
+            }
+            else if( RightClickListener.isRightClick( e ) )
+            {
+                rightClickListeners.fireListeners( e );
             }
         }
 

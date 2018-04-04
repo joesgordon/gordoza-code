@@ -30,9 +30,18 @@ public class RightClickListener extends MouseAdapter
     public void mouseClicked( MouseEvent e )
     {
         // LogUtils.printDebug( "Clicked: " + e.toString() );
-        if( SwingUtilities.isRightMouseButton( e ) && !e.isConsumed() )
+        if( isRightClick( e ) )
         {
             callback.update( e );
         }
+    }
+
+    /***************************************************************************
+     * @param e
+     * @return
+     **************************************************************************/
+    public static boolean isRightClick( MouseEvent e )
+    {
+        return SwingUtilities.isRightMouseButton( e ) && !e.isConsumed();
     }
 }
