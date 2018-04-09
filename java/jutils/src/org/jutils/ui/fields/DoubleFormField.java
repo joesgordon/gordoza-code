@@ -20,7 +20,7 @@ public class DoubleFormField implements IDataFormField<Double>
 
     /**  */
     private IUpdater<Double> updater;
-
+    /**  */
     private String format;
 
     /**  */
@@ -36,6 +36,8 @@ public class DoubleFormField implements IDataFormField<Double>
 
     /***************************************************************************
      * @param name
+     * @param min
+     * @param max
      **************************************************************************/
     public DoubleFormField( String name, Double min, Double max )
     {
@@ -44,6 +46,9 @@ public class DoubleFormField implements IDataFormField<Double>
 
     /***************************************************************************
      * @param name
+     * @param units
+     * @param min
+     * @param max
      **************************************************************************/
     public DoubleFormField( String name, String units, Double min, Double max )
     {
@@ -107,7 +112,7 @@ public class DoubleFormField implements IDataFormField<Double>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public String getName()
@@ -116,7 +121,7 @@ public class DoubleFormField implements IDataFormField<Double>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JComponent getView()
@@ -125,7 +130,7 @@ public class DoubleFormField implements IDataFormField<Double>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public Double getValue()
@@ -134,7 +139,7 @@ public class DoubleFormField implements IDataFormField<Double>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void setValue( Double value )
@@ -163,7 +168,7 @@ public class DoubleFormField implements IDataFormField<Double>
     }
 
     /***************************************************************************
-     * @param editable
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void setEditable( boolean editable )
@@ -172,7 +177,7 @@ public class DoubleFormField implements IDataFormField<Double>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void setUpdater( IUpdater<Double> updater )
@@ -181,7 +186,7 @@ public class DoubleFormField implements IDataFormField<Double>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public IUpdater<Double> getUpdater()
@@ -190,7 +195,7 @@ public class DoubleFormField implements IDataFormField<Double>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void addValidityChanged( IValidityChangedListener l )
@@ -199,7 +204,7 @@ public class DoubleFormField implements IDataFormField<Double>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void removeValidityChanged( IValidityChangedListener l )
@@ -208,7 +213,7 @@ public class DoubleFormField implements IDataFormField<Double>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public Validity getValidity()
@@ -216,6 +221,9 @@ public class DoubleFormField implements IDataFormField<Double>
         return textField.getField().getValidity();
     }
 
+    /***************************************************************************
+     * @param format
+     **************************************************************************/
     public void setFormat( String format )
     {
         this.format = format;
@@ -226,13 +234,20 @@ public class DoubleFormField implements IDataFormField<Double>
      **************************************************************************/
     private static class ValueUpdater implements IUpdater<Double>
     {
+        /**  */
         private final DoubleFormField view;
 
+        /**
+         * @param view
+         */
         public ValueUpdater( DoubleFormField view )
         {
             this.view = view;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void update( Double data )
         {
