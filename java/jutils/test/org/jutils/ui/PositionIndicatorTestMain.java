@@ -90,8 +90,8 @@ public class PositionIndicatorTestMain
                 ( d ) -> Long.toString( d ) );
             this.view = createView();
 
-            indicator.setLength( LEN );
-            indicator.setUnitLength( SIZE );
+            indicator.setLength( 100 );
+            indicator.setUnitLength( 1 );
             indicator.setPosition( 0L );
             // indicator.getView().setBorder( new EtchedBorder() );
             indicator.getView().setBorder( new LineBorder( Color.gray ) );
