@@ -10,7 +10,10 @@ import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.event.FileChooserListener;
 import org.jutils.ui.event.FileChooserListener.IFileSelected;
+import org.jutils.ui.event.FileChooserListener.ILastFile;
 import org.jutils.ui.event.FileDropTarget;
+import org.jutils.ui.fields.BooleanFormField;
+import org.jutils.ui.fields.IntegerFormField;
 
 /***************************************************************************
  * 
@@ -49,8 +52,11 @@ public class FilePropertiesViewMain
             GridBagConstraints constraints = new GridBagConstraints();
             JButton button = new JButton( "Show File Props" );
             IFileSelected fileSelected = ( f ) -> show( f, panel );
+            ILastFile ilf = () -> null;
             FileChooserListener listener = new FileChooserListener( panel,
-                "Choose File", false, fileSelected );
+                "Choose File", true, fileSelected, ilf );
+
+            listener.setAdditional( createExample() );
 
             button.setDropTarget( new FileDropTarget(
                 ( e ) -> handleFileDropped( e.getItem().getFiles(), panel ) ) );
@@ -62,6 +68,20 @@ public class FilePropertiesViewMain
             panel.add( button, constraints );
 
             return panel;
+        }
+
+        private JComponent createExample()
+        {
+            StandardFormView form = new StandardFormView();
+            IntegerFormField intField = new IntegerFormField( "Int", null, 10 );
+            BooleanFormField boolField = new BooleanFormField( "Boolean" );
+
+            intField.setValue( 0 );
+
+            form.addField( intField );
+            form.addField( boolField );
+
+            return form.getView();
         }
 
         private void handleFileDropped( List<File> list, Component parent )

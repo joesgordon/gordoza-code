@@ -1,10 +1,9 @@
 package org.jutils.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
+import java.awt.*;
 
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
+import javax.swing.border.LineBorder;
 
 import org.jutils.io.LogUtils;
 import org.jutils.ui.app.FrameRunner;
@@ -87,13 +86,15 @@ public class PositionIndicatorTestMain
             this.lengthField = new LongFormField( "Length" );
             this.unitLengthField = new LongFormField( "Unit Length" );
             this.offsetField = new HexLongFormField( "Offset" );
-            this.indicator = new PositionIndicator();
+            this.indicator = new PositionIndicator(
+                ( d ) -> Long.toString( d ) );
             this.view = createView();
 
             indicator.setLength( LEN );
             indicator.setUnitLength( SIZE );
             indicator.setPosition( 0L );
-            indicator.getView().setBorder( new EtchedBorder() );
+            // indicator.getView().setBorder( new EtchedBorder() );
+            indicator.getView().setBorder( new LineBorder( Color.gray ) );
 
             lengthField.setValue( indicator.getLength() );
             unitLengthField.setValue( indicator.getUnitLength() );
@@ -123,7 +124,10 @@ public class PositionIndicatorTestMain
          */
         private JPanel createView()
         {
-            JPanel panel = new JPanel( new BorderLayout() );
+            BorderLayout layout = new BorderLayout();
+            JPanel panel = new JPanel( layout );
+
+            layout.setHgap( 4 );
 
             panel.add( createForm(), BorderLayout.CENTER );
             panel.add( indicator.getView(), BorderLayout.SOUTH );

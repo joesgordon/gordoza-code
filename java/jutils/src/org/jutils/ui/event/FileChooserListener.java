@@ -1,11 +1,13 @@
 package org.jutils.ui.event;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.JFileChooser;
+import javax.swing.*;
+import javax.swing.border.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -35,7 +37,7 @@ public class FileChooserListener implements ActionListener
     private final boolean selectMultiple;
 
     /** The file chooser to be used to generate a dialog. */
-    private final JFileChooser chooser;
+    private final DataFileChooser chooser;
 
     /** The directory last view regardless of user accept/cancel. */
     private File lastDir;
@@ -47,7 +49,7 @@ public class FileChooserListener implements ActionListener
      * @param title the title of the dialog to be displayed.
      * @param isSave a save dialog will be shown if {@code true}, an open dialog
      * will be shown otherwise.
-     * @param lastFile the listener called when the directory is selected.
+     * @param fileSelected the listener called when the directory is selected.
      **************************************************************************/
     public FileChooserListener( Component parent, String title, boolean isSave,
         IFileSelected fileSelected )
@@ -110,7 +112,6 @@ public class FileChooserListener implements ActionListener
      * Creates a listener with the following parameters:
      * @param parent the parent component of the dialog to be displayed.
      * @param title the title of the dialog to be displayed.
-     * @param defaultFilename the default filename to be used.
      * @param isSave a save dialog will be shown if {@code true}, an open dialog
      * will be shown otherwise.
      * @param selectMultiple option to select multiple files (only valid if
@@ -144,7 +145,7 @@ public class FileChooserListener implements ActionListener
                 "Cannot select multiple if saving." );
         }
 
-        this.chooser = new JFileChooser();
+        this.chooser = new DataFileChooser();
 
         chooser.setDialogTitle( title );
         chooser.setMultiSelectionEnabled( false );
@@ -178,6 +179,16 @@ public class FileChooserListener implements ActionListener
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
             desc.toString(), extensions );
         chooser.addChoosableFileFilter( filter );
+    }
+
+    /***************************************************************************
+     * Sets a component to show additional options to the right of the standard
+     * chooser fields.
+     * @param comp the component containing fields for additional options.
+     **************************************************************************/
+    public void setAdditional( JComponent comp )
+    {
+        chooser.setAdditional( comp );
     }
 
     /***************************************************************************
@@ -338,6 +349,8 @@ public class FileChooserListener implements ActionListener
     /***************************************************************************
      * Ensures that the extension specified by the file filter is suffixed onto
      * the file name of the given file.
+     * @param selected The file to be checked.
+     * @param fileFilter the filter defining the extension to be used.
      * @return a file with the given extension.
      **************************************************************************/
     private static File ensureExtension( File selected,
@@ -381,6 +394,10 @@ public class FileChooserListener implements ActionListener
          */
         void fileChosen( File file );
 
+        /**
+         * Creates a file selector that does nothing.
+         * @return the file selector.
+         */
         static IFileSelected nullSelector()
         {
             return ( f ) -> {
@@ -396,9 +413,14 @@ public class FileChooserListener implements ActionListener
     {
         /**
          * Returns the last file the user chose.
+         * @return the last file chosen.
          */
         File getLastFile();
 
+        /**
+         * Creates a last file selector that returns {@code null}.
+         * @return the last file selector.
+         */
         static ILastFile nullSelector()
         {
             return () -> {
@@ -418,6 +440,10 @@ public class FileChooserListener implements ActionListener
          */
         void filesChosen( File [] files );
 
+        /**
+         * Creates a file selector that does nothing.
+         * @return the file selector.
+         */
         static IFilesSelected nullSelector()
         {
             return ( fs ) -> {
@@ -433,14 +459,98 @@ public class FileChooserListener implements ActionListener
     {
         /**
          * Returns the last set of files the user chose.
+         * @return the last files chosen.
          */
         File [] getLastFiles();
 
+        /**
+         * Creates a last file selector that returns an empty array.
+         * @return the last file selector.
+         */
         static ILastFiles nullSelector()
         {
             return () -> {
                 return new File[0];
             };
+        }
+    }
+
+    /***************************************************************************
+     * Defines a {@link JFileChooser} that supports an additional component on
+     * the right hand side.
+     **************************************************************************/
+    private static final class DataFileChooser extends JFileChooser
+    {
+        /** Generated UID. */
+        private static final long serialVersionUID = 407583092267479562L;
+
+        /**
+         * Creates the chooser with default options.
+         */
+        public DataFileChooser()
+        {
+            super();
+
+            // Color [] colors = { Color.red, Color.green, Color.blue,
+            // Color.black };
+            //
+            // for( int i = 0; i < super.getComponentCount(); i++ )
+            // {
+            // JComponent comp = ( JComponent )super.getComponent( i );
+            //
+            // comp.setBorder( new LineBorder( colors[i] ) );
+            //
+            // LogUtils.printDebug( "Child %d is a %s", i, comp.getClass() );
+            // }
+        }
+
+        /**
+         * Sets a component to show additional options to the right of the
+         * standard chooser fields.
+         * @param comp the component containing fields for additional options.
+         */
+        public void setAdditional( JComponent comp )
+        {
+            BorderLayout layout = ( BorderLayout )super.getLayout();
+            BorderLayout newLayout = new BorderLayout();
+            JPanel panel = new JPanel( newLayout );
+
+            newLayout.setHgap( layout.getHgap() );
+            newLayout.setVgap( layout.getVgap() );
+
+            while( super.getComponentCount() > 0 )
+            {
+                Component c = super.getComponent( 0 );
+                Object constraints = layout.getConstraints( c );
+
+                // LogUtils.printDebug( "Contraints: " + constraints.toString()
+                // );
+
+                super.remove( c );
+                panel.add( c, constraints );
+            }
+
+            Border border = comp.getBorder();
+
+            if( border == null )
+            {
+                border = new EtchedBorder();
+            }
+
+            // int rightBorder = onTop ? 0 : 8;
+            // int bottomBorder = onTop ? 8 : 0;
+
+            comp.setBorder(
+                new CompoundBorder( new EmptyBorder( 0, 8, 0, 0 ), border ) );
+
+            // String compLoc = onTop ? BorderLayout.NORTH : BorderLayout.WEST;
+            // String existingLoc = onTop ? BorderLayout.SOUTH :
+            // BorderLayout.EAST;
+
+            super.add( panel, BorderLayout.CENTER );
+            super.add( comp, BorderLayout.EAST );
+
+            super.doLayout();
         }
     }
 }

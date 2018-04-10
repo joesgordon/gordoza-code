@@ -109,6 +109,10 @@ public class AppManagerViewMain
             return toolbar;
         }
 
+        /**
+         * @param appmanView
+         * @return
+         */
         private static Action createOpenAction( AppManagerView appmanView )
         {
             Icon icon = IconConstants.getIcon( IconConstants.OPEN_FILE_16 );
@@ -119,6 +123,10 @@ public class AppManagerViewMain
             return new ActionAdapter( fcl, "Open", icon );
         }
 
+        /**
+         * @param appmanView
+         * @return
+         */
         private static Action createSaveAction( AppManagerView appmanView )
         {
             Icon icon = IconConstants.getIcon( IconConstants.SAVE_16 );

@@ -34,20 +34,11 @@ public class LongFormField implements IDataFormField<Long>
 
     /***************************************************************************
      * @param name
-     * @param updater
-     **************************************************************************/
-    public LongFormField( String name, IUpdater<Long> updater )
-    {
-        this( name, null, 20, updater );
-    }
-
-    /***************************************************************************
-     * @param name
      * @param units
      **************************************************************************/
     public LongFormField( String name, String units )
     {
-        this( name, units, 20, null );
+        this( name, units, 20, null, null );
     }
 
     /***************************************************************************
@@ -57,7 +48,7 @@ public class LongFormField implements IDataFormField<Long>
      **************************************************************************/
     public LongFormField( String name, String units, int columns )
     {
-        this( name, units, columns, null );
+        this( name, units, columns, null, null );
     }
 
     /***************************************************************************
@@ -68,33 +59,22 @@ public class LongFormField implements IDataFormField<Long>
      **************************************************************************/
     public LongFormField( String name, String units, Long min, Long max )
     {
-        this( name, units, 20, null, min, max );
+        this( name, units, 20, min, max );
     }
 
     /***************************************************************************
      * @param name
      * @param units
      * @param columns
-     * @param updater
+     * @param min
+     * @param max
      **************************************************************************/
-    public LongFormField( String name, String units, int columns,
-        IUpdater<Long> updater )
-    {
-        this( name, units, columns, updater, null, null );
-    }
-
-    /***************************************************************************
-     * @param name
-     * @param units
-     * @param columns
-     * @param updater
-     **************************************************************************/
-    public LongFormField( String name, String units, int columns,
-        IUpdater<Long> updater, Long min, Long max )
+    public LongFormField( String name, String units, int columns, Long min,
+        Long max )
     {
         this.name = name;
         this.textField = new ValidationTextView( units, columns );
-        this.updater = updater;
+        this.updater = null;
 
         ITextValidator textValidator;
 

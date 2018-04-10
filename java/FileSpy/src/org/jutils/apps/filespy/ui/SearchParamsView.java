@@ -65,9 +65,9 @@ public class SearchParamsView implements IDataView<SearchParams>
             ExistenceType.DIRECTORY_ONLY );
         this.subfoldersField = new BooleanFormField( "Search Sub-directories" );
         this.moreThanField = new UsableFormField<>(
-            new LongFormField( "More Than", null, 10, null ) );
+            new LongFormField( "More Than", null, 10 ) );
         this.lessThanField = new UsableFormField<>(
-            new LongFormField( "Less Than", null, 10, null ) );
+            new LongFormField( "Less Than", null, 10 ) );
         this.afterField = new UsableFormField<>( new DateField( "After" ) );
         this.beforeField = new UsableFormField<>( new DateField( "Before" ) );
         this.fileNotCheckBox = new BooleanFormField( "Specify Not Condition" );
@@ -98,7 +98,6 @@ public class SearchParamsView implements IDataView<SearchParams>
     }
 
     /***************************************************************************
-     * @param enterListener
      * @return
      **************************************************************************/
     private JPanel createView()
@@ -205,7 +204,6 @@ public class SearchParamsView implements IDataView<SearchParams>
     }
 
     /***************************************************************************
-     * @param enterListener
      * @return
      **************************************************************************/
     private JPanel createSearchPanel()

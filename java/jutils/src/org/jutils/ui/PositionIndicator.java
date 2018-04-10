@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 
 import org.jutils.data.UIProperty;
+import org.jutils.io.LogUtils;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.event.updater.UpdaterList;
@@ -239,32 +240,26 @@ public class PositionIndicator implements IView<JComponent>
     /***************************************************************************
      * Gets the indicated position based on the x-coordinate of the thumb.
      * @param x the x-position in the {@link #component}'s coordinate space of
-     * the left of the thumb.
+     * the component that defines the left of the thumb.
      * @return the calculated position.
      **************************************************************************/
     private long getPosition( final int x )
     {
-        int xCnt = component.getWidth() - 2;
-        int xIdx = x - 1;
+        int posMax = paintable.track.width - paintable.thumb.width - 1;
+        int posIdx = x - paintable.track.x;
 
-        if( xIdx < 0 )
-        {
-            xIdx = 0;
-        }
-        else if( xIdx >= xCnt )
-        {
-            xIdx = xCnt - 1;
-        }
+        posIdx = Math.max( posIdx, 0 );
+        posIdx = Math.min( posIdx, posMax );
 
-        double xpc = xIdx / ( double )( xCnt );
+        double posPc = posIdx / ( double )posMax;
 
-        int posCnt = component.getWidth() - 1 - paintable.thumbRect.width;
-        int posIdx = ( int )( xpc * posCnt );
-        double posPc = posIdx / ( double )posCnt;
-
-        int unitCount = paintable.getUnitCount();
-        int unitIdx = ( int )( posPc * unitCount );
+        long unitCount = paintable.getUnitCount();
+        long unitIdx = ( long )( posPc * unitCount );
         long position = unitIdx * paintable.unitLength;
+
+        LogUtils.printDebug(
+            "Calculated %d for posIdx = %d; posMax = %d; unitLength = %d, unitCount = %d",
+            position, posIdx, posMax, paintable.unitLength, unitCount );
 
         return position;
     }
@@ -275,34 +270,35 @@ public class PositionIndicator implements IView<JComponent>
     private static final class PositionIndicatorPaintable implements IPaintable
     {
         /** The bounds of the thumb. Defaults to zeros. */
-        private final Rectangle thumbRect;
+        private final Rectangle thumb;
+        /**  */
+        private final Rectangle track;
 
         /** The color of the thumb. */
         private Color thumbColor;
         /** The color of the shadow of the thumb. */
         private Color thumbShadow;
+
         /** The length of the item containing the indicated position. */
         private long length;
         /** The length of units which break up the item's length. */
         private long unitLength;
         /** The current indicated position. */
         private long position;
-        /** The indicated position of the item while dragging. */
-        private Long dragPosition;
 
         /**
          * Creates a new paintable.
          */
         public PositionIndicatorPaintable()
         {
-            this.thumbRect = new Rectangle();
+            this.thumb = new Rectangle();
+            this.track = new Rectangle();
 
             this.thumbColor = UIProperty.SCROLLBAR_THUMB.getColor();
             this.thumbShadow = UIProperty.SCROLLBAR_THUMBSHADOW.getColor();
             this.unitLength = 10;
             this.length = 0;
             this.position = 50;
-            this.dragPosition = null;
         }
 
         /**
@@ -311,16 +307,15 @@ public class PositionIndicator implements IView<JComponent>
         @Override
         public void paint( JComponent c, Graphics2D g2 )
         {
-            Rectangle bounds = c.getBounds();
+            Rectangle cb = c.getBounds();
             Insets insets = c.getInsets();
 
-            bounds.x = insets.left;
-            bounds.y = insets.top;
-            bounds.width -= ( insets.left + insets.right );
-            bounds.height -= ( insets.top + insets.bottom );
+            track.x = insets.left + 1;
+            track.y = insets.top + 1;
+            track.width = cb.width - ( insets.left + insets.right + 2 );
+            track.height = cb.height - ( insets.top + insets.bottom + 2 );
 
-            int width = bounds.width;
-            int height = bounds.height;
+            calculateThumb();
 
             Object aaHint = g2.getRenderingHint(
                 RenderingHints.KEY_ANTIALIASING );
@@ -328,62 +323,72 @@ public class PositionIndicator implements IView<JComponent>
             g2.setRenderingHint( RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON );
 
-            long off = dragPosition == null ? position : dragPosition;
-            int unitCount = getUnitCount();
-            int unitIndex = ( int )( ( double )unitCount * off / length );
+            g2.setColor( thumbShadow );
+            g2.fillRoundRect( thumb.x, thumb.y, thumb.width, thumb.height, 5,
+                5 );
+
+            g2.setColor( thumbColor );
+            g2.fillRoundRect( thumb.x + 1, thumb.y + 1, thumb.width - 2,
+                thumb.height - 2, 4, 4 );
+
+            g2.setRenderingHint( RenderingHints.KEY_ANTIALIASING, aaHint );
+        }
+
+        /**
+         * 
+         */
+        private void calculateThumb()
+        {
+            long off = position;
+
+            long unitCount = getUnitCount();
+            long unitIndex = ( long )( off * ( double )unitCount / length );
 
             if( length == 0 )
             {
                 return;
             }
 
-            int x = bounds.x;
-            int y = bounds.y;
-            int w = ( int )( width * unitLength / ( double )length ) - 2;
-            int h = height;
+            int x = track.x;
+            int y = track.y;
+            int w = ( int )( track.width * ( unitLength / ( double )length ) );
+            int h = track.height;
 
             if( unitLength > 0 )
             {
                 w = Math.max( w, 16 );
+                w = Math.min( w, track.width );
             }
 
-            x = ( int )( unitIndex / ( double )unitCount * ( width - 2 ) ) +
-                bounds.x;
+            x = ( int )( unitIndex / ( double )unitCount * track.width ) +
+                track.x;
 
-            if( x < bounds.x )
+            if( x < track.x )
             {
-                x = bounds.x;
+                x = track.x;
             }
-            else if( x + w + bounds.x > bounds.x + bounds.width )
+            else if( x + w + track.x > track.x + track.width )
             {
-                x = bounds.x + width - w - 1;
+                x = track.x + track.width - w;
             }
 
-            thumbRect.x = x;
-            thumbRect.y = y;
-            thumbRect.width = w;
-            thumbRect.height = h;
-
-            g2.setColor( thumbShadow );
-            g2.fillRoundRect( x, y, w, h, 5, 5 );
-
-            g2.setColor( thumbColor );
-            g2.fillRoundRect( x + 1, y + 1, w - 2, h - 2, 4, 4 );
-
-            g2.setRenderingHint( RenderingHints.KEY_ANTIALIASING, aaHint );
+            thumb.x = x;
+            thumb.y = y;
+            thumb.width = w;
+            thumb.height = h;
         }
 
         /**
          * Calculates and returns the number of units for the item length.
          * @return the number of units.
          */
-        private int getUnitCount()
+        private long getUnitCount()
         {
-            int count = 0;
+            long count = 0;
 
             if( unitLength != 0 )
             {
-                count = ( int )( ( length + unitLength - 1 ) / unitLength );
+                count = length / unitLength;
             }
 
             return count;
@@ -396,7 +401,7 @@ public class PositionIndicator implements IView<JComponent>
     private static final class PiMouseListener extends MouseAdapter
     {
         /** The position indicator listened to. */
-        private final PositionIndicator pi;
+        private final PositionIndicator indicator;
         /** The descriptor used to create a string for a position. */
         private final IDescriptor<Long> positionDescriptor;
         /**  */
@@ -405,7 +410,7 @@ public class PositionIndicator implements IView<JComponent>
         /** The last point at which the mouse was pressed. */
         private Point start;
         /**  */
-        private boolean dragging = false;
+        private boolean dragging;
 
         /**
          * Creates a new listener with the provided indicator and description.
@@ -416,10 +421,12 @@ public class PositionIndicator implements IView<JComponent>
         public PiMouseListener( PositionIndicator pi,
             IDescriptor<Long> descriptor )
         {
-            this.pi = pi;
+            this.indicator = pi;
             this.positionDescriptor = descriptor;
-            this.start = null;
             this.rightClickListeners = new UpdaterList<>();
+
+            this.start = null;
+            this.dragging = false;
         }
 
         /**
@@ -437,10 +444,10 @@ public class PositionIndicator implements IView<JComponent>
         @Override
         public void mouseClicked( MouseEvent e )
         {
-            if( e.isConsumed() && SwingUtilities.isLeftMouseButton( e ) &&
-                !pi.paintable.thumbRect.contains( e.getPoint() ) )
+            if( SwingUtilities.isLeftMouseButton( e ) &&
+                !indicator.paintable.thumb.contains( e.getPoint() ) )
             {
-                pi.fireThumbMoved( e.getX() );
+                indicator.fireThumbMoved( e.getX() );
             }
             else if( RightClickListener.isRightClick( e ) )
             {
@@ -471,32 +478,28 @@ public class PositionIndicator implements IView<JComponent>
                 return;
             }
 
-            if( start != null && pi.paintable.thumbRect.contains( start ) )
+            if( start != null && indicator.paintable.thumb.contains( start ) )
             {
                 dragging = true;
             }
 
             if( dragging )
             {
-                pi.paintable.dragPosition = pi.getPosition( e.getX() );
-
-                pi.component.repaint();
-
-                long position = pi.getPosition( e.getX() );
-                pi.posLabel.setText(
+                long position = indicator.getPosition( e.getX() );
+                indicator.posLabel.setText(
                     positionDescriptor.getDescription( position ) );
 
-                Point csp = pi.component.getLocationOnScreen();
+                Point csp = indicator.component.getLocationOnScreen();
                 Point msp = e.getLocationOnScreen();
 
-                msp.x = ( int )( csp.x + pi.component.getWidth() / 2.0 -
-                    pi.positionWindow.getWidth() / 2.0 );
-                msp.y = csp.y + pi.component.getHeight() + 2;
+                msp.x = ( int )( csp.x + indicator.component.getWidth() / 2.0 -
+                    indicator.positionWindow.getWidth() / 2.0 );
+                msp.y = csp.y + indicator.component.getHeight() + 2;
 
-                pi.positionWindow.setLocation( msp );
-                pi.positionWindow.setVisible( true );
+                indicator.positionWindow.setLocation( msp );
+                indicator.positionWindow.setVisible( true );
 
-                pi.fireThumbMoved( position );
+                indicator.fireThumbMoved( position );
             }
         }
 
@@ -508,16 +511,15 @@ public class PositionIndicator implements IView<JComponent>
         {
             boolean fire = dragging;
 
-            pi.paintable.dragPosition = null;
             start = null;
             dragging = false;
-            pi.positionWindow.setVisible( false );
+            indicator.positionWindow.setVisible( false );
 
-            pi.component.repaint();
+            indicator.component.repaint();
 
             if( fire )
             {
-                pi.fireThumbMoved( e.getX() );
+                indicator.fireThumbMoved( e.getX() );
             }
         }
 
@@ -527,13 +529,15 @@ public class PositionIndicator implements IView<JComponent>
         @Override
         public void mouseMoved( MouseEvent e )
         {
-            if( pi.paintable.thumbRect.contains( e.getPoint() ) )
+            if( indicator.paintable.thumb.contains( e.getPoint() ) )
             {
-                pi.component.setCursor( new Cursor( Cursor.HAND_CURSOR ) );
+                indicator.component.setCursor(
+                    new Cursor( Cursor.HAND_CURSOR ) );
             }
             else
             {
-                pi.component.setCursor( new Cursor( Cursor.DEFAULT_CURSOR ) );
+                indicator.component.setCursor(
+                    new Cursor( Cursor.DEFAULT_CURSOR ) );
             }
         }
     }
