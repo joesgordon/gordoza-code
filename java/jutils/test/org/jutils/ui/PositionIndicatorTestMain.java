@@ -1,13 +1,17 @@
 package org.jutils.ui;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
+import org.jutils.IconConstants;
+import org.jutils.SwingUtils;
 import org.jutils.io.LogUtils;
 import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
+import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.fields.HexLongFormField;
 import org.jutils.ui.fields.LongFormField;
 import org.jutils.ui.model.IView;
@@ -38,13 +42,31 @@ public class PositionIndicatorTestMain
         {
             StandardFrameView view = new StandardFrameView();
             PositionIndicatorTestView testView = new PositionIndicatorTestView();
+            ActionListener listener = ( e ) -> testView.addBookmark();
 
             view.setTitle( "Position Test Frame" );
             view.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
             view.setSize( 700, 500 );
             view.setContent( testView.getView() );
+            view.setToolbar( createToolbar( createAddAction( listener ) ) );
 
             return view.getView();
+        }
+
+        private JToolBar createToolbar( Action addAction )
+        {
+            JToolBar toolbar = new JGoodiesToolBar();
+
+            SwingUtils.addActionToToolbar( toolbar, addAction );
+
+            return toolbar;
+        }
+
+        private Action createAddAction( ActionListener listener )
+        {
+            Icon icon = IconConstants.getIcon( IconConstants.EDIT_ADD_16 );
+            // TODO Auto-generated method stub
+            return new ActionAdapter( listener, "Add Bookmark", icon );
         }
 
         /**
@@ -90,8 +112,8 @@ public class PositionIndicatorTestMain
                 ( d ) -> Long.toString( d ) );
             this.view = createView();
 
-            indicator.setLength( 100 );
-            indicator.setUnitLength( 1 );
+            indicator.setLength( LEN );
+            indicator.setUnitLength( SIZE );
             indicator.setPosition( 0L );
             // indicator.getView().setBorder( new EtchedBorder() );
             indicator.getView().setBorder( new LineBorder( Color.gray ) );
@@ -106,6 +128,11 @@ public class PositionIndicatorTestMain
             lengthField.setUpdater( ( n ) -> indicator.setLength( n ) );
             unitLengthField.setUpdater( ( n ) -> indicator.setUnitLength( n ) );
             offsetField.setUpdater( ( n ) -> indicator.setPosition( n ) );
+        }
+
+        public void addBookmark()
+        {
+            indicator.addBookmark( indicator.getPosition() );
         }
 
         /**

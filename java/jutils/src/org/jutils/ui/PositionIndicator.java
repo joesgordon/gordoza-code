@@ -3,12 +3,13 @@ package org.jutils.ui;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
 import org.jutils.data.UIProperty;
-import org.jutils.io.LogUtils;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.event.updater.UpdaterList;
@@ -213,6 +214,41 @@ public class PositionIndicator implements IView<JComponent>
     }
 
     /***************************************************************************
+     * @param position the position of the bookmark to add.
+     **************************************************************************/
+    public void addBookmark( long position )
+    {
+        paintable.bookmarks.add( position );
+        component.repaint();
+    }
+
+    /***************************************************************************
+     * @param position
+     **************************************************************************/
+    public void removeBookmark( long position )
+    {
+        paintable.bookmarks.remove( position );
+        component.repaint();
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public List<Long> getBookmarks()
+    {
+        return new ArrayList<>( paintable.bookmarks );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public void clearBookmarks()
+    {
+        paintable.bookmarks.clear();
+        component.repaint();
+    }
+
+    /***************************************************************************
      * Invokes the callback on all listeners to the position change based on the
      * x-coordinate of the thumb.
      * @param x the x-position in the {@link #component}'s coordinate space that
@@ -221,6 +257,12 @@ public class PositionIndicator implements IView<JComponent>
     private void fireThumbMoved( int x )
     {
         long pos = paintable.calculatePosition( x );
+        // int x2 = paintable.calculateThumbPosition( pos );
+        //
+        // if( x != x2 )
+        // {
+        // LogUtils.printDebug( "Wrong! expected %d, actual %d", x, x2 );
+        // }
 
         firePositionUpdated( pos );
     }
@@ -242,15 +284,25 @@ public class PositionIndicator implements IView<JComponent>
      **************************************************************************/
     private static final class PositionIndicatorPaintable implements IPaintable
     {
+        /**  */
+        private static final int BM_WIDTH = 4;
+
         /** The bounds of the thumb. Defaults to zeros. */
         private final Rectangle thumb;
         /**  */
         private final Rectangle track;
+        /**  */
+        private final List<Long> bookmarks;
 
         /** The color of the thumb. */
         private Color thumbColor;
         /** The color of the shadow of the thumb. */
         private Color thumbShadow;
+
+        /**  */
+        private Color bookmarkColor;
+        /**  */
+        private Color bookmarkShadow;
 
         /** The length of the item containing the indicated position. */
         private long length;
@@ -266,11 +318,16 @@ public class PositionIndicator implements IView<JComponent>
         {
             this.thumb = new Rectangle();
             this.track = new Rectangle();
+            this.bookmarks = new ArrayList<>();
 
             this.thumbColor = UIProperty.SCROLLBAR_THUMB.getColor();
             this.thumbShadow = UIProperty.SCROLLBAR_THUMBSHADOW.getColor();
-            this.unitLength = 10;
+
+            this.bookmarkColor = new Color( 0xFF, 0xFF, 0x00 );
+            this.bookmarkShadow = new Color( 0x000000 );
+
             this.length = 0;
+            this.unitLength = 10;
             this.position = 50;
         }
 
@@ -307,6 +364,18 @@ public class PositionIndicator implements IView<JComponent>
             g2.fillRoundRect( thumb.x + 1, thumb.y + 1, thumb.width - 2,
                 thumb.height - 2, 4, 4 );
 
+            int off = ( thumb.width - BM_WIDTH ) / 2;
+            for( long pos : bookmarks )
+            {
+                int idx = calculateThumbPosition( pos ) + off;
+                g2.setColor( bookmarkShadow );
+                g2.fillRect( idx, thumb.y, BM_WIDTH, thumb.height );
+
+                g2.setColor( bookmarkColor );
+                g2.fillRect( idx + 1, thumb.y + 1, BM_WIDTH - 2,
+                    thumb.height - 2 );
+            }
+
             g2.setRenderingHint( RenderingHints.KEY_ANTIALIASING, aaHint );
         }
 
@@ -328,6 +397,16 @@ public class PositionIndicator implements IView<JComponent>
          * @return
          */
         private int calculateThumbPosition()
+        {
+            return calculateThumbPosition( position, length, unitLength,
+                track.x, track.width, thumb.width );
+        }
+
+        /**
+         * @param position
+         * @return
+         */
+        private int calculateThumbPosition( long position )
         {
             return calculateThumbPosition( position, length, unitLength,
                 track.x, track.width, thumb.width );
@@ -361,19 +440,20 @@ public class PositionIndicator implements IView<JComponent>
             int posMax = trackWidth - thumbWidth - 1;
 
             long unitCount = calculateUnitCount( length, unitLength );
-            long unitIndex = ( long )( position / ( double )length *
-                unitCount );
+            long unitIndex = ( long )( ( double )position / ( double )length *
+                ( double )unitCount );
 
-            int posIdx = ( int )( unitIndex / ( double )unitCount * posMax ) +
-                trackx;
+            int posIdx = ( int )( ( double )unitIndex / ( double )unitCount *
+                ( double )posMax ) + trackx;
 
             posIdx = Math.max( posIdx, 0 );
             posIdx = Math.min( posIdx, posMax );
             int x = posIdx + trackx;
 
-            LogUtils.printDebug(
-                "Calculated index %d (x = %d) for position = %d; posMax = %d; unitLength = %d, unitCount = %d",
-                posIdx, x, position, posMax, unitLength, unitCount );
+            // LogUtils.printDebug(
+            // "Calculated index %d (x = %d) for position = %d; posMax = %d;" +
+            // " unitLength = %d; unitCount = %d; unitIndex = %d",
+            // posIdx, x, position, posMax, unitLength, unitCount, unitIndex );
 
             return x;
         }
@@ -397,19 +477,23 @@ public class PositionIndicator implements IView<JComponent>
             posIdx = Math.min( posIdx, posMax );
 
             long unitCount = calculateUnitCount( length, unitLength );
-            long unitIndex = ( long )( posIdx / ( double )posMax * unitCount );
+            long unitIndex = ( long )( ( double )posIdx / ( double )posMax *
+                ( double )unitCount );
 
             long position = unitIndex * unitLength;
 
-            LogUtils.printDebug(
-                "Calculated position %d for posIdx = %d (x = %d); posMax = %d; unitLength = %d, unitCount = %d",
-                position, x, posIdx, posMax, unitLength, unitCount );
+            // LogUtils.printDebug(
+            // "Calculated position %d for posIdx = %d (x = %d); posMax = %d;" +
+            // " unitLength = %d; unitCount = %d; unitIndex = %d",
+            // position, x, posIdx, posMax, unitLength, unitCount, unitIndex );
 
             return position;
         }
 
         /**
          * Calculates and returns the number of units for the item length.
+         * @param length
+         * @param unitLength
          * @return the number of units.
          */
         private static long calculateUnitCount( long length, long unitLength )
