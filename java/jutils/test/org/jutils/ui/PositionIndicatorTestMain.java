@@ -1,6 +1,6 @@
 package org.jutils.ui;
 
-import java.awt.*;
+import java.awt.Color;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
@@ -8,11 +8,9 @@ import javax.swing.border.LineBorder;
 
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
-import org.jutils.io.LogUtils;
 import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.event.ActionAdapter;
-import org.jutils.ui.fields.HexLongFormField;
 import org.jutils.ui.fields.LongFormField;
 import org.jutils.ui.model.IView;
 
@@ -53,6 +51,10 @@ public class PositionIndicatorTestMain
             return view.getView();
         }
 
+        /**
+         * @param addAction
+         * @return
+         */
         private JToolBar createToolbar( Action addAction )
         {
             JToolBar toolbar = new JGoodiesToolBar();
@@ -62,6 +64,10 @@ public class PositionIndicatorTestMain
             return toolbar;
         }
 
+        /**
+         * @param listener
+         * @return
+         */
         private Action createAddAction( ActionListener listener )
         {
             Icon icon = IconConstants.getIcon( IconConstants.EDIT_ADD_16 );
@@ -91,14 +97,18 @@ public class PositionIndicatorTestMain
         /**  */
         private final LongFormField unitLengthField;
         /**  */
-        private final HexLongFormField offsetField;
+        private final LongFormField positionField;
         /**  */
-        private final PositionIndicator indicator;
+        private final PositionIndicator posIndicator;
+        /**  */
+        private final LongFormField unitPositionField;
+        /**  */
+        private final UnitPositionIndicator unitIndicator;
 
         /**  */
-        private static final long LEN = 865716124;
+        private static final long LEN = 100000;
         /**  */
-        private static final long SIZE = 4 * 1024 * 1024;
+        private static final long SIZE = LEN / 70;
 
         /**
          * 
@@ -107,43 +117,64 @@ public class PositionIndicatorTestMain
         {
             this.lengthField = new LongFormField( "Length" );
             this.unitLengthField = new LongFormField( "Unit Length" );
-            this.offsetField = new HexLongFormField( "Offset" );
-            this.indicator = new PositionIndicator(
+            this.positionField = new LongFormField( "Position" );
+            this.posIndicator = new PositionIndicator(
+                ( d ) -> Long.toString( d ) );
+            this.unitPositionField = new LongFormField( "Unit Position" );
+            this.unitIndicator = new UnitPositionIndicator(
                 ( d ) -> Long.toString( d ) );
             this.view = createView();
 
-            indicator.setLength( LEN );
-            indicator.setUnitLength( SIZE );
-            indicator.setPosition( 0L );
-            // indicator.getView().setBorder( new EtchedBorder() );
-            indicator.getView().setBorder( new LineBorder( Color.gray ) );
+            posIndicator.setLength( LEN );
+            posIndicator.setPosition( 0L );
+            posIndicator.getView().setBorder( new LineBorder( Color.gray ) );
 
-            lengthField.setValue( indicator.getLength() );
-            unitLengthField.setValue( indicator.getUnitLength() );
-            offsetField.setValue( indicator.getPosition() );
+            unitIndicator.setLength( LEN );
+            unitIndicator.setPosition( 0L );
+            unitIndicator.setUnitLength( SIZE );
+            unitIndicator.getView().setBorder( new LineBorder( Color.gray ) );
 
-            indicator.addPositionListener(
-                ( e ) -> updatePosition( e.getItem() ) );
+            lengthField.setValue( LEN );
+            unitLengthField.setValue( SIZE );
+            positionField.setValue( posIndicator.getPosition() );
+            unitPositionField.setValue( unitIndicator.getPosition() );
 
-            lengthField.setUpdater( ( n ) -> indicator.setLength( n ) );
-            unitLengthField.setUpdater( ( n ) -> indicator.setUnitLength( n ) );
-            offsetField.setUpdater( ( n ) -> indicator.setPosition( n ) );
+            posIndicator.addPositionListener(
+                ( d ) -> updatePosition( d, positionField ) );
+            unitIndicator.addPositionListener(
+                ( d ) -> updatePosition( d, unitPositionField ) );
+
+            lengthField.setUpdater( ( n ) -> {
+                posIndicator.setLength( n );
+                unitIndicator.setLength( n );
+            } );
+
+            positionField.setUpdater( ( n ) -> posIndicator.setPosition( n ) );
+
+            unitLengthField.setUpdater(
+                ( n ) -> unitIndicator.setUnitLength( n ) );
+            unitPositionField.setUpdater(
+                ( n ) -> unitIndicator.setPosition( n ) );
         }
 
+        /**
+         * 
+         */
         public void addBookmark()
         {
-            indicator.addBookmark( indicator.getPosition() );
+            posIndicator.addBookmark( posIndicator.getPosition() );
+            unitIndicator.addBookmark( unitIndicator.getPosition() );
         }
 
         /**
          * @param position
+         * @param field
          */
-        private void updatePosition( long position )
+        private void updatePosition( long position, LongFormField field )
         {
-            offsetField.setValue( position );
-            indicator.setPosition( position );
+            field.setValue( position );
 
-            LogUtils.printDebug( "new position: %d", position );
+            // LogUtils.printDebug( "new position: %d", position );
         }
 
         /**
@@ -151,27 +182,15 @@ public class PositionIndicatorTestMain
          */
         private JPanel createView()
         {
-            BorderLayout layout = new BorderLayout();
-            JPanel panel = new JPanel( layout );
-
-            layout.setHgap( 4 );
-
-            panel.add( createForm(), BorderLayout.CENTER );
-            panel.add( indicator.getView(), BorderLayout.SOUTH );
-
-            return panel;
-        }
-
-        /**
-         * @return
-         */
-        private Component createForm()
-        {
             StandardFormView form = new StandardFormView();
 
             form.addField( lengthField );
+            form.addField( positionField );
+            form.addComponent( posIndicator.getView() );
+
             form.addField( unitLengthField );
-            form.addField( offsetField );
+            form.addField( unitPositionField );
+            form.addComponent( unitIndicator.getView() );
 
             return form.getView();
         }

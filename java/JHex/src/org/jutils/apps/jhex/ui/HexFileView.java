@@ -36,7 +36,7 @@ public class HexFileView implements IDataView<File>
     private final JPanel view;
 
     /**  */
-    private final PositionIndicator progressBar;
+    private final UnitPositionIndicator progressBar;
     /**  */
     private final JLabel offsetLabel;
     /**  */
@@ -102,7 +102,7 @@ public class HexFileView implements IDataView<File>
         this.plotAction = new ActionAdapter( ( e ) -> showPlot(), "Plot",
             ChartIcons.getIcon( ChartIcons.CHART_016 ) );
 
-        this.progressBar = new PositionIndicator();
+        this.progressBar = new UnitPositionIndicator();
         this.offsetLabel = new JLabel( "" );
         this.hexView = new HexPanel();
         this.fileTitleView = new TitleView( "No File Loaded", createContent() );
@@ -197,8 +197,7 @@ public class HexFileView implements IDataView<File>
         progressBar.setLength( 0 );
         progressBar.setPosition( 0 );
         progressBar.getView().setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
-        progressBar.addPositionListener(
-            ( e ) -> updatePosition( e.getItem() ) );
+        progressBar.addPositionListener( ( d ) -> updatePosition( d ) );
 
         // setAlternateRowBG( true );
         // setShowGrid( true );
@@ -311,7 +310,7 @@ public class HexFileView implements IDataView<File>
         nextAction.setEnabled( position < buffer.getLastPosition() );
         lastAction.setEnabled( nextAction.isEnabled() );
         progressBar.setPosition( position );
-        progressBar.setUnitLength( block.buffer.length );
+        // progressBar.setUnitLength( block.buffer.length );
     }
 
     /***************************************************************************
@@ -538,6 +537,9 @@ public class HexFileView implements IDataView<File>
         return hexView.getBuffer();
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public void jumpFirst()
     {
         jump( 0L );

@@ -10,7 +10,7 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 
 import org.jutils.data.UIProperty;
-import org.jutils.ui.event.*;
+import org.jutils.ui.event.RightClickListener;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.event.updater.UpdaterList;
 import org.jutils.ui.fields.IDescriptor;
@@ -29,7 +29,7 @@ public class PositionIndicator implements IView<JComponent>
     /** The label that shows the position in the popup window. */
     private final JLabel posLabel;
     /** The list of listers to be notified when the position changes. */
-    private final ItemActionList<Long> posititonListeners;
+    private final UpdaterList<Long> posititonListeners;
     /** The object that draws the component. */
     private final PositionIndicatorPaintable paintable;
     /** The control to be drawn. */
@@ -62,7 +62,7 @@ public class PositionIndicator implements IView<JComponent>
         this.component = new PaintingComponent( paintable );
         this.posLabel = new JLabel();
         this.positionWindow = createWindow();
-        this.posititonListeners = new ItemActionList<>();
+        this.posititonListeners = new UpdaterList<>();
         this.mouseListener = new PiMouseListener( this, descriptor );
 
         component.setMinimumSize( new Dimension( 20, 20 ) );
@@ -77,7 +77,7 @@ public class PositionIndicator implements IView<JComponent>
      * zero-padded hexadecimal string.
      * @return the default position descriptor.
      **************************************************************************/
-    private IDescriptor<Long> createDefaultPositionDescriptor()
+    public static IDescriptor<Long> createDefaultPositionDescriptor()
     {
         return ( v ) -> String.format( "0x%016X", v );
     }
@@ -118,12 +118,12 @@ public class PositionIndicator implements IView<JComponent>
     }
 
     /***************************************************************************
-     * Add the provided listener to be called when the position is updated.
+     * Adds the provided listener to be called when the position is updated.
      * @param l the listener to be added.
      **************************************************************************/
-    public void addPositionListener( ItemActionListener<Long> l )
+    public void addPositionListener( IUpdater<Long> l )
     {
-        posititonListeners.addListener( l );
+        posititonListeners.addUpdater( l );
     }
 
     /***************************************************************************
@@ -139,7 +139,7 @@ public class PositionIndicator implements IView<JComponent>
      * Sets the color of the "Thumb" that represents the position.
      * @param c the new color of the "Thumb"
      **************************************************************************/
-    public void setUnitColor( Color c )
+    public void setThumbColor( Color c )
     {
         paintable.thumbColor = c;
         component.repaint();
@@ -166,41 +166,12 @@ public class PositionIndicator implements IView<JComponent>
     }
 
     /***************************************************************************
-     * Sets the length of the units that break up the length of the item.
-     * @param length the length of a unit.
-     * @throws IllegalArgumentException if the provided length is less than 1.
-     **************************************************************************/
-    public void setUnitLength( long length ) throws IllegalArgumentException
-    {
-        if( length > 0 )
-        {
-            paintable.unitLength = length;
-            component.repaint();
-        }
-        else
-        {
-            throw new IllegalArgumentException(
-                "The unit increment length must be greater than 0" );
-        }
-    }
-
-    /***************************************************************************
-     * Returns the previously set length of the units that break up the length
-     * of the item.
-     * @return the length of a unit.
-     **************************************************************************/
-    public long getUnitLength()
-    {
-        return paintable.unitLength;
-    }
-
-    /***************************************************************************
      * Sets the indicated position.
      * @param position the position to be displayed.
      **************************************************************************/
     public void setPosition( long position )
     {
-        paintable.position = position;
+        paintable.setPosition( position );
         component.repaint();
     }
 
@@ -210,7 +181,7 @@ public class PositionIndicator implements IView<JComponent>
      **************************************************************************/
     public long getPosition()
     {
-        return paintable.position;
+        return paintable.getPosition();
     }
 
     /***************************************************************************
@@ -223,7 +194,7 @@ public class PositionIndicator implements IView<JComponent>
     }
 
     /***************************************************************************
-     * @param position
+     * @param position the position of the bookmark to remove.
      **************************************************************************/
     public void removeBookmark( long position )
     {
@@ -232,7 +203,7 @@ public class PositionIndicator implements IView<JComponent>
     }
 
     /***************************************************************************
-     * @return
+     * @return a copy of the list of bookmarks added.
      **************************************************************************/
     public List<Long> getBookmarks()
     {
@@ -253,30 +224,25 @@ public class PositionIndicator implements IView<JComponent>
      * x-coordinate of the thumb.
      * @param x the x-position in the {@link #component}'s coordinate space that
      * defines the left of the thumb.
+     * @return the indicated position represented by the provided position.
      **************************************************************************/
-    private void fireThumbMoved( int x )
+    private long fireThumbMoved( int x )
     {
-        long pos = paintable.calculatePosition( x );
-        // int x2 = paintable.calculateThumbPosition( pos );
-        //
-        // if( x != x2 )
-        // {
-        // LogUtils.printDebug( "Wrong! expected %d, actual %d", x, x2 );
-        // }
+        long pos = paintable.setThumbPosition( x );
+        component.repaint();
 
         firePositionUpdated( pos );
+
+        return pos;
     }
 
     /***************************************************************************
      * Invokes the callback on all listeners to the position change.
-     * @param position the new indicated positon.
+     * @param position the new indicated position.
      **************************************************************************/
     private void firePositionUpdated( long position )
     {
-        if( position != paintable.position )
-        {
-            posititonListeners.fireListeners( this, position );
-        }
+        posititonListeners.fireListeners( position );
     }
 
     /***************************************************************************
@@ -306,8 +272,6 @@ public class PositionIndicator implements IView<JComponent>
 
         /** The length of the item containing the indicated position. */
         private long length;
-        /** The length of units which break up the item's length. */
-        private long unitLength;
         /** The current indicated position. */
         private long position;
 
@@ -327,8 +291,46 @@ public class PositionIndicator implements IView<JComponent>
             this.bookmarkShadow = new Color( 0x000000 );
 
             this.length = 0;
-            this.unitLength = 10;
             this.position = 50;
+        }
+
+        /**
+         * @param x the thumb position in the components coordinate space.
+         * @return the indicated position represented by the provided position.
+         */
+        public long setThumbPosition( int x )
+        {
+            long pos = calculatePosition( x );
+
+            // LogUtils.printDebug( "Moving thumb to %d", x );
+            // int thumbPos = paintable.calculateThumbPosition( pos );
+            //
+            // if( thumbPos != x )
+            // {
+            // LogUtils.printDebug(
+            // "Wrong: Expected index %d for position %d; Actual %d", x, pos,
+            // thumbPos );
+            // }
+
+            setPosition( pos );
+
+            return pos;
+        }
+
+        /**
+         * @param position the indicated position.
+         */
+        public void setPosition( long position )
+        {
+            this.position = position;
+        }
+
+        /**
+         * @return the original position when setting with
+         */
+        public long getPosition()
+        {
+            return position;
         }
 
         /**
@@ -337,12 +339,14 @@ public class PositionIndicator implements IView<JComponent>
         @Override
         public void paint( JComponent c, Graphics2D g2 )
         {
+            // LogUtils.printDebug( "Drawing position %d", position );
+
             Rectangle cb = c.getBounds();
             Insets insets = c.getInsets();
 
-            track.x = insets.left;
+            track.x = insets.left + 1;
             track.y = insets.top + 1;
-            track.width = cb.width - ( insets.left + insets.right );
+            track.width = cb.width - ( insets.left + insets.right + 2 );
             track.height = cb.height - ( insets.top + insets.bottom + 2 );
 
             thumb.y = track.y;
@@ -384,8 +388,7 @@ public class PositionIndicator implements IView<JComponent>
          */
         private void calculateThumb()
         {
-            thumb.width = ( int )( track.width *
-                ( unitLength / ( double )length ) );
+            thumb.width = ( int )( track.width / ( double )length );
 
             thumb.width = Math.max( thumb.width, 16 );
             thumb.width = Math.min( thumb.width, track.width );
@@ -394,22 +397,26 @@ public class PositionIndicator implements IView<JComponent>
         }
 
         /**
-         * @return
+         * @return the calculated position.
          */
         private int calculateThumbPosition()
         {
-            return calculateThumbPosition( position, length, unitLength,
-                track.x, track.width, thumb.width );
+            return calculateThumbPosition( getPosition(), length, track.x,
+                track.width, thumb.width );
         }
 
         /**
-         * @param position
-         * @return
+         * @param position the position being displayed
+         * @return the calculated position
          */
         private int calculateThumbPosition( long position )
         {
-            return calculateThumbPosition( position, length, unitLength,
-                track.x, track.width, thumb.width );
+            int x = calculateThumbPosition( position, length, track.x,
+                track.width, thumb.width );
+
+            // this.positionError = position - calculatePosition( x );
+
+            return x;
         }
 
         /**
@@ -420,93 +427,83 @@ public class PositionIndicator implements IView<JComponent>
          */
         private long calculatePosition( int x )
         {
-            return calculatePosition( x, length, unitLength, track.x,
-                track.width, thumb.width );
+            long position = calculatePosition( x, length, track.x, track.width,
+                thumb.width );
+
+            return position;
         }
 
         /**
-         * @param position
-         * @param unitCount
-         * @param length
-         * @param unitLength
-         * @param trackx
-         * @param trackWidth
-         * @param thumbWidth
-         * @return
+         * @param position the position within the length.
+         * @param length the length of the item containing positions.
+         * @param trackx the x position within the component's coordinate space
+         * of the start of the track.
+         * @param trackWidth the width of the track.
+         * @param thumbWidth the width of the thumb.
+         * @return the calculated position.
          */
         private static int calculateThumbPosition( long position, long length,
-            long unitLength, int trackx, int trackWidth, int thumbWidth )
+            int trackx, int trackWidth, int thumbWidth )
         {
-            int posMax = trackWidth - thumbWidth - 1;
+            int posMax = trackWidth - thumbWidth;
 
-            long unitCount = calculateUnitCount( length, unitLength );
-            long unitIndex = ( long )( ( double )position / ( double )length *
-                ( double )unitCount );
-
-            int posIdx = ( int )( ( double )unitIndex / ( double )unitCount *
-                ( double )posMax ) + trackx;
+            int posIdx = ( int )Math.round(
+                ( ( double )position / ( length - 1.0 ) * ( double )posMax ) );
 
             posIdx = Math.max( posIdx, 0 );
             posIdx = Math.min( posIdx, posMax );
             int x = posIdx + trackx;
 
             // LogUtils.printDebug(
-            // "Calculated index %d (x = %d) for position = %d; posMax = %d;" +
-            // " unitLength = %d; unitCount = %d; unitIndex = %d",
-            // posIdx, x, position, posMax, unitLength, unitCount, unitIndex );
+            // "Calculated thumb position %d (x = %d) for position = %d;" +
+            // " length = %d; trackx = %d; trackWidth = %d;" +
+            // " thumbWidth = %d; posMax = %d",
+            // posIdx, x, position, length, trackx, trackWidth, thumbWidth,
+            // posMax );
 
             return x;
         }
 
         /**
-         * @param x
-         * @param length
-         * @param unitLength
-         * @param trackx
-         * @param trackWidth
-         * @param thumbWidth
-         * @return
+         * @param x the x position in the component's coordinate space for which
+         * the position is calculated.
+         * @param length the length of the item containing positions.
+         * @param trackx the x position within the component's coordinate space
+         * of the start of the track.
+         * @param trackWidth the width of the track.
+         * @param thumbWidth the width of the thumb.
+         * @return the calculated position.
          */
-        private static long calculatePosition( int x, long length,
-            long unitLength, int trackx, int trackWidth, int thumbWidth )
+        private static long calculatePosition( int x, long length, int trackx,
+            int trackWidth, int thumbWidth )
         {
-            int posMax = trackWidth - thumbWidth - 1;
+            int posMax = trackWidth - thumbWidth;
             int posIdx = x - trackx;
 
             posIdx = Math.max( posIdx, 0 );
             posIdx = Math.min( posIdx, posMax );
 
-            long unitCount = calculateUnitCount( length, unitLength );
-            long unitIndex = ( long )( ( double )posIdx / ( double )posMax *
-                ( double )unitCount );
+            long position = Math.round(
+                ( double )posIdx / ( double )posMax * ( length - 1.0 ) );
 
-            long position = unitIndex * unitLength;
+            // position = ( position / unitLength ) * unitLength;
 
             // LogUtils.printDebug(
-            // "Calculated position %d for posIdx = %d (x = %d); posMax = %d;" +
-            // " unitLength = %d; unitCount = %d; unitIndex = %d",
-            // position, x, posIdx, posMax, unitLength, unitCount, unitIndex );
+            // "Calculated position %d for posIdx = %d (x = %d); length = %d;" +
+            // " trackx = %d; trackWidth = %d; thumbWidth = %d;" +
+            // " posMax = %d",
+            // position, posIdx, x, length, trackx, trackWidth, thumbWidth,
+            // posMax );
 
             return position;
         }
 
         /**
-         * Calculates and returns the number of units for the item length.
-         * @param length
-         * @param unitLength
-         * @return the number of units.
+         * @return a copy of the thumb bounds.
          */
-        private static long calculateUnitCount( long length, long unitLength )
+        public Rectangle getThumbBounds()
         {
-            long count = 0;
-
-            if( unitLength != 0 )
-            {
-                // count = ( length + unitLength - 1 ) / unitLength;
-                count = length / unitLength;
-            }
-
-            return count;
+            return new Rectangle( thumb );
         }
     }
 
@@ -565,10 +562,11 @@ public class PositionIndicator implements IView<JComponent>
         @Override
         public void mouseClicked( MouseEvent e )
         {
+            Rectangle thumb = indicator.paintable.getThumbBounds();
             if( SwingUtilities.isLeftMouseButton( e ) &&
-                !indicator.paintable.thumb.contains( e.getPoint() ) )
+                !thumb.contains( e.getPoint() ) )
             {
-                indicator.fireThumbMoved( e.getX() );
+                indicator.fireThumbMoved( e.getX() - thumb.width / 2 );
             }
             else if( RightClickListener.isRightClick( e ) )
             {
@@ -585,7 +583,8 @@ public class PositionIndicator implements IView<JComponent>
             if( SwingUtilities.isLeftMouseButton( e ) )
             {
                 start = e.getPoint();
-                thumbxStart = indicator.paintable.thumb.x;
+                Rectangle thumb = indicator.paintable.getThumbBounds();
+                thumbxStart = thumb.x;
                 dragx = start.x;
             }
         }
@@ -601,7 +600,8 @@ public class PositionIndicator implements IView<JComponent>
                 return;
             }
 
-            if( start != null && indicator.paintable.thumb.contains( start ) )
+            if( start != null &&
+                indicator.paintable.getThumbBounds().contains( start ) )
             {
                 dragging = true;
             }
@@ -612,9 +612,11 @@ public class PositionIndicator implements IView<JComponent>
 
                 int delta = e.getX() - start.x;
                 int thumbx = thumbxStart + delta;
-                long position = indicator.paintable.calculatePosition( thumbx );
-                indicator.posLabel.setText(
-                    positionDescriptor.getDescription( position ) );
+
+                long pos = indicator.fireThumbMoved( thumbx );
+
+                String text = positionDescriptor.getDescription( pos );
+                indicator.posLabel.setText( text );
 
                 Point csp = indicator.component.getLocationOnScreen();
                 Point msp = e.getLocationOnScreen();
@@ -625,8 +627,6 @@ public class PositionIndicator implements IView<JComponent>
 
                 indicator.positionWindow.setLocation( msp );
                 indicator.positionWindow.setVisible( true );
-
-                indicator.firePositionUpdated( position );
             }
         }
 
@@ -649,7 +649,7 @@ public class PositionIndicator implements IView<JComponent>
         @Override
         public void mouseMoved( MouseEvent e )
         {
-            if( indicator.paintable.thumb.contains( e.getPoint() ) )
+            if( indicator.paintable.getThumbBounds().contains( e.getPoint() ) )
             {
                 indicator.component.setCursor(
                     new Cursor( Cursor.HAND_CURSOR ) );
