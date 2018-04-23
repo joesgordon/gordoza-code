@@ -50,7 +50,7 @@ public class FontDescription
 
     /***************************************************************************
      * Sets the provided attributes according to this font description.
-     * @param attributes
+     * @param attributes the attributes to set this description to.
      **************************************************************************/
     public void getAttributes( MutableAttributeSet attributes )
     {
@@ -67,7 +67,7 @@ public class FontDescription
 
     /***************************************************************************
      * Sets this font description according to the provided attributes.
-     * @param attributes
+     * @param attributes the attributes to be set using this description.
      **************************************************************************/
     public void setAttributes( AttributeSet attributes )
     {

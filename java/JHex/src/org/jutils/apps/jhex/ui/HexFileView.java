@@ -28,7 +28,7 @@ import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
 import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
- *
+ * Displays the contents of a file in a paginated hex table.
  ******************************************************************************/
 public class HexFileView implements IDataView<File>
 {
