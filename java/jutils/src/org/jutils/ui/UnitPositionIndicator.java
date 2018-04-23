@@ -165,9 +165,7 @@ public class UnitPositionIndicator implements IView<JComponent>
      **************************************************************************/
     private long calculateItemPosition( long unitIndex )
     {
-        long unitCount = calculateUnitCount();
-        long position = Math.round(
-            unitIndex / ( unitCount - 1.0 ) * ( itemLength - 1.0 ) );
+        long position = unitIndex * unitLength;
 
         // LogUtils.printDebug( );
 
