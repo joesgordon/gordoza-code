@@ -21,6 +21,9 @@ public class StandardUncaughtExceptionHandler
     /**  */
     private final MessageExceptionView exView;
 
+    /**  */
+    private static boolean showingDialog = false;
+
     /***************************************************************************
      * @param frame
      **************************************************************************/
@@ -40,7 +43,7 @@ public class StandardUncaughtExceptionHandler
         {
             th.printStackTrace();
 
-            catchUncaughtException( thread, th );
+            handleUncaughtException( thread, th );
         }
         catch( Throwable ex )
         {
@@ -48,7 +51,11 @@ public class StandardUncaughtExceptionHandler
         }
     }
 
-    private void catchUncaughtException( Thread thread, Throwable th )
+    /***************************************************************************
+     * @param thread
+     * @param th
+     **************************************************************************/
+    private void handleUncaughtException( Thread thread, Throwable th )
     {
         File exFile = IOUtils.getUsersFile( ".uncaught_exception" );
 
@@ -68,9 +75,17 @@ public class StandardUncaughtExceptionHandler
             ex.printStackTrace();
         }
 
-        if( !exView.getView().isShowing() )
+        if( !showingDialog )
         {
-            displayException( th );
+            showingDialog = true;
+            try
+            {
+                displayException( th );
+            }
+            finally
+            {
+                showingDialog = false;
+            }
         }
     }
 

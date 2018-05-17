@@ -2,7 +2,8 @@ package org.jutils.io.options;
 
 import java.io.*;
 
-import org.jutils.io.*;
+import org.jutils.io.IOUtils;
+import org.jutils.io.XStreamUtils;
 
 import com.thoughtworks.xstream.XStreamException;
 
@@ -35,11 +36,18 @@ public class OptionsSerializer<T>
     {
         this.creator = creator;
         this.file = file;
+
+        if( !IOUtils.ensureParentExists( file ) )
+        {
+            creator.warn( "User options directory cannot be created: " +
+                file.getParentFile().getAbsolutePath() );
+        }
     }
 
     /***************************************************************************
      * Creates the directories for this file if necessary and returns
      * {@code true} if they exist as of the return of this function.
+     * @return
      **************************************************************************/
     public boolean ensureDirectoryExists()
     {
@@ -55,6 +63,7 @@ public class OptionsSerializer<T>
 
     /***************************************************************************
      * Returns the last options read/written.
+     * @return
      **************************************************************************/
     public T getOptions()
     {
@@ -77,6 +86,7 @@ public class OptionsSerializer<T>
 
     /***************************************************************************
      * Reads the options from file, caching the options before returns them.
+     * @return
      **************************************************************************/
     public T read()
     {
@@ -210,13 +220,6 @@ public class OptionsSerializer<T>
     public static <T> OptionsSerializer<T> getOptions(
         IOptionsCreator<T> creator, File file )
     {
-        if( !IOUtils.ensureParentExists( file ) )
-        {
-            LogUtils.printWarning(
-                "User options directory cannot be created: " +
-                    file.getParentFile().getAbsolutePath() );
-        }
-
         return new OptionsSerializer<T>( creator, file );
     }
 
@@ -226,6 +229,7 @@ public class OptionsSerializer<T>
      * @param cls the class of the object to be serialized.
      * @param file the file to be used for serialization.
      * @param <T> the type of object to be serialized.
+     * @return
      **************************************************************************/
     public static <T> OptionsSerializer<T> getOptions( Class<T> cls, File file )
     {

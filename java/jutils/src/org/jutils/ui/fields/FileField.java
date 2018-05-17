@@ -54,9 +54,10 @@ public class FileField implements IDataView<File>, IValidationField
         this.field = new ValidationTextComponentField<>( new JTextField() );
         this.textField = new IconTextField( field.getView() );
         this.button = new JButton();
+        this.icon = new FileIcon();
+
         this.fileListener = createFileListener( existence, isSave );
         this.view = createView( existence, required, showButton );
-        this.icon = new FileIcon();
 
         textField.setIcon( icon );
 
@@ -289,11 +290,17 @@ public class FileField implements IDataView<File>, IValidationField
     {
         private final FileField view;
 
+        /**
+         * @param view
+         */
         public FileUpdater( FileField view )
         {
             this.view = view;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void update( File file )
         {

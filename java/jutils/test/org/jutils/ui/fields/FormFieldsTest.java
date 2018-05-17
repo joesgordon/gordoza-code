@@ -181,6 +181,10 @@ public class FormFieldsTest
                     ExistenceType.DO_NOT_CHECK ),
                 null ) );
             itemsModel.addElement( createFormFieldItem(
+                new FileFormField( "File Form Field (not set, false)",
+                    ExistenceType.DO_NOT_CHECK, false ),
+                null ) );
+            itemsModel.addElement( createFormFieldItem(
                 new FileFormField( "File Form Field (Dir/Save)",
                     ExistenceType.DIRECTORY_ONLY ),
                 new File( "/" ) ) );
