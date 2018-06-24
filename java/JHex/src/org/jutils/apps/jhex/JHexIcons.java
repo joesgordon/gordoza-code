@@ -8,23 +8,23 @@ import javax.swing.Icon;
 import org.jutils.io.IconLoader;
 
 /*******************************************************************************
- * 
+ * Defines the methods for accessing the icons needed in the JHex application.
  ******************************************************************************/
 public class JHexIcons
 {
-    /**  */
+    /** The icon loader needed to access the project icons. */
     public static final IconLoader loader = new IconLoader( JHexIcons.class,
         "icons" );
 
-    /**  */
+    /** Represents a go-to operation. */
     public static final String GOTO = "goto.png";
-    /**  */
+    /** Represents the 16 pixel application icon. */
     public static final String APP_016 = "app_016.png";
-    /**  */
+    /** Represents the 24 pixel application icon. */
     public static final String APP_024 = "app_024.png";
 
     /***************************************************************************
-     * @return
+     * @return the list of application images.
      **************************************************************************/
     public static List<Image> getAppImages()
     {
@@ -32,11 +32,13 @@ public class JHexIcons
     }
 
     /***************************************************************************
-     * @param str
-     * @return
+     * The icon specified by the provided name.
+     * @param name the name of the icon to load.
+     * @return the icon loaded or {@code null} if it does not exist.
+     * @see IconLoader#getIcon(String)
      **************************************************************************/
-    public static Icon getIcon( String str )
+    public static Icon getIcon( String name )
     {
-        return loader.getIcon( str );
+        return loader.getIcon( name );
     }
 }

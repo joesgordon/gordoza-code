@@ -35,7 +35,7 @@ public class DataPlotView implements IView<JComponent>
     private final ByteCache cache;
 
     /***************************************************************************
-     * 
+     * @param stream
      **************************************************************************/
     public DataPlotView( IStream stream )
     {
@@ -120,9 +120,9 @@ public class DataPlotView implements IView<JComponent>
         }
     }
 
-    /**
+    /***************************************************************************
      * @param position
-     */
+     **************************************************************************/
     private void load( long position )
     {
         try
@@ -158,60 +158,91 @@ public class DataPlotView implements IView<JComponent>
      **************************************************************************/
     public static class DataSeries implements ISeriesData<IDataPoint>
     {
+        /**  */
         private byte [] data;
 
+        /**
+         * @param data
+         */
         public DataSeries( byte [] data )
         {
             this.data = data;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public Iterator<IDataPoint> iterator()
         {
             return new SeriesIterator( this );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public int getCount()
         {
             return data.length;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public double getX( int index )
         {
             return index;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public double getY( int index )
         {
             return data[index];
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public IDataPoint get( int index )
         {
             return new XYPoint( index, getY( index ) );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public boolean isHidden( int index )
         {
             return false;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void setHidden( int index, boolean hidden )
         {
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public boolean isSelected( int index )
         {
             return false;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void setSelected( int index, boolean selected )
         {
@@ -223,21 +254,33 @@ public class DataPlotView implements IView<JComponent>
      **************************************************************************/
     private static class SeriesIterator implements Iterator<IDataPoint>
     {
-        private int index;
+        /**  */
         private final ISeriesData<IDataPoint> series;
 
+        /**  */
+        private int index;
+
+        /**
+         * @param series
+         */
         public SeriesIterator( ISeriesData<IDataPoint> series )
         {
             this.series = series;
             this.index = 0;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public boolean hasNext()
         {
             return index < series.getCount();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public IDataPoint next()
         {

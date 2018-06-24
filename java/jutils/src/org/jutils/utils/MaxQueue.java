@@ -27,7 +27,8 @@ public class MaxQueue<T> implements Iterable<T>
     }
 
     /***************************************************************************
-     * @param queue
+     * Creates a copy of the provided queue.
+     * @param queue the queue to be copied.
      **************************************************************************/
     public MaxQueue( MaxQueue<T> queue )
     {
@@ -140,7 +141,8 @@ public class MaxQueue<T> implements Iterable<T>
     }
 
     /***************************************************************************
-     * Returns the first item in the queue or {@code null} if empty.
+     * Returns the first item in the queue.
+     * @return the first item in the queue or {@code null} if empty.
      **************************************************************************/
     public T first()
     {
@@ -148,7 +150,8 @@ public class MaxQueue<T> implements Iterable<T>
     }
 
     /***************************************************************************
-     * Returns the last item in the queue, or {@code null} if empty.
+     * Returns the last item in the queue.
+     * @return the last item in the queue, or {@code null} if empty.
      **************************************************************************/
     public T last()
     {
@@ -156,7 +159,8 @@ public class MaxQueue<T> implements Iterable<T>
     }
 
     /***************************************************************************
-     * @return
+     * Creates a new list populated with the items in this queue.
+     * @return the new list of items in the queue.
      **************************************************************************/
     public List<T> toList()
     {

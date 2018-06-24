@@ -27,7 +27,7 @@ public class ZipWriter implements Closeable
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void close() throws IOException
@@ -158,9 +158,14 @@ public class ZipWriter implements Closeable
      **************************************************************************/
     public static class DirContents
     {
+        /**  */
         public File parent;
+        /**  */
         public final List<String> paths;
 
+        /**
+         * 
+         */
         public DirContents()
         {
             this.paths = new ArrayList<>();

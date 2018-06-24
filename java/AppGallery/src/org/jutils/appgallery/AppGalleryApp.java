@@ -15,7 +15,7 @@ import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.app.IFrameApp;
 
 /*******************************************************************************
- * 
+ * Defines the set of functions that displays a frame application.
  ******************************************************************************/
 public class AppGalleryApp implements IFrameApp
 {
@@ -23,7 +23,7 @@ public class AppGalleryApp implements IFrameApp
     private final List<ILibraryApp> apps;
 
     /***************************************************************************
-     * 
+     * Creates a new app that displays a gallery of library apps.
      **************************************************************************/
     public AppGalleryApp()
     {
@@ -41,8 +41,7 @@ public class AppGalleryApp implements IFrameApp
     }
 
     /***************************************************************************
-     * Create the AppGalley frame.
-     * @return
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JFrame createFrame()
@@ -67,7 +66,10 @@ public class AppGalleryApp implements IFrameApp
     }
 
     /***************************************************************************
-     * @return
+     * Creates the popup menu for the tray icon that displays all the apps in
+     * the gallery.
+     * @param frame the frame to use as the parent of the popup menu.
+     * @return the
      **************************************************************************/
     private PopupMenu createPopupMenu( JFrame frame )
     {
@@ -91,7 +93,7 @@ public class AppGalleryApp implements IFrameApp
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void finalizeGui()

@@ -63,6 +63,9 @@ public class Account
         return ledgers;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public List<Transaction> getCurrentMonthsTransactions()
     {
         LocalDate start = LocalDate.now();

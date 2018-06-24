@@ -885,6 +885,12 @@ public final class IOUtils
         return url;
     }
 
+    /***************************************************************************
+     * @param file
+     * @return
+     * @throws FileNotFoundException
+     * @throws IOException
+     **************************************************************************/
     public static boolean isBinary( File file )
         throws FileNotFoundException, IOException
     {
@@ -919,6 +925,10 @@ public final class IOUtils
         return false;
     }
 
+    /***************************************************************************
+     * @param b
+     * @return
+     **************************************************************************/
     private static boolean isNonPrintable( byte b )
     {
 

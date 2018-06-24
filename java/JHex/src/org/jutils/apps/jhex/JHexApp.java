@@ -7,21 +7,22 @@ import javax.swing.JFrame;
 import org.jutils.apps.jhex.ui.JHexFrame;
 import org.jutils.ui.app.IFrameApp;
 
-/***************************************************************************
- * 
- **************************************************************************/
+/*******************************************************************************
+ * Defines the {@link IFrameApp} that starts the JHex application.
+ ******************************************************************************/
 public class JHexApp implements IFrameApp
 {
-    /**  */
+    /** The file to be loaded when the application is started. */
     private final File file;
-    /**  */
+    /** Closes the file when */
     private final boolean closeFileWithFrame;
 
-    /**  */
+    /** The view created by {@link #createFrame()}. */
     private JHexFrame view;
 
     /***************************************************************************
-     *
+     * Creates a new app with no file that closes the file when the frame is
+     * closed.
      **************************************************************************/
     public JHexApp()
     {
@@ -29,7 +30,9 @@ public class JHexApp implements IFrameApp
     }
 
     /***************************************************************************
-     * @param file
+     * Creates a new app with the provided file that closes the file when the
+     * frame is closed.
+     * @param file the file to be displayed when the application is started.
      **************************************************************************/
     public JHexApp( File file )
     {
@@ -37,8 +40,11 @@ public class JHexApp implements IFrameApp
     }
 
     /***************************************************************************
-     * @param file
-     * @param closeFileWithFrame
+     * Creates a new app with the provided file that closes the file when the
+     * frame is closed according to the provided parameter.
+     * @param file the file to be displayed when the application is started.
+     * @param closeFileWithFrame closes the file when the frame is closed if
+     * {@code true}.
      **************************************************************************/
     public JHexApp( File file, boolean closeFileWithFrame )
     {
@@ -47,7 +53,8 @@ public class JHexApp implements IFrameApp
     }
 
     /***************************************************************************
-     * @return
+     * Returns the created view.
+     * @return the view created by {@link #createFrame()}.
      **************************************************************************/
     public JHexFrame getView()
     {
@@ -55,7 +62,7 @@ public class JHexApp implements IFrameApp
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JFrame createFrame()
@@ -67,7 +74,7 @@ public class JHexApp implements IFrameApp
     }
 
     /***************************************************************************
-     * 
+     * Displays the file specified if defined. {@inheritDoc}
      **************************************************************************/
     @Override
     public void finalizeGui()

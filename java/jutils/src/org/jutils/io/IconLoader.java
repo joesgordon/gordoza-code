@@ -2,7 +2,6 @@ package org.jutils.io;
 
 import java.awt.Image;
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
@@ -27,9 +26,8 @@ public class IconLoader
     /***************************************************************************
      * Creates an icon loader initialized to the provided base path.
      * @param basePath the path containing icons.
-     * @throws MalformedURLException
      **************************************************************************/
-    public IconLoader( File basePath ) throws MalformedURLException
+    public IconLoader( File basePath )
     {
         this( new ResourceLoader( basePath ) );
     }
@@ -88,7 +86,7 @@ public class IconLoader
 
     /***************************************************************************
      * Returns the icons with the provided names.
-     * @param name the names/relative paths to the icons.
+     * @param names the names/relative paths to the icons.
      * @return the list of icons loaded or an empty list if none found.
      **************************************************************************/
     public List<ImageIcon> getIcons( String... names )
@@ -116,7 +114,7 @@ public class IconLoader
 
     /***************************************************************************
      * Returns the images with the provided names.
-     * @param name the names/relative paths to the images.
+     * @param names the names/relative paths to the images.
      * @return the list of images loaded or and empty list if none found.
      **************************************************************************/
     public List<Image> getImages( String... names )

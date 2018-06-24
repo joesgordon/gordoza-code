@@ -10,22 +10,23 @@ import org.jutils.task.*;
  ******************************************************************************/
 public class SearchTask implements IStatusTask
 {
-    /**  */
+    /** The bytes this task is searching for. */
     private final byte [] bytes;
-    /**  */
+    /** The stream to be searched. */
     private final IStream stream;
-    /**  */
+    /** The offset into the stream to start searching. */
     private final long offset;
-    /**  */
+    /** Search forward if {@code true}; backwards otherwise. */
     private final boolean forward;
 
+    /**  */
     public long foundOffset;
 
     /***************************************************************************
-     * @param bytes
-     * @param stream
-     * @param offset
-     * @param isForward
+     * @param bytes the bytes this task is searching for.
+     * @param stream the stream to be searched.
+     * @param offset the offset into the stream to start searching.
+     * @param isForward search forward if {@code true}; backwards otherwise.
      **************************************************************************/
     public SearchTask( byte [] bytes, IStream stream, long offset,
         boolean isForward )
@@ -34,6 +35,8 @@ public class SearchTask implements IStatusTask
         this.stream = stream;
         this.offset = offset;
         this.forward = isForward;
+
+        this.foundOffset = -1;
     }
 
     /***************************************************************************
@@ -61,8 +64,9 @@ public class SearchTask implements IStatusTask
     }
 
     /***************************************************************************
-     * @param handler
-     * @throws IOException
+     * @param handler handler the handler that preempts execution and reports
+     * status and errors.
+     * @throws IOException any I/O error that occurs.
      **************************************************************************/
     private void search( ITaskStatusHandler handler ) throws IOException
     {
