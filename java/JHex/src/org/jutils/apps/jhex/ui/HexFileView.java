@@ -289,7 +289,7 @@ public class HexFileView implements IDataView<File>
      **************************************************************************/
     private void loadBuffer( long position ) throws IOException
     {
-        if( position < 0 || position >= buffer.getLength() ||
+        if( position < 0 || position > buffer.getLength() ||
             buffer.isLoaded( position ) )
         {
             return;
@@ -692,6 +692,9 @@ public class HexFileView implements IDataView<File>
             long len = buffer.getLength();
             long size = buffer.getBufferSize();
             long unitLen = size > len ? len : size;
+
+            unitLen = unitLen == 0 ? size : unitLen;
+
             progressBar.setLength( len );
             progressBar.setUnitLength( unitLen );
         }
@@ -747,7 +750,8 @@ public class HexFileView implements IDataView<File>
     }
 
     /***************************************************************************
-     * @param foundOffset
+     * @param offset
+     * @param length
      **************************************************************************/
     public void highlightOffset( long offset, int length )
     {
