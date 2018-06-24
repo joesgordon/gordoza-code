@@ -126,6 +126,9 @@ public class DistributionBuilder
      **************************************************************************/
     private static class CountComparator implements Comparator<DataRecord>
     {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public int compare( DataRecord this1, DataRecord that1 )
         {

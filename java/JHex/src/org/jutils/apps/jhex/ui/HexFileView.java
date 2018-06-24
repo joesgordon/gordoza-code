@@ -806,15 +806,24 @@ public class HexFileView implements IDataView<File>
      **************************************************************************/
     private static class ShowDataListener implements ActionListener
     {
+        /**  */
         private final HexFileView view;
+        /**  */
         private final JToggleButton button;
 
+        /**
+         * @param view
+         * @param jtb
+         */
         public ShowDataListener( HexFileView view, JToggleButton jtb )
         {
             this.view = view;
             this.button = jtb;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ActionEvent e )
         {
@@ -828,13 +837,20 @@ public class HexFileView implements IDataView<File>
     private static class SizeSelectedListener
         implements ItemActionListener<Integer>
     {
+        /**  */
         private final HexFileView view;
 
+        /**
+         * @param view
+         */
         public SizeSelectedListener( HexFileView view )
         {
             this.view = view;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ItemActionEvent<Integer> event )
         {
@@ -849,13 +865,20 @@ public class HexFileView implements IDataView<File>
      **************************************************************************/
     private static class SelectionListener implements IRangeSelectedListener
     {
+        /**  */
         private final HexFileView view;
 
+        /**
+         * @param view
+         */
         public SelectionListener( HexFileView view )
         {
             this.view = view;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void rangeSelected( int start, int end )
         {
@@ -873,20 +896,32 @@ public class HexFileView implements IDataView<File>
      **************************************************************************/
     private static class FindAgainListener implements ActionListener
     {
+        /**  */
         private final HexFileView view;
+        /**  */
         private final boolean isForward;
 
+        /**
+         * @param view
+         */
         public FindAgainListener( HexFileView view )
         {
             this( view, true );
         }
 
+        /**
+         * @param view
+         * @param forward
+         */
         public FindAgainListener( HexFileView view, boolean forward )
         {
             this.view = view;
             this.isForward = forward;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public synchronized void actionPerformed( ActionEvent e )
         {

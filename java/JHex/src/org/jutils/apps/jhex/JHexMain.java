@@ -10,25 +10,30 @@ import org.jutils.io.options.OptionsSerializer;
 import org.jutils.ui.app.FrameRunner;
 
 /*******************************************************************************
- * 
+ * Contains the entry point for the JHex application.
  ******************************************************************************/
 public class JHexMain
 {
-    /**  */
+    /** The path to the user options file. */
     public static final File USER_OPTIONS_FILE = IOUtils.getUsersFile(
         ".jutils", "jhex", "options.xml" );
 
-    /**  */
+    /**
+     * The single user options shared by all instances of the calling
+     * application.
+     */
     private static OptionsSerializer<JHexOptions> OPTIONS;
 
     /***************************************************************************
-     * @param args Program arguments.
+     * Starts the JHex application.
+     * @param args either an empty array or the path to the file to be displayed
+     * when the application starts.
      **************************************************************************/
     public static void main( String [] args )
     {
         File file = null;
 
-        if( args.length > 0 )
+        if( args.length == 1 )
         {
             file = new File( args[0] );
             if( !file.isFile() )
@@ -44,7 +49,9 @@ public class JHexMain
     }
 
     /***************************************************************************
-     * @return
+     * Gets (or creates) the user options for the JHex application.
+     * @return the single user options shared by all instances of the calling
+     * application.
      **************************************************************************/
     public static OptionsSerializer<JHexOptions> getOptions()
     {
@@ -62,13 +69,18 @@ public class JHexMain
     private static final class JHexOptionsCreator
         implements IOptionsCreator<JHexOptions>
     {
-
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public JHexOptions createDefaultOptions()
         {
             return new JHexOptions();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public JHexOptions initialize( JHexOptions options )
         {
@@ -79,6 +91,9 @@ public class JHexMain
             return options;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void warn( String message )
         {

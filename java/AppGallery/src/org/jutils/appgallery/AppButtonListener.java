@@ -10,10 +10,13 @@ import org.jutils.appgallery.ui.AppGalleryView;
  ******************************************************************************/
 public class AppButtonListener implements ActionListener
 {
+    /** The application to launch on {@link #actionPerformed(ActionEvent)}. */
     private final ILibraryApp app;
 
     /***************************************************************************
      * Creates a new listener using the provided application.
+     * @param app the application to launch on
+     * {@link #actionPerformed(ActionEvent)}.
      **************************************************************************/
     public AppButtonListener( ILibraryApp app )
     {
@@ -21,7 +24,7 @@ public class AppButtonListener implements ActionListener
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void actionPerformed( ActionEvent e )

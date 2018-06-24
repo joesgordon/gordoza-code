@@ -44,7 +44,7 @@ public class JHexFrame implements IView<JFrame>
     private HexBufferSize bufferSize;
 
     /***************************************************************************
-     * Creates a JHex frame.
+     * Creates a new frame that closes the file when the frame closes.
      **************************************************************************/
     public JHexFrame()
     {
@@ -52,7 +52,10 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * @param closeFileWithFrame
+     * Creates a new frame that closes the file when the frame closes according
+     * to the provided parameter.
+     * @param closeFileWithFrame closes the file when the frame is closed if
+     * {@code true}.
      **************************************************************************/
     public JHexFrame( boolean closeFileWithFrame )
     {
@@ -91,6 +94,7 @@ public class JHexFrame implements IView<JFrame>
 
     /***************************************************************************
      * Creates the toolbar.
+     * @return the toolbar created.
      **************************************************************************/
     private JToolBar createToolbar()
     {
@@ -112,6 +116,10 @@ public class JHexFrame implements IView<JFrame>
         return toolbar;
     }
 
+    /***************************************************************************
+     * Creates a listener that opens a file.
+     * @return the listener that opens a file.
+     **************************************************************************/
     private FileChooserListener createOpenListener()
     {
         IFileSelected ifs = ( f ) -> openFile( f );
@@ -123,11 +131,11 @@ public class JHexFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * Creates the menu bar.
-     * @param menubar
-     * @param fileMenu
+     * Adds the menu components to the provided bar and file menu.
+     * @param menubar the menu bar to add menus to.
+     * @param fileMenu the file menu of the menu bar.
      **************************************************************************/
-    private JMenuBar createMenuBar( JMenuBar menubar, JMenu fileMenu )
+    private void createMenuBar( JMenuBar menubar, JMenu fileMenu )
     {
         createFileMenu( fileMenu );
         menubar.add( fileMenu );
@@ -135,12 +143,11 @@ public class JHexFrame implements IView<JFrame>
         menubar.add( createToolsMenu() );
 
         updateFileMenu();
-
-        return menubar;
     }
 
     /***************************************************************************
-     * @param fileMenu
+     * Adds the application menu items to the provided file menu.
+     * @param fileMenu the file menu to add menu items to.
      **************************************************************************/
     private void createFileMenu( JMenu fileMenu )
     {
@@ -175,7 +182,7 @@ public class JHexFrame implements IView<JFrame>
 
     /***************************************************************************
      * Creates the search menu.
-     * @return
+     * @return the application's search menu.
      **************************************************************************/
     private JMenu createNavMenu()
     {
@@ -196,7 +203,7 @@ public class JHexFrame implements IView<JFrame>
 
     /***************************************************************************
      * Creates the tools menu.
-     * @return
+     * @return the applications tools menu.
      **************************************************************************/
     private JMenu createToolsMenu()
     {
@@ -321,13 +328,21 @@ public class JHexFrame implements IView<JFrame>
     private static class FileDroppedListener
         implements ItemActionListener<IFileDropEvent>
     {
+        /** The view to open the dropped file. */
         private final JHexFrame view;
 
+        /**
+         * Creates a new listener for a dropped file.
+         * @param view the view to open the dropped file.
+         */
         public FileDroppedListener( JHexFrame view )
         {
             this.view = view;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ItemActionEvent<IFileDropEvent> event )
         {
@@ -346,13 +361,26 @@ public class JHexFrame implements IView<JFrame>
      **************************************************************************/
     private static class WindowCloseListener extends WindowAdapter
     {
+        /**
+         * The frame that contains the resource to be closed when the frame
+         * closes.
+         */
         private final JHexFrame frame;
 
+        /**
+         * Creates a new window listener that closes the resources of the
+         * provided frame when closed.
+         * @param frame the frame that contains the resource to be closed when
+         * the frame closes.
+         */
         public WindowCloseListener( JHexFrame frame )
         {
             this.frame = frame;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void windowClosing( WindowEvent e )
         {
@@ -360,6 +388,9 @@ public class JHexFrame implements IView<JFrame>
             frame.closeFile();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void windowClosed( WindowEvent e )
         {

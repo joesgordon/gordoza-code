@@ -12,7 +12,9 @@ public class FilePrintStream implements IPrintStream
     /** The buffer size used to create the underlying writer. */
     private static final int BUFFER_SIZE = 64 * 1024;
 
+    /** The output stream that writes to a file. */
     private final FileOutputStream fileStream;
+    /** the writer that writes to an output stream. */
     private final OutputStreamWriter outputWriter;
     /** The buffer to use for printing. */
     private final BufferedWriter writer;
