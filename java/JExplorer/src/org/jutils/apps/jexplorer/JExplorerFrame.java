@@ -113,8 +113,7 @@ public class JExplorerFrame implements IView<JFrame>
 
         frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         frame.setTitle( "JExplorer" );
-        frame.setIconImages( IconConstants.getImages(
-            IconConstants.OPEN_FOLDER_16, IconConstants.OPEN_FOLDER_32 ) );
+        frame.setIconImages( JExplorerIcons.getAppImages() );
         frame.setSize( new Dimension( 600, 450 ) );
 
         createMenubar( view.getMenuBar() );

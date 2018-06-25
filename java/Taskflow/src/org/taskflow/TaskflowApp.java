@@ -7,8 +7,8 @@ import javax.swing.JFrame;
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
 import org.jutils.ui.app.IFrameApp;
-import org.tuvok.ui.TaskflowFrameView;
-import org.tuvok.ui.TaskflowMenu;
+import org.taskflow.ui.TaskflowFrameView;
+import org.taskflow.ui.TaskflowMenu;
 
 /*******************************************************************************
  * 

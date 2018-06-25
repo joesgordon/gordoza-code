@@ -64,8 +64,8 @@ public final class EagleSheetIcons
             "spreadsheet16.png" );
     }
 
-    public static Icon getApp32()
+    public static Icon getApp24()
     {
-        return loader.getIcon( "spreadsheet32.png" );
+        return loader.getIcon( "spreadsheet24.png" );
     }
 }

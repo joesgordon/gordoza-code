@@ -1,17 +1,14 @@
 package org.jutils.appgallery;
 
-import java.awt.*;
-import java.util.ArrayList;
+import java.awt.TrayIcon;
 import java.util.List;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
-import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
-import org.jutils.appgallery.apps.*;
-import org.jutils.appgallery.ui.AppGalleryView;
+import org.jutils.appgallery.ui.AppGalleryFrameView;
 import org.jutils.ui.ExitListener;
-import org.jutils.ui.StandardFrameView;
+import org.jutils.ui.IToolView;
 import org.jutils.ui.app.IFrameApp;
 
 /*******************************************************************************
@@ -19,48 +16,21 @@ import org.jutils.ui.app.IFrameApp;
  ******************************************************************************/
 public class AppGalleryApp implements IFrameApp
 {
-    /**  */
-    private final List<ILibraryApp> apps;
-
-    /***************************************************************************
-     * Creates a new app that displays a gallery of library apps.
-     **************************************************************************/
-    public AppGalleryApp()
-    {
-        apps = new ArrayList<ILibraryApp>();
-
-        apps.add( new FileSpyApp() );
-        apps.add( new JHexApp() );
-        apps.add( new JExplorerApp() );
-        apps.add( new ChatterboxApp() );
-        apps.add( new BudgeyApp() );
-        apps.add( new DuakApp() );
-        apps.add( new SheetApp() );
-        apps.add( new ChartApp() );
-        apps.add( new TaskflowLibApp() );
-    }
-
     /***************************************************************************
      * {@inheritDoc}
      **************************************************************************/
     @Override
     public JFrame createFrame()
     {
-        StandardFrameView frameView = new StandardFrameView();
-        AppGalleryView appFrame = new AppGalleryView( apps );
+        List<IToolView> apps = AppGalleryMain.getTools();
+        AppGalleryFrameView frameView = new AppGalleryFrameView( apps );
         JFrame frame = frameView.getView();
 
-        Image img = IconConstants.getImage( IconConstants.LAUNCH_16 );
+        TrayIcon icon = SwingUtils.createTrayIcon(
+            AppGalleryIcons.getImage( AppGalleryIcons.APP_16 ), "Tray Helper",
+            frame, null );
 
-        frameView.setContent( appFrame.getView() );
-
-        frame.setIconImages( AppGalleryIcons.getAppImages() );
-        frame.setTitle( "JUtils Application Gallery" );
-        frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-        frame.setSize( 500, 500 );
-
-        SwingUtils.createTrayIcon( img, "App Gallery", frame,
-            createPopupMenu( frame ) );
+        SwingUtils.addTrayMenu( icon, createPopup( frameView ) );
 
         return frame;
     }
@@ -69,24 +39,18 @@ public class AppGalleryApp implements IFrameApp
      * Creates the popup menu for the tray icon that displays all the apps in
      * the gallery.
      * @param frame the frame to use as the parent of the popup menu.
-     * @return the
+     * @return
      **************************************************************************/
-    private PopupMenu createPopupMenu( JFrame frame )
+    private JPopupMenu createPopup( AppGalleryFrameView frame )
     {
-        PopupMenu menu = new PopupMenu();
-        MenuItem menuItem;
+        JPopupMenu menu = new JPopupMenu();
 
-        for( ILibraryApp app : apps )
-        {
-            menuItem = new MenuItem( app.getName() );
-            menuItem.addActionListener( new AppButtonListener( app ) );
-            menu.add( menuItem );
-        }
+        menu.add( frame.createMenu() );
 
         menu.addSeparator();
 
-        menuItem = new MenuItem( "Exit" );
-        menuItem.addActionListener( new ExitListener( frame ) );
+        JMenuItem menuItem = new JMenuItem( "Exit" );
+        menuItem.addActionListener( new ExitListener( frame.getView() ) );
         menu.add( menuItem );
 
         return menu;

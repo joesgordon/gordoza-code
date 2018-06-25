@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import org.budgey.BudgeyIconConstants;
+import org.budgey.BudgeyIcons;
 import org.budgey.data.*;
 import org.budgey.model.BalanceCalculator;
 import org.jutils.IconConstants;
@@ -74,12 +74,12 @@ public class BudgeyView implements IDataView<Budget>
         configView.addCancelListener( doneListener );
 
         calenderAddButton = new JButton(
-            BudgeyIconConstants.getCalendarAddIcon() );
+            BudgeyIcons.getCalendarAddIcon() );
         transactionAddButton = new JButton(
-            BudgeyIconConstants.getCoinsAddIcon() );
+            BudgeyIcons.getCoinsAddIcon() );
         calenderButton = new JButton(
             IconConstants.getIcon( IconConstants.CALENDAR_32 ) );
-        configButton = new JButton( BudgeyIconConstants.getCogIcon() );
+        configButton = new JButton( BudgeyIcons.getCogIcon() );
 
         accountField = new JLabel( "Account Name" );
         sliderPanel = new CardPanel();

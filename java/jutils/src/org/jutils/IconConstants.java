@@ -20,9 +20,6 @@ public final class IconConstants
     public final static String ANALYZE_16 = "analyze016.png";
 
     /**  */
-    public final static String ATOMIC_32 = "atomic32.png";
-
-    /**  */
     public static final String NAV_FIRST_16 = "nav_first16.png";
 
     /**  */
@@ -50,9 +47,6 @@ public final class IconConstants
     public final static String NAV_UP_24 = "nav_up24.png";
 
     /**  */
-    public final static String BINARY_32 = "binary32.png";
-
-    /**  */
     public final static String CALENDAR_16 = "calendar16.png";
 
     /**  */
@@ -60,6 +54,9 @@ public final class IconConstants
 
     /**  */
     public final static String CHAT_16 = "chat16.png";
+
+    /**  */
+    public final static String CHAT_24 = "chat24.png";
 
     /**  */
     public final static String CHAT_32 = "chat32.png";
@@ -147,6 +144,9 @@ public final class IconConstants
 
     /**  */
     public final static String OPEN_FOLDER_16 = "folder16.png";
+
+    /**  */
+    public final static String OPEN_FOLDER_24 = "folder24.png";
 
     /**  */
     public final static String OPEN_FOLDER_32 = "folder32.png";
@@ -293,7 +293,7 @@ public final class IconConstants
      * @param names the names of the images to be loaded as a list.
      * @return the list of images loaded from the provided names.
      **************************************************************************/
-    public static List<? extends Image> getImages( String... names )
+    public static List<Image> getImages( String... names )
     {
         return loader.getImages( names );
     }

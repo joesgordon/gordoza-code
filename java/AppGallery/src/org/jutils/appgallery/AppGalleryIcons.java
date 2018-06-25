@@ -11,6 +11,9 @@ import org.jutils.io.IconLoader;
 public final class AppGalleryIcons
 {
     /**  */
+    public static final String APP_16 = "app_16.png";
+
+    /**  */
     public static final IconLoader loader = new IconLoader(
         AppGalleryIcons.class, "icons" );
 
@@ -27,5 +30,14 @@ public final class AppGalleryIcons
     public static List<Image> getAppImages()
     {
         return loader.getImages( IconLoader.buildNameList( "app_" ) );
+    }
+
+    /***************************************************************************
+     * @param name
+     * @return
+     **************************************************************************/
+    public static Image getImage( String name )
+    {
+        return loader.getImage( name );
     }
 }

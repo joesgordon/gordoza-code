@@ -6,7 +6,7 @@ import java.io.*;
 
 import javax.swing.*;
 
-import org.budgey.BudgeyIconConstants;
+import org.budgey.BudgeyIcons;
 import org.budgey.BudgeyMain;
 import org.budgey.data.Budget;
 import org.budgey.data.BudgeyOptions;
@@ -57,7 +57,7 @@ public class BudgeyFrame implements IView<JFrame>
         frame.setTitle( "Budgey" );
         setBudget( new Budget() );
 
-        frame.setIconImages( BudgeyIconConstants.getWalletIcons() );
+        frame.setIconImages( BudgeyIcons.getWalletIcons() );
     }
 
     /***************************************************************************
@@ -83,13 +83,13 @@ public class BudgeyFrame implements IView<JFrame>
         toolbar.addSeparator();
 
         JButton accountAddButton = new JButton(
-            BudgeyIconConstants.getBookAddIcon() );
+            BudgeyIcons.getBookAddIcon() );
         accountAddButton.setToolTipText( "Add Account" );
         accountAddButton.setFocusable( false );
         // newButton.addActionListener( new NewButtonListener() );
         toolbar.add( accountAddButton );
 
-        JButton switchButton = new JButton( BudgeyIconConstants.getBookIcon() );
+        JButton switchButton = new JButton( BudgeyIcons.getBookIcon() );
         switchButton.setFocusable( false );
         switchButton.setToolTipText( "View a Different Account" );
         // newButton.addActionListener( new NewButtonListener() );

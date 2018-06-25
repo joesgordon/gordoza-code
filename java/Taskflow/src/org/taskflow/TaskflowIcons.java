@@ -1,4 +1,4 @@
-package org.duak;
+package org.taskflow;
 
 import java.awt.Image;
 import java.util.List;
@@ -8,23 +8,21 @@ import javax.swing.ImageIcon;
 import org.jutils.io.IconLoader;
 
 /*******************************************************************************
- * 
+ *
  ******************************************************************************/
-public final class DuakIcons
+public final class TaskflowIcons
 {
-    /**  */
-    public static final IconLoader loader = new IconLoader( DuakIcons.class,
+    /** The loader used to access the icons. */
+    public final static IconLoader loader = new IconLoader( TaskflowIcons.class,
         "icons" );
 
     /**  */
-    public static final String APP_024 = "duak_024.png";
-    /**  */
-    public static final String APP_032 = "duak_032.png";
+    public static String APP_024 = "calendar_" + "024.png";
 
     /***************************************************************************
      * Private default constructor to prevent instantiation of this class.
      **************************************************************************/
-    private DuakIcons()
+    private TaskflowIcons()
     {
     }
 
@@ -33,15 +31,15 @@ public final class DuakIcons
      **************************************************************************/
     public static List<Image> getAppImages()
     {
-        return loader.getImages( IconLoader.buildNameList( "duak_" ) );
+        return loader.getImages( IconLoader.buildNameList( "calendar_" ) );
     }
 
     /***************************************************************************
-     * @param name
+     * @param str
      * @return
      **************************************************************************/
-    public static ImageIcon getIcon( String name )
+    public static ImageIcon getIcon( String str )
     {
-        return loader.getIcon( name );
+        return loader.getIcon( str );
     }
 }
