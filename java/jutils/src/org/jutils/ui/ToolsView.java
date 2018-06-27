@@ -1,7 +1,8 @@
 package org.jutils.ui;
 
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
@@ -15,22 +16,27 @@ import org.jutils.ui.model.*;
 import org.jutils.ui.model.LabelTableCellRenderer.ITableCellLabelDecorator;
 
 /*******************************************************************************
- * 
+ * Displays tools and their descriptions in a table that allows the user to
+ * start a tool by double-clicking on it.
  ******************************************************************************/
 public class ToolsView implements IView<JPanel>
 {
-    /**  */
+    /** The view of this gallery of tools. */
     private final JPanel view;
-    /**  */
+    /** The table to display the tools. */
     private final JTable table;
-    /**  */
+    /** The model of the table that contains the tools. */
     private final ItemsTableModel<IToolView> tableModel;
-    /**  */
+    /**
+     * The name of the application to be displayed in each tool's window title.
+     */
     private final String appName;
 
     /***************************************************************************
-     * @param tools
-     * @param appName
+     * Creates a new gallery of tools.
+     * @param tools the tools to be displayed.
+     * @param appName the name of the application to be displayed in each tool's
+     * window title alongside the name of the tool.
      **************************************************************************/
     public ToolsView( List<? extends IToolView> tools, String appName )
     {
@@ -56,11 +62,12 @@ public class ToolsView implements IView<JPanel>
         SwingUtils.addKeyListener( table, "ENTER", false,
             ( e ) -> showSelectedRow(), "Enter to display tool" );
 
-        ResizingTableModelListener.resizeTable( table );
+        resizeTable();
     }
 
     /***************************************************************************
-     * @return
+     * Creates the main view of tools.
+     * @return the new view.
      **************************************************************************/
     private JPanel createView()
     {
@@ -79,33 +86,16 @@ public class ToolsView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * 
+     * Resizes the table to fit the icons, names, and descriptions of the tools.
      **************************************************************************/
-    public void resizeTable()
+    private void resizeTable()
     {
         ResizingTableModelListener.resizeTable( table );
     }
 
     /***************************************************************************
-     * @param menubar
-     **************************************************************************/
-    public static void fixMenuBar( JMenuBar menubar )
-    {
-        menubar.setBorder(
-            new javax.swing.border.MatteBorder( 0, 0, 1, 0, Color.gray ) );
-    }
-
-    /***************************************************************************
-     * {@inheritDoc}
-     **************************************************************************/
-    @Override
-    public JPanel getView()
-    {
-        return view;
-    }
-
-    /***************************************************************************
-     * 
+     * Displays the tool of the selected row. Does nothing if no row is
+     * selected.
      **************************************************************************/
     private void showSelectedRow()
     {
@@ -120,7 +110,58 @@ public class ToolsView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @param tool
+     * Adds the tools in this view to the provided menu.
+     * @param menu the menu to which the tools in this view are added.
+     **************************************************************************/
+    private void addToMenu( JMenu menu )
+    {
+        JMenuItem item;
+
+        for( IToolView tool : tableModel.getItems() )
+        {
+            item = new JMenuItem( tool.getName(), tool.getIcon24() );
+            item.setFont( item.getFont().deriveFont( 16.0f ) );
+            item.addActionListener( ( e ) -> showTool( tool ) );
+            menu.add( item );
+        }
+    }
+
+    /***************************************************************************
+     * Creates a default tool icon.
+     * @return the default icon.
+     **************************************************************************/
+    private static ImageIcon createDefaultIcon()
+    {
+        int iconSize = 24;
+
+        BufferedImage image = Utils.createTransparentImage( iconSize,
+            iconSize );
+
+        Graphics2D graphics = image.createGraphics();
+
+        graphics.setRenderingHint( RenderingHints.KEY_ANTIALIASING,
+            RenderingHints.VALUE_ANTIALIAS_ON );
+
+        int shapeSize = 24 - 2;
+
+        graphics.setColor( new Color( 58, 110, 167 ) );
+        graphics.fillRoundRect( 1, 1, shapeSize, shapeSize, 4, 4 );
+
+        return new ImageIcon( image );
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public JPanel getView()
+    {
+        return view;
+    }
+
+    /***************************************************************************
+     * Displays the tool provided.
+     * @param tool the tool to be displayed.
      **************************************************************************/
     public void showTool( IToolView tool )
     {
@@ -170,8 +211,8 @@ public class ToolsView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @param tools
-     * @return
+     * Creates a menu called "Tools" which contains the tools in this view.
+     * @return the menu of tools.
      **************************************************************************/
     public JMenu createMenu()
     {
@@ -179,9 +220,10 @@ public class ToolsView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @param tools
-     * @param menuName
-     * @return
+     * Creates a menu with the provided name which contains the tools in this
+     * view.
+     * @param menuName the name of the menu to be displayed.
+     * @return the menu of tools.
      **************************************************************************/
     public JMenu createMenu( String menuName )
     {
@@ -193,53 +235,13 @@ public class ToolsView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @param tools
-     * @param menu
-     **************************************************************************/
-    private void addToMenu( JMenu menu )
-    {
-        JMenuItem item;
-
-        for( IToolView tool : tableModel.getItems() )
-        {
-            item = new JMenuItem( tool.getName(), tool.getIcon24() );
-            item.setFont( item.getFont().deriveFont( 16.0f ) );
-            item.addActionListener( new ShowToolListener( this, tool ) );
-            menu.add( item );
-        }
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    private static ImageIcon createDefaultIcon()
-    {
-        int iconSize = 24;
-
-        BufferedImage image = Utils.createTransparentImage( iconSize,
-            iconSize );
-
-        Graphics2D graphics = image.createGraphics();
-
-        graphics.setRenderingHint( RenderingHints.KEY_ANTIALIASING,
-            RenderingHints.VALUE_ANTIALIAS_ON );
-
-        int shapeSize = 24 - 2;
-
-        graphics.setColor( new Color( 58, 110, 167 ) );
-        graphics.fillRoundRect( 1, 1, shapeSize, shapeSize, 4, 4 );
-
-        return new ImageIcon( image );
-    }
-
-    /***************************************************************************
-     * 
+     * Defines the contents of the tools table.
      **************************************************************************/
     private static class ToolsTableModel implements ITableItemsConfig<IToolView>
     {
-        /**  */
+        /** The names of the columns of the tools table. */
         public final static String [] COL_NAMES = { "Name", "Description" };
-        /**  */
+        /** The type of data in the columns of the tools table. */
         public final static Class<?> [] COL_CLASSES = { String.class,
             String.class };
 
@@ -297,11 +299,11 @@ public class ToolsView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * 
+     * Defines how tool names are drawn.
      **************************************************************************/
     private static class ToolCellRenderer implements ITableCellLabelDecorator
     {
-        /**  */
+        /** A default icon in case none is loaded from the tool. */
         private static final Icon TOOL_ICON = createDefaultIcon();
 
         /**
@@ -330,15 +332,16 @@ public class ToolsView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * 
+     * Defines the double-click handler for the table.
      **************************************************************************/
     private static class TableMouseListener extends MouseAdapter
     {
-        /**  */
+        /** The view of tools. */
         private final ToolsView view;
 
         /**
-         * @param view
+         * Creates a new listener with the provided view.
+         * @param view the view of tools.
          */
         public TableMouseListener( ToolsView view )
         {
@@ -355,36 +358,6 @@ public class ToolsView implements IView<JPanel>
             {
                 view.showSelectedRow();
             }
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class ShowToolListener implements ActionListener
-    {
-        /**  */
-        private final ToolsView view;
-        /**  */
-        private final IToolView tool;
-
-        /**
-         * @param view
-         * @param tool
-         */
-        public ShowToolListener( ToolsView view, IToolView tool )
-        {
-            this.view = view;
-            this.tool = tool;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            view.showTool( tool );
         }
     }
 }

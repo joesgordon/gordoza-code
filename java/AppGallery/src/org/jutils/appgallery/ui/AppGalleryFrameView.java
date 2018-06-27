@@ -10,22 +10,23 @@ import org.jutils.ui.*;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
- * 
+ * Defines the window for this application that displays tools in a gallery.
  ******************************************************************************/
 public class AppGalleryFrameView implements IView<JFrame>
 {
-    /**  */
+    /** The window for this application. */
     private final StandardFrameView frameView;
-    /**  */
+    /** The view that displays the tools. */
     private final ToolsView view;
 
     /***************************************************************************
-     * @param apps
+     * Creates a new app gallery window that displays the provided tools.
+     * @param tools the tools to be displayed in the gallery.
      **************************************************************************/
-    public AppGalleryFrameView( List<IToolView> apps )
+    public AppGalleryFrameView( List<IToolView> tools )
     {
         this.frameView = new StandardFrameView();
-        this.view = new ToolsView( apps, "JUtils App Gallery" );
+        this.view = new ToolsView( tools, "JUtils App Gallery" );
 
         frameView.setContent( view.getView() );
         frameView.setTitle( "JUtils Application Gallery" );
@@ -36,7 +37,7 @@ public class AppGalleryFrameView implements IView<JFrame>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JFrame getView()
@@ -45,7 +46,9 @@ public class AppGalleryFrameView implements IView<JFrame>
     }
 
     /***************************************************************************
-     * @return
+     * Creates a menu for the tools displayed.
+     * @return a menu containing the tools displayed.
+     * @see ToolsView#createMenu()
      **************************************************************************/
     public JMenuItem createMenu()
     {

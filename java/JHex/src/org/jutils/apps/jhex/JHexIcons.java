@@ -24,6 +24,13 @@ public class JHexIcons
     public static final String APP_024 = "app_024.png";
 
     /***************************************************************************
+     * Private default constructor to prevent instantiation of this class.
+     **************************************************************************/
+    private JHexIcons()
+    {
+    }
+
+    /***************************************************************************
      * @return the list of application images.
      **************************************************************************/
     public static List<Image> getAppImages()

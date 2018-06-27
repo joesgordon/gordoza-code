@@ -6,26 +6,27 @@ import java.util.List;
 import org.jutils.io.IconLoader;
 
 /*******************************************************************************
- * 
+ * Defines methods of returning the icons for this application.
  ******************************************************************************/
 public final class AppGalleryIcons
 {
-    /**  */
-    public static final String APP_16 = "app_16.png";
+    /** The name of the 16 x 16 pixel icon for this application. */
+    public static final String APP_16 = "app_016.png";
 
-    /**  */
+    /** The loader used to access icons in this application. */
     public static final IconLoader loader = new IconLoader(
         AppGalleryIcons.class, "icons" );
 
     /***************************************************************************
-     * 
+     * Private default constructor to prevent instantiation of this class.
      **************************************************************************/
     private AppGalleryIcons()
     {
     }
 
     /***************************************************************************
-     * @return
+     * Loads all the different sized icons that represent this application.
+     * @return the icons for this application.
      **************************************************************************/
     public static List<Image> getAppImages()
     {
@@ -33,8 +34,9 @@ public final class AppGalleryIcons
     }
 
     /***************************************************************************
-     * @param name
-     * @return
+     * Loads the image with the provided name.
+     * @param name the name of the image to be loaded.
+     * @return the image of the provided name.
      **************************************************************************/
     public static Image getImage( String name )
     {
