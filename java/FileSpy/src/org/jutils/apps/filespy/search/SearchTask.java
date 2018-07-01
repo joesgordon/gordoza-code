@@ -8,8 +8,9 @@ import org.jutils.ValidationException;
 import org.jutils.apps.filespy.data.SearchParams;
 import org.jutils.apps.filespy.data.SearchRecord;
 import org.jutils.concurrent.*;
-import org.jutils.pattern.StringPattern.IMatcher;
-import org.jutils.pattern.StringPattern.Match;
+import org.jutils.io.LogUtils;
+import org.jutils.pattern.IMatcher;
+import org.jutils.pattern.Match;
 import org.jutils.ui.MessageExceptionView;
 
 /*******************************************************************************
@@ -19,6 +20,7 @@ public class SearchTask implements ITask
 {
     /**  */
     private static final ZoneId GMT = ZoneId.of( "GMT" );
+
     /**  */
     private final SearchResultsHandler searchHandler;
     /**  */
@@ -95,7 +97,7 @@ public class SearchTask implements ITask
             }
         }
 
-        // LogUtils.printDebug( "Found files. Awaiting contents search" );
+        LogUtils.printDebug( "Found files. Awaiting contents search" );
 
         fileConsumer.signalInputFinished();
 
@@ -104,6 +106,8 @@ public class SearchTask implements ITask
         finalizer.run();
 
         stopper.signalFinished();
+
+        LogUtils.printDebug( "Search task finished" );
     }
 
     /***************************************************************************
@@ -265,10 +269,17 @@ public class SearchTask implements ITask
      **************************************************************************/
     private static class FileContentsConsumer implements IResultsConsumer
     {
+        /**  */
         private final SearchResultsHandler searchHandler;
+        /**  */
         private final FileContentsSearcher contentsSearcher;
+        /**  */
         private final SafeExecutorService contentsService;
 
+        /**
+         * @param contentsMatcher
+         * @param searchHandler
+         */
         public FileContentsConsumer( IMatcher contentsMatcher,
             SearchResultsHandler searchHandler )
         {

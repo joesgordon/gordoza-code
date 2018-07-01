@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import org.jutils.*;
-import org.jutils.pattern.StringPattern.IMatcher;
 import org.jutils.ui.*;
 import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
@@ -15,6 +14,9 @@ import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.fields.StringFormField;
 import org.jutils.ui.model.IView;
 
+/*******************************************************************************
+ *
+ ******************************************************************************/
 public class PatternTesterViewMain implements IView<JComponent>
 {
     /**  */
@@ -65,6 +67,9 @@ public class PatternTesterViewMain implements IView<JComponent>
         return panel;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private Component addToolbar()
     {
         JToolBar toolbar = new JGoodiesToolBar();
@@ -74,6 +79,9 @@ public class PatternTesterViewMain implements IView<JComponent>
         return toolbar;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private Action createCheckAction()
     {
         Icon icon = IconConstants.getIcon( IconConstants.ANALYZE_16 );
@@ -81,6 +89,9 @@ public class PatternTesterViewMain implements IView<JComponent>
         return new ActionAdapter( listener, "Test", icon );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private void testPatterns()
     {
         String testString = testField.getValue();
@@ -114,6 +125,9 @@ public class PatternTesterViewMain implements IView<JComponent>
 
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private JPanel createForm()
     {
         StandardFormView form = new StandardFormView();
@@ -152,6 +166,9 @@ public class PatternTesterViewMain implements IView<JComponent>
      **************************************************************************/
     private static final class PatternTesterApp implements IFrameApp
     {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public JFrame createFrame()
         {
@@ -166,6 +183,9 @@ public class PatternTesterViewMain implements IView<JComponent>
             return frameView.getView();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void finalizeGui()
         {

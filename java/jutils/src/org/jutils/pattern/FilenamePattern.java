@@ -4,7 +4,6 @@ import java.io.File;
 
 import org.jutils.INamedItem;
 import org.jutils.ValidationException;
-import org.jutils.pattern.StringPattern.IMatcher;
 
 /*******************************************************************************
  * 
@@ -19,7 +18,9 @@ public class FilenamePattern
     }
 
     /***************************************************************************
-     * 
+     * @param pattern
+     * @return
+     * @throws ValidationException
      **************************************************************************/
     public static IFilenameMatcher createMatcher( StringPattern pattern )
         throws ValidationException
@@ -34,8 +35,15 @@ public class FilenamePattern
      **************************************************************************/
     public static interface IFilenameMatcher extends INamedItem
     {
+        /**
+         * @param file
+         * @return
+         */
         public boolean match( File file );
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String getName();
     }
@@ -45,19 +53,29 @@ public class FilenamePattern
      **************************************************************************/
     private static final class FilenameMatcher implements IFilenameMatcher
     {
+        /**  */
         private final IMatcher strMatcher;
 
+        /**
+         * @param strMatcher
+         */
         public FilenameMatcher( IMatcher strMatcher )
         {
             this.strMatcher = strMatcher;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public boolean match( File file )
         {
             return strMatcher.matches( file.getName() );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String getName()
         {

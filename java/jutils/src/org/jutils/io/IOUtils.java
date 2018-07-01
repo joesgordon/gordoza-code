@@ -909,13 +909,18 @@ public final class IOUtils
         {
             if( buf[i] == 0 )
             {
+                // LogUtils.printDebug( "\t found \\0" );
                 return true;
             }
             else if( isNonPrintable( buf[i] ) )
             {
                 cnt++;
 
-                if( cnt <= threshold )
+                // LogUtils.printDebug(
+                // "\t non-printable %02X @ %d count %d of %d", buf[i], i, cnt,
+                // threshold );
+
+                if( cnt >= threshold )
                 {
                     return true;
                 }

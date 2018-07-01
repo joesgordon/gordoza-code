@@ -8,8 +8,8 @@ import org.jutils.apps.filespy.data.SearchRecord;
 import org.jutils.concurrent.IConsumer;
 import org.jutils.concurrent.ITaskHandler;
 import org.jutils.io.IOUtils;
-import org.jutils.pattern.StringPattern.IMatcher;
-import org.jutils.pattern.StringPattern.Match;
+import org.jutils.pattern.IMatcher;
+import org.jutils.pattern.Match;
 
 /*******************************************************************************
  * 
@@ -50,6 +50,8 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
     {
         boolean matched = false;
         Match m = contentsPattern.find( str );
+
+        // LogUtils.printDebug( "\t Searching \"%s\"", str );
 
         if( m.matches )
         {
@@ -98,7 +100,8 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
     }
 
     /***************************************************************************
-     * @param file
+     * @param record
+     * @param stopper
      * @throws IOException
      **************************************************************************/
     private void searchFile( SearchRecord record, ITaskHandler stopper )
@@ -112,12 +115,17 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
         long count = fileCount.get();
         long searched = filesSearched.get();
 
-        // LogUtils.printDebug( "Searching file " + file.getAbsolutePath() );
+        // LogUtils.printDebug( "Searching file %s? %s", file.getAbsolutePath(),
+        // stopper.canContinue() );
         searchHandler.updateStatus( "Searching file " + searched + " of " +
             count + ": " + file.getAbsolutePath() );
 
         if( IOUtils.isBinary( file ) )
         {
+            String msg = String.format( "Skipping binary file %s",
+                file.getAbsolutePath() );
+            SearchResultsHandler.addErrorMessage( msg );
+            // LogUtils.printDebug( msg );
             return;
         }
 
@@ -147,13 +155,16 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public void addFile()
     {
         fileCount.incrementAndGet();
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void consume( SearchRecord data, ITaskHandler stopper )
@@ -164,6 +175,7 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
         }
         catch( IOException ex )
         {
+            // LogUtils.printDebug( "I/O Error: %s" + ex.getMessage() );
             SearchResultsHandler.addErrorMessage( ex.getMessage() );
         }
         finally

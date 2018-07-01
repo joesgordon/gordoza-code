@@ -3,8 +3,10 @@ package org.jutils.pattern;
 import org.junit.Assert;
 import org.junit.Test;
 import org.jutils.ValidationException;
-import org.jutils.pattern.StringPattern.IMatcher;
 
+/*******************************************************************************
+ *
+ ******************************************************************************/
 public class StringPatternTests
 {
     /***************************************************************************
