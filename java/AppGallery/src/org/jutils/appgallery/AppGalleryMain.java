@@ -6,12 +6,13 @@ import java.util.List;
 import org.budgey.BudgeyTool;
 import org.duak.DuakTool;
 import org.eglsht.SheetTool;
-import org.jutils.appgallery.apps.*;
 import org.jutils.apps.filespy.FileSpyTool;
+import org.jutils.apps.jexplorer.JExplorerTool;
 import org.jutils.apps.jhex.JHexTool;
 import org.jutils.chart.app.JChartTool;
 import org.jutils.ui.IToolView;
 import org.jutils.ui.app.FrameRunner;
+import org.taskflow.TaskflowLibTool;
 
 import chatterbox.ChatterboxTool;
 
@@ -31,7 +32,8 @@ public class AppGalleryMain
     }
 
     /***************************************************************************
-     * @return
+     * Defines the tools displayed by this application.
+     * @return the list of tools in this application.
      **************************************************************************/
     public static List<IToolView> getTools()
     {

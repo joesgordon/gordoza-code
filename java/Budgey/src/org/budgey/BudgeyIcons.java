@@ -20,6 +20,13 @@ public final class BudgeyIcons
     public static final String WALLET_24 = "wallet24.png";
 
     /***************************************************************************
+     * Private default constructor to prevent instantiation of this class.
+     **************************************************************************/
+    private BudgeyIcons()
+    {
+    }
+
+    /***************************************************************************
      * @return
      **************************************************************************/
     public static Icon getCalendarAddIcon()

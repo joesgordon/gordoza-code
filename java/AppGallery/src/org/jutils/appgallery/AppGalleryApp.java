@@ -39,7 +39,7 @@ public class AppGalleryApp implements IFrameApp
      * Creates the popup menu for the tray icon that displays all the apps in
      * the gallery.
      * @param frame the frame to use as the parent of the popup menu.
-     * @return
+     * @return the popup menu for this application's tray icon.
      **************************************************************************/
     private JPopupMenu createPopup( AppGalleryFrameView frame )
     {
