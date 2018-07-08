@@ -5,32 +5,32 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 
 import org.jutils.SwingUtils;
 import org.jutils.ui.event.*;
-import org.jutils.ui.event.updater.IUpdater;
+import org.jutils.ui.fields.HexAreaFormField;
+import org.jutils.ui.hex.HexUtils;
 import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class MessageTextView implements IDataView<String>
+public class MessageTextView implements IDataView<byte[]>
 {
+    /**  */
     private final String CR = "" + ( char )0xD;
+    /**  */
     private final String LF = "" + ( char )0xA;
 
     /**  */
-    private final JPanel view;
+    private final JComponent view;
     /**  */
     private final JTextArea textField;
     /**  */
-    private final ItemActionList<String> enterListeners;
-
+    private final HexAreaFormField hexField;
     /**  */
-    private IUpdater<String> updater;
+    private final ItemActionList<String> enterListeners;
 
     /***************************************************************************
      * 
@@ -38,16 +38,15 @@ public class MessageTextView implements IDataView<String>
     public MessageTextView()
     {
         this.textField = new JTextArea();
+        this.hexField = new HexAreaFormField( "Message Bytes" );
         this.view = createView();
         this.enterListeners = new ItemActionList<>();
 
         // textField.getDocument().addDocumentListener(
         // new GrowingTextDocumentListener( textField ) );
 
-        setData( new String() );
+        setData( HexUtils.fromHexStringToArray( "EB91" ) );
 
-        textField.getDocument().addDocumentListener(
-            new TextChangedListener( () -> updateData() ) );
         SwingUtils.addKeyListener( textField, "shift ENTER", false,
             ( e ) -> insertText( LF ), "Shift+Enter Listener" );
         SwingUtils.addKeyListener( textField, "control ENTER", false,
@@ -55,7 +54,7 @@ public class MessageTextView implements IDataView<String>
     }
 
     /***************************************************************************
-     * 
+     * @param text
      **************************************************************************/
     private void insertText( String text )
     {
@@ -73,20 +72,24 @@ public class MessageTextView implements IDataView<String>
     }
 
     /***************************************************************************
-     * 
+     * @return
      **************************************************************************/
-    private void updateData()
+    private JComponent createView()
     {
-        if( updater != null )
-        {
-            updater.update( textField.getText() );
-        }
+        JTabbedPane tabs = new JTabbedPane();
+
+        tabs.addTab( "Text", createTextView() );
+        tabs.addTab( "Hex", hexField.getView() );
+
+        addEnterHook( hexField.getTextArea() );
+
+        return tabs;
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    private JPanel createView()
+    private JPanel createTextView()
     {
         JPanel contentPanel = new JPanel( new BorderLayout() );
 
@@ -112,24 +115,16 @@ public class MessageTextView implements IDataView<String>
     }
 
     /***************************************************************************
-     * @param updater
-     **************************************************************************/
-    public void setUpdater( IUpdater<String> updater )
-    {
-        this.updater = updater;
-    }
-
-    /***************************************************************************
      * @param textPane
      **************************************************************************/
     private void addEnterHook( JTextArea textPane )
     {
         KeyStroke ks;
         String aname;
+        ActionListener l;
         Action action;
         ActionMap amap;
         InputMap imap;
-        ActionListener l;
 
         ks = KeyStroke.getKeyStroke( KeyEvent.VK_ENTER, 0 );
         aname = "SEND_MESSAGE";
@@ -142,7 +137,7 @@ public class MessageTextView implements IDataView<String>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public Component getView()
@@ -151,21 +146,27 @@ public class MessageTextView implements IDataView<String>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
-    public String getData()
+    public byte[] getData()
     {
-        return textField.getText();
+        if( hexField.getView().isShowing() )
+        {
+            return hexField.getValue();
+        }
+
+        return textField.getText().getBytes();
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
-    public void setData( String text )
+    public void setData( byte[] text )
     {
-        textField.setText( text );
+        textField.setText( new String( text ) );
+        hexField.setValue( text );
     }
 
     /***************************************************************************
@@ -185,33 +186,11 @@ public class MessageTextView implements IDataView<String>
     }
 
     /***************************************************************************
-     * 
+     * @param editable
      **************************************************************************/
-    private static final class TextChangedListener implements DocumentListener
+    public void setEditable( boolean editable )
     {
-        private final Runnable callback;
-
-        public TextChangedListener( Runnable callback )
-        {
-            this.callback = callback;
-        }
-
-        @Override
-        public void insertUpdate( DocumentEvent e )
-        {
-            callback.run();
-        }
-
-        @Override
-        public void removeUpdate( DocumentEvent e )
-        {
-            callback.run();
-        }
-
-        @Override
-        public void changedUpdate( DocumentEvent e )
-        {
-            callback.run();
-        }
+        textField.setEditable( editable );
+        hexField.setEditable( editable );
     }
 }

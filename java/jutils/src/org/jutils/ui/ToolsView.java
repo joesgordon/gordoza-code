@@ -88,7 +88,7 @@ public class ToolsView implements IView<JPanel>
     /***************************************************************************
      * Resizes the table to fit the icons, names, and descriptions of the tools.
      **************************************************************************/
-    private void resizeTable()
+    public void resizeTable()
     {
         ResizingTableModelListener.resizeTable( table );
     }
@@ -232,6 +232,15 @@ public class ToolsView implements IView<JPanel>
         addToMenu( menu );
 
         return menu;
+    }
+
+    /***************************************************************************
+     * @param menubar
+     **************************************************************************/
+    public static void fixMenuBar( JMenuBar menubar )
+    {
+        menubar.setBorder(
+            new javax.swing.border.MatteBorder( 0, 0, 1, 0, Color.gray ) );
     }
 
     /***************************************************************************

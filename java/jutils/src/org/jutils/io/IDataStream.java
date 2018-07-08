@@ -17,6 +17,7 @@ public interface IDataStream extends IStream
 
     /***************************************************************************
      * Returns the method of ordering bytes in this stream.
+     * @return the endiannes of the data in this stream.
      **************************************************************************/
     public ByteOrdering getOrder();
 

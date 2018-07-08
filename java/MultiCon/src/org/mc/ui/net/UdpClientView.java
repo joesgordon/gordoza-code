@@ -2,7 +2,6 @@ package org.mc.ui.net;
 
 import java.awt.*;
 import java.io.IOException;
-import java.nio.charset.Charset;
 
 import javax.swing.*;
 
@@ -157,11 +156,11 @@ public class UdpClientView implements IConnectionView
             return;
         }
 
-        String msgStr = textView.getData();
+        byte[] msgBytes = textView.getData();
 
         // msgStr = msgStr.trim();
 
-        if( msgStr.length() < 1 )
+        if( msgBytes.length < 1 )
         {
             JOptionPane.showMessageDialog( getView(), "Nothing to send",
                 "ERROR", JOptionPane.ERROR_MESSAGE );
@@ -170,8 +169,6 @@ public class UdpClientView implements IConnectionView
 
         try
         {
-            byte[] msgBytes = msgStr.getBytes( Charset.forName( "UTF-8" ) );
-
             NetMessage msg = commModel.connection.txMessage( msgBytes );
 
             messagesView.addMessage( msg );

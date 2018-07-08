@@ -17,7 +17,7 @@ public class McInputPanel implements IView<JPanel>
     /**  */
     private final JPanel view;
     /**  */
-    private final JEditorPane sendTextArea;
+    private final MessageTextView sendTextArea;
     /**  */
     private final JButton sendButton;
     /**  */
@@ -33,8 +33,7 @@ public class McInputPanel implements IView<JPanel>
     public McInputPanel()
     {
         this.view = new JPanel( new GridBagLayout() );
-        this.sendTextArea = new JEditorPane();
-        JScrollPane sendScrollPane = new JScrollPane( sendTextArea );
+        this.sendTextArea = new MessageTextView();
         this.scheduleCheckBox = new JCheckBox( "Schedule Messages" );
         this.msgCountTextField = new JTextField( 5 );
         this.msgDelayTextField = new JTextField( 5 );
@@ -50,7 +49,7 @@ public class McInputPanel implements IView<JPanel>
 
         scheduleCheckBox.addActionListener( new ScheduleCheckListener() );
 
-        view.add( sendScrollPane,
+        view.add( sendTextArea.getView(),
             new GridBagConstraints( 0, 0, 5, 1, 1.0, 1.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 new Insets( 6, 6, 6, 6 ), 0, 0 ) );
@@ -85,10 +84,7 @@ public class McInputPanel implements IView<JPanel>
         msgDelayTextField.setMinimumSize(
             msgDelayTextField.getPreferredSize() );
 
-        sendScrollPane.setMinimumSize( new Dimension( 200, 100 ) );
-        sendScrollPane.setPreferredSize( view.getMinimumSize() );
-
-        sendTextArea.setEnabled( false );
+        sendTextArea.setEditable( false );
         msgCountTextField.setEnabled( false );
         msgDelayTextField.setEnabled( false );
         scheduleCheckBox.setEnabled( false );
@@ -115,17 +111,17 @@ public class McInputPanel implements IView<JPanel>
     /***************************************************************************
      * @return
      **************************************************************************/
-    public String getMessageText()
+    public byte[] getMessageText()
     {
-        return sendTextArea.getText();
+        return sendTextArea.getData();
     }
 
     /***************************************************************************
      * @param text
      **************************************************************************/
-    public void setMessageText( String text )
+    public void setMessageText( byte[] text )
     {
-        sendTextArea.setText( text );
+        sendTextArea.setData( text );
     }
 
     /***************************************************************************
@@ -158,7 +154,7 @@ public class McInputPanel implements IView<JPanel>
     public void setBound( boolean bound )
     {
         sendButton.setEnabled( bound );
-        sendTextArea.setEnabled( bound );
+        sendTextArea.setEditable( bound );
         scheduleCheckBox.setEnabled( bound );
 
         scheduleCheckBox.setSelected( false );

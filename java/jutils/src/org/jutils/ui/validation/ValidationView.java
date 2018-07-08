@@ -16,7 +16,7 @@ public class ValidationView implements IView<JPanel>
     private final JPanel view;
     /** The validation field to be displayed. */
     private final IValidationField field;
-    /**  */
+    /** The view of the validation field. */
     private final Component fieldView;
     /** Any units to be shown; only visible when units are specified. */
     private final JLabel unitsField;
@@ -55,6 +55,12 @@ public class ValidationView implements IView<JPanel>
     public ValidationView( IValidationField field, String units,
         Component fieldView )
     {
+        this( field, units, fieldView, false );
+    }
+
+    public ValidationView( IValidationField field, String units,
+        Component fieldView, boolean fillBoth )
+    {
         this.field = field;
         this.fieldView = fieldView;
 
@@ -71,25 +77,31 @@ public class ValidationView implements IView<JPanel>
         errorField.setPreferredSize( dim );
         errorField.setEditable( false );
 
-        this.view = createView();
+        this.view = createView( fillBoth );
 
         // LogUtils.printDebug( "Adding validity changed listner" );
-        field.addValidityChanged( new FieldValidityChangedListener( this ) );
+        field.addValidityChanged( ( v ) -> handleValidityChanged( v ) );
 
         setErrorFieldVisible( !field.getValidity().isValid );
     }
 
     /***************************************************************************
      * Creates the view and adds the components.
+     * @param fillBoth
+     * @return the main component that represents this view.
      **************************************************************************/
-    private JPanel createView()
+    private JPanel createView( boolean fillBoth )
     {
         JPanel panel = new JPanel( new GridBagLayout() );
         GridBagConstraints constraints;
 
-        constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-            new Insets( 0, 0, 0, 0 ), 0, 0 );
+        int fieldFill = fillBoth ? GridBagConstraints.BOTH
+            : GridBagConstraints.HORIZONTAL;
+        double fieldWeightY = fillBoth ? 1.0 : 0.0;
+
+        constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, fieldWeightY,
+            GridBagConstraints.WEST, fieldFill, new Insets( 0, 0, 0, 0 ), 0,
+            0 );
         panel.add( fieldView, constraints );
 
         if( unitsField != null )
@@ -104,7 +116,20 @@ public class ValidationView implements IView<JPanel>
     }
 
     /***************************************************************************
+     * @param validity
+     **************************************************************************/
+    private void handleValidityChanged( Validity validity )
+    {
+        // LogUtils.printDebug( "Validity: " + validity.toString() );
+        String errText = validity.isValid ? "" : "ERROR: " + validity.reason;
+
+        setErrorFieldVisible( !validity.isValid );
+        errorField.setText( errText );
+    }
+
+    /***************************************************************************
      * Returns the validation field with which this class was initialized.
+     * @return the validation field displayed.
      **************************************************************************/
     public IValidationField getField()
     {
@@ -112,7 +137,8 @@ public class ValidationView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @param editable
+     * Hides the error field if false; shows otherwise.
+     * @param editable indicates the error field should be hidden if true.
      **************************************************************************/
     public void setEditable( boolean editable )
     {
@@ -120,7 +146,7 @@ public class ValidationView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JPanel getView()
@@ -145,31 +171,5 @@ public class ValidationView implements IView<JPanel>
 
         view.revalidate();
         view.repaint();
-    }
-
-    /***************************************************************************
-     * Validity listener added to the validation field that show/hides/populates
-     * the error field.
-     **************************************************************************/
-    private static class FieldValidityChangedListener
-        implements IValidityChangedListener
-    {
-        private final ValidationView view;
-
-        public FieldValidityChangedListener( ValidationView view )
-        {
-            this.view = view;
-        }
-
-        @Override
-        public void signalValidity( Validity validity )
-        {
-            // LogUtils.printDebug( "Validity: " + validity.toString() );
-            String errText = validity.isValid ? ""
-                : "ERROR: " + validity.reason;
-
-            view.setErrorFieldVisible( !validity.isValid );
-            view.errorField.setText( errText );
-        }
     }
 }

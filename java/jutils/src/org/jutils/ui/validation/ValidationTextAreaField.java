@@ -5,7 +5,8 @@ import javax.swing.JTextArea;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ValidationTextAreaField extends ValidationTextComponentField<JTextArea>
+public class ValidationTextAreaField
+    extends ValidationTextComponentField<JTextArea>
 {
     /***************************************************************************
      * 

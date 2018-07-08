@@ -2,7 +2,6 @@ package org.mc.ui.net;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.Arrays;
 
 import javax.swing.*;
 
@@ -91,7 +90,7 @@ public class TcpClientView implements IConnectionView
     }
 
     /***************************************************************************
-     * @param b
+     * @param bind
      **************************************************************************/
     private void bindUnbind( boolean bind )
     {
@@ -155,11 +154,14 @@ public class TcpClientView implements IConnectionView
      **************************************************************************/
     private void sendMessage()
     {
-        String msgStr = textView.getData();
+        if( commModel == null )
+        {
+            return;
+        }
 
-        msgStr = msgStr.trim();
+        byte[] msgBytes = textView.getData();
 
-        if( msgStr.length() < 1 )
+        if( msgBytes.length < 1 )
         {
             JOptionPane.showMessageDialog( getView(), "Nothing to send",
                 "ERROR", JOptionPane.ERROR_MESSAGE );
@@ -168,9 +170,6 @@ public class TcpClientView implements IConnectionView
 
         try
         {
-            byte[] strBytes = msgStr.getBytes();
-            byte[] msgBytes = Arrays.copyOf( strBytes, strBytes.length + 1 );
-
             NetMessage msg = commModel.connection.txMessage( msgBytes );
 
             messagesView.addMessage( msg );
@@ -184,7 +183,7 @@ public class TcpClientView implements IConnectionView
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JComponent getView()
@@ -193,7 +192,7 @@ public class TcpClientView implements IConnectionView
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void close()
@@ -227,6 +226,9 @@ public class TcpClientView implements IConnectionView
         close();
     }
 
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
     @Override
     public String getTitle()
     {

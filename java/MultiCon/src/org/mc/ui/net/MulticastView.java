@@ -2,7 +2,6 @@ package org.mc.ui.net;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.Arrays;
 
 import javax.swing.*;
 
@@ -133,11 +132,9 @@ public class MulticastView implements IConnectionView
      **************************************************************************/
     private void sendMessage()
     {
-        String msgStr = inputPanel.getMessageText();
+        byte[] msgBytes = inputPanel.getMessageText();
 
-        msgStr = msgStr.trim();
-
-        if( msgStr.length() < 1 )
+        if( msgBytes.length < 1 )
         {
             JOptionPane.showMessageDialog( getView(), "Nothing to send",
                 "ERROR", JOptionPane.ERROR_MESSAGE );
@@ -146,9 +143,6 @@ public class MulticastView implements IConnectionView
 
         try
         {
-            byte[] strBytes = msgStr.getBytes();
-            byte[] msgBytes = Arrays.copyOf( strBytes, strBytes.length + 1 );
-
             if( inputPanel.isScheduling() )
             {
                 int msgCount = inputPanel.getMessageCount();
