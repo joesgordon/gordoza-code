@@ -220,7 +220,6 @@ public class MulticastView implements IConnectionView
         }
 
         configPanel.setBound( bound );
-        inputPanel.setEditable( bound );
         configPanel.setBindEnabled( true );
     }
 
