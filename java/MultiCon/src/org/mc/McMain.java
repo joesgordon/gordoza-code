@@ -29,7 +29,7 @@ public class McMain
     }
 
     /***************************************************************************
-     * @return
+     * @return the user options for this application/library instance.
      **************************************************************************/
     public static OptionsSerializer<McOptions> getUserData()
     {
@@ -48,19 +48,27 @@ public class McMain
     private static final class McCommOptionsCreator
         implements IOptionsCreator<McOptions>
     {
-
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public McOptions createDefaultOptions()
         {
             return new McOptions();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public McOptions initialize( McOptions options )
         {
             return new McOptions( options );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void warn( String message )
         {

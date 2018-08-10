@@ -41,16 +41,16 @@ public class McTxThread implements ITask
     public McTxThread( int count, int delay, byte[] contents,
         IConnection commModel, Window parent )
     {
-        sendCount = 0;
-        sendCountMax = count;
-        sendDelay = delay;
-        msgContents = contents;
+        this.sendCount = 0;
+        this.sendCountMax = count;
+        this.sendDelay = delay;
+        this.msgContents = contents;
         this.commModel = commModel;
-        frame = parent;
+        this.frame = parent;
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void run( final ITaskHandler stopper )

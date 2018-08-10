@@ -3,6 +3,7 @@ package org.jutils.ui.fields;
 import java.awt.Font;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.text.*;
 
 import org.jutils.io.parsers.HexBytesParser;
@@ -42,6 +43,7 @@ public class HexAreaFormField implements IDataFormField<byte []>
 
         pane.setVerticalScrollBarPolicy(
             JScrollPane.VERTICAL_SCROLLBAR_ALWAYS );
+        pane.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
 
         this.view = new ValidationView( inputField, null, pane, true );
 

@@ -31,7 +31,7 @@ public class McOptions
     }
 
     /***************************************************************************
-     * @param options
+     * @param options the options to be copied.
      **************************************************************************/
     public McOptions( McOptions options )
     {

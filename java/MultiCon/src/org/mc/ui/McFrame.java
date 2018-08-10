@@ -136,6 +136,7 @@ public class McFrame implements IView<JFrame>
             }
         } );
 
+        odv.getView().setIconImages( getView().getIconImages() );
         odv.getView().pack();
         odv.getView().setLocationRelativeTo( getView() );
         odv.getView().setVisible( true );

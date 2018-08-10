@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.text.BadLocationException;
 
 import org.jutils.SwingUtils;
@@ -99,8 +100,6 @@ public class MessageTextView implements IDataView<byte[]>
     {
         JPanel contentPanel = new JPanel( new BorderLayout() );
 
-        contentPanel.setBorder( BorderFactory.createEtchedBorder() );
-
         // JScrollPane msgScrollPane = new GrowingScrollPane( textField );
         JScrollPane msgScrollPane = new JScrollPane( textField );
 
@@ -111,9 +110,9 @@ public class MessageTextView implements IDataView<byte[]>
 
         msgScrollPane.setMinimumSize( new Dimension( 100, 48 ) );
         msgScrollPane.setMaximumSize( new Dimension( 100, 150 ) );
-        msgScrollPane.setBorder( null );
-        msgScrollPane.setBorder(
-            BorderFactory.createMatteBorder( 1, 0, 0, 0, Color.gray ) );
+        msgScrollPane.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
+        msgScrollPane.setVerticalScrollBarPolicy(
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
 
         contentPanel.add( msgScrollPane, BorderLayout.CENTER );
 

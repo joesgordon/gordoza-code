@@ -6,14 +6,14 @@ import java.io.IOException;
 import javax.swing.*;
 
 import org.jutils.SwingUtils;
-import org.jutils.concurrent.TaskThread;
 import org.jutils.io.LogUtils;
 import org.jutils.io.options.OptionsSerializer;
 import org.jutils.net.*;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.net.MulticastInputsView;
 import org.jutils.ui.net.NetMessagesView;
-import org.mc.*;
+import org.mc.McMain;
+import org.mc.McOptions;
 import org.mc.ui.*;
 
 /*******************************************************************************
@@ -30,7 +30,7 @@ public class MulticastView implements IConnectionView
     /**  */
     private final NetMessagesView messagesPanel;
     /**  */
-    private final McInputPanel inputPanel;
+    private final MsgInputPanel inputPanel;
 
     /**  */
     private ConnectionListener commModel;
@@ -44,7 +44,7 @@ public class MulticastView implements IConnectionView
         this.inputsView = new MulticastInputsView();
         this.configPanel = new BindView( inputsView );
         this.messagesPanel = new NetMessagesView();
-        this.inputPanel = new McInputPanel();
+        this.inputPanel = new MsgInputPanel();
 
         this.commModel = null;
 
@@ -52,7 +52,7 @@ public class MulticastView implements IConnectionView
 
         configPanel.setCallback( ( b ) -> bindUnbind( b ) );
 
-        inputPanel.addSendActionListener( ( e ) -> sendMessage() );
+        inputPanel.addSendListener( ( e ) -> sendMessage() );
 
         // ---------------------------------------------------------------------
         // Setup main panel
@@ -60,15 +60,17 @@ public class MulticastView implements IConnectionView
         view.setLayout( new GridBagLayout() );
 
         view.add( configPanel.getView(),
-            new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
+            new GridBagConstraints( 0, 0, 1, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                new Insets( 6, 6, 6, 6 ), 0, 0 ) );
-        view.add( messagesPanel.getView(),
-            new GridBagConstraints( 0, 1, 1, 1, 1.0, 1.0,
+                new Insets( 6, 6, 4, 6 ), 0, 0 ) );
+
+        view.add( inputPanel.getView(),
+            new GridBagConstraints( 0, 1, 1, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 new Insets( 0, 6, 6, 6 ), 0, 0 ) );
-        view.add( inputPanel.getView(),
-            new GridBagConstraints( 0, 2, 1, 1, 1.0, 0.0,
+
+        view.add( messagesPanel.getView(),
+            new GridBagConstraints( 1, 0, 1, 2, 1.0, 1.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 new Insets( 0, 6, 6, 6 ), 0, 0 ) );
 
@@ -78,7 +80,7 @@ public class MulticastView implements IConnectionView
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JPanel getView()
@@ -87,7 +89,7 @@ public class MulticastView implements IConnectionView
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void close()
@@ -143,22 +145,20 @@ public class MulticastView implements IConnectionView
 
         try
         {
-            if( inputPanel.isScheduling() )
-            {
-                int msgCount = inputPanel.getMessageCount();
-                int msgDelay = inputPanel.getSendDelay();
-                Window win = SwingUtils.getComponentsWindow( getView() );
+            // if( inputPanel.isScheduling() )
+            // {
+            // int msgCount = inputPanel.getMessageCount();
+            // int msgDelay = inputPanel.getSendDelay();
+            // Window win = SwingUtils.getComponentsWindow( getView() );
+            //
+            // McTxThread txThread = new McTxThread( msgCount, msgDelay,
+            // msgBytes, commModel.connection, win );
+            // TaskThread thread = new TaskThread( txThread,
+            // "Multicast Tx Thread" );
+            // thread.start();
+            // }
 
-                McTxThread txThread = new McTxThread( msgCount, msgDelay,
-                    msgBytes, commModel.connection, win );
-                TaskThread thread = new TaskThread( txThread,
-                    "Multicast Tx Thread" );
-                thread.start();
-            }
-            else
-            {
-                commModel.connection.txMessage( msgBytes );
-            }
+            commModel.connection.txMessage( msgBytes );
         }
         catch( IOException ex )
         {
@@ -220,7 +220,7 @@ public class MulticastView implements IConnectionView
         }
 
         configPanel.setBound( bound );
-        inputPanel.setBound( bound );
+        inputPanel.setEditable( bound );
         configPanel.setBindEnabled( true );
     }
 
