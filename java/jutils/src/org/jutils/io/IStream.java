@@ -75,10 +75,7 @@ public interface IStream extends Closeable
         throws EOFException, IOException;
 
     /***************************************************************************
-     * Closes this stream and releases any system resources associated with the
-     * stream. A closed stream cannot perform input or output operations and
-     * cannot be reopened.
-     * @throws IOException If an I/O error occurs.
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void close() throws IOException;

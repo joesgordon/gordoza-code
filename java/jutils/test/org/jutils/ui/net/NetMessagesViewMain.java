@@ -70,6 +70,10 @@ public class NetMessagesViewMain
             return frame;
         }
 
+        /**
+         * @param view
+         * @return
+         */
         private JToolBar createToolbar( NetMessagesView view )
         {
             JToolBar toolbar = new JGoodiesToolBar();
@@ -83,16 +87,23 @@ public class NetMessagesViewMain
             return toolbar;
         }
 
+        /**
+         * @return
+         */
         private NetMessage buildMessage()
         {
             int len = 20 + rand.nextInt( 1004 );
             byte [] bytes = new byte[len];
             rand.nextBytes( bytes );
 
-            NetMessage msg = new NetMessage( true, "127.0.0.1", 80, bytes );
+            NetMessage msg = new NetMessage( true, "127.0.0.1", 186,
+                "127.0.0.1", 282, bytes );
             return msg;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void finalizeGui()
         {
@@ -104,12 +115,18 @@ public class NetMessagesViewMain
      **************************************************************************/
     private static class MessageFields implements IMessageFields
     {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public int getFieldCount()
         {
             return 1;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String getFieldName( int index )
         {
@@ -121,6 +138,9 @@ public class NetMessagesViewMain
             return null;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String getFieldValue( NetMessage message, int index )
         {
@@ -138,6 +158,9 @@ public class NetMessagesViewMain
      **************************************************************************/
     private static final class MsgWriter implements IStringWriter<NetMessage>
     {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String toString( NetMessage item )
         {
@@ -147,7 +170,7 @@ public class NetMessagesViewMain
                 {
                     str.println( "Byte %d = %02X", i, item.contents[i] );
                 }
-                // TODO Auto-generated method stub
+
                 return str.toString();
             }
         }

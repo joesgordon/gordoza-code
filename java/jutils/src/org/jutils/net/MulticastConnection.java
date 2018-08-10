@@ -21,8 +21,9 @@ public class MulticastConnection implements IConnection
     private final DatagramPacket rxPacket;
 
     /***************************************************************************
-     * @param inputs
-     * @throws IOException
+     * @param inputs the configuration values for this connection.
+     * @throws IOException if any error occurs binding to the socket using the
+     * provided configuration values.
      **************************************************************************/
     public MulticastConnection( MulticastInputs inputs ) throws IOException
     {
@@ -73,8 +74,14 @@ public class MulticastConnection implements IConnection
 
         socket.send( pack );
 
-        NetMessage msg = new NetMessage( false, address.getHostAddress(), port,
-            buf );
+        String localAddress = socket.getLocalAddress().getHostAddress();
+        int localPort = socket.getLocalPort();
+
+        String remoteAddress = address.getHostAddress();
+        int remotePort = port;
+
+        NetMessage msg = new NetMessage( false, localAddress, localPort,
+            remoteAddress, remotePort, buf );
 
         return msg;
     }
@@ -93,14 +100,20 @@ public class MulticastConnection implements IConnection
         InetAddress address = rxPacket.getAddress();
         int port = rxPacket.getPort();
 
-        NetMessage msg = new NetMessage( true, address.getHostAddress(), port,
-            contents );
+        String localAddress = socket.getLocalAddress().getHostAddress();
+        int localPort = socket.getLocalPort();
+
+        String remoteAddress = address.getHostAddress();
+        int remotePort = port;
+
+        NetMessage msg = new NetMessage( true, localAddress, localPort,
+            remoteAddress, remotePort, contents );
 
         return msg;
     }
 
     /***************************************************************************
-     * @throws IOException
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void close() throws IOException

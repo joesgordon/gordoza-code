@@ -1,6 +1,5 @@
 package org.jutils.ui.net;
 
-import java.net.*;
 import java.nio.charset.Charset;
 
 import javax.swing.JFrame;
@@ -41,19 +40,9 @@ public class NetMessageViewMain
 
             byte [] contents = "So long and thanks f".getBytes(
                 Charset.forName( "UTF-8" ) );
-            InetAddress address;
-            try
-            {
-                address = Inet4Address.getLocalHost();
-            }
-            catch( UnknownHostException ex )
-            {
-                throw new RuntimeException( "Localhost should never be unknown",
-                    ex );
-            }
-            int port = 80;
-            NetMessage msg = new NetMessage( true, address.getHostAddress(),
-                port, contents );
+
+            NetMessage msg = new NetMessage( true, "127.0.0.1", 186,
+                "127.0.0.1", 282, contents );
 
             panel.setData( msg );
 

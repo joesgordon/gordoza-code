@@ -28,7 +28,8 @@ public class TcpConnection implements IConnection
     private OutputStream output;
 
     /***************************************************************************
-     * @param port
+     * @param inputs
+     * @param disconnetCallback
      * @throws IOException
      **************************************************************************/
     public TcpConnection( TcpInputs inputs, Runnable disconnetCallback )
@@ -49,6 +50,11 @@ public class TcpConnection implements IConnection
         setSocket( socket );
     }
 
+    /***************************************************************************
+     * @param socket
+     * @param disconnetCallback
+     * @throws IOException
+     **************************************************************************/
     TcpConnection( Socket socket, Runnable disconnetCallback )
         throws IOException
     {
@@ -113,8 +119,9 @@ public class TcpConnection implements IConnection
             return null;
         }
 
-        return new NetMessage( false, remoteAddress.getHostAddress(),
-            remotePort, contents );
+        return new NetMessage( false, socket.getLocalAddress().getHostAddress(),
+            socket.getLocalPort(), remoteAddress.getHostAddress(), remotePort,
+            contents );
     }
 
     /***************************************************************************
@@ -139,11 +146,15 @@ public class TcpConnection implements IConnection
 
         byte [] contents = Arrays.copyOf( rxBuffer, len );
 
-        return new NetMessage( true, remoteAddress.getHostAddress(), remotePort,
+        return new NetMessage( true, socket.getLocalAddress().getHostAddress(),
+            socket.getLocalPort(), remoteAddress.getHostAddress(), remotePort,
             contents );
 
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public Ip4Address getRemoteAddress()
     {
         Ip4Address address = new Ip4Address();
@@ -153,11 +164,18 @@ public class TcpConnection implements IConnection
         return address;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     public int getRemotePort()
     {
         return socket.getPort();
     }
 
+    /***************************************************************************
+     * @param millis
+     * @throws SocketException
+     **************************************************************************/
     public void setTimeout( int millis ) throws SocketException
     {
         socket.setSoTimeout( millis );
