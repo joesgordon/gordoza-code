@@ -11,7 +11,7 @@ import org.jutils.ui.model.IView;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class BindView implements IView<JPanel>
+public class ConnectionBindView implements IView<JPanel>
 {
     /**  */
     public static final String BIND_TEXT = "Bind";
@@ -26,13 +26,16 @@ public class BindView implements IView<JPanel>
     private final Icon bindIcon;
     /**  */
     private final Icon unbindIcon;
+
+    /**  */
     private IUpdater<Boolean> updater;
+    /**  */
     private boolean bound;
 
     /***************************************************************************
-     * 
+     * @param dataView
      **************************************************************************/
-    public BindView( IView<?> dataView )
+    public ConnectionBindView( IView<?> dataView )
     {
         this.view = new JPanel( new GridBagLayout() );
 
@@ -79,7 +82,7 @@ public class BindView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @param l
+     * @param updater
      **************************************************************************/
     public void setCallback( IUpdater<Boolean> updater )
     {

@@ -15,7 +15,7 @@ import org.jutils.ui.net.NetMessagesView;
 import org.jutils.ui.net.UdpInputsView;
 import org.mc.McMain;
 import org.mc.McOptions;
-import org.mc.ui.BindView;
+import org.mc.ui.ConnectionBindView;
 import org.mc.ui.IConnectionView;
 
 /*******************************************************************************
@@ -28,7 +28,7 @@ public class UdpServerView implements IConnectionView
     /**  */
     private final UdpInputsView inputsView;
     /**  */
-    private final BindView configPanel;
+    private final ConnectionBindView configPanel;
     /**  */
     private final NetMessagesView messagesView;
 
@@ -43,7 +43,7 @@ public class UdpServerView implements IConnectionView
     public UdpServerView()
     {
         this.inputsView = new UdpInputsView( true, false );
-        this.configPanel = new BindView( inputsView );
+        this.configPanel = new ConnectionBindView( inputsView );
         this.messagesView = new NetMessagesView();
         this.view = createView();
 

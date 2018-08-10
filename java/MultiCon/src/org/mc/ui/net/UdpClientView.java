@@ -26,7 +26,7 @@ public class UdpClientView implements IConnectionView
     /**  */
     private final UdpInputsView inputsView;
     /**  */
-    private final BindView configPanel;
+    private final ConnectionBindView configPanel;
     /**  */
     private final NetMessagesView messagesView;
     /**  */
@@ -41,7 +41,7 @@ public class UdpClientView implements IConnectionView
     public UdpClientView()
     {
         this.inputsView = new UdpInputsView();
-        this.configPanel = new BindView( inputsView );
+        this.configPanel = new ConnectionBindView( inputsView );
         this.messagesView = new NetMessagesView();
         this.textView = new MessageTextView();
         this.view = createView();

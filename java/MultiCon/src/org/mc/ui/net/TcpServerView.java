@@ -16,7 +16,7 @@ import org.jutils.ui.net.NetMessagesView;
 import org.jutils.ui.net.TcpInputsView;
 import org.mc.McMain;
 import org.mc.McOptions;
-import org.mc.ui.BindView;
+import org.mc.ui.ConnectionBindView;
 import org.mc.ui.IConnectionView;
 
 /*******************************************************************************
@@ -29,7 +29,7 @@ public class TcpServerView implements IConnectionView
     /**  */
     private final TcpInputsView inputsView;
     /**  */
-    private final BindView configPanel;
+    private final ConnectionBindView configPanel;
     /**  */
     private final NetMessagesView messagesView;
 
@@ -44,7 +44,7 @@ public class TcpServerView implements IConnectionView
     public TcpServerView()
     {
         this.inputsView = new TcpInputsView( true, true );
-        this.configPanel = new BindView( inputsView );
+        this.configPanel = new ConnectionBindView( inputsView );
         this.messagesView = new NetMessagesView();
         this.view = createView();
 

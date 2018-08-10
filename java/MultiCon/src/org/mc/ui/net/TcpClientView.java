@@ -25,7 +25,7 @@ public class TcpClientView implements IConnectionView
     /**  */
     private final TcpInputsView inputsView;
     /**  */
-    private final BindView configPanel;
+    private final ConnectionBindView configPanel;
     /**  */
     private final NetMessagesView messagesView;
     /**  */
@@ -40,7 +40,7 @@ public class TcpClientView implements IConnectionView
     public TcpClientView()
     {
         this.inputsView = new TcpInputsView( false );
-        this.configPanel = new BindView( inputsView );
+        this.configPanel = new ConnectionBindView( inputsView );
         this.messagesView = new NetMessagesView();
         this.textView = new MessageTextView();
         this.view = createView();

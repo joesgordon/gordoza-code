@@ -8,6 +8,7 @@ import javax.swing.*;
 import org.jutils.SwingUtils;
 import org.jutils.ui.TitleView;
 import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.event.updater.CheckBoxUpdater;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
@@ -84,6 +85,9 @@ public class MsgInputPanel implements IView<JComponent>
         msgDelayTextField.setMinimumSize(
             msgDelayTextField.getPreferredSize() );
 
+        scheduleCheckBox.addActionListener(
+            new CheckBoxUpdater( ( b ) -> scheduleMessages( b ) ) );
+
         toolbar.add( scheduleCheckBox );
 
         toolbar.addSeparator();
@@ -99,6 +103,14 @@ public class MsgInputPanel implements IView<JComponent>
         toolbar.add( autoEnabledCheckbox );
 
         return toolbar;
+    }
+
+    private void scheduleMessages( boolean enable )
+    {
+        if( enable )
+        {
+            // MsgScheduleTask task = new MsgScheduleTask();
+        }
     }
 
     /***************************************************************************

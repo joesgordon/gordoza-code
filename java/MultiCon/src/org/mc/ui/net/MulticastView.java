@@ -26,7 +26,7 @@ public class MulticastView implements IConnectionView
     /**  */
     private final MulticastInputsView inputsView;
     /**  */
-    private final BindView configPanel;
+    private final ConnectionBindView configPanel;
     /**  */
     private final NetMessagesView messagesPanel;
     /**  */
@@ -42,7 +42,7 @@ public class MulticastView implements IConnectionView
     {
         this.view = new JPanel();
         this.inputsView = new MulticastInputsView();
-        this.configPanel = new BindView( inputsView );
+        this.configPanel = new ConnectionBindView( inputsView );
         this.messagesPanel = new NetMessagesView();
         this.inputPanel = new MsgInputPanel();
 
