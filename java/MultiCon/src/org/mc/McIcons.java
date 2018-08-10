@@ -29,7 +29,9 @@ public class McIcons
     }
 
     /***************************************************************************
-     * @return
+     * Builds and returns the list of application images.
+     * @return the list of application images or an empty list if a programmatic
+     * error occurs.
      **************************************************************************/
     public static List<Image> getMulticonImages()
     {
@@ -37,11 +39,12 @@ public class McIcons
     }
 
     /***************************************************************************
-     * @param str
-     * @return
+     * Returns the icon with the provided name.
+     * @param name the name/relative path to the icon.
+     * @return the icon loaded or null if none found.
      **************************************************************************/
-    public static ImageIcon getIcon( String str )
+    public static ImageIcon getIcon( String name )
     {
-        return loader.getIcon( str );
+        return loader.getIcon( name );
     }
 }

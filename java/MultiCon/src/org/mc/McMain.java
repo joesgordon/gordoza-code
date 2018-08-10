@@ -15,10 +15,13 @@ public class McMain
 {
     /**  */
     private static final File OPTIONS_FILE = IOUtils.getUsersFile( ".jutils",
-        "mccomm", "options.xml" );
+        "multicon", "options.xml" );
+
+    /**  */
+    private static OptionsSerializer<McOptions> userOptions;
 
     /***************************************************************************
-     * @param args
+     * @param args ignored
      **************************************************************************/
     public static void main( String[] args )
     {
@@ -30,8 +33,13 @@ public class McMain
      **************************************************************************/
     public static OptionsSerializer<McOptions> getUserData()
     {
-        return OptionsSerializer.getOptions( new McCommOptionsCreator(),
-            OPTIONS_FILE );
+        if( userOptions == null )
+        {
+            userOptions = OptionsSerializer.getOptions(
+                new McCommOptionsCreator(), OPTIONS_FILE );
+        }
+
+        return userOptions;
     }
 
     /***************************************************************************

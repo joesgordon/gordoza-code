@@ -77,7 +77,8 @@ public class UdpConnection implements IConnection
         byte [] contents = Arrays.copyOf( rxBuffer, packet.getLength() );
         InetAddress address = packet.getAddress();
         int port = packet.getPort();
-        return new NetMessage( true, address.getHostAddress(), port, contents );
+        return new NetMessage( true, socket.getLocalAddress().getHostAddress(),
+            socket.getLocalPort(), address.getHostAddress(), port, contents );
     }
 
     /***************************************************************************
@@ -109,7 +110,7 @@ public class UdpConnection implements IConnection
 
         socket.send( packet );
 
-        return new NetMessage( false, toAddr.getHostAddress(), toPort,
-            contents );
+        return new NetMessage( false, socket.getLocalAddress().getHostAddress(),
+            socket.getLocalPort(), toAddr.getHostAddress(), toPort, contents );
     }
 }

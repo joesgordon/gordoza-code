@@ -2,13 +2,11 @@ package org.mc.ui.net;
 
 import java.awt.*;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.nio.charset.Charset;
 
 import javax.swing.*;
 
 import org.jutils.SwingUtils;
-import org.jutils.Utils;
 import org.jutils.io.LogUtils;
 import org.jutils.io.options.OptionsSerializer;
 import org.jutils.net.*;
@@ -148,24 +146,6 @@ public class UdpServerView implements IConnectionView
     private void rxMessage( NetMessage msg )
     {
         addMessage( msg );
-
-        byte[] response = new byte[PREFIX.length + msg.contents.length];
-        Utils.byteArrayCopy( PREFIX, 0, response, 0, PREFIX.length );
-        Utils.byteArrayCopy( msg.contents, 0, response, PREFIX.length,
-            msg.contents.length );
-
-        try
-        {
-            InetAddress addr = InetAddress.getByName( msg.address );
-            msg = connection.txMessage( response, addr, msg.port );
-
-            addMessage( msg );
-        }
-        catch( IOException ex )
-        {
-            JOptionPane.showMessageDialog( getView(),
-                "ERROR: " + ex.getMessage() );
-        }
     }
 
     /***************************************************************************

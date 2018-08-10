@@ -54,7 +54,7 @@ public class DirectoryTree implements IView<JTree>
     }
 
     /***************************************************************************
-     * @param rootFiles File[]
+     * @param root FileTreeNode
      **************************************************************************/
     private DirectoryTree( FileTreeNode root )
     {
@@ -81,7 +81,7 @@ public class DirectoryTree implements IView<JTree>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JTree getView()
@@ -185,7 +185,7 @@ public class DirectoryTree implements IView<JTree>
     }
 
     /***************************************************************************
-     * @param l
+     * @param l the callback invoked when the selection has changed.
      **************************************************************************/
     public void addSelectedListener( ItemActionListener<List<File>> l )
     {

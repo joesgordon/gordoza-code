@@ -16,11 +16,12 @@ public class NetMessagesTableConfig implements ITableItemsConfig<NetMessage>
 {
     /**  */
     private static final String [] NAMES = new String[] { "Tx/Rx", "Time",
-        "Address", "Port", "Length", "Contents" };
+        "Local Address", "Local Port", "Remote Address", "Remote Port",
+        "Length", "Contents" };
     /**  */
     private static final Class<?> [] CLASSES = new Class<?>[] { String.class,
-        LocalDateTime.class, String.class, Integer.class, Integer.class,
-        String.class };
+        LocalDateTime.class, String.class, Integer.class, String.class,
+        Integer.class, Integer.class, String.class };
 
     /**  */
     private final Charset utf8;
@@ -116,12 +117,18 @@ public class NetMessagesTableConfig implements ITableItemsConfig<NetMessage>
                     return item.time;
 
                 case 2:
-                    return item.address;
+                    return item.localAddress;
 
                 case 3:
-                    return item.port;
+                    return item.localPort;
 
                 case 4:
+                    return item.remoteAddress;
+
+                case 5:
+                    return item.remotePort;
+
+                case 6:
                     return item.contents.length;
 
                 default:

@@ -115,7 +115,7 @@ public class IconLoader
     /***************************************************************************
      * Returns the images with the provided names.
      * @param names the names/relative paths to the images.
-     * @return the list of images loaded or and empty list if none found.
+     * @return the list of images loaded or an empty list if none found.
      **************************************************************************/
     public List<Image> getImages( String... names )
     {

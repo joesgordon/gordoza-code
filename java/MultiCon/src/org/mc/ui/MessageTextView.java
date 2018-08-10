@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.text.BadLocationException;
 
 import org.jutils.SwingUtils;
+import org.jutils.ui.TitleView;
 import org.jutils.ui.event.*;
 import org.jutils.ui.fields.HexAreaFormField;
 import org.jutils.ui.hex.HexUtils;
@@ -54,7 +55,9 @@ public class MessageTextView implements IDataView<byte[]>
     }
 
     /***************************************************************************
-     * @param text
+     * Inserts the provided text at the current cursor position in the
+     * {@link #textField}.
+     * @param text the text to be inserted.
      **************************************************************************/
     private void insertText( String text )
     {
@@ -76,14 +79,17 @@ public class MessageTextView implements IDataView<byte[]>
      **************************************************************************/
     private JComponent createView()
     {
-        JTabbedPane tabs = new JTabbedPane();
+        JPanel panel = new JPanel( new GridLayout( 2, 1, 4, 4 ) );
 
-        tabs.addTab( "Text", createTextView() );
-        tabs.addTab( "Hex", hexField.getView() );
+        TitleView textView = new TitleView( "Text", createTextView() );
+        TitleView hexView = new TitleView( "Hex", hexField.getView() );
+
+        panel.add( textView.getView() );
+        panel.add( hexView.getView() );
 
         addEnterHook( hexField.getTextArea() );
 
-        return tabs;
+        return panel;
     }
 
     /***************************************************************************

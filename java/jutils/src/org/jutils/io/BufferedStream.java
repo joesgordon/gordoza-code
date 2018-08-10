@@ -73,7 +73,7 @@ public class BufferedStream implements IStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public byte read() throws IOException
@@ -99,7 +99,7 @@ public class BufferedStream implements IStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public int read( byte [] buf ) throws IOException
@@ -110,7 +110,7 @@ public class BufferedStream implements IStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public int read( byte [] buf, int off, int len ) throws IOException
@@ -168,7 +168,7 @@ public class BufferedStream implements IStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void readFully( byte [] buf ) throws IOException
@@ -177,7 +177,7 @@ public class BufferedStream implements IStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void readFully( byte [] buf, int off, int len )
@@ -200,7 +200,7 @@ public class BufferedStream implements IStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void seek( long pos ) throws IOException
@@ -219,7 +219,7 @@ public class BufferedStream implements IStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void close() throws IOException
@@ -229,7 +229,7 @@ public class BufferedStream implements IStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void skip( long count ) throws IOException
@@ -238,7 +238,7 @@ public class BufferedStream implements IStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public long getAvailable() throws IOException
@@ -247,7 +247,7 @@ public class BufferedStream implements IStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public long getPosition() throws IOException
@@ -275,7 +275,7 @@ public class BufferedStream implements IStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void write( byte b ) throws IOException
@@ -308,7 +308,7 @@ public class BufferedStream implements IStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void write( byte [] buf ) throws IOException
@@ -317,7 +317,7 @@ public class BufferedStream implements IStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void write( byte [] buf, int off, int len ) throws IOException

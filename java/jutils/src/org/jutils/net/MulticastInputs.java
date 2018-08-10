@@ -9,11 +9,11 @@ import java.util.Objects;
  ******************************************************************************/
 public class MulticastInputs
 {
-    /**  */
-    public final Ip4Address address;
-    /**  */
+    /** The multicast group used to send/receive. */
+    public final Ip4Address group;
+    /** The port to send/receive. */
     public int port;
-    /**  */
+    /** The nic to be bound to. */
     public String nic;
     /**
      * Indicates that the socket will receive the messages it sends or not. This
@@ -21,9 +21,9 @@ public class MulticastInputs
      * great everyone should have one.
      */
     public boolean loopback;
-    /**  */
+    /** Time-to-Live */
     public int ttl;
-    /**  */
+    /** The timeout to use for send and receive. */
     public int timeout;
 
     /***************************************************************************
@@ -31,7 +31,7 @@ public class MulticastInputs
      **************************************************************************/
     public MulticastInputs()
     {
-        this.address = new Ip4Address( 238, 0, 0, 1 );
+        this.group = new Ip4Address( 238, 0, 0, 1 );
         this.port = 2048;
         this.nic = null;
         this.ttl = 10;
@@ -44,7 +44,7 @@ public class MulticastInputs
      **************************************************************************/
     public MulticastInputs( MulticastInputs inputs )
     {
-        this.address = new Ip4Address( inputs.address );
+        this.group = new Ip4Address( inputs.group );
         this.port = inputs.port;
         this.nic = inputs.nic;
         this.ttl = inputs.ttl;
@@ -71,7 +71,7 @@ public class MulticastInputs
         else if( obj instanceof MulticastInputs )
         {
             MulticastInputs inputs = ( MulticastInputs )obj;
-            return address.equals( inputs.address ) && port == inputs.port &&
+            return group.equals( inputs.group ) && port == inputs.port &&
                 nic == inputs.nic && ttl == inputs.ttl;
         }
 
@@ -81,6 +81,6 @@ public class MulticastInputs
     @Override
     public int hashCode()
     {
-        return Objects.hash( address, port, nic, ttl );
+        return Objects.hash( group, port, nic, ttl );
     }
 }

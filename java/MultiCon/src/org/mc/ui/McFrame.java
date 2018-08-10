@@ -1,15 +1,12 @@
 package org.mc.ui;
 
 import java.awt.*;
-import java.awt.Dialog.ModalityType;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.*;
 
-import org.jutils.ui.OkDialogView;
-import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.model.IView;
 import org.mc.McIcons;
@@ -56,10 +53,10 @@ public class McFrame implements IView<JFrame>
         addButton( panel, "Multicast", l, r++ );
 
         l = ( e ) -> showView( new UdpServerView() );
-        addButton( panel, "UDP Server", l, r++ );
+        addButton( panel, "UDP Receiver", l, r++ );
 
         l = ( e ) -> showView( new UdpClientView() );
-        addButton( panel, "UDP Client", l, r++ );
+        addButton( panel, "UDP Sender", l, r++ );
 
         l = ( e ) -> showView( new TcpServerView() );
         addButton( panel, "TCP Server", l, r++ );
@@ -70,6 +67,12 @@ public class McFrame implements IView<JFrame>
         return panel;
     }
 
+    /***************************************************************************
+     * @param panel
+     * @param text
+     * @param listener
+     * @param row
+     **************************************************************************/
     private static void addButton( JPanel panel, String text,
         ActionListener listener, int row )
     {
@@ -88,18 +91,54 @@ public class McFrame implements IView<JFrame>
     {
         views.add( view );
 
-        OkDialogView odv = new OkDialogView( getView(), view.getView(),
-            ModalityType.MODELESS, OkDialogButtons.OK_ONLY );
+        StandardFrameView odv = new StandardFrameView();
 
         odv.setTitle( view.getTitle() );
-        odv.setOkButtonText( "Close" );
+        odv.setContent( view.getView() );
 
-        odv.addOkListener( ( b ) -> {
-            view.close();
-            views.remove( view );
+        odv.getView().addWindowListener( new WindowListener()
+        {
+            @Override
+            public void windowOpened( WindowEvent e )
+            {
+            }
+
+            @Override
+            public void windowIconified( WindowEvent e )
+            {
+            }
+
+            @Override
+            public void windowDeiconified( WindowEvent e )
+            {
+            }
+
+            @Override
+            public void windowDeactivated( WindowEvent e )
+            {
+            }
+
+            @Override
+            public void windowClosing( WindowEvent e )
+            {
+                view.close();
+                views.remove( view );
+            }
+
+            @Override
+            public void windowClosed( WindowEvent e )
+            {
+            }
+
+            @Override
+            public void windowActivated( WindowEvent e )
+            {
+            }
         } );
 
-        odv.show();
+        odv.getView().pack();
+        odv.getView().setLocationRelativeTo( getView() );
+        odv.getView().setVisible( true );
     }
 
     /***************************************************************************
@@ -116,13 +155,20 @@ public class McFrame implements IView<JFrame>
      **************************************************************************/
     private static final class ClosingListener extends WindowAdapter
     {
+        /**  */
         private final McFrame parent;
 
+        /**
+         * @param parent
+         */
         public ClosingListener( McFrame parent )
         {
             this.parent = parent;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void windowClosing( WindowEvent e )
         {
