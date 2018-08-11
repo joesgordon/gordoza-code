@@ -43,17 +43,22 @@ public class MsgScheduleTask
     /***************************************************************************
      * 
      **************************************************************************/
-    public void run()
+    private void run()
     {
         try
         {
-            connection.txMessage( msg );
+            connection.sendMessage( msg );
         }
-        catch( IOException e )
+        catch( IOException ex )
         {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            ex.printStackTrace();
         }
+    }
+
+    public void stop()
+    {
+        taskTimer.cancel();
     }
 
     /**

@@ -1,6 +1,7 @@
 package org.jutils.ui.fields;
 
 import java.awt.Font;
+import java.nio.charset.Charset;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -19,6 +20,9 @@ import org.jutils.ui.validators.ITextValidator;
 public class HexAreaFormField implements IDataFormField<byte []>
 {
     /**  */
+    public static final Charset UTF8 = Charset.forName( "UTF-8" );
+
+    /**  */
     private final String name;
     /**  */
     private final ValidationTextAreaField inputField;
@@ -35,7 +39,6 @@ public class HexAreaFormField implements IDataFormField<byte []>
      **************************************************************************/
     public HexAreaFormField( String name )
     {
-
         this.name = name;
         this.inputField = new ValidationTextAreaField();
 
@@ -178,6 +181,14 @@ public class HexAreaFormField implements IDataFormField<byte []>
     public JTextArea getTextArea()
     {
         return inputField.getView();
+    }
+
+    /***************************************************************************
+     * @param text
+     **************************************************************************/
+    public void setText( String text )
+    {
+        setValue( text.getBytes( UTF8 ) );
     }
 
     /***************************************************************************

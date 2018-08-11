@@ -12,7 +12,7 @@ import org.jutils.ui.event.ItemActionListener;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ConnectionReceiver implements ITask
+public class ConnectionReceiverTask implements ITask
 {
     /**  */
     private final IConnection connection;
@@ -24,7 +24,7 @@ public class ConnectionReceiver implements ITask
     /***************************************************************************
      * @param connection
      **************************************************************************/
-    public ConnectionReceiver( IConnection connection )
+    public ConnectionReceiverTask( IConnection connection )
     {
         this.connection = connection;
         this.msgListeners = new ItemActionList<>();
@@ -42,7 +42,7 @@ public class ConnectionReceiver implements ITask
             try
             {
                 // LogUtils.printDebug( "Receiving message..." );
-                NetMessage msg = connection.rxMessage();
+                NetMessage msg = connection.receiveMessage();
                 if( msg == null )
                 {
                     break;

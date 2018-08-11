@@ -7,17 +7,18 @@ import org.jutils.concurrent.TaskThread;
 import org.jutils.ui.event.ItemActionListener;
 
 /*******************************************************************************
- * 
+ * Creates a thread to listen for messages received with the provided
+ * connection.
  ******************************************************************************/
 public class ConnectionListener implements Closeable
 {
-    /**  */
+    /** The connection used to send/receive messages. */
     public final IConnection connection;
-    /**  */
+    /** The receive thread. */
     private final TaskThread rxThread;
 
     /***************************************************************************
-     * @param socket
+     * @param connection
      * @param msgListener
      * @param errListener
      * @throws IOException
@@ -28,7 +29,8 @@ public class ConnectionListener implements Closeable
     {
         this.connection = connection;
 
-        ConnectionReceiver receiver = new ConnectionReceiver( connection );
+        ConnectionReceiverTask receiver = new ConnectionReceiverTask(
+            connection );
 
         this.rxThread = new TaskThread( receiver, "Connection Receiver" );
 
@@ -39,7 +41,7 @@ public class ConnectionListener implements Closeable
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void close() throws IOException

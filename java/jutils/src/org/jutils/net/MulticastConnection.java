@@ -65,7 +65,7 @@ public class MulticastConnection implements IConnection
      * 
      **************************************************************************/
     @Override
-    public NetMessage txMessage( byte [] buf ) throws IOException
+    public NetMessage sendMessage( byte [] buf ) throws IOException
     {
         // LogUtils.printDebug( "Sending message..." );
 
@@ -87,10 +87,10 @@ public class MulticastConnection implements IConnection
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
-    public NetMessage rxMessage() throws IOException
+    public NetMessage receiveMessage() throws IOException
     {
         // LogUtils.printDebug( "Receiving message..." );
 
@@ -119,5 +119,13 @@ public class MulticastConnection implements IConnection
     public void close() throws IOException
     {
         socket.close();
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public void addDisconnectedListener( Runnable listener )
+    {
     }
 }

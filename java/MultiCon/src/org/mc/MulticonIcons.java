@@ -10,7 +10,7 @@ import org.jutils.io.IconLoader;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class McIcons
+public class MulticonIcons
 {
     /**  */
     public static final String MULTICON_016 = "multicon016.png";
@@ -18,13 +18,13 @@ public class McIcons
     public static final String MULTICON_024 = "multicon024.png";
 
     /** The loader used to access the icons. */
-    public final static IconLoader loader = new IconLoader( McIcons.class,
+    public final static IconLoader loader = new IconLoader( MulticonIcons.class,
         "icons" );
 
     /***************************************************************************
      * Private default constructor to prevent instantiation of this class.
      **************************************************************************/
-    private McIcons()
+    private MulticonIcons()
     {
     }
 

@@ -2,14 +2,17 @@ package org.mc.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.io.IOException;
 
 import javax.swing.*;
 
 import org.jutils.SwingUtils;
+import org.jutils.net.IConnection;
 import org.jutils.ui.TitleView;
-import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.event.updater.CheckBoxUpdater;
+import org.jutils.ui.fields.DoubleFormField;
 import org.jutils.ui.model.IView;
+import org.mc.MsgScheduleTask;
 
 /*******************************************************************************
  * 
@@ -19,36 +22,44 @@ public class MsgInputPanel implements IView<JComponent>
     /**  */
     private final JComponent view;
     /**  */
-    private final MessageTextView adHocField;
+    private final MessageTextView adHocView;
     /**  */
-    private final MessageTextView scheduleField;
+    private final MessageTextView scheduleView;
     /**  */
-    private final MessageTextView autoReplyField;
+    private final MessageTextView autoReplyView;
 
     /**  */
-    private final JCheckBox scheduleCheckBox;
+    private final JCheckBox scheduleField;
     /**  */
-    private final JTextField msgCountTextField;
-    /**  */
-    private final JTextField msgDelayTextField;
+    private final DoubleFormField rateField;
     /**  */
     private final JCheckBox autoEnabledCheckbox;
+
+    /**  */
+    private IConnection connection;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public MsgInputPanel()
     {
-        this.scheduleCheckBox = new JCheckBox( "Schedule Messages" );
-        this.msgCountTextField = new JTextField( 4 );
-        this.msgDelayTextField = new JTextField( 4 );
+        this.scheduleField = new JCheckBox( "Schedule Messages" );
+        this.rateField = new DoubleFormField( "Message Rate", "Hz", 4 );
         this.autoEnabledCheckbox = new JCheckBox( "Auto-Reply" );
 
-        this.adHocField = new MessageTextView();
-        this.scheduleField = new MessageTextView();
-        this.autoReplyField = new MessageTextView();
+        this.adHocView = new MessageTextView();
+        this.scheduleView = new MessageTextView();
+        this.autoReplyView = new MessageTextView();
 
         this.view = createView();
+
+        this.connection = null;
+
+        adHocView.setText( "Send Me" );
+        scheduleView.setText( "Schedule Me" );
+        autoReplyView.setText( "Reply with Me" );
+
+        adHocView.addEnterListener( ( e ) -> sendAdHoc( e.getItem() ) );
     }
 
     /***************************************************************************
@@ -61,9 +72,9 @@ public class MsgInputPanel implements IView<JComponent>
 
         JTabbedPane tabs = new JTabbedPane();
 
-        tabs.addTab( "Ad Hoc", adHocField.getView() );
-        tabs.addTab( "Scheduled", scheduleField.getView() );
-        tabs.addTab( "Auto-Reply", autoReplyField.getView() );
+        tabs.addTab( "Ad Hoc", adHocView.getView() );
+        tabs.addTab( "Scheduled", scheduleView.getView() );
+        tabs.addTab( "Auto-Reply", autoReplyView.getView() );
 
         panel.add( createToolbar(), BorderLayout.NORTH );
         panel.add( tabs, BorderLayout.CENTER );
@@ -80,24 +91,17 @@ public class MsgInputPanel implements IView<JComponent>
 
         SwingUtils.setToolbarDefaults( toolbar );
 
-        msgCountTextField.setMinimumSize(
-            msgDelayTextField.getPreferredSize() );
-        msgDelayTextField.setMinimumSize(
-            msgDelayTextField.getPreferredSize() );
-
-        scheduleCheckBox.addActionListener(
+        scheduleField.addActionListener(
             new CheckBoxUpdater( ( b ) -> scheduleMessages( b ) ) );
 
-        toolbar.add( scheduleCheckBox );
+        rateField.setValue( 5.0 );
+        rateField.getView().setMaximumSize(
+            rateField.getView().getPreferredSize() );
+
+        toolbar.add( scheduleField );
 
         toolbar.addSeparator();
-        toolbar.add( new JLabel( "#" ) );
-        toolbar.add( msgCountTextField );
-
-        toolbar.addSeparator();
-        toolbar.add( new JLabel( "Delay:" ) );
-        toolbar.add( msgDelayTextField );
-        toolbar.add( new JLabel( "ms" ) );
+        toolbar.add( rateField.getView() );
 
         toolbar.addSeparator();
         toolbar.add( autoEnabledCheckbox );
@@ -105,11 +109,36 @@ public class MsgInputPanel implements IView<JComponent>
         return toolbar;
     }
 
+    /***************************************************************************
+     * @param enable
+     **************************************************************************/
     private void scheduleMessages( boolean enable )
     {
-        if( enable )
+        if( enable && connection != null )
         {
-            // MsgScheduleTask task = new MsgScheduleTask();
+            MsgScheduleTask task = new MsgScheduleTask( rateField.getValue(),
+                scheduleView.getData(), connection );
+
+            task.stop();
+        }
+    }
+
+    /***************************************************************************
+     * @param msgBytes
+     **************************************************************************/
+    private void sendAdHoc( byte[] msgBytes )
+    {
+        if( connection != null )
+        {
+            try
+            {
+                connection.sendMessage( msgBytes );
+            }
+            catch( IOException ex )
+            {
+                SwingUtils.showErrorMessage( getView(), ex.getMessage(),
+                    "Error sending message" );
+            }
         }
     }
 
@@ -123,11 +152,34 @@ public class MsgInputPanel implements IView<JComponent>
     }
 
     /***************************************************************************
-     * @param l
+     * @param connection
      **************************************************************************/
-    public void addSendListener( ItemActionListener<String> l )
+    public void setConnection( IConnection connection )
     {
-        adHocField.addEnterListener( l );
+        closeConnection();
+        this.connection = connection;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    public void closeConnection()
+    {
+        if( this.connection != null )
+        {
+            IConnection connection = this.connection;
+            this.connection = null;
+
+            try
+            {
+                connection.close();
+            }
+            catch( IOException ex )
+            {
+                SwingUtils.showErrorMessage( getView(), ex.getMessage(),
+                    "Error closing connection" );
+            }
+        }
     }
 
     /***************************************************************************
@@ -135,7 +187,7 @@ public class MsgInputPanel implements IView<JComponent>
      **************************************************************************/
     public byte[] getMessageText()
     {
-        return adHocField.getData();
+        return adHocView.getData();
     }
 
     /***************************************************************************
@@ -143,7 +195,7 @@ public class MsgInputPanel implements IView<JComponent>
      **************************************************************************/
     public void setMessageText( byte[] text )
     {
-        adHocField.setData( text );
+        adHocView.setData( text );
     }
 
     /***************************************************************************
@@ -151,14 +203,13 @@ public class MsgInputPanel implements IView<JComponent>
      **************************************************************************/
     public void setEditable( boolean editable )
     {
-        scheduleCheckBox.setEnabled( editable );
-        msgCountTextField.setEditable( editable );
-        msgDelayTextField.setEditable( editable );
+        scheduleField.setEnabled( editable );
+        rateField.setEditable( editable );
         autoEnabledCheckbox.setEnabled( editable );
 
-        adHocField.setEditable( editable );
-        scheduleField.setEditable( editable );
-        autoReplyField.setEditable( editable );
+        adHocView.setEditable( editable );
+        scheduleView.setEditable( editable );
+        autoReplyView.setEditable( editable );
     }
 
     /***************************************************************************
@@ -166,6 +217,6 @@ public class MsgInputPanel implements IView<JComponent>
      **************************************************************************/
     public void selectAll()
     {
-        adHocField.selectAll();
+        adHocView.selectAll();
     }
 }

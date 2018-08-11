@@ -7,7 +7,7 @@ import javax.swing.JComponent;
 
 import org.jutils.io.options.OptionsSerializer;
 import org.jutils.net.*;
-import org.jutils.ui.net.MulticastInputsView;
+import org.jutils.ui.net.UdpInputsView;
 import org.mc.MulticonMain;
 import org.mc.MulticonOptions;
 import org.mc.ui.IConnectionView;
@@ -15,23 +15,21 @@ import org.mc.ui.IConnectionView;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class MulticastView implements IConnectionView
+public class UdpView implements IConnectionView
 {
     /**  */
-    private final MulticastInputsView inputsView;
+    private final UdpInputsView inputsView;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public MulticastView()
+    public UdpView()
     {
-        this.inputsView = new MulticastInputsView();
-
-        inputsView.setEnabled( true );
+        this.inputsView = new UdpInputsView();
 
         OptionsSerializer<MulticonOptions> userio = MulticonMain.getUserData();
 
-        inputsView.setData( userio.getOptions().multicastInputs );
+        inputsView.setData( userio.getOptions().udpClientInputs );
     }
 
     /***************************************************************************
@@ -47,16 +45,25 @@ public class MulticastView implements IConnectionView
      * {@inheritDoc}
      **************************************************************************/
     @Override
+    public String getTitle()
+    {
+        return "UDP";
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
     public IConnection createConnection() throws SocketException, IOException
     {
-        MulticastInputs inputs = inputsView.getData();
+        UdpInputs inputs = inputsView.getData();
 
         OptionsSerializer<MulticonOptions> userio = MulticonMain.getUserData();
         MulticonOptions options = userio.getOptions();
-        options.multicastInputs = inputs;
+        options.udpClientInputs = inputs;
         userio.write( options );
 
-        return new MulticastConnection( inputs );
+        return new UdpConnection( inputs );
     }
 
     /***************************************************************************
@@ -66,14 +73,5 @@ public class MulticastView implements IConnectionView
     public void setEditable( boolean enabled )
     {
         inputsView.setEnabled( enabled );
-    }
-
-    /***************************************************************************
-     * {@inheritDoc}
-     **************************************************************************/
-    @Override
-    public String getTitle()
-    {
-        return "Multicast";
     }
 }

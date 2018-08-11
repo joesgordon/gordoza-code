@@ -15,13 +15,18 @@ public interface IConnection extends Closeable
      * @return
      * @throws IOException
      **************************************************************************/
-    public NetMessage txMessage( byte [] buf ) throws IOException;
+    public NetMessage sendMessage( byte [] buf ) throws IOException;
 
     /***************************************************************************
      * @return
      * @throws IOException
      **************************************************************************/
-    public NetMessage rxMessage() throws IOException;
+    public NetMessage receiveMessage() throws IOException;
+
+    /***************************************************************************
+     * @param listener
+     **************************************************************************/
+    public void addDisconnectedListener( Runnable listener );
 
     /***************************************************************************
      * Returns the first {@link InetAddress} of the network interface name
@@ -85,6 +90,7 @@ public interface IConnection extends Closeable
     }
 
     /***************************************************************************
+     * @return
      * @throws RuntimeException if the implementing JRE is so strange as to not
      * recognize 0.0.0.0 as a valid address.
      **************************************************************************/

@@ -2,35 +2,38 @@ package org.mc.ui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.*;
 
+import org.jutils.SwingUtils;
 import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.model.IView;
-import org.mc.McIcons;
+import org.mc.MulticonIcons;
+import org.mc.ui.BindingFrameView.IBindableView;
 import org.mc.ui.net.*;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class McFrame implements IView<JFrame>
+public class MulticonFrame implements IView<JFrame>
 {
     /**  */
     private final StandardFrameView frameView;
     /**  */
-    private final List<IConnectionView> views;
+    private final List<IBindableView> views;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public McFrame()
+    public MulticonFrame()
     {
         this.frameView = new StandardFrameView();
         this.views = new ArrayList<>();
 
-        frameView.getView().setIconImages( McIcons.getMulticonImages() );
+        frameView.getView().setIconImages( MulticonIcons.getMulticonImages() );
 
         frameView.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         frameView.setSize( 400, 400 );
@@ -49,19 +52,19 @@ public class McFrame implements IView<JFrame>
         int r = 0;
         ActionListener l;
 
-        l = ( e ) -> showView( new MulticastView() );
+        l = ( e ) -> showView(
+            new ConnectionBindableView( new MulticastView() ) );
         addButton( panel, "Multicast", l, r++ );
 
-        l = ( e ) -> showView( new UdpServerView() );
-        addButton( panel, "UDP Receiver", l, r++ );
-
-        l = ( e ) -> showView( new UdpClientView() );
+        l = ( e ) -> showView(
+            new ConnectionBindableView( new UdpView() ) );
         addButton( panel, "UDP Sender", l, r++ );
 
         l = ( e ) -> showView( new TcpServerView() );
         addButton( panel, "TCP Server", l, r++ );
 
-        l = ( e ) -> showView( new TcpClientView() );
+        l = ( e ) -> showView(
+            new ConnectionBindableView( new TcpClientView() ) );
         addButton( panel, "TCP Client", l, r++ );
 
         return panel;
@@ -87,59 +90,35 @@ public class McFrame implements IView<JFrame>
     /***************************************************************************
      * @param view
      **************************************************************************/
-    private void showView( IConnectionView view )
+    private void showView( IBindableView view )
     {
         views.add( view );
 
-        StandardFrameView odv = new StandardFrameView();
+        BindingFrameView frame = new BindingFrameView( view, getView() );
 
-        odv.setTitle( view.getTitle() );
-        odv.setContent( view.getView() );
+        frame.getView().addWindowListener(
+            new BindableClosingListener( view, this ) );
 
-        odv.getView().addWindowListener( new WindowListener()
+        frame.getView().setIconImages( getView().getIconImages() );
+        frame.getView().pack();
+        frame.getView().setLocationRelativeTo( getView() );
+        frame.getView().setVisible( true );
+    }
+
+    /***************************************************************************
+     * @param view
+     **************************************************************************/
+    private void closeView( IBindableView view )
+    {
+        try
         {
-            @Override
-            public void windowOpened( WindowEvent e )
-            {
-            }
-
-            @Override
-            public void windowIconified( WindowEvent e )
-            {
-            }
-
-            @Override
-            public void windowDeiconified( WindowEvent e )
-            {
-            }
-
-            @Override
-            public void windowDeactivated( WindowEvent e )
-            {
-            }
-
-            @Override
-            public void windowClosing( WindowEvent e )
-            {
-                view.close();
-                views.remove( view );
-            }
-
-            @Override
-            public void windowClosed( WindowEvent e )
-            {
-            }
-
-            @Override
-            public void windowActivated( WindowEvent e )
-            {
-            }
-        } );
-
-        odv.getView().setIconImages( getView().getIconImages() );
-        odv.getView().pack();
-        odv.getView().setLocationRelativeTo( getView() );
-        odv.getView().setVisible( true );
+            view.unbind();
+        }
+        catch( IOException ex )
+        {
+            SwingUtils.showErrorMessage( getView(), ex.getMessage(),
+                "Socket Close Error" );
+        }
     }
 
     /***************************************************************************
@@ -157,14 +136,14 @@ public class McFrame implements IView<JFrame>
     private static final class ClosingListener extends WindowAdapter
     {
         /**  */
-        private final McFrame parent;
+        private final MulticonFrame frame;
 
         /**
          * @param parent
          */
-        public ClosingListener( McFrame parent )
+        public ClosingListener( MulticonFrame parent )
         {
-            this.parent = parent;
+            this.frame = parent;
         }
 
         /**
@@ -173,10 +152,41 @@ public class McFrame implements IView<JFrame>
         @Override
         public void windowClosing( WindowEvent e )
         {
-            for( IConnectionView view : parent.views )
+            for( IBindableView view : frame.views )
             {
-                view.close();
+                frame.closeView( view );
             }
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static final class BindableClosingListener extends WindowAdapter
+    {
+        /**  */
+        private final IBindableView view;
+        /**  */
+        private final MulticonFrame frame;
+
+        /**
+         * @param view
+         * @param frame
+         */
+        public BindableClosingListener( IBindableView view,
+            MulticonFrame frame )
+        {
+            this.view = view;
+            this.frame = frame;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void windowClosing( WindowEvent e )
+        {
+            frame.closeView( view );
         }
     }
 }

@@ -340,7 +340,7 @@ public class ChatterboxHandler
                     "Message is too long: " + msgBytes.length );
             }
 
-            wire.connection.txMessage( msgBytes );
+            wire.connection.sendMessage( msgBytes );
         }
     }
 

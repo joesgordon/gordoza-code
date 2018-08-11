@@ -32,7 +32,7 @@ public class MessageTextView implements IDataView<byte[]>
     /**  */
     private final HexAreaFormField hexField;
     /**  */
-    private final ItemActionList<String> enterListeners;
+    private final ItemActionList<byte[]> enterListeners;
 
     /***************************************************************************
      * 
@@ -133,7 +133,8 @@ public class MessageTextView implements IDataView<byte[]>
 
         ks = KeyStroke.getKeyStroke( KeyEvent.VK_ENTER, 0 );
         aname = "SEND_MESSAGE";
-        l = ( e ) -> enterListeners.fireListeners( this, textField.getText() );
+        l = ( e ) -> enterListeners.fireListeners( this,
+            textField.getText().getBytes( hexField.UTF8 ) );
         action = new ActionAdapter( l, aname, null );
         amap = textPane.getActionMap();
         imap = textPane.getInputMap();
@@ -177,7 +178,7 @@ public class MessageTextView implements IDataView<byte[]>
     /***************************************************************************
      * @param l
      **************************************************************************/
-    public void addEnterListener( ItemActionListener<String> l )
+    public void addEnterListener( ItemActionListener<byte[]> l )
     {
         enterListeners.addListener( l );
     }
@@ -197,5 +198,14 @@ public class MessageTextView implements IDataView<byte[]>
     {
         textField.setEditable( editable );
         hexField.setEditable( editable );
+    }
+
+    /***************************************************************************
+     * @param text
+     **************************************************************************/
+    public void setText( String text )
+    {
+        textField.setText( text );
+        hexField.setText( text );
     }
 }

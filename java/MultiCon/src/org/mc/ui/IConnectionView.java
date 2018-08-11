@@ -1,7 +1,11 @@
 package org.mc.ui;
 
+import java.io.IOException;
+import java.net.SocketException;
+
 import javax.swing.JComponent;
 
+import org.jutils.net.IConnection;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
@@ -10,12 +14,19 @@ import org.jutils.ui.model.IView;
 public interface IConnectionView extends IView<JComponent>
 {
     /***************************************************************************
-     * Closes the connection if it has been established.
-     **************************************************************************/
-    public void close();
-
-    /***************************************************************************
      * @return the string describing the connection this view represents.
      **************************************************************************/
     public String getTitle();
+
+    /***************************************************************************
+     * @return
+     * @throws SocketException
+     * @throws IOException
+     **************************************************************************/
+    public IConnection createConnection() throws SocketException, IOException;
+
+    /***************************************************************************
+     * @param enabled
+     **************************************************************************/
+    public void setEditable( boolean enabled );
 }

@@ -11,27 +11,27 @@ import org.jutils.ui.app.FrameRunner;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class McMain
+public class MulticonMain
 {
     /**  */
     private static final File OPTIONS_FILE = IOUtils.getUsersFile( ".jutils",
         "multicon", "options.xml" );
 
     /**  */
-    private static OptionsSerializer<McOptions> userOptions;
+    private static OptionsSerializer<MulticonOptions> userOptions;
 
     /***************************************************************************
      * @param args ignored
      **************************************************************************/
     public static void main( String[] args )
     {
-        FrameRunner.invokeLater( new McApp(), false );
+        FrameRunner.invokeLater( new MulticonApp(), false );
     }
 
     /***************************************************************************
      * @return the user options for this application/library instance.
      **************************************************************************/
-    public static OptionsSerializer<McOptions> getUserData()
+    public static OptionsSerializer<MulticonOptions> getUserData()
     {
         if( userOptions == null )
         {
@@ -46,24 +46,24 @@ public class McMain
      * 
      **************************************************************************/
     private static final class McCommOptionsCreator
-        implements IOptionsCreator<McOptions>
+        implements IOptionsCreator<MulticonOptions>
     {
         /**
          * {@inheritDoc}
          */
         @Override
-        public McOptions createDefaultOptions()
+        public MulticonOptions createDefaultOptions()
         {
-            return new McOptions();
+            return new MulticonOptions();
         }
 
         /**
          * {@inheritDoc}
          */
         @Override
-        public McOptions initialize( McOptions options )
+        public MulticonOptions initialize( MulticonOptions options )
         {
-            return new McOptions( options );
+            return new MulticonOptions( options );
         }
 
         /**

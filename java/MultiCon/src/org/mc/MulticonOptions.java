@@ -5,7 +5,7 @@ import org.jutils.net.*;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class McOptions
+public class MulticonOptions
 {
     /**  */
     public TcpInputs tcpServerInputs;
@@ -21,7 +21,7 @@ public class McOptions
     /***************************************************************************
      * 
      **************************************************************************/
-    public McOptions()
+    public MulticonOptions()
     {
         this.tcpServerInputs = new TcpInputs();
         this.tcpClientInputs = new TcpInputs();
@@ -33,7 +33,7 @@ public class McOptions
     /***************************************************************************
      * @param options the options to be copied.
      **************************************************************************/
-    public McOptions( McOptions options )
+    public MulticonOptions( MulticonOptions options )
     {
         this.tcpServerInputs = options.tcpServerInputs == null ? new TcpInputs()
             : new TcpInputs( options.tcpServerInputs );
