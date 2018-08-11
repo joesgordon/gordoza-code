@@ -48,7 +48,7 @@ public class UdpConnection implements IConnection
         socket.setSoTimeout( inputs.timeout );
 
         this.socket = socket;
-        this.rxBuffer = new byte[65535];
+        this.rxBuffer = new byte[65536];
 
         if( inputs.remoteAddress != null )
         {

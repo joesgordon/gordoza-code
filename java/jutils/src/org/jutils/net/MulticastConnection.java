@@ -38,7 +38,7 @@ public class MulticastConnection implements IConnection
         }
 
         this.address = inputs.group.getInetAddress();
-        this.rxBuffer = new byte[2048];
+        this.rxBuffer = new byte[65536];
         this.socket = new MulticastSocket( inputs.port );
         this.rxPacket = new DatagramPacket( rxBuffer, rxBuffer.length, address,
             inputs.port );

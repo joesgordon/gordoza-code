@@ -24,7 +24,7 @@ public class ComponentView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JPanel getView()
@@ -45,5 +45,16 @@ public class ComponentView implements IView<JPanel>
         view.invalidate();
         view.validate();
         view.repaint();
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public Component getComponent()
+    {
+        Component comp = view.getComponentCount() < 1 ? null
+            : view.getComponent( 0 );
+
+        return comp;
     }
 }

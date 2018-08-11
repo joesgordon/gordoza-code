@@ -113,6 +113,9 @@ public final class IconConstants
     public final static String FONT_24 = "font24.png";
 
     /**  */
+    public final static String HEX_16 = "hex_016.png";
+
+    /**  */
     public final static String IM_USER_16 = "im-user16.png";
 
     /**  */
