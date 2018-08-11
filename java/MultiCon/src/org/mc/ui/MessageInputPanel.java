@@ -8,8 +8,10 @@ import javax.swing.*;
 
 import org.jutils.SwingUtils;
 import org.jutils.net.IConnection;
+import org.jutils.net.NetMessage;
 import org.jutils.ui.TitleView;
 import org.jutils.ui.event.updater.CheckBoxUpdater;
+import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.fields.DoubleFormField;
 import org.jutils.ui.model.IView;
 import org.mc.MsgScheduleTask;
@@ -21,12 +23,6 @@ public class MessageInputPanel implements IView<JComponent>
 {
     /**  */
     private final JComponent view;
-    /**  */
-    private final MessageTextView adHocView;
-    /**  */
-    private final MessageTextView scheduleView;
-    /**  */
-    private final MessageTextView autoReplyView;
 
     /**  */
     private final JCheckBox scheduleField;
@@ -36,14 +32,24 @@ public class MessageInputPanel implements IView<JComponent>
     private final JCheckBox autoEnabledCheckbox;
 
     /**  */
+    private final MessageTextView adHocView;
+    /**  */
+    private final MessageTextView scheduleView;
+    /**  */
+    private final MessageTextView autoReplyView;
+
+    /**  */
+    private final IUpdater<NetMessage> msgNotifier;
+
+    /**  */
     private IConnection connection;
     /**  */
     private MsgScheduleTask task;
 
     /***************************************************************************
-     * 
+     * @param msgNotifier
      **************************************************************************/
-    public MessageInputPanel()
+    public MessageInputPanel( IUpdater<NetMessage> msgNotifier )
     {
         this.scheduleField = new JCheckBox( "Schedule Messages" );
         this.rateField = new DoubleFormField( "Message Rate", "Hz", 4, null,
@@ -53,6 +59,8 @@ public class MessageInputPanel implements IView<JComponent>
         this.adHocView = new MessageTextView();
         this.scheduleView = new MessageTextView();
         this.autoReplyView = new MessageTextView();
+
+        this.msgNotifier = msgNotifier;
 
         this.view = createView();
 
@@ -129,12 +137,18 @@ public class MessageInputPanel implements IView<JComponent>
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private void startScheduled()
     {
         task = new MsgScheduleTask( rateField.getValue(),
-            scheduleView.getData(), connection );
+            scheduleView.getData(), connection, msgNotifier );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private void stopScheduled()
     {
         if( task != null )
@@ -154,7 +168,9 @@ public class MessageInputPanel implements IView<JComponent>
         {
             try
             {
-                connection.sendMessage( msgBytes );
+                NetMessage netMsg = connection.sendMessage( msgBytes );
+
+                msgNotifier.update( netMsg );
             }
             catch( IOException ex )
             {
@@ -178,31 +194,15 @@ public class MessageInputPanel implements IView<JComponent>
      **************************************************************************/
     public void setConnection( IConnection connection )
     {
-        closeConnection();
+        close();
         this.connection = connection;
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public void closeConnection()
+    public void close()
     {
-        if( this.connection != null )
-        {
-            IConnection connection = this.connection;
-            this.connection = null;
-
-            try
-            {
-                connection.close();
-            }
-            catch( IOException ex )
-            {
-                SwingUtils.showErrorMessage( getView(), ex.getMessage(),
-                    "Error closing connection" );
-            }
-        }
-
         stopScheduled();
     }
 

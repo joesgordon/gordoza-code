@@ -4,7 +4,7 @@ import java.io.Closeable;
 import java.io.IOException;
 
 import org.jutils.concurrent.TaskThread;
-import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.event.updater.IUpdater;
 
 /*******************************************************************************
  * Creates a thread to listen for messages received with the provided
@@ -24,8 +24,8 @@ public class ConnectionListener implements Closeable
      * @throws IOException
      **************************************************************************/
     public ConnectionListener( IConnection connection,
-        ItemActionListener<NetMessage> msgListener,
-        ItemActionListener<String> errListener ) throws IOException
+        IUpdater<NetMessage> msgListener, IUpdater<String> errListener )
+        throws IOException
     {
         this.connection = connection;
 

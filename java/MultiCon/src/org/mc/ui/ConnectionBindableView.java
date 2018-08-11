@@ -9,7 +9,7 @@ import org.jutils.SwingUtils;
 import org.jutils.io.LogUtils;
 import org.jutils.net.*;
 import org.jutils.ui.TitleView;
-import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.net.NetMessagesView;
 import org.mc.ui.BindingFrameView.IBindableView;
 
@@ -38,8 +38,11 @@ public class ConnectionBindableView implements IBindableView
     {
         this.connectionView = connectionView;
 
+        IUpdater<NetMessage> msgNotifier = ( m ) -> SwingUtilities.invokeLater(
+            () -> addMessage( m ) );
+
         this.messagesPanel = new NetMessagesView();
-        this.inputPanel = new MessageInputPanel();
+        this.inputPanel = new MessageInputPanel( msgNotifier );
         this.view = createView();
 
         this.commModel = null;
@@ -103,21 +106,23 @@ public class ConnectionBindableView implements IBindableView
      * {@inheritDoc}
      **************************************************************************/
     @Override
-    public void unbind()
+    public void unbind() throws IOException
     {
         inputPanel.setEditable( false );
+        inputPanel.close();
+
+        messagesPanel.clearMessages();
+
         if( commModel != null )
         {
             try
             {
-                unbindSocket();
+                commModel.close();
+                commModel = null;
             }
-            catch( IOException ex )
+            finally
             {
-                SwingUtils.showErrorMessage( getView(),
-                    "Unable to properly close multicast connection: " +
-                        ex.getMessage(),
-                    "Unbind Error" );
+                connectionView.setEditable( true );
             }
         }
     }
@@ -186,13 +191,13 @@ public class ConnectionBindableView implements IBindableView
      **************************************************************************/
     private void setConnection( IConnection connection ) throws IOException
     {
-        ItemActionListener<NetMessage> rxListener;
-        ItemActionListener<String> errListener;
+        IUpdater<NetMessage> rxListener;
+        IUpdater<String> errListener;
 
-        rxListener = ( e ) -> SwingUtilities.invokeLater(
-            () -> addMessage( e.getItem() ) );
-        errListener = ( e ) -> SwingUtilities.invokeLater(
-            () -> displayErrorMessage( e.getItem() ) );
+        rxListener = ( m ) -> SwingUtilities.invokeLater(
+            () -> addMessage( m ) );
+        errListener = ( m ) -> SwingUtilities.invokeLater(
+            () -> displayErrorMessage( m ) );
 
         commModel = new ConnectionListener( connection, rxListener,
             errListener );
@@ -212,24 +217,5 @@ public class ConnectionBindableView implements IBindableView
 
         SwingUtils.showErrorMessage( getView(), errorMsg,
             "Communication Error" );
-    }
-
-    /***************************************************************************
-     * @throws IOException
-     **************************************************************************/
-    private void unbindSocket() throws IOException
-    {
-        inputPanel.closeConnection();
-        messagesPanel.clearMessages();
-
-        try
-        {
-            commModel.close();
-            commModel = null;
-        }
-        finally
-        {
-            connectionView.setEditable( true );
-        }
     }
 }

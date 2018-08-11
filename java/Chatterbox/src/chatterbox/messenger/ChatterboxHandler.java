@@ -11,7 +11,9 @@ import org.jutils.io.options.OptionsSerializer;
 import org.jutils.net.*;
 import org.jutils.task.TaskError;
 import org.jutils.task.TaskRunner;
-import org.jutils.ui.event.*;
+import org.jutils.ui.event.ItemActionList;
+import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.event.updater.IUpdater;
 
 import chatterbox.ChatterboxConstants;
 import chatterbox.data.*;
@@ -72,9 +74,9 @@ public class ChatterboxHandler
         {
             @SuppressWarnings( "resource")
             IConnection connection = new MulticastConnection( config );
-            ItemActionListener<String> errorListener = (
+            IUpdater<String> errorListener = (
                 e ) -> SwingUtilities.invokeLater(
-                    () -> displayErrorMessage( e.getItem() ) );
+                    () -> displayErrorMessage( e ) );
             this.wire = new ConnectionListener( connection,
                 new RawReceiver( this ), errorListener );
         }
@@ -347,22 +349,28 @@ public class ChatterboxHandler
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class RawReceiver implements ItemActionListener<NetMessage>
+    private static class RawReceiver implements IUpdater<NetMessage>
     {
+        /**  */
         private final ChatterboxHandler chat;
+        /**  */
         private final MessageSerializer msgSerializer;
 
+        /**
+         * @param chat
+         */
         public RawReceiver( ChatterboxHandler chat )
         {
             this.chat = chat;
             this.msgSerializer = new MessageSerializer();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public void actionPerformed( ItemActionEvent<NetMessage> event )
+        public void update( NetMessage msg )
         {
-            NetMessage msg = event.getItem();
-
             try( ByteArrayStream byteStream = new ByteArrayStream(
                 msg.contents );
                  IDataStream stream = new DataStream( byteStream ); )
