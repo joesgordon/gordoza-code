@@ -23,6 +23,7 @@ public class MessageTextViewTestMain
             StandardFrameView frame = new StandardFrameView();
 
             frame.setContent( createContent() );
+            frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 
             frame.setSize( 800, 800 );
 

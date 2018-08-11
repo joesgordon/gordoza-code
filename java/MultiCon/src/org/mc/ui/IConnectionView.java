@@ -28,5 +28,5 @@ public interface IConnectionView extends IView<JComponent>
     /***************************************************************************
      * @param enabled
      **************************************************************************/
-    public void setEditable( boolean enabled );
+    public void setEditable( boolean editable );
 }

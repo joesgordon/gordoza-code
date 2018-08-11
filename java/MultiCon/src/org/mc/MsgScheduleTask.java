@@ -35,9 +35,9 @@ public class MsgScheduleTask
         this.connection = connection;
         this.msgsSent = 0L;
 
-        long delay = ( long )Math.floor( rate / 1000.0 );
+        long delay = ( long )Math.floor( 1000.0 / rate );
 
-        taskTimer.schedule( new TimerTaskRunner( () -> run() ), delay );
+        taskTimer.schedule( new TimerTaskRunner( () -> run() ), 0, delay );
     }
 
     /***************************************************************************
@@ -56,6 +56,9 @@ public class MsgScheduleTask
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public void stop()
     {
         taskTimer.cancel();

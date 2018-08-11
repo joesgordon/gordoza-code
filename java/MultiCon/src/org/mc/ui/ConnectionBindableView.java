@@ -26,7 +26,7 @@ public class ConnectionBindableView implements IBindableView
     /**  */
     private final NetMessagesView messagesPanel;
     /**  */
-    private final MsgInputPanel inputPanel;
+    private final MessageInputPanel inputPanel;
 
     /**  */
     private ConnectionListener commModel;
@@ -39,10 +39,12 @@ public class ConnectionBindableView implements IBindableView
         this.connectionView = connectionView;
 
         this.messagesPanel = new NetMessagesView();
-        this.inputPanel = new MsgInputPanel();
+        this.inputPanel = new MessageInputPanel();
         this.view = createView();
 
         this.commModel = null;
+
+        inputPanel.setEditable( false );
     }
 
     /***************************************************************************
@@ -86,11 +88,24 @@ public class ConnectionBindableView implements IBindableView
     }
 
     /***************************************************************************
+     * @param bind
+     **************************************************************************/
+    @Override
+    public void bind() throws IOException
+    {
+        @SuppressWarnings( "resource")
+        IConnection connection = connectionView.createConnection();
+
+        setConnection( connection );
+    }
+
+    /***************************************************************************
      * {@inheritDoc}
      **************************************************************************/
     @Override
     public void unbind()
     {
+        inputPanel.setEditable( false );
         if( commModel != null )
         {
             try
@@ -166,18 +181,6 @@ public class ConnectionBindableView implements IBindableView
     }
 
     /***************************************************************************
-     * @param bind
-     **************************************************************************/
-    @Override
-    public void bind() throws IOException
-    {
-        @SuppressWarnings( "resource")
-        IConnection connection = connectionView.createConnection();
-
-        setConnection( connection );
-    }
-
-    /***************************************************************************
      * @param connection
      * @throws IOException
      **************************************************************************/
@@ -197,6 +200,7 @@ public class ConnectionBindableView implements IBindableView
         inputPanel.setConnection( connection );
 
         connectionView.setEditable( false );
+        inputPanel.setEditable( true );
     }
 
     /***************************************************************************

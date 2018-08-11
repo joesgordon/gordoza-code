@@ -70,8 +70,8 @@ public class UdpView implements IConnectionView
      * {@inheritDoc}
      **************************************************************************/
     @Override
-    public void setEditable( boolean enabled )
+    public void setEditable( boolean editable )
     {
-        inputsView.setEnabled( enabled );
+        inputsView.setEnabled( editable );
     }
 }

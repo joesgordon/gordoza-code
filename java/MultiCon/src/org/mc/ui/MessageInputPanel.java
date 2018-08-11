@@ -17,7 +17,7 @@ import org.mc.MsgScheduleTask;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class MsgInputPanel implements IView<JComponent>
+public class MessageInputPanel implements IView<JComponent>
 {
     /**  */
     private final JComponent view;
@@ -37,14 +37,17 @@ public class MsgInputPanel implements IView<JComponent>
 
     /**  */
     private IConnection connection;
+    /**  */
+    private MsgScheduleTask task;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public MsgInputPanel()
+    public MessageInputPanel()
     {
         this.scheduleField = new JCheckBox( "Schedule Messages" );
-        this.rateField = new DoubleFormField( "Message Rate", "Hz", 4 );
+        this.rateField = new DoubleFormField( "Message Rate", "Hz", 4, null,
+            1.0, 1000.0 );
         this.autoEnabledCheckbox = new JCheckBox( "Auto-Reply" );
 
         this.adHocView = new MessageTextView();
@@ -54,6 +57,7 @@ public class MsgInputPanel implements IView<JComponent>
         this.view = createView();
 
         this.connection = null;
+        this.task = null;
 
         adHocView.setText( "Send Me" );
         scheduleView.setText( "Schedule Me" );
@@ -110,16 +114,34 @@ public class MsgInputPanel implements IView<JComponent>
     }
 
     /***************************************************************************
-     * @param enable
+     * @param scheduleMessages
      **************************************************************************/
-    private void scheduleMessages( boolean enable )
+    private void scheduleMessages( boolean scheduleMessages )
     {
-        if( enable && connection != null )
+        if( connection != null )
         {
-            MsgScheduleTask task = new MsgScheduleTask( rateField.getValue(),
-                scheduleView.getData(), connection );
+            stopScheduled();
 
+            if( scheduleMessages )
+            {
+                startScheduled();
+            }
+        }
+    }
+
+    private void startScheduled()
+    {
+        task = new MsgScheduleTask( rateField.getValue(),
+            scheduleView.getData(), connection );
+    }
+
+    private void stopScheduled()
+    {
+        if( task != null )
+        {
             task.stop();
+            task = null;
+            scheduleField.setSelected( false );
         }
     }
 
@@ -180,6 +202,8 @@ public class MsgInputPanel implements IView<JComponent>
                     "Error closing connection" );
             }
         }
+
+        stopScheduled();
     }
 
     /***************************************************************************

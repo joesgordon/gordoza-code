@@ -299,6 +299,7 @@ public class MessageTextView implements IDataView<byte[]>
      **************************************************************************/
     public void setEditable( boolean editable )
     {
+        hextTextListener.button.setEnabled( editable );
         textField.setEditable( editable );
         hexField.setEditable( editable );
     }
