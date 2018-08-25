@@ -1,6 +1,7 @@
 package org.taskflow.data;
 
-import java.util.GregorianCalendar;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.taskflow.model.INote;
@@ -20,17 +21,24 @@ public class Task
     /**  */
     public List<IUpdate> updates;
     /**  */
-    public GregorianCalendar dateCreated = new GregorianCalendar();
+    public LocalDateTime dateCreated;
     /**  */
-    public GregorianCalendar dateUpdated = new GregorianCalendar();
+    public LocalDateTime dateUpdated;
     /**  */
-    public GregorianCalendar dateClosed = new GregorianCalendar();
+    public LocalDateTime dateClosed;
 
     /**
      *
      */
     public Task()
     {
+        this.title = "";
+        this.description = "";
+        this.notes = new ArrayList<>();
+        this.updates = new ArrayList<>();
+        this.dateCreated = LocalDateTime.now();
+        this.dateUpdated = dateCreated;
+        this.dateClosed = null;
     }
 
     /**

@@ -9,7 +9,7 @@ public class TimeUtilsTests
     public void test()
     {
         long expected = 18921600000L;
-        long actual = TimeUtils.monthDayToMillis( 8, 8, 2018 );
+        long actual = TimeUtils.getMillisIntoYear( 8, 8, 2018 );
 
         Assert.assertEquals( expected, actual );
     }

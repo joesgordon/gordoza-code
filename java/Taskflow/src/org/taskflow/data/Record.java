@@ -1,6 +1,6 @@
 package org.taskflow.data;
 
-import java.util.GregorianCalendar;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -8,19 +8,23 @@ import java.util.GregorianCalendar;
 public class Record
 {
     /**  */
-    public String title = "";
+    public String title;
     /**  */
-    public String description = "";
+    public String description;
     /**  */
-    public GregorianCalendar dateCreated = new GregorianCalendar();
+    public LocalDateTime dateCreated;
     /**  */
-    public GregorianCalendar dateUpdated = new GregorianCalendar();
+    public LocalDateTime dateUpdated;
 
     /**
      *
      */
     public Record()
     {
+        this.title = "";
+        this.description = "";
+        this.dateCreated = LocalDateTime.now();
+        this.dateUpdated = dateCreated;
     }
 
     /**

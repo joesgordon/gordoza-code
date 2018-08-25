@@ -2,35 +2,48 @@ package org.jutils.time;
 
 import java.time.*;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.TimeZone;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
 public final class TimeUtils
 {
+    /**  */
     public static final long MINUTES_IN_DAY = 60 * 24;
+    /**  */
     public static final long SECONDS_IN_DAY = 60 * MINUTES_IN_DAY;
 
+    /**  */
     public static final long MILLIS_IN_MIN = 1000 * 60;
+    /**  */
     public static final long MILLIS_IN_HOUR = 60 * MILLIS_IN_MIN;
+    /**  */
     public static final long MILLIS_IN_DAY = 24 * MILLIS_IN_HOUR;
+    /**  */
     public static final long MILLIS_IN_WEEK = 7 * MILLIS_IN_DAY;
 
+    /**  */
     public static final long MICROS_IN_DAY = 1000 * MILLIS_IN_DAY;
 
+    /**  */
     public static final long MAX_DAYS_IN_YEAR = 366;
+    /**  */
     public static final long MAX_HOURS_IN_YEAR = MAX_DAYS_IN_YEAR * 24;
+    /**  */
     public static final long MAX_MIN_IN_YEAR = MAX_HOURS_IN_YEAR * 60;
+    /**  */
     public static final long MAX_SECONDS_IN_YEAR = MAX_MIN_IN_YEAR * 60;
+    /**  */
     public static final long MAX_MILLIS_IN_YEAR = MAX_SECONDS_IN_YEAR * 1000;
+    /**  */
     public static final long MAX_MICROS_IN_YEAR = MAX_MILLIS_IN_YEAR * 1000;
+    /**  */
+    /**  */
     public static final TimeZone UTC = TimeZone.getTimeZone( "UTC" );
 
-    private static final long LEAP_YEAR_START = yearStartMillis( 2004 );
-
     /***************************************************************************
-     * 
+     * Private constructor to prevent instantiation.
      **************************************************************************/
     private TimeUtils()
     {
@@ -42,7 +55,7 @@ public final class TimeUtils
      **************************************************************************/
     public static int getCurrentYear()
     {
-        return Calendar.getInstance().get( Calendar.YEAR );
+        return LocalDate.now( ZoneOffset.UTC ).getYear();
     }
 
     /***************************************************************************
@@ -50,8 +63,8 @@ public final class TimeUtils
      * {@code D HH:mm:ss.uuuuuu} format where D = days, HH = hours into day
      * (00-23), mm = minutes into hour (00-59), ss = seconds into minute
      * (00-59), uuuuuu = microseconds (000000-999999).
-     * @param microseconds
-     * @return
+     * @param microseconds the duration in microseconds.
+     * @return the string representing the provided duration.
      **************************************************************************/
     public static String microsDurationToString( long microseconds )
     {
@@ -62,30 +75,12 @@ public final class TimeUtils
     }
 
     /***************************************************************************
-     * @param milliseconds
-     * @return
+     * Creates a string with days hours, minutes, seconds and fractional seconds
+     * (e.g. 2 03:44:66.254) from the provided duration in milliseconds.
+     * @param milliseconds the duration to be converted to a string.
+     * @return the string representing the provided duration.
      **************************************************************************/
     public static String durationToString( long milliseconds )
-    {
-        return durationToString( milliseconds, 0 );
-    }
-
-    /***************************************************************************
-     * @param milliseconds
-     * @param micros
-     * @return
-     **************************************************************************/
-    private static String durationToString( long milliseconds, int micros )
-    {
-        return millisToString( milliseconds ) +
-            String.format( "%03d", Math.abs( micros ) );
-    }
-
-    /***************************************************************************
-     * @param milliseconds
-     * @return
-     **************************************************************************/
-    public static String millisToString( long milliseconds )
     {
         boolean negative = milliseconds < 0;
         long t = Math.abs( milliseconds );
@@ -137,103 +132,93 @@ public final class TimeUtils
     }
 
     /***************************************************************************
-     * @return
+     * Creates a string with days hours, minutes, seconds and fractional seconds
+     * (e.g. 2 03:44:66.254987) from the provided duration in milliseconds.
+     * @param milliseconds the duration to be converted to a string.
+     * @param micros the number of microseconds into the provided number of
+     * milliseconds (range 0-999).
+     * @return the string representing the provided duration.
      **************************************************************************/
-    public static Calendar today()
+    public static String durationToString( long milliseconds, int micros )
     {
-        GregorianCalendar cal = new GregorianCalendar( UTC );
-
-        cal.set( Calendar.HOUR_OF_DAY, 0 );
-        cal.set( Calendar.MINUTE, 0 );
-        cal.set( Calendar.SECOND, 0 );
-        cal.set( Calendar.MILLISECOND, 0 );
-
-        return cal;
+        return durationToString( milliseconds ) +
+            String.format( "%03d", Math.abs( micros ) );
     }
 
     /***************************************************************************
-     * @return
+     * Returns the number of milliseconds from the beginning of the current year
+     * to midnight of the current day.
+     * @return the number of milliseconds into the year of the current day.
      **************************************************************************/
-    public static long todayMillisIntoYear()
+    public static long getMillisIntoYear()
     {
-        return today().getTimeInMillis() - yearStartMillis();
-    }
-
-    public static short getYearOfMillis( long millis )
-    {
-        GregorianCalendar cal = new GregorianCalendar( UTC );
-
-        cal.setTimeInMillis( millis );
-
-        return ( short )cal.get( Calendar.YEAR );
+        return getMillisIntoYear( LocalDate.now( ZoneOffset.UTC ) );
     }
 
     /***************************************************************************
-     * @return
-     **************************************************************************/
-    public static long yearStartMillis()
-    {
-        Calendar yearStart = today();
-
-        yearStart.set( Calendar.DAY_OF_YEAR, 0 );
-
-        return yearStart.getTimeInMillis();
-    }
-
-    /***************************************************************************
-     * @param year
-     * @return
-     **************************************************************************/
-    public static long yearStartMillis( int year )
-    {
-        GregorianCalendar cal = new GregorianCalendar( UTC );
-
-        cal.set( Calendar.DAY_OF_YEAR, 1 );
-        cal.set( Calendar.HOUR_OF_DAY, 0 );
-        cal.set( Calendar.MINUTE, 0 );
-        cal.set( Calendar.SECOND, 0 );
-        cal.set( Calendar.MILLISECOND, 0 );
-        cal.set( Calendar.YEAR, year );
-
-        return cal.getTimeInMillis();
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public static long now()
-    {
-        return new GregorianCalendar( UTC ).getTimeInMillis() -
-            yearStartMillis();
-    }
-
-    /***************************************************************************
-     * @param month 1-relative month
-     * @param day 1-relative day of month
-     * @return milliseconds since the beginning of a leap year
-     **************************************************************************/
-    public static long monthDayToMillis( int month, int day )
-    {
-        Calendar doy = new GregorianCalendar( 2004, month - 1, day );
-
-        long millis = doy.getTimeInMillis() - LEAP_YEAR_START;
-
-        return millis;
-    }
-
-    /***************************************************************************
-     * @param month 1-relative month
-     * @param day 1-relative day of month
-     * @parame year
+     * Returns the number of milliseconds from the beginning of the provided
+     * year to midnight of the provided month and day of month.
+     * @param month 1-relative month.
+     * @param day 1-relative day of the month.
+     * @param year the four digit year.
      * @return milliseconds since the beginning of the provided year
      **************************************************************************/
-    public static long monthDayToMillis( int month, int day, int year )
+    public static long getMillisIntoYear( int month, int day, int year )
     {
         LocalDate date = LocalDate.of( year, month, day );
+
+        return getMillisIntoYear( date );
+    }
+
+    /***************************************************************************
+     * Returns the number of milliseconds from the beginning of the year to
+     * midnight of the provided date
+     * @param date the date used to calculate milliseconds into the year.
+     * @return the number of milliseconds from the beginning of the year to
+     * midnight of the provided date.
+     **************************************************************************/
+    private static long getMillisIntoYear( LocalDate date )
+    {
         int doy = date.getDayOfYear() - 1;
         long millis = doy * MILLIS_IN_DAY;
 
         return millis;
+    }
+
+    /***************************************************************************
+     * Returns the number of milliseconds from the beginning of the current year
+     * until now.
+     * @return the number of milliseconds from the beginning of the current year
+     * until now.
+     **************************************************************************/
+    public static long getMillisIntoYearNow()
+    {
+        LocalDateTime now = LocalDateTime.now( ZoneOffset.UTC );
+        return getMillisIntoYear( now.toLocalDate() ) +
+            getMillisIntoDay( now.toLocalTime() );
+    }
+
+    /***************************************************************************
+     * @param millisFromEpoch the number of milliseconds from midnight January
+     * 1, 1970.
+     * @return the year calculated by the provided milliseconds from epoch.
+     **************************************************************************/
+    public static short getYearOfMillis( long millisFromEpoch )
+    {
+        long epochDay = millisFromEpoch / MILLIS_IN_DAY;
+        LocalDate date = LocalDate.ofEpochDay( epochDay );
+
+        return ( short )date.getYear();
+    }
+
+    /***************************************************************************
+     * Returns the number of milliseconds from midnight until the provided time.
+     * @param time a time of day.
+     * @return the number of milliseconds since midnight.
+     **************************************************************************/
+    private static long getMillisIntoDay( LocalTime time )
+    {
+        return time.toSecondOfDay() * 1000 + time.getNano() / 1000000;
     }
 
     /***************************************************************************

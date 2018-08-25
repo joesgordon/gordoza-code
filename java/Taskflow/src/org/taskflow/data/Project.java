@@ -1,7 +1,9 @@
 package org.taskflow.data;
 
 import java.io.File;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /*******************************************************************************
  *
@@ -9,23 +11,29 @@ import java.util.*;
 public class Project
 {
     /**  */
-    public String title = "";
+    public String title;
     /**  */
-    public String description = "";
+    public String description;
     /**  */
-    public List<Task> tasks = new ArrayList<Task>();
+    public List<Task> tasks;
     /**  */
-    public GregorianCalendar dateCreated = new GregorianCalendar();
+    public LocalDateTime dateCreated;
     /**  */
-    public GregorianCalendar dateUpdated = new GregorianCalendar();
+    public LocalDateTime dateUpdated;
     /**  */
-    private transient File file = null;
+    private transient File file;
 
     /***************************************************************************
      *
      **************************************************************************/
     public Project()
     {
+        this.title = "";
+        this.description = "";
+        this.tasks = new ArrayList<>();
+        this.dateCreated = LocalDateTime.now();
+        this.dateUpdated = dateCreated;
+        this.file = null;
     }
 
     /***************************************************************************
