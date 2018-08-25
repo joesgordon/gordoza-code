@@ -54,18 +54,17 @@ public class MulticonFrame implements IView<JFrame>
 
         l = ( e ) -> showView(
             new ConnectionBindableView( new MulticastView() ) );
-        addButton( panel, "Multicast", l, r++ );
+        addButton( panel, MulticastView.NAME, l, r++ );
 
-        l = ( e ) -> showView(
-            new ConnectionBindableView( new UdpView() ) );
-        addButton( panel, "UDP Sender", l, r++ );
+        l = ( e ) -> showView( new ConnectionBindableView( new UdpView() ) );
+        addButton( panel, UdpView.NAME, l, r++ );
 
         l = ( e ) -> showView( new TcpServerView() );
-        addButton( panel, "TCP Server", l, r++ );
+        addButton( panel, TcpServerView.NAME, l, r++ );
 
         l = ( e ) -> showView(
             new ConnectionBindableView( new TcpClientView() ) );
-        addButton( panel, "TCP Client", l, r++ );
+        addButton( panel, TcpClientView.NAME, l, r++ );
 
         return panel;
     }

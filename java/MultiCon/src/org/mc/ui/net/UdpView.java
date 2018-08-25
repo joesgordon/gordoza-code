@@ -17,6 +17,8 @@ import org.mc.ui.IConnectionView;
  ******************************************************************************/
 public class UdpView implements IConnectionView
 {
+    public static final String NAME = "UDP Connection";
+
     /**  */
     private final UdpInputsView inputsView;
 
@@ -29,7 +31,7 @@ public class UdpView implements IConnectionView
 
         OptionsSerializer<MulticonOptions> userio = MulticonMain.getUserData();
 
-        inputsView.setData( userio.getOptions().udpClientInputs );
+        inputsView.setData( new UdpInputs( userio.getOptions().udpInputs ) );
     }
 
     /***************************************************************************
@@ -47,7 +49,7 @@ public class UdpView implements IConnectionView
     @Override
     public String getTitle()
     {
-        return "UDP";
+        return NAME;
     }
 
     /***************************************************************************
@@ -60,7 +62,7 @@ public class UdpView implements IConnectionView
 
         OptionsSerializer<MulticonOptions> userio = MulticonMain.getUserData();
         MulticonOptions options = userio.getOptions();
-        options.udpClientInputs = inputs;
+        options.udpInputs = new UdpInputs( inputs );
         userio.write( options );
 
         return new UdpConnection( inputs );

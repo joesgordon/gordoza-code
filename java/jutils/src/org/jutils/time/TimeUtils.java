@@ -229,9 +229,9 @@ public final class TimeUtils
      **************************************************************************/
     public static long monthDayToMillis( int month, int day, int year )
     {
-        Calendar doy = new GregorianCalendar( year, month - 1, day );
-
-        long millis = doy.getTimeInMillis() - yearStartMillis( year );
+        LocalDate date = LocalDate.of( year, month, day );
+        int doy = date.getDayOfYear() - 1;
+        long millis = doy * MILLIS_IN_DAY;
 
         return millis;
     }

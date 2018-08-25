@@ -1,13 +1,17 @@
-package org.jutils.ui.fields;
+package org.jutils.ui.net;
 
-import java.awt.event.MouseEvent;
 import java.net.*;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.List;
 
 import javax.swing.*;
 
+import org.jutils.IconConstants;
+import org.jutils.net.NetUtils;
+import org.jutils.net.NetUtils.NicInfo;
 import org.jutils.ui.event.RightClickListener;
 import org.jutils.ui.event.updater.IUpdater;
+import org.jutils.ui.fields.*;
 import org.jutils.ui.hex.HexUtils;
 import org.jutils.ui.validation.IValidityChangedListener;
 import org.jutils.ui.validation.Validity;
@@ -19,11 +23,11 @@ import org.jutils.utils.EnumerationIteratorAdapter;
 public class NetworkInterfaceField implements IDataFormField<String>
 {
     /**  */
-    private final ComboFormField<NicChoice> nicField;
+    private final StringFormField nicField;
     /**  */
     private final NicChoiceDescriptor descriptor;
     /**  */
-    private final NicUpdater updater;
+    private final JPopupMenu nicMenu;
 
     /***************************************************************************
      * @param name
@@ -31,68 +35,47 @@ public class NetworkInterfaceField implements IDataFormField<String>
     public NetworkInterfaceField( String name )
     {
         this.descriptor = new NicChoiceDescriptor();
-        this.nicField = new ComboFormField<>( name, buildNicList(),
-            descriptor );
+        this.nicField = new StringFormField( name );
+        this.nicMenu = new JPopupMenu();
 
-        this.updater = new NicUpdater();
-
-        nicField.setUpdater( updater );
+        buildNicMenu();
 
         nicField.getView().getComponent( 0 ).addMouseListener(
-            new RightClickListener( ( e ) -> showMenu( e ) ) );
+            new RightClickListener( ( e ) -> nicMenu.show( e.getComponent(),
+                e.getX(), e.getY() ) ) );
     }
 
     /***************************************************************************
      * @param e
      **************************************************************************/
-    private void showMenu( MouseEvent e )
+    private void buildNicMenu()
     {
-        JPopupMenu menu = new JPopupMenu();
+        List<NicInfo> nics = NetUtils.buildNicList();
 
-        JCheckBoxMenuItem itemv6 = new JCheckBoxMenuItem( "Show IPv6",
-            descriptor.showIpv6 );
-        itemv6.addActionListener(
-            ( ae ) -> descriptor.showIpv6 = itemv6.isSelected() );
-        menu.add( itemv6 );
+        nicMenu.removeAll();
 
-        JCheckBoxMenuItem itemv4 = new JCheckBoxMenuItem( "Show IPv4",
-            descriptor.showIpv4 );
-        itemv4.addActionListener(
-            ( ae ) -> descriptor.showIpv4 = itemv4.isSelected() );
-        menu.add( itemv4 );
-
-        menu.show( e.getComponent(), e.getX(), e.getY() );
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    private static List<NicChoice> buildNicList()
-    {
-        List<NicChoice> nics = new ArrayList<>();
-        Enumeration<NetworkInterface> nets;
-
-        nics.add( new NicChoice( null ) );
-
-        try
+        for( NicInfo nic : nics )
         {
-            nets = NetworkInterface.getNetworkInterfaces();
-
-            for( NetworkInterface nic : Collections.list( nets ) )
-            {
-                Enumeration<InetAddress> inetAddresses = nic.getInetAddresses();
-                if( inetAddresses.hasMoreElements() )
-                {
-                    nics.add( new NicChoice( nic ) );
-                }
-            }
-        }
-        catch( SocketException ex )
-        {
-            ;
+            String title = nic.addressString + " : " + nic.name;
+            JMenuItem item = new JMenuItem( title );
+            item.addActionListener(
+                ( e ) -> nicField.setValue( nic.address.getHostAddress() ) );
+            nicMenu.add( item );
         }
 
-        return nics;
+        if( nics.isEmpty() )
+        {
+            JMenuItem item = new JMenuItem( "No NICs Detected" );
+            item.setEnabled( false );
+            nicMenu.add( item );
+        }
+
+        nicMenu.addSeparator();
+
+        JMenuItem item = new JMenuItem( "Refresh",
+            IconConstants.getIcon( IconConstants.REFRESH_16 ) );
+        item.addActionListener( ( ae ) -> buildNicMenu() );
+        nicMenu.add( item );
     }
 
     /***************************************************************************
@@ -119,9 +102,7 @@ public class NetworkInterfaceField implements IDataFormField<String>
     @Override
     public String getValue()
     {
-        NicChoice choice = nicField.getValue();
-
-        return choice == null ? null : choice.nic.getName();
+        return nicField.getValue();
     }
 
     /***************************************************************************
@@ -130,21 +111,7 @@ public class NetworkInterfaceField implements IDataFormField<String>
     @Override
     public void setValue( String value )
     {
-        NetworkInterface nic = null;
-
-        if( value != null )
-        {
-            try
-            {
-                nic = NetworkInterface.getByName( value );
-            }
-            catch( SocketException ex )
-            {
-                nic = null;
-            }
-        }
-
-        nicField.setValue( new NicChoice( nic ) );
+        nicField.setValue( value );
     }
 
     /***************************************************************************
@@ -153,7 +120,7 @@ public class NetworkInterfaceField implements IDataFormField<String>
     @Override
     public void setUpdater( IUpdater<String> updater )
     {
-        this.updater.setUpdater( updater );
+        nicField.setUpdater( updater );
     }
 
     /***************************************************************************
@@ -162,7 +129,7 @@ public class NetworkInterfaceField implements IDataFormField<String>
     @Override
     public IUpdater<String> getUpdater()
     {
-        return updater.getUpdater();
+        return nicField.getUpdater();
     }
 
     /***************************************************************************
@@ -252,10 +219,14 @@ public class NetworkInterfaceField implements IDataFormField<String>
                     }
                 }
             }
+            else
+            {
+                v4Addr = "0.0.0.0";
+                v6Addr = "0000:0000:0000:0000:0000:0000:0000:0000";
+            }
 
             this.nic = nic;
-            this.name = nic == null ? "<< Use Routing Table >>"
-                : nic.getDisplayName();
+            this.name = nic == null ? "Any" : nic.getDisplayName();
             this.v6Addr = v6Addr;
             this.v4Addr = v4Addr;
         }
@@ -340,7 +311,7 @@ public class NetworkInterfaceField implements IDataFormField<String>
         @Override
         public String getDescription( NicChoice choice )
         {
-            return choice.getTitle( showIpv6, showIpv4 );
+            return choice == null ? "" : choice.getTitle( showIpv6, showIpv4 );
         }
     }
 

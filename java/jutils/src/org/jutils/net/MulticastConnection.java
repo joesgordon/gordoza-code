@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.*;
 import java.util.Arrays;
 
+import org.jutils.io.LogUtils;
+
 /*******************************************************************************
  * 
  ******************************************************************************/
@@ -50,10 +52,12 @@ public class MulticastConnection implements IConnection
 
         if( inputs.nic != null )
         {
-            NetworkInterface nic = NetworkInterface.getByName( inputs.nic );
+            NetworkInterface nic = NetUtils.lookupNic( inputs.nic );
 
             if( nic != null )
             {
+                LogUtils.printDebug(
+                    "Bound multicast using " + nic.getDisplayName() );
                 this.socket.setNetworkInterface( nic );
             }
         }

@@ -1,11 +1,9 @@
 package org.mc.ui.net;
 
-import java.awt.*;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 
 import org.jutils.concurrent.*;
 import org.jutils.io.LogUtils;
@@ -22,7 +20,8 @@ import org.mc.ui.BindingFrameView.IBindableView;
 public class TcpServerView implements IBindableView
 {
     /**  */
-    private final JPanel view;
+    public static final String NAME = "TCP Server";
+
     /**  */
     private final TcpInputsView inputsView;
 
@@ -35,29 +34,11 @@ public class TcpServerView implements IBindableView
     public TcpServerView()
     {
         this.inputsView = new TcpInputsView( true, true );
-        this.view = createView();
 
         OptionsSerializer<MulticonOptions> userio = MulticonMain.getUserData();
 
-        inputsView.setData( userio.getOptions().tcpServerInputs );
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    private JPanel createView()
-    {
-        JPanel panel = new JPanel( new GridBagLayout() );
-        GridBagConstraints constraints;
-
-        inputsView.setEnabled( true );
-
-        constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 0, 0, 0, 0 ), 0, 0 );
-        panel.add( inputsView.getView(), constraints );
-
-        return panel;
+        inputsView.setData(
+            new TcpInputs( userio.getOptions().tcpServerInputs ) );
     }
 
     /***************************************************************************
@@ -70,7 +51,7 @@ public class TcpServerView implements IBindableView
 
         OptionsSerializer<MulticonOptions> userio = MulticonMain.getUserData();
         MulticonOptions options = userio.getDefault();
-        options.tcpServerInputs = inputs;
+        options.tcpServerInputs = new TcpInputs( inputs );
         userio.write( options );
 
         AcceptTask task = new AcceptTask( inputs, this );
@@ -103,7 +84,7 @@ public class TcpServerView implements IBindableView
     @Override
     public JComponent getView()
     {
-        return view;
+        return inputsView.getView();
     }
 
     /***************************************************************************
@@ -112,7 +93,15 @@ public class TcpServerView implements IBindableView
     @Override
     public String getName()
     {
-        return "TCP Server";
+        return NAME;
+    }
+
+    /***************************************************************************
+     * @param connection
+     **************************************************************************/
+    private void setAcceptedConnection( TcpConnection connection )
+    {
+        // TODO Auto-generated method stub
     }
 
     /***************************************************************************
@@ -170,10 +159,5 @@ public class TcpServerView implements IBindableView
                 view.acceptThread = null;
             }
         }
-    }
-
-    public void setAcceptedConnection( TcpConnection connection )
-    {
-        // TODO Auto-generated method stub
     }
 }

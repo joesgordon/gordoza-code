@@ -18,6 +18,8 @@ import org.mc.ui.IConnectionView;
 public class MulticastView implements IConnectionView
 {
     /**  */
+    public static final String NAME = "Multicast Connection";
+    /**  */
     private final MulticastInputsView inputsView;
 
     /***************************************************************************
@@ -31,7 +33,8 @@ public class MulticastView implements IConnectionView
 
         OptionsSerializer<MulticonOptions> userio = MulticonMain.getUserData();
 
-        inputsView.setData( userio.getOptions().multicastInputs );
+        inputsView.setData(
+            new MulticastInputs( userio.getOptions().multicastInputs ) );
     }
 
     /***************************************************************************
@@ -53,7 +56,7 @@ public class MulticastView implements IConnectionView
 
         OptionsSerializer<MulticonOptions> userio = MulticonMain.getUserData();
         MulticonOptions options = userio.getOptions();
-        options.multicastInputs = inputs;
+        options.multicastInputs = new MulticastInputs( inputs );
         userio.write( options );
 
         return new MulticastConnection( inputs );
@@ -74,6 +77,6 @@ public class MulticastView implements IConnectionView
     @Override
     public String getTitle()
     {
-        return "Multicast";
+        return NAME;
     }
 }

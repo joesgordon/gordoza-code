@@ -18,6 +18,8 @@ import org.mc.ui.IConnectionView;
 public class TcpClientView implements IConnectionView
 {
     /**  */
+    public static final String NAME = "TCP Client";
+    /**  */
     private final TcpInputsView inputsView;
 
     /***************************************************************************
@@ -29,7 +31,8 @@ public class TcpClientView implements IConnectionView
 
         OptionsSerializer<MulticonOptions> userio = MulticonMain.getUserData();
 
-        inputsView.setData( userio.getOptions().tcpClientInputs );
+        inputsView.setData(
+            new TcpInputs( userio.getOptions().tcpClientInputs ) );
     }
 
     /***************************************************************************
@@ -47,7 +50,7 @@ public class TcpClientView implements IConnectionView
     @Override
     public String getTitle()
     {
-        return "TCP Client";
+        return NAME;
     }
 
     /***************************************************************************
@@ -60,7 +63,7 @@ public class TcpClientView implements IConnectionView
 
         OptionsSerializer<MulticonOptions> userio = MulticonMain.getUserData();
         MulticonOptions options = userio.getOptions();
-        options.tcpClientInputs = inputs;
+        options.tcpClientInputs = new TcpInputs( inputs );
         userio.write( options );
 
         return new TcpConnection( inputs );
