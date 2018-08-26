@@ -13,6 +13,7 @@ public interface IReferenceStream<T> extends Closeable
 {
     /***************************************************************************
      * Returns the number of items currently stored.
+     * @return the number of items currently stored.
      **************************************************************************/
     public long getCount();
 
@@ -45,6 +46,7 @@ public interface IReferenceStream<T> extends Closeable
 
     /***************************************************************************
      * Returns the stream to which items are read/written.
+     * @return the stream to which items are read/written.
      **************************************************************************/
     public IStream getItemsStream();
 

@@ -222,16 +222,17 @@ public final class TimeUtils
     }
 
     /***************************************************************************
-     * @param ldt
-     * @return
+     * Returns the date/time at midnight on Sunday of the provided date/time.
+     * @param time a date/time.
+     * @return midnight on Sunday of the provided date/time.
      **************************************************************************/
-    public static LocalDateTime getBeginningOfWeek( LocalDateTime ldt )
+    public static LocalDateTime getBeginningOfWeek( LocalDateTime time )
     {
-        int days = ldt.getDayOfWeek().getValue();
+        int days = time.getDayOfWeek().getValue();
 
         days = days < 7 ? days : 0;
 
-        LocalDate date = ldt.toLocalDate().minus( days, ChronoUnit.DAYS );
+        LocalDate date = time.toLocalDate().minus( days, ChronoUnit.DAYS );
 
         return LocalDateTime.of( date, LocalTime.MIDNIGHT );
     }

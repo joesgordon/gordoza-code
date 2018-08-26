@@ -81,9 +81,11 @@ public class BitReader
     }
 
     /***************************************************************************
-     * @param bit
-     * @param value
-     * @return
+     * Writes the provided bit to the provided at the position indicated upon
+     * construction.
+     * @param bit the value to be written ({@code true} indicates 0b1).
+     * @param value the field to be written to.
+     * @return the provided value with the bit written to.
      **************************************************************************/
     public byte write( boolean bit, byte value )
     {

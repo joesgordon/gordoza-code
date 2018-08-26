@@ -133,7 +133,7 @@ public class BitBuffer
 
     /***************************************************************************
      * Returns a copy of the position of the next read/write operation.
-     * @return
+     * @return a copy of the position of the next read/write operation.
      **************************************************************************/
     public BitPosition getPosition()
     {
@@ -142,7 +142,7 @@ public class BitBuffer
 
     /***************************************************************************
      * Returns the byte index of the current position.
-     * @return
+     * @return the byte index of the current position.
      **************************************************************************/
     public int getByte()
     {
@@ -151,7 +151,7 @@ public class BitBuffer
 
     /***************************************************************************
      * Returns the bit index of the current position.
-     * @return
+     * @return the bit index of the current position.
      **************************************************************************/
     public int getBit()
     {
@@ -160,7 +160,7 @@ public class BitBuffer
 
     /***************************************************************************
      * Return the position in bits.
-     * @return
+     * @return the position in bits.
      * @see BitPosition#getPosition()
      **************************************************************************/
     public long getBitPosition()
@@ -230,7 +230,7 @@ public class BitBuffer
 
     /***************************************************************************
      * Returns the number of bytes remaining.
-     * @return
+     * @return the number of bytes remaining.
      **************************************************************************/
     public int remainingBits()
     {
@@ -239,7 +239,7 @@ public class BitBuffer
 
     /***************************************************************************
      * Returns the number of bits in this buffer
-     * @return
+     * @return the number of bits in this buffer
      **************************************************************************/
     public int bitCount()
     {
@@ -248,7 +248,7 @@ public class BitBuffer
 
     /***************************************************************************
      * returns the number of bytes remaining in this buffer.
-     * @return
+     * @return the number of bytes remaining in this buffer.
      **************************************************************************/
     public int remainingBytes()
     {
@@ -259,7 +259,8 @@ public class BitBuffer
      * Finds the specified bits starting at the provided byte index.
      * @param bitsToFind the bits to be found.
      * @param start the beginning byte index to start looking.
-     * @param findFoward
+     * @param findFoward searches forward if {@code true}; backwards if
+     * {@code false}.
      * @return the bit position where the provided bits were found or null if
      * not found.
      **************************************************************************/
@@ -275,7 +276,8 @@ public class BitBuffer
      * Finds the specified bits starting at the provided position.
      * @param bitsToFind the bits to be found.
      * @param start the beginning position to start looking.
-     * @param findFoward
+     * @param findFoward searches forward if {@code true}; backwards if
+     * {@code false}.
      * @return the bit position where the provided bits were found or null if
      * not found.
      *************************************************************************/

@@ -97,6 +97,7 @@ public class BitPosition
 
     /***************************************************************************
      * Returns the byte index of this position.
+     * @return the byte index of this position.
      **************************************************************************/
     public int getByte()
     {
@@ -105,6 +106,7 @@ public class BitPosition
 
     /***************************************************************************
      * Returns the bit index of this position.
+     * @return the bit index of this position.
      **************************************************************************/
     public int getBit()
     {
@@ -113,6 +115,7 @@ public class BitPosition
 
     /***************************************************************************
      * Returns the position in bits.
+     * @return the position in bits.
      **************************************************************************/
     public int getPosition()
     {
@@ -164,7 +167,7 @@ public class BitPosition
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public String toString()
@@ -173,7 +176,7 @@ public class BitPosition
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public boolean equals( Object obj )
@@ -196,7 +199,7 @@ public class BitPosition
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public int hashCode()
