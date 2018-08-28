@@ -6,7 +6,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.jutils.ValidationException;
 import org.jutils.io.*;
-import org.jutils.utils.CachedList.ICacher;
 
 /*******************************************************************************
  * 
@@ -19,10 +18,9 @@ public class CachedListTest
     @Test
     public void testAddSizeMinusOne()
     {
-        final int count = 8;
         final int testCount = 7;
 
-        testNAdditions( count, testCount );
+        testNAdditions( testCount );
     }
 
     /***************************************************************************
@@ -31,10 +29,9 @@ public class CachedListTest
     @Test
     public void testAddExactSize()
     {
-        final int count = 8;
         final int testCount = 8;
 
-        testNAdditions( count, testCount );
+        testNAdditions( testCount );
     }
 
     /***************************************************************************
@@ -43,10 +40,9 @@ public class CachedListTest
     @Test
     public void testAddSizePlusOne()
     {
-        final int count = 8;
         final int testCount = 9;
 
-        testNAdditions( count, testCount );
+        testNAdditions( testCount );
     }
 
     /***************************************************************************
@@ -55,10 +51,9 @@ public class CachedListTest
     @Test
     public void testAddTwiceSizeMinusOne()
     {
-        final int count = 8;
         final int testCount = 15;
 
-        testNAdditions( count, testCount );
+        testNAdditions( testCount );
     }
 
     /***************************************************************************
@@ -67,10 +62,9 @@ public class CachedListTest
     @Test
     public void testAddTwiceExactSize()
     {
-        final int count = 8;
         final int testCount = 16;
 
-        testNAdditions( count, testCount );
+        testNAdditions( testCount );
     }
 
     /***************************************************************************
@@ -79,10 +73,9 @@ public class CachedListTest
     @Test
     public void testAddTwiceSizePlusOne()
     {
-        final int count = 8;
         final int testCount = 17;
 
-        testNAdditions( count, testCount );
+        testNAdditions( testCount );
     }
 
     /***************************************************************************
@@ -91,17 +84,14 @@ public class CachedListTest
     @Test
     public void testAddSizePlusOneThenGet()
     {
-        final int count = 8;
         final int testCount = 9;
+        IDataSerializer<Integer> cacher = new IntegerCacher();
 
         try( ByteArrayStream byteStream = new ByteArrayStream();
              BufferedStream bufStream = new BufferedStream( byteStream, 8 );
-             DataStream stream = new DataStream( bufStream ) )
+             DataStream stream = new DataStream( bufStream );
+             CachedList<Integer> list = new CachedList<>( 4, cacher, stream ) )
         {
-            ICacher<Integer> cacher = createCacher();
-            CachedList<Integer> list = new CachedList<>( cacher, stream,
-                count );
-
             for( int i = 0; i < testCount; i++ )
             {
                 list.add( i );
@@ -129,16 +119,13 @@ public class CachedListTest
     @Test
     public void testAdd32ThenGet32()
     {
-        final int count = 8;
         final int testCount = 33;
+        IDataSerializer<Integer> cacher = new IntegerCacher();
 
         try( ByteArrayStream bufStream = new ByteArrayStream();
-             DataStream stream = new DataStream( bufStream ) )
+             DataStream stream = new DataStream( bufStream );
+             CachedList<Integer> list = new CachedList<>( 4, cacher, stream ) )
         {
-            ICacher<Integer> cacher = createCacher();
-            CachedList<Integer> list = new CachedList<>( cacher, stream,
-                count );
-
             for( int i = 0; i < testCount; i++ )
             {
                 list.add( i );
@@ -157,17 +144,16 @@ public class CachedListTest
     }
 
     /***************************************************************************
-     * 
+     * @param testCount the number of items to add
      **************************************************************************/
-    private static void testNAdditions( int count, int testCount )
+    private static void testNAdditions( int testCount )
     {
-        try( ByteArrayStream bufStream = new ByteArrayStream();
-             DataStream stream = new DataStream( bufStream ) )
-        {
-            ICacher<Integer> cacher = createCacher();
-            CachedList<Integer> list = new CachedList<>( cacher, stream,
-                count );
+        IDataSerializer<Integer> cacher = new IntegerCacher();
 
+        try( ByteArrayStream bufStream = new ByteArrayStream();
+             DataStream stream = new DataStream( bufStream );
+             CachedList<Integer> list = new CachedList<>( 4, cacher, stream ) )
+        {
             for( int i = 0; i < testCount; i++ )
             {
                 list.add( i );
@@ -175,8 +161,8 @@ public class CachedListTest
 
             Assert.assertEquals( testCount, list.size() );
 
-            int cacheCount = ( testCount - 1 ) / count;
-            int cacheSize = count * cacher.getItemSize();
+            int cacheCount = list.size();
+            int cacheSize = 4;
             long expectedSize = cacheCount * cacheSize;
 
             Assert.assertEquals( "count: " + cacheCount + ", size: " +
@@ -192,15 +178,7 @@ public class CachedListTest
     /***************************************************************************
      * 
      **************************************************************************/
-    private static ICacher<Integer> createCacher()
-    {
-        return new IntegerCacher();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class IntegerCacher implements ICacher<Integer>
+    private static class IntegerCacher implements IDataSerializer<Integer>
     {
         @Override
         public Integer read( IDataStream stream )
@@ -213,12 +191,6 @@ public class CachedListTest
         public void write( Integer item, IDataStream stream ) throws IOException
         {
             stream.writeInt( item );
-        }
-
-        @Override
-        public int getItemSize()
-        {
-            return 4;
         }
     }
 }
