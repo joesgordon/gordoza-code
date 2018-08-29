@@ -103,6 +103,10 @@ public final class ValidationComboField<T> implements IValidationField
         {
             model.setSelectedItem( item );
         }
+        else
+        {
+            model.setSelectedItem( null );
+        }
     }
 
     /***************************************************************************

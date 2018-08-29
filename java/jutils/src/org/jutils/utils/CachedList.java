@@ -76,8 +76,9 @@ public class CachedList<T> implements List<T>, Closeable
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
+    @Override
     public void close()
     {
         cache.clear();

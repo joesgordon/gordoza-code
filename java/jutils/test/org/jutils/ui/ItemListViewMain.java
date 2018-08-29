@@ -209,9 +209,9 @@ public class ItemListViewMain
         private final ColorIcon icon = new ColorIcon( Color.green );
 
         @Override
-        public Component getListCellRendererComponent( JList<?> list,
-            TestData value, int index, boolean isSelected, boolean cellHasFocus,
-            String text )
+        public Component getListCellRendererComponent(
+            JList<? extends TestData> list, TestData value, int index,
+            boolean isSelected, boolean cellHasFocus, String text )
         {
             Component c = renderer.getListCellRendererComponent( list, value,
                 index, isSelected, cellHasFocus );

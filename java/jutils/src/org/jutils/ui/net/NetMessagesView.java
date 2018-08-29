@@ -602,10 +602,11 @@ public class NetMessagesView implements IView<JPanel>
         }
     }
 
+    /**
+     * @param file
+     */
     public void saveBinFile( File file )
     {
-        byte [] buf = new byte[IOUtils.DEFAULT_BUF_SIZE];
-
         synchronized( msgsStream )
         {
             try( FileStream stream = new FileStream( file ) )
