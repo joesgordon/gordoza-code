@@ -63,6 +63,8 @@ public class TcpConnection implements IConnection
         this.input = new BufferedInputStream( socket.getInputStream(),
             IOUtils.DEFAULT_BUF_SIZE );
         this.output = socket.getOutputStream();
+
+        socket.setSoTimeout( timeout );
     }
 
     /***************************************************************************

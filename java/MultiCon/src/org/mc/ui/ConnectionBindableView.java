@@ -3,7 +3,8 @@ package org.mc.ui;
 import java.awt.*;
 import java.io.IOException;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import org.jutils.SwingUtils;
 import org.jutils.io.LogUtils;
@@ -144,45 +145,6 @@ public class ConnectionBindableView implements IBindableView
         // LogUtils.printDebug(
         // "rx'd msg: " + HexUtils.toHexString( msg.contents ) );
         messagesPanel.addMessage( msg );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private void sendMessage()
-    {
-        byte[] msgBytes = inputPanel.getMessageText();
-
-        if( msgBytes.length < 1 )
-        {
-            JOptionPane.showMessageDialog( getView(), "Nothing to send",
-                "ERROR", JOptionPane.ERROR_MESSAGE );
-            return;
-        }
-
-        try
-        {
-            // if( inputPanel.isScheduling() )
-            // {
-            // int msgCount = inputPanel.getMessageCount();
-            // int msgDelay = inputPanel.getSendDelay();
-            // Window win = SwingUtils.getComponentsWindow( getView() );
-            //
-            // McTxThread txThread = new McTxThread( msgCount, msgDelay,
-            // msgBytes, commModel.connection, win );
-            // TaskThread thread = new TaskThread( txThread,
-            // "Multicast Tx Thread" );
-            // thread.start();
-            // }
-
-            commModel.connection.sendMessage( msgBytes );
-        }
-        catch( IOException ex )
-        {
-            JOptionPane.showMessageDialog( getView(),
-                "ERROR: " + ex.getMessage() );
-        }
-        inputPanel.selectAll();
     }
 
     /***************************************************************************

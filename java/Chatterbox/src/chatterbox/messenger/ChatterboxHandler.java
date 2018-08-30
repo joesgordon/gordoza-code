@@ -101,6 +101,7 @@ public class ChatterboxHandler
      **************************************************************************/
     private void displayErrorMessage( String errorMessage )
     {
+        LogUtils.printError( errorMessage );
         // TODO Auto-generated method stub and run on swing event queue
     }
 

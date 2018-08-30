@@ -128,6 +128,13 @@ public final class HexUtils
         return toHexString( bytes, 0, bytes.length, delim );
     }
 
+    /***************************************************************************
+     * @param bytes
+     * @param index
+     * @param len
+     * @param delim
+     * @return
+     **************************************************************************/
     public static String toHexString( byte [] bytes, int index, int len,
         String delim )
     {
@@ -203,6 +210,11 @@ public final class HexUtils
         return asArray( byteList );
     }
 
+    /***************************************************************************
+     * @param text
+     * @return
+     * @throws NumberFormatException
+     **************************************************************************/
     public static byte parseHex( String text ) throws NumberFormatException
     {
         if( text.length() != 2 )
@@ -272,6 +284,8 @@ public final class HexUtils
 
     /***************************************************************************
      * Converts an array of bytes to a list of bytes.
+     * @param array
+     * @return
      **************************************************************************/
     public static List<Byte> asList( byte [] array )
     {
@@ -287,6 +301,8 @@ public final class HexUtils
 
     /***************************************************************************
      * Converts a list of bytes to an array of bytes.
+     * @param bytes
+     * @return
      **************************************************************************/
     public static byte [] asArray( List<Byte> bytes )
     {
@@ -319,45 +335,14 @@ public final class HexUtils
      **************************************************************************/
     public static byte toBcd( int d )
     {
-        return ( byte )( ( ( d / 10 ) << 4 ) + ( d % 10 ) );
+        return ( byte )( ( ( d / 10 ) << 4 ) | ( d % 10 ) );
     }
 
     /***************************************************************************
-     * Helper class for creating and accessing a lookup table for hexadecimal
-     * string representations of bytes.
+     * @param buffer
+     * @param start
+     * @param count
      **************************************************************************/
-    private static class HexStringConverter
-    {
-        private final String [] BYTE_STRINGS;
-
-        public HexStringConverter()
-        {
-            this.BYTE_STRINGS = new String[256];
-
-            for( int i = 0; i < BYTE_STRINGS.length; i++ )
-            {
-                BYTE_STRINGS[i] = buildHexString( i );
-            }
-        }
-
-        public String get( int i )
-        {
-            return BYTE_STRINGS[i];
-        }
-
-        private static String buildHexString( int b )
-        {
-            String s = Integer.toHexString( b ).toUpperCase();
-
-            if( b < 0x10 )
-            {
-                s = "0" + s;
-            }
-
-            return s;
-        }
-    }
-
     public static void cleanAscii( byte [] buffer, int start, int count )
     {
         for( int i = start; i < count; i++ )
@@ -369,6 +354,54 @@ public final class HexUtils
                 // ch = ( char )( -1 );
             }
             buffer[i] = ch;
+        }
+    }
+
+    /***************************************************************************
+     * Helper class for creating and accessing a lookup table for hexadecimal
+     * string representations of bytes.
+     **************************************************************************/
+    private static class HexStringConverter
+    {
+        /**  */
+        private final String [] BYTE_STRINGS;
+
+        /**
+         * 
+         */
+        public HexStringConverter()
+        {
+            this.BYTE_STRINGS = new String[256];
+
+            for( int i = 0; i < BYTE_STRINGS.length; i++ )
+            {
+                BYTE_STRINGS[i] = buildHexString( i );
+            }
+        }
+
+        /**
+         * @param i
+         * @return
+         */
+        public String get( int i )
+        {
+            return BYTE_STRINGS[i];
+        }
+
+        /**
+         * @param b
+         * @return
+         */
+        private static String buildHexString( int b )
+        {
+            String s = Integer.toHexString( b ).toUpperCase();
+
+            if( b < 0x10 )
+            {
+                s = "0" + s;
+            }
+
+            return s;
         }
     }
 }
