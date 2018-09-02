@@ -60,6 +60,6 @@ public class BudgeyTool implements IToolView
     @Override
     public List<Image> getImages()
     {
-        return BudgeyIcons.getWalletIcons();
+        return BudgeyIcons.getAppImages();
     }
 }

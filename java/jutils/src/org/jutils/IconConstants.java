@@ -282,6 +282,7 @@ public final class IconConstants
      * Returns an icon for the provided name.
      * @param name the name of the icon to be loaded.
      * @return the common icon.
+     * @see IconLoader#getIcon(String)
      **************************************************************************/
     public static Icon getIcon( String name )
     {

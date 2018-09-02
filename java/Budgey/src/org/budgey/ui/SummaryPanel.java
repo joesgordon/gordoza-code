@@ -52,7 +52,8 @@ public class SummaryPanel implements IView<Component>
     }
 
     /***************************************************************************
-     * @param amount
+     * @param balance
+     * @param available
      **************************************************************************/
     public void setData( Money balance, Money available )
     {

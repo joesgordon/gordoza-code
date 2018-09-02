@@ -7,7 +7,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.budgey.data.Transaction;
-import org.jutils.ui.calendar.DateField;
 import org.jutils.ui.fields.StringFormField;
 import org.jutils.ui.model.IDataView;
 
@@ -23,7 +22,7 @@ public class TransactionView implements IDataView<Transaction>
     /**  */
     private final MoneyFormField amountField;
     /**  */
-    private final DateField dateField;
+    // private final DateField dateField;
     /**  */
     private final ItemView itemView;
 
@@ -38,7 +37,7 @@ public class TransactionView implements IDataView<Transaction>
         secondPartyField = new StringFormField( "Seondary Party", 20, 3, null );
         tagField = new StringFormField( "Tags", 20, 0, null );
         amountField = new MoneyFormField( "Amount" );
-        dateField = new DateField( "Date" );
+        // dateField = new DateField( "Date" );
 
         itemView = new ItemView( createFieldsPanel() );
 
@@ -47,7 +46,7 @@ public class TransactionView implements IDataView<Transaction>
         secondPartyField.setUpdater( ( d ) -> transaction.setSecondParty( d ) );
         tagField.setUpdater( ( d ) -> transaction.setTags( d ) );
         amountField.setUpdater( ( d ) -> transaction.setAmount( d ) );
-        dateField.setUpdater( ( d ) -> transaction.setDate( d ) );
+        // dateField.setUpdater( ( d ) -> transaction.setDate( d ) );
     }
 
     /***************************************************************************
@@ -88,10 +87,10 @@ public class TransactionView implements IDataView<Transaction>
             new GridBagConstraints( 0, 6, 1, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets( 4, 4, 2, 2 ), 0, 0 ) );
-        panel.add( dateField.getView(),
-            new GridBagConstraints( 0, 7, 1, 1, 0.0, 0.0,
-                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-                new Insets( 2, 4, 4, 4 ), 0, 0 ) );
+        // panel.add( dateField.getView(),
+        // new GridBagConstraints( 0, 7, 1, 1, 0.0, 0.0,
+        // GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+        // new Insets( 2, 4, 4, 4 ), 0, 0 ) );
 
         return panel;
     }
@@ -141,7 +140,7 @@ public class TransactionView implements IDataView<Transaction>
         secondPartyField.setValue( transaction.getSecondParty() );
         tagField.setValue( transaction.getTag() );
         amountField.setValue( transaction.getAmount() );
-        dateField.setValue( transaction.getDate() );
+        // dateField.setValue( transaction.getDate() );
     }
 
     /***************************************************************************

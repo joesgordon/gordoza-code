@@ -74,12 +74,12 @@ public class BudgeyView implements IDataView<Budget>
         configView.addCancelListener( doneListener );
 
         calenderAddButton = new JButton(
-            BudgeyIcons.getCalendarAddIcon() );
+            BudgeyIcons.getIcon( BudgeyIcons.CALLENDAR_ADD_32 ) );
         transactionAddButton = new JButton(
-            BudgeyIcons.getCoinsAddIcon() );
+            BudgeyIcons.getIcon( BudgeyIcons.COINS_ADD_32 ) );
         calenderButton = new JButton(
             IconConstants.getIcon( IconConstants.CALENDAR_32 ) );
-        configButton = new JButton( BudgeyIcons.getCogIcon() );
+        configButton = new JButton( BudgeyIcons.getIcon( BudgeyIcons.COG_32 ) );
 
         accountField = new JLabel( "Account Name" );
         sliderPanel = new CardPanel();
@@ -294,6 +294,9 @@ public class BudgeyView implements IDataView<Budget>
      **************************************************************************/
     private class TransactionOkListener implements ActionListener
     {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ActionEvent e )
         {
@@ -312,6 +315,9 @@ public class BudgeyView implements IDataView<Budget>
     private class EditTransactionListener
         implements ItemActionListener<Transaction>
     {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ItemActionEvent<Transaction> event )
         {
@@ -331,6 +337,9 @@ public class BudgeyView implements IDataView<Budget>
      **************************************************************************/
     private class ShowTransactionListListener implements ActionListener
     {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ActionEvent e )
         {
@@ -343,6 +352,9 @@ public class BudgeyView implements IDataView<Budget>
      **************************************************************************/
     private class TransactionAddListener implements ActionListener
     {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ActionEvent e )
         {
@@ -356,6 +368,9 @@ public class BudgeyView implements IDataView<Budget>
      **************************************************************************/
     private class ConfigButtonListener implements ActionListener
     {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ActionEvent e )
         {
@@ -368,6 +383,9 @@ public class BudgeyView implements IDataView<Budget>
      **************************************************************************/
     private class NameChangedListener implements ItemActionListener<String>
     {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ItemActionEvent<String> event )
         {

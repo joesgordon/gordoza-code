@@ -12,12 +12,36 @@ import org.jutils.io.IconLoader;
  ******************************************************************************/
 public final class BudgeyIcons
 {
-    /**  */
+    /** The icon loader to be used to access icons in this project. */
     private static final IconLoader loader = new IconLoader( BudgeyIcons.class,
         "icons" );
 
-    /**  */
-    public static final String WALLET_24 = "wallet24.png";
+    /** The prefix of the application icons. */
+    public static final String APP_PREFIX = "wallet";
+
+    /** The name of the 24 pixel wallet icon. */
+    public static final String WALLET_24 = APP_PREFIX + "24.png";
+
+    /** The name of the 32 pixel add calendar icon. */
+    public static final String CALLENDAR_ADD_32 = "calendar_add32.png";
+
+    /** The name of the 32 pixel add book icon. */
+    public static final String BOOK_ADD_32 = "book_add16.png";
+
+    /** The name of the 32 pixel add coins icon. */
+    public static final String COINS_ADD_32 = "coins_add32.png";
+
+    /** The name of the 32 pixel cog icon. */
+    public static final String COG_32 = "cog32.png";
+
+    /** The name of the 16 pixel book icon. */
+    public static final String BOOK_16 = "book16.png";
+
+    /** The name of the 16 pixel book icon. */
+    public static final String CHECK_24 = "check24.png";
+
+    /** The name of the 16 pixel book icon. */
+    public static final String CANCEL_24 = "cancel24.png";
 
     /***************************************************************************
      * Private default constructor to prevent instantiation of this class.
@@ -27,81 +51,19 @@ public final class BudgeyIcons
     }
 
     /***************************************************************************
-     * @return
+     * Loads and returns a list of images to be used for this application.
+     * @return the list of application images.
      **************************************************************************/
-    public static Icon getCalendarAddIcon()
+    public static List<Image> getAppImages()
     {
-        return getIcon( "calendar_add32.png" );
+        return loader.getImages( IconLoader.buildNameList( APP_PREFIX ) );
     }
 
     /***************************************************************************
-     * @return
-     **************************************************************************/
-    public static Icon getBookAddIcon()
-    {
-        return getIcon( "book_add16.png" );
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public static Icon getCoinsAddIcon()
-    {
-        return getIcon( "coins_add32.png" );
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public static Icon getCogIcon()
-    {
-        return getIcon( "cog32.png" );
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public static Icon getBookIcon()
-    {
-        return getIcon( "book16.png" );
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public static List<Image> getWalletIcons()
-    {
-        return loader.getImages( "wallet16.png", "wallet24.png", "wallet32.png",
-            "wallet64.png", "wallet128.png", "wallet256.png" );
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public static Icon getCheckIcon()
-    {
-        return getIcon( "check24.png" );
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public static Icon getWallet32Icon()
-    {
-        return getIcon( "wallet32.png" );
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    public static Icon getCancelIcon()
-    {
-        return getIcon( "cancel24.png" );
-    }
-
-    /***************************************************************************
-     * @param name
-     * @return
+     * Returns an icon for the provided name.
+     * @param name the name of the icon to be loaded.
+     * @return the common icon.
+     * @see IconLoader#getIcon(String)
      **************************************************************************/
     public static Icon getIcon( String name )
     {

@@ -27,7 +27,7 @@ public interface ITableItemsConfig<T>
      * @param col
      * @param data
      **************************************************************************/
-    public void setItemData( T item, int col, Object data );
+    public <F> void setItemData( T item, int col, F field );
 
     /***************************************************************************
      * @param col

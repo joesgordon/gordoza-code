@@ -55,7 +55,7 @@ public class FileResultsTableConfig implements ITableItemsConfig<FileInfo>
      * 
      **************************************************************************/
     @Override
-    public void setItemData( FileInfo item, int col, Object data )
+    public <F> void setItemData( FileInfo item, int col, F field )
     {
     }
 

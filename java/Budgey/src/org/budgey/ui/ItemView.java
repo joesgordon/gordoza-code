@@ -28,9 +28,10 @@ public final class ItemView implements IView<Component>
     {
         panel = new JPanel( new GridBagLayout() );
 
-        okButton = new JButton( "OK", BudgeyIcons.getCheckIcon() );
+        okButton = new JButton( "OK",
+            BudgeyIcons.getIcon( BudgeyIcons.CHECK_24 ) );
         cancelButton = new JButton( "Cancel",
-            BudgeyIcons.getCancelIcon() );
+            BudgeyIcons.getIcon( BudgeyIcons.CANCEL_24 ) );
 
         panel.add( fieldsPanel,
             new GridBagConstraints( 0, 0, 1, 1, 1.0, 0.0,

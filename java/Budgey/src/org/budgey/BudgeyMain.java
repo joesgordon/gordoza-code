@@ -9,7 +9,7 @@ import org.jutils.io.options.OptionsSerializer;
 import org.jutils.ui.app.FrameRunner;
 
 /*******************************************************************************
- * 
+ * Defines the main method for this application.
  ******************************************************************************/
 public class BudgeyMain
 {
@@ -23,7 +23,8 @@ public class BudgeyMain
     private static OptionsSerializer<BudgeyOptions> options;
 
     /***************************************************************************
-     * @param args
+     * Starts the Budgey application with the provided arguments.
+     * @param args empty, the file to open, or ignored.
      **************************************************************************/
     public static void main( String [] args )
     {
@@ -31,7 +32,8 @@ public class BudgeyMain
     }
 
     /***************************************************************************
-     * @return
+     * Creates or returns the user options serializer for this application.
+     * @return the user options serializer for this application.
      **************************************************************************/
     public static OptionsSerializer<BudgeyOptions> getOptions()
     {
@@ -50,18 +52,27 @@ public class BudgeyMain
     private static class BudgeyOptionsCreator
         implements IOptionsCreator<BudgeyOptions>
     {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public BudgeyOptions createDefaultOptions()
         {
             return new BudgeyOptions();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public BudgeyOptions initialize( BudgeyOptions options )
         {
             return new BudgeyOptions( options );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void warn( String message )
         {

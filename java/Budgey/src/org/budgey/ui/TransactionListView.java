@@ -4,16 +4,16 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.swing.*;
 
+import org.budgey.data.Money;
 import org.budgey.data.Transaction;
-import org.budgey.ui.model.TransactionTableModel;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
-import org.jutils.ui.model.IView;
-import org.jutils.ui.model.ItemsTableModel;
+import org.jutils.ui.model.*;
 
 /*******************************************************************************
  * 
@@ -32,15 +32,27 @@ public class TransactionListView implements IView<Component>
      **************************************************************************/
     public TransactionListView()
     {
+        DefaultTableItemsConfig<Transaction> itemsTableCfg = new DefaultTableItemsConfig<>();
+
+        itemsTableCfg.addCol( "Date", LocalDate.class, ( t ) -> t.getDate(),
+            ( t, f ) -> t.setDate( f ) );
+        itemsTableCfg.addCol( "Location", String.class,
+            ( t ) -> t.getSecondParty(), ( t, f ) -> t.setSecondParty( f ) );
+        itemsTableCfg.addCol( "Amount", Money.class, ( t ) -> t.getAmount(),
+            ( t, f ) -> t.setAmount( f ) );
+        itemsTableCfg.addCol( "Balance", Money.class, ( t ) -> t.getBalance() );
+        itemsTableCfg.addCol( "Tags", String.class, ( t ) -> t.getTag(),
+            ( t, f ) -> t.setTags( f ) );
+
         editTransListeners = new ItemActionList<Transaction>();
         transactionPanel = new JPanel( new BorderLayout() );
-        transactionModel = new ItemsTableModel<Transaction>(
-            new TransactionTableModel() );
+        transactionModel = new ItemsTableModel<>( itemsTableCfg );
         JTable table = new JTable( transactionModel );
         JScrollPane pane = new JScrollPane( table );
 
         table.addMouseListener( new TableMouseListener( this,
             editTransListeners, transactionModel ) );
+        table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
 
         pane.setBorder( BorderFactory.createEmptyBorder() );
 
@@ -93,10 +105,18 @@ public class TransactionListView implements IView<Component>
      **************************************************************************/
     private static class TableMouseListener extends MouseAdapter
     {
+        /**  */
         private final ItemActionList<Transaction> editTransListeners;
+        /**  */
         private final ItemsTableModel<Transaction> model;
+        /**  */
         private final Object source;
 
+        /**
+         * @param source
+         * @param editTransListeners
+         * @param model
+         */
         public TableMouseListener( Object source,
             ItemActionList<Transaction> editTransListeners,
             ItemsTableModel<Transaction> model )
@@ -106,6 +126,9 @@ public class TransactionListView implements IView<Component>
             this.model = model;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void mouseClicked( MouseEvent e )
         {

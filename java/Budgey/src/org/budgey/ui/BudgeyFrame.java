@@ -57,7 +57,7 @@ public class BudgeyFrame implements IView<JFrame>
         frame.setTitle( "Budgey" );
         setBudget( new Budget() );
 
-        frame.setIconImages( BudgeyIcons.getWalletIcons() );
+        frame.setIconImages( BudgeyIcons.getAppImages() );
     }
 
     /***************************************************************************
@@ -70,7 +70,8 @@ public class BudgeyFrame implements IView<JFrame>
     }
 
     /***************************************************************************
-     * @return
+     * Creates the toolbar for this frame.
+     * @return the toolbar for this frame.
      **************************************************************************/
     private JToolBar createToolBar()
     {
@@ -83,13 +84,14 @@ public class BudgeyFrame implements IView<JFrame>
         toolbar.addSeparator();
 
         JButton accountAddButton = new JButton(
-            BudgeyIcons.getBookAddIcon() );
+            BudgeyIcons.getIcon( BudgeyIcons.BOOK_ADD_32 ) );
         accountAddButton.setToolTipText( "Add Account" );
         accountAddButton.setFocusable( false );
         // newButton.addActionListener( new NewButtonListener() );
         toolbar.add( accountAddButton );
 
-        JButton switchButton = new JButton( BudgeyIcons.getBookIcon() );
+        JButton switchButton = new JButton(
+            BudgeyIcons.getIcon( BudgeyIcons.BOOK_16 ) );
         switchButton.setFocusable( false );
         switchButton.setToolTipText( "View a Different Account" );
         // newButton.addActionListener( new NewButtonListener() );
