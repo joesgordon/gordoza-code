@@ -375,6 +375,8 @@ public class DirectoryChooser
                         else
                         {
                             chooser.tree.refreshSelected();
+                            chooser.setSelectedPaths(
+                                newDir.getAbsolutePath() );
                         }
                     }
                     else

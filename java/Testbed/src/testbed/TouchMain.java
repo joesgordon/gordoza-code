@@ -1,11 +1,25 @@
 package testbed;
 
-import java.io.File;
+import java.io.*;
 import java.util.Calendar;
 
 public class TouchMain
 {
     public static void main( String[] args )
+    {
+        File file = new File( "test.bin" );
+        try( RandomAccessFile raf = new RandomAccessFile( file, "rw" ) )
+        {
+            raf.setLength( 164160L );
+        }
+        catch( IOException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public static void main2( String[] args )
     {
         long now = Calendar.getInstance().getTimeInMillis();
 

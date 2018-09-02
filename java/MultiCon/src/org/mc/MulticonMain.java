@@ -11,48 +11,64 @@ import org.jutils.ui.app.FrameRunner;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class McMain
+public class MulticonMain
 {
     /**  */
     private static final File OPTIONS_FILE = IOUtils.getUsersFile( ".jutils",
-        "mccomm", "options.xml" );
+        "multicon", "options.xml" );
+
+    /**  */
+    private static OptionsSerializer<MulticonOptions> userOptions;
 
     /***************************************************************************
-     * @param args
+     * @param args ignored
      **************************************************************************/
     public static void main( String[] args )
     {
-        FrameRunner.invokeLater( new McApp(), false );
+        FrameRunner.invokeLater( new MulticonApp(), false );
     }
 
     /***************************************************************************
-     * @return
+     * @return the user options for this application/library instance.
      **************************************************************************/
-    public static OptionsSerializer<McOptions> getUserData()
+    public static OptionsSerializer<MulticonOptions> getUserData()
     {
-        return OptionsSerializer.getOptions( new McCommOptionsCreator(),
-            OPTIONS_FILE );
+        if( userOptions == null )
+        {
+            userOptions = OptionsSerializer.getOptions(
+                new McCommOptionsCreator(), OPTIONS_FILE );
+        }
+
+        return userOptions;
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
     private static final class McCommOptionsCreator
-        implements IOptionsCreator<McOptions>
+        implements IOptionsCreator<MulticonOptions>
     {
-
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public McOptions createDefaultOptions()
+        public MulticonOptions createDefaultOptions()
         {
-            return new McOptions();
+            return new MulticonOptions();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public McOptions initialize( McOptions options )
+        public MulticonOptions initialize( MulticonOptions options )
         {
-            return new McOptions( options );
+            return new MulticonOptions( options );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void warn( String message )
         {

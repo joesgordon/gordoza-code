@@ -23,8 +23,8 @@ public class ReceiverTask implements ITask
     private final DatagramPacket rxPacket;
 
     /***************************************************************************
-     * @param rxListener
-     * @param socket
+     * @param rxListener the callback invoked upon receipt of a message.
+     * @param socket the connection that receives messages.
      **************************************************************************/
     public ReceiverTask( ItemActionListener<NetMessage> rxListener,
         MulticastSocket socket )
@@ -52,12 +52,17 @@ public class ReceiverTask implements ITask
                 byte[] messageBytes = Arrays.copyOf( rxPacket.getData(),
                     rxPacket.getLength() );
 
-                InetAddress address = rxPacket.getAddress();
-                int port = rxPacket.getPort();
+                String localAddress = socket.getLocalAddress().getHostAddress();
+                int localPort = socket.getLocalPort();
+
+                String remoteAddress = rxPacket.getAddress().getHostAddress();
+                int remotePort = rxPacket.getPort();
+
+                NetMessage netMsg = new NetMessage( true, localAddress,
+                    localPort, remoteAddress, remotePort, messageBytes );
 
                 rxListener.actionPerformed(
-                    new ItemActionEvent<NetMessage>( this, new NetMessage( true,
-                        address.getHostAddress(), port, messageBytes ) ) );
+                    new ItemActionEvent<NetMessage>( this, netMsg ) );
             }
             catch( SocketTimeoutException ex )
             {

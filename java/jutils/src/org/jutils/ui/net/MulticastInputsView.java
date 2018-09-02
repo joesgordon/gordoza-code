@@ -66,7 +66,7 @@ public class MulticastInputsView implements IDataView<MulticastInputs>
 
         setData( new MulticastInputs() );
 
-        addressField.setUpdater( ( d ) -> inputs.address.set( d ) );
+        addressField.setUpdater( ( d ) -> inputs.group.set( d ) );
         portField.setUpdater( ( d ) -> inputs.port = d );
         nicField.setUpdater( ( d ) -> inputs.nic = d );
         ttlField.setUpdater( ( d ) -> inputs.ttl = d );
@@ -100,7 +100,7 @@ public class MulticastInputsView implements IDataView<MulticastInputs>
     {
         this.inputs = data;
 
-        addressField.setValue( inputs.address );
+        addressField.setValue( inputs.group );
         portField.setValue( inputs.port );
         nicField.setValue( inputs.nic );
         ttlField.setValue( inputs.ttl );

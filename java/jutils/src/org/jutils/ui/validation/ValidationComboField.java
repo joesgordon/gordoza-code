@@ -97,7 +97,16 @@ public final class ValidationComboField<T> implements IValidationField
      **************************************************************************/
     public void setSelectedItem( T item )
     {
-        model.setSelectedItem( item );
+        int index = model.indexOf( item );
+
+        if( index > -1 )
+        {
+            model.setSelectedItem( item );
+        }
+        else
+        {
+            model.setSelectedItem( null );
+        }
     }
 
     /***************************************************************************

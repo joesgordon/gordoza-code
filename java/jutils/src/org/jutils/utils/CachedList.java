@@ -1,5 +1,6 @@
 package org.jutils.utils;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.*;
 
@@ -12,10 +13,12 @@ import org.jutils.io.IDataStream;
  * but a certain number of items to the provided stream.
  * @param <T> the type of item in the group.
  ******************************************************************************/
-public class CachedList<T> implements List<T>
+public class CachedList<T> implements List<T>, Closeable
 {
+    /**  */
+    private final int itemSize;
     /** The serializer error reporter for this list. */
-    private final ICacher<T> cacher;
+    private final IDataSerializer<T> cacher;
     /** The stream to be serialized to/from for this list. */
     private final IDataStream stream;
     /** The current item cache. */
@@ -39,9 +42,10 @@ public class CachedList<T> implements List<T>
      * @param cacher
      * @param stream
      **************************************************************************/
-    public CachedList( ICacher<T> cacher, IDataStream stream )
+    public CachedList( int itemSize, IDataSerializer<T> cacher,
+        IDataStream stream )
     {
-        this( cacher, stream, 8 * 1024 * 1024 / cacher.getItemSize() );
+        this( itemSize, cacher, stream, 8 * 1024 * 1024 / itemSize );
     }
 
     /***************************************************************************
@@ -49,8 +53,10 @@ public class CachedList<T> implements List<T>
      * @param stream
      * @param cacheSize
      **************************************************************************/
-    public CachedList( ICacher<T> cacher, IDataStream stream, int cacheSize )
+    public CachedList( int itemSize, IDataSerializer<T> cacher,
+        IDataStream stream, int cacheSize )
     {
+        this.itemSize = itemSize;
         this.cacher = cacher;
         this.stream = stream;
         this.cacheSize = cacheSize;
@@ -70,8 +76,9 @@ public class CachedList<T> implements List<T>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
+    @Override
     public void close()
     {
         cache.clear();
@@ -302,7 +309,7 @@ public class CachedList<T> implements List<T>
     {
         int cacheIndex = index / cacheSize;
 
-        long position = cacheIndex * cacheSize * cacher.getItemSize();
+        long position = cacheIndex * cacheSize * itemSize;
         // LogUtils.printDebug( " reading from position: %d", position );
 
         cache.clear();
@@ -335,16 +342,6 @@ public class CachedList<T> implements List<T>
 
         // LogUtils.printDebug(
         // " wrote " + ( cache.size() * cacher.getItemSize() ) + " bytes" );
-    }
-
-    /***************************************************************************
-     * Defines the methods of serializing and item to a stream and reporting
-     * exceptions.
-     * @param <T> the type of item to be serialized.
-     **************************************************************************/
-    public static interface ICacher<T> extends IDataSerializer<T>
-    {
-        public int getItemSize();
     }
 
     /***************************************************************************

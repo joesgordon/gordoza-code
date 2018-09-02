@@ -81,9 +81,11 @@ public class BitReader
     }
 
     /***************************************************************************
-     * @param bit
-     * @param value
-     * @return
+     * Writes the provided bit to the provided value at the position indicated
+     * upon construction.
+     * @param bit the value to be written ({@code true} indicates 0b1).
+     * @param value the field to be written to.
+     * @return the provided value with the bit written.
      **************************************************************************/
     public byte write( boolean bit, byte value )
     {
@@ -100,9 +102,11 @@ public class BitReader
     }
 
     /***************************************************************************
-     * @param bit
-     * @param value
-     * @return
+     * Writes the provided bit to the provided value at the position indicated
+     * upon construction.
+     * @param bit the value to be written ({@code true} indicates 0b1).
+     * @param value the field to be written to.
+     * @return the provided value with the bit written.
      **************************************************************************/
     public short write( boolean bit, short value )
     {
@@ -119,9 +123,11 @@ public class BitReader
     }
 
     /***************************************************************************
-     * @param bit
-     * @param value
-     * @return
+     * Writes the provided bit to the provided value at the position indicated
+     * upon construction.
+     * @param bit the value to be written ({@code true} indicates 0b1).
+     * @param value the field to be written to.
+     * @return the provided value with the bit written.
      **************************************************************************/
     public int write( boolean bit, int value )
     {
@@ -138,9 +144,11 @@ public class BitReader
     }
 
     /***************************************************************************
-     * @param bit
-     * @param value
-     * @return
+     * Writes the provided bit to the provided value at the position indicated
+     * upon construction.
+     * @param bit the value to be written ({@code true} indicates 0b1).
+     * @param value the field to be written to.
+     * @return the provided value with the bit written.
      **************************************************************************/
     public long write( boolean bit, long value )
     {

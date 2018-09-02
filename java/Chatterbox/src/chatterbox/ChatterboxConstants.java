@@ -4,6 +4,8 @@ import java.awt.Image;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 import org.jutils.IconConstants;
@@ -49,7 +51,8 @@ public class ChatterboxConstants
      **************************************************************************/
     public static long now()
     {
-        return new GregorianCalendar().getTimeInMillis();
+        return LocalDateTime.now( ZoneOffset.UTC ).toEpochSecond(
+            ZoneOffset.UTC );
     }
 
     /***************************************************************************

@@ -5,44 +5,39 @@ import org.jutils.net.*;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class McOptions
+public class MulticonOptions
 {
     /**  */
     public TcpInputs tcpServerInputs;
     /**  */
     public TcpInputs tcpClientInputs;
     /**  */
-    public UdpInputs udpServerInputs;
-    /**  */
-    public UdpInputs udpClientInputs;
+    public UdpInputs udpInputs;
     /**  */
     public MulticastInputs multicastInputs;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public McOptions()
+    public MulticonOptions()
     {
         this.tcpServerInputs = new TcpInputs();
         this.tcpClientInputs = new TcpInputs();
-        this.udpServerInputs = new UdpInputs();
-        this.udpClientInputs = new UdpInputs();
+        this.udpInputs = new UdpInputs();
         this.multicastInputs = new MulticastInputs();
     }
 
     /***************************************************************************
-     * @param options
+     * @param options the options to be copied.
      **************************************************************************/
-    public McOptions( McOptions options )
+    public MulticonOptions( MulticonOptions options )
     {
         this.tcpServerInputs = options.tcpServerInputs == null ? new TcpInputs()
             : new TcpInputs( options.tcpServerInputs );
         this.tcpClientInputs = options.tcpClientInputs == null ? new TcpInputs()
             : new TcpInputs( options.tcpClientInputs );
-        this.udpServerInputs = options.udpServerInputs == null ? new UdpInputs()
-            : new UdpInputs( options.udpServerInputs );
-        this.udpClientInputs = options.udpClientInputs == null ? new UdpInputs()
-            : new UdpInputs( options.udpClientInputs );
+        this.udpInputs = options.udpInputs == null ? new UdpInputs()
+            : new UdpInputs( options.udpInputs );
         this.multicastInputs = options.multicastInputs == null
             ? new MulticastInputs()
             : new MulticastInputs( options.multicastInputs );

@@ -478,7 +478,7 @@ public class FileSpyFrameView implements IView<JFrame>
         startButton.setActionCommand( "Start" );
 
         int rowCount = resultsView.getRecordCount();
-        String elapsed = TimeUtils.millisToString( millis );
+        String elapsed = TimeUtils.durationToString( millis );
 
         statusBar.setText( rowCount + " file(s) found in " + elapsed + "." );
 

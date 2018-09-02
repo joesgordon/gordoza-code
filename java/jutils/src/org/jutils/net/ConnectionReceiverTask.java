@@ -6,29 +6,29 @@ import java.net.SocketTimeoutException;
 
 import org.jutils.concurrent.ITask;
 import org.jutils.concurrent.ITaskHandler;
-import org.jutils.ui.event.ItemActionList;
-import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.event.updater.IUpdater;
+import org.jutils.ui.event.updater.UpdaterList;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ConnectionReceiver implements ITask
+public class ConnectionReceiverTask implements ITask
 {
     /**  */
     private final IConnection connection;
     /**  */
-    private final ItemActionList<NetMessage> msgListeners;
+    private final UpdaterList<NetMessage> msgListeners;
     /**  */
-    private final ItemActionList<String> errListeners;
+    private final UpdaterList<String> errListeners;
 
     /***************************************************************************
      * @param connection
      **************************************************************************/
-    public ConnectionReceiver( IConnection connection )
+    public ConnectionReceiverTask( IConnection connection )
     {
         this.connection = connection;
-        this.msgListeners = new ItemActionList<>();
-        this.errListeners = new ItemActionList<>();
+        this.msgListeners = new UpdaterList<>();
+        this.errListeners = new UpdaterList<>();
     }
 
     /***************************************************************************
@@ -42,12 +42,12 @@ public class ConnectionReceiver implements ITask
             try
             {
                 // LogUtils.printDebug( "Receiving message..." );
-                NetMessage msg = connection.rxMessage();
+                NetMessage msg = connection.receiveMessage();
                 if( msg == null )
                 {
                     break;
                 }
-                msgListeners.fireListeners( this, msg );
+                msgListeners.fireListeners( msg );
             }
             catch( SocketTimeoutException ex )
             {
@@ -60,7 +60,7 @@ public class ConnectionReceiver implements ITask
             catch( IOException ex )
             {
                 ex.printStackTrace();
-                errListeners.fireListeners( this,
+                errListeners.fireListeners(
                     "Error receiving packet: " + ex.getMessage() );
             }
             catch( Exception ex )
@@ -74,16 +74,16 @@ public class ConnectionReceiver implements ITask
     /***************************************************************************
      * @param l
      **************************************************************************/
-    public void addMessageListener( ItemActionListener<NetMessage> l )
+    public void addMessageListener( IUpdater<NetMessage> l )
     {
-        msgListeners.addListener( l );
+        msgListeners.addUpdater( l );
     }
 
     /***************************************************************************
      * @param l
      **************************************************************************/
-    public void addErrorListener( ItemActionListener<String> l )
+    public void addErrorListener( IUpdater<String> l )
     {
-        errListeners.addListener( l );
+        errListeners.addUpdater( l );
     }
 }

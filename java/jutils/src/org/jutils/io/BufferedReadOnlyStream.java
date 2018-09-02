@@ -274,9 +274,8 @@ public class BufferedReadOnlyStream implements IStream
      **************************************************************************/
     private void fillBuffer( long position ) throws EOFException, IOException
     {
+        // LogUtils.printDebug( "Filling buffer @ %X", position );
         stream.seek( position );
-
-        // LogUtils.printDebug( "Filling buffer" );
 
         this.position = position;
         this.index = 0;

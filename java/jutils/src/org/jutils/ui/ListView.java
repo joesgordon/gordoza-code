@@ -328,9 +328,9 @@ public class ListView<T> implements IDataView<List<T>>
                     }
                     else
                     {
-                        JOptionPane.showMessageDialog( view,
-                            "The name " + name +
-                                " already exists. Please Choose a different one.",
+                        JOptionPane.showMessageDialog( view, "The name " +
+                            name +
+                            " already exists. Please Choose a different one.",
                             "Name Exists", JOptionPane.ERROR_MESSAGE );
                     }
                 }
@@ -588,8 +588,9 @@ public class ListView<T> implements IDataView<List<T>>
          * @param text
          * @return
          */
-        public Component getListCellRendererComponent( JList<?> list, T value,
-            int index, boolean isSelected, boolean cellHasFocus, String text );
+        public Component getListCellRendererComponent( JList<? extends T> list,
+            T value, int index, boolean isSelected, boolean cellHasFocus,
+            String text );
     }
 
     /***************************************************************************
@@ -601,8 +602,9 @@ public class ListView<T> implements IDataView<List<T>>
         private final DefaultListCellRenderer renderer = new DefaultListCellRenderer();
 
         @Override
-        public Component getListCellRendererComponent( JList<?> list, T value,
-            int index, boolean isSelected, boolean cellHasFocus, String text )
+        public Component getListCellRendererComponent( JList<? extends T> list,
+            T value, int index, boolean isSelected, boolean cellHasFocus,
+            String text )
         {
             Component c = renderer.getListCellRendererComponent( list, value,
                 index, isSelected, cellHasFocus );

@@ -470,9 +470,10 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param file
-     * @param suffix
-     * @return
+     * Appends a suffix to a file name prior to the extension.
+     * @param file the file path to be changed.
+     * @param suffix the string to add to the end of the file name.
+     * @return the new path with the appended string.
      **************************************************************************/
     public static File appendToName( File file, String suffix )
     {
@@ -886,10 +887,14 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param file
-     * @return
-     * @throws FileNotFoundException
-     * @throws IOException
+     * Determines if the provided file is binary. The provided file is binary if
+     * either a {@code 0x00} byte or more than 25% non-printable bytes are found
+     * in the first 2048 bytes.
+     * @param file the file to be analyzed.
+     * @return {@code true} if the file is binary; {@code false} if ASCII.
+     * @throws FileNotFoundException if the path does not exist or an access
+     * error occurs.
+     * @throws IOException if any I/O error occurs.
      **************************************************************************/
     public static boolean isBinary( File file )
         throws FileNotFoundException, IOException
@@ -931,12 +936,13 @@ public final class IOUtils
     }
 
     /***************************************************************************
-     * @param b
-     * @return
+     * Tests if the provided byte is non-printable.
+     * @param b the byte under test.
+     * @return {@code true} if the byte is non-printable; {@code false}
+     * otherwise.
      **************************************************************************/
     private static boolean isNonPrintable( byte b )
     {
-
         switch( b )
         {
             case 9:

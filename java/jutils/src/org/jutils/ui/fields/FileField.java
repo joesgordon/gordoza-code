@@ -14,29 +14,31 @@ import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileChooserListener.IFileSelected;
 import org.jutils.ui.event.FileDropTarget.JTextFieldFilesListener;
 import org.jutils.ui.event.updater.IUpdater;
+import org.jutils.ui.event.updater.UpdaterList;
 import org.jutils.ui.model.IDataView;
 import org.jutils.ui.validation.*;
 import org.jutils.ui.validators.DataTextValidator;
 import org.jutils.ui.validators.ITextValidator;
 
 /*******************************************************************************
- * 
+ * Defines a field that validates the text as a {@link File}, checking for
+ * existence according to constructor parameters.
  ******************************************************************************/
 public class FileField implements IDataView<File>, IValidationField
 {
-    /**  */
+    /** The panel that contains all the components in this view. */
     private final JPanel view;
-    /**  */
+    /** The field used to display the file path and its associated icon. */
     private final IconTextField textField;
-    /**  */
+    /** The validation field used to display the {@link #textField}. */
     private final ValidationTextComponentField<JTextField> field;
-    /**  */
+    /** The button used to display an open file dialog. */
     private final JButton button;
-    /**  */
-    private final ItemActionList<File> changeListeners;
-    /**  */
+    /** Listeners called when the file is updated by the user. */
+    private final UpdaterList<File> updateListeners;
+    /** The listener called when the user clicks the browse button. */
     private final FileChooserListener fileListener;
-    /**  */
+    /** The icon shown in {@link #textField}. */
     private final FileIcon icon;
 
     /***************************************************************************
@@ -49,14 +51,14 @@ public class FileField implements IDataView<File>, IValidationField
     public FileField( ExistenceType existence, boolean required, boolean isSave,
         boolean showButton )
     {
-        this.changeListeners = new ItemActionList<>();
+        this.updateListeners = new UpdaterList<>();
 
         this.field = new ValidationTextComponentField<>( new JTextField() );
         this.textField = new IconTextField( field.getView() );
         this.button = new JButton();
         this.icon = new FileIcon();
 
-        this.fileListener = createFileListener( existence, isSave );
+        this.fileListener = createBrowseListener( existence, isSave );
         this.view = createView( existence, required, showButton );
 
         textField.setIcon( icon );
@@ -70,17 +72,24 @@ public class FileField implements IDataView<File>, IValidationField
         field.addValidityChanged( ( v ) -> {
             if( !v.isValid )
             {
-                icon.setDefaultIcon();
+                icon.setErrorIcon();
+            }
+            else if( !getData().exists() &&
+                existence == ExistenceType.DO_NOT_CHECK )
+            {
+                icon.setCheckIcon();
             }
         } );
     }
 
     /***************************************************************************
-     * @param existence
-     * @param isSave
-     * @return
+     * Creates the listener for the browse button.
+     * @param existence the type of existence to be checked.
+     * @param isSave indicates if the file is being saved ({@code false}
+     * indicates open).
+     * @return the listener for the browse button.
      **************************************************************************/
-    private FileChooserListener createFileListener( ExistenceType existence,
+    private FileChooserListener createBrowseListener( ExistenceType existence,
         boolean isSave )
     {
         FileChooserListener fcl = null;
@@ -96,11 +105,11 @@ public class FileField implements IDataView<File>, IValidationField
     }
 
     /***************************************************************************
+     * Creates the main panel for this view.
      * @param existence type of existence to be checked: file/dir/either/none.
      * @param required if the path can be empty or is required.s
-     * @param isSave if the path is to be be save to (alt. read from).
      * @param showButton denotes whether the browse button should be shown.
-     * @return
+     * @return the newly created panel.
      **************************************************************************/
     private JPanel createView( ExistenceType existence, boolean required,
         boolean showButton )
@@ -121,7 +130,8 @@ public class FileField implements IDataView<File>, IValidationField
         }
 
         ITextValidator validator = new DataTextValidator<File>(
-            new FileParser( existence, required ), new FileUpdater( this ) );
+            new FileParser( existence, required ),
+            ( f ) -> handleFileUpdated( f ) );
 
         // LogUtils.printDebug( "Setting validator" );
         field.setValidator( validator );
@@ -149,6 +159,18 @@ public class FileField implements IDataView<File>, IValidationField
         }
 
         return panel;
+    }
+
+    /***************************************************************************
+     * Invoked when the edited value is valid.
+     * @param file the new file object.
+     **************************************************************************/
+    public void handleFileUpdated( File file )
+    {
+        // LogUtils.printDebug( "File changed to " + file.getAbsolutePath()
+        // );
+        icon.setFile( file );
+        updateListeners.fireListeners( file );
     }
 
     /***************************************************************************
@@ -239,11 +261,13 @@ public class FileField implements IDataView<File>, IValidationField
     }
 
     /***************************************************************************
-     * @param l
+     * Adds the provided callback to the end of the callbacks invoked when the
+     * file is updated.
+     * @param updater the listener to be added.
      **************************************************************************/
-    public void addChangeListener( ItemActionListener<File> l )
+    public void addUpdater( IUpdater<File> updater )
     {
-        changeListeners.addListener( l );
+        updateListeners.addUpdater( updater );
     }
 
     /***************************************************************************
@@ -269,7 +293,8 @@ public class FileField implements IDataView<File>, IValidationField
     }
 
     /***************************************************************************
-     * Returns the last selected file for the listener.
+     * Returns either the current path or the closest parent path that exists.
+     * @return the closest known existing path to the current path.
      **************************************************************************/
     private File getDefaultFile()
     {
@@ -284,58 +309,39 @@ public class FileField implements IDataView<File>, IValidationField
     }
 
     /***************************************************************************
-     * Notifies the listeners that the file has been updated.
-     **************************************************************************/
-    private static class FileUpdater implements IUpdater<File>
-    {
-        private final FileField view;
-
-        /**
-         * @param view
-         */
-        public FileUpdater( FileField view )
-        {
-            this.view = view;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void update( File file )
-        {
-            // LogUtils.printDebug( "File changed to " + file.getAbsolutePath()
-            // );
-            view.icon.setFile( file );
-            view.changeListeners.fireListeners( view, file );
-        }
-    }
-
-    /***************************************************************************
      * Displays the context menu on the button on right-click.
      **************************************************************************/
     private static class MenuListener extends MouseAdapter
     {
+        /** The field on which the menu is displayed. */
         private final FileField field;
+        /** The menu to be displayed. */
         private final FileContextMenu menu;
 
+        /**
+         * @param field the field on which the menu is displayed.
+         * @param parent the component to be used as the parent of the menu.
+         */
         public MenuListener( FileField field, Component parent )
         {
             this.field = field;
             this.menu = new FileContextMenu( parent );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void mouseClicked( MouseEvent e )
         {
+            File file = field.getData();
+
             if( SwingUtilities.isRightMouseButton( e ) &&
                 e.getClickCount() == 1 )
             {
                 Component c = e.getComponent();
                 int x = c.getWidth() / 2; // e.getX();
                 int y = c.getHeight() / 2; // e.getY();
-
-                File file = field.getData();
 
                 menu.show( file, c, x, y );
             }

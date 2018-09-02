@@ -48,7 +48,7 @@ public class UdpConnection implements IConnection
         socket.setSoTimeout( inputs.timeout );
 
         this.socket = socket;
-        this.rxBuffer = new byte[65535];
+        this.rxBuffer = new byte[65536];
 
         if( inputs.remoteAddress != null )
         {
@@ -58,7 +58,7 @@ public class UdpConnection implements IConnection
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void close() throws IOException
@@ -67,24 +67,26 @@ public class UdpConnection implements IConnection
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
-    public NetMessage rxMessage() throws IOException, SocketTimeoutException
+    public NetMessage receiveMessage()
+        throws IOException, SocketTimeoutException
     {
         DatagramPacket packet = new DatagramPacket( rxBuffer, rxBuffer.length );
         socket.receive( packet );
         byte [] contents = Arrays.copyOf( rxBuffer, packet.getLength() );
         InetAddress address = packet.getAddress();
         int port = packet.getPort();
-        return new NetMessage( true, address.getHostAddress(), port, contents );
+        return new NetMessage( true, socket.getLocalAddress().getHostAddress(),
+            socket.getLocalPort(), address.getHostAddress(), port, contents );
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
-    public NetMessage txMessage( byte [] contents ) throws IOException
+    public NetMessage sendMessage( byte [] contents ) throws IOException
     {
         if( remoteAddress == null )
         {
@@ -92,6 +94,14 @@ public class UdpConnection implements IConnection
         }
 
         return txMessage( contents, remoteAddress, remotePort );
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public void addDisconnectedListener( Runnable listener )
+    {
     }
 
     /***************************************************************************
@@ -109,7 +119,7 @@ public class UdpConnection implements IConnection
 
         socket.send( packet );
 
-        return new NetMessage( false, toAddr.getHostAddress(), toPort,
-            contents );
+        return new NetMessage( false, socket.getLocalAddress().getHostAddress(),
+            socket.getLocalPort(), toAddr.getHostAddress(), toPort, contents );
     }
 }

@@ -26,7 +26,7 @@ public class TcpServer implements Closeable
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void close() throws IOException
@@ -35,18 +35,16 @@ public class TcpServer implements Closeable
     }
 
     /***************************************************************************
-     * @param disconnetCallback
      * @return
      * @throws IOException
+     * @throws SocketTimeoutException
      **************************************************************************/
     @SuppressWarnings( "resource")
-    public TcpConnection accept( Runnable disconnetCallback )
-        throws IOException, SocketTimeoutException
+    public TcpConnection accept() throws IOException, SocketTimeoutException
     {
         Socket socket = server.accept();
 
-        TcpConnection connection = new TcpConnection( socket,
-            disconnetCallback );
+        TcpConnection connection = new TcpConnection( socket );
 
         return connection;
     }

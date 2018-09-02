@@ -12,7 +12,7 @@ import org.jutils.ui.hex.HexUtils;
 public class HexBytesParser implements IParser<byte []>
 {
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public byte [] parse( String text ) throws ValidationException

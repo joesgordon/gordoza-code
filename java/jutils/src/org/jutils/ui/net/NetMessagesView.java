@@ -491,7 +491,7 @@ public class NetMessagesView implements IView<JPanel>
         }
         else
         {
-            icon = IconConstants.getIcon( "hex_016.png" );
+            icon = IconConstants.getIcon( IconConstants.HEX_16 );
             text = "Show Hex Contents";
         }
 
@@ -602,10 +602,11 @@ public class NetMessagesView implements IView<JPanel>
         }
     }
 
+    /**
+     * @param file
+     */
     public void saveBinFile( File file )
     {
-        byte [] buf = new byte[IOUtils.DEFAULT_BUF_SIZE];
-
         synchronized( msgsStream )
         {
             try( FileStream stream = new FileStream( file ) )
@@ -894,8 +895,9 @@ public class NetMessagesView implements IView<JPanel>
         private Action createNavAction( boolean forward )
         {
             ActionListener listener = ( e ) -> navigate( forward );
-            Icon icon = IconConstants.getIcon( forward
-                ? IconConstants.NAV_NEXT_16 : IconConstants.NAV_PREVIOUS_16 );
+            Icon icon = IconConstants.getIcon(
+                forward ? IconConstants.NAV_NEXT_16
+                    : IconConstants.NAV_PREVIOUS_16 );
             String name = forward ? "Next Message" : "Previous Message";
 
             return new ActionAdapter( listener, name, icon );

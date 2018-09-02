@@ -1,15 +1,20 @@
 package org.mc.ui;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 
+import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
+import org.jutils.ui.ComponentView;
+import org.jutils.ui.TitleView;
 import org.jutils.ui.event.*;
 import org.jutils.ui.fields.HexAreaFormField;
+import org.jutils.ui.fields.StringAreaFormField;
 import org.jutils.ui.hex.HexUtils;
 import org.jutils.ui.model.IDataView;
 
@@ -24,94 +29,187 @@ public class MessageTextView implements IDataView<byte[]>
     private final String LF = "" + ( char )0xA;
 
     /**  */
-    private final JComponent view;
+    private final TitleView view;
     /**  */
-    private final JTextArea textField;
+    private final ComponentView msgView;
+    /**  */
+    private final StringAreaFormField textField;
     /**  */
     private final HexAreaFormField hexField;
     /**  */
-    private final ItemActionList<String> enterListeners;
+    private final HexTextListener hextTextListener;
+    /**  */
+    private final ItemActionList<byte[]> enterListeners;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public MessageTextView()
     {
-        this.textField = new JTextArea();
+        this.textField = new StringAreaFormField( "Message Text" );
         this.hexField = new HexAreaFormField( "Message Bytes" );
-        this.view = createView();
+        this.msgView = new ComponentView();
+        this.hextTextListener = new HexTextListener( this );
+        this.view = new TitleView( "Hexadecimal", createMainView() );
         this.enterListeners = new ItemActionList<>();
 
-        // textField.getDocument().addDocumentListener(
-        // new GrowingTextDocumentListener( textField ) );
+        hextTextListener.showHex();
 
         setData( HexUtils.fromHexStringToArray( "EB91" ) );
 
-        SwingUtils.addKeyListener( textField, "shift ENTER", false,
-            ( e ) -> insertText( LF ), "Shift+Enter Listener" );
-        SwingUtils.addKeyListener( textField, "control ENTER", false,
-            ( e ) -> insertText( CR ), "Control+Enter Listener" );
+        SwingUtils.addKeyListener( textField.getTextArea(), "shift ENTER",
+            false, ( e ) -> insertText( LF ), "Shift+Enter Listener" );
+        SwingUtils.addKeyListener( textField.getTextArea(), "control ENTER",
+            false, ( e ) -> insertText( CR ), "Control+Enter Listener" );
     }
 
     /***************************************************************************
-     * @param text
+     * Inserts the provided text at the current cursor position in the
+     * {@link #textField}.
+     * @param text the text to be inserted.
      **************************************************************************/
     private void insertText( String text )
     {
-        int offset = textField.getCaretPosition();
+        JTextArea area = textField.getTextArea();
+        int offset = area.getCaretPosition();
         try
         {
 
-            textField.getDocument().insertString( offset, text, null );
+            area.getDocument().insertString( offset, text, null );
         }
         catch( BadLocationException ex )
         {
-            // TODO Auto-generated catch block
-            ex.printStackTrace();
+            throw new RuntimeException( ex );
         }
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    private JComponent createView()
+    private JComponent createMainView()
     {
-        JTabbedPane tabs = new JTabbedPane();
+        JPanel panel = new JPanel( new BorderLayout() );
 
-        tabs.addTab( "Text", createTextView() );
-        tabs.addTab( "Hex", hexField.getView() );
+        panel.add( createToolbar(), BorderLayout.NORTH );
+        panel.add( msgView.getView(), BorderLayout.CENTER );
 
+        addEnterHook( textField.getTextArea() );
         addEnterHook( hexField.getTextArea() );
 
-        return tabs;
+        return panel;
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    private JPanel createTextView()
+    private Component createToolbar()
     {
-        JPanel contentPanel = new JPanel( new BorderLayout() );
+        JToolBar toolbar = new JToolBar();
 
-        contentPanel.setBorder( BorderFactory.createEtchedBorder() );
+        SwingUtils.setToolbarDefaults( toolbar );
 
-        // JScrollPane msgScrollPane = new GrowingScrollPane( textField );
-        JScrollPane msgScrollPane = new JScrollPane( textField );
+        SwingUtils.addActionToToolbar( toolbar, createHexTextAction(),
+            hextTextListener.button );
 
-        // BottomScroller bottomScroller = new BottomScroller( textField );
+        return toolbar;
+    }
 
-        // textField.addComponentListener( bottomScroller );
-        addEnterHook( textField );
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createHexTextAction()
+    {
+        ActionListener listener = ( e ) -> hextTextListener.toggle();
 
-        msgScrollPane.setMinimumSize( new Dimension( 100, 48 ) );
-        msgScrollPane.setMaximumSize( new Dimension( 100, 150 ) );
-        msgScrollPane.setBorder( null );
-        msgScrollPane.setBorder(
-            BorderFactory.createMatteBorder( 1, 0, 0, 0, Color.gray ) );
+        return new ActionAdapter( listener, "HexText", null );
+    }
 
-        contentPanel.add( msgScrollPane, BorderLayout.CENTER );
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class HexTextListener
+    {
+        /**  */
+        private final MessageTextView view;
+        /**  */
+        public final JButton button;
 
-        return contentPanel;
+        /**  */
+        private final Icon textIcon;
+        /**  */
+        private final String textText;
+        /**  */
+        private final String textTooltip;
+
+        /**  */
+        private final Icon hexIcon;
+        /**  */
+        private final String hexText;
+        /**  */
+        private final String hexTooltip;
+
+        /**
+         * @param view
+         */
+        public HexTextListener( MessageTextView view )
+        {
+            this.view = view;
+            this.button = new JButton();
+
+            this.textIcon = IconConstants.getIcon( IconConstants.FONT_16 );
+            this.hexIcon = IconConstants.getIcon( IconConstants.HEX_16 );
+
+            this.textText = "Text";
+            this.hexText = "Hex";
+
+            this.textTooltip = "Show message as text";
+            this.hexTooltip = "Show message as hex";
+        }
+
+        /**
+         * 
+         */
+        public void toggle()
+        {
+            boolean showHex = button.getIcon() == hexIcon;
+
+            if( showHex )
+            {
+                showHex();
+            }
+            else
+            {
+                showText();
+            }
+        }
+
+        /**
+         * 
+         */
+        private void showHex()
+        {
+            button.setIcon( textIcon );
+            button.setText( textText );
+            button.setToolTipText( textTooltip );
+            byte[] bytes = view.textField.getValue().getBytes(
+                HexAreaFormField.UTF8 );
+            view.hexField.setValue( bytes );
+            view.msgView.setComponent( view.hexField.getView() );
+        }
+
+        /**
+         * 
+         */
+        private void showText()
+        {
+            button.setIcon( hexIcon );
+            button.setText( hexText );
+            button.setToolTipText( hexTooltip );
+            String text = new String( view.hexField.getValue(),
+                HexAreaFormField.UTF8 );
+            view.textField.setText( text );
+            view.msgView.setComponent( view.textField.getView() );
+        }
     }
 
     /***************************************************************************
@@ -128,7 +226,7 @@ public class MessageTextView implements IDataView<byte[]>
 
         ks = KeyStroke.getKeyStroke( KeyEvent.VK_ENTER, 0 );
         aname = "SEND_MESSAGE";
-        l = ( e ) -> enterListeners.fireListeners( this, textField.getText() );
+        l = ( e ) -> fireEnterListeners();
         action = new ActionAdapter( l, aname, null );
         amap = textPane.getActionMap();
         imap = textPane.getInputMap();
@@ -137,12 +235,22 @@ public class MessageTextView implements IDataView<byte[]>
     }
 
     /***************************************************************************
+     * 
+     **************************************************************************/
+    private void fireEnterListeners()
+    {
+        byte[] msgBuffer = getData();
+
+        enterListeners.fireListeners( this, msgBuffer );
+    }
+
+    /***************************************************************************
      * {@inheritDoc}
      **************************************************************************/
     @Override
-    public Component getView()
+    public JComponent getView()
     {
-        return view;
+        return view.getView();
     }
 
     /***************************************************************************
@@ -151,12 +259,12 @@ public class MessageTextView implements IDataView<byte[]>
     @Override
     public byte[] getData()
     {
-        if( hexField.getView().isShowing() )
+        if( msgView.getComponent() == hexField.getView() )
         {
             return hexField.getValue();
         }
 
-        return textField.getText().getBytes();
+        return textField.getValue().getBytes( HexAreaFormField.UTF8 );
     }
 
     /***************************************************************************
@@ -172,7 +280,7 @@ public class MessageTextView implements IDataView<byte[]>
     /***************************************************************************
      * @param l
      **************************************************************************/
-    public void addEnterListener( ItemActionListener<String> l )
+    public void addEnterListener( ItemActionListener<byte[]> l )
     {
         enterListeners.addListener( l );
     }
@@ -182,7 +290,8 @@ public class MessageTextView implements IDataView<byte[]>
      **************************************************************************/
     public void selectAll()
     {
-        textField.selectAll();
+        hexField.getTextArea().selectAll();
+        textField.getTextArea().selectAll();
     }
 
     /***************************************************************************
@@ -190,7 +299,17 @@ public class MessageTextView implements IDataView<byte[]>
      **************************************************************************/
     public void setEditable( boolean editable )
     {
+        hextTextListener.button.setEnabled( editable );
         textField.setEditable( editable );
         hexField.setEditable( editable );
+    }
+
+    /***************************************************************************
+     * @param text
+     **************************************************************************/
+    public void setText( String text )
+    {
+        textField.setText( text );
+        hexField.setText( text );
     }
 }

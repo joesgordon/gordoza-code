@@ -58,6 +58,12 @@ public class ValidationView implements IView<JPanel>
         this( field, units, fieldView, false );
     }
 
+    /***************************************************************************
+     * @param field
+     * @param units
+     * @param fieldView
+     * @param fillBoth
+     **************************************************************************/
     public ValidationView( IValidationField field, String units,
         Component fieldView, boolean fillBoth )
     {
@@ -66,7 +72,7 @@ public class ValidationView implements IView<JPanel>
 
         this.errorField = new JTextField();
         this.unitsField = units == null ? null : new JLabel( units );
-        this.errorConstraints = new GridBagConstraints( 0, 1, 2, 1, 1.0, 1.0,
+        this.errorConstraints = new GridBagConstraints( 0, 1, 2, 1, 1.0, 0.0,
             GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
             new Insets( 4, 0, 0, 0 ), 0, 0 );
 

@@ -35,13 +35,13 @@ public class UdpInputsView implements IDataView<UdpInputs>
      **************************************************************************/
     public UdpInputsView()
     {
-        this( true, true );
+        this( true );
     }
 
     /***************************************************************************
      * @param advanced shows time-to-live and timeout fields.
      **************************************************************************/
-    public UdpInputsView( boolean advanced, boolean showRemote )
+    public UdpInputsView( boolean advanced )
     {
         this.form = new StandardFormView();
 
@@ -57,11 +57,8 @@ public class UdpInputsView implements IDataView<UdpInputs>
         form.addField( localPortField );
         form.addField( nicField );
 
-        if( showRemote )
-        {
-            form.addField( remoteAddressField );
-            form.addField( remotePortField );
-        }
+        form.addField( remoteAddressField );
+        form.addField( remotePortField );
 
         if( advanced )
         {
@@ -126,7 +123,7 @@ public class UdpInputsView implements IDataView<UdpInputs>
         timeoutField.setEditable( enabled );
         reuseField.setEditable( enabled );
 
-        remoteAddressField.setEditable( enabled );
-        remotePortField.setEditable( enabled );
+        // remoteAddressField.setEditable( enabled );
+        // remotePortField.setEditable( enabled );
     }
 }

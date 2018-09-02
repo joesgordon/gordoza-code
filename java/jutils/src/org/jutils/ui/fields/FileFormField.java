@@ -9,7 +9,7 @@ import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.validation.*;
 
 /*******************************************************************************
- * 
+ * Defines a form field that edits a file path.
  ******************************************************************************/
 public class FileFormField implements IDataFormField<File>
 {
@@ -60,8 +60,8 @@ public class FileFormField implements IDataFormField<File>
      * {@link ExistenceType} that ensures the file exists if {@code required}
      * and shows "Save" text and a browse button.
      * @param name the name of this field.
-     * @param existence
-     * @param required
+     * @param existence type of existence to be checked: file/dir/either/none.
+     * @param required if the path can be empty or is required.
      **************************************************************************/
     public FileFormField( String name, ExistenceType existence,
         boolean required )
@@ -174,7 +174,7 @@ public class FileFormField implements IDataFormField<File>
     {
         this.updater = updater;
 
-        field.addChangeListener( ( e ) -> callUpdater( e.getItem() ) );
+        field.addUpdater( ( f ) -> callUpdater( f ) );
     }
 
     /***************************************************************************

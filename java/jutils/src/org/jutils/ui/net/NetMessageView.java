@@ -2,8 +2,6 @@ package org.jutils.ui.net;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.time.format.DateTimeFormatter;
 
 import javax.swing.*;
@@ -53,19 +51,8 @@ public class NetMessageView implements IDataView<NetMessage>
         this.bytesField = new HexPanel();
         this.view = createView( addScrollPane );
 
-        try
-        {
-            InetAddress addr = InetAddress.getLocalHost();
-            setData(
-                new NetMessage( true, addr.getHostName(), 0, new byte[0] ) );
-        }
-        catch( UnknownHostException ex )
-        {
-            throw new RuntimeException(
-                "This system doesn't know what 127.0.0.1 is. Poor system. It's homeless. :_(",
-                ex );
-        }
-
+        setData( new NetMessage( true, "127.0.0.1", 186, "127.0.0.1", 282,
+            new byte[0] ) );
     }
 
     /***************************************************************************
@@ -193,10 +180,14 @@ public class NetMessageView implements IDataView<NetMessage>
         str.append( msg.received ? "received " : " transmitted " );
         str.append( "at " );
         str.append( msg.time.format( dtf ) );
-        str.append( " from " );
-        str.append( msg.address );
+        str.append( " on " );
+        str.append( msg.localAddress );
         str.append( ":" );
-        str.append( msg.port );
+        str.append( msg.localPort );
+        str.append( msg.received ? " from " : " to " );
+        str.append( msg.remoteAddress );
+        str.append( ":" );
+        str.append( msg.remotePort );
 
         return str.toString();
     }

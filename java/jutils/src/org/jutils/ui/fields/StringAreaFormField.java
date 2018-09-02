@@ -5,11 +5,9 @@ import java.nio.charset.Charset;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.*;
 
-import org.jutils.io.parsers.HexBytesParser;
+import org.jutils.io.parsers.StringLengthParser;
 import org.jutils.ui.event.updater.IUpdater;
-import org.jutils.ui.hex.HexUtils;
 import org.jutils.ui.validation.*;
 import org.jutils.ui.validators.DataTextValidator;
 import org.jutils.ui.validators.ITextValidator;
@@ -17,7 +15,7 @@ import org.jutils.ui.validators.ITextValidator;
 /***************************************************************************
  * 
  **************************************************************************/
-public class HexAreaFormField implements IDataFormField<byte []>
+public class StringAreaFormField implements IDataFormField<String>
 {
     /**  */
     public static final Charset UTF8 = Charset.forName( "UTF-8" );
@@ -30,14 +28,12 @@ public class HexAreaFormField implements IDataFormField<byte []>
     private final ValidationView view;
 
     /**  */
-    private byte [] bytes;
-    /**  */
-    private IUpdater<byte []> updater;
+    private IUpdater<String> updater;
 
     /***************************************************************************
      * @param name
      **************************************************************************/
-    public HexAreaFormField( String name )
+    public StringAreaFormField( String name )
     {
         this.name = name;
         this.inputField = new ValidationTextAreaField();
@@ -50,15 +46,12 @@ public class HexAreaFormField implements IDataFormField<byte []>
 
         this.view = new ValidationView( inputField, null, pane, true );
 
-        this.bytes = null;
         this.updater = null;
 
         ITextValidator validator;
 
-        validator = new DataTextValidator<byte []>( new HexBytesParser(),
+        validator = new DataTextValidator<>( new StringLengthParser( 0, null ),
             ( d ) -> fireUpdaters( d ) );
-        AbstractDocument ad = ( AbstractDocument )inputField.getView().getDocument();
-        ad.setDocumentFilter( new InputFilter() );
         inputField.setValidator( validator );
 
         JTextArea field = inputField.getView();
@@ -72,10 +65,8 @@ public class HexAreaFormField implements IDataFormField<byte []>
     /***************************************************************************
      * @param data
      **************************************************************************/
-    private void fireUpdaters( byte [] data )
+    private void fireUpdaters( String data )
     {
-        this.bytes = data;
-
         if( updater != null )
         {
             updater.update( data );
@@ -86,27 +77,25 @@ public class HexAreaFormField implements IDataFormField<byte []>
      * {@inheritDoc}
      **************************************************************************/
     @Override
-    public byte [] getValue()
+    public String getValue()
     {
-        return bytes;
+        return inputField.getText();
     }
 
     /***************************************************************************
      * {@inheritDoc}
      **************************************************************************/
     @Override
-    public void setValue( byte [] bytes )
+    public void setValue( String text )
     {
-        this.bytes = bytes;
-
-        inputField.setText( HexUtils.toHexString( bytes ) );
+        inputField.setText( text );
     }
 
     /***************************************************************************
      * {@inheritDoc}
      **************************************************************************/
     @Override
-    public void setUpdater( IUpdater<byte []> updater )
+    public void setUpdater( IUpdater<String> updater )
     {
         this.updater = updater;
     }
@@ -115,7 +104,7 @@ public class HexAreaFormField implements IDataFormField<byte []>
      * {@inheritDoc}
      **************************************************************************/
     @Override
-    public IUpdater<byte []> getUpdater()
+    public IUpdater<String> getUpdater()
     {
         return updater;
     }
@@ -188,34 +177,6 @@ public class HexAreaFormField implements IDataFormField<byte []>
      **************************************************************************/
     public void setText( String text )
     {
-        setValue( text.getBytes( UTF8 ) );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class InputFilter extends DocumentFilter
-    {
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void insertString( FilterBypass fb, int offset, String text,
-            AttributeSet attr ) throws BadLocationException
-        {
-            text = text.replaceAll( "\\s", "" );
-            super.insertString( fb, offset, text, attr );
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void replace( FilterBypass fb, int offset, int length,
-            String text, AttributeSet attrs ) throws BadLocationException
-        {
-            text = text.replaceAll( "[^a-fA-F0-9]", "" );
-            super.replace( fb, offset, length, text, attrs );
-        }
+        inputField.setText( text );
     }
 }
