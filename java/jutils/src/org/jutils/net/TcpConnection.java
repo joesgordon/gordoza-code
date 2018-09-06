@@ -172,4 +172,29 @@ public class TcpConnection implements IConnection
     {
         disconnetListeners.add( listener );
     }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public Ip4Address getRemoteAddress()
+    {
+        return new Ip4Address( remoteAddress );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public int getRemotePort()
+    {
+        return remotePort;
+    }
+
+    /***************************************************************************
+     * @param millis
+     * @throws SocketException
+     **************************************************************************/
+    public void setTimeout( int millis ) throws SocketException
+    {
+        socket.setSoTimeout( millis );
+    }
 }
