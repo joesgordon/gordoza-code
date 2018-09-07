@@ -375,8 +375,10 @@ public class DirectoryChooser
                         else
                         {
                             chooser.tree.refreshSelected();
-                            chooser.setSelectedPaths(
-                                newDir.getAbsolutePath() );
+
+                            SwingUtilities.invokeLater(
+                                () -> chooser.setSelectedPaths(
+                                    newDir.getAbsolutePath() ) );
                         }
                     }
                     else

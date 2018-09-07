@@ -407,6 +407,9 @@ public class DirectoryTree implements IView<JTree>
             }
         }
 
+        /**
+         * @return
+         */
         public Object [] getPath()
         {
             List<FileTreeNode> nodes = new ArrayList<>();
@@ -424,6 +427,10 @@ public class DirectoryTree implements IView<JTree>
             return nodes.toArray();
         }
 
+        /**
+         * @param parent
+         * @param file
+         */
         public FileTreeNode( FileTreeNode parent, File file )
         {
             this.parent = parent;
@@ -431,62 +438,87 @@ public class DirectoryTree implements IView<JTree>
             this.children = new ArrayList<>();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public FileTreeNode getChildAt( int childIndex )
         {
             return children.get( childIndex );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public int getChildCount()
         {
             return children.size();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public TreeNode getParent()
         {
             return parent;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public int getIndex( TreeNode node )
         {
             return children.indexOf( node );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public boolean getAllowsChildren()
         {
             return file == null ? true : file.isDirectory();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public boolean isLeaf()
         {
             return file == null ? false : !file.isDirectory();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public Enumeration<FileTreeNode> children()
         {
             return new EnumeratedIterator<>( children.iterator() );
         }
 
+        /**
+         * 
+         */
         public void loadChildren()
         {
-            File [] files;
+            File [] files = null;
 
             try
             {
                 files = file.listFiles();
-                files = files == null ? new File[0] : files;
 
             }
             catch( SecurityException ex )
             {
-                files = new File[0];
+                files = null;
             }
+
+            files = files == null ? new File[0] : files;
 
             Arrays.sort( files );
 
@@ -507,19 +539,29 @@ public class DirectoryTree implements IView<JTree>
      **************************************************************************/
     private static final class EnumeratedIterator<T> implements Enumeration<T>
     {
+        /**  */
         private final Iterator<T> iterator;
 
+        /**
+         * @param iterator
+         */
         public EnumeratedIterator( Iterator<T> iterator )
         {
             this.iterator = iterator;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public boolean hasMoreElements()
         {
             return iterator.hasNext();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public T nextElement()
         {
@@ -534,75 +576,102 @@ public class DirectoryTree implements IView<JTree>
     {
         private final DefaultTreeModel model;
 
+        /**
+         * @param node
+         */
         private FileTreeModel( FileTreeNode node )
         {
             this.model = new DefaultTreeModel( node );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public Object getRoot()
         {
             return model.getRoot();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public Object getChild( Object parent, int index )
         {
             return model.getChild( parent, index );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public int getChildCount( Object parent )
         {
             return model.getChildCount( parent );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public boolean isLeaf( Object node )
         {
             if( node instanceof FileTreeNode )
             {
-                FileTreeNode dmtn = ( FileTreeNode )node;
-                Object obj = dmtn.file;
-
-                if( obj != null && obj instanceof File )
+                FileTreeNode fileNode = ( FileTreeNode )node;
+                if( fileNode.file != null )
                 {
-                    File file = ( File )obj;
-
-                    return !file.isDirectory();
+                    return !fileNode.file.isDirectory();
                 }
             }
 
             return model.isLeaf( node );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void valueForPathChanged( TreePath path, Object newValue )
         {
             model.valueForPathChanged( path, newValue );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public int getIndexOfChild( Object parent, Object child )
         {
             return model.getIndexOfChild( parent, child );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void addTreeModelListener( TreeModelListener l )
         {
             model.addTreeModelListener( l );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void removeTreeModelListener( TreeModelListener l )
         {
             model.removeTreeModelListener( l );
         }
 
+        /**
+         * @param node
+         */
         public void reload( FileTreeNode node )
         {
             model.reload( node );
+            model.nodeStructureChanged( node );
         }
     }
 
@@ -611,6 +680,9 @@ public class DirectoryTree implements IView<JTree>
      **************************************************************************/
     private final class ExpansionListener implements TreeWillExpandListener
     {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void treeWillExpand( TreeExpansionEvent event )
             throws ExpandVetoException
@@ -619,6 +691,9 @@ public class DirectoryTree implements IView<JTree>
             expandDirectoryPath( path );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void treeWillCollapse( TreeExpansionEvent event )
             throws ExpandVetoException
@@ -632,15 +707,23 @@ public class DirectoryTree implements IView<JTree>
      **************************************************************************/
     private static class Renderer implements TreeCellRenderer
     {
+        /**  */
         private final DefaultTreeCellRenderer renderer;
+        /**  */
         private final Map<File, FileData> iconCache;
 
+        /**
+         * 
+         */
         public Renderer()
         {
             this.renderer = new DefaultTreeCellRenderer();
             this.iconCache = new HashMap<>();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public Component getTreeCellRendererComponent( JTree tree, Object value,
             boolean sel, boolean expanded, boolean leaf, int row,
@@ -675,9 +758,14 @@ public class DirectoryTree implements IView<JTree>
      **************************************************************************/
     private static final class FileData
     {
+        /**  */
         public final Icon icon;
+        /**  */
         public final String name;
 
+        /**
+         * @param file
+         */
         public FileData( File file )
         {
             this.icon = DirectoryTree.FILE_SYSTEM.getSystemIcon( file );
@@ -691,13 +779,20 @@ public class DirectoryTree implements IView<JTree>
     private static class FileDroppedListener
         implements ItemActionListener<IFileDropEvent>
     {
+        /**  */
         private final DirectoryTree tree;
 
+        /**
+         * @param tree
+         */
         public FileDroppedListener( DirectoryTree tree )
         {
             this.tree = tree;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ItemActionEvent<IFileDropEvent> event )
         {
@@ -723,20 +818,30 @@ public class DirectoryTree implements IView<JTree>
      **************************************************************************/
     private static class SelectionListener implements TreeSelectionListener
     {
+        /**  */
         private final DirectoryTree dirTree;
-
+        /**  */
         private boolean enabled;
 
+        /**
+         * @param dirTree
+         */
         public SelectionListener( DirectoryTree dirTree )
         {
             this.dirTree = dirTree;
         }
 
+        /**
+         * @param enabled
+         */
         public void setEnabled( boolean enabled )
         {
             this.enabled = enabled;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void valueChanged( TreeSelectionEvent e )
         {
