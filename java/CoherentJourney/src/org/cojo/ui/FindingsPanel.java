@@ -7,22 +7,34 @@ import java.util.List;
 
 import javax.swing.*;
 
-import org.cojo.model.IFinding;
+import org.cojo.data.Finding;
+import org.cojo.data.Project;
 import org.cojo.ui.tableModels.FindingTableModel;
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
 import org.jutils.ui.model.IView;
 import org.jutils.ui.model.ItemsTableModel;
 
+/*******************************************************************************
+ *
+ ******************************************************************************/
 public class FindingsPanel implements IView<JPanel>
 {
     /**  */
     private final JPanel view;
     /**  */
-    private final ItemsTableModel<IFinding> findingTableModel;
+    private final FindingTableModel tableConfig;
+    /**  */
+    private final ItemsTableModel<Finding> findingTableModel;
     /**  */
     private final JTable findingTable;
 
+    /**  */
+    private Project project;
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public FindingsPanel()
     {
         this.view = new JPanel( new GridBagLayout() );
@@ -30,7 +42,9 @@ public class FindingsPanel implements IView<JPanel>
         JButton addButton = new JButton();
         JButton editButton = new JButton();
         JButton deleteButton = new JButton();
-        findingTableModel = new ItemsTableModel<>( new FindingTableModel() );
+
+        tableConfig = new FindingTableModel();
+        findingTableModel = new ItemsTableModel<>( tableConfig );
         findingTable = new JTable( findingTableModel );
         JScrollPane findingScrollPane = new JScrollPane( findingTable );
 
@@ -73,7 +87,7 @@ public class FindingsPanel implements IView<JPanel>
     /***************************************************************************
      * @param findings
      **************************************************************************/
-    public void setData( List<IFinding> findings )
+    public void setData( List<Finding> findings )
     {
         findingTableModel.setItems( findings );
     }
@@ -91,8 +105,9 @@ public class FindingsPanel implements IView<JPanel>
         row = findingTable.convertRowIndexToModel( row );
         if( row > -1 )
         {
-            IFinding finding = findingTableModel.getItem( row );
+            Finding finding = findingTableModel.getItem( row );
 
+            findingPanel.setProject( project );
             findingPanel.setData( finding );
 
             dialog.setSize( 400, 400 );
@@ -103,11 +118,21 @@ public class FindingsPanel implements IView<JPanel>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JPanel getView()
     {
         return view;
+    }
+
+    /***************************************************************************
+     * @param project
+     **************************************************************************/
+    public void setProject( Project project )
+    {
+        this.project = project;
+
+        tableConfig.setProject( project );
     }
 }

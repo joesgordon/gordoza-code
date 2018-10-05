@@ -24,7 +24,7 @@ public class RightClickListener extends MouseAdapter
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void mouseClicked( MouseEvent e )

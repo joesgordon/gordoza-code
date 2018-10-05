@@ -5,7 +5,8 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
-import org.cojo.model.IChangeRequest;
+import org.cojo.data.ChangeRequest;
+import org.cojo.data.Project;
 import org.jutils.IconConstants;
 import org.jutils.ui.model.IView;
 
@@ -41,7 +42,7 @@ public class NotesPanel implements IView<JPanel>
     /***************************************************************************
      * @param changeRequest
      **************************************************************************/
-    public void setData( IChangeRequest changeRequest )
+    public void setData( ChangeRequest changeRequest )
     {
         // TODO Auto-generated method stub
     }
@@ -128,5 +129,11 @@ public class NotesPanel implements IView<JPanel>
     public JPanel getView()
     {
         return view;
+    }
+
+    public void setProject( Project project )
+    {
+        // TODO Auto-generated method stub
+
     }
 }

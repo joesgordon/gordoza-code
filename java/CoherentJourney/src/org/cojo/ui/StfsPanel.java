@@ -7,25 +7,29 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.*;
 
-import org.cojo.model.IChangeRequest;
-import org.cojo.model.ISoftwareTask;
+import org.cojo.data.*;
 import org.cojo.ui.tableModels.StfTableModel;
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
 import org.jutils.ui.model.IView;
 import org.jutils.ui.model.ItemsTableModel;
 
-/***************************************************************************
+/*******************************************************************************
  * 
- **************************************************************************/
+ ******************************************************************************/
 public class StfsPanel implements IView<JPanel>
 {
     /**  */
     private final JPanel view;
     /**  */
-    private final ItemsTableModel<ISoftwareTask> stfTableModel;
+    private final StfTableModel tableConfig;
     /**  */
-    private final JTable stfTable;
+    private final ItemsTableModel<SoftwareTask> tableModel;
+    /**  */
+    private final JTable table;
+
+    /**  */
+    private Project project;
 
     /***************************************************************************
      * 
@@ -33,8 +37,9 @@ public class StfsPanel implements IView<JPanel>
     public StfsPanel()
     {
         this.view = new JPanel( new BorderLayout() );
-        this.stfTableModel = new ItemsTableModel<>( new StfTableModel() );
-        this.stfTable = new JTable( stfTableModel );
+        this.tableConfig = new StfTableModel();
+        this.tableModel = new ItemsTableModel<>( tableConfig );
+        this.table = new JTable( tableModel );
 
         view.add( createToolbar(), BorderLayout.NORTH );
         view.add( createMainPanel(), BorderLayout.CENTER );
@@ -43,9 +48,9 @@ public class StfsPanel implements IView<JPanel>
     /***************************************************************************
      * @param cr
      **************************************************************************/
-    public void setData( IChangeRequest cr )
+    public void setData( ChangeRequest cr )
     {
-        stfTableModel.setItems( cr.getTasks() );
+        tableModel.setItems( cr.tasks );
     }
 
     /***************************************************************************
@@ -57,12 +62,13 @@ public class StfsPanel implements IView<JPanel>
         StfPanel stfPanel = new StfPanel();
         JEditDialog stfDialog = new JEditDialog( frame, stfPanel.getView() );
 
-        int row = stfTable.getSelectedRow();
-        row = stfTable.convertRowIndexToModel( row );
+        int row = table.getSelectedRow();
+        row = table.convertRowIndexToModel( row );
         if( row > -1 )
         {
-            ISoftwareTask task = stfTableModel.getItem( row );
+            SoftwareTask task = tableModel.getItem( row );
 
+            stfPanel.setProject( project );
             stfPanel.setData( task );
 
             stfDialog.setSize( 400, 400 );
@@ -78,13 +84,13 @@ public class StfsPanel implements IView<JPanel>
     private JPanel createMainPanel()
     {
         JPanel mainPanel = new JPanel( new BorderLayout() );
-        JScrollPane scrollPane = new JScrollPane( stfTable );
+        JScrollPane scrollPane = new JScrollPane( table );
 
-        stfTable.setAutoResizeMode( JTable.AUTO_RESIZE_LAST_COLUMN );
-        stfTable.getColumnModel().getColumn( 0 ).setPreferredWidth( 50 );
-        stfTable.getColumnModel().getColumn( 1 ).setPreferredWidth( 500 );
-        stfTable.getColumnModel().getColumn( 2 ).setPreferredWidth( 100 );
-        stfTable.addMouseListener( new MouseAdapter()
+        table.setAutoResizeMode( JTable.AUTO_RESIZE_LAST_COLUMN );
+        table.getColumnModel().getColumn( 0 ).setPreferredWidth( 50 );
+        table.getColumnModel().getColumn( 1 ).setPreferredWidth( 500 );
+        table.getColumnModel().getColumn( 2 ).setPreferredWidth( 100 );
+        table.addMouseListener( new MouseAdapter()
         {
             @Override
             public void mouseClicked( MouseEvent e )
@@ -130,9 +136,22 @@ public class StfsPanel implements IView<JPanel>
         return toolbar;
     }
 
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
     @Override
     public JPanel getView()
     {
         return view;
+    }
+
+    /***************************************************************************
+     * @param project
+     **************************************************************************/
+    public void setProject( Project project )
+    {
+        this.project = project;
+
+        tableConfig.setProject( project );
     }
 }

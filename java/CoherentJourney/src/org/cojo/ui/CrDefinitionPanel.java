@@ -5,7 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
-import org.cojo.model.IChangeRequest;
+import org.cojo.data.ChangeRequest;
 import org.jutils.IconConstants;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
@@ -50,10 +50,6 @@ public class CrDefinitionPanel implements IView<JPanel>
 
     /**  */
     private final JTextArea descriptionField;
-    /**  */
-    private final JTextArea rationaleField;
-    /**  */
-    private final JTextArea impactField;
     /**  */
     private final IccbPanel iccbPanel;
 
@@ -114,14 +110,6 @@ public class CrDefinitionPanel implements IView<JPanel>
         descriptionField.setText( "Doesn't work right" );
         addArea( view, "Description", descriptionField, 10 );
 
-        rationaleField = new JTextArea();
-        rationaleField.setText( "Because it doesn't work right" );
-        addArea( view, "Rationale", rationaleField, 11 );
-
-        impactField = new JTextArea();
-        impactField.setText( "The bit that's supposed to work" );
-        addArea( view, "Impact", impactField, 12 );
-
         // ---------------------------------------------------------------------
         // Column 2
         // ---------------------------------------------------------------------
@@ -163,11 +151,9 @@ public class CrDefinitionPanel implements IView<JPanel>
     /***************************************************************************
      * @param cr
      **************************************************************************/
-    public void setData( IChangeRequest cr )
+    public void setData( ChangeRequest cr )
     {
-        descriptionField.setText( cr.getDescription() );
-        impactField.setText( cr.getImpact() );
-        rationaleField.setText( cr.getRationale() );
+        descriptionField.setText( cr.description );
     }
 
     /***************************************************************************

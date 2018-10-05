@@ -1,61 +1,32 @@
 package org.cojo.data;
 
-import org.cojo.model.IFinding;
-import org.cojo.model.IUser;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
-public class Finding implements IFinding
+public class Finding
 {
-    private int number;
-    private IUser user;
-    private long date;
-    private String description;
-    private boolean accepted;
-    private String comments;
+    public int id;
+    public int userId;
+    public LocalDateTime time;
+    public String description;
+    public boolean accepted;
+    public String comments;
 
-    public Finding( int number, IUser user, long date, String description,
+    /**
+     * @param id
+     * @param userId
+     * @param description
+     * @param accepted
+     * @param comments
+     */
+    public Finding( int id, int userId, String description,
         boolean accepted, String comments )
     {
-        this.number = number;
-        this.user = user;
-        this.date = date;
+        this.id = id;
+        this.userId = userId;
+        this.time = LocalDateTime.now( ZoneOffset.UTC );
         this.description = description;
         this.accepted = accepted;
         this.comments = comments;
-    }
-
-    @Override
-    public String getComments()
-    {
-        return comments;
-    }
-
-    @Override
-    public long getDate()
-    {
-        return date;
-    }
-
-    @Override
-    public String getDescription()
-    {
-        return description;
-    }
-
-    @Override
-    public int getNumber()
-    {
-        return number;
-    }
-
-    @Override
-    public IUser getUser()
-    {
-        return user;
-    }
-
-    @Override
-    public boolean isAccepted()
-    {
-        return accepted;
     }
 }

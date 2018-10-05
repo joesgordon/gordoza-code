@@ -1,12 +1,12 @@
 package org.cojo.ui;
 
 import java.awt.*;
-import java.util.Date;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
-import org.cojo.model.IFinding;
+import org.cojo.data.Finding;
+import org.cojo.data.Project;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
@@ -28,6 +28,7 @@ public class FindingPanel implements IView<JPanel>
     private final JTextArea descriptionField;
     /**  */
     private final JTextArea commentsField;
+    private Project project;
 
     /***************************************************************************
      * 
@@ -50,16 +51,14 @@ public class FindingPanel implements IView<JPanel>
     /***************************************************************************
      * @param finding
      **************************************************************************/
-    public void setData( IFinding finding )
+    public void setData( Finding finding )
     {
-        Date d = new Date( finding.getDate() );
-
-        numberField.setText( "" + finding.getNumber() );
-        userField.setText( finding.getUser().getName() );
-        dateField.setText( d.toString() );
-        acceptedField.setSelected( finding.isAccepted() );
-        descriptionField.setText( finding.getDescription() );
-        commentsField.setText( finding.getComments() );
+        numberField.setText( "" + finding.id );
+        userField.setText( project.getUser( finding.userId ).name );
+        dateField.setText( finding.time.toString() );
+        acceptedField.setSelected( finding.accepted );
+        descriptionField.setText( finding.description );
+        commentsField.setText( finding.comments );
     }
 
     /***************************************************************************
@@ -145,5 +144,10 @@ public class FindingPanel implements IView<JPanel>
     public JPanel getView()
     {
         return view;
+    }
+
+    public void setProject( Project project )
+    {
+        this.project = project;
     }
 }

@@ -1,30 +1,23 @@
 package org.cojo.data;
 
-import org.cojo.model.IUser;
-
-public class User implements IUser
+/**
+ *
+ */
+public class User
 {
     /**  */
-    private String username;
-    /**  */
-    private String name;
+    public final int userId;
 
-    public User( String username, String name )
+    /**  */
+    public String name;
+
+    /**
+     * @param userId
+     * @param name
+     */
+    public User( int userId, String name )
     {
-        this.username = username;
+        this.userId = userId;
         this.name = name;
     }
-
-    @Override
-    public String getName()
-    {
-        return name;
-    }
-
-    @Override
-    public String getUsername()
-    {
-        return username;
-    }
-
 }

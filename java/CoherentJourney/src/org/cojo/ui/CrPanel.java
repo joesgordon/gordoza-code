@@ -5,7 +5,8 @@ import java.awt.*;
 import javax.swing.*;
 
 import org.cojo.CojoIconLoader;
-import org.cojo.model.IChangeRequest;
+import org.cojo.data.ChangeRequest;
+import org.cojo.data.Project;
 import org.jutils.IconConstants;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
@@ -30,6 +31,7 @@ public class CrPanel implements IView<JPanel>
     private final JPanel thirdPartyPanel;
     private final JPanel systemEngineeringPanel;
     private final FindingsPanel designPanel;
+    private Project project;
 
     /***************************************************************************
      * 
@@ -55,16 +57,16 @@ public class CrPanel implements IView<JPanel>
     /***************************************************************************
      * @param changeRequest
      **************************************************************************/
-    public void setData( IChangeRequest cr )
+    public void setData( ChangeRequest changeRequest )
     {
-        numberLabel.setText( "CR # " + cr.getNumber() );
-        titleField.setText( cr.getTitle() );
-        stateField.setText( cr.getState().toString() );
+        numberLabel.setText( "CR # " + changeRequest.id );
+        titleField.setText( changeRequest.title );
+        stateField.setText( changeRequest.state.toString() );
 
-        crDefinitionPanel.setData( cr );
-        stfsPanel.setData( cr );
-        notesPanel.setData( cr );
-        designPanel.setData( cr.getDesignReviews() );
+        crDefinitionPanel.setData( changeRequest );
+        stfsPanel.setData( changeRequest );
+        notesPanel.setData( changeRequest );
+        designPanel.setData( changeRequest.reviews );
     }
 
     /***************************************************************************
@@ -159,9 +161,9 @@ public class CrPanel implements IView<JPanel>
         return mainPanel;
     }
 
-    /**
+    /***************************************************************************
      * @param show
-     */
+     **************************************************************************/
     private void showSystemEngineeringTab( boolean show )
     {
         int idx = mainTabbedPane.indexOfComponent( systemEngineeringPanel );
@@ -177,9 +179,9 @@ public class CrPanel implements IView<JPanel>
         }
     }
 
-    /**
+    /***************************************************************************
      * @param show
-     */
+     **************************************************************************/
     private void showThirdPartyTab( boolean show )
     {
         int idx = mainTabbedPane.indexOfComponent( thirdPartyPanel );
@@ -223,11 +225,23 @@ public class CrPanel implements IView<JPanel>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JPanel getView()
     {
         return view;
+    }
+
+    /***************************************************************************
+     * @param project
+     **************************************************************************/
+    public void setProject( Project project )
+    {
+        this.project = project;
+
+        stfsPanel.setProject( project );
+        notesPanel.setProject( project );
+        designPanel.setProject( project );
     }
 }

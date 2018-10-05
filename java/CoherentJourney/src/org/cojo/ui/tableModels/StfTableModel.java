@@ -1,12 +1,13 @@
 package org.cojo.ui.tableModels;
 
-import org.cojo.model.ISoftwareTask;
+import org.cojo.data.Project;
+import org.cojo.data.SoftwareTask;
 import org.jutils.ui.model.ITableItemsConfig;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class StfTableModel implements ITableItemsConfig<ISoftwareTask>
+public class StfTableModel implements ITableItemsConfig<SoftwareTask>
 {
     /**  */
     private static final String [] COLUMN_HEADING = { "#", "Title", "Lead",
@@ -15,8 +16,27 @@ public class StfTableModel implements ITableItemsConfig<ISoftwareTask>
     private static final Class<?> [] COLUMN_CLASSES = { Integer.class,
         String.class, String.class, Integer.class, Integer.class };
 
+    /**  */
+    private Project project;
+
     /***************************************************************************
      * 
+     **************************************************************************/
+    public StfTableModel()
+    {
+        this.project = new Project();
+    }
+
+    /***************************************************************************
+     * @param project
+     **************************************************************************/
+    public void setProject( Project project )
+    {
+        this.project = project;
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public String [] getColumnNames()
@@ -25,7 +45,7 @@ public class StfTableModel implements ITableItemsConfig<ISoftwareTask>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public Class<?> [] getColumnClasses()
@@ -34,41 +54,41 @@ public class StfTableModel implements ITableItemsConfig<ISoftwareTask>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
-    public Object getItemData( ISoftwareTask item, int col )
+    public Object getItemData( SoftwareTask item, int col )
     {
         switch( col )
         {
             case 0:
-                return item.getNumber();
+                return item.id;
             case 1:
-                return item.getTitle();
+                return item.title;
             case 2:
-                return item.getLead().getName();
+                return project.getUser( item.leadUserId ).name;
             case 3:
-                return item.getEstimatedHours();
+                return item.estimatedHours;
             case 4:
-                return item.getActualHours();
+                return item.actualHours;
         }
 
         throw new IllegalArgumentException( "Unknown column: " + col );
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
-    public void setItemData( ISoftwareTask item, int col, Object data )
+    public void setItemData( SoftwareTask item, int col, Object data )
     {
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
-    public boolean isCellEditable( ISoftwareTask item, int col )
+    public boolean isCellEditable( SoftwareTask item, int col )
     {
         return false;
     }

@@ -17,21 +17,32 @@ import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileDropTarget.DropActionType;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
 import org.jutils.ui.model.IView;
+import org.jutils.utils.IteratorEnumerationAdapter;
 
 /*******************************************************************************
- * 
+ * Displays a tree of directories which do not get loaded until the user expands
+ * the tree node. This has the unfortunate consequence of having a '+' next to
+ * empty directories until it is clicked. This feature exists because there is
+ * not an interruptable way to list a directory and it sometimes takes 30
+ * seconds to load the "Network" directory in windows.
  ******************************************************************************/
 public class DirectoryTree implements IView<JTree>
 {
-    /**  */
-    public static final FileSystemView FILE_SYSTEM = FileSystemView.getFileSystemView();
+    /**
+     * The file system view used to get the roots of the file system and icons
+     * of files.
+     */
+    private static final FileSystemView FILE_SYSTEM = FileSystemView.getFileSystemView();
 
-    /**  */
+    /** The tree that displays the file system. */
     private final JTree tree;
-    /**  */
+    /**
+     * The root node of the file system. This will contain a null file and will
+     * not be displayed.
+     */
     private final FileTreeNode root;
     /**  */
-    private final FileTreeModel treeModel;
+    private final DefaultTreeModel treeModel;
     /**  */
     private final ItemActionList<List<File>> selectedListeners;
     /**  */
@@ -59,7 +70,7 @@ public class DirectoryTree implements IView<JTree>
     private DirectoryTree( FileTreeNode root )
     {
         this.root = root;
-        this.treeModel = new FileTreeModel( root );
+        this.treeModel = new DefaultTreeModel( root );
         this.tree = new JTree( treeModel );
         this.selectedListeners = new ItemActionList<>();
         this.localSelectedListener = new SelectionListener( this );
@@ -73,7 +84,7 @@ public class DirectoryTree implements IView<JTree>
         tree.setCellRenderer( new Renderer() );
         tree.addTreeWillExpandListener( new ExpansionListener() );
 
-        tree.setModel( new DefaultTreeModel( root ) );
+        tree.setModel( treeModel );
 
         tree.setDropTarget(
             new FileDropTarget( new FileDroppedListener( this ) ) );
@@ -133,7 +144,7 @@ public class DirectoryTree implements IView<JTree>
             }
             else
             {
-                LogUtils.printDebug( "Node not a DirNode: " + lpc.toString() +
+                LogUtils.printWarning( "Node not a DirNode: " + lpc.toString() +
                     " of class " + lpc.getClass().getName() );
             }
         }
@@ -171,7 +182,7 @@ public class DirectoryTree implements IView<JTree>
 
         TreePath [] treePaths = getTreePaths( dirs );
 
-        // LogUtils.printDebug( "DEBUG: Selecting " + dirs.length + "
+        // LogUtils.printDebug( "Selecting " + dirs.length + "
         // directories"
         // );
 
@@ -195,6 +206,21 @@ public class DirectoryTree implements IView<JTree>
     /***************************************************************************
      * 
      **************************************************************************/
+    public void expandSelected()
+    {
+        TreePath path = tree.getSelectionPath();
+
+        if( path != null )
+        {
+            // LogUtils.printDebug( "Expanding %s",
+            // path.getLastPathComponent().toString() );
+            tree.expandPath( path );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public void refreshSelected()
     {
         TreePath [] paths = tree.getSelectionPaths();
@@ -206,8 +232,7 @@ public class DirectoryTree implements IView<JTree>
                 Object lastComp = path.getLastPathComponent();
                 FileTreeNode node = ( FileTreeNode )lastComp;
 
-                node.loadChildren();
-                treeModel.reload( node );
+                refreshNode( node );
             }
         }
     }
@@ -233,7 +258,7 @@ public class DirectoryTree implements IView<JTree>
             }
             else
             {
-                System.err.println( dir.getAbsolutePath() +
+                LogUtils.printError( dir.getAbsolutePath() +
                     " is not an ancestor of any system root" );
             }
         }
@@ -268,7 +293,7 @@ public class DirectoryTree implements IView<JTree>
 
             if( node == null )
             {
-                System.err.println(
+                LogUtils.printError(
                     "Could not find path " + dir.getAbsolutePath() + ":" +
                         filesPath[i].getName() + " in " + dmtr.toString() );
                 path = SwingUtils.getPath( dmtr );
@@ -344,17 +369,16 @@ public class DirectoryTree implements IView<JTree>
             }
             else if( file.getAbsoluteFile().equals( dir.getAbsoluteFile() ) )
             {
-                LogUtils.printDebug( "DEBUG: Same path different files ? " +
+                LogUtils.printWarning( "Same path different files ? " +
                     dir.getPath() + ":" + file.getPath() );
                 return fn;
             }
             else if( file.getAbsolutePath().compareTo(
                 dir.getAbsolutePath() ) == 0 )
             {
-                LogUtils.printDebug( "DEBUG: Somehow " +
-                    file.getAbsolutePath() + " which is a " + file.getClass() +
-                    " != " + dir.getAbsolutePath() + " which is a " +
-                    file.getClass() );
+                LogUtils.printWarning( "Somehow " + file.getAbsolutePath() +
+                    " which is a " + file.getClass() + " != " +
+                    dir.getAbsolutePath() + " which is a " + file.getClass() );
                 return fn;
             }
         }
@@ -365,21 +389,58 @@ public class DirectoryTree implements IView<JTree>
     /***************************************************************************
      * @param path
      **************************************************************************/
-    private static void expandDirectoryPath( TreePath path )
+    private void expandDirectoryPath( TreePath path )
     {
         Object lastComp = path.getLastPathComponent();
         FileTreeNode node = ( FileTreeNode )lastComp;
 
         if( node.getChildCount() == 0 )
         {
-            node.loadChildren();
+            refreshNode( node );
         }
+    }
+
+    /***************************************************************************
+     * @param node
+     **************************************************************************/
+    private void refreshNode( FileTreeNode node )
+    {
+        File [] files = null;
+
+        try
+        {
+            files = node.file.listFiles();
+
+        }
+        catch( SecurityException ex )
+        {
+            files = null;
+        }
+
+        files = files == null ? new File[0] : files;
+
+        Arrays.sort( files );
+
+        node.children.clear();
+
+        for( File f : files )
+        {
+            if( f.isDirectory() )
+            {
+                // LogUtils.printDebug( "Adding %s to %s", f.getName(),
+                // node.file.getAbsolutePath() );
+                node.children.add( new FileTreeNode( node, f ) );
+            }
+        }
+
+        // treeModel.reload( node );
+        treeModel.nodeStructureChanged( node );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private static final class FileTreeNode implements TreeNode
+    private static final class FileTreeNode implements MutableTreeNode
     {
         /**  */
         public final FileTreeNode parent;
@@ -390,7 +451,7 @@ public class DirectoryTree implements IView<JTree>
         private final List<FileTreeNode> children;
 
         /**
-         * 
+         * Creates the root node for a file system.
          */
         public FileTreeNode()
         {
@@ -498,180 +559,65 @@ public class DirectoryTree implements IView<JTree>
         @Override
         public Enumeration<FileTreeNode> children()
         {
-            return new EnumeratedIterator<>( children.iterator() );
-        }
-
-        /**
-         * 
-         */
-        public void loadChildren()
-        {
-            File [] files = null;
-
-            try
-            {
-                files = file.listFiles();
-
-            }
-            catch( SecurityException ex )
-            {
-                files = null;
-            }
-
-            files = files == null ? new File[0] : files;
-
-            Arrays.sort( files );
-
-            children.clear();
-
-            for( File f : files )
-            {
-                if( f.isDirectory() )
-                {
-                    children.add( new FileTreeNode( this, f ) );
-                }
-            }
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static final class EnumeratedIterator<T> implements Enumeration<T>
-    {
-        /**  */
-        private final Iterator<T> iterator;
-
-        /**
-         * @param iterator
-         */
-        public EnumeratedIterator( Iterator<T> iterator )
-        {
-            this.iterator = iterator;
+            return new IteratorEnumerationAdapter<>( children.iterator() );
         }
 
         /**
          * {@inheritDoc}
          */
         @Override
-        public boolean hasMoreElements()
+        public void insert( MutableTreeNode child, int index )
         {
-            return iterator.hasNext();
+            FileTreeNode fileTreeChild = ( FileTreeNode )child;
+
+            children.add( index, fileTreeChild );
         }
 
         /**
          * {@inheritDoc}
          */
         @Override
-        public T nextElement()
+        public void remove( int index )
         {
-            return iterator.next();
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private final class FileTreeModel implements TreeModel
-    {
-        private final DefaultTreeModel model;
-
-        /**
-         * @param node
-         */
-        private FileTreeModel( FileTreeNode node )
-        {
-            this.model = new DefaultTreeModel( node );
+            children.remove( index );
         }
 
         /**
          * {@inheritDoc}
          */
         @Override
-        public Object getRoot()
+        public void remove( MutableTreeNode child )
         {
-            return model.getRoot();
+            FileTreeNode fileTreeChild = ( FileTreeNode )child;
+
+            children.remove( fileTreeChild );
         }
 
         /**
          * {@inheritDoc}
          */
         @Override
-        public Object getChild( Object parent, int index )
+        public void setUserObject( Object object )
         {
-            return model.getChild( parent, index );
+            throw new UnsupportedOperationException();
         }
 
         /**
          * {@inheritDoc}
          */
         @Override
-        public int getChildCount( Object parent )
+        public void removeFromParent()
         {
-            return model.getChildCount( parent );
+            parent.remove( this );
         }
 
         /**
          * {@inheritDoc}
          */
         @Override
-        public boolean isLeaf( Object node )
+        public void setParent( MutableTreeNode newParent )
         {
-            if( node instanceof FileTreeNode )
-            {
-                FileTreeNode fileNode = ( FileTreeNode )node;
-                if( fileNode.file != null )
-                {
-                    return !fileNode.file.isDirectory();
-                }
-            }
-
-            return model.isLeaf( node );
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void valueForPathChanged( TreePath path, Object newValue )
-        {
-            model.valueForPathChanged( path, newValue );
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public int getIndexOfChild( Object parent, Object child )
-        {
-            return model.getIndexOfChild( parent, child );
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void addTreeModelListener( TreeModelListener l )
-        {
-            model.addTreeModelListener( l );
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void removeTreeModelListener( TreeModelListener l )
-        {
-            model.removeTreeModelListener( l );
-        }
-
-        /**
-         * @param node
-         */
-        public void reload( FileTreeNode node )
-        {
-            model.reload( node );
-            model.nodeStructureChanged( node );
+            throw new UnsupportedOperationException();
         }
     }
 
@@ -688,6 +634,7 @@ public class DirectoryTree implements IView<JTree>
             throws ExpandVetoException
         {
             TreePath path = event.getPath();
+
             expandDirectoryPath( path );
         }
 

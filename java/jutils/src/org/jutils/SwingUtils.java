@@ -11,9 +11,12 @@ import javax.swing.*;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import org.jutils.io.IParser;
 import org.jutils.io.XStreamUtils;
+import org.jutils.ui.StandardFormView;
 import org.jutils.ui.StatusBarPanel;
 import org.jutils.ui.event.*;
+import org.jutils.ui.fields.ParserFormField;
 import org.jutils.ui.model.IDataView;
 
 import com.thoughtworks.xstream.XStreamException;
@@ -306,6 +309,52 @@ public final class SwingUtils
         // TODO because JOptionPane sometimes returns -1.
 
         return okText.equals( pane.getValue() );
+    }
+
+    /***************************************************************************
+     * Prompts for a name of an item using a {@link JOptionPane}.
+     * @param <T>
+     * @param parent
+     * @param name
+     * @param parser
+     * @param message
+     * @return the value entered by the user or {@code null} if cancelled or
+     * invalid.
+     **************************************************************************/
+    public static <T> T promptForValue( Component parent, String name,
+        IParser<T> parser, String message )
+    {
+        return promptForValue( parent, name, parser, new JLabel( message ) );
+    }
+
+    /***************************************************************************
+     * @param <T>
+     * @param parent
+     * @param name
+     * @param parser
+     * @param message
+     * @return
+     **************************************************************************/
+    public static <T> T promptForValue( Component parent, String name,
+        IParser<T> parser, JComponent message )
+    {
+        ParserFormField<T> field = new ParserFormField<>( name, parser );
+        T value = null;
+        StandardFormView form = new StandardFormView();
+
+        form.addComponent( message );
+        form.addField( field );
+
+        int result = JOptionPane.showConfirmDialog( parent, form.getView(),
+            "Enter " + name, JOptionPane.OK_CANCEL_OPTION,
+            JOptionPane.QUESTION_MESSAGE );
+
+        if( result == JOptionPane.OK_OPTION && field.getValidity().isValid )
+        {
+            value = field.getValue();
+        }
+
+        return value;
     }
 
     /***************************************************************************

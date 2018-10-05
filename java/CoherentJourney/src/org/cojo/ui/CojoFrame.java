@@ -1,15 +1,19 @@
 package org.cojo.ui;
 
-import java.awt.BorderLayout;
-import java.util.*;
+import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.*;
 
-import org.cojo.data.*;
-import org.cojo.model.*;
+import org.cojo.data.Project;
 import org.jutils.IconConstants;
+import org.jutils.SwingUtils;
 import org.jutils.ui.JGoodiesToolBar;
 import org.jutils.ui.StandardFrameView;
+import org.jutils.ui.event.ActionAdapter;
+import org.jutils.ui.event.FileChooserListener;
+import org.jutils.ui.event.FileChooserListener.IFileSelected;
+import org.jutils.ui.event.FileChooserListener.ILastFile;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
@@ -17,9 +21,10 @@ import org.jutils.ui.model.IView;
  ******************************************************************************/
 public class CojoFrame implements IView<JFrame>
 {
+    /**  */
     private final StandardFrameView frameView;
-    private final CrsPanel crsPanel;
-    private final CrPanel crPanel;
+    /**  */
+    private final CojoPanel mainPanel;
 
     /***************************************************************************
      * 
@@ -27,117 +32,92 @@ public class CojoFrame implements IView<JFrame>
     public CojoFrame()
     {
         this.frameView = new StandardFrameView();
-        this.crsPanel = new CrsPanel();
-        this.crPanel = new CrPanel();
+        this.mainPanel = new CojoPanel();
 
         frameView.setToolbar( createToolBar() );
-        frameView.setContent( createMainPanel() );
+        frameView.setContent( mainPanel.getView() );
 
         frameView.setTitle( "CoherentJourney v1.0" );
         frameView.setSize( 800, 600 );
-
-        setDefaultData();
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    private JPanel createMainPanel()
+    private JToolBar createToolBar()
     {
-        JPanel mainPanel = new JPanel( new BorderLayout() );
-        JSplitPane mainSplitPane = new JSplitPane( JSplitPane.VERTICAL_SPLIT );
+        JToolBar toolbar = new JGoodiesToolBar();
 
-        mainSplitPane.setTopComponent( crsPanel.getView() );
-        mainSplitPane.setBottomComponent( crPanel.getView() );
-        mainSplitPane.validate();
-        mainSplitPane.setDividerLocation( 100 );
+        SwingUtils.addActionToToolbar( toolbar, createNewAction() );
+        SwingUtils.addActionToToolbar( toolbar, createOpenAction() );
+        SwingUtils.addActionToToolbar( toolbar, createSaveAction() );
 
-        mainPanel.add( mainSplitPane, BorderLayout.CENTER );
-
-        return mainPanel;
+        return toolbar;
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    private void setDefaultData()
+    private Action createNewAction()
     {
-        IChangeRequest cr = createDefaultCr();
-        List<IChangeRequest> crs = new ArrayList<IChangeRequest>();
-        crs.add( cr );
-
-        crsPanel.setData( crs );
-        crPanel.setData( cr );
+        ActionListener listener = ( e ) -> createNewProject();
+        Icon icon = IconConstants.getIcon( IconConstants.NEW_FILE_16 );
+        return new ActionAdapter( listener, "New Project", icon );
     }
 
     /***************************************************************************
-     * @return
+     * 
      **************************************************************************/
-    private static ChangeRequest createDefaultCr()
+    private Action createOpenAction()
     {
-        ChangeRequest cr = new ChangeRequest( 154 );
-        List<ISoftwareTask> tasks = new ArrayList<ISoftwareTask>();
-
-        IUser ajRimmer = new User( "ajrimmer", "Arnold Rimmer" );
-        IUser dmLister = new User( "dmlister", "Dave Lister" );
-
-        String designComment = "Don't you think that a little more design needs to be done than, \"Not like a fish?\"";
-
-        List<IFinding> findings = new ArrayList<IFinding>();
-        findings.add( new Finding( 1, dmLister, ( new Date() ).getTime(),
-            "Not like a fish.", false, designComment ) );
-
-        cr.setTitle( "Update the Software to be Less Atrocious" );
-        cr.setDescription( "Doesn't work right" );
-        cr.setImpact( "The bit that's supposed to work" );
-        cr.setRationale( "Because it doesn't work right" );
-        cr.setState( CrState.InWork );
-        cr.setDesignReviews( findings );
-
-        tasks.add(
-            new SoftwareTask( 1, "Make stuff work", ajRimmer, 1, 6, false,
-                "Do the quick fix", "Push the button", "Get banana", null ) );
-        tasks.add( new SoftwareTask( 2, "Make Arnold's stuff work correctly",
-            dmLister, 200, 66, true, "Fix Rimmer's \"quick\" fix",
-            "Push the button", "watch it work", null ) );
-
-        cr.setTasks( tasks );
-
-        return cr;
+        IFileSelected ifs = ( f ) -> openProject( f );
+        ILastFile ilf = null; // TODO read from options
+        FileChooserListener listener = new FileChooserListener( getView(),
+            "Open Project", false, ifs, ilf );
+        Icon icon = IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 );
+        return new ActionAdapter( listener, "Open Project", icon );
     }
 
     /***************************************************************************
-     * @return
+     * 
      **************************************************************************/
-    private static JToolBar createToolBar()
+    private Action createSaveAction()
     {
-        JToolBar toolbar = new JGoodiesToolBar();
-
-        JButton newButton = new JButton();
-        JButton openButton = new JButton();
-        JButton saveButton = new JButton();
-
-        newButton.setIcon( IconConstants.getIcon( IconConstants.NEW_FILE_16 ) );
-        newButton.setFocusable( false );
-
-        openButton.setIcon(
-            IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
-        openButton.setFocusable( false );
-
-        saveButton.setIcon( IconConstants.getIcon( IconConstants.SAVE_16 ) );
-        saveButton.setFocusable( false );
-
-        toolbar.add( newButton );
-        toolbar.add( openButton );
-        toolbar.add( saveButton );
-
-        toolbar.setFloatable( false );
-        toolbar.setRollover( true );
-        toolbar.setBorderPainted( false );
-
-        return toolbar;
+        IFileSelected ifs = ( f ) -> saveProject( f );
+        ILastFile ilf = null; // TODO read from options
+        FileChooserListener listener = new FileChooserListener( getView(),
+            "Save Project", true, ifs, ilf );
+        Icon icon = IconConstants.getIcon( IconConstants.SAVE_16 );
+        return new ActionAdapter( listener, "Save Project", icon );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private void createNewProject()
+    {
+        mainPanel.setData( new Project() );
+    }
+
+    /***************************************************************************
+     * @param file
+     **************************************************************************/
+    private void openProject( File file )
+    {
+        // TODO Open project
+    }
+
+    /***************************************************************************
+     * @param file
+     **************************************************************************/
+    private void saveProject( File file )
+    {
+        // TODO Save project
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
     @Override
     public JFrame getView()
     {

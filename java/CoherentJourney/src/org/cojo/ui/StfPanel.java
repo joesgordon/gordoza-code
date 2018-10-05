@@ -5,8 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
-import org.cojo.model.ISoftwareTask;
-import org.cojo.model.IUser;
+import org.cojo.data.*;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
@@ -19,7 +18,7 @@ public class StfPanel implements IView<JPanel>
 
     private final JTextField numberField;
     private final JTextField titleField;
-    private final JComboBox<IUser> leadField;
+    private final JComboBox<User> leadField;
     private final JCheckBox codeReviewField;
     private final JTextField estimatedHoursField;
     private final JTextField actualHoursField;
@@ -28,6 +27,7 @@ public class StfPanel implements IView<JPanel>
     private final JTextArea unitTestResultsField;
 
     private final FindingsPanel codeReviewPanel;
+    private Project project;
 
     /***************************************************************************
      * 
@@ -37,7 +37,7 @@ public class StfPanel implements IView<JPanel>
         this.view = new JPanel( new BorderLayout() );
         this.numberField = new JTextField( 25 );
         this.titleField = new JTextField();
-        this.leadField = new JComboBox<IUser>();
+        this.leadField = new JComboBox<User>();
         this.codeReviewField = new JCheckBox();
         this.estimatedHoursField = new JTextField();
         this.actualHoursField = new JTextField();
@@ -64,17 +64,17 @@ public class StfPanel implements IView<JPanel>
     /***************************************************************************
      * @param task
      **************************************************************************/
-    public void setData( ISoftwareTask task )
+    public void setData( SoftwareTask task )
     {
-        numberField.setText( "" + task.getNumber() );
-        titleField.setText( task.getTitle() );
-        leadField.setSelectedItem( task.getLead() );
-        codeReviewField.setSelected( task.isCodeReviewRequired() );
-        estimatedHoursField.setText( "" + task.getEstimatedHours() );
-        actualHoursField.setText( "" + task.getActualHours() );
-        descriptionField.setText( task.getDescription() );
-        unitTestDescField.setText( task.getUnitTestDescription() );
-        unitTestResultsField.setText( task.getUnitTestResults() );
+        numberField.setText( "" + task.id );
+        titleField.setText( task.title );
+        leadField.setSelectedItem( project.getUser( task.leadUserId ) );
+        codeReviewField.setSelected( task.codeReviewRequired );
+        estimatedHoursField.setText( "" + task.estimatedHours );
+        actualHoursField.setText( "" + task.actualHours );
+        descriptionField.setText( task.description );
+        unitTestDescField.setText( task.unitTestDescription );
+        unitTestResultsField.setText( task.unitTestResults );
     }
 
     /***************************************************************************
@@ -159,5 +159,10 @@ public class StfPanel implements IView<JPanel>
     public JPanel getView()
     {
         return view;
+    }
+
+    public void setProject( Project project )
+    {
+        this.project = project;
     }
 }

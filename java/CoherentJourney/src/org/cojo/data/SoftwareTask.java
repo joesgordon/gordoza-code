@@ -2,44 +2,42 @@ package org.cojo.data;
 
 import java.util.List;
 
-import org.cojo.model.*;
-
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class SoftwareTask implements ISoftwareTask
+public class SoftwareTask
 {
     /**  */
-    private int number;
+    public int id;
     /**  */
-    private String title;
+    public String title;
     /**  */
-    private IUser lead;
+    public int leadUserId;
     /**  */
-    private int estimatedHours;
+    public int estimatedHours;
     /**  */
-    private int actualHours;
+    public int actualHours;
     /**  */
-    private boolean codeReviewRequired;
+    public boolean codeReviewRequired;
     /**  */
-    private String description;
+    public String description;
     /**  */
-    private String unitTestDescription;
+    public String unitTestDescription;
     /**  */
-    private String unitTestResults;
+    public String unitTestResults;
     /**  */
-    private List<IFinding> codeReviews;
+    public List<Finding> codeReviews;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public SoftwareTask( int number, String title, IUser lead, int estHours,
+    public SoftwareTask( int id, String title, int leadUserId, int estHours,
         int actHours, boolean codeRevRequired, String desc, String utDesc,
-        String utResults, List<IFinding> codeReviews )
+        String utResults, List<Finding> codeReviews )
     {
-        this.number = number;
+        this.id = id;
         this.title = title;
-        this.lead = lead;
+        this.leadUserId = leadUserId;
         this.estimatedHours = estHours;
         this.actualHours = actHours;
         this.codeReviewRequired = codeRevRequired;
@@ -48,95 +46,5 @@ public class SoftwareTask implements ISoftwareTask
         this.unitTestDescription = utDesc;
         this.unitTestResults = utResults;
         this.codeReviews = codeReviews;
-    }
-
-    /***************************************************************************
-     * {@inheritDoc}
-     **************************************************************************/
-    @Override
-    public int getActualHours()
-    {
-        return actualHours;
-    }
-
-    /***************************************************************************
-     * {@inheritDoc}
-     **************************************************************************/
-    @Override
-    public int getEstimatedHours()
-    {
-        return estimatedHours;
-    }
-
-    /***************************************************************************
-     * {@inheritDoc}
-     **************************************************************************/
-    @Override
-    public IUser getLead()
-    {
-        return lead;
-    }
-
-    /***************************************************************************
-     * {@inheritDoc}
-     **************************************************************************/
-    @Override
-    public int getNumber()
-    {
-        return number;
-    }
-
-    /***************************************************************************
-     * {@inheritDoc}
-     **************************************************************************/
-    @Override
-    public String getTitle()
-    {
-        return title;
-    }
-
-    /***************************************************************************
-     * {@inheritDoc}
-     **************************************************************************/
-    @Override
-    public boolean isCodeReviewRequired()
-    {
-        return codeReviewRequired;
-    }
-
-    /***************************************************************************
-     * {@inheritDoc}
-     **************************************************************************/
-    @Override
-    public String getDescription()
-    {
-        return description;
-    }
-
-    /***************************************************************************
-     * {@inheritDoc}
-     **************************************************************************/
-    @Override
-    public String getUnitTestDescription()
-    {
-        return unitTestDescription;
-    }
-
-    /***************************************************************************
-     * {@inheritDoc}
-     **************************************************************************/
-    @Override
-    public String getUnitTestResults()
-    {
-        return unitTestResults;
-    }
-
-    /***************************************************************************
-     * {@inheritDoc}
-     **************************************************************************/
-    @Override
-    public List<IFinding> getCodeReviews()
-    {
-        return codeReviews;
     }
 }

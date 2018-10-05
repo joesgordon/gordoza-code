@@ -3,156 +3,40 @@ package org.cojo.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cojo.model.*;
-
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ChangeRequest implements IChangeRequest
+public class ChangeRequest
 {
-    private int number;
-    private String title;
-    private String description;
-    private String rationale;
-    private String impact;
-    private CrState state;
-    private List<ISoftwareTask> tasks;
-    private List<IFinding> designReviews;
+    /**  */
+    public final int id;
+    /**  */
+    public final int authorId;
+
+    /**  */
+    public String title;
+    /**  */
+    public CrState state;
+    /**  */
+    public String description;
+
+    /**  */
+    public final List<SoftwareTask> tasks;
+    /**  */
+    public final List<Finding> reviews;
 
     /***************************************************************************
-     * @param num
+     * @param id
+     * @param authorUserId
      **************************************************************************/
-    public ChangeRequest( int num )
+    public ChangeRequest( int id, int authorUserId )
     {
-        number = num;
-        state = CrState.New;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public String getDescription()
-    {
-        return description;
-    }
-
-    /***************************************************************************
-     * @param str
-     **************************************************************************/
-    public void setDescription( String str )
-    {
-        description = str;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public String getImpact()
-    {
-        return impact;
-    }
-
-    /***************************************************************************
-     * @param str
-     **************************************************************************/
-    public void setImpact( String str )
-    {
-        impact = str;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public int getNumber()
-    {
-        return number;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public String getRationale()
-    {
-        return rationale;
-    }
-
-    /***************************************************************************
-     * @param str
-     **************************************************************************/
-    public void setRationale( String str )
-    {
-        rationale = str;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public CrState getState()
-    {
-        return state;
-    }
-
-    /***************************************************************************
-     * @param state
-     **************************************************************************/
-    public void setState( CrState state )
-    {
-        this.state = state;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public String getTitle()
-    {
-        return title;
-    }
-
-    /***************************************************************************
-     * @param str
-     **************************************************************************/
-    public void setTitle( String str )
-    {
-        title = str;
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public List<ISoftwareTask> getTasks()
-    {
-        return tasks;
-    }
-
-    /***************************************************************************
-     * @param list
-     **************************************************************************/
-    public void setTasks( List<ISoftwareTask> list )
-    {
-        tasks = new ArrayList<ISoftwareTask>( list );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    @Override
-    public List<IFinding> getDesignReviews()
-    {
-        return designReviews;
-    }
-
-    /***************************************************************************
-     * @param list
-     **************************************************************************/
-    public void setDesignReviews( List<IFinding> reviews )
-    {
-        designReviews = new ArrayList<IFinding>( reviews );
+        this.id = id;
+        this.authorId = authorUserId;
+        this.title = "";
+        this.description = "";
+        this.state = CrState.NEW;
+        this.tasks = new ArrayList<>();
+        this.reviews = new ArrayList<>();
     }
 }

@@ -1,19 +1,16 @@
 package org.cojo.ui.tableModels;
 
-import java.time.LocalDateTime;
-
-import org.cojo.data.Finding;
-import org.cojo.data.Project;
+import org.cojo.data.*;
 import org.jutils.ui.model.DefaultTableItemsConfig;
 import org.jutils.ui.model.ITableItemsConfig;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class FindingTableModel implements ITableItemsConfig<Finding>
+public class CrTableConfig implements ITableItemsConfig<ChangeRequest>
 {
     /**  */
-    private final DefaultTableItemsConfig<Finding> config;
+    private final DefaultTableItemsConfig<ChangeRequest> config;
 
     /**  */
     private Project project;
@@ -21,16 +18,16 @@ public class FindingTableModel implements ITableItemsConfig<Finding>
     /***************************************************************************
      * 
      **************************************************************************/
-    public FindingTableModel()
+    public CrTableConfig()
     {
         this.config = new DefaultTableItemsConfig<>();
         this.project = new Project();
 
-        config.addCol( "#", Integer.class, ( f ) -> f.id );
-        config.addCol( "User", String.class,
-            ( f ) -> project.getUser( f.userId ).name );
-        config.addCol( "Date", LocalDateTime.class, ( f ) -> f.time );
-        config.addCol( "Accepted", Boolean.class, ( f ) -> f.accepted );
+        config.addCol( "#", Integer.class, ( cr ) -> cr.id );
+        config.addCol( "Title", String.class, ( cr ) -> cr.title );
+        config.addCol( "State", CrState.class, ( cr ) -> cr.state );
+        config.addCol( "Author", String.class,
+            ( cr ) -> project.getUser( cr.authorId ).name );
     }
 
     /***************************************************************************
@@ -63,16 +60,16 @@ public class FindingTableModel implements ITableItemsConfig<Finding>
      * {@inheritDoc}
      **************************************************************************/
     @Override
-    public Object getItemData( Finding finding, int col )
+    public Object getItemData( ChangeRequest cr, int col )
     {
-        return config.getItemData( finding, col );
+        return config.getItemData( cr, col );
     }
 
     /***************************************************************************
      * {@inheritDoc}
      **************************************************************************/
     @Override
-    public void setItemData( Finding item, int col, Object data )
+    public void setItemData( ChangeRequest item, int col, Object data )
     {
         config.setItemData( item, col, data );
     }
@@ -81,7 +78,7 @@ public class FindingTableModel implements ITableItemsConfig<Finding>
      * {@inheritDoc}
      **************************************************************************/
     @Override
-    public boolean isCellEditable( Finding item, int col )
+    public boolean isCellEditable( ChangeRequest item, int col )
     {
         return config.isCellEditable( item, col );
     }
