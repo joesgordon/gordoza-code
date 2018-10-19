@@ -716,7 +716,13 @@ public final class IOUtils
 
         for( int i = 0; i < dirs.length; i++ )
         {
-            dirs[i] = new File( dirPaths[i] );
+            String path = dirPaths[i];
+
+            // because new File( "" ).isDirectory() returns false
+            // see https://stackoverflow.com/questions/5883808
+            path = path.isEmpty() ? "." : path;
+
+            dirs[i] = new File( path );
         }
 
         return dirs;

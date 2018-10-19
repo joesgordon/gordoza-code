@@ -3,16 +3,20 @@
     <!--this file was created by Eclipse Runnable JAR Export Wizard-->
     <!--ANT 1.7 is required                                        -->
 
+	<property name="projname" value="jchartlib" />
     <property name="dir.proj" location=".." />
     <property name="dir.src" location="${dir.proj}/src" />
     <property name="dir.bin" location="./bin" />
-    <property name="jar.jgoodies" location="${dir.proj}/../libs/jgoodies.jar" />
-    <property name="jar.xstream" location="${dir.proj}/../libs/xstream_min.jar" />
-    <property name="jar.bin" location="./jutils.jar" />
-    <property name="jar.src" location="./jutils_src.jar" />
-    <property name="jar.all_bin" location="./jutils_all.jar" />
-    <property name="jar.all_src" location="./jutils_all_src.jar" />
-    <property name="file.version" location="${dir.src}/org/jutils/icons/info.properties" />
+    <property name="jar.bin" location="./${projname}.jar" />
+    <property name="jar.src" location="./${projname}_src.jar" />
+    <property name="jar.all_bin" location="./${projname}_all.jar" />
+    <property name="jar.all_src" location="./${projname}_all_src.jar" />
+	
+	<property name="dir.jutils" location="${dir.proj}/../jutils/" />
+	<property name="jar.jutils" location="${dir.jutils}/build/jutils.jar" />
+    <property name="jar.jgoodies" location="${dir.jutils}/libs/jgoodies.jar" />
+    <property name="jar.xstream" location="${dir.jutils}/libs/xstream_min.jar" />
+	
     
     <target name="clean">
         <delete dir="${dir.bin}" failonerror="false" quiet="true"/>

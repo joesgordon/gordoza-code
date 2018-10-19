@@ -17,7 +17,9 @@ public final class TaskflowIcons
         "icons" );
 
     /**  */
-    public static String APP_024 = "calendar_" + "024.png";
+    public static final String APP_016 = "calendar_" + "016.png";;
+    /**  */
+    public static final String APP_024 = "calendar_" + "024.png";
 
     /***************************************************************************
      * Private default constructor to prevent instantiation of this class.
@@ -38,8 +40,17 @@ public final class TaskflowIcons
      * @param str
      * @return
      **************************************************************************/
-    public static ImageIcon getIcon( String str )
+    public static ImageIcon getIcon( String name )
     {
-        return loader.getIcon( str );
+        return loader.getIcon( name );
+    }
+
+    /***************************************************************************
+     * @param name
+     * @return
+     **************************************************************************/
+    public static Image getImage( String name )
+    {
+        return loader.getImage( name );
     }
 }

@@ -18,7 +18,7 @@
             <fileset dir="${proj_root}/../JExplorer/bin"/>
             <fileset dir="${proj_root}/../JHex/bin"/>
             <fileset dir="${proj_root}/../jutils/bin"/>
-            <fileset dir="${proj_root}/../Tuvok/bin"/>
+            <fileset dir="${proj_root}/../Taskflow/bin"/>
             <zipfileset excludes="META-INF/*.SF" src="${proj_root}/../libs/jgoodies.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="${proj_root}/../libs/xstream_min.jar"/>
         </jar>

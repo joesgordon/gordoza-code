@@ -2,6 +2,7 @@ package org.jutils.ui;
 
 import java.awt.Component;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 import javax.swing.Icon;
@@ -294,8 +295,8 @@ public class DirectoryTree implements IView<JTree>
             if( node == null )
             {
                 LogUtils.printError(
-                    "Could not find path " + dir.getAbsolutePath() + ":" +
-                        filesPath[i].getName() + " in " + dmtr.toString() );
+                    "Could not find path " + dir.getAbsolutePath() + " in " +
+                        dmtr.file.getAbsolutePath() );
                 path = SwingUtils.getPath( dmtr );
                 break;
             }
@@ -320,12 +321,16 @@ public class DirectoryTree implements IView<JTree>
         ArrayList<File> files = new ArrayList<File>( 10 );
         File [] array;
 
+        // because new File( "" ).isDirectory() returns false
+        // see https://stackoverflow.com/questions/5883808
+        dir = dir.getAbsoluteFile();
+
         // LogUtils.printDebug( "Dir: " + dir.getAbsolutePath() );
 
-        while( dir != null && !dir.isDirectory() )
+        if( !dir.isDirectory() )
         {
-            dir = dir.getParentFile();
-            // LogUtils.printDebug( "\tDNE-Parent: " + dir.getAbsolutePath() );
+            dir = FILE_SYSTEM.getParentDirectory( dir );
+            // LogUtils.printDebug( "\tDNE-Parent: " + dir );
         }
 
         if( dir != null )
@@ -357,13 +362,31 @@ public class DirectoryTree implements IView<JTree>
         {
             return null;
         }
+        File canDir = null;
+
+        try
+        {
+            canDir = dir.getCanonicalFile();
+        }
+        catch( IOException e )
+        {
+            return null;
+        }
 
         for( int i = 0; i < node.getChildCount(); i++ )
         {
             FileTreeNode fn = node.getChildAt( i );
-            File file = fn.file;
+            File file;
+            try
+            {
+                file = fn.file.getCanonicalFile();
+            }
+            catch( IOException e )
+            {
+                continue;
+            }
 
-            if( file.equals( dir ) )
+            if( file.equals( canDir ) )
             {
                 return fn;
             }

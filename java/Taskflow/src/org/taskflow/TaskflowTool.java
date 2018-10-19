@@ -11,7 +11,7 @@ import org.jutils.ui.IToolView;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class TaskflowLibTool implements IToolView
+public class TaskflowTool implements IToolView
 {
     /***************************************************************************
      * {@inheritDoc}

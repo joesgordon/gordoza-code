@@ -1,32 +1,24 @@
 package org.taskflow.ui;
 
 import java.awt.*;
-import java.util.Vector;
 
 import javax.swing.*;
 
-import org.jutils.ui.model.IView;
+import org.jutils.ui.model.IDataView;
 import org.taskflow.data.Project;
 
 /*******************************************************************************
  * Displays all the main components of the 2DLs interface.
  ******************************************************************************/
-public class TaskflowView implements IView<JPanel>
+public class TaskflowView implements IDataView<Project>
 {
-    // -------------------------------------------------------------------------
-    // GUI Components.
-    // -------------------------------------------------------------------------
     /**  */
     private final JPanel view;
-    /** The split pane used to divide the tree view from the content pane. */
-    private final JSplitPane mainSplitPane = new JSplitPane();
     /** The tree contains all the open projects. */
     private final JList<String> tree = new JList<>();
-    // -------------------------------------------------------------------------
-    // Supporting data shown in components.
-    // -------------------------------------------------------------------------
-    /** Vector of project currently displayed in this panel */
-    private Vector<Project> projects = new Vector<Project>();
+
+    /** Project currently displayed in this panel */
+    private Project project;
 
     /***************************************************************************
      * Creates a new panel.
@@ -34,12 +26,15 @@ public class TaskflowView implements IView<JPanel>
     public TaskflowView()
     {
         this.view = new JPanel( new GridBagLayout() );
+        this.project = new Project();
 
         JScrollPane treeScrollPane = new JScrollPane( tree );
         JScrollPane rightScrollPane = new JScrollPane();
 
         treeScrollPane.setMinimumSize( new Dimension( 200, 200 ) );
         rightScrollPane.setMinimumSize( new Dimension( 300, 300 ) );
+
+        JSplitPane mainSplitPane = new JSplitPane();
 
         mainSplitPane.setOrientation( JSplitPane.HORIZONTAL_SPLIT );
         mainSplitPane.setTopComponent( treeScrollPane );
@@ -54,50 +49,19 @@ public class TaskflowView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @param proj Project
-     * @return boolean
+     * @param project
      **************************************************************************/
-    public boolean addProject( Project proj )
+    public void setData( Project project )
     {
-        if( !containsProject( proj ) )
-        {
-            return projects.add( proj );
-        }
-        return false;
+        this.project = project;
     }
 
     /***************************************************************************
-     * @param proj Project
-     * @return boolean
+     * @return
      **************************************************************************/
-    public boolean containsProject( Project proj )
+    public Project getData()
     {
-        return projects.contains( proj );
-    }
-
-    /***************************************************************************
-     * @param proj Project
-     * @return boolean
-     **************************************************************************/
-    public boolean removeProject( Project proj )
-    {
-        return projects.remove( proj );
-    }
-
-    /***************************************************************************
-     * @return Vector
-     **************************************************************************/
-    public Vector<Project> getProjects()
-    {
-        return new Vector<Project>( this.projects );
-    }
-
-    /***************************************************************************
-     *
-     **************************************************************************/
-    public void removeAllProjects()
-    {
-        projects.removeAllElements();
+        return this.project;
     }
 
     /***************************************************************************

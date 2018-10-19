@@ -12,7 +12,7 @@ import org.jutils.apps.jhex.JHexTool;
 import org.jutils.chart.app.JChartTool;
 import org.jutils.ui.IToolView;
 import org.jutils.ui.app.FrameRunner;
-import org.taskflow.TaskflowLibTool;
+import org.taskflow.TaskflowTool;
 
 import chatterbox.ChatterboxTool;
 
@@ -47,7 +47,7 @@ public class AppGalleryMain
         apps.add( new DuakTool() );
         apps.add( new SheetTool() );
         apps.add( new JChartTool() );
-        apps.add( new TaskflowLibTool() );
+        apps.add( new TaskflowTool() );
 
         return apps;
     }

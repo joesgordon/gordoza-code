@@ -4,7 +4,6 @@ import java.awt.*;
 
 import javax.swing.JFrame;
 
-import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
 import org.jutils.ui.app.IFrameApp;
 import org.taskflow.ui.TaskflowFrameView;
@@ -24,9 +23,10 @@ public class TaskflowApp implements IFrameApp
         TaskflowFrameView frameView = new TaskflowFrameView();
         JFrame frame = frameView.getView();
         TaskflowMenu popup = new TaskflowMenu( frameView );
-        Image img = IconConstants.getImage( IconConstants.CALENDAR_16 );
+        Image img = TaskflowIcons.getImage( TaskflowIcons.APP_016 );
 
-        TrayIcon icon = SwingUtils.createTrayIcon( img, "Tuvok", frame, null );
+        TrayIcon icon = SwingUtils.createTrayIcon( img, "Taskflow", frame,
+            null );
         SwingUtils.addTrayMenu( icon, popup.getView() );
 
         frame.setSize( new Dimension( 640, 480 ) );

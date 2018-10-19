@@ -12,10 +12,12 @@ import org.jutils.ui.model.IDataView;
 /*******************************************************************************
  *
  ******************************************************************************/
-public class CojoPanel implements IDataView<Project>
+public class ProjectPanel implements IDataView<Project>
 {
     /**  */
-    private final JPanel view;
+    private final JComponent view;
+    /**  */
+    private final UsersPanel usersPanel;
     /**  */
     private final CrsPanel crsPanel;
     /**  */
@@ -27,8 +29,9 @@ public class CojoPanel implements IDataView<Project>
     /***************************************************************************
      * 
      **************************************************************************/
-    public CojoPanel()
+    public ProjectPanel()
     {
+        this.usersPanel = new UsersPanel();
         this.crsPanel = new CrsPanel();
         this.crPanel = new CrPanel();
         this.view = createView();
@@ -36,10 +39,23 @@ public class CojoPanel implements IDataView<Project>
         setDefaultData();
     }
 
+    /**
+     * @return
+     */
+    private JComponent createView()
+    {
+        JTabbedPane tabs = new JTabbedPane();
+
+        tabs.addTab( "Requests", createCrsPanel() );
+        tabs.addTab( "Users", usersPanel.getView() );
+
+        return tabs;
+    }
+
     /***************************************************************************
      * @return
      **************************************************************************/
-    private JPanel createView()
+    private JPanel createCrsPanel()
     {
         JPanel mainPanel = new JPanel( new BorderLayout() );
         JSplitPane mainSplitPane = new JSplitPane(
@@ -132,9 +148,11 @@ public class CojoPanel implements IDataView<Project>
     {
         this.project = proj;
 
+        usersPanel.setProject( project );
         crsPanel.setProject( project );
         crPanel.setProject( project );
 
+        usersPanel.setData( project.users );
         crsPanel.setData( project.changes );
         if( project.changes.isEmpty() )
         {

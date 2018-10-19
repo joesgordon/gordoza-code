@@ -24,7 +24,7 @@ public class CojoFrame implements IView<JFrame>
     /**  */
     private final StandardFrameView frameView;
     /**  */
-    private final CojoPanel mainPanel;
+    private final ProjectPanel mainPanel;
 
     /***************************************************************************
      * 
@@ -32,7 +32,7 @@ public class CojoFrame implements IView<JFrame>
     public CojoFrame()
     {
         this.frameView = new StandardFrameView();
-        this.mainPanel = new CojoPanel();
+        this.mainPanel = new ProjectPanel();
 
         frameView.setToolbar( createToolBar() );
         frameView.setContent( mainPanel.getView() );

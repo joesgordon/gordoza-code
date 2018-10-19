@@ -246,7 +246,7 @@ public class FileChooserListener implements ActionListener
             }
             else
             {
-                chooser.setSelectedFile( new File( "" ) );
+                chooser.setSelectedFile( new File( "." ) );
             }
         }
         else
@@ -272,7 +272,7 @@ public class FileChooserListener implements ActionListener
             }
             else
             {
-                chooser.setSelectedFile( new File( "" ) );
+                chooser.setSelectedFile( new File( "." ) );
             }
         }
 

@@ -1,16 +1,16 @@
 package org.taskflow.ui;
 
-import java.awt.event.ActionEvent;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionListener;
 import java.io.*;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
 
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
 import org.jutils.io.XStreamUtils;
 import org.jutils.ui.*;
+import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.event.FileChooserListener;
 import org.jutils.ui.event.FileChooserListener.IFileSelected;
@@ -58,7 +58,7 @@ public class TaskflowFrameView implements IView<JFrame>
     {
         JToolBar toolbar = new JGoodiesToolBar();
 
-        recentFiles.install( toolbar, createOpenListener() );
+        recentFiles.install( toolbar, createOpenAction() );
         recentFiles.setListeners( ( f, c ) -> openFile( f ) );
 
         SwingUtils.addActionToToolbar( toolbar, createSaveAction() );
@@ -70,84 +70,52 @@ public class TaskflowFrameView implements IView<JFrame>
         return toolbar;
     }
 
-    /**
+    /***************************************************************************
      * @return
-     */
-    private FileChooserListener createOpenListener()
+     **************************************************************************/
+    private Action createNewAction()
     {
+        Icon icon = IconConstants.getIcon( IconConstants.NEW_FILE_16 );
+        ActionListener listener = ( e ) -> setNew();
+
+        return new ActionAdapter( listener, "New", icon );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public Action createOpenAction()
+    {
+        Icon icon = IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 );
         IFileSelected ifsl = ( f ) -> openFile( f );
         FileChooserListener fcl = new FileChooserListener( getView(),
             "Open Tasks", false, ifsl );
         // TODO add last file selected
-        return fcl;
+        return new ActionAdapter( fcl, "Open", icon );
     }
 
-    /**
+    /***************************************************************************
      * @return
-     */
+     **************************************************************************/
+    private Action createSaveAction()
+    {
+        Icon icon = IconConstants.getIcon( IconConstants.SAVE_16 );
+        IFileSelected ifsl = ( f ) -> saveFile( f );
+        FileChooserListener fcl = new FileChooserListener( getView(),
+            "Save Tasks", true, ifsl );
+        // TODO add last file selected
+        return new ActionAdapter( fcl, "Save", icon );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private Action createAddAction()
     {
         Icon icon = IconConstants.getIcon( IconConstants.EDIT_ADD_16 );
         ActionListener listener = ( e ) -> showAddDialog();
         // TODO add last file selected
         return new ActionAdapter( listener, "Add Task", icon );
-    }
-
-    /**
-     * 
-     */
-    private void showAddDialog()
-    {
-        // TODO Auto-generated method stub
-    }
-
-    /**
-     * @return
-     */
-    private Action createSaveAction()
-    {
-        Icon icon = IconConstants.getIcon( IconConstants.SAVE_16 );
-        IFileSelected ifsl = ( f ) -> saveFile( f );
-        ActionListener listener = new FileChooserListener( getView(),
-            "Save Tasks", true, ifsl );
-        // TODO add last file selected
-        return new ActionAdapter( listener, "Save", icon );
-    }
-
-    /**
-     * @param f
-     */
-    private void openFile( File f )
-    {
-        // TODO Auto-generated method stub
-        try
-        {
-            Project proj = XStreamUtils.readObjectXStream( f );
-            mainPanel.addProject( proj );
-        }
-        catch( XStreamException e )
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        catch( FileNotFoundException e )
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        catch( IOException e )
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * @param f
-     */
-    private void saveFile( File f )
-    {
-        // TODO Auto-generated method stub
     }
 
     /***************************************************************************
@@ -167,24 +135,75 @@ public class TaskflowFrameView implements IView<JFrame>
      **************************************************************************/
     private void createFileMenu( JMenu fileMenu )
     {
-        JMenuItem newMenuItem = new JMenuItem( "New" );
-        newMenuItem.setIcon(
-            IconConstants.getIcon( IconConstants.NEW_FILE_16 ) );
-        newMenuItem.addActionListener( new NewListener() );
-
-        JMenuItem openMenuItem = new JMenuItem( "Open" );
-        openMenuItem.setIcon(
-            IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 ) );
-        openMenuItem.addActionListener( new OpenListener( this ) );
-
-        JMenuItem saveMenuItem = new JMenuItem( "Save" );
-        saveMenuItem.setIcon( IconConstants.getIcon( IconConstants.SAVE_16 ) );
-        saveMenuItem.addActionListener( new SaveListener( this ) );
+        JMenuItem newMenuItem = new JMenuItem( createNewAction() );
+        JMenuItem openMenuItem = new JMenuItem( createOpenAction() );
+        JMenuItem saveMenuItem = new JMenuItem( createSaveAction() );
 
         fileMenu.add( newMenuItem, 0 );
         fileMenu.add( openMenuItem, 1 );
         fileMenu.add( saveMenuItem, 2 );
         fileMenu.add( new JSeparator(), 3 );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private void showAddDialog()
+    {
+        AddTaskView newTaskView = new AddTaskView();
+        OkDialogView dialogView = new OkDialogView( getView(),
+            newTaskView.getView(), ModalityType.DOCUMENT_MODAL,
+            OkDialogButtons.OK_CANCEL );
+
+        dialogView.setTitle( "Add New Task" );
+        dialogView.setOkButtonText( "Add" );
+
+        if( dialogView.show() )
+        {
+            String name = newTaskView.getData();
+            // TODO create and add task
+        }
+    }
+
+    /***************************************************************************
+     * @param f
+     **************************************************************************/
+    public void openFile( File f )
+    {
+        // TODO Auto-generated method stub
+        try
+        {
+            Project proj = XStreamUtils.readObjectXStream( f );
+            mainPanel.setData( proj );
+        }
+        catch( XStreamException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch( FileNotFoundException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch( IOException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    /***************************************************************************
+     * @param f
+     **************************************************************************/
+    private void saveFile( File f )
+    {
+        // TODO Auto-generated method stub
+    }
+
+    private void setNew()
+    {
+        mainPanel.setData( new Project() );
     }
 
     /***************************************************************************
@@ -227,86 +246,11 @@ public class TaskflowFrameView implements IView<JFrame>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JFrame getView()
     {
         return frameView.getView();
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class SaveListener implements ActionListener
-    {
-        private final TaskflowFrameView view;
-
-        public SaveListener( TaskflowFrameView view )
-        {
-            this.view = view;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            JFileChooser jfc = new JFileChooser();
-            jfc.setFileFilter( new TdlFileFilter() );
-            jfc.showSaveDialog( view.getView() );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class OpenListener implements ActionListener
-    {
-        private final TaskflowFrameView view;
-
-        public OpenListener( TaskflowFrameView view )
-        {
-            this.view = view;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            JFileChooser jfc = new JFileChooser();
-            jfc.setFileFilter( new TdlFileFilter() );
-            jfc.showOpenDialog( view.getView() );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class NewListener implements ActionListener
-    {
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class TdlFileFilter extends FileFilter
-    {
-        @Override
-        public boolean accept( File f )
-        {
-            if( f.isDirectory() || f.getName().endsWith( ".tdl" ) )
-            {
-                return true;
-            }
-            return false;
-        }
-
-        @Override
-        public String getDescription()
-        {
-            return "*.tdl";
-        }
     }
 }

@@ -1,9 +1,13 @@
 package org.taskflow.ui;
 
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
+import java.awt.event.ActionListener;
 
+import javax.swing.*;
+
+import org.jutils.IconConstants;
 import org.jutils.ui.ExitListener;
+import org.jutils.ui.RecentFilesMenuView;
+import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
@@ -14,11 +18,10 @@ public class TaskflowMenu implements IView<JPopupMenu>
     /**  */
     private final JPopupMenu menu;
     /**  */
-    private final JMenuItem openMenuItem = new JMenuItem();
+    private final RecentFilesMenuView recentMenu;
+
     /**  */
-    private final JMenuItem loadTaskMenuItem = new JMenuItem();
-    /**  */
-    private final JMenuItem exitMenuItem = new JMenuItem();
+    private final TaskflowFrameView frame;
 
     /***************************************************************************
      * @param frame ToDLsFrame
@@ -26,27 +29,44 @@ public class TaskflowMenu implements IView<JPopupMenu>
     public TaskflowMenu( TaskflowFrameView frame )
     {
         this.menu = new JPopupMenu();
+        this.recentMenu = new RecentFilesMenuView();
+        this.frame = frame;
 
-        openMenuItem.setText( "Open" );
-        openMenuItem.addActionListener(
-            ( e ) -> frame.getView().setVisible( true ) );
+        recentMenu.setIcon(
+            IconConstants.getIcon( IconConstants.OPEN_FILE_16 ) );
+        recentMenu.addSelectedListener( ( f, c ) -> frame.openFile( f ) );
 
-        loadTaskMenuItem.setText( "Load Task" );
-
-        exitMenuItem.setText( "Quit" );
-        exitMenuItem.addActionListener( new ExitListener( frame.getView() ) );
-
-        menu.add( openMenuItem );
-        menu.add( loadTaskMenuItem );
+        menu.add( createShowAction() );
+        menu.add( frame.createOpenAction() );
+        menu.add( recentMenu.getView() );
 
         // ---------------------------------------------------------------------
 
         menu.addSeparator();
-        menu.add( exitMenuItem );
+        menu.add( createExitAction() );
     }
 
     /***************************************************************************
-     * 
+     * @return
+     **************************************************************************/
+    private Action createShowAction()
+    {
+        ActionListener listener = ( e ) -> frame.getView().setVisible( true );
+        return new ActionAdapter( listener, "Show", null );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    private Action createExitAction()
+    {
+        ActionListener listener = new ExitListener( frame.getView() );
+        Icon icon = IconConstants.getIcon( IconConstants.CLOSE_16 );
+        return new ActionAdapter( listener, "Exit", icon );
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JPopupMenu getView()
