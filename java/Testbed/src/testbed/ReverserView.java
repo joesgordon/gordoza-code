@@ -2,14 +2,24 @@ package testbed;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
 
-import org.jutils.*;
-import org.jutils.ui.*;
+import org.jutils.IconConstants;
+import org.jutils.SwingUtils;
+import org.jutils.Utils;
+import org.jutils.ui.JGoodiesToolBar;
+import org.jutils.ui.ScrollableEditorPaneView;
+import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.event.ActionAdapter;

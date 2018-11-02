@@ -247,15 +247,24 @@ public class BusyBar implements IView<JComponent>
      **************************************************************************/
     private static class BusyAction implements ActionListener
     {
+        /**  */
         private final JComponent c;
+        /**  */
         private final BusyPainter p;
 
+        /**
+         * @param c
+         * @param p
+         */
         public BusyAction( JComponent c, BusyPainter p )
         {
             this.c = c;
             this.p = p;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ActionEvent arg0 )
         {

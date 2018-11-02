@@ -3,10 +3,21 @@ package testbed;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
-import javax.swing.*;
-import javax.swing.tree.*;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
@@ -442,7 +453,7 @@ public class DynamicTreeTest
          * {@inheritDoc}
          */
         @Override
-        public Enumeration<?> children()
+        public Enumeration<? extends TreeNode> children()
         {
             return new IteratorEnumerationAdapter<>( children.iterator() );
         }

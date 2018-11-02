@@ -55,13 +55,13 @@ public class ChecksumVerificationTask implements IStatusTask
             for( int i = 0; i < calcInput.files.size() &&
                 handler.canContinue(); i++ )
             {
-                SumFile readSum = input.files.get( i );
+                SumFile inputSum = input.files.get( i );
                 SumFile calcSum = calcInput.files.get( i );
                 updater.update( i );
 
-                if( !readSum.checksum.equalsIgnoreCase( calcSum.checksum ) )
+                if( !inputSum.checksum.equalsIgnoreCase( calcSum.checksum ) )
                 {
-                    invalidSums.add( new InvalidChecksum( readSum, calcSum ) );
+                    invalidSums.add( new InvalidChecksum( inputSum, calcSum ) );
                 }
             }
 

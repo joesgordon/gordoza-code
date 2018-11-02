@@ -1,10 +1,17 @@
 package org.jutils.apps.summer.ui;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Container;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -16,7 +23,10 @@ import org.jutils.ui.JGoodiesToolBar;
 import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.model.IView;
-import org.jutils.ui.validation.*;
+import org.jutils.ui.validation.IValidationField;
+import org.jutils.ui.validation.IValidityChangedListener;
+import org.jutils.ui.validation.Validity;
+import org.jutils.ui.validation.ValidityUtils;
 
 /*******************************************************************************
  * 
@@ -42,7 +52,7 @@ public class SummerView implements IView<JFrame>
         this.tabField = new JTabbedPane();
         this.createView = new CreateView();
         this.verifyView = new VerifyView();
-        this.createAction = new ActionAdapter( new RunListener( this ),
+        this.createAction = new ActionAdapter( ( e ) -> runSummer(),
             "Create Checksums",
             SummerIcons.loader.getIcon( SummerIcons.SUMMER_016 ) );
 
@@ -128,33 +138,22 @@ public class SummerView implements IView<JFrame>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class RunListener implements ActionListener
+    public void runSummer()
     {
-        private final SummerView view;
+        int idx = tabField.getSelectedIndex();
 
-        public RunListener( SummerView view )
+        switch( idx )
         {
-            this.view = view;
-        }
+            case 0:
+                createView.runCreate();
+                break;
 
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            int idx = view.tabField.getSelectedIndex();
+            case 1:
+                verifyView.runVerify();
+                break;
 
-            switch( idx )
-            {
-                case 0:
-                    view.createView.runCreate();
-                    break;
-
-                case 1:
-                    view.verifyView.runVerify();
-                    break;
-
-                default:
-                    break;
-            }
+            default:
+                break;
         }
     }
 

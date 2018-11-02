@@ -1,30 +1,64 @@
 package org.jutils.apps.summer.ui;
 
-import java.awt.*;
-import java.io.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JToolBar;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileSystemView;
 
-import org.jutils.*;
-import org.jutils.apps.summer.data.*;
+import org.jutils.IconConstants;
+import org.jutils.SwingUtils;
+import org.jutils.Utils;
+import org.jutils.ValidationException;
+import org.jutils.apps.summer.data.ChecksumResult;
+import org.jutils.apps.summer.data.InvalidChecksum;
+import org.jutils.apps.summer.data.SumFile;
 import org.jutils.apps.summer.io.ChecksumFileSerializer;
-import org.jutils.apps.summer.tasks.ChecksumVerificationTask;
+import org.jutils.apps.summer.tasks.ChecksumCreationTask;
+import org.jutils.apps.summer.tasks.VerificationTasksManager;
 import org.jutils.data.UIProperty;
 import org.jutils.io.parsers.ExistenceType;
-import org.jutils.task.TaskView;
+import org.jutils.task.MultiTaskView;
 import org.jutils.ui.StandardFormView;
 import org.jutils.ui.TitleView;
-import org.jutils.ui.event.*;
+import org.jutils.ui.event.ActionAdapter;
+import org.jutils.ui.event.FileChooserListener;
 import org.jutils.ui.event.FileChooserListener.IFileSelected;
+import org.jutils.ui.event.FileDropTarget;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
+import org.jutils.ui.event.ItemActionEvent;
+import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.fields.FileFormField;
-import org.jutils.ui.model.*;
+import org.jutils.ui.model.IDataView;
+import org.jutils.ui.model.ITableItemsConfig;
+import org.jutils.ui.model.ItemsTableModel;
+import org.jutils.ui.model.LabelTableCellRenderer;
 import org.jutils.ui.model.LabelTableCellRenderer.ITableCellLabelDecorator;
-import org.jutils.ui.validation.*;
+import org.jutils.ui.validation.IValidationField;
+import org.jutils.ui.validation.IValidityChangedListener;
+import org.jutils.ui.validation.Validity;
+import org.jutils.ui.validation.ValidityListenerList;
 
 /*******************************************************************************
  * 
@@ -259,14 +293,6 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
     public void runVerify()
     {
         ChecksumResult input = getData();
-        ChecksumVerificationTask task = new ChecksumVerificationTask( input );
-
-        if( input.type == null )
-        {
-            JOptionPane.showMessageDialog( view, "Checksum file not loaded",
-                "File Not Loaded", JOptionPane.ERROR_MESSAGE );
-            return;
-        }
 
         if( !getValidity().isValid )
         {
@@ -275,13 +301,36 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
             return;
         }
 
-        TaskView.startAndShow( view, task, "Verifing Checksums" );
+        runVerify( view, input );
 
-        List<InvalidChecksum> invalidSums = task.invalidSums;
+    }
+
+    public static void runVerify( Component parent, ChecksumResult input )
+    {
+        if( input.type == null )
+        {
+            JOptionPane.showMessageDialog( parent, "Checksum file not loaded",
+                "File Not Loaded", JOptionPane.ERROR_MESSAGE );
+            return;
+        }
+
+        List<InvalidChecksum> invalidSums;
+
+        invalidSums = new ArrayList<>();
+        VerificationTasksManager tasker = new VerificationTasksManager( input,
+            invalidSums );
+        MultiTaskView.startAndShow( parent, tasker,
+            "Verifying checksums for " + input.files.size() + " files",
+            ChecksumCreationTask.NUM_THREADS );
+
+        // ChecksumVerificationTask task = new ChecksumVerificationTask( input
+        // );
+        // TaskView.startAndShow( parent, task, "Verifing Checksums" );
+        // invalidSums = task.invalidSums;
 
         if( invalidSums.isEmpty() )
         {
-            JOptionPane.showMessageDialog( view, "All checksums were valid",
+            JOptionPane.showMessageDialog( parent, "All checksums were valid",
                 "Checksums Valid", JOptionPane.INFORMATION_MESSAGE );
         }
         else
@@ -290,9 +339,11 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
 
             invalidView.setData( invalidSums );
 
-            JOptionPane.showMessageDialog( view, invalidView.getView(),
+            JOptionPane.showMessageDialog( parent, invalidView.getView(),
                 "Invalid Checksums", JOptionPane.ERROR_MESSAGE );
         }
+
+        return;
     }
 
     /***************************************************************************

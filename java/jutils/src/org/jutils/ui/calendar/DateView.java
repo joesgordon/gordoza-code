@@ -294,7 +294,7 @@ public class DateView implements IDataView<LocalDate>
 
         monthSpinner.setValue( MONTHS[date.getMonthValue() - 1] );
 
-        yearSpinner.setValue( new Integer( date.getYear() ) );
+        yearSpinner.setValue(  date.getYear() );
     }
 
     /***************************************************************************
