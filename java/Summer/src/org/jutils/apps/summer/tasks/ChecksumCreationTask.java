@@ -4,8 +4,13 @@ import java.io.IOException;
 
 import org.jutils.apps.summer.data.ChecksumResult;
 import org.jutils.apps.summer.data.SumFile;
-import org.jutils.io.cksum.*;
-import org.jutils.task.*;
+import org.jutils.io.cksum.CheckSumFactory;
+import org.jutils.io.cksum.ChecksumGenenerator;
+import org.jutils.io.cksum.IChecksum;
+import org.jutils.task.IStatusTask;
+import org.jutils.task.ITaskStatusHandler;
+import org.jutils.task.TaskError;
+import org.jutils.task.TaskUpdater;
 import org.jutils.ui.hex.HexUtils;
 
 /*******************************************************************************
@@ -13,8 +18,6 @@ import org.jutils.ui.hex.HexUtils;
  ******************************************************************************/
 public class ChecksumCreationTask implements IStatusTask
 {
-    /**  */
-    public static final int NUM_THREADS = 8;
     /**  */
     private final ChecksumResult input;
 

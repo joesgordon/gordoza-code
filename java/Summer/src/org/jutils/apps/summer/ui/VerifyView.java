@@ -35,7 +35,6 @@ import org.jutils.apps.summer.data.ChecksumResult;
 import org.jutils.apps.summer.data.InvalidChecksum;
 import org.jutils.apps.summer.data.SumFile;
 import org.jutils.apps.summer.io.ChecksumFileSerializer;
-import org.jutils.apps.summer.tasks.ChecksumCreationTask;
 import org.jutils.apps.summer.tasks.VerificationTasksManager;
 import org.jutils.data.UIProperty;
 import org.jutils.io.parsers.ExistenceType;
@@ -287,10 +286,11 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
         return validityListeners.getValidity();
     }
 
-    /***************************************************************************
-     * 
+    /**
+     * @param numThreads
+     * *************************************************************************
      **************************************************************************/
-    public void runVerify()
+    public void runVerify( int numThreads )
     {
         ChecksumResult input = getData();
 
@@ -301,14 +301,16 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
             return;
         }
 
-        runVerify( view, input );
+        runVerify( view, input, numThreads );
     }
 
     /***************************************************************************
      * @param parent
      * @param input
+     * @param numThreads
      **************************************************************************/
-    public static void runVerify( Component parent, ChecksumResult input )
+    public static void runVerify( Component parent, ChecksumResult input,
+        int numThreads )
     {
         if( input.type == null )
         {
@@ -324,7 +326,7 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
             invalidSums );
         MultiTaskView.startAndShow( parent, tasker,
             "Verifying checksums for " + input.files.size() + " files",
-            ChecksumCreationTask.NUM_THREADS );
+            numThreads );
 
         // ChecksumVerificationTask task = new ChecksumVerificationTask( input
         // );

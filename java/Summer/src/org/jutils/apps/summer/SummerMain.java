@@ -2,21 +2,40 @@ package org.jutils.apps.summer;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.jutils.ValidationException;
 import org.jutils.apps.summer.data.ChecksumResult;
+import org.jutils.apps.summer.data.SummerOptions;
 import org.jutils.apps.summer.io.ChecksumFileSerializer;
 import org.jutils.apps.summer.ui.CreateView;
 import org.jutils.io.IOUtils;
 import org.jutils.io.LogUtils;
-import org.jutils.ui.app.*;
+import org.jutils.io.options.IOptionsCreator;
+import org.jutils.io.options.OptionsSerializer;
+import org.jutils.ui.app.AppRunner;
+import org.jutils.ui.app.FrameRunner;
+import org.jutils.ui.app.IApplication;
+import org.jutils.ui.app.IFrameApp;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
 public class SummerMain
 {
+
+    /** The path to the user options file. */
+    public static final File USER_OPTIONS_FILE = IOUtils.getUsersFile(
+        ".jutils", "summer", "options.xml" );
+
+    /**
+     * The single user options shared by all instances of the calling
+     * application.
+     */
+    private static OptionsSerializer<SummerOptions> OPTIONS;
+
     /***************************************************************************
      * @param args
      **************************************************************************/
@@ -195,6 +214,57 @@ public class SummerMain
     }
 
     /***************************************************************************
+     * Gets (or creates) the user options for the JHex application.
+     * @return the single user options shared by all instances of the calling
+     * application.
+     **************************************************************************/
+    public static OptionsSerializer<SummerOptions> getOptions()
+    {
+        if( OPTIONS == null )
+        {
+            OPTIONS = OptionsSerializer.getOptions( SummerOptions.class,
+                USER_OPTIONS_FILE, new SummerOptionsCreator() );
+        }
+        return OPTIONS;
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static final class SummerOptionsCreator
+        implements IOptionsCreator<SummerOptions>
+    {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public SummerOptions createDefaultOptions()
+        {
+            return new SummerOptions();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public SummerOptions initialize( SummerOptions options )
+        {
+            options = new SummerOptions( options );
+
+            return options;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void warn( String message )
+        {
+            LogUtils.printWarning( message );
+        }
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     private static class ChecksumCreator implements IApplication
@@ -218,7 +288,7 @@ public class SummerMain
         public void createAndShowUi()
         {
             succeeded = false;
-            succeeded = CreateView.runCreate( null, input ) != null;
+            succeeded = CreateView.runCreate( null, input, 8 ) != null;
         }
 
         public boolean isSuccessful()

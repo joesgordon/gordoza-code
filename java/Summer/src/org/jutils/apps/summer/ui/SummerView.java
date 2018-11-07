@@ -1,11 +1,14 @@
 package org.jutils.apps.summer.ui;
 
 import java.awt.Container;
+import java.awt.Dialog.ModalityType;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionListener;
 
 import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -13,13 +16,21 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 
+import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
 import org.jutils.apps.summer.SummerIcons;
+import org.jutils.apps.summer.SummerMain;
 import org.jutils.apps.summer.data.ChecksumResult;
+import org.jutils.apps.summer.data.SummerOptions;
 import org.jutils.io.cksum.ChecksumType;
+import org.jutils.io.options.OptionsSerializer;
 import org.jutils.ui.JGoodiesToolBar;
+import org.jutils.ui.OkDialogView;
+import org.jutils.ui.OkDialogView.OkDialogButtons;
+import org.jutils.ui.StandardFormView;
 import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.event.ActionAdapter;
+import org.jutils.ui.fields.IntegerFormField;
 import org.jutils.ui.model.IView;
 import org.jutils.ui.validation.IValidationField;
 import org.jutils.ui.validation.IValidityChangedListener;
@@ -147,7 +158,45 @@ public class SummerView implements IView<JFrame>
 
         SwingUtils.addActionToToolbar( toolbar, createAction );
 
+        toolbar.addSeparator();
+
+        SwingUtils.addActionToToolbar( toolbar, createConfigAction() );
+
         return toolbar;
+    }
+
+    private Action createConfigAction()
+    {
+        Icon icon = IconConstants.getIcon( IconConstants.CONFIG_16 );
+        ActionListener listener = ( e ) -> showConfig();
+
+        return new ActionAdapter( listener, "Config", icon );
+    }
+
+    private void showConfig()
+    {
+        OptionsSerializer<SummerOptions> options = SummerMain.getOptions();
+        SummerOptions sumOptions = options.getOptions();
+
+        IntegerFormField field = new IntegerFormField( "Thread Count",
+            "threads", 1, 100 );
+
+        StandardFormView form = new StandardFormView();
+
+        form.addField( field );
+
+        OkDialogView okView = new OkDialogView( getView(), form.getView(),
+            ModalityType.DOCUMENT_MODAL, OkDialogButtons.OK_CANCEL );
+
+        okView.setTitle( "Summer Configuration" );
+
+        field.setValue( sumOptions.numThreads );
+
+        if( okView.show() )
+        {
+            sumOptions.numThreads = field.getValue();
+            options.write( sumOptions );
+        }
     }
 
     /***************************************************************************
@@ -166,14 +215,17 @@ public class SummerView implements IView<JFrame>
     {
         int idx = tabField.getSelectedIndex();
 
+        OptionsSerializer<SummerOptions> options = SummerMain.getOptions();
+        SummerOptions sumOptions = options.getOptions();
+
         switch( idx )
         {
             case 0:
-                createView.runCreate();
+                createView.runCreate( sumOptions.numThreads );
                 break;
 
             case 1:
-                verifyView.runVerify();
+                verifyView.runVerify( sumOptions.numThreads );
                 break;
 
             default:
