@@ -1,13 +1,19 @@
 package org.jutils.apps.filespy.search;
 
 import java.io.File;
-import java.time.*;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.concurrent.TimeUnit;
 
 import org.jutils.ValidationException;
 import org.jutils.apps.filespy.data.SearchParams;
 import org.jutils.apps.filespy.data.SearchRecord;
-import org.jutils.concurrent.*;
+import org.jutils.concurrent.IConsumer;
+import org.jutils.concurrent.IFinishedHandler;
+import org.jutils.concurrent.ITask;
+import org.jutils.concurrent.ITaskHandler;
+import org.jutils.concurrent.SafeExecutorService;
 import org.jutils.io.LogUtils;
 import org.jutils.pattern.IMatcher;
 import org.jutils.pattern.Match;
@@ -150,7 +156,8 @@ public class SearchTask implements ITask
      **************************************************************************/
     private boolean isLessThan( long length )
     {
-        return !params.lessThan.isUsed || length > params.lessThan.data;
+        return !params.lessThan.isUsed ||
+            length < ( params.lessThan.data * 1024 );
     }
 
     /***************************************************************************
@@ -159,7 +166,8 @@ public class SearchTask implements ITask
      **************************************************************************/
     private boolean isMoreThan( long length )
     {
-        return !params.moreThan.isUsed || length > params.moreThan.data;
+        return !params.moreThan.isUsed ||
+            length > ( params.moreThan.data * 1024 );
     }
 
     /***************************************************************************
@@ -207,6 +215,8 @@ public class SearchTask implements ITask
 
             matched &= isLessThan( fileLength );
             matched &= isMoreThan( fileLength );
+            // LogUtils.printDebug( "Testing if %d bytes is > than %d kb: %s",
+            // fileLength, params.moreThan.data, matched );
         }
 
         return matched;
@@ -214,6 +224,8 @@ public class SearchTask implements ITask
 
     /***********************************************************************
      * @param file
+     * @param fileConsumer
+     * @param stopper
      **********************************************************************/
     private void findFiles( File file, IResultsConsumer fileConsumer,
         ITaskHandler stopper )
@@ -261,6 +273,9 @@ public class SearchTask implements ITask
      **************************************************************************/
     private static interface IResultsConsumer extends IConsumer<SearchRecord>
     {
+        /**
+         * 
+         */
         void signalInputFinished();
     }
 
@@ -303,6 +318,9 @@ public class SearchTask implements ITask
                 } );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void consume( SearchRecord record, ITaskHandler stopper )
         {
@@ -323,6 +341,9 @@ public class SearchTask implements ITask
             }
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void signalInputFinished()
         {
@@ -360,12 +381,18 @@ public class SearchTask implements ITask
             this.searchHandler = searchHandler;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void consume( SearchRecord record, ITaskHandler stopper )
         {
             searchHandler.addFile( record );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void signalInputFinished()
         {

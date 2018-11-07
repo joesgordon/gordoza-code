@@ -77,14 +77,14 @@ public class DefaultOptionsCreatorTest
         }
 
         DefaultOptionsCreator<T> creator = new DefaultOptionsCreator<>( cls );
-        OptionsSerializer<T> serializer = new OptionsSerializer<>( creator,
-            file );
+        OptionsSerializer<T> serializer = OptionsSerializer.getOptions( cls,
+            file, creator );
 
         T obj = creator.createDefaultOptions();
 
         obj.setData( 50.0 );
         serializer.write( obj );
-        serializer = new OptionsSerializer<>( creator, file );
+        serializer = OptionsSerializer.getOptions( cls, file, creator );
         obj = serializer.getOptions();
 
         Assert.assertEquals( 50.0, obj.getData(), 0.000001 );

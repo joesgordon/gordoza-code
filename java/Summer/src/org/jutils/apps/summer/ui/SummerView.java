@@ -12,8 +12,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import org.jutils.SwingUtils;
 import org.jutils.apps.summer.SummerIcons;
@@ -104,7 +102,7 @@ public class SummerView implements IView<JFrame>
         tabField.addTab( "Create", createView.getView() );
         tabField.addTab( "Verify", verifyView.getView() );
 
-        tabField.addChangeListener( new TabListener( this ) );
+        tabField.addChangeListener( ( e ) -> handleTabStateChanged() );
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 1.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -112,6 +110,32 @@ public class SummerView implements IView<JFrame>
         panel.add( tabField, constraints );
 
         return panel;
+    }
+
+    private void handleTabStateChanged()
+    {
+        IValidationField field = null;
+
+        if( tabField.getSelectedIndex() == 0 )
+        {
+            field = createView;
+        }
+        else
+        {
+            field = verifyView;
+        }
+
+        if( field.getValidity().isValid )
+        {
+            createAction.setEnabled( true );
+            SwingUtils.setActionToolTip( createAction, "Create Checksums" );
+        }
+        else
+        {
+            createAction.setEnabled( false );
+            SwingUtils.setActionToolTip( createAction,
+                field.getValidity().reason );
+        }
     }
 
     /***************************************************************************
@@ -160,58 +184,26 @@ public class SummerView implements IView<JFrame>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class TabListener implements ChangeListener
-    {
-        private final SummerView view;
-
-        public TabListener( SummerView view )
-        {
-            this.view = view;
-        }
-
-        @Override
-        public void stateChanged( ChangeEvent e )
-        {
-            IValidationField field = null;
-
-            if( view.tabField.getSelectedIndex() == 0 )
-            {
-                field = view.createView;
-            }
-            else
-            {
-                field = view.verifyView;
-            }
-
-            if( field.getValidity().isValid )
-            {
-                view.createAction.setEnabled( true );
-                SwingUtils.setActionToolTip( view.createAction,
-                    "Create Checksums" );
-            }
-            else
-            {
-                view.createAction.setEnabled( false );
-                SwingUtils.setActionToolTip( view.createAction,
-                    field.getValidity().reason );
-            }
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
     private static class ValidityChanged implements IValidityChangedListener
     {
+        /**  */
         private final SummerView view;
+        /**  */
         private int index;
 
+        /**
+         * @param view
+         * @param index
+         */
         public ValidityChanged( SummerView view, int index )
         {
             this.view = view;
             this.index = index;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void signalValidity( Validity v )
         {

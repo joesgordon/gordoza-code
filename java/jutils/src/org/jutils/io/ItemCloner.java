@@ -2,6 +2,8 @@ package org.jutils.io;
 
 import java.io.IOException;
 
+import org.jutils.ValidationException;
+
 /*******************************************************************************
  * Deep clones objects, retaining the intermediate buffer from call to call.
  * @param <T> the type of object to be cloned.
@@ -45,7 +47,7 @@ public class ItemCloner<T>
             stream.seek( 0 );
             clone = XStreamUtils.readObjectXStream( inputStream );
         }
-        catch( IOException ex )
+        catch( IOException | ValidationException ex )
         {
             throw new IllegalStateException(
                 "Could not clone item: " + ex.getMessage(), ex );

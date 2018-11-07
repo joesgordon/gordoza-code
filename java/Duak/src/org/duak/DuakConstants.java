@@ -32,8 +32,8 @@ public final class DuakConstants
     {
         if( options == null )
         {
-            options = OptionsSerializer.getOptions( new OptionsCreator(),
-                OPTIONS_FILE );
+            options = OptionsSerializer.getOptions( DuakOptions.class,
+                OPTIONS_FILE, new OptionsCreator() );
         }
 
         return options;

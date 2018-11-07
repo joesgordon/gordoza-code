@@ -7,14 +7,13 @@ import java.io.*;
 import javax.swing.*;
 
 import org.jutils.SwingUtils;
+import org.jutils.ValidationException;
 import org.jutils.io.XStreamUtils;
 import org.jutils.ui.OkDialogView;
 import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.explorer.data.AppManagerConfig;
 import org.jutils.ui.fields.BooleanFormField;
 import org.jutils.ui.model.IDataView;
-
-import com.thoughtworks.xstream.XStreamException;
 
 /*******************************************************************************
  * 
@@ -143,7 +142,7 @@ public class AppManagerView implements IDataView<AppManagerConfig>
 
             setData( cfg );
         }
-        catch( XStreamException ex )
+        catch( ValidationException ex )
         {
             SwingUtils.showErrorMessage( getView(),
                 "Error reading from file: " + file.getAbsolutePath(),
@@ -170,12 +169,6 @@ public class AppManagerView implements IDataView<AppManagerConfig>
         try
         {
             XStreamUtils.writeObjectXStream( cfg, file );
-        }
-        catch( XStreamException e )
-        {
-            SwingUtils.showErrorMessage( getView(),
-                "Error reading from file: " + file.getAbsolutePath(),
-                "Serialization Error" );
         }
         catch( IOException e )
         {

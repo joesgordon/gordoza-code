@@ -24,8 +24,8 @@ public class FileSpyMain
 
     static
     {
-        OPTIONS = OptionsSerializer.getOptions( new OptionsCreator(),
-            USER_OPTIONS_FILE );
+        OPTIONS = OptionsSerializer.getOptions( FileSpyData.class,
+            USER_OPTIONS_FILE, new OptionsCreator() );
     }
 
     /***************************************************************************

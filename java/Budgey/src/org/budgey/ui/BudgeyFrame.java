@@ -2,9 +2,16 @@ package org.budgey.ui;
 
 import java.awt.Container;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JToolBar;
 
 import org.budgey.BudgeyIcons;
 import org.budgey.BudgeyMain;
@@ -12,6 +19,7 @@ import org.budgey.data.Budget;
 import org.budgey.data.BudgeyOptions;
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
+import org.jutils.ValidationException;
 import org.jutils.io.XStreamUtils;
 import org.jutils.io.options.OptionsSerializer;
 import org.jutils.ui.JGoodiesToolBar;
@@ -22,8 +30,6 @@ import org.jutils.ui.event.FileChooserListener.IFileSelected;
 import org.jutils.ui.event.FileChooserListener.ILastFile;
 import org.jutils.ui.model.IDataView;
 import org.jutils.ui.model.IView;
-
-import com.thoughtworks.xstream.XStreamException;
 
 /*******************************************************************************
  * 
@@ -153,7 +159,7 @@ public class BudgeyFrame implements IView<JFrame>
             Budget b = XStreamUtils.readObjectXStream( file );
             budgeyPanel.setData( b );
         }
-        catch( XStreamException ex )
+        catch( ValidationException ex )
         {
             JOptionPane.showMessageDialog( getView(), ex.getMessage(),
                 "Data Error", JOptionPane.ERROR_MESSAGE );
@@ -177,11 +183,6 @@ public class BudgeyFrame implements IView<JFrame>
         try
         {
             XStreamUtils.writeObjectXStream( budgeyPanel.getData(), file );
-        }
-        catch( XStreamException ex )
-        {
-            JOptionPane.showMessageDialog( getView(), ex.getMessage(),
-                "Data Error", JOptionPane.ERROR_MESSAGE );
         }
         catch( IOException ex )
         {

@@ -57,8 +57,8 @@ public class JHexMain
     {
         if( OPTIONS == null )
         {
-            OPTIONS = OptionsSerializer.getOptions( new JHexOptionsCreator(),
-                USER_OPTIONS_FILE );
+            OPTIONS = OptionsSerializer.getOptions( JHexOptions.class,
+                USER_OPTIONS_FILE, new JHexOptionsCreator() );
         }
         return OPTIONS;
     }

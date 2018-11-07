@@ -19,7 +19,6 @@ public class DefaultOptionsCreator<T> implements IOptionsCreator<T>
      * @param cls
      * @throws IllegalArgumentException
      **************************************************************************/
-    @SuppressWarnings( "unchecked")
     public DefaultOptionsCreator( Class<T> cls ) throws IllegalArgumentException
     {
         Constructor<T> defaultConstructor = null;
@@ -33,7 +32,10 @@ public class DefaultOptionsCreator<T> implements IOptionsCreator<T>
 
             if( types.length == 1 && types[0].equals( cls ) )
             {
-                copyConstructor = ( Constructor<T> )c;
+                @SuppressWarnings( "unchecked")
+                Constructor<T> itemCopyConstructor = ( Constructor<T> )c;
+                copyConstructor = itemCopyConstructor;
+                break;
             }
         }
 

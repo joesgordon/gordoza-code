@@ -2,23 +2,34 @@ package org.taskflow.ui;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JSeparator;
+import javax.swing.JToolBar;
 
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
+import org.jutils.ValidationException;
 import org.jutils.io.XStreamUtils;
-import org.jutils.ui.*;
+import org.jutils.ui.JGoodiesToolBar;
+import org.jutils.ui.OkDialogView;
 import org.jutils.ui.OkDialogView.OkDialogButtons;
+import org.jutils.ui.RecentFilesViews;
+import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.event.FileChooserListener;
 import org.jutils.ui.event.FileChooserListener.IFileSelected;
 import org.jutils.ui.model.IView;
 import org.taskflow.TaskflowIcons;
 import org.taskflow.data.Project;
-
-import com.thoughtworks.xstream.XStreamException;
 
 /*******************************************************************************
  *
@@ -176,7 +187,7 @@ public class TaskflowFrameView implements IView<JFrame>
             Project proj = XStreamUtils.readObjectXStream( f );
             mainPanel.setData( proj );
         }
-        catch( XStreamException e )
+        catch( ValidationException e )
         {
             // TODO Auto-generated catch block
             e.printStackTrace();

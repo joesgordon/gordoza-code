@@ -39,8 +39,8 @@ public class BudgeyMain
     {
         if( options == null )
         {
-            options = new OptionsSerializer<>( new BudgeyOptionsCreator(),
-                OPTIONS_FILE );
+            options = OptionsSerializer.getOptions( BudgeyOptions.class,
+                OPTIONS_FILE, new BudgeyOptionsCreator() );
         }
 
         return options;

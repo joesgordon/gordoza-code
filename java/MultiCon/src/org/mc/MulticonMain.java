@@ -35,8 +35,8 @@ public class MulticonMain
     {
         if( userOptions == null )
         {
-            userOptions = OptionsSerializer.getOptions(
-                new McCommOptionsCreator(), OPTIONS_FILE );
+            userOptions = OptionsSerializer.getOptions( MulticonOptions.class,
+                OPTIONS_FILE, new McCommOptionsCreator() );
         }
 
         return userOptions;

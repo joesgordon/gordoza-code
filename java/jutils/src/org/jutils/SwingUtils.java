@@ -312,12 +312,15 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * Prompts for a name of an item using a {@link JOptionPane}.
-     * @param <T>
-     * @param parent
-     * @param name
-     * @param parser
-     * @param message
+     * Prompts for an item using a {@link JOptionPane}.
+     * @param <T> the type of the item to be parsed from a text field.
+     * @param parent determines the {@link Frame} in which the dialog is
+     * displayed; if the {@code parent} has no {@link Frame}, a default
+     * {@link Frame} is used.
+     * @param name the name of the item to prompt the user to enter.
+     * @param parser the method used to interpret the entered text as the item
+     * needed.
+     * @param message the message to be displayed on the dialog.
      * @return the value entered by the user or {@code null} if cancelled or
      * invalid.
      **************************************************************************/
@@ -328,12 +331,18 @@ public final class SwingUtils
     }
 
     /***************************************************************************
-     * @param <T>
-     * @param parent
-     * @param name
-     * @param parser
-     * @param message
-     * @return
+     * Prompts for an item using a {@link JOptionPane}.
+     * @param <T> the type of the item to be parsed from a text field.
+     * @param parent determines the {@link Frame} in which the dialog is
+     * displayed; if the {@code parent} has no {@link Frame}, a default
+     * {@link Frame} is used.
+     * @param name the name of the item to prompt the user to enter.
+     * @param parser the method used to interpret the entered text as the item
+     * needed.
+     * @param message the component to be displayed as the message on the
+     * dialog.
+     * @return the value entered by the user or {@code null} if cancelled or
+     * invalid.
      **************************************************************************/
     public static <T> T promptForValue( Component parent, String name,
         IParser<T> parser, JComponent message )
@@ -609,13 +618,9 @@ public final class SwingUtils
                 String str = XStreamUtils.writeObjectXStream( data );
                 Utils.setClipboardText( str );
             }
-            catch( XStreamException ex )
-            {
-                ex.printStackTrace();
-            }
             catch( IOException ex )
             {
-                ex.printStackTrace();
+                throw new RuntimeException( ex );
             }
         };
         Icon icon = IconConstants.getIcon( IconConstants.EDIT_COPY_16 );

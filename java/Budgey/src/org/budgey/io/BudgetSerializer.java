@@ -1,9 +1,16 @@
 package org.budgey.io;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
-import org.budgey.data.*;
+import org.budgey.data.Account;
+import org.budgey.data.Budget;
+import org.budgey.data.LedgerMonth;
+import org.budgey.data.Money;
+import org.budgey.data.Transaction;
+import org.jutils.ValidationException;
 import org.jutils.io.ISerializer;
 import org.jutils.io.XStreamUtils;
 
@@ -17,7 +24,8 @@ public class BudgetSerializer
      * 
      **************************************************************************/
     @Override
-    public Budget read( InputStream stream ) throws IOException
+    public Budget read( InputStream stream )
+        throws IOException, ValidationException
     {
         Budget budget = ( Budget )XStreamUtils.readObjectXStream( stream );
 

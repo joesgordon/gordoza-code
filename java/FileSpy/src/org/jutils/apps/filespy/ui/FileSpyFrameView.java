@@ -1,15 +1,32 @@
 package org.jutils.apps.filespy.ui;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 
-import org.jutils.*;
+import org.jutils.IconConstants;
+import org.jutils.SwingUtils;
+import org.jutils.ValidationException;
 import org.jutils.apps.filespy.FileSpyMain;
 import org.jutils.apps.filespy.data.FileSpyData;
 import org.jutils.apps.filespy.data.SearchParams;
@@ -18,7 +35,9 @@ import org.jutils.io.XStreamUtils;
 import org.jutils.io.options.OptionsSerializer;
 import org.jutils.licensing.LicenseDialog;
 import org.jutils.time.TimeUtils;
-import org.jutils.ui.*;
+import org.jutils.ui.JGoodiesToolBar;
+import org.jutils.ui.StandardFrameView;
+import org.jutils.ui.StatusBarPanel;
 import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.explorer.AppManagerView;
 import org.jutils.ui.model.IView;
@@ -304,7 +323,7 @@ public class FileSpyFrameView implements IView<JFrame>
                     params = XStreamUtils.readObjectXStream( fileChosen );
                     spyPanel.setData( params );
                 }
-                catch( IOException ex )
+                catch( IOException | ValidationException ex )
                 {
                     JOptionPane.showMessageDialog( getView(), ex.getMessage(),
                         "I/O ERROR", JOptionPane.ERROR_MESSAGE );

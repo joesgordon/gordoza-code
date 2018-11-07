@@ -31,6 +31,7 @@ public class ColorMapView implements IView<JComponent>
     /**  */
     private final ColorMapFactory mapFactory;
 
+    /**  */
     private BufferedImage exampleImage;
 
     /***************************************************************************

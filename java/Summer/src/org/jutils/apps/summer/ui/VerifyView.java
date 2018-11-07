@@ -302,9 +302,12 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
         }
 
         runVerify( view, input );
-
     }
 
+    /***************************************************************************
+     * @param parent
+     * @param input
+     **************************************************************************/
     public static void runVerify( Component parent, ChecksumResult input )
     {
         if( input.type == null )

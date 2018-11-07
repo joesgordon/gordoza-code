@@ -2,10 +2,8 @@ package org.jutils.io.options;
 
 import java.io.*;
 
-import org.jutils.io.IOUtils;
-import org.jutils.io.XStreamUtils;
-
-import com.thoughtworks.xstream.XStreamException;
+import org.jutils.ValidationException;
+import org.jutils.io.*;
 
 /*******************************************************************************
  * Default serializer for user options.
@@ -20,6 +18,8 @@ public class OptionsSerializer<T>
     private final IOptionsCreator<T> creator;
     /** The file from which the options will be read and written. */
     private final File file;
+    /**  */
+    private final IStdSerializer<T, File> serializer;
 
     /** The last options read/written. */
     private T options;
@@ -31,11 +31,14 @@ public class OptionsSerializer<T>
      * @param creator The class to use to create default options when the
      * options cannot be read from file.
      * @param file The file from which the options will be read and written.
+     * @param serializer the methods used to serialize data items to a file.
      **************************************************************************/
-    public OptionsSerializer( IOptionsCreator<T> creator, File file )
+    public OptionsSerializer( IOptionsCreator<T> creator, File file,
+        IStdSerializer<T, File> serializer )
     {
         this.creator = creator;
         this.file = file;
+        this.serializer = serializer;
 
         if( !IOUtils.ensureParentExists( file ) )
         {
@@ -100,7 +103,7 @@ public class OptionsSerializer<T>
             {
                 options = getDefault();
 
-                obj = XStreamUtils.readObjectXStream( file );
+                obj = serializer.read( file );
             }
             catch( FileNotFoundException ex )
             {
@@ -115,7 +118,7 @@ public class OptionsSerializer<T>
                 write();
                 ex.printStackTrace();
             }
-            catch( XStreamException ex )
+            catch( ValidationException ex )
             {
                 File brokenFile = new File(
                     file.getAbsoluteFile().getParentFile(),
@@ -194,33 +197,29 @@ public class OptionsSerializer<T>
 
         try
         {
-            XStreamUtils.writeObjectXStream( data, file );
+            serializer.write( data, file );
         }
         catch( IOException ex )
         {
             creator.warn( "Unable to write options because of an I/O error: " +
                 ex.getMessage() );
         }
-        catch( XStreamException ex )
-        {
-            creator.warn(
-                "Unable to write options because of an serialization error: " +
-                    ex.getMessage() );
-        }
     }
 
     /***************************************************************************
      * Creates an options serializer with the specified file and options creator
      * by ensuring the directory structure exists for the file before creation.
+     * @param <T> the type of object to be serialized.
+     * @param cls the class of the object to be serialized.
      * @param creator the default creator to be used.
      * @param file the file to be used for serialization.
-     * @param <T> the type of object to be serialized.
      * @return the new options serializer.
      **************************************************************************/
-    public static <T> OptionsSerializer<T> getOptions(
-        IOptionsCreator<T> creator, File file )
+    public static <T> OptionsSerializer<T> getOptions( Class<T> cls, File file,
+        IOptionsCreator<T> creator )
     {
-        return new OptionsSerializer<T>( creator, file );
+        IStdSerializer<T, File> serializer = new XStreamFileSerializer<>( cls );
+        return new OptionsSerializer<T>( creator, file, serializer );
     }
 
     /***************************************************************************
@@ -229,10 +228,10 @@ public class OptionsSerializer<T>
      * @param cls the class of the object to be serialized.
      * @param file the file to be used for serialization.
      * @param <T> the type of object to be serialized.
-     * @return
+     * @return the new options serializer.
      **************************************************************************/
     public static <T> OptionsSerializer<T> getOptions( Class<T> cls, File file )
     {
-        return getOptions( new DefaultOptionsCreator<T>( cls ), file );
+        return getOptions( cls, file, new DefaultOptionsCreator<T>( cls ) );
     }
 }
