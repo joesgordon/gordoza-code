@@ -61,6 +61,11 @@ public class SummerMain
         }
     }
 
+    /***************************************************************************
+     * @param args
+     * @return
+     * @throws ValidationException
+     **************************************************************************/
     public static int runMain( List<String> args ) throws ValidationException
     {
         if( args.isEmpty() )

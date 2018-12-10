@@ -165,6 +165,9 @@ public class SummerView implements IView<JFrame>
         return toolbar;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private Action createConfigAction()
     {
         Icon icon = IconConstants.getIcon( IconConstants.CONFIG_16 );
@@ -173,6 +176,9 @@ public class SummerView implements IView<JFrame>
         return new ActionAdapter( listener, "Config", icon );
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private void showConfig()
     {
         OptionsSerializer<SummerOptions> options = SummerMain.getOptions();

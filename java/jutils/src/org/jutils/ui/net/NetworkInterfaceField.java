@@ -52,8 +52,14 @@ public class NetworkInterfaceField implements IDataFormField<String>
         {
             String title = nic.addressString + " : " + nic.name;
             JMenuItem item = new JMenuItem( title );
-            item.addActionListener(
-                ( e ) -> nicField.setValue( nic.address.getHostAddress() ) );
+            item.addActionListener( ( e ) -> {
+                nicField.setValue( nic.address.getHostAddress() );
+                IUpdater<String> updater = nicField.getUpdater();
+                if( updater != null )
+                {
+                    updater.update( nicField.getValue() );
+                }
+            } );
             nicMenu.add( item );
         }
 

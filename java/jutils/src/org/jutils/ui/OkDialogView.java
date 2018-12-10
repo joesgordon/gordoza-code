@@ -247,7 +247,8 @@ public class OkDialogView implements IView<JDialog>
     }
 
     /***************************************************************************
-     * @return
+     * Shows the dialog after packing.
+     * @return {@code true} if the ok button was pressed, false otherwise.
      **************************************************************************/
     public boolean show()
     {
@@ -255,8 +256,9 @@ public class OkDialogView implements IView<JDialog>
     }
 
     /***************************************************************************
-     * @param size
-     * @return
+     * Shows the dialog after setting the provided size.
+     * @param size the desired size of the dialog shown or {@code null} to pack.
+     * @return {@code true} if the ok button was pressed, false otherwise.
      **************************************************************************/
     public boolean show( Dimension size )
     {
@@ -274,9 +276,11 @@ public class OkDialogView implements IView<JDialog>
     }
 
     /***************************************************************************
-     * @param title
-     * @param size
-     * @return
+     * Shows the dialog after setting the provided parameters.
+     * @param title the text displayed in the dialog's border; a {@code null}
+     * value results in an empty title.
+     * @param size the desired size of the dialog shown or {@code null} to pack.
+     * @return {@code true} if the ok button was pressed, false otherwise.
      **************************************************************************/
     public boolean show( String title, Dimension size )
     {
@@ -286,10 +290,12 @@ public class OkDialogView implements IView<JDialog>
     }
 
     /***************************************************************************
-     * @param title
-     * @param iconImages
-     * @param size
-     * @return
+     * Shows the dialog after setting the provided parameters.
+     * @param title the text displayed in the dialog's border; a {@code null}
+     * value results in an empty title.
+     * @param iconImages the list of icons displayed when asked by the system.
+     * @param size the desired size of the dialog shown or {@code null} to pack.
+     * @return {@code true} if the ok button was pressed, false otherwise.
      **************************************************************************/
     public boolean show( String title, List<Image> iconImages, Dimension size )
     {
@@ -299,8 +305,9 @@ public class OkDialogView implements IView<JDialog>
     }
 
     /***************************************************************************
-     * @param width
-     * @param height
+     * Sets the size of the dialog to the provided parameters.
+     * @param width the width of the dialog shown.
+     * @param height the height of the dialog shown.
      **************************************************************************/
     public void setSize( int width, int height )
     {
@@ -359,7 +366,7 @@ public class OkDialogView implements IView<JDialog>
         // applyButton.setIcon( IconConstants.loader.getIcon(
         // IconConstants.CHECK_16 ) );
         applyButton.addActionListener(
-            ( e ) -> handleButtonAction( true, true ) );
+            ( e ) -> handleButtonAction( false, true ) );
 
         SwingUtils.setMaxComponentSize( okButton, cancelButton, applyButton );
 
