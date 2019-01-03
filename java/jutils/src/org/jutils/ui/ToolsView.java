@@ -59,8 +59,8 @@ public class ToolsView implements IView<JPanel>
         table.getTableHeader().setReorderingAllowed( false );
         table.setAutoResizeMode( JTable.AUTO_RESIZE_LAST_COLUMN );
 
-        SwingUtils.addKeyListener( table, "ENTER", false,
-            ( e ) -> showSelectedRow(), "Enter to display tool" );
+        SwingUtils.addKeyListener( table, "ENTER", ( e ) -> showSelectedRow(),
+            "Enter to display tool", false );
 
         resizeTable();
     }

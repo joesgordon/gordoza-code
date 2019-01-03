@@ -29,6 +29,11 @@ public interface IConnection extends Closeable
     public void addDisconnectedListener( Runnable listener );
 
     /***************************************************************************
+     * @return
+     **************************************************************************/
+    public String getNic();
+
+    /***************************************************************************
      * Returns the first {@link InetAddress} of the network interface name
      * provided or dies if the JRE is strange.
      * @param nicName the name of the network interface to be found.

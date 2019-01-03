@@ -59,7 +59,9 @@ public class MulticastView implements IConnectionView
         options.multicastInputs = new MulticastInputs( inputs );
         userio.write( options );
 
-        return new MulticastConnection( inputs );
+        MulticastConnection connection = new MulticastConnection( inputs );
+
+        return connection;
     }
 
     /***************************************************************************

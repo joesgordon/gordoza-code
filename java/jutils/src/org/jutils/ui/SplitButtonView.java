@@ -304,6 +304,10 @@ public class SplitButtonView<T> implements IView<JComponent>
         private final JList<T> list;
         private final List<IRecentListener<T>> selectedListeners;
 
+        /**
+         * @param items
+         * @param descriptor
+         */
         public ListPopup( List<T> items, IListItemModel<T> descriptor )
         {
             this.model = new CollectionListModel<>();
@@ -313,9 +317,9 @@ public class SplitButtonView<T> implements IView<JComponent>
             model.setData( items );
 
             // list.setFocusable( false );
-            SwingUtils.addKeyListener( list, "ENTER", false,
+            SwingUtils.addKeyListener( list, "ENTER",
                 ( e ) -> fireSelected( list.getSelectedValue(), false ),
-                "List Enter Pressed" );
+                "List Enter Pressed", false );
             list.setBackground(
                 UIProperty.TEXTFIELD_INACTIVEBACKGROUND.getColor() );
             list.setVisibleRowCount( 10 );

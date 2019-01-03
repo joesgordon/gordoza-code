@@ -68,6 +68,7 @@ public class ByteCache
     /***************************************************************************
      * Returns the number of bytes past the last read/write index that are
      * available for reading in this cache.
+     * @return the number of bytes available for reading.
      **************************************************************************/
     public int remainingRead()
     {
@@ -77,6 +78,7 @@ public class ByteCache
     /***************************************************************************
      * Returns the number of bytes past the last read/write index that are
      * available for writing in this cache.
+     * @return the number of bytes available for writing.
      **************************************************************************/
     public int remainingWrite()
     {
@@ -201,6 +203,8 @@ public class ByteCache
      * @param buf the buffer to which the data will be copied.
      * @param off the offset into the buffer at which the data will be copied.
      * @param len the length of the data to copy.
+     * @throws IndexOutOfBoundsException the offset is negative or offset +
+     * length is greater than the length of the buffer.
      **************************************************************************/
     public void read( byte [] buf, int off, int len )
         throws IndexOutOfBoundsException
@@ -282,6 +286,7 @@ public class ByteCache
     /***************************************************************************
      * Returns the number of bytes in this cache available for reading. This
      * does not take into account the current read/write index.
+     * @return the total number of bytes available for reading.
      **************************************************************************/
     public long getReadLength()
     {

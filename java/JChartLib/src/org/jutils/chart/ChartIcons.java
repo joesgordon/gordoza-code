@@ -47,7 +47,7 @@ public class ChartIcons
     }
 
     /***************************************************************************
-     * @return
+     * @return the list of images that represent the charting application.
      **************************************************************************/
     public static List<Image> getChartImages()
     {
@@ -55,8 +55,9 @@ public class ChartIcons
     }
 
     /***************************************************************************
-     * @param str
-     * @return
+     * @param str the name/relative path to the icon.
+     * @return the icon loaded or {@code null} if none found.
+     * @see IconLoader#getIcon(String)
      **************************************************************************/
     public static Icon getIcon( String str )
     {

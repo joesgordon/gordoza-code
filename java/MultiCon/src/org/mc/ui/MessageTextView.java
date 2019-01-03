@@ -58,9 +58,9 @@ public class MessageTextView implements IDataView<byte[]>
         setData( HexUtils.fromHexStringToArray( "EB91" ) );
 
         SwingUtils.addKeyListener( textField.getTextArea(), "shift ENTER",
-            false, ( e ) -> insertText( LF ), "Shift+Enter Listener" );
+            ( e ) -> insertText( LF ), "Shift+Enter Listener", false );
         SwingUtils.addKeyListener( textField.getTextArea(), "control ENTER",
-            false, ( e ) -> insertText( CR ), "Control+Enter Listener" );
+            ( e ) -> insertText( CR ), "Control+Enter Listener", false );
     }
 
     /***************************************************************************

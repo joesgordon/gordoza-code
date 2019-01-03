@@ -161,8 +161,10 @@ public class ConnectionBindableView implements IBindableView
         errListener = ( m ) -> SwingUtilities.invokeLater(
             () -> displayErrorMessage( m ) );
 
-        commModel = new ConnectionListener( connection, rxListener,
-            errListener );
+        commModel = new ConnectionListener();
+        commModel.addMessageListener( rxListener );
+        commModel.addErrorListener( errListener );
+        commModel.start( connection );
 
         inputPanel.setConnection( connection );
 

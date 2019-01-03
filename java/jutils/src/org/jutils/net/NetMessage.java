@@ -60,4 +60,18 @@ public class NetMessage
         this.remotePort = remotePort;
         this.contents = contents;
     }
+
+    /***************************************************************************
+     * @param msg
+     **************************************************************************/
+    public NetMessage( NetMessage msg )
+    {
+        this.received = msg.received;
+        this.time = msg.time;
+        this.localAddress = msg.localAddress;
+        this.localPort = msg.localPort;
+        this.remoteAddress = msg.remoteAddress;
+        this.remotePort = msg.remotePort;
+        this.contents = msg.contents;
+    }
 }

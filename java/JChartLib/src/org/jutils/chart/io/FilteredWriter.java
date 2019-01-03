@@ -1,6 +1,12 @@
 package org.jutils.chart.io;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
@@ -79,6 +85,7 @@ public class FilteredWriter
      * @param toFile
      * @param data
      * @throws FileNotFoundException
+     * @throws IOException
      **************************************************************************/
     public static void write( File toFile, ISeriesData<?> data )
         throws FileNotFoundException, IOException

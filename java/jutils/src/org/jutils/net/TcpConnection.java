@@ -174,6 +174,15 @@ public class TcpConnection implements IConnection
     }
 
     /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public String getNic()
+    {
+        return socket.getLocalAddress().getHostAddress();
+    }
+
+    /***************************************************************************
      * @return
      **************************************************************************/
     public Ip4Address getRemoteAddress()

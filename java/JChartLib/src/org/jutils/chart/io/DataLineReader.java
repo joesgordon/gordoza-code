@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.jutils.Utils;
 import org.jutils.chart.data.XYPoint;
+import org.jutils.chart.model.ChartOptions;
 
 /*******************************************************************************
  * 
@@ -39,7 +40,7 @@ public class DataLineReader
 
             String val = values.get( values.size() - 1 );
 
-            if( val.equals( "999999999.999999999" ) )
+            if( val.equals( ChartOptions.NINE_NINES_SENTINEL_VALUE ) )
             {
                 y = Double.NaN;
             }

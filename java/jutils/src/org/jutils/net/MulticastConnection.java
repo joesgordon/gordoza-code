@@ -62,7 +62,16 @@ public class MulticastConnection implements IConnection
             }
         }
 
-        this.socket.joinGroup( address );
+        try
+        {
+            this.socket.joinGroup( address );
+        }
+        catch( SocketException ex )
+        {
+            String msg = String.format( "Unable to join %s:%d", inputs.group,
+                inputs.port );
+            throw new IOException( msg, ex );
+        }
     }
 
     /***************************************************************************
@@ -88,6 +97,25 @@ public class MulticastConnection implements IConnection
             remoteAddress, remotePort, buf );
 
         return msg;
+    }
+
+    /***************************************************************************
+     * @param contents
+     * @param toAddr
+     * @param toPort
+     * @return
+     * @throws IOException
+     **************************************************************************/
+    public NetMessage sendMessage( byte [] contents, InetAddress toAddr,
+        int toPort ) throws IOException
+    {
+        DatagramPacket packet = new DatagramPacket( contents, contents.length,
+            toAddr, toPort );
+
+        socket.send( packet );
+
+        return new NetMessage( false, socket.getLocalAddress().getHostAddress(),
+            socket.getLocalPort(), toAddr.getHostAddress(), toPort, contents );
     }
 
     /***************************************************************************
@@ -131,5 +159,21 @@ public class MulticastConnection implements IConnection
     @Override
     public void addDisconnectedListener( Runnable listener )
     {
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public String getNic()
+    {
+        try
+        {
+            return NetUtils.getIpv4( socket.getNetworkInterface() );
+        }
+        catch( SocketException e )
+        {
+            return null;
+        }
     }
 }

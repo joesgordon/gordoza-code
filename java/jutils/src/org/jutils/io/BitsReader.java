@@ -197,8 +197,9 @@ public class BitsReader
     }
 
     /***************************************************************************
-     * Generates the mask for the number of bits in a sub-field regardless of
-     * its bit offset.
+     * Generates a mask for each number, 0 through 64 inclusive. This range is
+     * the number of bits in a sub-field regardless of its bit offset.
+     * @return the array of masks for each index into the array, 0 - 64.
      **************************************************************************/
     private static long [] generateMasks()
     {

@@ -16,6 +16,27 @@ public final class NetUtils
     }
 
     /***************************************************************************
+     * @param nic
+     * @return
+     **************************************************************************/
+    public static String getIpv4( NetworkInterface nic )
+    {
+        Enumeration<InetAddress> addresses = nic.getInetAddresses();
+
+        while( addresses.hasMoreElements() )
+        {
+            InetAddress address = addresses.nextElement();
+
+            if( address instanceof Inet4Address )
+            {
+                return address.getHostAddress();
+            }
+        }
+
+        return null;
+    }
+
+    /***************************************************************************
      * @return
      **************************************************************************/
     public static List<NicInfo> buildNicList()

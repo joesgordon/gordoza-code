@@ -66,7 +66,7 @@ public final class SwingUtils
         String mapKey = "com.spodding.tackline.dispatch:WINDOW_CLOSING";
         Action closeAction = new ActionAdapter( closeListener, mapKey, null );
 
-        addKeyListener( rootPane, "ESCAPE", true, closeAction );
+        addKeyListener( rootPane, "ESCAPE", closeAction, true );
     }
 
     /***************************************************************************
@@ -872,11 +872,11 @@ public final class SwingUtils
      * @return the action created.
      **************************************************************************/
     public static Action addKeyListener( JComponent view, String keystoke,
-        boolean inWindow, ActionListener callback, String actionName )
+        ActionListener callback, String actionName, boolean inWindow )
     {
         Action action = new ActionAdapter( callback, actionName, null );
 
-        addKeyListener( view, keystoke, inWindow, action );
+        addKeyListener( view, keystoke, action, inWindow );
 
         return action;
     }
@@ -890,10 +890,37 @@ public final class SwingUtils
      * @param action the action to be bound to the key.
      **************************************************************************/
     public static void addKeyListener( JComponent view, String keystoke,
-        boolean inWindow, Action action )
+        Action action, boolean inWindow )
     {
         int condition = inWindow ? JComponent.WHEN_IN_FOCUSED_WINDOW
             : JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT;
+        InputMap inMap = view.getInputMap( condition );
+        ActionMap acMap = view.getActionMap();
+        KeyStroke stroke = KeyStroke.getKeyStroke( keystoke );
+        String mapKey = action.getValue( Action.NAME ).toString();
+
+        if( stroke == null )
+        {
+            throw new IllegalArgumentException(
+                "Invalid keystroke: " + keystoke );
+        }
+
+        action.putValue( Action.ACCELERATOR_KEY, stroke );
+        inMap.put( stroke, mapKey );
+        acMap.put( mapKey, action );
+    }
+
+    /***************************************************************************
+     * Binds a listener to a key on a component.
+     * @param view the component on which to bind the key.
+     * @param keystoke the key to be bound.
+     * @param condition the condition under which the key listener is called
+     * {@link JComponent#getInputMap(int)};
+     * @param action the action to be bound to the key.
+     **************************************************************************/
+    public static void addKeyListener( JComponent view, String keystoke,
+        Action action, int condition )
+    {
         InputMap inMap = view.getInputMap( condition );
         ActionMap acMap = view.getActionMap();
         KeyStroke stroke = KeyStroke.getKeyStroke( keystoke );

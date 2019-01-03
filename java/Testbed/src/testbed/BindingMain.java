@@ -3,7 +3,10 @@ package testbed;
 import java.awt.Container;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import org.jutils.SwingUtils;
 import org.jutils.data.SystemProperty;
@@ -60,15 +63,15 @@ public final class BindingMain
             JPanel panel = form.getView();
             ActionListener l = ( e ) -> SwingUtils.showErrorMessage( panel,
                 "Enter pressed", "Yay!" );
-            SwingUtils.addKeyListener( panel, "ENTER", true, l,
-                "enterpressed" );
-            SwingUtils.addKeyListener( combo, "ENTER", true, l,
-                "enterpressed" );
+            SwingUtils.addKeyListener( panel, "ENTER", l, "enterpressed",
+                true );
+            SwingUtils.addKeyListener( combo, "ENTER", l, "enterpressed",
+                true );
             SwingUtils.addKeyListener(
                 ( JComponent )combo.getEditor().getEditorComponent(), "ENTER",
-                false, l, "enterpressed" );
-            SwingUtils.addKeyListener( uiField.getView(), "ENTER", false, l,
-                "enterpressed" );
+                l, "enterpressed", false );
+            SwingUtils.addKeyListener( uiField.getView(), "ENTER", l,
+                "enterpressed", false );
 
             combo.addActionListener( l );
 

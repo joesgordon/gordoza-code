@@ -1,14 +1,25 @@
 package chatterbox.messenger;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.SwingUtilities;
 
 import org.jutils.ValidationException;
-import org.jutils.io.*;
+import org.jutils.io.ByteArrayStream;
+import org.jutils.io.DataStream;
+import org.jutils.io.IDataStream;
+import org.jutils.io.LogUtils;
 import org.jutils.io.options.OptionsSerializer;
-import org.jutils.net.*;
+import org.jutils.net.ConnectionListener;
+import org.jutils.net.IConnection;
+import org.jutils.net.MulticastConnection;
+import org.jutils.net.MulticastInputs;
+import org.jutils.net.NetMessage;
 import org.jutils.task.TaskError;
 import org.jutils.task.TaskRunner;
 import org.jutils.ui.event.ItemActionList;
@@ -16,9 +27,18 @@ import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.event.updater.IUpdater;
 
 import chatterbox.ChatterboxConstants;
-import chatterbox.data.*;
-import chatterbox.data.messages.*;
-import chatterbox.io.*;
+import chatterbox.data.ChatInfo;
+import chatterbox.data.ChatUser;
+import chatterbox.data.ChatterboxOptions;
+import chatterbox.data.messages.ChatHeader;
+import chatterbox.data.messages.ChatMessage;
+import chatterbox.data.messages.ChatMessageType;
+import chatterbox.data.messages.UserAvailableMessage;
+import chatterbox.data.messages.UserLeftMessage;
+import chatterbox.io.ChatHeaderSerializer;
+import chatterbox.io.ChatMessageSerializer;
+import chatterbox.io.UserAvailableMessageSerializer;
+import chatterbox.io.UserLeftMessageSerializer;
 
 /*******************************************************************************
  * 
@@ -77,8 +97,10 @@ public class ChatterboxHandler
             IUpdater<String> errorListener = (
                 e ) -> SwingUtilities.invokeLater(
                     () -> displayErrorMessage( e ) );
-            this.wire = new ConnectionListener( connection,
-                new RawReceiver( this ), errorListener );
+            this.wire = new ConnectionListener();
+            wire.start( connection );
+            wire.addMessageListener( new RawReceiver( this ) );
+            wire.addErrorListener( errorListener );
         }
         catch( IOException ex )
         {
@@ -343,7 +365,7 @@ public class ChatterboxHandler
                     "Message is too long: " + msgBytes.length );
             }
 
-            wire.connection.sendMessage( msgBytes );
+            wire.sendMessage( msgBytes );
         }
     }
 

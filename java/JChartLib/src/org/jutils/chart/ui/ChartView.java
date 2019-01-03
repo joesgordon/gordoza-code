@@ -1,35 +1,81 @@
 package org.jutils.chart.ui;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dialog.ModalityType;
-import java.awt.event.*;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.InputEvent;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.Box;
+import javax.swing.Icon;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.JToolBar;
 
-import org.jutils.*;
-import org.jutils.chart.*;
+import org.jutils.IconConstants;
+import org.jutils.SwingUtils;
+import org.jutils.Utils;
+import org.jutils.ValidationException;
+import org.jutils.chart.ChartIcons;
+import org.jutils.chart.IPalette;
+import org.jutils.chart.PresetPalette;
 import org.jutils.chart.app.JChartAppConstants;
 import org.jutils.chart.app.UserData;
 import org.jutils.chart.data.SaveOptions;
 import org.jutils.chart.io.DataFileReader;
-import org.jutils.chart.model.*;
+import org.jutils.chart.model.Chart;
+import org.jutils.chart.model.ChartOptions.PointRemovalMethod;
+import org.jutils.chart.model.IDataPoint;
+import org.jutils.chart.model.ISeriesData;
+import org.jutils.chart.model.Interval;
+import org.jutils.chart.model.Series;
 import org.jutils.chart.ui.event.ChartMouseListenter;
 import org.jutils.chart.ui.event.SaveSeriesDataListener;
-import org.jutils.chart.ui.objects.*;
+import org.jutils.chart.ui.objects.ChartWidget;
+import org.jutils.chart.ui.objects.PlotContext;
+import org.jutils.chart.ui.objects.PlotWidget;
 import org.jutils.io.IOUtils;
 import org.jutils.io.options.OptionsSerializer;
-import org.jutils.ui.*;
+import org.jutils.ui.JGoodiesToolBar;
+import org.jutils.ui.OkDialogView;
 import org.jutils.ui.OkDialogView.OkDialogButtons;
-import org.jutils.ui.event.*;
+import org.jutils.ui.RecentFilesViews;
+import org.jutils.ui.event.ActionAdapter;
+import org.jutils.ui.event.FileChooserListener;
 import org.jutils.ui.event.FileChooserListener.IFilesSelected;
 import org.jutils.ui.event.FileChooserListener.ILastFiles;
+import org.jutils.ui.event.FileDropTarget;
 import org.jutils.ui.event.FileDropTarget.DropActionType;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
+import org.jutils.ui.event.ItemActionEvent;
+import org.jutils.ui.event.ItemActionList;
+import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.fields.ComboFormField;
+import org.jutils.ui.fields.NamedItemDescriptor;
 import org.jutils.ui.model.IDataView;
 import org.jutils.ui.model.IView;
 
@@ -50,6 +96,8 @@ public class ChartView implements IView<JComponent>
     private final PropertiesView propertiesView;
     /**  */
     private final JToolBar toolbar;
+    /**  */
+    private final ComboFormField<PointRemovalMethod> pointsField;
     /**  */
     private final JSeparator separator;
 
@@ -90,6 +138,8 @@ public class ChartView implements IView<JComponent>
         this.propertiesView = new PropertiesView( chart );
         this.recentFiles = new RecentFilesViews();
 
+        this.pointsField = new ComboFormField<>( "Point Removal: ",
+            PointRemovalMethod.values(), new NamedItemDescriptor<>() );
         this.toolbar = createToolbar( allowOpen, gradientToolbar );
         this.separator = new JSeparator();
         this.view = createView();
@@ -121,14 +171,11 @@ public class ChartView implements IView<JComponent>
 
         mainComp.setFocusable( true );
 
-        String actionMapKey = "delete_point";
-        KeyStroke deleteKey = KeyStroke.getKeyStroke( KeyEvent.VK_DELETE, 0 );
-        ActionMap amap = mainComp.getActionMap();
-        InputMap imap = mainComp.getInputMap( JTable.WHEN_FOCUSED );
+        Action action = new ActionAdapter( ( e ) -> removeSelectedPoints(),
+            "delete_point", null );
 
-        imap.put( deleteKey, actionMapKey );
-        amap.put( actionMapKey, new ActionAdapter(
-            new DeletePointListener( this ), actionMapKey, null ) );
+        SwingUtils.addKeyListener( mainComp, "DELETE", action,
+            JComponent.WHEN_FOCUSED );
 
         mainComp.setMinimumSize( new Dimension( 150, 150 ) );
     }
@@ -198,6 +245,18 @@ public class ChartView implements IView<JComponent>
         SwingUtils.addActionToToolbar( toolbar, createZoomInAction() );
 
         SwingUtils.addActionToToolbar( toolbar, createZoomOutAction() );
+
+        JPanel panel = new JPanel( new FlowLayout( FlowLayout.CENTER, 0, 0 ) );
+
+        pointsField.setValue( PointRemovalMethod.NAN );
+
+        panel.setOpaque( false );
+        panel.add( new JLabel( pointsField.getName() ) );
+        panel.add( pointsField.getView() );
+        panel.setMaximumSize( panel.getPreferredSize() );
+        toolbar.add( panel );
+
+        toolbar.add( Box.createHorizontalGlue() );
 
         return toolbar;
     }
@@ -624,6 +683,42 @@ public class ChartView implements IView<JComponent>
     /***************************************************************************
      * 
      **************************************************************************/
+    private void removeSelectedPoints()
+    {
+        // System.out.println( "Deleting points..." );
+
+        for( PlotWidget series : chartWidget.plots.plots )
+        {
+            for( IDataPoint xy : series.series.data )
+            {
+                if( xy.isSelected() )
+                {
+                    xy.setHidden( true );
+                    xy.setSelected( false );
+                }
+            }
+        }
+
+        PlotContext context = chartWidget.context;
+
+        if( context.isAutoBounds() )
+        {
+            context.calculateAutoBounds( chart.series );
+            context.restoreAutoBounds();
+        }
+        else
+        {
+            context.calculateAutoBounds( chart.series );
+        }
+
+        chartWidget.plots.repaint();
+        chartWidget.axes.axesLayer.repaint = true;
+        mainPanel.repaint();
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
     @Override
     public JComponent getView()
     {
@@ -939,53 +1034,6 @@ public class ChartView implements IView<JComponent>
     /***************************************************************************
      * 
      **************************************************************************/
-    private static class DeletePointListener implements ActionListener
-    {
-        private final ChartView view;
-
-        public DeletePointListener( ChartView view )
-        {
-            this.view = view;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            // System.out.println( "Deleting points..." );
-
-            for( PlotWidget series : view.chartWidget.plots.plots )
-            {
-                for( IDataPoint xy : series.series.data )
-                {
-                    if( xy.isSelected() )
-                    {
-                        xy.setHidden( true );
-                        xy.setSelected( false );
-                    }
-                }
-            }
-
-            PlotContext context = view.chartWidget.context;
-
-            if( context.isAutoBounds() )
-            {
-                context.calculateAutoBounds( view.chart.series );
-                context.restoreAutoBounds();
-            }
-            else
-            {
-                context.calculateAutoBounds( view.chart.series );
-            }
-
-            view.chartWidget.plots.repaint();
-            view.chartWidget.axes.axesLayer.repaint = true;
-            view.mainPanel.repaint();
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
     public static class SeriesChangedEvent
     {
         public final Series s;
@@ -1050,6 +1098,9 @@ public class ChartView implements IView<JComponent>
             return view.propertiesDialog;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ItemActionEvent<Boolean> event )
         {
@@ -1067,13 +1118,20 @@ public class ChartView implements IView<JComponent>
      **************************************************************************/
     private static class ZoomInListener implements ActionListener
     {
+        /**  */
         private final ChartView view;
 
+        /**
+         * @param view
+         */
         public ZoomInListener( ChartView view )
         {
             this.view = view;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ActionEvent e )
         {
@@ -1090,13 +1148,20 @@ public class ChartView implements IView<JComponent>
      **************************************************************************/
     private static class ZoomOutListener implements ActionListener
     {
+        /**  */
         private final ChartView view;
 
+        /**
+         * @param view
+         */
         public ZoomOutListener( ChartView view )
         {
             this.view = view;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ActionEvent e )
         {
@@ -1113,13 +1178,20 @@ public class ChartView implements IView<JComponent>
      **************************************************************************/
     private static class FileLoadedListener implements ItemActionListener<File>
     {
+        /**  */
         private final ChartView view;
 
+        /**
+         * @param view
+         */
         public FileLoadedListener( ChartView view )
         {
             this.view = view;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ItemActionEvent<File> event )
         {

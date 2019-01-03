@@ -1,9 +1,13 @@
 package org.jutils.apps.filespy.ui;
 
-import java.awt.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.time.LocalDate;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JPanel;
 
 import org.jutils.SwingUtils;
 import org.jutils.apps.filespy.data.SearchParams;
@@ -14,7 +18,10 @@ import org.jutils.ui.StandardFormView;
 import org.jutils.ui.calendar.DateField;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
-import org.jutils.ui.fields.*;
+import org.jutils.ui.fields.BooleanFormField;
+import org.jutils.ui.fields.FileFormField;
+import org.jutils.ui.fields.LongFormField;
+import org.jutils.ui.fields.UsableFormField;
 import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
@@ -92,9 +99,9 @@ public class SearchParamsView implements IDataView<SearchParams>
 
         fileNotCheckBox.setUpdater( ( b ) -> params.filenameNot = b );
 
-        SwingUtils.addKeyListener( view, "ENTER", false,
+        SwingUtils.addKeyListener( view, "ENTER",
             ( e ) -> startListeners.fireListeners( this, params ),
-            "Entertostartsearch" );
+            "Entertostartsearch", false );
     }
 
     /***************************************************************************

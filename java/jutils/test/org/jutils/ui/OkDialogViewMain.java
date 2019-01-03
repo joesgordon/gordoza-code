@@ -16,15 +16,27 @@ import org.jutils.ui.fields.ComboFormField;
 import org.jutils.ui.fields.StringFormField;
 import org.jutils.ui.model.IView;
 
+/**
+ *
+ */
 public class OkDialogViewMain
 {
+    /**
+     * @param args
+     */
     public static void main( String [] args )
     {
         FrameRunner.invokeLater( new OkDialogViewApp(), false );
     }
 
+    /**
+     *
+     */
     private static class OkDialogViewApp implements IFrameApp
     {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public JFrame createFrame()
         {
@@ -33,6 +45,9 @@ public class OkDialogViewMain
             return frame.getView();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void finalizeGui()
         {
@@ -41,12 +56,20 @@ public class OkDialogViewMain
 
     private static class OkDialogViewFrame implements IView<JFrame>
     {
+        /**  */
         private final StandardFrameView frame;
+        /**  */
         private final ComboFormField<ModalityType> modalityField;
+        /**  */
         private final ComboFormField<OkDialogButtons> buttonsField;
+        /**  */
         private final StringFormField titleField;
+        /**  */
         private final StringFormField okTextField;
 
+        /**
+         * 
+         */
         public OkDialogViewFrame()
         {
             this.frame = new StandardFrameView();
@@ -69,6 +92,9 @@ public class OkDialogViewMain
             frame.setContent( createContent() );
         }
 
+        /**
+         * @return
+         */
         private JToolBar createToolbar()
         {
             JToolBar toolbar = new JGoodiesToolBar();
@@ -82,6 +108,9 @@ public class OkDialogViewMain
             return toolbar;
         }
 
+        /**
+         * @return
+         */
         private Container createContent()
         {
             StandardFormView form = new StandardFormView();
@@ -94,6 +123,9 @@ public class OkDialogViewMain
             return form.getView();
         }
 
+        /**
+         * 
+         */
         private void showDialog()
         {
             OkDialogView view = new OkDialogView( getView(), new JPanel(),

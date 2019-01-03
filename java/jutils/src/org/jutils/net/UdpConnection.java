@@ -93,7 +93,7 @@ public class UdpConnection implements IConnection
             throw new RuntimeException( "No remote address specified" );
         }
 
-        return txMessage( contents, remoteAddress, remotePort );
+        return sendMessage( contents, remoteAddress, remotePort );
     }
 
     /***************************************************************************
@@ -105,13 +105,22 @@ public class UdpConnection implements IConnection
     }
 
     /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public String getNic()
+    {
+        return socket.getLocalAddress().getHostAddress();
+    }
+
+    /***************************************************************************
      * @param contents
      * @param toAddr
      * @param toPort
      * @return
      * @throws IOException
      **************************************************************************/
-    public NetMessage txMessage( byte [] contents, InetAddress toAddr,
+    public NetMessage sendMessage( byte [] contents, InetAddress toAddr,
         int toPort ) throws IOException
     {
         DatagramPacket packet = new DatagramPacket( contents, contents.length,
