@@ -133,7 +133,7 @@ public class ItemListViewMain
 
             nameField.setUpdater( ( d ) -> {
                 data.name = d;
-                nameUpdaters.fireListeners( d );
+                nameUpdaters.fire( d );
             } );
         }
 
@@ -148,7 +148,7 @@ public class ItemListViewMain
 
         public void addNameUpdater( IUpdater<String> u )
         {
-            nameUpdaters.addUpdater( u );
+            nameUpdaters.add( u );
         }
 
         @Override

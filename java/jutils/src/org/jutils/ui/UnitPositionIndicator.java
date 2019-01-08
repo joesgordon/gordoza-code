@@ -66,7 +66,7 @@ public class UnitPositionIndicator implements IView<JComponent>
      **************************************************************************/
     public void addPositionListener( IUpdater<Long> listener )
     {
-        posititonListeners.addUpdater( listener );
+        posititonListeners.add( listener );
     }
 
     /***************************************************************************
@@ -155,7 +155,7 @@ public class UnitPositionIndicator implements IView<JComponent>
     {
         this.itemPosition = calculateItemPosition( unitIndex );
 
-        posititonListeners.fireListeners( itemPosition );
+        posititonListeners.fire( itemPosition );
     }
 
     /***************************************************************************

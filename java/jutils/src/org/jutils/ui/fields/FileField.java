@@ -170,7 +170,7 @@ public class FileField implements IDataView<File>, IValidationField
         // LogUtils.printDebug( "File changed to " + file.getAbsolutePath()
         // );
         icon.setFile( file );
-        updateListeners.fireListeners( file );
+        updateListeners.fire( file );
     }
 
     /***************************************************************************
@@ -267,7 +267,7 @@ public class FileField implements IDataView<File>, IValidationField
      **************************************************************************/
     public void addUpdater( IUpdater<File> updater )
     {
-        updateListeners.addUpdater( updater );
+        updateListeners.add( updater );
     }
 
     /***************************************************************************

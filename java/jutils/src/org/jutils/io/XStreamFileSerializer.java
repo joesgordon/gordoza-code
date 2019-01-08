@@ -4,6 +4,8 @@ import java.io.*;
 
 import org.jutils.ValidationException;
 
+import com.thoughtworks.xstream.XStreamException;
+
 /*******************************************************************************
  * @param <T>
  ******************************************************************************/
@@ -29,6 +31,10 @@ public class XStreamFileSerializer<T> implements IStdSerializer<T, File>
         try( FileInputStream fis = new FileInputStream( file ) )
         {
             return serializer.read( fis );
+        }
+        catch( XStreamException ex )
+        {
+            throw new ValidationException( ex.getMessage(), ex );
         }
     }
 

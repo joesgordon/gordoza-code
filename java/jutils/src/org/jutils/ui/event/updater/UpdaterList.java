@@ -21,7 +21,7 @@ public class UpdaterList<T>
     /***************************************************************************
      * @param l
      **************************************************************************/
-    public void addUpdater( IUpdater<T> l )
+    public void add( IUpdater<T> l )
     {
         listeners.addFirst( l );
     }
@@ -29,7 +29,7 @@ public class UpdaterList<T>
     /***************************************************************************
      * @param item
      **************************************************************************/
-    public void fireListeners( T item )
+    public void fire( T item )
     {
         for( IUpdater<T> l : listeners )
         {
@@ -57,7 +57,7 @@ public class UpdaterList<T>
     /***************************************************************************
      * @param l
      **************************************************************************/
-    public void removeListener( IUpdater<T> l )
+    public void remove( IUpdater<T> l )
     {
         listeners.remove( l );
     }

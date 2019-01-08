@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.jutils.ValidationException;
 import org.jutils.io.*;
-import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.event.updater.UpdaterList;
 
 /*******************************************************************************
@@ -19,10 +18,13 @@ public class MessageThread<T>
     private final IDataSerializer<T> msgSerializer;
     /**  */
     private final ConnectionListener listener;
+
     /**  */
-    private final MessageHandlerList<T> msgHandlers;
+    public final MessageHandlerList<T> messageHandlers;
     /**  */
-    private final UpdaterList<String> errorListeners;
+    public final UpdaterList<String> errorListeners;
+    /**  */
+    public final UpdaterList<SocketTimeoutException> timeoutListeners;
 
     /***************************************************************************
      * @param msgSerializer
@@ -31,36 +33,12 @@ public class MessageThread<T>
     {
         this.msgSerializer = msgSerializer;
         this.listener = new ConnectionListener();
-        this.msgHandlers = new MessageHandlerList<>();
+        this.messageHandlers = new MessageHandlerList<>();
         this.errorListeners = new UpdaterList<>();
+        this.timeoutListeners = listener.timeoutListeners;
 
         listener.addErrorListener( ( e ) -> handleError( e ) );
         listener.addMessageListener( ( m ) -> handleMessage( m ) );
-    }
-
-    /***************************************************************************
-     * @param l
-     **************************************************************************/
-    public void addErrorListener( IUpdater<String> l )
-    {
-        errorListeners.addUpdater( l );
-    }
-
-    /***************************************************************************
-     * @param id
-     * @param handler
-     **************************************************************************/
-    public void addMessageHandler( IMessageHandler<T> handler )
-    {
-        msgHandlers.addHandler( handler );
-    }
-
-    /***************************************************************************
-     * @param l
-     **************************************************************************/
-    public void addTimeoutListener( IUpdater<SocketTimeoutException> l )
-    {
-        listener.addTimeoutListener( l );
     }
 
     /***************************************************************************
@@ -69,12 +47,11 @@ public class MessageThread<T>
      * @throws IOException
      * @throws ValidationException
      **************************************************************************/
-    public NetMessage sendMessage( T msg )
-        throws IOException, ValidationException
+    public NetMessage sendMessage( T msg ) throws IOException
     {
         NetMessage netMsg = listener.sendMessage( write( msg ) );
 
-        msgHandlers.fireHandlers( netMsg, msg );
+        messageHandlers.fireHandlers( netMsg, msg );
 
         return netMsg;
     }
@@ -100,7 +77,7 @@ public class MessageThread<T>
      **************************************************************************/
     private void handleError( String error )
     {
-        errorListeners.fireListeners( error );
+        errorListeners.fire( error );
     }
 
     /***************************************************************************
@@ -129,7 +106,7 @@ public class MessageThread<T>
         }
         finally
         {
-            msgHandlers.fireHandlers( netMsg, msg );
+            messageHandlers.fireHandlers( netMsg, msg );
         }
     }
 
@@ -154,7 +131,7 @@ public class MessageThread<T>
      * @throws IOException
      * @throws ValidationException
      **************************************************************************/
-    private byte [] write( T msg ) throws IOException, ValidationException
+    private byte [] write( T msg ) throws IOException
     {
         try( ByteArrayStream bas = new ByteArrayStream( 1024 );
              DataStream stream = new DataStream( bas ) )
@@ -180,7 +157,7 @@ public class MessageThread<T>
     /**
      * @param <T>
      */
-    private static class MessageHandlerList<T>
+    public static class MessageHandlerList<T>
     {
         /**  */
         private final List<IMessageHandler<T>> handlers;
@@ -196,9 +173,25 @@ public class MessageThread<T>
         /**
          * @param handler
          */
-        public void addHandler( IMessageHandler<T> handler )
+        public void add( IMessageHandler<T> handler )
         {
             handlers.add( handler );
+        }
+
+        /**
+         * @param handler
+         */
+        public void remove( IMessageHandler<T> handler )
+        {
+            handlers.remove( handler );
+        }
+
+        /**
+         * 
+         */
+        public void removeAll()
+        {
+            handlers.clear();
         }
 
         /**

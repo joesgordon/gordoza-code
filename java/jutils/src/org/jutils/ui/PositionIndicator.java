@@ -123,7 +123,7 @@ public class PositionIndicator implements IView<JComponent>
      **************************************************************************/
     public void addPositionListener( IUpdater<Long> l )
     {
-        posititonListeners.addUpdater( l );
+        posititonListeners.add( l );
     }
 
     /***************************************************************************
@@ -242,7 +242,7 @@ public class PositionIndicator implements IView<JComponent>
      **************************************************************************/
     private void firePositionUpdated( long position )
     {
-        posititonListeners.fireListeners( position );
+        posititonListeners.fire( position );
     }
 
     /***************************************************************************
@@ -553,7 +553,7 @@ public class PositionIndicator implements IView<JComponent>
          */
         public void addRightClick( IUpdater<MouseEvent> callback )
         {
-            this.rightClickListeners.addUpdater( callback );
+            this.rightClickListeners.add( callback );
         }
 
         /**
@@ -570,7 +570,7 @@ public class PositionIndicator implements IView<JComponent>
             }
             else if( RightClickListener.isRightClick( e ) )
             {
-                rightClickListeners.fireListeners( e );
+                rightClickListeners.fire( e );
             }
         }
 

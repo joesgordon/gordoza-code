@@ -20,12 +20,13 @@ public class ConnectionListener implements Closeable
     private IConnection connection;
     /** The receive thread. */
     private TaskThread rxThread;
+
     /**  */
-    private final UpdaterList<NetMessage> msgListeners;
+    public final UpdaterList<NetMessage> messageListeners;
     /**  */
-    private final UpdaterList<String> errListeners;
+    public final UpdaterList<String> errorListeners;
     /**  */
-    private final UpdaterList<SocketTimeoutException> timeoutListeners;
+    public final UpdaterList<SocketTimeoutException> timeoutListeners;
 
     /***************************************************************************
      * @param connection
@@ -36,11 +37,14 @@ public class ConnectionListener implements Closeable
     public ConnectionListener()
     {
         this.connection = null;
-        this.msgListeners = new UpdaterList<>();
-        this.errListeners = new UpdaterList<>();
+        this.messageListeners = new UpdaterList<>();
+        this.errorListeners = new UpdaterList<>();
         this.timeoutListeners = new UpdaterList<>();
     }
 
+    /***************************************************************************
+     * @param connection
+     **************************************************************************/
     public void start( IConnection connection )
     {
         this.connection = connection;
@@ -56,6 +60,8 @@ public class ConnectionListener implements Closeable
     @Override
     public void close() throws IOException
     {
+        IConnection connection = this.connection;
+
         if( connection != null )
         {
             rxThread.interrupt();
@@ -63,12 +69,22 @@ public class ConnectionListener implements Closeable
             connection.close();
         }
 
-        connection = null;
-        rxThread = null;
+        this.connection = null;
+        this.rxThread = null;
     }
 
     /***************************************************************************
-     * {@inheritDoc}
+     * Removes all listeners added to this connection.
+     **************************************************************************/
+    public void clear()
+    {
+        this.messageListeners.removeAll();
+        this.errorListeners.removeAll();
+        this.timeoutListeners.removeAll();
+    }
+
+    /***************************************************************************
+     * @param handler
      **************************************************************************/
     public void run( ITaskHandler handler )
     {
@@ -82,12 +98,12 @@ public class ConnectionListener implements Closeable
                 {
                     break;
                 }
-                msgListeners.fireListeners( msg );
+                messageListeners.fire( msg );
             }
             catch( SocketTimeoutException ex )
             {
                 // LogUtils.printDebug( "Receive timed out..." );
-                timeoutListeners.fireListeners( ex );
+                timeoutListeners.fire( ex );
             }
             catch( SocketException ex )
             {
@@ -97,7 +113,7 @@ public class ConnectionListener implements Closeable
             catch( IOException ex )
             {
                 ex.printStackTrace();
-                errListeners.fireListeners(
+                errorListeners.fire(
                     "Error receiving packet: " + ex.getMessage() );
             }
             catch( Exception ex )
@@ -113,7 +129,7 @@ public class ConnectionListener implements Closeable
      **************************************************************************/
     public void addMessageListener( IUpdater<NetMessage> l )
     {
-        msgListeners.addUpdater( l );
+        messageListeners.add( l );
     }
 
     /***************************************************************************
@@ -121,7 +137,7 @@ public class ConnectionListener implements Closeable
      **************************************************************************/
     public void addErrorListener( IUpdater<String> l )
     {
-        errListeners.addUpdater( l );
+        errorListeners.add( l );
     }
 
     /***************************************************************************
@@ -129,7 +145,7 @@ public class ConnectionListener implements Closeable
      **************************************************************************/
     public void addTimeoutListener( IUpdater<SocketTimeoutException> l )
     {
-        timeoutListeners.addUpdater( l );
+        timeoutListeners.add( l );
     }
 
     /***************************************************************************
