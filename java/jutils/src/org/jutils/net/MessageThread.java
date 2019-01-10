@@ -2,8 +2,6 @@ package org.jutils.net;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.jutils.ValidationException;
 import org.jutils.io.*;
@@ -20,7 +18,7 @@ public class MessageThread<T>
     private final ConnectionListener listener;
 
     /**  */
-    public final MessageHandlerList<T> messageHandlers;
+    public final UpdaterList<NetMessage> messageHandlers;
     /**  */
     public final UpdaterList<String> errorListeners;
     /**  */
@@ -33,7 +31,7 @@ public class MessageThread<T>
     {
         this.msgSerializer = msgSerializer;
         this.listener = new ConnectionListener();
-        this.messageHandlers = new MessageHandlerList<>();
+        this.messageHandlers = new UpdaterList<>();
         this.errorListeners = new UpdaterList<>();
         this.timeoutListeners = listener.timeoutListeners;
 
@@ -51,7 +49,9 @@ public class MessageThread<T>
     {
         NetMessage netMsg = listener.sendMessage( write( msg ) );
 
-        messageHandlers.fireHandlers( netMsg, msg );
+        netMsg.message = msg;
+
+        messageHandlers.fire( netMsg );
 
         return netMsg;
     }
@@ -91,6 +91,8 @@ public class MessageThread<T>
         {
             msg = read( netMsg.contents );
 
+            netMsg.message = msg;
+
             if( msg == null )
             {
                 return;
@@ -106,7 +108,7 @@ public class MessageThread<T>
         }
         finally
         {
-            messageHandlers.fireHandlers( netMsg, msg );
+            messageHandlers.fire( netMsg );
         }
     }
 
@@ -139,71 +141,6 @@ public class MessageThread<T>
             msgSerializer.write( msg, stream );
 
             return bas.toByteArray();
-        }
-    }
-
-    /***************************************************************************
-     * @param <T>
-     **************************************************************************/
-    public static interface IMessageHandler<T>
-    {
-        /**
-         * @param netMsg
-         * @param msg
-         */
-        public void handleMessage( NetMessage netMsg, T msg );
-    }
-
-    /**
-     * @param <T>
-     */
-    public static class MessageHandlerList<T>
-    {
-        /**  */
-        private final List<IMessageHandler<T>> handlers;
-
-        /**
-         * 
-         */
-        public MessageHandlerList()
-        {
-            this.handlers = new ArrayList<>();
-        }
-
-        /**
-         * @param handler
-         */
-        public void add( IMessageHandler<T> handler )
-        {
-            handlers.add( handler );
-        }
-
-        /**
-         * @param handler
-         */
-        public void remove( IMessageHandler<T> handler )
-        {
-            handlers.remove( handler );
-        }
-
-        /**
-         * 
-         */
-        public void removeAll()
-        {
-            handlers.clear();
-        }
-
-        /**
-         * @param netMsg
-         * @param msg
-         */
-        public void fireHandlers( NetMessage netMsg, T msg )
-        {
-            for( IMessageHandler<T> handler : handlers )
-            {
-                handler.handleMessage( netMsg, msg );
-            }
         }
     }
 }

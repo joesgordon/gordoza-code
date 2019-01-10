@@ -23,6 +23,8 @@ public class NetMessage
     public final int remotePort;
     /** The raw message contents. */
     public final byte [] contents;
+    /**  */
+    public Object message;
 
     /***************************************************************************
      * @param received
@@ -59,6 +61,7 @@ public class NetMessage
         this.remoteAddress = remoteAddress;
         this.remotePort = remotePort;
         this.contents = contents;
+        this.message = null;
     }
 
     /***************************************************************************
@@ -73,5 +76,17 @@ public class NetMessage
         this.remoteAddress = msg.remoteAddress;
         this.remotePort = msg.remotePort;
         this.contents = msg.contents;
+        this.message = msg.message;
+    }
+
+    /***************************************************************************
+     * @param <T>
+     * @return
+     **************************************************************************/
+    public <T> T getParsedMessage()
+    {
+        @SuppressWarnings( "unchecked")
+        T msg = ( T )message;
+        return msg;
     }
 }

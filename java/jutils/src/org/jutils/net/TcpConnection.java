@@ -78,7 +78,8 @@ public class TcpConnection implements IConnection
     {
         Socket socket = null;
 
-        InetAddress nicAddr = IConnection.getNicAddress( inputs.nic );
+        InetAddress nicAddr = NetUtils.getNicAddress(
+            NetUtils.lookupNic( inputs.nic ) );
 
         socket = new Socket( inputs.remoteAddress.getInetAddress(),
             inputs.remotePort, nicAddr, inputs.localPort );

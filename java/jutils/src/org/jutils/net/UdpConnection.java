@@ -27,11 +27,13 @@ public class UdpConnection implements IConnection
     public UdpConnection( UdpInputs inputs ) throws IOException, SocketException
     {
         DatagramSocket socket;
-        InetAddress nicAddr = IConnection.getNicAddress( inputs.nic );
+        NetworkInterface nic = NetUtils.lookupNic( inputs.nic );
+        InetAddress nicAddr = NetUtils.getNicAddress( nic );
 
         // LogUtils.printDebug( "NIC: " + inputs.nic );
         // LogUtils.printDebug( "Address: " + nicAddr );
-        // LogUtils.printDebug( "port: " + inputs.port );
+        // LogUtils.printDebug( "Local Port: " + inputs.localPort );
+        // LogUtils.printDebug( "Remote Port: " + inputs.remotePort );
         // LogUtils.printDebug( "" );
 
         if( inputs.reuse )
