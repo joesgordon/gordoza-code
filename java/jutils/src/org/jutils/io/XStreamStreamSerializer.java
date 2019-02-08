@@ -5,6 +5,7 @@ import java.io.*;
 import org.jutils.ValidationException;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.XStreamException;
 
 /*******************************************************************************
  * @param <T>
@@ -29,10 +30,19 @@ public class XStreamStreamSerializer<T>
     @Override
     public T read( InputStream stream ) throws IOException, ValidationException
     {
-        Object obj = xstream.fromXML( stream );
-        @SuppressWarnings( "unchecked")
-        T item = ( T )obj;
-        return item;
+        try
+        {
+            Object obj = xstream.fromXML( stream );
+
+            @SuppressWarnings( "unchecked")
+            T item = ( T )obj;
+
+            return item;
+        }
+        catch( XStreamException ex )
+        {
+            throw new ValidationException( ex.getMessage(), ex );
+        }
     }
 
     /***************************************************************************

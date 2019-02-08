@@ -184,7 +184,15 @@ public final class ComboFormField<T> implements IDataFormField<T>
     }
 
     /***************************************************************************
-     * @param editable
+     * @return
+     **************************************************************************/
+    public List<T> getValues()
+    {
+        return field.getItems();
+    }
+
+    /***************************************************************************
+     * @param parser
      **************************************************************************/
     public void setUserEditable( IParser<T> parser )
     {

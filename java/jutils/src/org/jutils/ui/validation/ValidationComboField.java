@@ -76,7 +76,7 @@ public final class ValidationComboField<T> implements IValidationField
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JComboBox<T> getView()
@@ -118,7 +118,15 @@ public final class ValidationComboField<T> implements IValidationField
     }
 
     /***************************************************************************
-     * 
+     * @return
+     **************************************************************************/
+    public List<T> getItems()
+    {
+        return model.getItems();
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public Validity getValidity()
@@ -127,7 +135,7 @@ public final class ValidationComboField<T> implements IValidationField
     }
 
     /***************************************************************************
-     * @param vcl
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void addValidityChanged( IValidityChangedListener vcl )
@@ -136,7 +144,7 @@ public final class ValidationComboField<T> implements IValidationField
     }
 
     /***************************************************************************
-     * @param vcl
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void removeValidityChanged( IValidityChangedListener vcl )

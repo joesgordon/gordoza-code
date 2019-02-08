@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.*;
 import java.util.Arrays;
 
-import org.jutils.io.LogUtils;
-
 /*******************************************************************************
  * 
  ******************************************************************************/
@@ -21,6 +19,8 @@ public class MulticastConnection implements IConnection
     private final byte [] rxBuffer;
     /**  */
     private final DatagramPacket rxPacket;
+    /**  */
+    private final String localAddress;
 
     /***************************************************************************
      * @param inputs the configuration values for this connection.
@@ -50,17 +50,23 @@ public class MulticastConnection implements IConnection
         this.socket.setTimeToLive( inputs.ttl );
         this.socket.setSoTimeout( inputs.timeout );
 
+        InetAddress intf = InetAddress.getByAddress(
+            new byte[] { 0, 0, 0, 0 } );
+
         if( inputs.nic != null )
         {
             NetworkInterface nic = NetUtils.lookupNic( inputs.nic );
 
             if( nic != null )
             {
-                LogUtils.printDebug(
-                    "Bound multicast using " + nic.getDisplayName() );
-                this.socket.setNetworkInterface( nic );
+                intf = Inet4Address.getByName( NetUtils.getIpv4( nic ) );
+
+                // this.socket.setNetworkInterface( nic );
+                this.socket.setInterface( intf );
             }
         }
+
+        this.localAddress = intf.getHostAddress();
 
         try
         {
@@ -75,7 +81,7 @@ public class MulticastConnection implements IConnection
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public NetMessage sendMessage( byte [] buf ) throws IOException
@@ -87,7 +93,6 @@ public class MulticastConnection implements IConnection
 
         socket.send( pack );
 
-        String localAddress = socket.getLocalAddress().getHostAddress();
         int localPort = socket.getLocalPort();
 
         String remoteAddress = address.getHostAddress();
@@ -114,8 +119,8 @@ public class MulticastConnection implements IConnection
 
         socket.send( packet );
 
-        return new NetMessage( false, socket.getLocalAddress().getHostAddress(),
-            socket.getLocalPort(), toAddr.getHostAddress(), toPort, contents );
+        return new NetMessage( false, localAddress, socket.getLocalPort(),
+            toAddr.getHostAddress(), toPort, contents );
     }
 
     /***************************************************************************
@@ -132,7 +137,6 @@ public class MulticastConnection implements IConnection
         InetAddress address = rxPacket.getAddress();
         int port = rxPacket.getPort();
 
-        String localAddress = socket.getLocalAddress().getHostAddress();
         int localPort = socket.getLocalPort();
 
         String remoteAddress = address.getHostAddress();
