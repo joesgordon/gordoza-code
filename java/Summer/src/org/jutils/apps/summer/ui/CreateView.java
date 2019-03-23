@@ -314,7 +314,7 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JPanel getView()
@@ -323,7 +323,7 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public ChecksumResult getData()
@@ -378,7 +378,7 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void addValidityChanged( IValidityChangedListener l )
@@ -387,7 +387,7 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void removeValidityChanged( IValidityChangedListener l )
@@ -396,7 +396,7 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public Validity getValidity()
@@ -404,9 +404,8 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
         return validityListeners.getValidity();
     }
 
-    /**
+    /***************************************************************************
      * @param numThreads
-     * *************************************************************************
      **************************************************************************/
     public void runCreate( int numThreads )
     {
@@ -526,13 +525,20 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
     private static class FilesDroppedListener
         implements ItemActionListener<IFileDropEvent>
     {
+        /**  */
         private final CreateView view;
 
+        /**
+         * @param view
+         */
         public FilesDroppedListener( CreateView view )
         {
             this.view = view;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ItemActionEvent<IFileDropEvent> event )
         {
@@ -580,22 +586,33 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
      **************************************************************************/
     private static class PathModel implements ITableItemsConfig<SumFile>
     {
+        /**  */
         private static final Class<?> [] CLASSES = { String.class,
             String.class };
+        /**  */
         private static final String [] NAMES = { "Path", "Size" };
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String [] getColumnNames()
         {
             return NAMES;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public Class<?> [] getColumnClasses()
         {
             return CLASSES;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public Object getItemData( SumFile sf, int col )
         {
@@ -613,11 +630,17 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
             }
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void setItemData( SumFile item, int col, Object data )
         {
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public boolean isCellEditable( SumFile item, int col )
         {
@@ -630,15 +653,23 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
      **************************************************************************/
     private static class PathRenderer implements ITableCellLabelDecorator
     {
+        /**  */
         private static final FileSystemView FILE_SYSTEM = FileSystemView.getFileSystemView();
 
+        /**  */
         private final CreateView view;
 
+        /**
+         * @param view
+         */
         public PathRenderer( CreateView view )
         {
             this.view = view;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void decorate( JLabel label, JTable table, Object value,
             boolean isSelected, boolean hasFocus, int row, int col )
@@ -665,13 +696,20 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
      **************************************************************************/
     private static class DeleteListener implements ActionListener
     {
+        /**  */
         private CreateView view;
 
+        /**
+         * @param view
+         */
         public DeleteListener( CreateView view )
         {
             this.view = view;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ActionEvent e )
         {
@@ -702,13 +740,20 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
      **************************************************************************/
     private static class CommonDirChanged implements ItemActionListener<File>
     {
+        /**  */
         private final CreateView view;
 
+        /**
+         * @param view
+         */
         private CommonDirChanged( CreateView view )
         {
             this.view = view;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ItemActionEvent<File> event )
         {
@@ -732,24 +777,35 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
      **************************************************************************/
     private static class LastFilesListener implements IFilesSelected, ILastFiles
     {
+        /**  */
         private final CreateView view;
-        private File [] lastFile = null;
+        /**  */
+        private File [] lastFiles = null;
 
+        /**
+         * @param view
+         */
         public LastFilesListener( CreateView view )
         {
             this.view = view;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public File [] getLastFiles()
         {
-            return lastFile;
+            return lastFiles;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void filesChosen( File [] files )
         {
-            this.lastFile = files;
+            this.lastFiles = files;
 
             view.addDirs( files );
         }
@@ -760,13 +816,20 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
      **************************************************************************/
     private static class ClearAllListener implements ActionListener
     {
+        /**  */
         private final CreateView view;
 
+        /**
+         * @param view
+         */
         private ClearAllListener( CreateView view )
         {
             this.view = view;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed( ActionEvent event )
         {

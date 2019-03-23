@@ -1,7 +1,9 @@
 package org.jutils.io;
 
 import java.io.IOException;
-import java.time.*;
+import java.time.LocalDateTime;
+
+import org.jutils.time.NanoTime;
 
 /*******************************************************************************
  * Defines an {@link IDataSerializer} that reads/writes {@link LocalDateTime}s.
@@ -17,22 +19,12 @@ public class LocalDateTimeSerializer implements IDataSerializer<LocalDateTime>
     @Override
     public LocalDateTime read( IDataStream stream ) throws IOException
     {
-        int year = stream.readShort();
-        long noy = stream.readLong();
+        NanoTime nt = new NanoTime();
 
-        int doy = ( int )( noy / NANOS_PER_DAY );
-        long nod = noy - ( doy * NANOS_PER_DAY );
+        nt.year = stream.readShort();
+        nt.nanoseconds = stream.readLong();
 
-        doy++;
-
-        // LogUtils.printDebug( "Read year %d, nanos %d -> doy %d, nod %d ",
-        // year,
-        // noy, doy, nod );
-
-        LocalDate date = LocalDate.ofYearDay( year, doy );
-        LocalTime time = LocalTime.ofNanoOfDay( nod );
-
-        return LocalDateTime.of( date, time );
+        return nt.toDateTime();
     }
 
     /***************************************************************************
@@ -42,15 +34,9 @@ public class LocalDateTimeSerializer implements IDataSerializer<LocalDateTime>
     public void write( LocalDateTime time, IDataStream stream )
         throws IOException
     {
-        int year = time.getYear();
-        int doy = time.getDayOfYear() - 1;
-        long noy = doy * NANOS_PER_DAY + time.toLocalTime().toNanoOfDay();
+        NanoTime nt = new NanoTime( time );
 
-        // LogUtils.printDebug( "Wrote year %d, nanos %d for day of year %d",
-        // year,
-        // noy, doy + 1 );
-
-        stream.writeShort( ( short )year );
-        stream.writeLong( noy );
+        stream.writeShort( nt.year );
+        stream.writeLong( nt.nanoseconds );
     }
 }
