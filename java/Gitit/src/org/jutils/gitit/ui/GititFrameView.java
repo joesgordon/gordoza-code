@@ -15,6 +15,7 @@ import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
 import org.jutils.Utils;
 import org.jutils.ValidationException;
+import org.jutils.gitit.GititIcons;
 import org.jutils.gitit.GititMain;
 import org.jutils.gitit.data.GititConfig;
 import org.jutils.gitit.data.GititOptions;
@@ -66,6 +67,7 @@ public class GititFrameView implements IView<JFrame>
         view.setSize( 500, 500 );
         view.setContent( gititView.getView() );
         view.setToolbar( createToolbar() );
+        view.getView().setIconImages( GititIcons.getAppImages() );
 
         gititView.setData( options.getOptions().config );
     }
