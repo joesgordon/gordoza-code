@@ -100,7 +100,7 @@ public class ItemListView<T> implements IDataView<List<T>>
 
         constraints = new GridBagConstraints( 0, 0, 1, 1, 0.0, 1.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets( 8, 8, 8, 8 ), 0, 0 );
+            new Insets( 0, 8, 8, 8 ), 0, 0 );
         panel.add( itemsView.getView(), constraints );
 
         constraints = new GridBagConstraints( 1, 0, 1, 1, 1.0, 1.0,

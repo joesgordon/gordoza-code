@@ -13,6 +13,7 @@ public class SummerOptions
      */
     public SummerOptions()
     {
+        numThreads = 8;
     }
 
     /**

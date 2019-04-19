@@ -88,8 +88,7 @@ public class NetMessagesView implements IView<JPanel>
     public NetMessagesView( IMessageFields fields,
         IStringWriter<NetMessage> msgWriter )
     {
-        this( fields, msgWriter == null ? null : new MsgStringView( msgWriter ),
-            true );
+        this( fields, createMsgWriterView( msgWriter ), true );
     }
 
     /***************************************************************************
@@ -143,9 +142,8 @@ public class NetMessagesView implements IView<JPanel>
 
         table.setDefaultRenderer( LocalDateTime.class,
             new LabelTableCellRenderer( new LocalDateTimeDecorator() ) );
-
+        table.getTableHeader().setReorderingAllowed( false );
         table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
-
         table.addMouseListener( new MessageMouseListener( this ) );
 
         TableColumnModel colModel = table.getColumnModel();
@@ -602,9 +600,9 @@ public class NetMessagesView implements IView<JPanel>
         }
     }
 
-    /**
+    /***************************************************************************
      * @param file
-     */
+     **************************************************************************/
     public void saveBinFile( File file )
     {
         synchronized( msgsStream )
@@ -720,6 +718,9 @@ public class NetMessagesView implements IView<JPanel>
         setNavButtonsEnabled();
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private boolean isAtBottom()
     {
         JScrollBar bar = tablePane.getVerticalScrollBar();
@@ -768,14 +769,36 @@ public class NetMessagesView implements IView<JPanel>
     }
 
     /***************************************************************************
+     * @param msgWriter
+     * @return
+     **************************************************************************/
+    private static MsgStringView createMsgWriterView(
+        IStringWriter<NetMessage> msgWriter )
+    {
+        return msgWriter == null ? null : new MsgStringView( msgWriter );
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     public static interface IMessageFields
     {
+        /**
+         * @return
+         */
         public int getFieldCount();
 
+        /**
+         * @param index
+         * @return
+         */
         public String getFieldName( int index );
 
+        /**
+         * @param message
+         * @param index
+         * @return
+         */
         public String getFieldValue( NetMessage message, int index );
     }
 
@@ -784,13 +807,20 @@ public class NetMessagesView implements IView<JPanel>
      **************************************************************************/
     private static class MessageMouseListener extends MouseAdapter
     {
+        /**  */
         private final NetMessagesView view;
 
+        /**
+         * @param view
+         */
         public MessageMouseListener( NetMessagesView view )
         {
             this.view = view;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void mouseClicked( MouseEvent e )
         {
@@ -846,14 +876,24 @@ public class NetMessagesView implements IView<JPanel>
      **************************************************************************/
     private static final class MessageNavView implements IDataView<NetMessage>
     {
+        /**  */
         private final NetMessagesView msgsView;
 
+        /**  */
         private final JPanel view;
+        /**  */
         private final IDataView<NetMessage> msgView;
 
+        /**  */
         private final JButton prevButton;
+        /**  */
         private final JButton nextButton;
 
+        /**
+         * @param msgsView
+         * @param msgView
+         * @param addScrollPane
+         */
         public MessageNavView( NetMessagesView msgsView,
             IDataView<NetMessage> msgView, boolean addScrollPane )
         {
@@ -867,6 +907,9 @@ public class NetMessagesView implements IView<JPanel>
             setButtonsEnabled();
         }
 
+        /**
+         * @return
+         */
         private JPanel createView()
         {
             JPanel panel = new JPanel( new BorderLayout() );
@@ -877,6 +920,9 @@ public class NetMessagesView implements IView<JPanel>
             return panel;
         }
 
+        /**
+         * @return
+         */
         private JToolBar createToolbar()
         {
             JToolBar toolbar = new JToolBar();
@@ -892,6 +938,10 @@ public class NetMessagesView implements IView<JPanel>
             return toolbar;
         }
 
+        /**
+         * @param forward
+         * @return
+         */
         private Action createNavAction( boolean forward )
         {
             ActionListener listener = ( e ) -> navigate( forward );
@@ -903,6 +953,9 @@ public class NetMessagesView implements IView<JPanel>
             return new ActionAdapter( listener, name, icon );
         }
 
+        /**
+         * @param forward
+         */
         private void navigate( boolean forward )
         {
             int inc = forward ? 1 : -1;
@@ -915,6 +968,9 @@ public class NetMessagesView implements IView<JPanel>
             setButtonsEnabled();
         }
 
+        /**
+         * 
+         */
         private void setButtonsEnabled()
         {
             long index = msgsView.table.getSelectedRow() +
@@ -925,18 +981,27 @@ public class NetMessagesView implements IView<JPanel>
             nextButton.setEnabled( index > -1 && index < maxRow );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public JPanel getView()
         {
             return view;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public NetMessage getData()
         {
             return msgView.getData();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void setData( NetMessage data )
         {
@@ -952,60 +1017,25 @@ public class NetMessagesView implements IView<JPanel>
     private static final class FontLabelTableCellRenderer
         implements ITableCellLabelDecorator
     {
+        /**  */
         private final Font font;
 
+        /**
+         * @param font
+         */
         public FontLabelTableCellRenderer( Font font )
         {
             this.font = font;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void decorate( JLabel label, JTable table, Object value,
             boolean isSelected, boolean hasFocus, int row, int col )
         {
             label.setFont( font );
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static final class MsgStringView implements IDataView<NetMessage>
-    {
-        /** The field for the string representation of the message content. */
-        private final JEditorPane editor;
-        private final IStringWriter<NetMessage> writer;
-
-        private NetMessage msg;
-
-        public MsgStringView( IStringWriter<NetMessage> writer )
-        {
-            this.writer = writer;
-            this.editor = new JEditorPane();
-
-            editor.setEditable( false );
-            editor.setFont( SwingUtils.getFixedFont( 12 ) );
-        }
-
-        @Override
-        public Component getView()
-        {
-            return editor;
-        }
-
-        @Override
-        public NetMessage getData()
-        {
-            return msg;
-        }
-
-        @Override
-        public void setData( NetMessage msg )
-        {
-            this.msg = msg;
-
-            editor.setText( writer.toString( msg ) );
-            editor.setCaretPosition( 0 );
         }
     }
 }

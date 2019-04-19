@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.*;
@@ -19,6 +20,7 @@ import org.jutils.ui.model.IDataView;
 /*******************************************************************************
  * Defines a view that displays a list of items to the user. The view allows for
  * additions/deletions to the list.
+ * @param <T> the type of items listed.
  ******************************************************************************/
 public class ListView<T> implements IDataView<List<T>>
 {
@@ -33,15 +35,15 @@ public class ListView<T> implements IDataView<List<T>>
     /** The model for the items. */
     private final IItemListModel<T> itemsModel;
 
-    /**  */
+    /** The action used for adding items. */
     private final Action addAction;
-    /**  */
+    /** The action used for removing items. */
     private final Action removeAction;
-    /**  */
+    /** The action used for moving items up. */
     private final Action upAction;
-    /**  */
+    /** The action used for moving items down. */
     private final Action downAction;
-    /**  */
+    /** The toolbar that has all the buttons in this view. */
     private final JToolBar toolbar;
 
     /**  */
@@ -81,7 +83,7 @@ public class ListView<T> implements IDataView<List<T>>
         this.upAction = canOrder ? createUpAction() : null;
         this.downAction = canOrder ? createDownAction() : null;
 
-        this.toolbar = createButtonsPanel( canAddRemove, canOrder );
+        this.toolbar = createToolbar( canAddRemove, canOrder );
 
         this.selectedListeners = new ItemActionList<>();
         this.changeListeners = new ItemActionList<>();
@@ -100,6 +102,7 @@ public class ListView<T> implements IDataView<List<T>>
 
     /***************************************************************************
      * Creates the main view.
+     * @return the panel that represents the main view.
      **************************************************************************/
     private JPanel createView()
     {
@@ -113,7 +116,8 @@ public class ListView<T> implements IDataView<List<T>>
 
         // itemsPane.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
 
-        itemsList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+        itemsList.setSelectionMode(
+            ListSelectionModel.MULTIPLE_INTERVAL_SELECTION );
         itemsList.addListSelectionListener( new ItemSelctedListener<>( this ) );
 
         setItemsSize( 200, 200 );
@@ -124,6 +128,38 @@ public class ListView<T> implements IDataView<List<T>>
         panel.add( itemsPane, constraints );
 
         return panel;
+    }
+
+    /***************************************************************************
+     * Creates the component that provides add/remove buttons.
+     * @param canAddRemove
+     * @param canOrder
+     * @return
+     **************************************************************************/
+    private JToolBar createToolbar( boolean canAddRemove, boolean canOrder )
+    {
+        JToolBar toolbar = new JToolBar();
+
+        SwingUtils.setToolbarDefaults( toolbar );
+
+        if( canAddRemove )
+        {
+            SwingUtils.addActionToToolbar( toolbar, addAction );
+            SwingUtils.addActionToToolbar( toolbar, removeAction );
+        }
+
+        if( toolbar.getComponentCount() > 0 )
+        {
+            toolbar.addSeparator();
+        }
+
+        if( canOrder )
+        {
+            SwingUtils.addActionToToolbar( toolbar, upAction );
+            SwingUtils.addActionToToolbar( toolbar, downAction );
+        }
+
+        return toolbar;
     }
 
     /***************************************************************************
@@ -142,7 +178,7 @@ public class ListView<T> implements IDataView<List<T>>
     private Action createRemoveAction()
     {
         Icon icon = IconConstants.getIcon( IconConstants.EDIT_DELETE_16 );
-        ActionListener listener = new DeleteItemListener<>( this );
+        ActionListener listener = ( e ) -> invokeDeleteClicked();
         return new ActionAdapter( listener, "Delete", icon );
     }
 
@@ -152,7 +188,7 @@ public class ListView<T> implements IDataView<List<T>>
     private Action createUpAction()
     {
         Icon icon = IconConstants.getIcon( IconConstants.NAV_UP_16 );
-        ActionListener listener = new MoveUpListener<T>( this );
+        ActionListener listener = ( e ) -> invokeUpClicked();
         return new ActionAdapter( listener, "Move Up", icon );
     }
 
@@ -162,8 +198,82 @@ public class ListView<T> implements IDataView<List<T>>
     private Action createDownAction()
     {
         Icon icon = IconConstants.getIcon( IconConstants.NAV_DOWN_16 );
-        ActionListener listener = new MoveDownListener<T>( this );
+        ActionListener listener = ( e ) -> invokeDownClicked();
         return new ActionAdapter( listener, "Move Down", icon );
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private void invokeUpClicked()
+    {
+        int idx = itemsList.getSelectedIndex();
+
+        if( idx > 0 )
+        {
+            // T item = items.remove( idx );
+            // items.add( idx - 1, item );
+
+            T di = itemsListModel.remove( idx );
+            itemsListModel.add( di, idx - 1 );
+
+            itemsList.setSelectedIndex( idx - 1 );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private void invokeDownClicked()
+    {
+        int idx = itemsList.getSelectedIndex();
+
+        if( idx > -1 && idx < ( items.size() - 1 ) )
+        {
+            // T item = items.remove( idx );
+            // items.add( idx + 1, item );
+
+            T di = itemsListModel.remove( idx );
+            itemsListModel.add( di, idx + 1 );
+
+            itemsList.setSelectedIndex( idx + 1 );
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private void invokeDeleteClicked()
+    {
+        int [] indexes = itemsList.getSelectedIndices();
+
+        Arrays.sort( indexes );
+
+        for( int i = indexes.length - 1; i > -1; i-- )
+        {
+            int index = indexes[i];
+
+            T item = items.get( index );
+            itemsListModel.remove( index );
+            changeListeners.fireListeners( this,
+                new ItemChange<>( ChangeType.REMOVED, item ) );
+        }
+    }
+
+    /***************************************************************************
+     * @param name
+     * @return
+     **************************************************************************/
+    private boolean containsItemWithName( String name )
+    {
+        for( T t : itemsListModel )
+        {
+            if( name.equals( t.toString() ) )
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     /***************************************************************************
@@ -218,38 +328,6 @@ public class ListView<T> implements IDataView<List<T>>
         itemsPane.setMinimumSize( dim );
         itemsPane.setPreferredSize( dim );
         itemsPane.setMaximumSize( dim );
-    }
-
-    /***************************************************************************
-     * Creates the component that provides add/remove buttons.
-     * @param canOrder
-     * @param canOrder2
-     **************************************************************************/
-    private JToolBar createButtonsPanel( boolean canAddRemove,
-        boolean canOrder )
-    {
-        JToolBar toolbar = new JToolBar();
-
-        SwingUtils.setToolbarDefaults( toolbar );
-
-        if( canAddRemove )
-        {
-            SwingUtils.addActionToToolbar( toolbar, addAction );
-            SwingUtils.addActionToToolbar( toolbar, removeAction );
-        }
-
-        if( toolbar.getComponentCount() > 0 )
-        {
-            toolbar.addSeparator();
-        }
-
-        if( canOrder )
-        {
-            SwingUtils.addActionToToolbar( toolbar, upAction );
-            SwingUtils.addActionToToolbar( toolbar, downAction );
-        }
-
-        return toolbar;
     }
 
     /***************************************************************************
@@ -322,7 +400,7 @@ public class ListView<T> implements IDataView<List<T>>
             {
                 if( !name.isEmpty() )
                 {
-                    if( !contains( name ) )
+                    if( !containsItemWithName( name ) )
                     {
                         prompt = false;
                     }
@@ -348,22 +426,6 @@ public class ListView<T> implements IDataView<List<T>>
         }
 
         return name;
-    }
-
-    /***************************************************************************
-     * @param name
-     * @return
-     **************************************************************************/
-    private boolean contains( String name )
-    {
-        for( T t : itemsListModel )
-        {
-            if( name.equals( t.toString() ) )
-            {
-                return true;
-            }
-        }
-        return false;
     }
 
     /***************************************************************************
@@ -482,93 +544,6 @@ public class ListView<T> implements IDataView<List<T>>
                 // itemListView.items.add( item );
                 itemListView.changeListeners.fireListeners( itemListView,
                     new ItemChange<>( ChangeType.ADDED, item ) );
-            }
-        }
-    }
-
-    /***************************************************************************
-     * Defines the listener to be called when the delete button is pressed.
-     **************************************************************************/
-    private static class DeleteItemListener<T> implements ActionListener
-    {
-        private final ListView<T> itemListView;
-
-        public DeleteItemListener( ListView<T> itemListView )
-        {
-            this.itemListView = itemListView;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            int index = itemListView.itemsList.getSelectedIndex();
-
-            if( index > -1 )
-            {
-                T item = itemListView.items.get( index );
-                itemListView.itemsListModel.remove( index );
-                itemListView.changeListeners.fireListeners( itemListView,
-                    new ItemChange<>( ChangeType.REMOVED, item ) );
-            }
-        }
-    }
-
-    /***************************************************************************
-     * @param <T>
-     **************************************************************************/
-    private static class MoveUpListener<T> implements ActionListener
-    {
-        private final ListView<T> view;
-
-        public MoveUpListener( ListView<T> view )
-        {
-            this.view = view;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            int idx = view.itemsList.getSelectedIndex();
-
-            if( idx > 0 )
-            {
-                T item = view.items.remove( idx );
-                view.items.add( idx - 1, item );
-
-                T di = view.itemsListModel.remove( idx );
-                view.itemsListModel.add( di, idx - 1 );
-
-                view.itemsList.setSelectedIndex( idx - 1 );
-            }
-        }
-    }
-
-    /***************************************************************************
-     * @param <T>
-     **************************************************************************/
-    private static class MoveDownListener<T> implements ActionListener
-    {
-        private final ListView<T> view;
-
-        public MoveDownListener( ListView<T> view )
-        {
-            this.view = view;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            int idx = view.itemsList.getSelectedIndex();
-
-            if( idx > -1 && idx < ( view.items.size() - 1 ) )
-            {
-                T item = view.items.remove( idx );
-                view.items.add( idx + 1, item );
-
-                T di = view.itemsListModel.remove( idx );
-                view.itemsListModel.add( di, idx + 1 );
-
-                view.itemsList.setSelectedIndex( idx + 1 );
             }
         }
     }

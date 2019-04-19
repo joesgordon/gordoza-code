@@ -2,13 +2,17 @@ package org.jutils.ui;
 
 import java.awt.*;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.border.MatteBorder;
 
 import org.jutils.Utils;
 import org.jutils.ui.fields.StringFormField;
 import org.jutils.ui.model.IView;
 
+/*******************************************************************************
+ *
+ ******************************************************************************/
 public class ExceptionView implements IView<JComponent>
 {
     /**  */
@@ -16,47 +20,38 @@ public class ExceptionView implements IView<JComponent>
     /**  */
     private final StringFormField messageField;
     /**  */
-    private final JTextArea stacktraceField;
+    private final ErrorView stacktraceField;
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public ExceptionView()
     {
         this.messageField = new StringFormField( "Message", 0, null );
-        this.stacktraceField = new JTextArea();
+        this.stacktraceField = new ErrorView();
         this.titlePanel = new TitleView( "", createView() );
 
         messageField.setEditable( false );
-        stacktraceField.setEditable( false );
-
-        stacktraceField.setLineWrap( false );
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private Component createView()
     {
         JPanel panel = new JPanel( new BorderLayout() );
 
+        stacktraceField.setBorder( new MatteBorder( 1, 0, 0, 0, Color.gray ) );
+
         panel.add( createForm(), BorderLayout.NORTH );
-        panel.add( createTracePanel(), BorderLayout.CENTER );
+        panel.add( stacktraceField.getView(), BorderLayout.CENTER );
 
         return panel;
     }
 
-    private Component createTracePanel()
-    {
-        JPanel panel = new JPanel( new BorderLayout() );
-
-        JScrollPane tracePane = new JScrollPane( stacktraceField );
-        // tracePane.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
-        tracePane.setBorder( new MatteBorder( 1, 0, 0, 0, Color.gray ) );
-        tracePane.setPreferredSize( new Dimension( 400, 200 ) );
-        tracePane.setMinimumSize( new Dimension( 400, 200 ) );
-        tracePane.getVerticalScrollBar().setUnitIncrement( 12 );
-
-        // panel.add( new JSeparator(), BorderLayout.NORTH );
-        panel.add( tracePane, BorderLayout.CENTER );
-
-        return panel;
-    }
-
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private Component createForm()
     {
         StandardFormView form = new StandardFormView();
@@ -66,14 +61,19 @@ public class ExceptionView implements IView<JComponent>
         return form.getView();
     }
 
+    /***************************************************************************
+     * @param th
+     **************************************************************************/
     public void setException( Throwable th )
     {
         titlePanel.setTitle( th.getClass().getName() );
         messageField.setValue( th.getMessage() );
-        stacktraceField.setText( Utils.printStackTrace( th ) );
-        stacktraceField.setCaretPosition( 0 );
+        stacktraceField.setData( Utils.printStackTrace( th ) );
     }
 
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
     @Override
     public JComponent getView()
     {
