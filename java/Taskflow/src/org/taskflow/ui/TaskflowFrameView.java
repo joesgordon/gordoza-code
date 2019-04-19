@@ -171,7 +171,7 @@ public class TaskflowFrameView implements IView<JFrame>
 
         if( dialogView.show() )
         {
-            String name = newTaskView.getData();
+            // String name = newTaskView.getData();
             // TODO create and add task
         }
     }
@@ -212,6 +212,9 @@ public class TaskflowFrameView implements IView<JFrame>
         // TODO Auto-generated method stub
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     private void setNew()
     {
         mainPanel.setData( new Project() );

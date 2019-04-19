@@ -48,7 +48,9 @@ public class NetMessagesTableConfig implements ITableItemsConfig<NetMessage>
      **************************************************************************/
     public NetMessagesTableConfig( IMessageFields fields )
     {
-        this.fields = fields == null ? new EmptyMessageFields() : fields;
+        fields = fields == null ? new EmptyMessageFields() : fields;
+
+        this.fields = fields;
         this.utf8 = Charset.forName( "UTF-8" );
         this.names = new String[NAMES.length + this.fields.getFieldCount()];
         this.classes = new Class<?>[NAMES.length + this.fields.getFieldCount()];

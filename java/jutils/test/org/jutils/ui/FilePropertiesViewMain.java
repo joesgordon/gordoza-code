@@ -15,9 +15,9 @@ import org.jutils.ui.event.FileDropTarget;
 import org.jutils.ui.fields.BooleanFormField;
 import org.jutils.ui.fields.IntegerFormField;
 
-/***************************************************************************
+/*******************************************************************************
  * 
- **************************************************************************/
+ ******************************************************************************/
 public class FilePropertiesViewMain
 {
     /***************************************************************************
@@ -33,6 +33,9 @@ public class FilePropertiesViewMain
      **************************************************************************/
     private static final class FilePropertiesViewApp implements IFrameApp
     {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public JFrame createFrame()
         {
@@ -46,7 +49,10 @@ public class FilePropertiesViewMain
             return frameView.getView();
         }
 
-        private Container createContent()
+        /**
+         * @return
+         */
+        private static Container createContent()
         {
             JPanel panel = new JPanel( new GridBagLayout() );
             GridBagConstraints constraints = new GridBagConstraints();
@@ -70,7 +76,10 @@ public class FilePropertiesViewMain
             return panel;
         }
 
-        private JComponent createExample()
+        /**
+         * @return
+         */
+        private static JComponent createExample()
         {
             StandardFormView form = new StandardFormView();
             IntegerFormField intField = new IntegerFormField( "Int", null, 10 );
@@ -84,7 +93,12 @@ public class FilePropertiesViewMain
             return form.getView();
         }
 
-        private void handleFileDropped( List<File> list, Component parent )
+        /**
+         * @param list
+         * @param parent
+         */
+        private static void handleFileDropped( List<File> list,
+            Component parent )
         {
             if( !list.isEmpty() )
             {
@@ -92,11 +106,18 @@ public class FilePropertiesViewMain
             }
         }
 
-        private void show( File f, Component parent )
+        /**
+         * @param f
+         * @param parent
+         */
+        private static void show( File f, Component parent )
         {
             FilePropertiesView.show( f, parent );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void finalizeGui()
         {

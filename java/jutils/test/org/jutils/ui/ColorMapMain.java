@@ -68,7 +68,7 @@ public class ColorMapMain
         /**
          * @return
          */
-        private Container createView()
+        private static Container createView()
         {
             ColorMapView mapView = new ColorMapView();
 

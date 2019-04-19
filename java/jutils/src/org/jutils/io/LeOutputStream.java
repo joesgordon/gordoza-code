@@ -9,7 +9,7 @@ import java.nio.ByteOrder;
  ******************************************************************************/
 public class LeOutputStream implements DataOutput
 {
-    /**  */
+    /** The parent stream to write data in a little-endian fashion. */
     private final OutputStream out;
     /** The bytes to buffer data writes. */
     private final byte [] bytes;
@@ -18,7 +18,7 @@ public class LeOutputStream implements DataOutput
 
     /***************************************************************************
      * Creates a
-     * @param out
+     * @param out the stream to be written to.
      **************************************************************************/
     public LeOutputStream( OutputStream out )
     {

@@ -7,7 +7,8 @@ import org.jutils.ValidationException;
 import com.thoughtworks.xstream.XStreamException;
 
 /*******************************************************************************
- * @param <T>
+ * Serializes items to XML using XStream.
+ * @param <T> the type of item to be serialized.
  ******************************************************************************/
 public class XStreamFileSerializer<T> implements IStdSerializer<T, File>
 {

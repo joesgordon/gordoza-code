@@ -48,6 +48,8 @@ public class LineReader implements Closeable
 
     /***************************************************************************
      * Returns the number of the last line read.
+     * @return the number of the last line read or {@code -1} if none have been
+     * read.
      **************************************************************************/
     public long getLastLineNumberRead()
     {

@@ -19,7 +19,7 @@ public class StringPrintStream implements IPrintStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void print( String str )
@@ -28,7 +28,7 @@ public class StringPrintStream implements IPrintStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void println( String str )
@@ -38,7 +38,7 @@ public class StringPrintStream implements IPrintStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void println()
@@ -47,15 +47,7 @@ public class StringPrintStream implements IPrintStream
     }
 
     /***************************************************************************
-     * Returns {@code true} if the stream has never been written to.
-     **************************************************************************/
-    public boolean isEmpty()
-    {
-        return buffer.length() > 0;
-    }
-
-    /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public String toString()
@@ -64,7 +56,7 @@ public class StringPrintStream implements IPrintStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void println( String format, Object... args )
@@ -73,7 +65,7 @@ public class StringPrintStream implements IPrintStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void print( String format, Object... args )
@@ -82,7 +74,7 @@ public class StringPrintStream implements IPrintStream
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void println( char [] chars )
@@ -90,9 +82,22 @@ public class StringPrintStream implements IPrintStream
         buffer.append( chars );
     }
 
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
     @Override
     public void close()
     {
         buffer.setLength( 0 );
+    }
+
+    /***************************************************************************
+     * Returns {@code true} if the stream has never been written to.
+     * @return {@code true} if the stream has never been written to;
+     * {@code false} otherwise.
+     **************************************************************************/
+    public boolean isEmpty()
+    {
+        return buffer.length() > 0;
     }
 }

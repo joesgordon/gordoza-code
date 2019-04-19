@@ -3,7 +3,9 @@ package org.jutils.appgallery;
 import java.awt.TrayIcon;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
 import org.jutils.SwingUtils;
 import org.jutils.appgallery.ui.AppGalleryFrameView;
@@ -41,7 +43,7 @@ public class AppGalleryApp implements IFrameApp
      * @param frame the frame to use as the parent of the popup menu.
      * @return the popup menu for this application's tray icon.
      **************************************************************************/
-    private JPopupMenu createPopup( AppGalleryFrameView frame )
+    private static JPopupMenu createPopup( AppGalleryFrameView frame )
     {
         JPopupMenu menu = new JPopupMenu();
 

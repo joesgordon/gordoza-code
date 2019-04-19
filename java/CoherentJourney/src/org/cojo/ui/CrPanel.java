@@ -1,8 +1,18 @@
 package org.cojo.ui;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
 
 import org.cojo.CojoIconLoader;
 import org.cojo.data.ChangeRequest;
@@ -17,20 +27,32 @@ import org.jutils.ui.model.IView;
  ******************************************************************************/
 public class CrPanel implements IView<JPanel>
 {
+    /**  */
     private final JPanel view;
+    /**  */
     private final JTabbedPane mainTabbedPane;
 
+    /**  */
     private final JLabel numberLabel;
+    /**  */
     private final JTextField titleField;
+    /**  */
     private final JTextField stateField;
 
+    /**  */
     private final CrDefinitionPanel crDefinitionPanel;
+    /**  */
     private final StfsPanel stfsPanel;
+    /**  */
     private final NotesPanel notesPanel;
 
+    /**  */
     private final JPanel thirdPartyPanel;
+    /**  */
     private final JPanel systemEngineeringPanel;
+    /**  */
     private final FindingsPanel designPanel;
+    /**  */
     private Project project;
 
     /***************************************************************************

@@ -67,7 +67,6 @@ public class ChatterboxHandler
 
     /***************************************************************************
      * @param user
-     * @param options
      **************************************************************************/
     public ChatterboxHandler( ChatUser user )
     {
@@ -86,7 +85,6 @@ public class ChatterboxHandler
 
     /***************************************************************************
      * @param config
-     * @throws IOException
      **************************************************************************/
     public void connect( MulticastInputs config ) throws IOException
     {
@@ -121,7 +119,7 @@ public class ChatterboxHandler
     /***************************************************************************
      * @param errorMessage
      **************************************************************************/
-    private void displayErrorMessage( String errorMessage )
+    private static void displayErrorMessage( String errorMessage )
     {
         LogUtils.printError( errorMessage );
         // TODO Auto-generated method stub and run on swing event queue
@@ -174,7 +172,8 @@ public class ChatterboxHandler
     }
 
     /***************************************************************************
-     * 
+     * @param users
+     * @return
      **************************************************************************/
     public ChatHandler createConversation( List<String> users )
     {
@@ -187,7 +186,7 @@ public class ChatterboxHandler
     }
 
     /***************************************************************************
-     * 
+     * @return
      **************************************************************************/
     public ChatHandler getDefaultConversation()
     {
@@ -253,7 +252,8 @@ public class ChatterboxHandler
     }
 
     /***************************************************************************
-     * @param message
+     * @param conversationId
+     * @param user
      **************************************************************************/
     public void removeUser( String conversationId, ChatUser user )
     {
@@ -402,14 +402,20 @@ public class ChatterboxHandler
             }
             catch( IOException ex )
             {
-                chat.displayErrorMessage( "I/O error: " + ex.getMessage() );
+                ChatterboxHandler.displayErrorMessage(
+                    "I/O error: " + ex.getMessage() );
             }
             catch( ValidationException ex )
             {
-                chat.displayErrorMessage( ex.getMessage() );
+                ChatterboxHandler.displayErrorMessage( ex.getMessage() );
             }
         }
 
+        /**
+         * @param stream
+         * @throws IOException
+         * @throws ValidationException
+         */
         private void parseMessage( IDataStream stream )
             throws IOException, ValidationException
         {
@@ -447,11 +453,18 @@ public class ChatterboxHandler
      **************************************************************************/
     private static class MessageSerializer
     {
+        /**  */
         public final ChatHeaderSerializer headerSerializer;
+        /**  */
         public final ChatMessageSerializer messageSerializer;
+        /**  */
         public final UserAvailableMessageSerializer userAvailableMessageSerializer;
+        /**  */
         public final UserLeftMessageSerializer userLeftMessageSerializer;
 
+        /**
+         * 
+         */
         public MessageSerializer()
         {
             this.headerSerializer = new ChatHeaderSerializer();
@@ -466,12 +479,18 @@ public class ChatterboxHandler
      **************************************************************************/
     private static class Signaler implements ISignaler
     {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void signalMessage( String message )
         {
             // TODO Auto-generated method stub
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public boolean signalPercent( int percent )
         {
@@ -479,12 +498,18 @@ public class ChatterboxHandler
             return true;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void signalError( TaskError error )
         {
             // TODO Auto-generated method stub
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void signalFinished()
         {
@@ -492,6 +517,10 @@ public class ChatterboxHandler
         }
     }
 
+    /**
+     * @param userId
+     * @return
+     */
     public ChatUser getUser( String userId )
     {
         for( ChatUser user : defaultConversation.getUsers() )
@@ -523,7 +552,7 @@ public class ChatterboxHandler
     }
 
     /***************************************************************************
-     * 
+     * @return
      **************************************************************************/
     public final ChatUser getLocalUser()
     {
@@ -553,7 +582,7 @@ public class ChatterboxHandler
     }
 
     /***************************************************************************
-     * 
+     * @param conversation
      **************************************************************************/
     public final void removeConversation( ChatHandler conversation )
     {

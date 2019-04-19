@@ -10,11 +10,11 @@ import java.util.List;
 public class Account
 {
     /**  */
-    private String name;
+    public String name;
     /**  */
-    private Money startingBalance;
+    public Money startingBalance;
     /**  */
-    private List<LedgerMonth> ledgers;
+    public final List<LedgerMonth> ledgers;
 
     // private List<Transaction> forecasts;
 
@@ -23,13 +23,13 @@ public class Account
      **************************************************************************/
     public Account()
     {
-        name = "New Account";
-        startingBalance = new Money( 0 );
-        ledgers = new ArrayList<LedgerMonth>();
+        this.name = "New Account";
+        this.startingBalance = new Money( 0 );
+        this.ledgers = new ArrayList<LedgerMonth>();
     }
 
     /***************************************************************************
-     * @param trans
+     * @param trans the most recent transaction to be added to this account.
      **************************************************************************/
     public void addTransaction( Transaction trans )
     {
@@ -150,7 +150,7 @@ public class Account
      **************************************************************************/
     public void setStartingBalance( Money balance )
     {
-        startingBalance = balance;
+        startingBalance = new Money( balance );
     }
 
     /***************************************************************************
@@ -175,6 +175,7 @@ public class Account
      **************************************************************************/
     public void setLedgers( ArrayList<LedgerMonth> list )
     {
-        ledgers = list;
+        ledgers.clear();
+        ledgers.addAll( list );
     }
 }

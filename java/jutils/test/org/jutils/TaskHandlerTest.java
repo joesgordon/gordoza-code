@@ -8,7 +8,7 @@ import org.jutils.concurrent.TaskHandler;
 /*******************************************************************************
  * Defines unit tests for a {@link TaskHandler}.
  ******************************************************************************/
-public final class TaskHandlerTest
+public class TaskHandlerTest
 {
     /***************************************************************************
      * Test method for {@link TaskHandler#canContinue()}.

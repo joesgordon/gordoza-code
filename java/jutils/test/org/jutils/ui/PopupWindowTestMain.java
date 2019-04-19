@@ -14,11 +14,14 @@ import org.jutils.ui.calendar.DateView;
 import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.hex.HexPanel;
 
-/***************************************************************************
+/*******************************************************************************
  * 
- **************************************************************************/
+ ******************************************************************************/
 public class PopupWindowTestMain implements IFrameApp
 {
+    /***************************************************************************
+     * @param args
+     **************************************************************************/
     public static void main( String [] args )
     {
         FrameRunner.invokeLater( new PopupWindowTestMain() );
@@ -36,19 +39,28 @@ public class PopupWindowTestMain implements IFrameApp
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void finalizeGui()
     {
     }
 
+    /***************************************************************************
+     *
+     **************************************************************************/
     private static final class PwtFrame
     {
+        /**  */
         public final StandardFrameView frame;
+        /**  */
         public final JButton testButton;
+        /**  */
         public final JButton testJpButton;
 
+        /**
+         * 
+         */
         public PwtFrame()
         {
             this.testButton = new JButton();
@@ -63,11 +75,17 @@ public class PopupWindowTestMain implements IFrameApp
             frame.setSize( 500, 500 );
         }
 
+        /**
+         * @return
+         */
         public JFrame getView()
         {
             return frame.getView();
         }
 
+        /**
+         * @return
+         */
         private JToolBar createToolbar()
         {
             JToolBar toolbar = new JGoodiesToolBar();
@@ -81,6 +99,9 @@ public class PopupWindowTestMain implements IFrameApp
             return toolbar;
         }
 
+        /**
+         * @return
+         */
         private Action createTestAction()
         {
             ActionListener l = ( e ) -> showPopup();
@@ -89,6 +110,9 @@ public class PopupWindowTestMain implements IFrameApp
             return new ActionAdapter( l, "Test", icon );
         }
 
+        /**
+         * @return
+         */
         private Action createTestJpAction()
         {
             ActionListener l = ( e ) -> showJPopup();
@@ -97,6 +121,9 @@ public class PopupWindowTestMain implements IFrameApp
             return new ActionAdapter( l, "Test", icon );
         }
 
+        /**
+         * 
+         */
         private void showPopup()
         {
             DateView view = new DateView();
@@ -106,6 +133,9 @@ public class PopupWindowTestMain implements IFrameApp
                 testButton.getHeight() );
         }
 
+        /**
+         * 
+         */
         private void showJPopup()
         {
             DateView view = new DateView();
@@ -117,7 +147,10 @@ public class PopupWindowTestMain implements IFrameApp
                 testButton.getHeight() );
         }
 
-        private Container createContent()
+        /**
+         * @return
+         */
+        private static Container createContent()
         {
             JPanel panel = new JPanel( new BorderLayout() );
             HexPanel hex = new HexPanel();

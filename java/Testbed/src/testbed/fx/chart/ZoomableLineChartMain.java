@@ -20,17 +20,17 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-/**
+/*******************************************************************************
  *
- */
+ ******************************************************************************/
 public class ZoomableLineChartMain extends Application
 {
-
-    /**
-     * 
-     */
+    /**  */
     private static final int NUM_DATA_POINTS = 1000;
 
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
     @Override
     public void start( Stage primaryStage )
     {
@@ -62,10 +62,10 @@ public class ZoomableLineChartMain extends Application
         primaryStage.show();
     }
 
-    /**
+    /***************************************************************************
      * @return the newly created chart.
-     */
-    private ZoomableChart createChart()
+     **************************************************************************/
+    private static ZoomableChart createChart()
     {
         final LineChart<Number, Number> lchart = new LineChart<>(
             new NumberAxis(), new NumberAxis() );
@@ -75,10 +75,10 @@ public class ZoomableLineChartMain extends Application
         return chart;
     }
 
-    /**
+    /***************************************************************************
      * @return some data to fill the chart.
-     */
-    private ObservableList<Series<Number, Number>> generateChartData()
+     **************************************************************************/
+    private static ObservableList<Series<Number, Number>> generateChartData()
     {
         final Series<Number, Number> series = new Series<>();
         series.setName( "Data" );
@@ -93,9 +93,9 @@ public class ZoomableLineChartMain extends Application
             Collections.singleton( series ) );
     }
 
-    /**
+    /***************************************************************************
      * @param args ignored
-     */
+     **************************************************************************/
     public static void main( String[] args )
     {
         launch( args );

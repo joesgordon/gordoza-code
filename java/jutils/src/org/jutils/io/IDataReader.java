@@ -11,12 +11,7 @@ import org.jutils.ValidationException;
 public interface IDataReader<T> extends IReader<T, IDataStream>
 {
     /***************************************************************************
-     * Reads the object from the current position of the provided stream.
-     * @param stream the stream containing the object to be read.
-     * @return the object read.
-     * @throws IOException if any I/O error occurs.
-     * @throws ValidationException if the data is improperly formatted or
-     * otherwise out of specification.
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public T read( IDataStream stream ) throws IOException, ValidationException;

@@ -1,8 +1,13 @@
 package org.cojo.ui;
 
-import java.awt.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 
 import org.cojo.data.ChangeRequest;
@@ -131,9 +136,11 @@ public class NotesPanel implements IView<JPanel>
         return view;
     }
 
+    /***************************************************************************
+     * @param project
+     **************************************************************************/
     public void setProject( Project project )
     {
         // TODO Auto-generated method stub
-
     }
 }

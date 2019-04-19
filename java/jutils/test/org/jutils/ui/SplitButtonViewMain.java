@@ -84,7 +84,7 @@ public final class SplitButtonViewMain
             return new ActionAdapter( listener, "Save", icon );
         }
 
-        private Component createCenterPanel()
+        private static Component createCenterPanel()
         {
             JPanel panel = new JPanel();
             SplitButtonView<String> sbv = createButtonView( "Open" );
@@ -94,7 +94,7 @@ public final class SplitButtonViewMain
             return panel;
         }
 
-        private SplitButtonView<String> createButtonView( String text )
+        private static SplitButtonView<String> createButtonView( String text )
         {
             Icon icon = IconConstants.getIcon( IconConstants.OPEN_FOLDER_16 );
             List<String> items = new ArrayList<>();

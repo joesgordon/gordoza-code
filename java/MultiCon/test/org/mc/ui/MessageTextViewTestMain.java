@@ -8,15 +8,27 @@ import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
+/*******************************************************************************
+ *
+ ******************************************************************************/
 public class MessageTextViewTestMain
 {
+    /***************************************************************************
+     * @param args
+     **************************************************************************/
     public static void main( String[] args )
     {
         FrameRunner.invokeLater( new MessageTextViewTestApp() );
     }
 
+    /***************************************************************************
+     *
+     **************************************************************************/
     private static class MessageTextViewTestApp implements IFrameApp
     {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public JFrame createFrame()
         {
@@ -30,13 +42,19 @@ public class MessageTextViewTestMain
             return frame.getView();
         }
 
-        private Container createContent()
+        /**
+         * @return
+         */
+        private static Container createContent()
         {
             MessageTextView view = new MessageTextView();
 
             return view.getView();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void finalizeGui()
         {

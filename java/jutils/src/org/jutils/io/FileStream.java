@@ -53,6 +53,7 @@ public class FileStream implements IStream
 
     /***************************************************************************
      * Returns the path to the file being accessed.
+     * @return the path to the file being accessed.
      **************************************************************************/
     public File getFile()
     {

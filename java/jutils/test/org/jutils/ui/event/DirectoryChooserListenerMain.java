@@ -82,7 +82,7 @@ public class DirectoryChooserListenerMain
          * @param f
          * @return
          */
-        private void openFile( File f )
+        private static void openFile( File f )
         {
             LogUtils.printDebug( "File chosen: " + f );
         }

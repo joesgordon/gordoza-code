@@ -9,15 +9,22 @@ import javax.swing.border.AbstractBorder;
 
 import org.jutils.ui.model.IView;
 
-/***************************************************************************
+/*******************************************************************************
  * 
- **************************************************************************/
+ ******************************************************************************/
 public class PopupWindow implements IView<JComponent>
 {
+    /**  */
     private final JPanel glassPane;
+    /**  */
     private final JPanel view;
+    /**  */
     private final JLabel dots;
 
+    /***************************************************************************
+     * @param resizable
+     * @param comp
+     **************************************************************************/
     public PopupWindow( boolean resizable, JComponent comp )
     {
         this.dots = new JLabel( new DotsIcon() );
@@ -35,6 +42,11 @@ public class PopupWindow implements IView<JComponent>
         // setBorder( new LineBorder( Color.gray ) );
     }
 
+    /***************************************************************************
+     * @param resizable
+     * @param comp
+     * @return
+     **************************************************************************/
     private JPanel createView( boolean resizable, JComponent comp )
     {
         JPanel panel = new JPanel( new BorderLayout() );
@@ -49,6 +61,9 @@ public class PopupWindow implements IView<JComponent>
         return panel;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private JPanel createGlassPane()
     {
         JPanel panel = new JPanel( null );
@@ -60,6 +75,9 @@ public class PopupWindow implements IView<JComponent>
         return panel;
     }
 
+    /***************************************************************************
+     * @return
+     **************************************************************************/
     private Component createBottom()
     {
         JPanel panel = new JPanel( new GridBagLayout() );
@@ -78,6 +96,11 @@ public class PopupWindow implements IView<JComponent>
         return panel;
     }
 
+    /***************************************************************************
+     * @param parent
+     * @param x
+     * @param y
+     **************************************************************************/
     public void show( Component parent, int x, int y )
     {
         JFrame w = ( JFrame )SwingUtilities.getRoot( parent );
@@ -150,7 +173,7 @@ public class PopupWindow implements IView<JComponent>
     }
 
     /***************************************************************************
-     * @return
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JComponent getView()
@@ -158,12 +181,21 @@ public class PopupWindow implements IView<JComponent>
         return glassPane;
     }
 
+    /**
+     *
+     */
     private static final class DotsIcon implements Icon
     {
+        /**  */
         private static final int DOT_SIZE = 2;
+        /**  */
         private static final int DOT_START = 2;
+        /**  */
         private static final int DOT_STEP = 4;
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void paintIcon( Component c, Graphics g, int x, int y )
         {
@@ -188,7 +220,12 @@ public class PopupWindow implements IView<JComponent>
             }
         }
 
-        private void drawDot( Graphics g, int x, int y )
+        /**
+         * @param g
+         * @param x
+         * @param y
+         */
+        private static void drawDot( Graphics g, int x, int y )
         {
             g.setColor( Color.WHITE );
             g.fillRect( x, y, DOT_SIZE, DOT_SIZE );
@@ -196,12 +233,18 @@ public class PopupWindow implements IView<JComponent>
             g.fillRect( x - 1, y - 1, DOT_SIZE, DOT_SIZE );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public int getIconWidth()
         {
             return 10;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public int getIconHeight()
         {
@@ -209,16 +252,28 @@ public class PopupWindow implements IView<JComponent>
         }
     }
 
+    /***************************************************************************
+     *
+     **************************************************************************/
     private static final class DotsMouseListener extends MouseAdapter
     {
+        /**  */
         private final PopupWindow popup;
+        /**  */
         private final Cursor defaultCursor;
+        /**  */
         private final Cursor resizeCursor;
 
+        /**  */
         private Point mouseStart;
+        /**  */
         private Dimension startSize;
+        /**  */
         private boolean isResizing;
 
+        /**
+         * @param popup
+         */
         public DotsMouseListener( PopupWindow popup )
         {
             this.popup = popup;
@@ -232,18 +287,28 @@ public class PopupWindow implements IView<JComponent>
             this.isResizing = false;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void mouseMoved( MouseEvent e )
         {
         }
 
-        private Point toScreen( MouseEvent e )
+        /**
+         * @param e
+         * @return
+         */
+        private static Point toScreen( MouseEvent e )
         {
             Point p = e.getPoint();
             SwingUtilities.convertPointToScreen( p, e.getComponent() );
             return p;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void mousePressed( MouseEvent e )
         {
@@ -253,6 +318,9 @@ public class PopupWindow implements IView<JComponent>
             // LogUtils.printDebug( "dots pressed" );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void mouseReleased( MouseEvent e )
         {
@@ -261,6 +329,9 @@ public class PopupWindow implements IView<JComponent>
             // LogUtils.printDebug( "dots released" );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void mouseDragged( MouseEvent e )
         {
@@ -285,6 +356,10 @@ public class PopupWindow implements IView<JComponent>
             }
         }
 
+        /**
+         * @param width
+         * @param height
+         */
         private void resize( final int width, final int height )
         {
             // final Window window = ( Window )menu.getTopLevelAncestor();
@@ -297,12 +372,18 @@ public class PopupWindow implements IView<JComponent>
             // menu.validate();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void mouseEntered( MouseEvent e )
         {
             popup.dots.setCursor( resizeCursor );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void mouseExited( MouseEvent e )
         {
@@ -310,15 +391,25 @@ public class PopupWindow implements IView<JComponent>
         }
     }
 
+    /**
+     *
+     */
     private static final class GlassClickListener extends MouseAdapter
     {
+        /**  */
         private final PopupWindow popup;
 
+        /**
+         * @param popup
+         */
         public GlassClickListener( PopupWindow popup )
         {
             this.popup = popup;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void mouseClicked( MouseEvent e )
         {
@@ -327,6 +418,9 @@ public class PopupWindow implements IView<JComponent>
             evaluateEvent( e, false );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void mousePressed( MouseEvent e )
         {
@@ -335,6 +429,9 @@ public class PopupWindow implements IView<JComponent>
             evaluateEvent( e, false );
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void mouseReleased( MouseEvent e )
         {
@@ -343,10 +440,12 @@ public class PopupWindow implements IView<JComponent>
             evaluateEvent( e, true );
         }
 
+        /**
+         * @param e
+         * @param hide
+         */
         public void evaluateEvent( MouseEvent e, boolean hide )
         {
-            // TODO Auto-generated method stub
-
             // LogUtils.printDebug( "mouse clicked" );
 
             JFrame w = ( JFrame )SwingUtilities.getRoot( popup.getView() );

@@ -55,7 +55,7 @@ public class PositionIndicatorTestMain
          * @param addAction
          * @return
          */
-        private JToolBar createToolbar( Action addAction )
+        private static JToolBar createToolbar( Action addAction )
         {
             JToolBar toolbar = new JGoodiesToolBar();
 
@@ -68,7 +68,7 @@ public class PositionIndicatorTestMain
          * @param listener
          * @return
          */
-        private Action createAddAction( ActionListener listener )
+        private static Action createAddAction( ActionListener listener )
         {
             Icon icon = IconConstants.getIcon( IconConstants.EDIT_ADD_16 );
             // TODO Auto-generated method stub
@@ -170,7 +170,7 @@ public class PositionIndicatorTestMain
          * @param position
          * @param field
          */
-        private void updatePosition( long position, LongFormField field )
+        private static void updatePosition( long position, LongFormField field )
         {
             field.setValue( position );
 

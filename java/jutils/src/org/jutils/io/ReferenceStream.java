@@ -9,30 +9,35 @@ import java.util.List;
 import org.jutils.ValidationException;
 
 /*******************************************************************************
- * @param <T>
+ * Creates a stream where items are written to one file and the offsets (the
+ * file offset in the first file) to each item are written to another file.
+ * Meant to be a cached location for items of variable serialized length.
+ * @param <T> the type of object to be referenced.
  ******************************************************************************/
 public final class ReferenceStream<T> implements IReferenceStream<T>
 {
-    /**  */
+    /** The serializer to read/write each item. */
     private final IDataSerializer<T> serializer;
-    /**  */
-    private final File refFileToDelete;
-    /**  */
-    private final IDataStream refStream;
-    /**  */
-    private File itemsFileToDelete;
-    /**  */
+    /** The file to which items are written. */
+    private File itemsFile;
+    /** The stream that writes to the items file. */
     private IDataStream itemsStream;
 
-    /**  */
+    /** The file to which references are written. */
+    private final File referenceFile;
+    /** The stream that writes references to the file. */
+    private final IDataStream refStream;
+
+    /** The number of items that have been written. */
     private long count;
-    /**  */
-    private long itemStreamLength = 0;
 
     /***************************************************************************
-     * @param serializer
-     * @throws FileNotFoundException
-     * @throws IOException
+     * Creates a stream with the provided serializer that uses temporary files
+     * for both items and references.
+     * @param serializer the serializer to read/write each item.
+     * @throws FileNotFoundException if there was a error creating/opening
+     * temporary files.
+     * @throws IOException if there was a error opening temporary files.
      **************************************************************************/
     public ReferenceStream( IDataSerializer<T> serializer )
         throws FileNotFoundException, IOException
@@ -109,9 +114,9 @@ public final class ReferenceStream<T> implements IReferenceStream<T>
     }
 
     /***************************************************************************
-     * @param serializer
-     * @param itemsFile
-     * @param deleteItems
+     * @param serializer the serializer to read/write each item.
+     * @param itemsFile the file to which items are written.
+     * @param deleteItems whether or not to delete the items file on close.
      * @param itemsStream
      * @param referenceFile
      * @param deleteReference
@@ -126,14 +131,15 @@ public final class ReferenceStream<T> implements IReferenceStream<T>
     {
         this.serializer = serializer;
 
-        this.itemsFileToDelete = deleteItems ? itemsFile : null;
+        this.itemsFile = deleteItems ? itemsFile : null;
         this.itemsStream = itemsStream;
 
-        this.refFileToDelete = deleteReference ? referenceFile : null;
+        this.referenceFile = deleteReference ? referenceFile : null;
         this.refStream = referenceStream;
 
         this.count = refStream.getLength() / 8;
-        this.itemStreamLength = itemsStream.getLength();
+
+        long itemStreamLength = itemsStream.getLength();
 
         if( itemStreamLength > 0 && count == 0 )
         {
@@ -162,14 +168,14 @@ public final class ReferenceStream<T> implements IReferenceStream<T>
         refStream.close();
         itemsStream.close();
 
-        if( refFileToDelete != null )
+        if( referenceFile != null )
         {
-            refFileToDelete.delete();
+            referenceFile.delete();
         }
 
-        if( itemsFileToDelete != null )
+        if( itemsFile != null )
         {
-            itemsFileToDelete.delete();
+            itemsFile.delete();
         }
     }
 
@@ -189,14 +195,13 @@ public final class ReferenceStream<T> implements IReferenceStream<T>
     public void write( T item ) throws IOException
     {
         long rpos = count * 8;
-        long ipos = this.itemStreamLength;
+        long ipos = this.itemsStream.getPosition();
 
         refStream.seek( rpos );
         itemsStream.seek( ipos );
 
         refStream.writeLong( ipos );
         serializer.write( item, itemsStream );
-        itemStreamLength = itemsStream.getPosition();
 
         count++;
     }
@@ -272,15 +277,15 @@ public final class ReferenceStream<T> implements IReferenceStream<T>
     {
         this.itemsStream.close();
 
-        if( itemsFileToDelete != null )
+        if( itemsFile != null )
         {
-            itemsFileToDelete.delete();
-            itemsFileToDelete = null;
+            itemsFile.delete();
+            itemsFile = null;
         }
 
         this.itemsStream = createStream( file );
 
-        this.itemStreamLength = itemsStream.getLength();
+        long itemStreamLength = itemsStream.getLength();
 
         this.count = 0;
         this.refStream.seek( 0L );

@@ -448,7 +448,7 @@ public class PositionIndicator implements IView<JComponent>
             int posMax = trackWidth - thumbWidth;
 
             int posIdx = ( int )Math.round(
-                ( ( double )position / ( length - 1.0 ) * ( double )posMax ) );
+                ( position / ( length - 1.0 ) * posMax ) );
 
             posIdx = Math.max( posIdx, 0 );
             posIdx = Math.min( posIdx, posMax );

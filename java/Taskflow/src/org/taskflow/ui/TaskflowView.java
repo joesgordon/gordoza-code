@@ -1,8 +1,14 @@
 package org.taskflow.ui;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-import javax.swing.*;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 
 import org.jutils.ui.model.IDataView;
 import org.taskflow.data.Project;
@@ -49,23 +55,25 @@ public class TaskflowView implements IDataView<Project>
     }
 
     /***************************************************************************
-     * @param project
+     * {@inheritDoc}
      **************************************************************************/
+    @Override
     public void setData( Project project )
     {
         this.project = project;
     }
 
     /***************************************************************************
-     * @return
+     * {@inheritDoc}
      **************************************************************************/
+    @Override
     public Project getData()
     {
         return this.project;
     }
 
     /***************************************************************************
-     *
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JPanel getView()

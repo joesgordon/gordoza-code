@@ -19,15 +19,27 @@ import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.fields.ComboFormField;
 import org.jutils.ui.fields.StringFormField;
 
+/**
+ *
+ */
 public final class BindingMain
 {
+    /**
+     * @param args
+     */
     public static void main( String[] args )
     {
         FrameRunner.invokeLater( new BindingApp() );
     }
 
+    /**
+     *
+     */
     private static final class BindingApp implements IFrameApp
     {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public JFrame createFrame()
         {
@@ -44,7 +56,10 @@ public final class BindingMain
             return view.getView();
         }
 
-        private Container createContent()
+        /**
+         * @return
+         */
+        private static Container createContent()
         {
             StandardFormView form = new StandardFormView();
             JComboBox<SystemProperty> combo = new JComboBox<>(
@@ -78,6 +93,9 @@ public final class BindingMain
             return form.getView();
         }
 
+        /**
+         * @return
+         */
         private static String[] strs()
         {
             UIProperty[] vals = UIProperty.values();
@@ -91,6 +109,9 @@ public final class BindingMain
             return names;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void finalizeGui()
         {
