@@ -93,15 +93,29 @@ public class MulticonFrame implements IView<JFrame>
     {
         views.add( view );
 
-        BindingFrameView frame = new BindingFrameView( view, getView() );
+        showBindingFrame( view, getView() );
+    }
+
+    /***************************************************************************
+     * @param view
+     * @param parent
+     * @return
+     **************************************************************************/
+    public static BindingFrameView showBindingFrame( IBindableView view,
+        Component parent )
+    {
+        Window window = SwingUtils.getComponentsWindow( parent );
+        BindingFrameView frame = new BindingFrameView( view, parent );
 
         frame.getView().addWindowListener(
-            new BindableClosingListener( view, this ) );
+            new BindableClosingListener( view, parent ) );
 
-        frame.getView().setIconImages( getView().getIconImages() );
+        frame.getView().setIconImages( window.getIconImages() );
         frame.getView().pack();
-        frame.getView().setLocationRelativeTo( getView() );
+        frame.getView().setLocationRelativeTo( parent );
         frame.getView().setVisible( true );
+
+        return frame;
     }
 
     /***************************************************************************
@@ -155,37 +169,6 @@ public class MulticonFrame implements IView<JFrame>
             {
                 frame.closeView( view );
             }
-        }
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static final class BindableClosingListener extends WindowAdapter
-    {
-        /**  */
-        private final IBindableView view;
-        /**  */
-        private final MulticonFrame frame;
-
-        /**
-         * @param view
-         * @param frame
-         */
-        public BindableClosingListener( IBindableView view,
-            MulticonFrame frame )
-        {
-            this.view = view;
-            this.frame = frame;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void windowClosing( WindowEvent e )
-        {
-            frame.closeView( view );
         }
     }
 }

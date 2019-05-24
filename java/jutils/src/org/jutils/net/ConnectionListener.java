@@ -61,6 +61,10 @@ public class ConnectionListener implements Closeable
     public void close() throws IOException
     {
         IConnection connection = this.connection;
+        TaskThread rxThread = this.rxThread;
+
+        this.connection = null;
+        this.rxThread = null;
 
         if( connection != null )
         {
@@ -68,9 +72,6 @@ public class ConnectionListener implements Closeable
             rxThread.stopAndWait();
             connection.close();
         }
-
-        this.connection = null;
-        this.rxThread = null;
     }
 
     /***************************************************************************
@@ -155,6 +156,11 @@ public class ConnectionListener implements Closeable
      **************************************************************************/
     public NetMessage sendMessage( byte [] buf ) throws IOException
     {
+        if( connection == null )
+        {
+            throw new IOException( "No connection established" );
+        }
+
         return connection.sendMessage( buf );
     }
 }

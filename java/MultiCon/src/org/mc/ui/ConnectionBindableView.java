@@ -132,6 +132,15 @@ public class ConnectionBindableView implements IBindableView
      * {@inheritDoc}
      **************************************************************************/
     @Override
+    public boolean isBound()
+    {
+        return commModel != null;
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
     public String getName()
     {
         return connectionView.getTitle();
@@ -145,14 +154,44 @@ public class ConnectionBindableView implements IBindableView
         // LogUtils.printDebug(
         // "rx'd msg: " + HexUtils.toHexString( msg.contents ) );
         messagesPanel.addMessage( msg );
+
+        if( inputPanel.isAutoReplySet() )
+        {
+            ConnectionListener commModel = this.commModel;
+
+            if( commModel != null )
+            {
+                try
+                {
+                    commModel.sendMessage( inputPanel.getAutoMessageText() );
+                }
+                catch( IOException e )
+                {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     /***************************************************************************
      * @param connection
      * @throws IOException
      **************************************************************************/
-    private void setConnection( IConnection connection ) throws IOException
+    public void setConnection( IConnection connection )
     {
+        if( commModel != null )
+        {
+            try
+            {
+                unbind();
+            }
+            catch( IOException ex )
+            {
+                displayErrorMessage( ex.getMessage() );
+            }
+        }
+
         IUpdater<NetMessage> rxListener;
         IUpdater<String> errListener;
 

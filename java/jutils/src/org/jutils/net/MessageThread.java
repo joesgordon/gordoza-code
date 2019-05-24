@@ -92,11 +92,6 @@ public class MessageThread<T>
             msg = read( netMsg.contents );
 
             netMsg.message = msg;
-
-            if( msg == null )
-            {
-                return;
-            }
         }
         catch( IOException ex )
         {

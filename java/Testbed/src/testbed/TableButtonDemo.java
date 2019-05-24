@@ -5,8 +5,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
 
-import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.AbstractCellEditor;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 
 import org.jutils.data.UIProperty;
 import org.jutils.io.LogUtils;
@@ -22,12 +30,10 @@ public class TableButtonDemo implements IView<JComponent>
     public TableButtonDemo()
     {
         String[] columnNames = { "Date", "String", "Integer", "Decimal", "" };
-        Object[][] data = {
-            { new Date(), "A", new Integer( 1 ), new Double( 5.1 ), "Delete0" },
-            { new Date(), "B", new Integer( 2 ), new Double( 6.2 ), "Delete1" },
-            { new Date(), "C", new Integer( 3 ), new Double( 7.3 ), "Delete2" },
-            { new Date(), "D", new Integer( 4 ), new Double( 8.4 ),
-                "Delete3" } };
+        Object[][] data = { { new Date(), "A", 1, 5.1, "Delete0" },
+            { new Date(), "B", 2, 6.2, "Delete1" },
+            { new Date(), "C", 3, 7.3, "Delete2" },
+            { new Date(), "D", 4, 8.4, "Delete3" } };
 
         DefaultTableModel model = new DefaultTableModel( data, columnNames );
         JTable table = new JTable( model )

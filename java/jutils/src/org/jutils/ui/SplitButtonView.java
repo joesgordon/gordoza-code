@@ -397,7 +397,7 @@ public class SplitButtonView<T> implements IView<JComponent>
         @Override
         public void mousePressed( MouseEvent e )
         {
-            int modifiers = e.getModifiers();
+            int modifiers = e.getModifiersEx();
             boolean ctrlPressed = ( ActionEvent.CTRL_MASK &
                 modifiers ) == ActionEvent.CTRL_MASK;
 

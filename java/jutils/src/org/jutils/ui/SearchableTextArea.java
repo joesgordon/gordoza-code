@@ -260,9 +260,9 @@ public class SearchableTextArea implements IView<JTextComponent>
         public void keyTyped( KeyEvent e )
         {
             char keyTyped = e.getKeyChar();
-            int modifiers = e.getModifiers();
+            int modifiers = e.getModifiersEx();
 
-            if( ( modifiers & KeyEvent.CTRL_MASK ) != 0 )
+            if( ( modifiers & KeyEvent.CTRL_DOWN_MASK ) != 0 )
             {
                 if( keyTyped == 'f' - 'a' + 1 )
                 {

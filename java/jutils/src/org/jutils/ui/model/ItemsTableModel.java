@@ -112,13 +112,22 @@ public class ItemsTableModel<T> extends AbstractTableModel
     }
 
     /***************************************************************************
-     * @param rowData
+     * @param item the item to be added to the end of the list of items.
      **************************************************************************/
     public void addItem( T item )
     {
-        items.add( item );
+        addItem( item, items.size() );
+    }
 
-        super.fireTableRowsInserted( items.size() - 1, items.size() - 1 );
+    /***************************************************************************
+     * @param item
+     * @param index
+     **************************************************************************/
+    public void addItem( T item, int index )
+    {
+        items.add( index, item );
+
+        super.fireTableRowsInserted( index, index );
     }
 
     /***************************************************************************

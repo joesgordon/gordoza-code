@@ -27,8 +27,12 @@ public class UdpConnection implements IConnection
     public UdpConnection( UdpInputs inputs ) throws IOException, SocketException
     {
         DatagramSocket socket;
-        NetworkInterface nic = NetUtils.lookupNic( inputs.nic );
-        InetAddress nicAddr = NetUtils.getNicAddress( nic );
+        InetAddress nicAddr = NetUtils.lookupNic( inputs.nic );
+
+        if( nicAddr == null )
+        {
+            throw new IOException( "Nic not found: " + inputs.nic );
+        }
 
         // LogUtils.printDebug( "NIC: " + inputs.nic );
         // LogUtils.printDebug( "Address: " + nicAddr );

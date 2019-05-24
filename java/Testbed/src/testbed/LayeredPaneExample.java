@@ -3,7 +3,9 @@ package testbed;
 import java.awt.BorderLayout;
 import java.awt.Container;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
 
 import org.jutils.apps.filespy.ui.SearchParamsView;
 import org.jutils.ui.StatusBarPanel;
@@ -45,7 +47,7 @@ public class LayeredPaneExample implements IFrameApp
 
         pane.setBounds( 0, 0, 500, 500 );
 
-        layeredPane.add( pane, new Integer( 100 ) );
+        layeredPane.add( pane, Integer.valueOf( 100 ) );
 
         return layeredPane;
     }

@@ -24,7 +24,7 @@ public class XStreamUtilsTests
     {
         try
         {
-            XStreamUtils.writeObjectXStream( new Double( 42.0 ) );
+            XStreamUtils.writeObjectXStream( 42.0 );
         }
         catch( XStreamException ex )
         {
@@ -46,7 +46,7 @@ public class XStreamUtilsTests
     {
         try
         {
-            Double expected = new Double( 42.0 );
+            Double expected = 42.0;
             String xml = XStreamUtils.writeObjectXStream( expected,
                 FileState.class.getPackage().getName() );
             Double d = XStreamUtils.readObjectXStream( xml,

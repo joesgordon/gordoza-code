@@ -1,15 +1,30 @@
 package testbed.slider;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
 
 import org.jutils.IconConstants;
 import org.jutils.apps.filespy.ui.RegexPanel;
 import org.jutils.apps.filespy.ui.SearchParamsView;
-import org.jutils.ui.*;
+import org.jutils.ui.DirectoryTree;
+import org.jutils.ui.GradientPanel;
+import org.jutils.ui.JGoodiesToolBar;
+import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.model.IView;
 
 import testbed.SliderPanel;
@@ -63,10 +78,10 @@ public class SliderTestFrame implements IView<JFrame>
         toolbar.add( nextButton );
 
         JComponent comboPanel = new JPanel( new GridBagLayout() );
-        comboBox.addItem( new Integer( 0 ) );
-        comboBox.addItem( new Integer( 1 ) );
-        comboBox.addItem( new Integer( 2 ) );
-        comboBox.addItem( new Integer( 3 ) );
+        comboBox.addItem( Integer.valueOf( 0 ) );
+        comboBox.addItem( Integer.valueOf( 1 ) );
+        comboBox.addItem( Integer.valueOf( 2 ) );
+        comboBox.addItem( Integer.valueOf( 3 ) );
         comboBox.setFocusable( false );
         Dimension size = comboBox.getPreferredSize();
         size.width = 75;

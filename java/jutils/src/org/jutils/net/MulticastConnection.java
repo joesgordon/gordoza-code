@@ -50,23 +50,30 @@ public class MulticastConnection implements IConnection
         this.socket.setTimeToLive( inputs.ttl );
         this.socket.setSoTimeout( inputs.timeout );
 
-        InetAddress intf = InetAddress.getByAddress(
-            new byte[] { 0, 0, 0, 0 } );
+        InetAddress any = InetAddress.getByAddress( new byte[] { 0, 0, 0, 0 } );
+        InetAddress nicAddr = null;
 
         if( inputs.nic != null )
         {
-            NetworkInterface nic = NetUtils.lookupNic( inputs.nic );
+            nicAddr = NetUtils.lookupNic( inputs.nic );
 
-            if( nic != null )
+            if( nicAddr == null )
             {
-                intf = Inet4Address.getByName( NetUtils.getIpv4( nic ) );
+                throw new IOException( "Nic not found: " + inputs.nic );
+            }
 
+            if( !nicAddr.equals( any ) )
+            {
                 // this.socket.setNetworkInterface( nic );
-                this.socket.setInterface( intf );
+                this.socket.setInterface( nicAddr );
             }
         }
+        else
+        {
+            nicAddr = any;
+        }
 
-        this.localAddress = intf.getHostAddress();
+        this.localAddress = nicAddr.getHostAddress();
 
         try
         {

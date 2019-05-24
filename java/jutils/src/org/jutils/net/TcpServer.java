@@ -18,8 +18,12 @@ public class TcpServer implements Closeable
      **************************************************************************/
     public TcpServer( TcpInputs inputs ) throws IOException
     {
-        InetAddress nicAddr = NetUtils.getNicAddress(
-            NetUtils.lookupNic( inputs.nic ) );
+        InetAddress nicAddr = NetUtils.lookupNic( inputs.nic );
+
+        if( nicAddr == null )
+        {
+            throw new IOException( "Nic not found: " + inputs.nic );
+        }
 
         this.server = new ServerSocket( inputs.localPort, 64, nicAddr );
 

@@ -209,9 +209,17 @@ public class MessageInputPanel implements IView<JComponent>
     /***************************************************************************
      * @return
      **************************************************************************/
-    public byte[] getMessageText()
+    public byte[] getAdHocMessageText()
     {
         return adHocView.getData();
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public byte[] getAutoMessageText()
+    {
+        return autoReplyView.getData();
     }
 
     /***************************************************************************
@@ -242,5 +250,13 @@ public class MessageInputPanel implements IView<JComponent>
     public void selectAll()
     {
         adHocView.selectAll();
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public boolean isAutoReplySet()
+    {
+        return autoEnabledCheckbox.isSelected();
     }
 }

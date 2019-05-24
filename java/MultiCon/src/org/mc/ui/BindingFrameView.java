@@ -63,7 +63,7 @@ public class BindingFrameView implements IView<JFrame>
         frameView.setTitle( bindableView.getName() );
         frameView.setContent( createView( bindableView ) );
 
-        setButtonBound( false );
+        setButtonBound( bindableView.isBound() );
     }
 
     /***************************************************************************
@@ -161,6 +161,8 @@ public class BindingFrameView implements IView<JFrame>
          * @return
          */
         public String getName();
+
+        public boolean isBound();
 
         /**
          * @throws IOException

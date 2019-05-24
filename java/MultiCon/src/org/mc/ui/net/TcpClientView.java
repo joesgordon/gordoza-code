@@ -77,4 +77,12 @@ public class TcpClientView implements IConnectionView
     {
         inputsView.setEnabled( editable );
     }
+
+    /***************************************************************************
+     * @param inputs
+     **************************************************************************/
+    public void setInputs( TcpInputs inputs )
+    {
+        inputsView.setData( inputs );
+    }
 }

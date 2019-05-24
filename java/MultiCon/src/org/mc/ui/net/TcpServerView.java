@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 
 import org.jutils.concurrent.*;
 import org.jutils.io.LogUtils;
@@ -13,6 +14,8 @@ import org.jutils.ui.net.TcpInputsView;
 import org.mc.MulticonMain;
 import org.mc.MulticonOptions;
 import org.mc.ui.BindingFrameView.IBindableView;
+import org.mc.ui.ConnectionBindableView;
+import org.mc.ui.MulticonFrame;
 
 /*******************************************************************************
  * 
@@ -58,6 +61,8 @@ public class TcpServerView implements IBindableView
         this.acceptThread = new TaskThread( task, "TCP Server Accept" );
 
         acceptThread.start();
+
+        inputsView.setEnabled( false );
     }
 
     /***************************************************************************
@@ -76,6 +81,8 @@ public class TcpServerView implements IBindableView
 
             this.acceptThread = null;
         }
+
+        inputsView.setEnabled( true );
     }
 
     /***************************************************************************
@@ -91,6 +98,15 @@ public class TcpServerView implements IBindableView
      * {@inheritDoc}
      **************************************************************************/
     @Override
+    public boolean isBound()
+    {
+        return acceptThread != null;
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
     public String getName()
     {
         return NAME;
@@ -99,9 +115,19 @@ public class TcpServerView implements IBindableView
     /***************************************************************************
      * @param connection
      **************************************************************************/
-    private void setAcceptedConnection( TcpConnection connection )
+    private void handleConnectionAccepted( TcpConnection connection )
     {
-        // TODO Auto-generated method stub
+        TcpClientView clientView = new TcpClientView();
+        ConnectionBindableView connectionView = new ConnectionBindableView(
+            new TcpClientView() );
+
+        TcpInputs inputs = connection.getInputs();
+
+        clientView.setInputs( inputs );
+
+        connectionView.setConnection( connection );
+
+        MulticonFrame.showBindingFrame( connectionView, getView() );
     }
 
     /***************************************************************************
@@ -132,17 +158,15 @@ public class TcpServerView implements IBindableView
         {
             try( TcpServer server = new TcpServer( inputs ) )
             {
-                boolean accepted = false;
-
-                while( !accepted && stopManager.canContinue() )
+                while( stopManager.canContinue() )
                 {
                     try
                     {
                         @SuppressWarnings( "resource")
                         TcpConnection connection = server.accept();
 
-                        view.setAcceptedConnection( connection );
-                        accepted = true;
+                        SwingUtilities.invokeLater(
+                            () -> view.handleConnectionAccepted( connection ) );
                     }
                     catch( SocketTimeoutException ex )
                     {

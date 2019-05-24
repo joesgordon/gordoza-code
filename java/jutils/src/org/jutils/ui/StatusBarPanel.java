@@ -6,7 +6,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import org.jutils.*;
+import org.jutils.IconConstants;
+import org.jutils.SwingUtils;
 import org.jutils.concurrent.GcThread;
 
 /*******************************************************************************
@@ -353,14 +354,14 @@ public class StatusBarPanel
         {
             Frame frame = SwingUtils.getComponentsFrame(
                 StatusBarPanel.this.view );
-            Integer delay = new Integer( 10 );
+            Integer delay = 10;
             Object obj = JOptionPane.showInputDialog( frame,
                 "New Delay in seconds: ", delay );
             if( obj != null )
             {
                 try
                 {
-                    delay = new Integer( obj.toString() );
+                    delay = Integer.parseInt( obj.toString() );
                     setDelay( delay.intValue() * 1000 );
                 }
                 catch( NumberFormatException ex )

@@ -85,7 +85,7 @@ public class FinallyTester
     {
         int i0 = 0xF6;
         byte b0 = ( byte )i0;
-        byte b1 = new Integer( 0xF6 ).byteValue();
+        byte b1 = ( ( Integer )0xF6 ).byteValue();
         byte b2 = ( byte )0xF6;
 
         testBytes( b0, b1 );

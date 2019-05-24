@@ -12,6 +12,8 @@ import org.jutils.io.IOUtils;
 public class TcpConnection implements IConnection
 {
     /**  */
+    private final TcpInputs inputs;
+    /**  */
     private final Socket socket;
     /**  */
     private final byte [] rxBuffer;
@@ -34,7 +36,7 @@ public class TcpConnection implements IConnection
      **************************************************************************/
     public TcpConnection( TcpInputs inputs ) throws IOException
     {
-        this( createSocket( inputs ), inputs.timeout );
+        this( inputs, createSocket( inputs ) );
     }
 
     /***************************************************************************
@@ -44,7 +46,7 @@ public class TcpConnection implements IConnection
      **************************************************************************/
     TcpConnection( Socket socket ) throws IOException
     {
-        this( socket, 1000 );
+        this( createInputs( socket ), socket );
     }
 
     /***************************************************************************
@@ -52,9 +54,11 @@ public class TcpConnection implements IConnection
      * @param timeout
      * @throws IOException
      **************************************************************************/
-    private TcpConnection( Socket socket, int timeout ) throws IOException
+    private TcpConnection( TcpInputs inputs, Socket socket ) throws IOException
     {
+        this.inputs = inputs;
         this.socket = socket;
+
         this.rxBuffer = new byte[65535];
         this.disconnetListeners = new ArrayList<>();
 
@@ -64,7 +68,25 @@ public class TcpConnection implements IConnection
             IOUtils.DEFAULT_BUF_SIZE );
         this.output = socket.getOutputStream();
 
-        socket.setSoTimeout( timeout );
+        socket.setSoTimeout( inputs.timeout );
+    }
+
+    /***************************************************************************
+     * @param socket2
+     * @return
+     **************************************************************************/
+    private static TcpInputs createInputs( Socket socket )
+    {
+        TcpInputs inputs = new TcpInputs();
+
+        inputs.localPort = socket.getLocalPort();
+        inputs.nic = socket.getLocalAddress().getHostAddress();
+        inputs.remoteAddress.set(
+            ( ( InetSocketAddress )socket.getRemoteSocketAddress() ).getAddress() );
+        inputs.remotePort = socket.getPort();
+        inputs.timeout = 1000;
+
+        return inputs;
     }
 
     /***************************************************************************
@@ -78,12 +100,26 @@ public class TcpConnection implements IConnection
     {
         Socket socket = null;
 
-        InetAddress nicAddr = NetUtils.getNicAddress(
-            NetUtils.lookupNic( inputs.nic ) );
+        InetAddress nicAddr = NetUtils.lookupNic( inputs.nic );
 
-        socket = new Socket( inputs.remoteAddress.getInetAddress(),
-            inputs.remotePort, nicAddr, inputs.localPort );
+        if( nicAddr == null )
+        {
+            throw new IOException( "Nic not found: " + inputs.nic );
+        }
+
+        // socket = new Socket( inputs.remoteAddress.getInetAddress(),
+        // inputs.remotePort, nicAddr, inputs.localPort );
+
+        socket = new Socket();
+
+        InetSocketAddress local = new InetSocketAddress( nicAddr,
+            inputs.localPort );
+        InetSocketAddress remote = new InetSocketAddress(
+            inputs.remoteAddress.getInetAddress(), inputs.remotePort );
+
+        socket.bind( local );
         socket.setSoTimeout( inputs.timeout );
+        socket.connect( remote, inputs.timeout );
 
         return socket;
     }
@@ -206,5 +242,13 @@ public class TcpConnection implements IConnection
     public void setTimeout( int millis ) throws SocketException
     {
         socket.setSoTimeout( millis );
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public TcpInputs getInputs()
+    {
+        return new TcpInputs( inputs );
     }
 }

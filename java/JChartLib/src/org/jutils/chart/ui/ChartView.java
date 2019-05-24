@@ -1136,8 +1136,8 @@ public class ChartView implements IView<JComponent>
         public void actionPerformed( ActionEvent e )
         {
             int mods = e.getModifiers();
-            boolean shift = ( mods & InputEvent.SHIFT_MASK ) != 0;
-            boolean ctrl = ( mods & InputEvent.CTRL_MASK ) != 0;
+            boolean shift = ( mods & InputEvent.SHIFT_DOWN_MASK ) != 0;
+            boolean ctrl = ( mods & InputEvent.CTRL_DOWN_MASK ) != 0;
 
             view.zoomIn( ZoomDirection.get( shift, ctrl ) );
         }
@@ -1166,8 +1166,8 @@ public class ChartView implements IView<JComponent>
         public void actionPerformed( ActionEvent e )
         {
             int mods = e.getModifiers();
-            boolean shift = ( mods & InputEvent.SHIFT_MASK ) != 0;
-            boolean ctrl = ( mods & InputEvent.CTRL_MASK ) != 0;
+            boolean shift = ( mods & InputEvent.SHIFT_DOWN_MASK ) != 0;
+            boolean ctrl = ( mods & InputEvent.CTRL_DOWN_MASK ) != 0;
 
             view.zoomOut( ZoomDirection.get( shift, ctrl ) );
         }

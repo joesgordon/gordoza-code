@@ -1,12 +1,30 @@
 package org.jutils.apps.jhex.ui;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dialog.ModalityType;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 
 import org.jutils.IconConstants;
@@ -18,13 +36,26 @@ import org.jutils.chart.ChartIcons;
 import org.jutils.datadist.DataDistribution;
 import org.jutils.io.IStream;
 import org.jutils.task.TaskView;
-import org.jutils.ui.*;
+import org.jutils.ui.JGoodiesToolBar;
+import org.jutils.ui.OkDialogView;
 import org.jutils.ui.OkDialogView.OkDialogButtons;
-import org.jutils.ui.event.*;
+import org.jutils.ui.ShadowBorder;
+import org.jutils.ui.StandardFormView;
+import org.jutils.ui.TitleView;
+import org.jutils.ui.UnitPositionIndicator;
+import org.jutils.ui.VerboseMessageView;
+import org.jutils.ui.event.ActionAdapter;
+import org.jutils.ui.event.ItemActionEvent;
+import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.event.RequestFocusListener;
 import org.jutils.ui.fields.HexBytesFormField;
-import org.jutils.ui.hex.*;
+import org.jutils.ui.hex.BlockBuffer;
 import org.jutils.ui.hex.BlockBuffer.DataBlock;
+import org.jutils.ui.hex.ByteBuffer;
+import org.jutils.ui.hex.HexPanel;
 import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
+import org.jutils.ui.hex.IByteBuffer;
+import org.jutils.ui.hex.ValueView;
 import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
@@ -320,7 +351,7 @@ public class HexFileView implements IDataView<File>
     private void showGotoDialog()
     {
         Object ans = JOptionPane.showInputDialog( getView(),
-            "Enter Offset in hexadecimal:", new Integer( 0 ) );
+            "Enter Offset in hexadecimal:", ( Integer )0 );
         if( ans != null )
         {
             try

@@ -408,12 +408,12 @@ public class OkDialogView implements IView<JDialog>
      **************************************************************************/
     private void handleButtonAction( boolean closeDialog, boolean okIndicated )
     {
+        okListeners.fireListeners( this, okIndicated );
+
         if( closeDialog )
         {
             dialog.dispose();
         }
-
-        okListeners.fireListeners( this, okIndicated );
     }
 
     /***************************************************************************

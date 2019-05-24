@@ -3,6 +3,9 @@ package org.jutils.net;
 import java.net.*;
 import java.util.*;
 
+import org.jutils.Utils;
+import org.jutils.ValidationException;
+
 /*******************************************************************************
  * 
  ******************************************************************************/
@@ -75,27 +78,76 @@ public final class NetUtils
      * @param nicString
      * @return
      **************************************************************************/
-    public static NetworkInterface lookupNic( String nicString )
+    public static InetAddress lookupNic( String nicString )
     {
+        InetAddress address = null;
         List<NicInfo> nics = buildNicList();
-        NetworkInterface nic = null;
 
-        if( nicString != null )
+        if( nicString == null )
+        {
+            try
+            {
+                address = InetAddress.getByAddress( new byte[] { 0, 0, 0, 0 } );
+            }
+            catch( UnknownHostException ex )
+            {
+                address = null;
+            }
+        }
+        else
         {
             for( NicInfo info : nics )
             {
                 if( info.name.toLowerCase().equals( nicString.toLowerCase() ) )
                 {
-                    return info.nic;
+                    address = info.address;
+                    break;
                 }
                 else if( info.addressString.equals( nicString ) )
                 {
-                    return info.nic;
+                    address = info.address;
+                    break;
+                }
+            }
+
+            if( address == null )
+            {
+                List<String> octects = Utils.split( nicString, '.' );
+
+                if( octects.size() < 3 )
+                {
+                    return null;
+                }
+
+                String firstThree = octects.get( 0 ) + "." + octects.get( 1 ) +
+                    "." + octects.get( 2 ) + ".";
+
+                for( NicInfo info : nics )
+                {
+                    if( info.addressString.startsWith( firstThree ) )
+                    {
+                        address = info.address;
+                    }
                 }
             }
         }
 
-        return nic;
+        return address;
+    }
+
+    /***************************************************************************
+     * @param nicString
+     * @param name
+     * @throws ValidationException
+     **************************************************************************/
+    public void validateNicString( String nicString, String name )
+        throws ValidationException
+    {
+        if( lookupNic( nicString ) == null )
+        {
+            throw new ValidationException(
+                "No Network Interface found for string \"" + name + "\"" );
+        }
     }
 
     /***************************************************************************

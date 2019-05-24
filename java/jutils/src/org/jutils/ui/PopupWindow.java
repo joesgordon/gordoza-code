@@ -487,7 +487,7 @@ public class PopupWindow implements IView<JComponent>
                     // componentPoint.y );
 
                     component.dispatchEvent( new MouseEvent( component, eventID,
-                        e.getWhen(), e.getModifiers(), componentPoint.x,
+                        e.getWhen(), e.getModifiersEx(), componentPoint.x,
                         componentPoint.y, e.getClickCount(),
                         e.isPopupTrigger() ) );
                 }
