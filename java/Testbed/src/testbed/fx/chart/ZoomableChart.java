@@ -7,7 +7,9 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.input.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -274,8 +276,9 @@ public class ZoomableChart
 
         yOffset = yAxis.getHeight() - yOffset;
 
-        System.out.print( String.format( "y dist to bottom: %f, off: %f, h: %f",
-            yDist, yOffset, yAxis.getHeight() ) );
+        System.out.println(
+            String.format( "y dist to bottom: %f, off: %f, h: %f", yDist,
+                yOffset, yAxis.getHeight() ) );
 
         double yLower = yAxis.getValueForDisplay( yOffset ).doubleValue();
         double yUpper = yAxis.getValueForDisplay(
