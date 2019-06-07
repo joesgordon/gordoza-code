@@ -107,7 +107,16 @@ public class FileStream implements IStream
 
         while( bytesRead < len )
         {
-            bytesRead += read( buf, off + bytesRead, len - bytesRead );
+            int count = read( buf, off + bytesRead, len - bytesRead );
+
+            if( count < 0 )
+            {
+                throw new EOFException(
+                    "End of file reached; attempted to read past by " +
+                        ( len - bytesRead ) + " bytes" );
+            }
+
+            bytesRead += count;
         }
     }
 

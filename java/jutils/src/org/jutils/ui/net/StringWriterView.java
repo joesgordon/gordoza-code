@@ -6,26 +6,25 @@ import javax.swing.JEditorPane;
 
 import org.jutils.SwingUtils;
 import org.jutils.io.IStringWriter;
-import org.jutils.net.NetMessage;
 import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
- * 
+ * @param <T>
  ******************************************************************************/
-public final class MsgStringView implements IDataView<NetMessage>
+public final class StringWriterView<T> implements IDataView<T>
 {
     /** The field for the string representation of the message content. */
     private final JEditorPane editor;
     /**  */
-    private final IStringWriter<NetMessage> writer;
+    private final IStringWriter<T> writer;
 
     /**  */
-    private NetMessage msg;
+    private T msg;
 
     /**
      * @param writer
      */
-    public MsgStringView( IStringWriter<NetMessage> writer )
+    public StringWriterView( IStringWriter<T> writer )
     {
         this.writer = writer;
         this.editor = new JEditorPane();
@@ -47,7 +46,7 @@ public final class MsgStringView implements IDataView<NetMessage>
      * {@inheritDoc}
      */
     @Override
-    public NetMessage getData()
+    public T getData()
     {
         return msg;
     }
@@ -56,7 +55,7 @@ public final class MsgStringView implements IDataView<NetMessage>
      * {@inheritDoc}
      */
     @Override
-    public void setData( NetMessage msg )
+    public void setData( T msg )
     {
         this.msg = msg;
 

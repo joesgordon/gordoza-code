@@ -195,6 +195,7 @@ public class FileContextMenu
     }
 
     /***************************************************************************
+     * @param parentComp
      * @param file
      **************************************************************************/
     public static void openPath( Component parentComp, File file )

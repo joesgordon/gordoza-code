@@ -1,4 +1,4 @@
-package org.jutils.ui.net;
+package org.jutils.ui;
 
 import java.awt.*;
 import java.awt.Dialog.ModalityType;
@@ -14,27 +14,25 @@ import javax.swing.table.TableColumnModel;
 
 import org.jutils.*;
 import org.jutils.io.*;
-import org.jutils.net.NetMessage;
-import org.jutils.net.NetMessageSerializer;
-import org.jutils.ui.OkDialogView;
 import org.jutils.ui.OkDialogView.OkDialogButtons;
-import org.jutils.ui.RowHeaderNumberView;
 import org.jutils.ui.event.*;
 import org.jutils.ui.event.FileChooserListener.IFileSelected;
 import org.jutils.ui.model.*;
 import org.jutils.ui.model.LabelTableCellRenderer.ITableCellLabelDecorator;
+import org.jutils.ui.net.StringWriterView;
 
 /*******************************************************************************
- * Defines UI that displays {@link NetMessage}s.
+ * Defines UI that displays a paginated table of items.
+ * @param <T> the type of item to be displayed.
  ******************************************************************************/
-public class NetMessagesView implements IView<JPanel>
+public class RefStreamView<T> implements IDataView<IReferenceStream<T>>
 {
     /**  */
     private final JPanel view;
     /**  */
-    private final NetMessagesTableConfig tableCfg;
+    private final ITableItemsConfig<T> tableConfig;
     /**  */
-    private final ItemsTableModel<NetMessage> tableModel;
+    private final ItemsTableModel<T> tableModel;
     /**  */
     private final JTable table;
     /**  */
@@ -54,66 +52,67 @@ public class NetMessagesView implements IView<JPanel>
     private final JLabel pageLabel;
     /**  */
     private final JButton openButton;
-    /**  */
-    private final JButton hexTextButton;
 
     /**  */
     private OkDialogView dialog;
     /**  */
-    private final MessageNavView msgView;
+    private final NavView<T> itemView;
 
     /**  */
-    private final IReferenceStream<NetMessage> msgsStream;
+    private IReferenceStream<T> stream;
 
     /**  */
-    private boolean isHex;
-
-    /**  */
-    private int msgsPerPage;
+    private int itemsPerPage;
     /**  */
     private long pageStartIndex;
 
     /***************************************************************************
-     * 
+     * @param serializer the serializer that reads/writes items.
+     * @param tableConfig defines the columns to be shown.
      **************************************************************************/
-    public NetMessagesView()
+    public RefStreamView( IDataSerializer<T> serializer,
+        ITableItemsConfig<T> tableConfig )
     {
-        this( null, null, false );
+        this( serializer, tableConfig, null, false );
     }
 
     /***************************************************************************
-     * @param fields
-     * @param msgWriter
+     * @param serializer the serializer that reads/writes items.
+     * @param tableConfig defines the columns to be shown.
+     * @param itemWriter writes a description of an item.
      **************************************************************************/
-    public NetMessagesView( IMessageFields fields,
-        IStringWriter<NetMessage> msgWriter )
+    public RefStreamView( IDataSerializer<T> serializer,
+        ITableItemsConfig<T> tableConfig, IStringWriter<T> itemWriter )
     {
-        this( fields, createMsgWriterView( msgWriter ), true );
+        this( serializer, tableConfig, createItemWriterView( itemWriter ),
+            true );
     }
 
     /***************************************************************************
-     * @param fields
-     * @param msgView
-     * @param addScrollPane
+     * @param serializer the serializer that reads/writes items.
+     * @param tableConfig defines the columns to be shown.
+     * @param itemView displays the contents of an item.
+     * @param addScrollPane optionally adds the item view to a scroll pane.
      **************************************************************************/
-    public NetMessagesView( IMessageFields fields,
-        IDataView<NetMessage> msgView, boolean addScrollPane )
+    public RefStreamView( IDataSerializer<T> serializer,
+        ITableItemsConfig<T> tableConfig, IDataView<T> itemView,
+        boolean addScrollPane )
     {
-        ReferenceStream<NetMessage> refStream = null;
+        ReferenceStream<T> refStream = null;
 
         try
         {
-            refStream = new ReferenceStream<>( new NetMessageSerializer() );
+            refStream = new ReferenceStream<T>( serializer );
         }
         catch( IOException ex )
         {
             throw new RuntimeException( "Unable to create temp files", ex );
         }
 
-        this.msgsStream = refStream;
+        this.stream = refStream;
 
-        this.tableCfg = new NetMessagesTableConfig( fields );
-        this.tableModel = new ItemsTableModel<>( tableCfg );
+        this.tableConfig = tableConfig;
+        this.tableModel = new ItemsTableModel<>( tableConfig );
         this.table = new JTable( tableModel );
         this.tablePane = new JScrollPane( table );
         this.rowView = new RowHeaderNumberView( table );
@@ -123,18 +122,39 @@ public class NetMessagesView implements IView<JPanel>
         this.navLastButton = new JButton();
         this.pageLabel = new JLabel( "Page 0 of 0" );
         this.openButton = new JButton();
-        this.hexTextButton = new JButton();
-        this.msgView = new MessageNavView( this, msgView, addScrollPane );
+        this.itemView = new NavView<>( this, itemView, addScrollPane );
         this.view = createView();
 
-        this.msgsPerPage = 500;
+        this.itemsPerPage = 500;
         this.pageStartIndex = 0L;
 
         setOpenVisible( false );
     }
 
     /***************************************************************************
-     * @return
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public IReferenceStream<T> getData()
+    {
+        return stream;
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    @Override
+    public void setData( IReferenceStream<T> stream )
+    {
+        this.stream = stream;
+
+        pageStartIndex = 0L;
+        navigatePage( 0L, true );
+        ResizingTableModelListener.resizeTable( table );
+    }
+
+    /***************************************************************************
+     * @return the main view for this control.
      **************************************************************************/
     private JPanel createView()
     {
@@ -144,10 +164,10 @@ public class NetMessagesView implements IView<JPanel>
             new LabelTableCellRenderer( new LocalDateTimeDecorator() ) );
         table.getTableHeader().setReorderingAllowed( false );
         table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
-        table.addMouseListener( new MessageMouseListener( this ) );
+        table.addMouseListener( new ItemMouseListener<>( this ) );
 
         TableColumnModel colModel = table.getColumnModel();
-        int lastColIdx = tableCfg.getColumnNames().length - 1;
+        int lastColIdx = tableConfig.getColumnNames().length - 1;
         TableColumn column = colModel.getColumn( lastColIdx );
         LabelTableCellRenderer renderer = new LabelTableCellRenderer(
             new FontLabelTableCellRenderer( SwingUtils.getFixedFont( 12 ) ) );
@@ -164,7 +184,7 @@ public class NetMessagesView implements IView<JPanel>
         tablePane.setHorizontalScrollBarPolicy(
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED );
 
-        // panel.setBorder( new TitledBorder( "Sent/Received Messages" ) );
+        // panel.setBorder( new TitledBorder( "Sent/Received Items" ) );
 
         panel.add( createToolbar(), BorderLayout.NORTH );
         panel.add( tablePane, BorderLayout.CENTER );
@@ -176,7 +196,7 @@ public class NetMessagesView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @return
+     * @return the toolbar displayed above the table of items
      **************************************************************************/
     private JToolBar createToolbar()
     {
@@ -208,8 +228,6 @@ public class NetMessagesView implements IView<JPanel>
 
         SwingUtils.addActionToToolbar( toolbar, createSaveAction() );
 
-        SwingUtils.addActionToToolbar( toolbar, createSaveAsAction() );
-
         SwingUtils.addActionToToolbar( toolbar, createOpenAction(),
             openButton );
 
@@ -217,17 +235,16 @@ public class NetMessagesView implements IView<JPanel>
 
         SwingUtils.addActionToToolbar( toolbar, createClearAction() );
 
-        SwingUtils.addActionToToolbar( toolbar, createTextHexAction(),
-            hexTextButton );
-        hexTextButton.setText( "" );
-
         return toolbar;
     }
 
     /***************************************************************************
-     * @param absolute
-     * @param forward
-     * @return
+     * Creates an action to move forward or backward, by either 1 or to the
+     * beginning/end.
+     * @param absolute moves to the beginning/end if {@code true} or by 1 page
+     * if {@code false}.
+     * @param forward moves forward if {@code true}; backward if {@code false}.
+     * @return the new action.
      **************************************************************************/
     private Action createNavAction( boolean absolute, boolean forward )
     {
@@ -263,6 +280,7 @@ public class NetMessagesView implements IView<JPanel>
     }
 
     /***************************************************************************
+     * Creates an action that saves all the items to a file.
      * @return
      **************************************************************************/
     private Action createSaveAction()
@@ -273,19 +291,6 @@ public class NetMessagesView implements IView<JPanel>
         Icon icon = IconConstants.getIcon( IconConstants.SAVE_16 );
 
         return new ActionAdapter( listener, "Save", icon );
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    private Action createSaveAsAction()
-    {
-        IFileSelected ifs = ( f ) -> saveBinFile( f );
-        FileChooserListener listener = new FileChooserListener( getView(),
-            "Choose Binary File", true, ifs );
-        Icon icon = IconConstants.getIcon( IconConstants.SAVE_AS_16 );
-
-        return new ActionAdapter( listener, "Save As", icon );
     }
 
     /***************************************************************************
@@ -306,23 +311,10 @@ public class NetMessagesView implements IView<JPanel>
      **************************************************************************/
     private Action createClearAction()
     {
-        ActionListener listener = ( e ) -> clearMessages();
+        ActionListener listener = ( e ) -> clearItems();
         Icon icon = IconConstants.getIcon( IconConstants.EDIT_CLEAR_16 );
 
         return new ActionAdapter( listener, "Clear", icon );
-    }
-
-    /***************************************************************************
-     * @return
-     **************************************************************************/
-    private Action createTextHexAction()
-    {
-        ActionListener listener = ( e ) -> toggleHexText();
-        Icon icon = IconConstants.getIcon( IconConstants.FONT_16 );
-
-        isHex = true;
-
-        return new ActionAdapter( listener, "Show Text Contents", icon );
     }
 
     /***************************************************************************
@@ -339,19 +331,19 @@ public class NetMessagesView implements IView<JPanel>
         }
         else if( !absolute && !forward )
         {
-            index = pageStartIndex - msgsPerPage;
+            index = pageStartIndex - itemsPerPage;
         }
         else if( !absolute && forward )
         {
-            index = pageStartIndex + msgsPerPage;
+            index = pageStartIndex + itemsPerPage;
         }
         else
         {
-            index = msgsStream.getCount() - 1;
-            index = index - index % msgsPerPage;
+            index = stream.getCount() - 1;
+            index = index - index % itemsPerPage;
         }
 
-        if( index > -1 && index < msgsStream.getCount() )
+        if( index > -1 && index < stream.getCount() )
         {
             navigatePage( index );
         }
@@ -376,14 +368,14 @@ public class NetMessagesView implements IView<JPanel>
             return;
         }
 
-        int count = ( int )Math.min( msgsPerPage,
-            msgsStream.getCount() - startIndex );
+        int count = ( int )Math.min( itemsPerPage,
+            stream.getCount() - startIndex );
 
         // LogUtils.printDebug( "Setting start index to %d from %d of %d for
         // %d",
-        // startIndex, pageStartIndex, msgsStream.getCount(), count );
+        // startIndex, pageStartIndex, stream.getCount(), count );
 
-        if( startIndex < 0 || startIndex >= msgsStream.getCount() )
+        if( startIndex < 0 || startIndex >= stream.getCount() )
         {
             return;
         }
@@ -391,12 +383,12 @@ public class NetMessagesView implements IView<JPanel>
         this.pageStartIndex = startIndex;
         try
         {
-            List<NetMessage> msgs = null;
-            synchronized( msgsStream )
+            List<T> items = null;
+            synchronized( stream )
             {
-                msgs = msgsStream.read( pageStartIndex, count );
+                items = stream.read( pageStartIndex, count );
             }
-            tableModel.setItems( msgs );
+            tableModel.setItems( items );
             updateRowHeader( count );
             ResizingTableModelListener.resizeTable( table );
         }
@@ -434,12 +426,12 @@ public class NetMessagesView implements IView<JPanel>
         navLastButton.setEnabled( hasNext );
 
         int pageCount = getPageCount();
-        int pageIndex = ( int )( ( pageStartIndex + msgsPerPage - 1 ) /
-            msgsPerPage );
+        int pageIndex = ( int )( ( pageStartIndex + itemsPerPage - 1 ) /
+            itemsPerPage );
         int pageNum = pageCount == 0 ? 0 : ( pageIndex + 1 );
 
-        pageLabel.setText( String.format( "Page %d of %d (%d messages)",
-            pageNum, pageCount, msgsStream.getCount() ) );
+        pageLabel.setText( String.format( "Page %d of %d (%d items)", pageNum,
+            pageCount, stream.getCount() ) );
     }
 
     /***************************************************************************
@@ -455,8 +447,8 @@ public class NetMessagesView implements IView<JPanel>
      **************************************************************************/
     private boolean hasNext()
     {
-        long lastMsg = msgsStream.getCount() - 1;
-        long maxStartIndex = lastMsg - lastMsg % msgsPerPage;
+        long lastItem = stream.getCount() - 1;
+        long maxStartIndex = lastItem - lastItem % itemsPerPage;
         return pageStartIndex < maxStartIndex;
     }
 
@@ -465,68 +457,39 @@ public class NetMessagesView implements IView<JPanel>
      **************************************************************************/
     private int getPageCount()
     {
-        long count = msgsStream.getCount();
+        long count = stream.getCount();
 
-        int max = ( int )( ( count + msgsPerPage - 1 ) / msgsPerPage );
+        int max = ( int )( ( count + itemsPerPage - 1 ) / itemsPerPage );
 
         return max;
     }
 
     /***************************************************************************
-     * 
+     * @param itemIndex
      **************************************************************************/
-    private void toggleHexText()
+    private void showItem( long itemIndex )
     {
-        isHex = !isHex;
-
-        Icon icon;
-        String text;
-
-        if( isHex )
-        {
-            icon = IconConstants.getIcon( IconConstants.FONT_16 );
-            text = "Show Text Contents";
-        }
-        else
-        {
-            icon = IconConstants.getIcon( IconConstants.HEX_16 );
-            text = "Show Hex Contents";
-        }
-
-        hexTextButton.setIcon( icon );
-        hexTextButton.setToolTipText( text );
-        tableCfg.setHexText( isHex );
-        tableModel.fireTableDataChanged();
-
-        ResizingTableModelListener.resizeTable( table );
-    }
-
-    /***************************************************************************
-     * @param msgIndex
-     **************************************************************************/
-    private void showMessage( long msgIndex )
-    {
-        if( msgIndex < 0 || msgIndex >= msgsStream.getCount() )
+        if( itemIndex < 0 || itemIndex >= stream.getCount() )
         {
             return;
         }
 
-        if( !isPaged( msgIndex ) )
+        if( !isPaged( itemIndex ) )
         {
-            long start = msgIndex - msgIndex % msgsPerPage;
+            long start = itemIndex - itemIndex % itemsPerPage;
             navigatePage( start );
         }
 
-        int tableIndex = ( int )( msgIndex - pageStartIndex );
+        int tableIndex = ( int )( itemIndex - pageStartIndex );
 
         Frame f = SwingUtils.getComponentsFrame( table );
-        NetMessage item = tableModel.getItem( tableIndex );
+        T item = tableModel.getItem( tableIndex );
 
-        msgView.setData( item );
+        itemView.setData( item );
 
         if( this.dialog == null )
         {
-            this.dialog = new OkDialogView( getView(), msgView.getView(),
+            this.dialog = new OkDialogView( getView(), itemView.getView(),
                 ModalityType.MODELESS, OkDialogButtons.OK_ONLY );
         }
 
@@ -543,7 +506,7 @@ public class NetMessagesView implements IView<JPanel>
             d.setLocationRelativeTo( f );
         }
 
-        d.setTitle( String.format( "Message %d", msgIndex + 1 ) );
+        d.setTitle( String.format( "Item %d", itemIndex + 1 ) );
         d.setVisible( true );
 
         table.setRowSelectionInterval( tableIndex, tableIndex );
@@ -556,22 +519,22 @@ public class NetMessagesView implements IView<JPanel>
     private boolean isPaged( long index )
     {
         return index > pageStartIndex &&
-            index < ( pageStartIndex + msgsPerPage );
+            index < ( pageStartIndex + itemsPerPage );
     }
 
     /***************************************************************************
-     * @param f
+     * @param file
      **************************************************************************/
     private void saveFile( File file )
     {
         byte [] buf = new byte[IOUtils.DEFAULT_BUF_SIZE];
 
-        synchronized( msgsStream )
+        synchronized( stream )
         {
             try( FileStream stream = new FileStream( file ) )
             {
                 @SuppressWarnings( "resource")
-                IStream input = msgsStream.getItemsStream();
+                IStream input = this.stream.getItemsStream();
 
                 input.seek( 0L );
 
@@ -603,61 +566,24 @@ public class NetMessagesView implements IView<JPanel>
     /***************************************************************************
      * @param file
      **************************************************************************/
-    public void saveBinFile( File file )
-    {
-        synchronized( msgsStream )
-        {
-            try( FileStream stream = new FileStream( file ) )
-            {
-                for( long i = 0L; i < msgsStream.getCount(); i++ )
-                {
-                    NetMessage msg = msgsStream.read( i );
-
-                    stream.write( msg.contents );
-                }
-            }
-            catch( FileNotFoundException ex )
-            {
-                // TODO Auto-generated catch block
-                ex.printStackTrace();
-            }
-            catch( IOException ex )
-            {
-                // TODO Auto-generated catch block
-                ex.printStackTrace();
-            }
-            catch( ValidationException e )
-            {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-
-    }
-
-    /***************************************************************************
-     * @param file
-     **************************************************************************/
     public void openFile( File file )
     {
-        clearMessages();
+        clearItems();
 
         try
         {
-            synchronized( msgsStream )
+            synchronized( stream )
             {
-                msgsStream.setItemsFile( file );
+                stream.setItemsFile( file );
             }
+
+            setData( stream );
         }
         catch( IOException ex )
         {
             // TODO Auto-generated catch block
             ex.printStackTrace();
         }
-
-        pageStartIndex = 0L;
-        navigatePage( 0L, true );
-        ResizingTableModelListener.resizeTable( table );
     }
 
     /***************************************************************************
@@ -670,19 +596,19 @@ public class NetMessagesView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @param msg
+     * @param item
      **************************************************************************/
-    public void addMessage( NetMessage msg )
+    public void addItem( T item )
     {
-        long count = msgsStream.getCount();
+        long count = stream.getCount();
         long lastStartIndex = Math.max( count - 1, 0 );
-        lastStartIndex = lastStartIndex - lastStartIndex % msgsPerPage;
+        lastStartIndex = lastStartIndex - lastStartIndex % itemsPerPage;
 
         try
         {
-            synchronized( msgsStream )
+            synchronized( stream )
             {
-                msgsStream.write( msg );
+                stream.write( item );
             }
             count++;
         }
@@ -691,12 +617,12 @@ public class NetMessagesView implements IView<JPanel>
             ex.printStackTrace();
         }
 
-        long nextPageStartIndex = pageStartIndex + msgsPerPage;
+        long nextPageStartIndex = pageStartIndex + itemsPerPage;
 
         // LogUtils.printDebug(
-        // "Adding message; last start = %d, next start = %d, current start =
+        // "Adding item; last start = %d, next start = %d, current start =
         // %d, count = %d",
-        // lastStartIndex, nextIndex, pageStartIndex, msgsStream.getCount() );
+        // lastStartIndex, nextIndex, pageStartIndex, stream.getCount() );
 
         if( lastStartIndex == pageStartIndex )
         {
@@ -709,7 +635,7 @@ public class NetMessagesView implements IView<JPanel>
             }
             else
             {
-                tableModel.addItem( msg );
+                tableModel.addItem( item );
                 updateRowHeader( tableModel.getRowCount() );
                 ResizingTableModelListener.resizeTable( table );
             }
@@ -734,15 +660,15 @@ public class NetMessagesView implements IView<JPanel>
     /***************************************************************************
      * 
      **************************************************************************/
-    public void clearMessages()
+    public void clearItems()
     {
         tableModel.clearItems();
 
         try
         {
-            synchronized( msgsStream )
+            synchronized( stream )
             {
-                msgsStream.removeAll();
+                stream.removeAll();
             }
         }
         catch( IOException ex )
@@ -769,51 +695,27 @@ public class NetMessagesView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @param msgWriter
+     * @param itemWriter
      * @return
      **************************************************************************/
-    private static StringWriterView<NetMessage> createMsgWriterView(
-        IStringWriter<NetMessage> msgWriter )
+    private static <T> StringWriterView<T> createItemWriterView(
+        IStringWriter<T> itemWriter )
     {
-        return msgWriter == null ? null : new StringWriterView<>( msgWriter );
+        return itemWriter == null ? null : new StringWriterView<>( itemWriter );
     }
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public static interface IMessageFields
-    {
-        /**
-         * @return
-         */
-        public int getFieldCount();
-
-        /**
-         * @param index
-         * @return
-         */
-        public String getFieldName( int index );
-
-        /**
-         * @param message
-         * @param index
-         * @return
-         */
-        public String getFieldValue( NetMessage message, int index );
-    }
-
-    /***************************************************************************
-     * 
-     **************************************************************************/
-    private static class MessageMouseListener extends MouseAdapter
+    private static class ItemMouseListener<T> extends MouseAdapter
     {
         /**  */
-        private final NetMessagesView view;
+        private final RefStreamView<T> view;
 
         /**
          * @param view
          */
-        public MessageMouseListener( NetMessagesView view )
+        public ItemMouseListener( RefStreamView<T> view )
         {
             this.view = view;
         }
@@ -830,7 +732,7 @@ public class NetMessagesView implements IView<JPanel>
                 long index = view.table.rowAtPoint( e.getPoint() ) +
                     view.pageStartIndex;
 
-                view.showMessage( index );
+                view.showItem( index );
             }
         }
     }
@@ -872,17 +774,17 @@ public class NetMessagesView implements IView<JPanel>
     }
 
     /***************************************************************************
-     * 
+     * @param <T>
      **************************************************************************/
-    private static final class MessageNavView implements IDataView<NetMessage>
+    private static final class NavView<T> implements IDataView<T>
     {
         /**  */
-        private final NetMessagesView msgsView;
+        private final RefStreamView<T> itemsView;
 
         /**  */
         private final JPanel view;
         /**  */
-        private final IDataView<NetMessage> msgView;
+        private final IDataView<T> itemView;
 
         /**  */
         private final JButton prevButton;
@@ -890,32 +792,43 @@ public class NetMessagesView implements IView<JPanel>
         private final JButton nextButton;
 
         /**
-         * @param msgsView
-         * @param msgView
+         * @param itemsView
+         * @param itemView
          * @param addScrollPane
          */
-        public MessageNavView( NetMessagesView msgsView,
-            IDataView<NetMessage> msgView, boolean addScrollPane )
+        public NavView( RefStreamView<T> itemsView, IDataView<T> itemView,
+            boolean addScrollPane )
         {
-            this.msgsView = msgsView;
-            this.msgView = new NetMessageView( msgView, addScrollPane );
+            this.itemsView = itemsView;
+            this.itemView = itemView;
             this.prevButton = new JButton();
             this.nextButton = new JButton();
 
-            this.view = createView();
+            this.view = createView( addScrollPane );
 
             setButtonsEnabled();
         }
 
         /**
+         * @param addScrollPane
          * @return
          */
-        private JPanel createView()
+        private JPanel createView( boolean addScrollPane )
         {
             JPanel panel = new JPanel( new BorderLayout() );
+            Component centerComp = itemView.getView();
+
+            if( addScrollPane )
+            {
+                JScrollPane pane = new JScrollPane( centerComp );
+
+                pane.getVerticalScrollBar().setUnitIncrement( 10 );
+
+                centerComp = pane;
+            }
 
             panel.add( createToolbar(), BorderLayout.NORTH );
-            panel.add( msgView.getView(), BorderLayout.CENTER );
+            panel.add( centerComp, BorderLayout.CENTER );
 
             return panel;
         }
@@ -948,7 +861,7 @@ public class NetMessagesView implements IView<JPanel>
             Icon icon = IconConstants.getIcon(
                 forward ? IconConstants.NAV_NEXT_16
                     : IconConstants.NAV_PREVIOUS_16 );
-            String name = forward ? "Next Message" : "Previous Message";
+            String name = forward ? "Next" : "Previous";
 
             return new ActionAdapter( listener, name, icon );
         }
@@ -959,11 +872,11 @@ public class NetMessagesView implements IView<JPanel>
         private void navigate( boolean forward )
         {
             int inc = forward ? 1 : -1;
-            long index = msgsView.table.getSelectedRow() +
-                msgsView.pageStartIndex;
+            long index = itemsView.table.getSelectedRow() +
+                itemsView.pageStartIndex;
             long nextIndex = index + inc;
 
-            msgsView.showMessage( nextIndex );
+            itemsView.showItem( nextIndex );
 
             setButtonsEnabled();
         }
@@ -973,9 +886,9 @@ public class NetMessagesView implements IView<JPanel>
          */
         private void setButtonsEnabled()
         {
-            long index = msgsView.table.getSelectedRow() +
-                msgsView.pageStartIndex;
-            long maxRow = msgsView.msgsStream.getCount() - 1;
+            long index = itemsView.table.getSelectedRow() +
+                itemsView.pageStartIndex;
+            long maxRow = itemsView.stream.getCount() - 1;
 
             prevButton.setEnabled( index > 0 );
             nextButton.setEnabled( index > -1 && index < maxRow );
@@ -994,18 +907,18 @@ public class NetMessagesView implements IView<JPanel>
          * {@inheritDoc}
          */
         @Override
-        public NetMessage getData()
+        public T getData()
         {
-            return msgView.getData();
+            return itemView.getData();
         }
 
         /**
          * {@inheritDoc}
          */
         @Override
-        public void setData( NetMessage data )
+        public void setData( T data )
         {
-            msgView.setData( data );
+            itemView.setData( data );
 
             setButtonsEnabled();
         }

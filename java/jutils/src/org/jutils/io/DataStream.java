@@ -182,6 +182,7 @@ public class DataStream implements IDataStream
     public int readInt() throws IOException
     {
         readFully( buffer.bytes, 0, 4 );
+
         return buffer.readInt();
     }
 
