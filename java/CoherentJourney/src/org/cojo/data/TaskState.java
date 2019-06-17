@@ -5,12 +5,10 @@ import org.jutils.INamedItem;
 /***************************************************************************
  *
  **************************************************************************/
-public enum CrState implements INamedItem
+public enum TaskState implements INamedItem
 {
     /**  */
     NEW( "New" ),
-    /**  */
-    AWATING( "Awaiting" ),
     /**  */
     DEFERRED( "Deferred" ),
     /**  */
@@ -18,7 +16,9 @@ public enum CrState implements INamedItem
     /**  */
     IN_WORK( "In Work" ),
     /**  */
-    CLOSED( "Closed" );
+    COMPLETE( "Complete" ),
+    /**  */
+    REJECTED( "Rejected" );
 
     /**  */
     public final String name;
@@ -26,7 +26,7 @@ public enum CrState implements INamedItem
     /***************************************************************************
      * @param name
      **************************************************************************/
-    private CrState( String name )
+    private TaskState( String name )
     {
         this.name = name;
     }

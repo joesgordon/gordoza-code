@@ -1,13 +1,24 @@
 package org.jutils.apps.filespy.ui;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.text.*;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
 
 import org.jutils.Utils;
 import org.jutils.apps.filespy.data.LineMatch;
@@ -15,7 +26,9 @@ import org.jutils.apps.filespy.data.SearchRecord;
 import org.jutils.concurrent.GcThread;
 import org.jutils.io.LogUtils;
 import org.jutils.ui.ScrollableEditorPaneView;
-import org.jutils.ui.explorer.*;
+import org.jutils.ui.explorer.ExplorerTable;
+import org.jutils.ui.explorer.ExplorerTableModel;
+import org.jutils.ui.explorer.IExplorerItem;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
@@ -196,6 +209,9 @@ public class ResultsView implements IView<JComponent>
             // this.explorer = new JExplorerFrame();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void mouseClicked( MouseEvent e )
         {

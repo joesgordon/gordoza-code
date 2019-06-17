@@ -1,17 +1,26 @@
 package org.cojo.ui;
 
-import java.awt.*;
+import java.awt.Dialog.ModalityType;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 import org.cojo.data.Finding;
 import org.cojo.data.Project;
 import org.cojo.ui.tableModels.FindingTableModel;
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
+import org.jutils.ui.OkDialogView;
+import org.jutils.ui.OkDialogView.OkDialogButtons;
 import org.jutils.ui.model.IView;
 import org.jutils.ui.model.ItemsTableModel;
 
@@ -99,7 +108,8 @@ public class FindingsPanel implements IView<JPanel>
     {
         Frame frame = SwingUtils.getComponentsFrame( view );
         FindingPanel findingPanel = new FindingPanel();
-        JEditDialog dialog = new JEditDialog( frame, findingPanel.getView() );
+        OkDialogView dialog = new OkDialogView( frame, findingPanel.getView(),
+            ModalityType.DOCUMENT_MODAL, OkDialogButtons.OK_ONLY );
 
         int row = findingTable.getSelectedRow();
         row = findingTable.convertRowIndexToModel( row );
@@ -110,10 +120,7 @@ public class FindingsPanel implements IView<JPanel>
             findingPanel.setProject( project );
             findingPanel.setData( finding );
 
-            dialog.setSize( 400, 400 );
-            dialog.validate();
-            dialog.setLocationRelativeTo( frame );
-            dialog.setVisible( true );
+            dialog.show( 400, 400 );
         }
     }
 

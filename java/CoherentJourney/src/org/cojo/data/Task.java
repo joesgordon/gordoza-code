@@ -6,7 +6,7 @@ import java.util.List;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class ChangeRequest
+public class Task
 {
     /**  */
     public final int id;
@@ -14,29 +14,45 @@ public class ChangeRequest
     public final int authorId;
 
     /**  */
-    public String title;
+    public TaskState state;
     /**  */
-    public CrState state;
+    public String title;
     /**  */
     public String description;
 
     /**  */
-    public final List<SoftwareTask> tasks;
+    public int assigneeId;
     /**  */
-    public final List<Finding> reviews;
+    public TaskPriority priority;
+    /**  */
+    public int estimatedHours;
+    /**  */
+    public int actualHours;
+    /**  */
+    public String unitTestDescription;
+    /**  */
+    public String unitTestResults;
+
+    /**  */
+    public final List<Finding> codeReviews;
 
     /***************************************************************************
      * @param id
-     * @param authorUserId
+     * @param authorId
      **************************************************************************/
-    public ChangeRequest( int id, int authorUserId )
+    public Task( int id, int authorId )
     {
         this.id = id;
-        this.authorId = authorUserId;
+        this.authorId = authorId;
+
         this.title = "";
+        this.assigneeId = -1;
+        this.estimatedHours = 0;
+        this.actualHours = 0;
+
         this.description = "";
-        this.state = CrState.NEW;
-        this.tasks = new ArrayList<>();
-        this.reviews = new ArrayList<>();
+        this.unitTestDescription = "";
+        this.unitTestResults = "";
+        this.codeReviews = new ArrayList<>();
     }
 }

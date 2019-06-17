@@ -14,18 +14,18 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 
-import org.cojo.CojoIconLoader;
-import org.cojo.data.ChangeRequest;
+import org.cojo.CojoIcons;
 import org.cojo.data.Project;
+import org.cojo.data.Task;
 import org.jutils.IconConstants;
 import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
-import org.jutils.ui.model.IView;
+import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class CrPanel implements IView<JPanel>
+public class CrPanel implements IDataView<Task>
 {
     /**  */
     private final JPanel view;
@@ -40,9 +40,7 @@ public class CrPanel implements IView<JPanel>
     private final JTextField stateField;
 
     /**  */
-    private final CrDefinitionPanel crDefinitionPanel;
-    /**  */
-    private final StfsPanel stfsPanel;
+    private final TaskDefinitionPanel crDefinitionPanel;
     /**  */
     private final NotesPanel notesPanel;
 
@@ -53,7 +51,7 @@ public class CrPanel implements IView<JPanel>
     /**  */
     private final FindingsPanel designPanel;
     /**  */
-    private Project project;
+    private Task task;
 
     /***************************************************************************
      * 
@@ -64,8 +62,7 @@ public class CrPanel implements IView<JPanel>
         this.numberLabel = new JLabel( "CR # " );
         this.titleField = new JTextField( "CR Title" );
         this.stateField = new JTextField( "State", 20 );
-        this.crDefinitionPanel = new CrDefinitionPanel();
-        this.stfsPanel = new StfsPanel();
+        this.crDefinitionPanel = new TaskDefinitionPanel();
         this.notesPanel = new NotesPanel();
         this.designPanel = new FindingsPanel();
         this.systemEngineeringPanel = new JPanel();
@@ -77,18 +74,28 @@ public class CrPanel implements IView<JPanel>
     }
 
     /***************************************************************************
-     * @param changeRequest
+     * {@inheritDoc}
      **************************************************************************/
-    public void setData( ChangeRequest changeRequest )
+    @Override
+    public Task getData()
     {
+        return task;
+    }
+
+    /***************************************************************************
+     * {@inheritDoc}
+     **************************************************************************/
+    public void setData( Task changeRequest )
+    {
+        this.task = changeRequest;
+
         numberLabel.setText( "CR # " + changeRequest.id );
         titleField.setText( changeRequest.title );
         stateField.setText( changeRequest.state.toString() );
 
         crDefinitionPanel.setData( changeRequest );
-        stfsPanel.setData( changeRequest );
         notesPanel.setData( changeRequest );
-        designPanel.setData( changeRequest.reviews );
+        designPanel.setData( changeRequest.codeReviews );
     }
 
     /***************************************************************************
@@ -108,17 +115,17 @@ public class CrPanel implements IView<JPanel>
         saveButton.setFocusable( false );
 
         printButton.setIcon(
-            CojoIconLoader.getloader().getIcon( CojoIconLoader.PRINT_16 ) );
+            CojoIcons.getloader().getIcon( CojoIcons.PRINT_16 ) );
         printButton.setToolTipText( "Print CR" );
         printButton.setFocusable( false );
 
         stateButton.setIcon(
-            CojoIconLoader.getloader().getIcon( CojoIconLoader.SWITCH_16 ) );
+            CojoIcons.getloader().getIcon( CojoIcons.SWITCH_16 ) );
         stateButton.setToolTipText( "Change State" );
         stateButton.setFocusable( false );
 
         helpButton.setIcon(
-            CojoIconLoader.getloader().getIcon( CojoIconLoader.HELP_16 ) );
+            CojoIcons.getloader().getIcon( CojoIcons.HELP_16 ) );
         helpButton.setToolTipText( "Get help" );
         helpButton.setFocusable( false );
 
@@ -171,7 +178,6 @@ public class CrPanel implements IView<JPanel>
             requirementsImpactListener );
 
         mainTabbedPane.addTab( "Change Request", crScrollPane );
-        mainTabbedPane.addTab( "STFs", stfsPanel.getView() );
         mainTabbedPane.addTab( "Notes", notesPanel.getView() );
         mainTabbedPane.addTab( "Design", designPanel.getView() );
 
@@ -260,9 +266,6 @@ public class CrPanel implements IView<JPanel>
      **************************************************************************/
     public void setProject( Project project )
     {
-        this.project = project;
-
-        stfsPanel.setProject( project );
         notesPanel.setProject( project );
         designPanel.setProject( project );
     }

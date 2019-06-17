@@ -1,22 +1,27 @@
 package org.cojo.data;
 
 /*******************************************************************************
- * 
+ *
  ******************************************************************************/
-public class User
+public class ProjectUser
 {
     /**  */
-    public String firstName;
+    public static final int INVALID_ID = -1;
+
     /**  */
-    public String lastName;
+    public final int id;
+    /**  */
+    public final User user;
 
     /***************************************************************************
-     * 
+     * @param id
+     * @param userId
+     * @param name
      **************************************************************************/
-    public User()
+    public ProjectUser( int id )
     {
-        this.firstName = "";
-        this.lastName = "";
+        this.id = id;
+        this.user = new User();
     }
 
     /***************************************************************************
@@ -24,6 +29,6 @@ public class User
      **************************************************************************/
     public String getName()
     {
-        return firstName + " " + lastName;
+        return user.getName();
     }
 }

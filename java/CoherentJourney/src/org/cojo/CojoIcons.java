@@ -1,29 +1,39 @@
-package org.cojo.data;
+package org.cojo;
+
+import org.jutils.io.IconLoader;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class User
+public class CojoIcons extends IconLoader
 {
     /**  */
-    public String firstName;
+    public static final String PRINT_16 = "printer16.png";
     /**  */
-    public String lastName;
+    public static final String HELP_16 = "help16.png";
+    /**  */
+    public static final String SWITCH_16 = "switch16.png";
+
+    /**  */
+    private static CojoIcons loader;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public User()
+    private CojoIcons()
     {
-        this.firstName = "";
-        this.lastName = "";
+        super( CojoIcons.class, "icons" );
     }
 
     /***************************************************************************
      * @return
      **************************************************************************/
-    public String getName()
+    public static CojoIcons getloader()
     {
-        return firstName + " " + lastName;
+        if( loader == null )
+        {
+            loader = new CojoIcons();
+        }
+        return loader;
     }
 }

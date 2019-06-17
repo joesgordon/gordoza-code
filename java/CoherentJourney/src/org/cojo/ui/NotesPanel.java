@@ -10,8 +10,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 
-import org.cojo.data.ChangeRequest;
 import org.cojo.data.Project;
+import org.cojo.data.Task;
 import org.jutils.IconConstants;
 import org.jutils.ui.model.IView;
 
@@ -47,7 +47,7 @@ public class NotesPanel implements IView<JPanel>
     /***************************************************************************
      * @param changeRequest
      **************************************************************************/
-    public void setData( ChangeRequest changeRequest )
+    public void setData( Task task )
     {
         // TODO Auto-generated method stub
     }

@@ -1,44 +1,69 @@
 package org.cojo.ui;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
-import org.cojo.data.*;
+import org.cojo.data.Project;
+import org.cojo.data.Task;
+import org.cojo.data.ProjectUser;
 import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class StfPanel implements IView<JPanel>
+public class TaskPanel implements IView<JPanel>
 {
+    /**  */
     private final JPanel view;
+    /**  */
     private final JTabbedPane tabbedPane;
 
+    /**  */
     private final JTextField numberField;
+    /**  */
     private final JTextField titleField;
-    private final JComboBox<User> leadField;
-    private final JCheckBox codeReviewField;
+    /**  */
+    private final JComboBox<ProjectUser> assigneeField;
+    /**  */
     private final JTextField estimatedHoursField;
+    /**  */
     private final JTextField actualHoursField;
+    /**  */
     private final JTextArea descriptionField;
+    /**  */
     private final JTextArea unitTestDescField;
+    /**  */
     private final JTextArea unitTestResultsField;
 
+    /**  */
     private final FindingsPanel codeReviewPanel;
+    /**  */
     private Project project;
 
     /***************************************************************************
      * 
      **************************************************************************/
-    public StfPanel()
+    public TaskPanel()
     {
         this.view = new JPanel( new BorderLayout() );
         this.numberField = new JTextField( 25 );
         this.titleField = new JTextField();
-        this.leadField = new JComboBox<User>();
-        this.codeReviewField = new JCheckBox();
+        this.assigneeField = new JComboBox<ProjectUser>();
         this.estimatedHoursField = new JTextField();
         this.actualHoursField = new JTextField();
         this.descriptionField = new JTextArea();
@@ -64,12 +89,11 @@ public class StfPanel implements IView<JPanel>
     /***************************************************************************
      * @param task
      **************************************************************************/
-    public void setData( SoftwareTask task )
+    public void setData( Task task )
     {
         numberField.setText( "" + task.id );
         titleField.setText( task.title );
-        leadField.setSelectedItem( project.getUser( task.leadUserId ) );
-        codeReviewField.setSelected( task.codeReviewRequired );
+        assigneeField.setSelectedItem( project.getUser( task.assigneeId ) );
         estimatedHoursField.setText( "" + task.estimatedHours );
         actualHoursField.setText( "" + task.actualHours );
         descriptionField.setText( task.description );
@@ -83,20 +107,20 @@ public class StfPanel implements IView<JPanel>
     private JPanel createStfPanel()
     {
         JPanel panel = new JPanel( new GridBagLayout() );
+        int row = 0;
 
-        addFields( panel, "Task # :", numberField, 0, 0 );
-        addFields( panel, "Title :", titleField, 1, 0 );
-        addFields( panel, "Lead :", leadField, 2, 0 );
-        addFields( panel, "Code Review Required :", codeReviewField, 3, 0 );
-        addFields( panel, "Estimated Hours :", estimatedHoursField, 4, 0 );
-        addFields( panel, "Actual Hours :", actualHoursField, 5, 0 );
+        addFields( panel, "Task # :", numberField, row++, 0 );
+        addFields( panel, "Title :", titleField, row++, 0 );
+        addFields( panel, "Lead :", assigneeField, row++, 0 );
+        addFields( panel, "Estimated Hours :", estimatedHoursField, row++, 0 );
+        addFields( panel, "Actual Hours :", actualHoursField, row++, 0 );
 
-        addArea( panel, "Description", descriptionField, 6 );
-        addArea( panel, "Unit Test Description", unitTestDescField, 7 );
-        addArea( panel, "Unit Test Results", unitTestResultsField, 8 );
+        addArea( panel, "Description", descriptionField, row++ );
+        addArea( panel, "Unit Test Description", unitTestDescField, row++ );
+        addArea( panel, "Unit Test Results", unitTestResultsField, row++ );
 
         panel.add( Box.createVerticalStrut( 0 ),
-            new GridBagConstraints( 0, 50, 2, 6, 1.0, 1.0,
+            new GridBagConstraints( 0, row++, 2, 6, 1.0, 1.0,
                 GridBagConstraints.WEST, GridBagConstraints.BOTH,
                 new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 

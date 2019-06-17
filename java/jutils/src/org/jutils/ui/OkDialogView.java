@@ -257,6 +257,17 @@ public class OkDialogView implements IView<JDialog>
 
     /***************************************************************************
      * Shows the dialog after setting the provided size.
+     * @param width the desired width of the dialog.
+     * @param height the desired height of the dialog.
+     * @return {@code true} if the ok button was pressed, false otherwise.
+     **************************************************************************/
+    public boolean show( int width, int height )
+    {
+        return show( new Dimension( width, height ) );
+    }
+
+    /***************************************************************************
+     * Shows the dialog after setting the provided size.
      * @param size the desired size of the dialog shown or {@code null} to pack.
      * @return {@code true} if the ok button was pressed, false otherwise.
      **************************************************************************/

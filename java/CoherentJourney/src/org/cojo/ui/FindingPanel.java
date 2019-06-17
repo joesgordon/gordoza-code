@@ -1,8 +1,19 @@
 package org.cojo.ui;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 import org.cojo.data.Finding;
@@ -28,6 +39,8 @@ public class FindingPanel implements IView<JPanel>
     private final JTextArea descriptionField;
     /**  */
     private final JTextArea commentsField;
+
+    /**  */
     private Project project;
 
     /***************************************************************************
@@ -54,7 +67,7 @@ public class FindingPanel implements IView<JPanel>
     public void setData( Finding finding )
     {
         numberField.setText( "" + finding.id );
-        userField.setText( project.getUser( finding.userId ).name );
+        userField.setText( project.getUser( finding.userId ).getName() );
         dateField.setText( finding.time.toString() );
         acceptedField.setSelected( finding.accepted );
         descriptionField.setText( finding.description );

@@ -28,7 +28,7 @@ public class FindingTableModel implements ITableItemsConfig<Finding>
 
         config.addCol( "#", Integer.class, ( f ) -> f.id );
         config.addCol( "User", String.class,
-            ( f ) -> project.getUser( f.userId ).name );
+            ( f ) -> project.getUser( f.userId ).getName() );
         config.addCol( "Date", LocalDateTime.class, ( f ) -> f.time );
         config.addCol( "Accepted", Boolean.class, ( f ) -> f.accepted );
     }

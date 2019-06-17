@@ -1,23 +1,28 @@
 package org.cojo.ui;
 
 import java.awt.Component;
+import java.awt.Dialog.ModalityType;
 import java.util.List;
 
-import org.cojo.data.Project;
-import org.cojo.data.User;
+import org.cojo.data.ProjectManager;
+import org.cojo.data.ProjectUser;
 import org.jutils.ui.ListView;
 import org.jutils.ui.ListView.IItemListModel;
+import org.jutils.ui.OkDialogView;
+import org.jutils.ui.OkDialogView.OkDialogButtons;
+import org.jutils.ui.StandardFormView;
+import org.jutils.ui.fields.StringFormField;
 import org.jutils.ui.model.IDataView;
 
 /**
  *
  */
-public class UsersPanel implements IDataView<List<User>>
+public class UsersPanel implements IDataView<List<ProjectUser>>
 {
     /**  */
     private final UsersListModel model;
     /**  */
-    private final ListView<User> view;
+    private final ListView<ProjectUser> view;
 
     /**
      * 
@@ -41,7 +46,7 @@ public class UsersPanel implements IDataView<List<User>>
      * {@inheritDoc}
      */
     @Override
-    public List<User> getData()
+    public List<ProjectUser> getData()
     {
         return view.getData();
     }
@@ -50,12 +55,12 @@ public class UsersPanel implements IDataView<List<User>>
      * {@inheritDoc}
      */
     @Override
-    public void setData( List<User> users )
+    public void setData( List<ProjectUser> users )
     {
         view.setData( users );
     }
 
-    public void setProject( Project project )
+    public void setProject( ProjectManager project )
     {
         model.setProject( project );
     }
@@ -63,49 +68,72 @@ public class UsersPanel implements IDataView<List<User>>
     /**
      *
      */
-    private static final class UsersListModel implements IItemListModel<User>
+    private static final class UsersListModel
+        implements IItemListModel<ProjectUser>
     {
         /**  */
-        private Project project;
+        private final StringFormField firstNameField;
+        /**  */
+        private final StringFormField lastNameField;
+        /**  */
+        private final Component newUserView;
+        /**  */
+        private ProjectManager project;
 
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String getTitle( User user )
+        public UsersListModel()
         {
-            return user.name;
+            this.firstNameField = new StringFormField( "First Name" );
+            this.lastNameField = new StringFormField( "Last Name" );
+            this.newUserView = createForm();
+        }
+
+        private Component createForm()
+        {
+            StandardFormView form = new StandardFormView();
+
+            form.addField( firstNameField );
+            form.addField( lastNameField );
+
+            return form.getView();
         }
 
         /**
          * {@inheritDoc}
          */
         @Override
-        public User promptForNew( ListView<User> view )
+        public String getTitle( ProjectUser user )
         {
-            User user = null;
-            // boolean done = false;
+            return user.getName();
+        }
 
-            // while( !done )
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public ProjectUser promptForNew( ListView<ProjectUser> view )
+        {
+            ProjectUser user = null;
+
+            OkDialogView dialogView = new OkDialogView( view.getView(),
+                newUserView, ModalityType.DOCUMENT_MODAL,
+                OkDialogButtons.OK_CANCEL );
+
+            dialogView.setTitle( "Enter New User's Name" );
+
+            if( dialogView.show() )
             {
-                String name = view.promptForName( "user name" );
-
-                if( name != null )
-                {
-                    // TODO make sure user doen't exist
-                    user = project.createUser( name );
-                    // done = true;
-                }
-                // else
-                // {
-                // done = true;
-                // }
+                // TODO make sure user doen't exist
+                user = project.createUser( firstNameField.getValue(),
+                    lastNameField.getValue() );
             }
 
             return user;
         }
 
-        public void setProject( Project project )
+        /**
+         * @param project
+         */
+        public void setProject( ProjectManager project )
         {
             this.project = project;
         }

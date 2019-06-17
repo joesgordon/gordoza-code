@@ -1,11 +1,23 @@
 package org.cojo.ui;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
-import org.cojo.data.ChangeRequest;
+import org.cojo.data.Task;
 import org.jutils.IconConstants;
 import org.jutils.ui.event.ItemActionList;
 import org.jutils.ui.event.ItemActionListener;
@@ -14,12 +26,12 @@ import org.jutils.ui.model.IView;
 /*******************************************************************************
  * 
  ******************************************************************************/
-public class CrDefinitionPanel implements IView<JPanel>
+public class TaskDefinitionPanel implements IView<JPanel>
 {
     /**  */
     private final JPanel view;
     /**  */
-    private final JTextField originatorField;
+    private final JTextField authorField;
     /**  */
     private final JTextField dateCreatedField;
     /**  */
@@ -30,8 +42,6 @@ public class CrDefinitionPanel implements IView<JPanel>
     private final JCheckBox thirdPartyField;
     /**  */
     private final JCheckBox requirementsImpactField;
-    /**  */
-    private final JCheckBox designField;
     /**  */
     private final JTextField hwciField;
     /**  */
@@ -61,15 +71,15 @@ public class CrDefinitionPanel implements IView<JPanel>
     /***************************************************************************
      * 
      **************************************************************************/
-    public CrDefinitionPanel()
+    public TaskDefinitionPanel()
     {
         this.view = new JPanel( new GridBagLayout() );
 
         thirdPartyListeners = new ItemActionList<Boolean>();
         requirementsImpactListeners = new ItemActionList<Boolean>();
 
-        originatorField = new JTextField( "Kristine Kochanski", 25 );
-        addFields( view, "Originator :", originatorField, 0, 0 );
+        authorField = new JTextField( "Kristine Kochanski", 25 );
+        addFields( view, "Originator :", authorField, 0, 0 );
 
         dateCreatedField = new JTextField( "8/22/10", 5 );
         dateCreatedField.setEditable( false );
@@ -83,9 +93,6 @@ public class CrDefinitionPanel implements IView<JPanel>
 
         priorityField = new JTextField( "Critical", 5 );
         addFields( view, "Priority :", priorityField, 4, 0 );
-
-        designField = new JCheckBox( "" );
-        addFields( view, "Design Required :", designField, 5, 0 );
 
         requirementsImpactField = new JCheckBox( "" );
         requirementsImpactField.addActionListener(
@@ -151,7 +158,7 @@ public class CrDefinitionPanel implements IView<JPanel>
     /***************************************************************************
      * @param cr
      **************************************************************************/
-    public void setData( ChangeRequest cr )
+    public void setData( Task cr )
     {
         descriptionField.setText( cr.description );
     }

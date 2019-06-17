@@ -14,9 +14,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-/**
+/*******************************************************************************
  *
- */
+ ******************************************************************************/
 public class ZoomableChart
 {
     /**  */
@@ -99,12 +99,12 @@ public class ZoomableChart
         yAxis.setAutoRanging( false );
     }
 
-    /**
+    /***************************************************************************
      * @param axis
      * @param min
      * @param max
      * @return the newly created axis.
-     */
+     **************************************************************************/
     private static void initAxis( ValueAxis<Number> axis, double min,
         double max )
     {
@@ -113,9 +113,9 @@ public class ZoomableChart
         axis.setUpperBound( max );
     }
 
-    /**
+    /***************************************************************************
      * @param zoomRect the rectangle to store the zoom limits
-     */
+     **************************************************************************/
     private void setUpZooming( final Rectangle zoomRect )
     {
         final ObjectProperty<Point2D> mouseAnchor = new SimpleObjectProperty<>();
@@ -193,12 +193,12 @@ public class ZoomableChart
         } );
     }
 
-    /**
+    /***************************************************************************
      * @param axis the axis to be scrolled.
      * @param direction the direction to be scrolled
      * @param vMin
      * @param vMax
-     */
+     **************************************************************************/
     private static void scrollAxis( ValueAxis<Number> axis, double direction,
         double vMin, double vMax )
     {
@@ -237,9 +237,9 @@ public class ZoomableChart
         axis.setUpperBound( max );
     }
 
-    /**
+    /***************************************************************************
      * @param zoomRect the rectangle to store the zoom limits
-     */
+     **************************************************************************/
     private void doZoom( Rectangle zoomRect )
     {
         Point2D zoomScene = chart.localToScene(
@@ -294,9 +294,9 @@ public class ZoomableChart
         zoomRect.setHeight( 0 );
     }
 
-    /**
+    /***************************************************************************
      * @return the base node of the chart.
-     */
+     **************************************************************************/
     public Node getNode()
     {
         return chartContainer;

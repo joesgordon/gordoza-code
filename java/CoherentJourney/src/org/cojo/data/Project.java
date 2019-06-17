@@ -11,42 +11,29 @@ public class Project
     /**  */
     public String name;
     /**  */
-    public final List<User> users;
+    public final List<ProjectUser> users;
     /**  */
-    public final List<ChangeRequest> changes;
+    public final List<Task> tasks;
 
     /***************************************************************************
-     * 
+     * @param currentUser
      **************************************************************************/
     public Project()
     {
         this.name = "";
         this.users = new ArrayList<>();
-        this.changes = new ArrayList<>();
-    }
-
-    /***************************************************************************
-     * @param name
-     * @return
-     **************************************************************************/
-    public User createUser( String name )
-    {
-        User u = new User( users.size(), name );
-
-        users.add( u );
-
-        return u;
+        this.tasks = new ArrayList<>();
     }
 
     /***************************************************************************
      * @param id
      * @return
      **************************************************************************/
-    public User getUser( int id )
+    public ProjectUser getUser( int id )
     {
-        for( User u : users )
+        for( ProjectUser u : users )
         {
-            if( u.userId == id )
+            if( u.id == id )
             {
                 return u;
             }

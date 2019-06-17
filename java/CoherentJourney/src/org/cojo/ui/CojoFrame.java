@@ -2,12 +2,19 @@ package org.cojo.ui;
 
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.JFrame;
+import javax.swing.JToolBar;
 
-import org.cojo.data.Project;
+import org.cojo.data.ProjectManager;
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
+import org.jutils.ValidationException;
+import org.jutils.io.XStreamUtils;
 import org.jutils.ui.JGoodiesToolBar;
 import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.event.ActionAdapter;
@@ -96,7 +103,8 @@ public class CojoFrame implements IView<JFrame>
      **************************************************************************/
     private void createNewProject()
     {
-        mainPanel.setData( new Project() );
+        ProjectManager manager = new ProjectManager();
+        mainPanel.setData( manager );
     }
 
     /***************************************************************************
@@ -104,6 +112,27 @@ public class CojoFrame implements IView<JFrame>
      **************************************************************************/
     private void openProject( File file )
     {
+        try
+        {
+            ProjectManager manager = new ProjectManager();
+            manager.project = XStreamUtils.readObjectXStream( file );
+            mainPanel.setData( manager );
+        }
+        catch( FileNotFoundException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch( IOException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch( ValidationException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         // TODO Open project
     }
 
@@ -112,7 +141,17 @@ public class CojoFrame implements IView<JFrame>
      **************************************************************************/
     private void saveProject( File file )
     {
-        // TODO Save project
+        ProjectManager manager = mainPanel.getData();
+
+        try
+        {
+            XStreamUtils.writeObjectXStream( manager.project, file );
+        }
+        catch( IOException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     /***************************************************************************
