@@ -147,7 +147,7 @@ public class CojoFrame implements IView<JFrame>
         {
             XStreamUtils.writeObjectXStream( manager.project, file );
         }
-        catch( IOException e )
+        catch( IOException | ValidationException e )
         {
             // TODO Auto-generated catch block
             e.printStackTrace();

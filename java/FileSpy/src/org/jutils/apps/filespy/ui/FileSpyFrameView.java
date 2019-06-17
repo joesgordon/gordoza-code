@@ -26,6 +26,7 @@ import javax.swing.SwingUtilities;
 
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
+import org.jutils.Utils;
 import org.jutils.ValidationException;
 import org.jutils.apps.filespy.FileSpyMain;
 import org.jutils.apps.filespy.data.FileSpyData;
@@ -368,12 +369,23 @@ public class FileSpyFrameView implements IView<JFrame>
             }
             catch( IOException ex )
             {
-                JOptionPane.showMessageDialog( getView(), ex.getMessage(),
-                    "I/O ERROR", JOptionPane.ERROR_MESSAGE );
+                SwingUtils.showErrorMessage( getView(), ex.getMessage(),
+                    "I/O ERROR" );
+            }
+            catch( ValidationException ex )
+            {
+                SwingUtils.showErrorMessage( getView(),
+                    "The file could not be saved: " +
+                        fileChosen.getAbsolutePath() + Utils.NEW_LINE +
+                        ex.getMessage(),
+                    "Serialization Error" );
             }
         }
     }
 
+    /**
+     * 
+     */
     private void saveSearchResults()
     {
         // TODO Auto-generated method stub

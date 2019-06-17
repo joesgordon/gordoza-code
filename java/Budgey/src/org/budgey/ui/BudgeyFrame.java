@@ -176,6 +176,9 @@ public class BudgeyFrame implements IView<JFrame>
         }
     }
 
+    /**
+     * @param file
+     */
     private void saveFile( File file )
     {
         options.getOptions().lastBudgets.push( file );
@@ -184,10 +187,10 @@ public class BudgeyFrame implements IView<JFrame>
         {
             XStreamUtils.writeObjectXStream( budgeyPanel.getData(), file );
         }
-        catch( IOException ex )
+        catch( IOException | ValidationException ex )
         {
-            JOptionPane.showMessageDialog( getView(), ex.getMessage(),
-                "I/O Error", JOptionPane.ERROR_MESSAGE );
+            SwingUtils.showErrorMessage( getView(), ex.getMessage(),
+                "I/O Error" );
         }
     }
 }

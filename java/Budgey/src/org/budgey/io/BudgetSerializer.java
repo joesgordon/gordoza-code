@@ -35,12 +35,19 @@ public class BudgetSerializer
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void write( Budget item, OutputStream stream ) throws IOException
     {
-        XStreamUtils.writeObjectXStream( item, stream );
+        try
+        {
+            XStreamUtils.writeObjectXStream( item, stream );
+        }
+        catch( ValidationException ex )
+        {
+            throw new IOException( ex );
+        }
     }
 
     /***************************************************************************

@@ -185,7 +185,7 @@ public class GititFrameView implements IView<JFrame>
                 XStreamUtils.buildDependencyList( GititConfig.class ).toArray(
                     new String[] {} ) );
         }
-        catch( IOException | XStreamException ex )
+        catch( IOException | ValidationException ex )
         {
             SwingUtils.showErrorMessage( getView(),
                 "Unable to write configuration to" + Utils.NEW_LINE +
