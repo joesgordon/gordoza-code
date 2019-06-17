@@ -5,11 +5,11 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/FileSpy"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JExplorer"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JHex"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jutils"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JUtils"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Duak"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Budgey"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/EagleSheet"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/JChartLib"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JPlot"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Taskflow"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Multicon"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Chatterbox"/>

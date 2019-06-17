@@ -1,0 +1,4 @@
+[submodule "jutils"]
+	path = jutils
+	url = https://github.com/joesgordon/jutils.git
+	branch = master
