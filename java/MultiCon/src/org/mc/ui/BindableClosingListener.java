@@ -5,7 +5,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 
-import org.jutils.SwingUtils;
+import org.jutils.OptionUtils;
 import org.mc.ui.BindingFrameView.IBindableView;
 
 /*******************************************************************************
@@ -40,7 +40,7 @@ public class BindableClosingListener extends WindowAdapter
         }
         catch( IOException ex )
         {
-            SwingUtils.showErrorMessage( parent, ex.getMessage(),
+            OptionUtils.showErrorMessage( parent, ex.getMessage(),
                 "Socket Close Error" );
         }
     }

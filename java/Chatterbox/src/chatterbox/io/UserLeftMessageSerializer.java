@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.jutils.io.IDataSerializer;
 import org.jutils.io.IDataStream;
+import org.jutils.io.LengthStringSerializer;
 
 import chatterbox.data.ChatUser;
 import chatterbox.data.messages.UserLeftMessage;
@@ -15,7 +16,7 @@ public class UserLeftMessageSerializer
     implements IDataSerializer<UserLeftMessage>
 {
     /**  */
-    private StringSerializer stringSerializer;
+    private LengthStringSerializer stringSerializer;
     /**  */
     private UserSerializer userSerializer;
 
@@ -24,7 +25,7 @@ public class UserLeftMessageSerializer
      **************************************************************************/
     public UserLeftMessageSerializer()
     {
-        stringSerializer = new StringSerializer();
+        stringSerializer = new LengthStringSerializer();
         userSerializer = new UserSerializer();
     }
 

@@ -5,6 +5,7 @@ import java.awt.Container;
 import javax.swing.JFrame;
 
 import org.jutils.ui.StandardFrameView;
+import org.jutils.ui.TextHexView;
 import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
@@ -47,7 +48,7 @@ public class MessageTextViewTestMain
          */
         private static Container createContent()
         {
-            MessageTextView view = new MessageTextView();
+            TextHexView view = new TextHexView();
 
             return view.getView();
         }

@@ -1,19 +1,49 @@
 package org.jutils.apps.jexplorer;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeSelectionModel;
 
-import org.jutils.*;
+import org.jutils.IconConstants;
+import org.jutils.OptionUtils;
+import org.jutils.SwingUtils;
+import org.jutils.Utils;
 import org.jutils.io.FileComparator;
-import org.jutils.ui.*;
+import org.jutils.ui.DirectoryTree;
+import org.jutils.ui.JGoodiesToolBar;
+import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.event.ActionAdapter;
-import org.jutils.ui.explorer.*;
+import org.jutils.ui.explorer.AppManagerView;
+import org.jutils.ui.explorer.DefaultExplorerItem;
+import org.jutils.ui.explorer.ExplorerTable;
 import org.jutils.ui.explorer.data.AppManagerConfig;
 import org.jutils.ui.model.IView;
 
@@ -339,10 +369,10 @@ public class JExplorerFrame implements IView<JFrame>
         }
         else
         {
-            JOptionPane.showMessageDialog(
-                getView(), "User does not have permissions to view: " +
-                    Utils.NEW_LINE + dir.getAbsolutePath(),
-                "ERROR", JOptionPane.ERROR_MESSAGE );
+            OptionUtils.showErrorMessage( getView(),
+                "User does not have permissions to view: " + Utils.NEW_LINE +
+                    dir.getAbsolutePath(),
+                "ERROR" );
         }
     }
 
@@ -448,9 +478,8 @@ public class JExplorerFrame implements IView<JFrame>
         }
         else
         {
-            JOptionPane.showMessageDialog( getView(),
-                file.getAbsolutePath() + " is not a directory!", "ERROR",
-                JOptionPane.ERROR_MESSAGE );
+            OptionUtils.showErrorMessage( getView(),
+                file.getAbsolutePath() + " is not a directory!", "ERROR" );
         }
     }
 
@@ -569,8 +598,8 @@ public class JExplorerFrame implements IView<JFrame>
                 }
                 catch( Exception ex )
                 {
-                    JOptionPane.showMessageDialog( getView(), ex.getMessage(),
-                        "ERROR", JOptionPane.ERROR_MESSAGE );
+                    OptionUtils.showErrorMessage( getView(), ex.getMessage(),
+                        "ERROR" );
                 }
             }
         }

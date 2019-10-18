@@ -136,7 +136,7 @@ public class FileContentsSearcher implements IConsumer<SearchRecord>
         }
 
         try( InputStream is = new FileInputStream( file );
-             Reader r = new InputStreamReader( is, IOUtils.US_ASCII );
+             Reader r = new InputStreamReader( is, IOUtils.get8BitEncoding() );
              LineNumberReader lineReader = new LineNumberReader( r ) )
         {
             while( ( line = lineReader.readLine() ) != null &&

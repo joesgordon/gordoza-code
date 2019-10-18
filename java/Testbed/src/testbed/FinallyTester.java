@@ -63,7 +63,7 @@ public class FinallyTester
 
         String str = "Algy met a bear. The bear was bulgy. The bulge was Algy";
 
-        String str2 = new String( str.getBytes(), IOUtils.US_ASCII );
+        String str2 = new String( str.getBytes(), IOUtils.get8BitEncoding() );
 
         if( !str.equals( str2 ) )
         {

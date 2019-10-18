@@ -1,16 +1,33 @@
 package chatterbox.ui;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
+import org.jutils.OptionUtils;
 import org.jutils.ui.OkDialogView;
-import org.jutils.ui.event.*;
-import org.jutils.ui.model.*;
+import org.jutils.ui.event.ActionAdapter;
+import org.jutils.ui.event.ItemActionList;
+import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.model.CollectionListModel;
+import org.jutils.ui.model.IDataView;
+import org.jutils.ui.model.LabelListCellRenderer;
 
 import chatterbox.data.ChatUser;
 
@@ -152,9 +169,9 @@ public class UserListView implements IDataView<List<ChatUser>>
             {
                 int index = view.userList.locationToIndex( e.getPoint() );
 
-                JOptionPane.showMessageDialog( view.getView(),
+                OptionUtils.showErrorMessage( view.getView(),
                     "This functionality is not yet supported. Good try, though.",
-                    "Not Supported", JOptionPane.ERROR_MESSAGE );
+                    "Not Supported" );
 
                 if( index > -1 )
                 {

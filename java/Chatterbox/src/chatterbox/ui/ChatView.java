@@ -1,12 +1,25 @@
 package chatterbox.ui;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import javax.swing.*;
-import javax.swing.text.*;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
+import org.jutils.OptionUtils;
 import org.jutils.Utils;
 import org.jutils.ui.TitleView;
 import org.jutils.ui.event.ItemActionEvent;
@@ -142,9 +155,8 @@ public class ChatView implements IDataView<ChatHandler>
         }
         else
         {
-            JOptionPane.showMessageDialog( getView(),
-                "Um... No one's listening", "Forever Alone",
-                JOptionPane.ERROR_MESSAGE );
+            OptionUtils.showErrorMessage( getView(), "Um... No one's listening",
+                "Forever Alone" );
         }
     }
 

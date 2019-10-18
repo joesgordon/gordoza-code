@@ -6,8 +6,7 @@ import java.io.IOException;
 
 import javax.swing.*;
 
-import org.jutils.IconConstants;
-import org.jutils.SwingUtils;
+import org.jutils.*;
 import org.jutils.ui.JGoodiesToolBar;
 import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.model.IView;
@@ -121,7 +120,7 @@ public class BindingFrameView implements IView<JFrame>
         catch( IOException ex )
         {
             setButtonBound( bound );
-            SwingUtils.showErrorMessage( getView(), ex.getMessage(),
+            OptionUtils.showErrorMessage( getView(), ex.getMessage(),
                 "Unable to bind" );
         }
     }

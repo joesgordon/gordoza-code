@@ -1,15 +1,32 @@
 package org.jutils.apps.filespy.ui;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
+import org.jutils.OptionUtils;
 import org.jutils.SwingUtils;
 import org.jutils.Utils;
-import org.jutils.ui.*;
+import org.jutils.ui.ExitListener;
+import org.jutils.ui.SearchableTextArea;
+import org.jutils.ui.StandardFormView;
+import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 import org.jutils.ui.model.IView;
@@ -230,9 +247,9 @@ public class RegexPanel implements IView<JPanel>
         }
         catch( PatternSyntaxException ex )
         {
-            JOptionPane.showMessageDialog(
+            OptionUtils.showErrorMessage(
                 SwingUtils.getComponentsWindow( view ), ex.getMessage(),
-                "ERROR", JOptionPane.ERROR_MESSAGE );
+                "ERROR" );
             regexTextArea.getView().requestFocus();
             regexTextArea.select( ex.getIndex() - 1, ex.getIndex() );
         }

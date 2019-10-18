@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.jutils.data.TextStyleList;
 import org.jutils.io.IDataSerializer;
 import org.jutils.io.IDataStream;
+import org.jutils.io.LengthStringSerializer;
 
 import chatterbox.ChatterboxConstants;
 import chatterbox.data.DecoratedText;
@@ -16,7 +17,7 @@ import chatterbox.data.messages.ChatMessage;
 public class ChatMessageSerializer implements IDataSerializer<ChatMessage>
 {
     /**  */
-    private final StringSerializer stringSerializer;
+    private final LengthStringSerializer stringSerializer;
     /**  */
     private final TextStyleListSerializer attributeSerializer;
 
@@ -25,7 +26,7 @@ public class ChatMessageSerializer implements IDataSerializer<ChatMessage>
      **************************************************************************/
     public ChatMessageSerializer()
     {
-        this.stringSerializer = new StringSerializer();
+        this.stringSerializer = new LengthStringSerializer();
         this.attributeSerializer = new TextStyleListSerializer();
     }
 

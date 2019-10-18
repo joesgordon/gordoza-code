@@ -1,17 +1,36 @@
 package org.eglsht.ui;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JToolBar;
 
 import org.eglsht.AppConstants;
 import org.eglsht.EagleSheetIcons;
 import org.eglsht.data.EagleSheet;
 import org.eglsht.data.SheetSize;
 import org.jutils.IconConstants;
-import org.jutils.ui.*;
+import org.jutils.OptionUtils;
+import org.jutils.ui.ExitListener;
+import org.jutils.ui.JGoodiesMenuBar;
+import org.jutils.ui.JGoodiesToolBar;
+import org.jutils.ui.ShadowBorder;
+import org.jutils.ui.StatusBarPanel;
+import org.jutils.ui.TitleView;
 import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.event.FileChooserListener;
 import org.jutils.ui.event.FileChooserListener.IFileSelected;
@@ -246,11 +265,11 @@ public class EagleSheetFrameView implements IView<JFrame>
     {
         SheetSizeView sizeView = new SheetSizeView();
 
-        int option = JOptionPane.showOptionDialog( frame, sizeView.getView(),
-            "Enter Size", JOptionPane.OK_CANCEL_OPTION,
-            JOptionPane.QUESTION_MESSAGE, null, null, null );
+        boolean createSheet = OptionUtils.showOkCancelDialog( frame,
+            sizeView.getView(), "Enter Size", "Create Sheet", () -> {
+            } );
 
-        if( option == JOptionPane.OK_OPTION )
+        if( createSheet )
         {
             SheetSize size = sizeView.getData();
             EagleSheet sheet = new EagleSheet( size.rows, size.cols );
@@ -259,12 +278,18 @@ public class EagleSheetFrameView implements IView<JFrame>
         }
     }
 
+    /**
+     * @param f
+     */
     @SuppressWarnings( "unused")
     public void openFile( File f )
     {
         // TODO Auto-generated method stub
     }
 
+    /**
+     * 
+     */
     private void editFont()
     {
         // TODO Auto-generated method stub

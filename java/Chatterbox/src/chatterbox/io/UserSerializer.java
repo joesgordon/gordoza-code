@@ -3,7 +3,10 @@ package chatterbox.io;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-import org.jutils.io.*;
+import org.jutils.io.IDataSerializer;
+import org.jutils.io.IDataStream;
+import org.jutils.io.LengthStringSerializer;
+import org.jutils.io.LocalDateTimeSerializer;
 
 import chatterbox.data.ChatUser;
 
@@ -13,7 +16,7 @@ import chatterbox.data.ChatUser;
 public class UserSerializer implements IDataSerializer<ChatUser>
 {
     /** For serializing {@link String}s. */
-    private final StringSerializer stringSerializer;
+    private final LengthStringSerializer stringSerializer;
     /** For serializing {@link LocalDateTime}s */
     private final LocalDateTimeSerializer ldtSerializer;
 
@@ -22,7 +25,7 @@ public class UserSerializer implements IDataSerializer<ChatUser>
      **************************************************************************/
     public UserSerializer()
     {
-        this.stringSerializer = new StringSerializer();
+        this.stringSerializer = new LengthStringSerializer();
         this.ldtSerializer = new LocalDateTimeSerializer();
     }
 

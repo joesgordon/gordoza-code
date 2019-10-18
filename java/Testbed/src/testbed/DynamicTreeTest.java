@@ -20,6 +20,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import org.jutils.IconConstants;
+import org.jutils.OptionUtils;
 import org.jutils.SwingUtils;
 import org.jutils.io.parsers.StringLengthParser;
 import org.jutils.ui.StandardFrameView;
@@ -158,7 +159,7 @@ public class DynamicTreeTest
 
             StringLengthParser parser = new StringLengthParser( 3, null );
 
-            String name = SwingUtils.promptForValue( getView(), "Node Name",
+            String name = OptionUtils.promptForValue( getView(), "Node Name",
                 parser, "Enter the new name:" );
 
             DynamicNode<String> child = treeView.addChild( parent, name );

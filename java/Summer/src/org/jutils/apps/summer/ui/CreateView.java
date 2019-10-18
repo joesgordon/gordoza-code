@@ -19,7 +19,6 @@ import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -33,6 +32,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileSystemView;
 
 import org.jutils.IconConstants;
+import org.jutils.OptionUtils;
 import org.jutils.SwingUtils;
 import org.jutils.ValidationException;
 import org.jutils.apps.summer.data.ChecksumResult;
@@ -436,8 +436,8 @@ public class CreateView implements IDataView<ChecksumResult>, IValidationField
         }
         catch( ValidationException ex )
         {
-            JOptionPane.showMessageDialog( parent, ex.getMessage(),
-                "Invalid Inputs", JOptionPane.ERROR_MESSAGE );
+            OptionUtils.showErrorMessage( parent, ex.getMessage(),
+                "Invalid Inputs" );
             return null;
         }
 

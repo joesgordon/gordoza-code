@@ -1,17 +1,40 @@
 package testbed;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 
 import org.jutils.IconConstants;
+import org.jutils.OptionUtils;
 import org.jutils.Utils;
-import org.jutils.concurrent.*;
+import org.jutils.concurrent.ITask;
+import org.jutils.concurrent.ITaskHandler;
+import org.jutils.concurrent.TaskThread;
 import org.jutils.data.UIProperty;
 import org.jutils.ui.LedIcon;
 import org.jutils.ui.StandardFrameView;
@@ -193,9 +216,8 @@ public class ColorGenFrame implements IView<JFrame>
             }
             catch( FileNotFoundException ex )
             {
-                JOptionPane.showMessageDialog( getView(),
-                    "Error writing file: " + ex, "ERROR",
-                    JOptionPane.ERROR_MESSAGE );
+                OptionUtils.showErrorMessage( getView(),
+                    "Error writing file: " + ex, "ERROR" );
             }
         }
     }

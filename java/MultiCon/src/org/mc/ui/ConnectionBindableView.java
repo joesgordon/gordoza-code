@@ -6,7 +6,7 @@ import java.io.IOException;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import org.jutils.SwingUtils;
+import org.jutils.OptionUtils;
 import org.jutils.io.LogUtils;
 import org.jutils.net.*;
 import org.jutils.ui.TitleView;
@@ -218,7 +218,7 @@ public class ConnectionBindableView implements IBindableView
     {
         LogUtils.printError( errorMsg );
 
-        SwingUtils.showErrorMessage( getView(), errorMsg,
+        OptionUtils.showErrorMessage( getView(), errorMsg,
             "Communication Error" );
     }
 }

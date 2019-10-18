@@ -16,7 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import org.jutils.SwingUtils;
+import org.jutils.OptionUtils;
 import org.jutils.gitit.data.GititConfig;
 import org.jutils.gitit.data.GititConfig.GititCommand;
 import org.jutils.ui.ComponentView;
@@ -137,7 +137,7 @@ public class GititView implements IDataView<GititConfig>
         }
         catch( IOException ex )
         {
-            SwingUtils.showErrorMessage( getView(),
+            OptionUtils.showErrorMessage( getView(),
                 "Unable to start " + cmd.command, "Error Starting Command" );
         }
     }

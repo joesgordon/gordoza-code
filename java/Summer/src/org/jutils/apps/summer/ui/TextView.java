@@ -2,13 +2,21 @@ package org.jutils.apps.summer.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.Scanner;
 
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JToolBar;
 import javax.swing.border.EmptyBorder;
 
 import org.jutils.IconConstants;
+import org.jutils.OptionUtils;
 import org.jutils.SwingUtils;
 import org.jutils.ui.JGoodiesToolBar;
 import org.jutils.ui.event.ActionAdapter;
@@ -172,11 +180,17 @@ public class TextView implements IDataView<String>
     {
         private final TextView view;
 
+        /**
+         * @param view
+         */
         public OpenListener( TextView view )
         {
             this.view = view;
         }
 
+        /**
+         * @{@inheritDoc}
+         */
         @Override
         public void fileChosen( File file )
         {
@@ -188,9 +202,9 @@ public class TextView implements IDataView<String>
             }
             catch( FileNotFoundException ex )
             {
-                JOptionPane.showMessageDialog( view.view,
+                OptionUtils.showErrorMessage( view.view,
                     "Cannot open file for reading: " + file.getAbsolutePath(),
-                    "Cannot Open File", JOptionPane.ERROR_MESSAGE );
+                    "Cannot Open File" );
             }
         }
     }
@@ -200,22 +214,33 @@ public class TextView implements IDataView<String>
      **************************************************************************/
     private static class SaveListener implements IFileSelected, ILastFile
     {
+        /**  */
         private final TextView view;
 
+        /**  */
         public File defaultFile;
 
+        /**
+         * @param view
+         */
         public SaveListener( TextView view )
         {
             this.view = view;
             this.defaultFile = null;
         }
 
+        /**
+         * @{@inheritDoc}
+         */
         @Override
         public File getLastFile()
         {
             return defaultFile;
         }
 
+        /**
+         * @{@inheritDoc}
+         */
         @Override
         public void fileChosen( File file )
         {
@@ -225,9 +250,9 @@ public class TextView implements IDataView<String>
             }
             catch( FileNotFoundException ex )
             {
-                JOptionPane.showMessageDialog( view.view,
+                OptionUtils.showErrorMessage( view.view,
                     "Cannot open file for writing: " + file.getAbsolutePath(),
-                    "Cannot Open File", JOptionPane.ERROR_MESSAGE );
+                    "Cannot Open File" );
             }
         }
     }

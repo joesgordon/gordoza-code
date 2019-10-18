@@ -10,7 +10,6 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 
 import org.budgey.BudgeyIcons;
@@ -18,6 +17,7 @@ import org.budgey.BudgeyMain;
 import org.budgey.data.Budget;
 import org.budgey.data.BudgeyOptions;
 import org.jutils.IconConstants;
+import org.jutils.OptionUtils;
 import org.jutils.SwingUtils;
 import org.jutils.ValidationException;
 import org.jutils.io.XStreamUtils;
@@ -161,18 +161,18 @@ public class BudgeyFrame implements IView<JFrame>
         }
         catch( ValidationException ex )
         {
-            JOptionPane.showMessageDialog( getView(), ex.getMessage(),
-                "Data Error", JOptionPane.ERROR_MESSAGE );
+            OptionUtils.showErrorMessage( getView(), ex.getMessage(),
+                "Data Error" );
         }
         catch( FileNotFoundException ex )
         {
-            JOptionPane.showMessageDialog( getView(), ex.getMessage(),
-                "File Not Found Error", JOptionPane.ERROR_MESSAGE );
+            OptionUtils.showErrorMessage( getView(), ex.getMessage(),
+                "File Not Found Error" );
         }
         catch( IOException ex )
         {
-            JOptionPane.showMessageDialog( getView(), ex.getMessage(),
-                "I/O Error", JOptionPane.ERROR_MESSAGE );
+            OptionUtils.showErrorMessage( getView(), ex.getMessage(),
+                "I/O Error" );
         }
     }
 
@@ -189,7 +189,7 @@ public class BudgeyFrame implements IView<JFrame>
         }
         catch( IOException | ValidationException ex )
         {
-            SwingUtils.showErrorMessage( getView(), ex.getMessage(),
+            OptionUtils.showErrorMessage( getView(), ex.getMessage(),
                 "I/O Error" );
         }
     }

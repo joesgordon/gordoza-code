@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.swing.*;
 
+import org.jutils.OptionUtils;
 import org.jutils.SwingUtils;
 import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.model.IView;
@@ -129,7 +130,7 @@ public class MulticonFrame implements IView<JFrame>
         }
         catch( IOException ex )
         {
-            SwingUtils.showErrorMessage( getView(), ex.getMessage(),
+            OptionUtils.showErrorMessage( getView(), ex.getMessage(),
                 "Socket Close Error" );
         }
     }

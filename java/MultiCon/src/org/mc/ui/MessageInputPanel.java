@@ -6,9 +6,11 @@ import java.io.IOException;
 
 import javax.swing.*;
 
+import org.jutils.OptionUtils;
 import org.jutils.SwingUtils;
 import org.jutils.net.IConnection;
 import org.jutils.net.NetMessage;
+import org.jutils.ui.TextHexView;
 import org.jutils.ui.TitleView;
 import org.jutils.ui.event.updater.CheckBoxUpdater;
 import org.jutils.ui.event.updater.IUpdater;
@@ -32,11 +34,11 @@ public class MessageInputPanel implements IView<JComponent>
     private final JCheckBox autoEnabledCheckbox;
 
     /**  */
-    private final MessageTextView adHocView;
+    private final TextHexView adHocView;
     /**  */
-    private final MessageTextView scheduleView;
+    private final TextHexView scheduleView;
     /**  */
-    private final MessageTextView autoReplyView;
+    private final TextHexView autoReplyView;
 
     /**  */
     private final IUpdater<NetMessage> msgNotifier;
@@ -56,9 +58,9 @@ public class MessageInputPanel implements IView<JComponent>
             1.0, 1000.0 );
         this.autoEnabledCheckbox = new JCheckBox( "Auto-Reply" );
 
-        this.adHocView = new MessageTextView();
-        this.scheduleView = new MessageTextView();
-        this.autoReplyView = new MessageTextView();
+        this.adHocView = new TextHexView();
+        this.scheduleView = new TextHexView();
+        this.autoReplyView = new TextHexView();
 
         this.msgNotifier = msgNotifier;
 
@@ -174,7 +176,7 @@ public class MessageInputPanel implements IView<JComponent>
             }
             catch( IOException ex )
             {
-                SwingUtils.showErrorMessage( getView(), ex.getMessage(),
+                OptionUtils.showErrorMessage( getView(), ex.getMessage(),
                     "Error sending message" );
             }
         }

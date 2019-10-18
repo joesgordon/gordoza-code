@@ -17,7 +17,6 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -28,6 +27,7 @@ import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileSystemView;
 
 import org.jutils.IconConstants;
+import org.jutils.OptionUtils;
 import org.jutils.SwingUtils;
 import org.jutils.Utils;
 import org.jutils.ValidationException;
@@ -296,8 +296,8 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
 
         if( !getValidity().isValid )
         {
-            JOptionPane.showMessageDialog( view, getValidity().reason,
-                "Invalid Configuration", JOptionPane.ERROR_MESSAGE );
+            OptionUtils.showErrorMessage( view, getValidity().reason,
+                "Invalid Configuration" );
             return;
         }
 
@@ -314,8 +314,8 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
     {
         if( input.type == null )
         {
-            JOptionPane.showMessageDialog( parent, "Checksum file not loaded",
-                "File Not Loaded", JOptionPane.ERROR_MESSAGE );
+            OptionUtils.showErrorMessage( parent, "Checksum file not loaded",
+                "File Not Loaded" );
             return;
         }
 
@@ -335,8 +335,8 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
 
         if( invalidSums.isEmpty() )
         {
-            JOptionPane.showMessageDialog( parent, "All checksums were valid",
-                "Checksums Valid", JOptionPane.INFORMATION_MESSAGE );
+            OptionUtils.showInfoMessage( parent, "All checksums were valid",
+                "Checksums Valid" );
         }
         else
         {
@@ -344,8 +344,8 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
 
             invalidView.setData( invalidSums );
 
-            JOptionPane.showMessageDialog( parent, invalidView.getView(),
-                "Invalid Checksums", JOptionPane.ERROR_MESSAGE );
+            OptionUtils.showErrorMessage( parent, invalidView.getView(),
+                "Invalid Checksums" );
         }
 
         return;
@@ -374,26 +374,28 @@ public class VerifyView implements IDataView<ChecksumResult>, IValidationField
         }
         catch( ValidationException ex )
         {
-            JOptionPane.showMessageDialog( view,
+            OptionUtils.showErrorMessage( view,
                 "Error reading file " + file.getAbsolutePath() +
                     Utils.NEW_LINE + ex.getLocalizedMessage(),
-                "Read Error", JOptionPane.ERROR_MESSAGE );
+                "Read Error" );
         }
         catch( FileNotFoundException ex )
         {
-            JOptionPane.showMessageDialog( view,
-                "Cannot open file " + file.getAbsolutePath(), "File Read Error",
-                JOptionPane.ERROR_MESSAGE );
+            OptionUtils.showErrorMessage( view,
+                "Cannot open file " + file.getAbsolutePath(),
+                "File Read Error" );
         }
         catch( IOException ex )
         {
-            JOptionPane.showMessageDialog( view,
-                "I/O error reading file:" + ex.getMessage() + Utils.NEW_LINE +
-                    file.getAbsolutePath(),
-                "I/O Error", JOptionPane.ERROR_MESSAGE );
+            OptionUtils.showErrorMessage( view, "I/O error reading file:" +
+                ex.getMessage() + Utils.NEW_LINE + file.getAbsolutePath(),
+                "I/O Error" );
         }
     }
 
+    /***************************************************************************
+     * @param file
+     **************************************************************************/
     public void setCommonFile( File file )
     {
         if( input != null )

@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.jutils.data.FontDescription;
 import org.jutils.io.IDataSerializer;
 import org.jutils.io.IDataStream;
+import org.jutils.io.LengthStringSerializer;
 
 /***************************************************************************
  * 
@@ -14,14 +15,14 @@ public class FontDescriptionSerializer
     implements IDataSerializer<FontDescription>
 {
     /**  */
-    private final StringSerializer strSerializer;
+    private final LengthStringSerializer strSerializer;
 
     /***************************************************************************
      * 
      **************************************************************************/
     public FontDescriptionSerializer()
     {
-        this.strSerializer = new StringSerializer();
+        this.strSerializer = new LengthStringSerializer();
     }
 
     /***************************************************************************

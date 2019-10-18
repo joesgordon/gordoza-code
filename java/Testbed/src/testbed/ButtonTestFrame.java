@@ -1,18 +1,33 @@
 package testbed;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
+import org.jutils.OptionUtils;
+import org.jutils.SwingUtils;
 import org.jutils.io.LogUtils;
 import org.jutils.ui.GradientButtonUI;
 import org.jutils.ui.app.FrameRunner;
 import org.jutils.ui.app.IFrameApp;
 
+/**
+ * 
+ */
 public class ButtonTestFrame implements IFrameApp
 {
+    /**
+     * @{@inheritDoc}
+     */
     @Override
     public JFrame createFrame()
     {
@@ -26,6 +41,9 @@ public class ButtonTestFrame implements IFrameApp
         return frame;
     }
 
+    /**
+     * @return
+     */
     private static JComponent createToolbar()
     {
         JPanel panel = new JPanel();
@@ -33,9 +51,10 @@ public class ButtonTestFrame implements IFrameApp
         JButton refreshButton = new JButton( "Refresh UI" );
         JButton openButton = new JButton( "Show Open Dialog" );
 
-        showButton.addActionListener( new ShowMsgListener() );
-        refreshButton.addActionListener( new RefreshUiListener() );
-        openButton.addActionListener( new OpenListener() );
+        showButton.addActionListener( ( e ) -> showMessage( e.getSource() ) );
+        refreshButton.addActionListener( ( e ) -> refreshUi( e.getSource() ) );
+        openButton.addActionListener(
+            ( e ) -> showOpenDialog( e.getSource() ) );
 
         panel.add( showButton );
         panel.add( openButton );
@@ -44,6 +63,40 @@ public class ButtonTestFrame implements IFrameApp
         return panel;
     }
 
+    /**
+     * @param source
+     */
+    private static void showMessage( Object source )
+    {
+        OptionUtils.showInfoMessage( ( Component )source, "Here is a message",
+            "Here is a title" );
+    }
+
+    /**
+     * @param source
+     */
+    private static void showOpenDialog( Object source )
+    {
+        JFileChooser jfc = new JFileChooser();
+
+        jfc.showSaveDialog( ( Component )source );
+    }
+
+    /**
+     * @param source
+     */
+    private static void refreshUi( Object source )
+    {
+        JFrame frame = SwingUtils.getComponentsJFrame( ( Component )source );
+
+        SwingUtilities.updateComponentTreeUI( frame );
+
+        frame.validate();
+    }
+
+    /**
+     * @return
+     */
     private static JComponent createContentPane()
     {
         JPanel panel = new JPanel( new BorderLayout() );
@@ -82,40 +135,5 @@ public class ButtonTestFrame implements IFrameApp
 
         FrameRunner.invokeLater( new ButtonTestFrame(), true,
             UIManager.getCrossPlatformLookAndFeelClassName() );
-    }
-
-    private static class ShowMsgListener implements ActionListener
-    {
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            JOptionPane.showMessageDialog( ( Component )e.getSource(),
-                "Here is a message" );
-        }
-    }
-
-    private static class OpenListener implements ActionListener
-    {
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            JFileChooser jfc = new JFileChooser();
-
-            jfc.showSaveDialog( ( Component )e.getSource() );
-        }
-    }
-
-    private static class RefreshUiListener implements ActionListener
-    {
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            JFrame frame = ( JFrame )SwingUtilities.getAncestorOfClass(
-                JFrame.class, ( Component )e.getSource() );
-
-            SwingUtilities.updateComponentTreeUI( frame );
-
-            frame.validate();
-        }
     }
 }

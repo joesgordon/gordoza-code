@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JToolBar;
 
 import org.jutils.IconConstants;
+import org.jutils.OptionUtils;
 import org.jutils.SwingUtils;
 import org.jutils.Utils;
 import org.jutils.ValidationException;
@@ -167,7 +168,7 @@ public class GititFrameView implements IView<JFrame>
         }
         catch( IOException | ValidationException | XStreamException ex )
         {
-            SwingUtils.showErrorMessage( getView(),
+            OptionUtils.showErrorMessage( getView(),
                 "Unable to read configuration from" + Utils.NEW_LINE +
                     file.getAbsolutePath(),
                 "Read Error" );
@@ -187,7 +188,7 @@ public class GititFrameView implements IView<JFrame>
         }
         catch( IOException | ValidationException ex )
         {
-            SwingUtils.showErrorMessage( getView(),
+            OptionUtils.showErrorMessage( getView(),
                 "Unable to write configuration to" + Utils.NEW_LINE +
                     file.getAbsolutePath(),
                 "Write Error" );

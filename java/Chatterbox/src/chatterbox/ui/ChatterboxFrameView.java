@@ -1,16 +1,25 @@
 package chatterbox.ui;
 
 import java.awt.Dialog.ModalityType;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.JFrame;
+import javax.swing.JToolBar;
 
 import org.jutils.IconConstants;
+import org.jutils.OptionUtils;
 import org.jutils.SwingUtils;
 import org.jutils.io.options.OptionsSerializer;
-import org.jutils.ui.*;
+import org.jutils.ui.JGoodiesToolBar;
+import org.jutils.ui.OkDialogView;
 import org.jutils.ui.OkDialogView.OkDialogButtons;
+import org.jutils.ui.StandardFrameView;
 import org.jutils.ui.event.ActionAdapter;
 import org.jutils.ui.model.IView;
 
@@ -156,9 +165,9 @@ public class ChatterboxFrameView implements IView<JFrame>
             }
             catch( IOException ex )
             {
-                JOptionPane.showMessageDialog( getView(),
+                OptionUtils.showErrorMessage( getView(),
                     "Cannot connect to chat: " + ex.getMessage(),
-                    "Connection Error", JOptionPane.ERROR_MESSAGE );
+                    "Connection Error" );
                 return;
             }
         }
@@ -179,13 +188,20 @@ public class ChatterboxFrameView implements IView<JFrame>
      **************************************************************************/
     private static class FrameListener extends WindowAdapter
     {
+        /**  */
         private final ChatterboxFrameView view;
 
+        /**
+         * @param view
+         */
         public FrameListener( ChatterboxFrameView view )
         {
             this.view = view;
         }
 
+        /**
+         * @{@inheritDoc}
+         */
         @Override
         public void windowClosing( WindowEvent e )
         {
@@ -203,19 +219,26 @@ public class ChatterboxFrameView implements IView<JFrame>
      **************************************************************************/
     private static class HistoryListener implements ActionListener
     {
+        /**  */
         private final ChatterboxFrameView view;
 
+        /**
+         * @param view
+         */
         public HistoryListener( ChatterboxFrameView view )
         {
             this.view = view;
         }
 
+        /**
+         * @{@inheritDoc}
+         */
         @Override
         public void actionPerformed( ActionEvent e )
         {
-            JOptionPane.showMessageDialog( view.getView(),
+            OptionUtils.showErrorMessage( view.getView(),
                 "This functionality is not yet supported. Good try, though.",
-                "Not Supported", JOptionPane.ERROR_MESSAGE );
+                "Not Supported" );
         }
     }
 }

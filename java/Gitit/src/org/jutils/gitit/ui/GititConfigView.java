@@ -12,6 +12,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.jutils.OptionUtils;
 import org.jutils.SwingUtils;
 import org.jutils.gitit.data.GititConfig;
 import org.jutils.gitit.data.GititConfig.GititCommand;
@@ -120,7 +121,7 @@ public class GititConfigView implements IDataView<GititConfig>
 
             messagePanel.setData( error.toString() );
 
-            String choice = SwingUtils.showConfirmMessage( getView(),
+            String choice = OptionUtils.showOptionMessage( getView(),
                 messagePanel.getView(), "Invalid Files", choices, choices[0],
                 true );
 

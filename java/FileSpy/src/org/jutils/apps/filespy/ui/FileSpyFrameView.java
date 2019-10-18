@@ -18,13 +18,13 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
 import org.jutils.IconConstants;
+import org.jutils.OptionUtils;
 import org.jutils.SwingUtils;
 import org.jutils.Utils;
 import org.jutils.ValidationException;
@@ -326,8 +326,8 @@ public class FileSpyFrameView implements IView<JFrame>
                 }
                 catch( IOException | ValidationException ex )
                 {
-                    JOptionPane.showMessageDialog( getView(), ex.getMessage(),
-                        "I/O ERROR", JOptionPane.ERROR_MESSAGE );
+                    OptionUtils.showErrorMessage( getView(), ex.getMessage(),
+                        "I/O ERROR" );
                 }
             }
         }
@@ -369,12 +369,12 @@ public class FileSpyFrameView implements IView<JFrame>
             }
             catch( IOException ex )
             {
-                SwingUtils.showErrorMessage( getView(), ex.getMessage(),
+                OptionUtils.showErrorMessage( getView(), ex.getMessage(),
                     "I/O ERROR" );
             }
             catch( ValidationException ex )
             {
-                SwingUtils.showErrorMessage( getView(),
+                OptionUtils.showErrorMessage( getView(),
                     "The file could not be saved: " +
                         fileChosen.getAbsolutePath() + Utils.NEW_LINE +
                         ex.getMessage(),
@@ -435,7 +435,7 @@ public class FileSpyFrameView implements IView<JFrame>
         }
         catch( ValidationException ex )
         {
-            SwingUtils.showErrorMessage( getView(), ex.getMessage(),
+            OptionUtils.showErrorMessage( getView(), ex.getMessage(),
                 "Input Validation Error" );
             return;
         }

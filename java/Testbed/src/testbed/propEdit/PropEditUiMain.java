@@ -2,11 +2,18 @@ package testbed.propEdit;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
 
+import org.jutils.OptionUtils;
 import org.jutils.SwingUtils;
 import org.jutils.ui.PropEditPanel;
 import org.jutils.ui.app.FrameRunner;
@@ -40,9 +47,9 @@ public class PropEditUiMain implements IFrameApp
         JButton refreshButton = new JButton( "Refresh UI" );
         JButton openButton = new JButton( "Show Open Dialog" );
 
-        showButton.addActionListener( new ShowMsgListener() );
-        refreshButton.addActionListener( new RefreshUiListener( this ) );
-        openButton.addActionListener( new OpenListener() );
+        showButton.addActionListener( ( e ) -> showMessage( e.getSource() ) );
+        refreshButton.addActionListener( ( e ) -> refreshUI() );
+        openButton.addActionListener( ( e ) -> showOpen( e.getSource() ) );
 
         SwingUtils.setMaxComponentSize( showButton, refreshButton, openButton );
 
@@ -53,6 +60,50 @@ public class PropEditUiMain implements IFrameApp
         return panel;
     }
 
+    private void refreshUI()
+    {
+        SwingUtilities.invokeLater( new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                JFrame frame = ( JFrame )SwingUtilities.getAncestorOfClass(
+                    JFrame.class, panel.getView() );
+
+                SwingUtilities.updateComponentTreeUI( frame );
+
+                frame.invalidate();
+                frame.validate();
+                frame.repaint();
+
+                panel.setProperties( UIManager.getDefaults() );
+            }
+        } );
+    }
+
+    /**
+     * @param source
+     */
+    private void showOpen( Object source )
+    {
+        JFileChooser jfc = new JFileChooser();
+
+        jfc.showSaveDialog( ( Component )source );
+    }
+
+    /**
+     * @param source
+     */
+    private void showMessage( Object source )
+    {
+        OptionUtils.showInfoMessage( ( Component )source, "Here is a message",
+            "Here is a title" );
+    }
+
+    /**
+     * @param propPanel
+     * @return
+     */
     private JComponent createContentPane( PropEditPanel propPanel )
     {
         JPanel panel = new JPanel( new BorderLayout() );
@@ -64,11 +115,17 @@ public class PropEditUiMain implements IFrameApp
         return panel;
     }
 
+    /**
+     * @{@inheritDoc}
+     */
     @Override
     public void finalizeGui()
     {
     }
 
+    /**
+     * @param args
+     */
     public static void main( String[] args )
     {
         // Color stadBg = new Color( 0x808080 );
@@ -86,58 +143,5 @@ public class PropEditUiMain implements IFrameApp
         // UIManager.put( "OptionPane.background", stadBg );
 
         FrameRunner.invokeLater( new PropEditUiMain(), true );
-    }
-
-    private static class ShowMsgListener implements ActionListener
-    {
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            JOptionPane.showMessageDialog( ( Component )e.getSource(),
-                "Here is a message" );
-        }
-    }
-
-    private static class OpenListener implements ActionListener
-    {
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            JFileChooser jfc = new JFileChooser();
-
-            jfc.showSaveDialog( ( Component )e.getSource() );
-        }
-    }
-
-    private static class RefreshUiListener implements ActionListener
-    {
-        private final PropEditUiMain pem;
-
-        public RefreshUiListener( PropEditUiMain pem )
-        {
-            this.pem = pem;
-        }
-
-        @Override
-        public void actionPerformed( ActionEvent e )
-        {
-            SwingUtilities.invokeLater( new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    JFrame frame = ( JFrame )SwingUtilities.getAncestorOfClass(
-                        JFrame.class, pem.panel.getView() );
-
-                    SwingUtilities.updateComponentTreeUI( frame );
-
-                    frame.invalidate();
-                    frame.validate();
-                    frame.repaint();
-
-                    pem.panel.setProperties( UIManager.getDefaults() );
-                }
-            } );
-        }
     }
 }

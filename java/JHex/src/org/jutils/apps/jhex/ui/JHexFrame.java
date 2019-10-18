@@ -6,19 +6,33 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JSeparator;
+import javax.swing.JToolBar;
 
 import org.jutils.IconConstants;
+import org.jutils.OptionUtils;
 import org.jutils.SwingUtils;
 import org.jutils.apps.jhex.JHexIcons;
 import org.jutils.apps.jhex.JHexMain;
 import org.jutils.apps.jhex.data.JHexOptions;
 import org.jutils.io.options.OptionsSerializer;
-import org.jutils.ui.*;
-import org.jutils.ui.event.*;
+import org.jutils.ui.JGoodiesToolBar;
+import org.jutils.ui.RecentFilesViews;
+import org.jutils.ui.StandardFrameView;
+import org.jutils.ui.event.ActionAdapter;
+import org.jutils.ui.event.FileChooserListener;
 import org.jutils.ui.event.FileChooserListener.IFileSelected;
 import org.jutils.ui.event.FileChooserListener.ILastFile;
+import org.jutils.ui.event.FileDropTarget;
 import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
+import org.jutils.ui.event.ItemActionEvent;
+import org.jutils.ui.event.ItemActionListener;
+import org.jutils.ui.fields.ComboFormField;
 import org.jutils.ui.hex.HexBufferSize;
 import org.jutils.ui.model.IView;
 
@@ -233,13 +247,17 @@ public class JHexFrame implements IView<JFrame>
      **************************************************************************/
     private void showBufferSizeDialog()
     {
-        Object ans = JOptionPane.showInputDialog( getView(),
-            "Choose buffer size:", "Buffer Size", JOptionPane.QUESTION_MESSAGE,
-            null, HexBufferSize.values(), bufferSize );
+        ComboFormField<HexBufferSize> sizeField = new ComboFormField<HexBufferSize>(
+            "Buffer Size", HexBufferSize.values() );
 
-        if( ans != null )
+        sizeField.setValue( bufferSize );
+
+        HexBufferSize size = OptionUtils.showQuestionField( getView(),
+            "Choose buffer size:", "Buffer Size", sizeField );
+
+        if( size != null )
         {
-            bufferSize = ( HexBufferSize )ans;
+            bufferSize = size;
             editor.setBufferSize( bufferSize.size );
         }
     }
@@ -270,9 +288,9 @@ public class JHexFrame implements IView<JFrame>
      **************************************************************************/
     private void saveFile()
     {
-        JOptionPane.showMessageDialog( getView(),
-            "This functionality is not yet implemented.", "Not Yet Implemented",
-            JOptionPane.INFORMATION_MESSAGE );
+        OptionUtils.showErrorMessage( getView(),
+            "Sorry, this functionality is not yet implemented.",
+            "Not Yet Implemented" );
 
         if( "".length() < 1 )
         {
@@ -317,8 +335,8 @@ public class JHexFrame implements IView<JFrame>
         }
         catch( IOException ex )
         {
-            JOptionPane.showMessageDialog( getView(), ex.getMessage(),
-                "I/O Error", JOptionPane.ERROR_MESSAGE );
+            OptionUtils.showErrorMessage( getView(), ex.getMessage(),
+                "I/O Error" );
         }
     }
 

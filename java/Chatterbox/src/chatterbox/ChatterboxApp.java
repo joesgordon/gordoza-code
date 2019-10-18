@@ -3,8 +3,8 @@ package chatterbox;
 import java.io.IOException;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
+import org.jutils.OptionUtils;
 import org.jutils.io.options.OptionsSerializer;
 import org.jutils.ui.ExitListener;
 import org.jutils.ui.app.IFrameApp;
@@ -69,9 +69,9 @@ public class ChatterboxApp implements IFrameApp
             }
             catch( IOException ex )
             {
-                JOptionPane.showMessageDialog( frameView.getView(),
+                OptionUtils.showErrorMessage( frameView.getView(),
                     "Unable to connect: " + ex.getMessage(),
-                    "Unable to connect", JOptionPane.ERROR_MESSAGE );
+                    "Unable to connect" );
 
                 config = frameView.showConfig();
 

@@ -8,6 +8,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.jutils.OptionUtils;
 import org.jutils.SwingUtils;
 import org.jutils.data.SystemProperty;
 import org.jutils.data.UIProperty;
@@ -76,7 +77,7 @@ public final class BindingMain
             form.addField( uiField );
 
             JPanel panel = form.getView();
-            ActionListener l = ( e ) -> SwingUtils.showErrorMessage( panel,
+            ActionListener l = ( e ) -> OptionUtils.showErrorMessage( panel,
                 "Enter pressed", "Yay!" );
             SwingUtils.addKeyListener( panel, "ENTER", l, "enterpressed",
                 true );

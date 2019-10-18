@@ -8,7 +8,6 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
@@ -20,6 +19,7 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 
+import org.jutils.OptionUtils;
 import org.jutils.Utils;
 import org.jutils.apps.filespy.data.LineMatch;
 import org.jutils.apps.filespy.data.SearchRecord;
@@ -244,9 +244,8 @@ public class ResultsView implements IView<JComponent>
                     }
                     catch( Exception ex )
                     {
-                        JOptionPane.showMessageDialog( panel.view,
-                            ex.getMessage(), "ERROR",
-                            JOptionPane.ERROR_MESSAGE );
+                        OptionUtils.showErrorMessage( panel.view,
+                            ex.getMessage(), "ERROR" );
                     }
                     // }
                 }

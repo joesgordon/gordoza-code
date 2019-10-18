@@ -19,7 +19,6 @@ import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JToggleButton;
@@ -28,6 +27,7 @@ import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 
 import org.jutils.IconConstants;
+import org.jutils.OptionUtils;
 import org.jutils.SwingUtils;
 import org.jutils.apps.jhex.JHexIcons;
 import org.jutils.apps.jhex.task.DataDistributionTask;
@@ -49,6 +49,8 @@ import org.jutils.ui.event.ItemActionEvent;
 import org.jutils.ui.event.ItemActionListener;
 import org.jutils.ui.event.RequestFocusListener;
 import org.jutils.ui.fields.HexBytesFormField;
+import org.jutils.ui.fields.HexLongFormField;
+import org.jutils.ui.fields.LongFormField;
 import org.jutils.ui.hex.BlockBuffer;
 import org.jutils.ui.hex.BlockBuffer.DataBlock;
 import org.jutils.ui.hex.ByteBuffer;
@@ -57,6 +59,10 @@ import org.jutils.ui.hex.HexTable.IRangeSelectedListener;
 import org.jutils.ui.hex.IByteBuffer;
 import org.jutils.ui.hex.ValueView;
 import org.jutils.ui.model.IDataView;
+import org.jutils.ui.validation.AggregateValidityChangedManager;
+import org.jutils.ui.validation.IValidationField;
+import org.jutils.ui.validation.IValidityChangedListener;
+import org.jutils.ui.validation.Validity;
 
 /*******************************************************************************
  * Displays the contents of a file in a paginated hex table.
@@ -309,8 +315,7 @@ public class HexFileView implements IDataView<File>
         }
         catch( IOException ex )
         {
-            JOptionPane.showMessageDialog( getView(), ex.getMessage(), "ERROR",
-                JOptionPane.ERROR_MESSAGE );
+            OptionUtils.showErrorMessage( getView(), ex.getMessage(), "ERROR" );
         }
     }
 
@@ -350,20 +355,24 @@ public class HexFileView implements IDataView<File>
      **************************************************************************/
     private void showGotoDialog()
     {
-        Object ans = JOptionPane.showInputDialog( getView(),
-            "Enter Offset in hexadecimal:", ( Integer )0 );
+        HexDecLongView offsetView = new HexDecLongView( "Offset" );
+
+        Long ans = OptionUtils.showQuestionView( getView(), "Enter offset:",
+            "Enter Offset", offsetView );
+
         if( ans != null )
         {
-            try
+            Validity validity = offsetView.getValidity();
+
+            if( validity.isValid )
             {
-                long offset = Long.parseLong( ans.toString(), 16 );
+                long offset = ans;
                 highlightOffset( offset, 1 );
             }
-            catch( NumberFormatException ex )
+            else
             {
-                JOptionPane.showMessageDialog( getView(),
-                    "'" + ans.toString() + "' is not a hexadecimal string.",
-                    "ERROR", JOptionPane.ERROR_MESSAGE );
+                OptionUtils.showErrorMessage( getView(), validity.reason,
+                    "Input Error" );
             }
         }
     }
@@ -392,14 +401,14 @@ public class HexFileView implements IDataView<File>
         }
         catch( FileNotFoundException ex )
         {
-            SwingUtils.showErrorMessage(
+            OptionUtils.showErrorMessage(
                 getView(), "Unable to open file: " +
                     getData().getAbsolutePath() + " because " + ex.getMessage(),
                 "File Not Found Error" );
         }
         catch( IOException ex )
         {
-            SwingUtils.showErrorMessage(
+            OptionUtils.showErrorMessage(
                 getView(), "Unable to read file: " +
                     getData().getAbsolutePath() + " because " + ex.getMessage(),
                 "I/O Error" );
@@ -436,14 +445,14 @@ public class HexFileView implements IDataView<File>
         }
         catch( FileNotFoundException ex )
         {
-            SwingUtils.showErrorMessage(
+            OptionUtils.showErrorMessage(
                 getView(), "Unable to open file: " +
                     getData().getAbsolutePath() + " because " + ex.getMessage(),
                 "File Not Found Error" );
         }
         catch( IOException ex )
         {
-            SwingUtils.showErrorMessage(
+            OptionUtils.showErrorMessage(
                 getView(), "Unable to read file: " +
                     getData().getAbsolutePath() + " because " + ex.getMessage(),
                 "I/O Error" );
@@ -468,21 +477,19 @@ public class HexFileView implements IDataView<File>
         hexField.getTextField().addAncestorListener(
             new RequestFocusListener() );
 
-        int ans = JOptionPane.showOptionDialog( getView(), form.getView(),
-            "Enter Hexadecimal String", JOptionPane.OK_CANCEL_OPTION,
-            JOptionPane.QUESTION_MESSAGE, null, null, null );
+        byte [] bytes = OptionUtils.showQuestionField( getView(),
+            "Enter Hexadecimal String", "Search", hexField );
 
-        if( ans == JOptionPane.OK_OPTION )
+        if( bytes != null )
         {
             if( !hexField.getValidity().isValid )
             {
-                JOptionPane.showMessageDialog( getView(),
-                    hexField.getValidity().reason, "Invalid Hexadecimal Entry",
-                    JOptionPane.ERROR_MESSAGE );
+                OptionUtils.showErrorMessage( getView(),
+                    hexField.getValidity().reason,
+                    "Invalid Hexadecimal Entry" );
                 return;
             }
 
-            byte [] bytes = hexField.getValue();
             long fromOffset = getSelectedOffset();
 
             fromOffset = fromOffset > -1 ? fromOffset : 0;
@@ -538,14 +545,14 @@ public class HexFileView implements IDataView<File>
         }
         catch( FileNotFoundException ex )
         {
-            SwingUtils.showErrorMessage(
+            OptionUtils.showErrorMessage(
                 getView(), "Unable to open file: " +
                     getData().getAbsolutePath() + " because " + ex.getMessage(),
                 "File Not Found Error" );
         }
         catch( IOException ex )
         {
-            SwingUtils.showErrorMessage(
+            OptionUtils.showErrorMessage(
                 getView(), "Unable to read file: " +
                     getData().getAbsolutePath() + " because " + ex.getMessage(),
                 "I/O Error" );
@@ -611,8 +618,7 @@ public class HexFileView implements IDataView<File>
         }
         catch( IOException ex )
         {
-            JOptionPane.showMessageDialog( view, ex.getMessage(), "ERROR",
-                JOptionPane.ERROR_MESSAGE );
+            OptionUtils.showErrorMessage( view, ex.getMessage(), "ERROR" );
         }
     }
 
@@ -666,8 +672,7 @@ public class HexFileView implements IDataView<File>
             }
             catch( IOException ex )
             {
-                JOptionPane.showMessageDialog( view, ex.getMessage(), "ERROR",
-                    JOptionPane.ERROR_MESSAGE );
+                OptionUtils.showErrorMessage( view, ex.getMessage(), "ERROR" );
             }
         }
     }
@@ -702,7 +707,7 @@ public class HexFileView implements IDataView<File>
         }
         catch( IOException ex )
         {
-            SwingUtils.showErrorMessage( getView(), ex.getMessage(),
+            OptionUtils.showErrorMessage( getView(), ex.getMessage(),
                 "I/O Error" );
         }
     }
@@ -798,8 +803,7 @@ public class HexFileView implements IDataView<File>
         }
         catch( IOException ex )
         {
-            JOptionPane.showMessageDialog( getView(), ex.getMessage(), "ERROR",
-                JOptionPane.ERROR_MESSAGE );
+            OptionUtils.showErrorMessage( getView(), ex.getMessage(), "ERROR" );
         }
     }
 
@@ -972,6 +976,111 @@ public class HexFileView implements IDataView<File>
 
                 view.search( view.lastSearch, off, isForward );
             }
+        }
+    }
+
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static class HexDecLongView
+        implements IDataView<Long>, IValidationField
+    {
+        /**  */
+        private final LongFormField decimalField;
+        /**  */
+        private final HexLongFormField hexField;
+        /**  */
+        private final JPanel view;
+
+        /**  */
+        private final AggregateValidityChangedManager validityManager;
+
+        /**
+         * @param name
+         */
+        public HexDecLongView( String name )
+        {
+            this.decimalField = new LongFormField( name + " (decimal)" );
+            this.hexField = new HexLongFormField( name + " (hex)" );
+            this.view = createView();
+
+            this.validityManager = new AggregateValidityChangedManager();
+
+            validityManager.addField( decimalField );
+            validityManager.addField( hexField );
+
+            decimalField.setUpdater( ( d ) -> hexField.setValue( d ) );
+            hexField.setUpdater( ( d ) -> decimalField.setValue( d ) );
+
+            setData( 0L );
+        }
+
+        /**
+         * @return
+         */
+        private JPanel createView()
+        {
+            StandardFormView form = new StandardFormView();
+
+            form.addField( decimalField );
+            form.addField( hexField );
+
+            return form.getView();
+        }
+
+        /**
+         * @{@inheritDoc}
+         */
+        @Override
+        public JComponent getView()
+        {
+            return view;
+        }
+
+        /**
+         * @{@inheritDoc}
+         */
+        @Override
+        public Long getData()
+        {
+            return decimalField.getValue();
+        }
+
+        /**
+         * @{@inheritDoc}
+         */
+        @Override
+        public void setData( Long data )
+        {
+            decimalField.setValue( data );
+            hexField.setValue( data );
+        }
+
+        /**
+         * @{@inheritDoc}
+         */
+        @Override
+        public void addValidityChanged( IValidityChangedListener l )
+        {
+            validityManager.addValidityChanged( l );
+        }
+
+        /**
+         * @{@inheritDoc}
+         */
+        @Override
+        public void removeValidityChanged( IValidityChangedListener l )
+        {
+            validityManager.removeValidityChanged( l );
+        }
+
+        /**
+         * @{@inheritDoc}
+         */
+        @Override
+        public Validity getValidity()
+        {
+            return validityManager.getValidity();
         }
     }
 }
