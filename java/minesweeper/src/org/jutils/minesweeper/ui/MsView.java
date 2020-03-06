@@ -1,7 +1,6 @@
 package org.jutils.minesweeper.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -26,6 +25,7 @@ import javax.swing.border.EmptyBorder;
 import org.jutils.IconConstants;
 import org.jutils.SwingUtils;
 import org.jutils.minesweeper.data.Difficulty;
+import org.jutils.minesweeper.data.GameOptions;
 import org.jutils.minesweeper.data.GameStatus;
 import org.jutils.minesweeper.data.GameStatus.GameResult;
 import org.jutils.minesweeper.data.GridSpace;
@@ -39,13 +39,6 @@ import org.jutils.ui.model.IView;
  ******************************************************************************/
 public class MsView implements IView<JComponent>
 {
-    /**  */
-    public static final Color FORM_BG = new Color( 0x0099CC );
-    /**  */
-    public static final Color TILE_BG = new Color( 0x0066CC );
-    /**  */
-    public static final Color GAME_BG = new Color( 0x66CCFF );
-
     /**  */
     private final JComponent view;
     /**  */
@@ -116,7 +109,7 @@ public class MsView implements IView<JComponent>
     /***************************************************************************
      * 
      **************************************************************************/
-    private void resetBoard()
+    public void resetBoard()
     {
         Difficulty difficulty = difficultyField.getValue();
 
@@ -151,9 +144,13 @@ public class MsView implements IView<JComponent>
             for( int r = 0; r < size; r++ )
             {
                 int index = r * size + c;
+                boolean isBottom = r == ( size - 1 );
+                boolean isRight = c == ( size - 1 );
+
                 GridSpace space = status.spaces.get( index );
                 GridBagConstraints constraints;
-                GridSpaceView sview = new GridSpaceView( space );
+                GridSpaceView sview = new GridSpaceView( space, status.options,
+                    isBottom, isRight );
 
                 LabelMouseListener ml = new LabelMouseListener(
                     ( b ) -> handleClick( space, b ) );
@@ -220,7 +217,7 @@ public class MsView implements IView<JComponent>
     {
         JPanel panel = new JPanel( new BorderLayout() );
 
-        grid.setBackground( FORM_BG );
+        grid.setBackground( status.options.palette.form );
         grid.setBorder( new EmptyBorder( 0, 10, 10, 10 ) );
 
         panel.add( createControls(), BorderLayout.NORTH );
@@ -237,7 +234,7 @@ public class MsView implements IView<JComponent>
         JPanel panel = new JPanel( new GridBagLayout() );
         GridBagConstraints constraints;
 
-        panel.setBackground( FORM_BG );
+        panel.setBackground( status.options.palette.form );
 
         int x = 0;
 
@@ -300,6 +297,14 @@ public class MsView implements IView<JComponent>
     public JComponent getView()
     {
         return view;
+    }
+
+    /***************************************************************************
+     * @return
+     **************************************************************************/
+    public GameOptions getOptions()
+    {
+        return status.options;
     }
 
     /***************************************************************************

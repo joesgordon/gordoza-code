@@ -13,6 +13,8 @@ import org.jutils.minesweeper.data.GridSpace.SpaceStatus;
  ******************************************************************************/
 public class GameStatus
 {
+    public final GameOptions options;
+
     /**  */
     public Difficulty difficulty;
     /**  */
@@ -36,6 +38,8 @@ public class GameStatus
      **************************************************************************/
     public GameStatus()
     {
+        this.options = new GameOptions();
+
         this.difficulty = Difficulty.EASY;
         this.started = false;
         this.flagsLeft = difficulty.numFlags;
@@ -135,13 +139,13 @@ public class GameStatus
 
             if( canToggle )
             {
-                space.toggleFlag();
+                space.toggleFlag( options.enableQuestion );
 
                 if( space.status == SpaceStatus.FLAGGED )
                 {
                     flagsLeft--;
                 }
-                else
+                else if( space.status == SpaceStatus.TILE )
                 {
                     flagsLeft++;
                 }
@@ -172,9 +176,22 @@ public class GameStatus
                 return GameResult.LOST;
             }
 
+            List<GridSpace> adjacent = getAdjacent( space );
+
             if( space.numAdj == 0 )
             {
-                revealAdditional( space );
+                for( GridSpace adjSpace : adjacent )
+                {
+                    if( adjSpace.status == SpaceStatus.TILE )
+                    {
+                        reveal( adjSpace );
+                    }
+                }
+            }
+
+            for( GridSpace adjSpace : adjacent )
+            {
+                adjSpace.setBorder( space );
             }
 
             if( revealed == difficulty.getSafeCount() )
@@ -206,9 +223,9 @@ public class GameStatus
             time = toMillis( LocalDateTime.now() );
         }
 
-        if( time > 999000L )
+        if( time > 999L )
         {
-            time = 999000L;
+            time = 999L;
         }
 
         return time;
@@ -227,27 +244,6 @@ public class GameStatus
 
     /***************************************************************************
      * @param space
-     **************************************************************************/
-    private void revealAdditional( GridSpace space )
-    {
-        // for( GridSpace adjSpace : getCross( space ) )
-        for( GridSpace adjSpace : getAdjacent( space ) )
-        {
-            if( adjSpace.status == SpaceStatus.TILE )
-            {
-                adjSpace.status = SpaceStatus.REVEALED;
-                revealed++;
-
-                if( adjSpace.numAdj == 0 )
-                {
-                    revealAdditional( adjSpace );
-                }
-            }
-        }
-    }
-
-    /***************************************************************************
-     * @param space
      * @return
      **************************************************************************/
     private List<GridSpace> getAdjacent( GridSpace space )
@@ -261,7 +257,8 @@ public class GameStatus
             {
                 int index = toIndex( x, y );
 
-                if( x > -1 && y > -1 && x < size && y < size )
+                if( x > -1 && y > -1 && x < size && y < size &&
+                    index != space.index )
                 {
                     GridSpace adjSpace = spaces.get( index );
 
@@ -291,14 +288,26 @@ public class GameStatus
         for( GridSpace space : spaces )
         {
             space.status = SpaceStatus.REVEALED;
+
+            space.isTopBorder = false;
+            space.isLeftBorder = false;
+            space.isBottomBorder = false;
+            space.isRightBorder = false;
         }
     }
 
+    /***************************************************************************
+     * 
+     **************************************************************************/
     public static enum GameResult
     {
+        /**  */
         NOT_STARTED,
+        /**  */
         PLAYING,
+        /**  */
         WON,
+        /**  */
         LOST;
     }
 }

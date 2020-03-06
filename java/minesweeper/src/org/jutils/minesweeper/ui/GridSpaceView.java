@@ -8,9 +8,13 @@ import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 import org.jutils.minesweeper.MsIcons;
+import org.jutils.minesweeper.data.GameOptions;
 import org.jutils.minesweeper.data.GridSpace;
 import org.jutils.ui.model.IView;
 
@@ -23,6 +27,18 @@ public class GridSpaceView implements IView<JComponent>
     public final GridSpace space;
 
     /**  */
+    private final GameOptions options;
+
+    /**  */
+    private final boolean isTopEdge;
+    /**  */
+    private final boolean isLeftEdge;
+    /**  */
+    private final boolean isBottomEdge;
+    /**  */
+    private final boolean isRightEdge;
+
+    /**  */
     private final JLabel label;
     /**  */
     private final FlagIcon flag;
@@ -31,10 +47,20 @@ public class GridSpaceView implements IView<JComponent>
 
     /***************************************************************************
      * @param space
+     * @param options
+     * @param isBottomEdge
+     * @param isRightEdge
      **************************************************************************/
-    public GridSpaceView( GridSpace space )
+    public GridSpaceView( GridSpace space, GameOptions options,
+        boolean isBottomEdge, boolean isRightEdge )
     {
         this.space = space;
+        this.options = options;
+        this.isTopEdge = space.y == 0;
+        this.isLeftEdge = space.x == 0;
+        this.isBottomEdge = isBottomEdge;
+        this.isRightEdge = isRightEdge;
+
         this.label = new JLabel();
         this.flag = new FlagIcon( 22 );
         this.mine = MsIcons.getIcon( "bomb024.png" );
@@ -50,7 +76,7 @@ public class GridSpaceView implements IView<JComponent>
         label.setMaximumSize( label.getPreferredSize() );
 
         label.setOpaque( true );
-        label.setBackground( MsView.FORM_BG );
+        label.setBackground( options.palette.form );
 
         repaint();
     }
@@ -61,33 +87,62 @@ public class GridSpaceView implements IView<JComponent>
     public void repaint()
     {
         String text = "";
-        Color bdrClr = MsView.TILE_BG.darker();
+        Color bdrClr = options.palette.border;
         Color bg = label.getBackground();
         Icon icon = null;
 
-        int bw = 2;
+        boolean isLight = ( space.x % 2 ) == ( space.y % 2 );
 
-        int t = space.y == 0 ? bw : 0;
-        int l = space.x == 0 ? bw : 0;
-        int b = bw;
-        int r = bw;
+        int bw = 1;
+
+        boolean isTop = isTopEdge || space.isTopBorder;
+        boolean isLeft = isLeftEdge || space.isLeftBorder;
+        boolean isBottom = isBottomEdge || space.isBottomBorder;
+        boolean isRight = isRightEdge || space.isRightBorder;
+
+        int tc = isTop ? bw : 0;
+        int lc = isLeft ? bw : 0;
+        int bc = isBottom ? bw : 0;
+        int rc = isRight ? bw : 0;
+
+        int te = isTop ? 0 : bw;
+        int le = isLeft ? 0 : bw;
+        int be = isBottom ? 0 : bw;
+        int re = isRight ? 0 : bw;
+
+        // t = 2;
+        // l = 2;
+        // b = 2;
+        // r = 2;
 
         switch( space.status )
         {
             case TILE:
                 text = "";
-                bg = MsView.TILE_BG;
+                bg = isLight ? options.palette.tileLight
+                    : options.palette.tileDark;
+                icon = null;
+                break;
+
+            case QUESTION:
+                text = "?";
+                bg = isLight ? options.palette.tileLight
+                    : options.palette.tileDark;
+                icon = null;
                 break;
 
             case FLAGGED:
                 text = null;
-                bg = MsView.TILE_BG;
+                bg = isLight ? options.palette.tileLight
+                    : options.palette.tileDark;
                 icon = flag;
                 break;
 
             case REVEALED:
                 text = space.numAdj == 0 ? "" : "" + space.numAdj;
-                bg = MsView.GAME_BG;
+                bg = isLight ? options.palette.boardLight
+                    : options.palette.boardDark;
+                icon = null;
                 break;
 
             default:
@@ -101,7 +156,14 @@ public class GridSpaceView implements IView<JComponent>
             bg = Color.red;
         }
 
-        MatteBorder border = new MatteBorder( t, l, b, r, bdrClr );
+        // bdrClr = bg;
+
+        MatteBorder cb = new MatteBorder( tc, lc, bc, rc, bdrClr );
+        EmptyBorder eb = new EmptyBorder( te, le, be, re );
+
+        Border border;
+
+        border = new CompoundBorder( cb, eb );
 
         label.setText( text );
         label.setBackground( bg );

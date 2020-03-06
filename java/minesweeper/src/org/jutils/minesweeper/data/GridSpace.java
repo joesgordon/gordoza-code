@@ -12,6 +12,15 @@ public class GridSpace
     /**  */
     public final int y;
 
+    /** */
+    public boolean isTopBorder;
+    /** */
+    public boolean isLeftBorder;
+    /** */
+    public boolean isBottomBorder;
+    /** */
+    public boolean isRightBorder;
+
     /**
      * The number of adjacent mines; < 0 indicates this space is a mine.
      * @see #isMine()
@@ -38,13 +47,18 @@ public class GridSpace
     }
 
     /***************************************************************************
-     * 
+     * @param enableQuestion
      **************************************************************************/
-    public void toggleFlag()
+    public void toggleFlag( boolean enableQuestion )
     {
         switch( status )
         {
             case TILE:
+                status = enableQuestion ? SpaceStatus.QUESTION
+                    : SpaceStatus.FLAGGED;
+                break;
+
+            case QUESTION:
                 status = SpaceStatus.FLAGGED;
                 break;
 
@@ -98,12 +112,65 @@ public class GridSpace
     }
 
     /***************************************************************************
+     * @param space
+     **************************************************************************/
+    public void setBorder( GridSpace space )
+    {
+        boolean border = false;
+
+        if( ( status != SpaceStatus.REVEALED &&
+            space.status == SpaceStatus.REVEALED ) ||
+            ( status == SpaceStatus.REVEALED &&
+                space.status != SpaceStatus.REVEALED ) )
+        {
+            border = true;
+        }
+
+        // LogUtils.printDebug( "Checking %d,%d against %d,%d: %s vs. %s => %s",
+        // x,
+        // y, space.x, space.y, status, space.status, border );
+
+        if( space.y == y )
+        {
+            if( space.x == x - 1 )
+            {
+                // LogUtils.printDebug( "Setting left to " + border );
+                isLeftBorder = border;
+                space.isRightBorder = border;
+            }
+            else if( space.x == x + 1 )
+            {
+                // LogUtils.printDebug( "Setting Right to " + border );
+                isRightBorder = border;
+                space.isLeftBorder = border;
+            }
+        }
+        else if( space.x == x )
+        {
+            if( space.y == y - 1 )
+            {
+                // LogUtils.printDebug( "Setting Top to " + border );
+                isTopBorder = border;
+                space.isBottomBorder = border;
+            }
+            if( space.y == y + 1 )
+            {
+                // LogUtils.printDebug( "Setting bottom to " + border );
+                isBottomBorder = border;
+                space.isTopBorder = border;
+            }
+        }
+    }
+
+    /***************************************************************************
      * 
      **************************************************************************/
     public static enum SpaceStatus
     {
         /**  */
         TILE,
+        /**  */
+        QUESTION,
         /**  */
         FLAGGED,
         /**  */
