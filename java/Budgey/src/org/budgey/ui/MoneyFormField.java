@@ -5,9 +5,9 @@ import javax.swing.JComponent;
 import org.budgey.data.Money;
 import org.jutils.ui.event.updater.IUpdater;
 import org.jutils.ui.fields.IDataFormField;
-import org.jutils.ui.validation.*;
-import org.jutils.ui.validators.DataTextValidator;
-import org.jutils.ui.validators.ITextValidator;
+import org.jutils.ui.fields.ParserFormField;
+import org.jutils.ui.validation.IValidityChangedListener;
+import org.jutils.ui.validation.Validity;
 
 /*******************************************************************************
  * 
@@ -15,41 +15,29 @@ import org.jutils.ui.validators.ITextValidator;
 public class MoneyFormField implements IDataFormField<Money>
 {
     /**  */
-    private final ValidationTextView field;
-    /**  */
-    private final String fieldName;
-
-    /**  */
-    private Money amount;
-    /**  */
-    private IUpdater<Money> updater;
+    private final ParserFormField<Money> field;
 
     /***************************************************************************
-     * @param fieldName
+     * @param name the name of the form field to be returned by
+     * {@link IDataFormField#getName()}.
      **************************************************************************/
-    public MoneyFormField( String fieldName )
+    public MoneyFormField( String name )
     {
-        this.fieldName = fieldName;
-        this.field = new ValidationTextView();
-
-        ITextValidator textValidator;
-
-        textValidator = new DataTextValidator<>( new MoneyParser(),
-            new ValueUpdater( this ) );
-        field.getField().setValidator( textValidator );
+        this.field = new ParserFormField<>( name, new MoneyParser(),
+            ( m ) -> toString( m ) );
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public String getName()
     {
-        return fieldName;
+        return field.getName();
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public JComponent getView()
@@ -58,47 +46,43 @@ public class MoneyFormField implements IDataFormField<Money>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public Money getValue()
     {
-        return amount;
+        return field.getValue();
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void setValue( Money value )
     {
-        this.amount = value;
-
-        String text = value == null ? "" : value.toString();
-
-        field.setText( text );
+        field.setValue( value );
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void setUpdater( IUpdater<Money> updater )
     {
-        this.updater = updater;
+        field.setUpdater( updater );
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public IUpdater<Money> getUpdater()
     {
-        return updater;
+        return field.getUpdater();
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void setEditable( boolean editable )
@@ -107,52 +91,38 @@ public class MoneyFormField implements IDataFormField<Money>
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void addValidityChanged( IValidityChangedListener l )
     {
-        field.getField().addValidityChanged( l );
+        field.addValidityChanged( l );
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public void removeValidityChanged( IValidityChangedListener l )
     {
-        field.getField().removeValidityChanged( l );
+        field.removeValidityChanged( l );
     }
 
     /***************************************************************************
-     * 
+     * {@inheritDoc}
      **************************************************************************/
     @Override
     public Validity getValidity()
     {
-        return field.getField().getValidity();
+        return field.getValidity();
     }
 
     /***************************************************************************
-     * 
+     * @param value
+     * @return
      **************************************************************************/
-    private static class ValueUpdater implements IUpdater<Money>
+    private String toString( Money value )
     {
-        private final MoneyFormField view;
-
-        public ValueUpdater( MoneyFormField view )
-        {
-            this.view = view;
-        }
-
-        @Override
-        public void update( Money data )
-        {
-            view.amount = data;
-            if( view.updater != null )
-            {
-                view.updater.update( data );
-            }
-        }
+        return value == null ? "" : value.toString();
     }
 }

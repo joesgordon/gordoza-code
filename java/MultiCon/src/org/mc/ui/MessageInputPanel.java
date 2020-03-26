@@ -54,8 +54,8 @@ public class MessageInputPanel implements IView<JComponent>
     public MessageInputPanel( IUpdater<NetMessage> msgNotifier )
     {
         this.scheduleField = new JCheckBox( "Schedule Messages" );
-        this.rateField = new DoubleFormField( "Message Rate", "Hz", 4, null,
-            1.0, 1000.0 );
+        this.rateField = new DoubleFormField( "Message Rate", "Hz", 4, 1.0,
+            1000.0 );
         this.autoEnabledCheckbox = new JCheckBox( "Auto-Reply" );
 
         this.adHocView = new TextHexView();

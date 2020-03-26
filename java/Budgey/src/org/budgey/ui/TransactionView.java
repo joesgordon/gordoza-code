@@ -1,6 +1,9 @@
 package org.budgey.ui;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionListener;
 
 import javax.swing.JLabel;
@@ -34,8 +37,8 @@ public class TransactionView implements IDataView<Transaction>
      **************************************************************************/
     public TransactionView()
     {
-        secondPartyField = new StringFormField( "Seondary Party", 20, 3, null );
-        tagField = new StringFormField( "Tags", 20, 0, null );
+        secondPartyField = new StringFormField( "Seondary Party", 3, null );
+        tagField = new StringFormField( "Tags", 0, null );
         amountField = new MoneyFormField( "Amount" );
         // dateField = new DateField( "Date" );
 
