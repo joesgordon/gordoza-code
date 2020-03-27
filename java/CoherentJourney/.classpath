@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/JUtils"/>
-	<classpathentry kind="lib" path="/JUtilsLibs/libs/jgoodies.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jutils.core"/>
+	<classpathentry kind="lib" path="/jutils.libs/libs/jgoodies.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

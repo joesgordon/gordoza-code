@@ -2,16 +2,16 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/FileSpy"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/JExplorer"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/JHex"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/JUtils"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Duak"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jutils.filespy"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jutils.explorer"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jutils.hexedit"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jutils.core"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jutils.duak"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Budgey"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/EagleSheet"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/JPlot"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jutils.plot"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Taskflow"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Multicon"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jutils.multicon"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Chatterbox"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

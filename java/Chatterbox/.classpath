@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="tests"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/JUtils"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Multicon"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jutils.core"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jutils.multicon"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
