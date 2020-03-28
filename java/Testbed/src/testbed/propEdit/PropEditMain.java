@@ -6,8 +6,8 @@ import java.util.Map.Entry;
 
 import javax.swing.*;
 
-import org.jutils.io.LogUtils;
-import org.jutils.ui.app.*;
+import org.jutils.core.io.LogUtils;
+import org.jutils.core.ui.app.*;
 
 public class PropEditMain
 {

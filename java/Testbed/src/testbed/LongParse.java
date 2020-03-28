@@ -4,7 +4,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jutils.io.LogUtils;
+import org.jutils.core.io.LogUtils;
 
 public class LongParse
 {

@@ -11,11 +11,11 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.jutils.apps.filespy.data.LineMatch;
 import org.jutils.apps.filespy.data.SearchRecord;
-import org.jutils.concurrent.IConsumer;
-import org.jutils.concurrent.ITaskHandler;
-import org.jutils.io.IOUtils;
-import org.jutils.pattern.IMatcher;
-import org.jutils.pattern.Match;
+import org.jutils.core.concurrent.IConsumer;
+import org.jutils.core.concurrent.ITaskHandler;
+import org.jutils.core.io.IOUtils;
+import org.jutils.core.pattern.IMatcher;
+import org.jutils.core.pattern.Match;
 
 /*******************************************************************************
  * 

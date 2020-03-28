@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import org.duak.data.FileInfo;
-import org.jutils.task.*;
+import org.jutils.core.task.*;
 
 /*******************************************************************************
  * 

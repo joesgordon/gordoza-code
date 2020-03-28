@@ -2,9 +2,9 @@ package org.duak;
 
 import java.io.File;
 
-import org.jutils.io.IOUtils;
-import org.jutils.io.options.IOptionsCreator;
-import org.jutils.io.options.OptionsSerializer;
+import org.jutils.core.io.IOUtils;
+import org.jutils.core.io.options.IOptionsCreator;
+import org.jutils.core.io.options.OptionsSerializer;
 
 /*******************************************************************************
  * 

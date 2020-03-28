@@ -5,7 +5,7 @@ import java.io.File;
 import javax.swing.JFrame;
 
 import org.jutils.apps.jhex.ui.JHexFrame;
-import org.jutils.ui.app.IFrameApp;
+import org.jutils.core.ui.app.IFrameApp;
 
 /*******************************************************************************
  * Defines the {@link IFrameApp} that starts the JHex application.

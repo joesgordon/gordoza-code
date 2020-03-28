@@ -5,14 +5,14 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import org.jutils.SwingUtils;
-import org.jutils.ValidationException;
-import org.jutils.ui.ExitListener;
-import org.jutils.ui.StandardFormView;
-import org.jutils.ui.app.FrameRunner;
-import org.jutils.ui.app.IFrameApp;
-import org.jutils.ui.validation.*;
-import org.jutils.ui.validators.ITextValidator;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.ValidationException;
+import org.jutils.core.ui.ExitListener;
+import org.jutils.core.ui.StandardFormView;
+import org.jutils.core.ui.app.FrameRunner;
+import org.jutils.core.ui.app.IFrameApp;
+import org.jutils.core.ui.validation.*;
+import org.jutils.core.ui.validators.ITextValidator;
 
 public class ValidationTestApp implements IFrameApp
 {

@@ -13,12 +13,12 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import org.jutils.OptionUtils;
-import org.jutils.SwingUtils;
-import org.jutils.io.LogUtils;
-import org.jutils.ui.GradientButtonUI;
-import org.jutils.ui.app.FrameRunner;
-import org.jutils.ui.app.IFrameApp;
+import org.jutils.core.OptionUtils;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.io.LogUtils;
+import org.jutils.core.ui.GradientButtonUI;
+import org.jutils.core.ui.app.FrameRunner;
+import org.jutils.core.ui.app.IFrameApp;
 
 /**
  * 

@@ -4,9 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.jutils.apps.summer.data.SumFile;
-import org.jutils.io.cksum.*;
-import org.jutils.task.*;
-import org.jutils.ui.hex.HexUtils;
+import org.jutils.core.io.cksum.*;
+import org.jutils.core.task.*;
+import org.jutils.core.ui.hex.HexUtils;
 
 /*******************************************************************************
  * 

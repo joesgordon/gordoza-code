@@ -8,17 +8,17 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import org.jutils.OptionUtils;
-import org.jutils.SwingUtils;
-import org.jutils.data.SystemProperty;
-import org.jutils.data.UIProperty;
-import org.jutils.io.parsers.StringParser;
-import org.jutils.ui.StandardFormView;
-import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.app.FrameRunner;
-import org.jutils.ui.app.IFrameApp;
-import org.jutils.ui.fields.ComboFormField;
-import org.jutils.ui.fields.StringFormField;
+import org.jutils.core.OptionUtils;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.data.SystemProperty;
+import org.jutils.core.data.UIProperty;
+import org.jutils.core.io.parsers.StringParser;
+import org.jutils.core.ui.StandardFormView;
+import org.jutils.core.ui.StandardFrameView;
+import org.jutils.core.ui.app.FrameRunner;
+import org.jutils.core.ui.app.IFrameApp;
+import org.jutils.core.ui.fields.ComboFormField;
+import org.jutils.core.ui.fields.StringFormField;
 
 /**
  *

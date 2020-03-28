@@ -6,10 +6,10 @@ import java.io.IOException;
 
 import javax.swing.*;
 
-import org.jutils.*;
-import org.jutils.ui.JGoodiesToolBar;
-import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.model.IView;
+import org.jutils.core.*;
+import org.jutils.core.ui.JGoodiesToolBar;
+import org.jutils.core.ui.StandardFrameView;
+import org.jutils.core.ui.model.IView;
 import org.mc.MulticonIcons;
 
 /*******************************************************************************

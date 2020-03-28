@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.swing.Icon;
 
-import org.jutils.IconConstants;
+import org.jutils.core.IconConstants;
 
 public class JExplorerIcons
 {

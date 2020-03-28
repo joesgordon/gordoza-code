@@ -4,7 +4,7 @@ import javax.swing.SwingUtilities;
 
 import org.jutils.apps.filespy.data.SearchRecord;
 import org.jutils.apps.filespy.ui.ResultsView;
-import org.jutils.ui.StatusBarPanel;
+import org.jutils.core.ui.StatusBarPanel;
 
 /*******************************************************************************
  *

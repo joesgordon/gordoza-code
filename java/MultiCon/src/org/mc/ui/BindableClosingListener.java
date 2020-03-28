@@ -5,7 +5,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 
-import org.jutils.OptionUtils;
+import org.jutils.core.OptionUtils;
 import org.mc.ui.BindingFrameView.IBindableView;
 
 /*******************************************************************************

@@ -8,9 +8,9 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 import org.jutils.apps.filespy.ui.SearchParamsView;
-import org.jutils.ui.StatusBarPanel;
-import org.jutils.ui.app.FrameRunner;
-import org.jutils.ui.app.IFrameApp;
+import org.jutils.core.ui.StatusBarPanel;
+import org.jutils.core.ui.app.FrameRunner;
+import org.jutils.core.ui.app.IFrameApp;
 
 public class LayeredPaneExample implements IFrameApp
 {

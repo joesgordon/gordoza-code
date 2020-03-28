@@ -3,7 +3,7 @@ package testbed;
 import java.util.ArrayList;
 import java.util.Random;
 
-import org.jutils.io.LogUtils;
+import org.jutils.core.io.LogUtils;
 
 public class TestProb
 {

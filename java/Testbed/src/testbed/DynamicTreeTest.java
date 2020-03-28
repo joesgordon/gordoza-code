@@ -19,16 +19,16 @@ import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import org.jutils.IconConstants;
-import org.jutils.OptionUtils;
-import org.jutils.SwingUtils;
-import org.jutils.io.parsers.StringLengthParser;
-import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.app.FrameRunner;
-import org.jutils.ui.app.IFrameApp;
-import org.jutils.ui.event.RightClickListener;
-import org.jutils.ui.model.IView;
-import org.jutils.utils.IteratorEnumerationAdapter;
+import org.jutils.core.IconConstants;
+import org.jutils.core.OptionUtils;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.io.parsers.StringLengthParser;
+import org.jutils.core.ui.StandardFrameView;
+import org.jutils.core.ui.app.FrameRunner;
+import org.jutils.core.ui.app.IFrameApp;
+import org.jutils.core.ui.event.RightClickListener;
+import org.jutils.core.ui.model.IView;
+import org.jutils.core.utils.IteratorEnumerationAdapter;
 
 /*******************************************************************************
  *

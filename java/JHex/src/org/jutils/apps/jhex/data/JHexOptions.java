@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jutils.utils.MaxQueue;
+import org.jutils.core.utils.MaxQueue;
 
 /*******************************************************************************
  * Defines the user options for the JHex application.

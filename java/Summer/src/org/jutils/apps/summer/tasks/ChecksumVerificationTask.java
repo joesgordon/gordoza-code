@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jutils.apps.summer.data.*;
-import org.jutils.task.*;
+import org.jutils.core.task.*;
 
 /*******************************************************************************
  * 

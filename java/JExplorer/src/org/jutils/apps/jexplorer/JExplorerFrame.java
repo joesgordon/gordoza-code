@@ -32,20 +32,20 @@ import javax.swing.JToolBar;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeSelectionModel;
 
-import org.jutils.IconConstants;
-import org.jutils.OptionUtils;
-import org.jutils.SwingUtils;
-import org.jutils.Utils;
-import org.jutils.io.FileComparator;
-import org.jutils.ui.DirectoryTree;
-import org.jutils.ui.JGoodiesToolBar;
-import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.event.ActionAdapter;
-import org.jutils.ui.explorer.AppManagerView;
-import org.jutils.ui.explorer.DefaultExplorerItem;
-import org.jutils.ui.explorer.ExplorerTable;
-import org.jutils.ui.explorer.data.AppManagerConfig;
-import org.jutils.ui.model.IView;
+import org.jutils.core.IconConstants;
+import org.jutils.core.OptionUtils;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.Utils;
+import org.jutils.core.io.FileComparator;
+import org.jutils.core.ui.DirectoryTree;
+import org.jutils.core.ui.JGoodiesToolBar;
+import org.jutils.core.ui.StandardFrameView;
+import org.jutils.core.ui.event.ActionAdapter;
+import org.jutils.core.ui.explorer.AppManagerView;
+import org.jutils.core.ui.explorer.DefaultExplorerItem;
+import org.jutils.core.ui.explorer.ExplorerTable;
+import org.jutils.core.ui.explorer.data.AppManagerConfig;
+import org.jutils.core.ui.model.IView;
 
 /*******************************************************************************
  * Frame that displays the contents of the file system in a explorer like

@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jutils.ui.explorer.DefaultExplorerItem;
-import org.jutils.ui.explorer.IExplorerItem;
+import org.jutils.core.ui.explorer.DefaultExplorerItem;
+import org.jutils.core.ui.explorer.IExplorerItem;
 
 /*******************************************************************************
  * 

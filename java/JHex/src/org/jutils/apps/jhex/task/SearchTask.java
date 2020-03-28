@@ -2,8 +2,8 @@ package org.jutils.apps.jhex.task;
 
 import java.io.IOException;
 
-import org.jutils.io.IStream;
-import org.jutils.task.*;
+import org.jutils.core.io.IStream;
+import org.jutils.core.task.*;
 
 /*******************************************************************************
  * 

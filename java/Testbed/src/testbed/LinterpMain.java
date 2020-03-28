@@ -1,6 +1,6 @@
 package testbed;
 
-import org.jutils.io.LogUtils;
+import org.jutils.core.io.LogUtils;
 
 public class LinterpMain
 {

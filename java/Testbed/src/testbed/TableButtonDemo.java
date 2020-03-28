@@ -16,12 +16,12 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
-import org.jutils.data.UIProperty;
-import org.jutils.io.LogUtils;
-import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.app.FrameRunner;
-import org.jutils.ui.app.IFrameApp;
-import org.jutils.ui.model.IView;
+import org.jutils.core.data.UIProperty;
+import org.jutils.core.io.LogUtils;
+import org.jutils.core.ui.StandardFrameView;
+import org.jutils.core.ui.app.FrameRunner;
+import org.jutils.core.ui.app.IFrameApp;
+import org.jutils.core.ui.model.IView;
 
 public class TableButtonDemo implements IView<JComponent>
 {

@@ -9,20 +9,20 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JPanel;
 
-import org.jutils.SwingUtils;
 import org.jutils.apps.filespy.data.SearchParams;
-import org.jutils.io.parsers.ExistenceType;
-import org.jutils.pattern.StringPattern;
-import org.jutils.pattern.StringPatternField;
-import org.jutils.ui.StandardFormView;
-import org.jutils.ui.calendar.DateField;
-import org.jutils.ui.event.ItemActionList;
-import org.jutils.ui.event.ItemActionListener;
-import org.jutils.ui.fields.BooleanFormField;
-import org.jutils.ui.fields.FileFormField;
-import org.jutils.ui.fields.LongFormField;
-import org.jutils.ui.fields.UsableFormField;
-import org.jutils.ui.model.IDataView;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.io.parsers.ExistenceType;
+import org.jutils.core.pattern.StringPattern;
+import org.jutils.core.pattern.StringPatternField;
+import org.jutils.core.ui.StandardFormView;
+import org.jutils.core.ui.calendar.DateField;
+import org.jutils.core.ui.event.ItemActionList;
+import org.jutils.core.ui.event.ItemActionListener;
+import org.jutils.core.ui.fields.BooleanFormField;
+import org.jutils.core.ui.fields.FileFormField;
+import org.jutils.core.ui.fields.LongFormField;
+import org.jutils.core.ui.fields.UsableFormField;
+import org.jutils.core.ui.model.IDataView;
 
 /*******************************************************************************
  *

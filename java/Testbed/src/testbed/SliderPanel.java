@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.swing.*;
 
-import org.jutils.io.LogUtils;
+import org.jutils.core.io.LogUtils;
 
 /*******************************************************************************
  * 

@@ -20,16 +20,16 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import org.jutils.OptionUtils;
-import org.jutils.SwingUtils;
-import org.jutils.Utils;
-import org.jutils.ui.ExitListener;
-import org.jutils.ui.SearchableTextArea;
-import org.jutils.ui.StandardFormView;
-import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.app.FrameRunner;
-import org.jutils.ui.app.IFrameApp;
-import org.jutils.ui.model.IView;
+import org.jutils.core.OptionUtils;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.Utils;
+import org.jutils.core.ui.ExitListener;
+import org.jutils.core.ui.SearchableTextArea;
+import org.jutils.core.ui.StandardFormView;
+import org.jutils.core.ui.StandardFrameView;
+import org.jutils.core.ui.app.FrameRunner;
+import org.jutils.core.ui.app.IFrameApp;
+import org.jutils.core.ui.model.IView;
 
 import com.jgoodies.forms.builder.ButtonStackBuilder;
 

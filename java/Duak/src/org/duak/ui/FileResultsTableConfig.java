@@ -2,7 +2,7 @@ package org.duak.ui;
 
 import org.duak.data.FileInfo;
 import org.duak.utils.FileSize;
-import org.jutils.ui.model.ITableItemsConfig;
+import org.jutils.core.ui.model.ITableItemsConfig;
 
 /*******************************************************************************
  * 

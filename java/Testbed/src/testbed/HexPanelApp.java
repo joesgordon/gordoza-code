@@ -2,10 +2,10 @@ package testbed;
 
 import javax.swing.JFrame;
 
-import org.jutils.ui.app.FrameRunner;
-import org.jutils.ui.app.IFrameApp;
-import org.jutils.ui.hex.ByteBuffer;
-import org.jutils.ui.hex.HexPanel;
+import org.jutils.core.ui.app.FrameRunner;
+import org.jutils.core.ui.app.IFrameApp;
+import org.jutils.core.ui.hex.ByteBuffer;
+import org.jutils.core.ui.hex.HexPanel;
 
 /*******************************************************************************
  * 

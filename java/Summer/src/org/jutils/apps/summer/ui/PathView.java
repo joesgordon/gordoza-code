@@ -10,10 +10,10 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 
-import org.jutils.io.IOUtils;
-import org.jutils.ui.event.ItemActionList;
-import org.jutils.ui.event.ItemActionListener;
-import org.jutils.ui.model.IDataView;
+import org.jutils.core.io.IOUtils;
+import org.jutils.core.ui.event.ItemActionList;
+import org.jutils.core.ui.event.ItemActionListener;
+import org.jutils.core.ui.model.IDataView;
 
 /*******************************************************************************
  * 

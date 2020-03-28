@@ -2,11 +2,11 @@ package org.jutils.apps.filespy.search;
 
 import org.jutils.apps.filespy.data.SearchParams;
 import org.jutils.apps.filespy.ui.ResultsView;
-import org.jutils.concurrent.TaskThread;
-import org.jutils.ui.StatusBarPanel;
-import org.jutils.ui.event.ItemActionEvent;
-import org.jutils.ui.event.ItemActionListener;
-import org.jutils.utils.Stopwatch;
+import org.jutils.core.concurrent.TaskThread;
+import org.jutils.core.ui.StatusBarPanel;
+import org.jutils.core.ui.event.ItemActionEvent;
+import org.jutils.core.ui.event.ItemActionListener;
+import org.jutils.core.utils.Stopwatch;
 
 /*******************************************************************************
  * 

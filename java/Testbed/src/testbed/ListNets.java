@@ -1,17 +1,22 @@
 package testbed;
 
-import java.io.IOException;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.Collections;
 import java.util.Enumeration;
 
-import org.jutils.ui.hex.HexUtils;
+import org.jutils.core.ui.hex.HexUtils;
 
+/**
+ * 
+ */
 public class ListNets
 {
-    private static final String TEST_ADDRESS = "225.26.45.1";
-    private static final int TEST_PORT = 51200;
-
+    /**
+     * @param args
+     * @throws SocketException
+     */
     public static void main( String args[] ) throws SocketException
     {
         Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
@@ -25,6 +30,10 @@ public class ListNets
         }
     }
 
+    /**
+     * @param nic
+     * @throws SocketException
+     */
     private static void displayInterfaceInformation( NetworkInterface nic )
         throws SocketException
     {
@@ -38,34 +47,5 @@ public class ListNets
         System.out.printf( "Hardware Address: %s\n",
             HexUtils.toHexString( nic.getHardwareAddress() ) );
         System.out.printf( "\n" );
-    }
-
-    @SuppressWarnings( "unused")
-    private static void testNic( NetworkInterface nic ) throws IOException
-    {
-        try( MulticastSocket socket = new MulticastSocket( TEST_PORT ) )
-        {
-            socket.setNetworkInterface( nic );
-            socket.setInterface(
-                nic.getInterfaceAddresses().get( 0 ).getAddress() );
-        }
-    }
-
-    @SuppressWarnings( "unused")
-    private static void testSocket( MulticastSocket socket )
-        throws SocketException, UnknownHostException, IOException
-    {
-        InetAddress group = InetAddress.getByName( TEST_ADDRESS );
-        String message = "nic '" +
-            socket.getNetworkInterface().getDisplayName() + "' on port '" +
-            socket.getPort() + "'";
-        socket.joinGroup( group );
-
-        InetSocketAddress sendAddress = new InetSocketAddress( group,
-            TEST_PORT );
-        byte[] bytes = message.getBytes();
-        DatagramPacket packet = new DatagramPacket( bytes, bytes.length,
-            sendAddress );
-        socket.send( packet );
     }
 }

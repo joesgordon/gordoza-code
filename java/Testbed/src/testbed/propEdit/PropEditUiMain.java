@@ -13,11 +13,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 
-import org.jutils.OptionUtils;
-import org.jutils.SwingUtils;
-import org.jutils.ui.PropEditPanel;
-import org.jutils.ui.app.FrameRunner;
-import org.jutils.ui.app.IFrameApp;
+import org.jutils.core.OptionUtils;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.ui.PropEditPanel;
+import org.jutils.core.ui.app.FrameRunner;
+import org.jutils.core.ui.app.IFrameApp;
 
 public class PropEditUiMain implements IFrameApp
 {

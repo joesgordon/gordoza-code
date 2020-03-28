@@ -4,9 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jutils.ValidationException;
-import org.jutils.io.IOUtils;
-import org.jutils.io.cksum.ChecksumType;
+import org.jutils.core.ValidationException;
+import org.jutils.core.io.IOUtils;
+import org.jutils.core.io.cksum.ChecksumType;
 
 /*******************************************************************************
  *  

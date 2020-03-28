@@ -4,10 +4,10 @@ import java.awt.Component;
 
 import javax.swing.JComponent;
 
+import org.jutils.core.ui.StandardFormView;
+import org.jutils.core.ui.fields.BooleanFormField;
+import org.jutils.core.ui.model.IDataView;
 import org.jutils.minesweeper.data.GameOptions;
-import org.jutils.ui.StandardFormView;
-import org.jutils.ui.fields.BooleanFormField;
-import org.jutils.ui.model.IDataView;
 
 /***************************************************************************
  * 

@@ -1,6 +1,6 @@
 package org.jutils.minesweeper.data;
 
-import org.jutils.INamedItem;
+import org.jutils.core.INamedItem;
 
 /*******************************************************************************
  * 

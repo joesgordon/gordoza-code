@@ -1,6 +1,6 @@
 package org.mc;
 
-import org.jutils.net.*;
+import org.jutils.core.net.*;
 
 /*******************************************************************************
  * 

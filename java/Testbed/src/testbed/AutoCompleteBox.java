@@ -6,9 +6,9 @@ import java.util.Locale;
 import javax.swing.*;
 import javax.swing.text.*;
 
-import org.jutils.ui.app.FrameRunner;
-import org.jutils.ui.app.IFrameApp;
-import org.jutils.ui.model.IView;
+import org.jutils.core.ui.app.FrameRunner;
+import org.jutils.core.ui.app.IFrameApp;
+import org.jutils.core.ui.model.IView;
 
 /*******************************************************************************
  * 

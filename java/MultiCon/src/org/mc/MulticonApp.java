@@ -2,7 +2,7 @@ package org.mc;
 
 import javax.swing.JFrame;
 
-import org.jutils.ui.app.IFrameApp;
+import org.jutils.core.ui.app.IFrameApp;
 import org.mc.ui.MulticonFrame;
 
 /*******************************************************************************

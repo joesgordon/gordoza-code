@@ -14,15 +14,15 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 
-import org.jutils.IconConstants;
-import org.jutils.SwingUtils;
-import org.jutils.Utils;
-import org.jutils.ui.JGoodiesToolBar;
-import org.jutils.ui.ScrollableEditorPaneView;
-import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.app.FrameRunner;
-import org.jutils.ui.app.IFrameApp;
-import org.jutils.ui.event.ActionAdapter;
+import org.jutils.core.IconConstants;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.Utils;
+import org.jutils.core.ui.JGoodiesToolBar;
+import org.jutils.core.ui.ScrollableEditorPaneView;
+import org.jutils.core.ui.StandardFrameView;
+import org.jutils.core.ui.app.FrameRunner;
+import org.jutils.core.ui.app.IFrameApp;
+import org.jutils.core.ui.event.ActionAdapter;
 
 public class ReverserView implements IFrameApp
 {

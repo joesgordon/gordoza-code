@@ -29,20 +29,20 @@ import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
-import org.jutils.IconConstants;
-import org.jutils.OptionUtils;
-import org.jutils.Utils;
-import org.jutils.concurrent.ITask;
-import org.jutils.concurrent.ITaskHandler;
-import org.jutils.concurrent.TaskThread;
-import org.jutils.data.UIProperty;
-import org.jutils.ui.LedIcon;
-import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.app.FrameRunner;
-import org.jutils.ui.app.IFrameApp;
-import org.jutils.ui.model.IView;
-import org.jutils.ui.model.LabelListCellRenderer;
-import org.jutils.ui.model.LabelListCellRenderer.IListCellLabelDecorator;
+import org.jutils.core.IconConstants;
+import org.jutils.core.OptionUtils;
+import org.jutils.core.Utils;
+import org.jutils.core.concurrent.ITask;
+import org.jutils.core.concurrent.ITaskHandler;
+import org.jutils.core.concurrent.TaskThread;
+import org.jutils.core.data.UIProperty;
+import org.jutils.core.ui.LedIcon;
+import org.jutils.core.ui.StandardFrameView;
+import org.jutils.core.ui.app.FrameRunner;
+import org.jutils.core.ui.app.IFrameApp;
+import org.jutils.core.ui.model.IView;
+import org.jutils.core.ui.model.LabelListCellRenderer;
+import org.jutils.core.ui.model.LabelListCellRenderer.IListCellLabelDecorator;
 
 /*******************************************************************************
  * 

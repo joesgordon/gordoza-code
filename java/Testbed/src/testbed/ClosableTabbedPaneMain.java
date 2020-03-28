@@ -3,10 +3,10 @@ package testbed;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import org.jutils.ui.ClosableTabbedPane;
-import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.app.FrameRunner;
-import org.jutils.ui.app.IFrameApp;
+import org.jutils.core.ui.ClosableTabbedPane;
+import org.jutils.core.ui.StandardFrameView;
+import org.jutils.core.ui.app.FrameRunner;
+import org.jutils.core.ui.app.IFrameApp;
 
 /*******************************************************************************
  * ClosableTabbedPane example

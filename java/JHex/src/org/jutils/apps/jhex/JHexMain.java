@@ -3,11 +3,11 @@ package org.jutils.apps.jhex;
 import java.io.File;
 
 import org.jutils.apps.jhex.data.JHexOptions;
-import org.jutils.io.IOUtils;
-import org.jutils.io.LogUtils;
-import org.jutils.io.options.IOptionsCreator;
-import org.jutils.io.options.OptionsSerializer;
-import org.jutils.ui.app.FrameRunner;
+import org.jutils.core.io.IOUtils;
+import org.jutils.core.io.LogUtils;
+import org.jutils.core.io.options.IOptionsCreator;
+import org.jutils.core.io.options.OptionsSerializer;
+import org.jutils.core.ui.app.FrameRunner;
 
 /*******************************************************************************
  * Contains the entry point for the JHex application.

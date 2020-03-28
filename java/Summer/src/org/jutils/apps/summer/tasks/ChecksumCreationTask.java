@@ -4,14 +4,14 @@ import java.io.IOException;
 
 import org.jutils.apps.summer.data.ChecksumResult;
 import org.jutils.apps.summer.data.SumFile;
-import org.jutils.io.cksum.CheckSumFactory;
-import org.jutils.io.cksum.ChecksumGenenerator;
-import org.jutils.io.cksum.IChecksum;
-import org.jutils.task.IStatusTask;
-import org.jutils.task.ITaskStatusHandler;
-import org.jutils.task.TaskError;
-import org.jutils.task.TaskUpdater;
-import org.jutils.ui.hex.HexUtils;
+import org.jutils.core.io.cksum.CheckSumFactory;
+import org.jutils.core.io.cksum.ChecksumGenenerator;
+import org.jutils.core.io.cksum.IChecksum;
+import org.jutils.core.task.IStatusTask;
+import org.jutils.core.task.ITaskStatusHandler;
+import org.jutils.core.task.TaskError;
+import org.jutils.core.task.TaskUpdater;
+import org.jutils.core.ui.hex.HexUtils;
 
 /*******************************************************************************
  * 

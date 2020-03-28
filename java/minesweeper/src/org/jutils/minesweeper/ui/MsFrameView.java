@@ -9,14 +9,14 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 
-import org.jutils.IconConstants;
+import org.jutils.core.IconConstants;
+import org.jutils.core.ui.OkDialogView;
+import org.jutils.core.ui.StandardFrameView;
+import org.jutils.core.ui.OkDialogView.OkDialogButtons;
+import org.jutils.core.ui.event.ActionAdapter;
+import org.jutils.core.ui.model.IView;
 import org.jutils.minesweeper.MsIcons;
 import org.jutils.minesweeper.data.GameOptions;
-import org.jutils.ui.OkDialogView;
-import org.jutils.ui.OkDialogView.OkDialogButtons;
-import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.event.ActionAdapter;
-import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * 

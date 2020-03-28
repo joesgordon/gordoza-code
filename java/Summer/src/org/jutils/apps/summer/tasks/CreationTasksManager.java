@@ -3,8 +3,8 @@ package org.jutils.apps.summer.tasks;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jutils.apps.summer.data.ChecksumResult;
-import org.jutils.task.IMultiTask;
-import org.jutils.task.IStatusTask;
+import org.jutils.core.task.IMultiTask;
+import org.jutils.core.task.IStatusTask;
 
 /*******************************************************************************
  * 

@@ -3,7 +3,7 @@ package testbed;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jutils.io.IOUtils;
+import org.jutils.core.io.IOUtils;
 
 public class FinallyTester
 {

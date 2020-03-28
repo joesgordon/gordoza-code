@@ -4,10 +4,10 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import org.jutils.ui.IPaintable;
-import org.jutils.ui.PaintingComponent;
-import org.jutils.ui.app.FrameRunner;
-import org.jutils.ui.app.IFrameApp;
+import org.jutils.core.ui.IPaintable;
+import org.jutils.core.ui.PaintingComponent;
+import org.jutils.core.ui.app.FrameRunner;
+import org.jutils.core.ui.app.IFrameApp;
 
 /**
  * @see <a href="http://stackoverflow.com/questions/5069152">StackOverflow

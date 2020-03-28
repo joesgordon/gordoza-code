@@ -4,8 +4,8 @@ import java.io.File;
 
 import javax.swing.JFrame;
 
-import org.jutils.ui.app.FrameRunner;
-import org.jutils.ui.app.IFrameApp;
+import org.jutils.core.ui.app.FrameRunner;
+import org.jutils.core.ui.app.IFrameApp;
 
 /*******************************************************************************
  * This class defines the application that will display the main applications

@@ -3,7 +3,7 @@ package org.duak;
 import javax.swing.JFrame;
 
 import org.duak.ui.DuakFrame;
-import org.jutils.ui.app.IFrameApp;
+import org.jutils.core.ui.app.IFrameApp;
 
 public class DuakApp implements IFrameApp
 {

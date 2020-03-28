@@ -6,10 +6,10 @@ import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.text.*;
 
-import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.app.FrameRunner;
-import org.jutils.ui.app.IFrameApp;
-import org.jutils.ui.model.IView;
+import org.jutils.core.ui.StandardFrameView;
+import org.jutils.core.ui.app.FrameRunner;
+import org.jutils.core.ui.app.IFrameApp;
+import org.jutils.core.ui.model.IView;
 
 /*******************************************************************************
  *

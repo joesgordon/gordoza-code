@@ -3,12 +3,12 @@ package org.jutils.apps.filespy;
 import java.io.File;
 
 import org.jutils.apps.filespy.data.FileSpyData;
-import org.jutils.io.IOUtils;
-import org.jutils.io.LogUtils;
-import org.jutils.io.options.IOptionsCreator;
-import org.jutils.io.options.OptionsSerializer;
-import org.jutils.ui.app.FrameRunner;
-import org.jutils.ui.app.IFrameApp;
+import org.jutils.core.io.IOUtils;
+import org.jutils.core.io.LogUtils;
+import org.jutils.core.io.options.IOptionsCreator;
+import org.jutils.core.io.options.OptionsSerializer;
+import org.jutils.core.ui.app.FrameRunner;
+import org.jutils.core.ui.app.IFrameApp;
 
 /*******************************************************************************
  *

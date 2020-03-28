@@ -5,8 +5,8 @@ import java.net.SocketException;
 
 import javax.swing.JComponent;
 
-import org.jutils.net.IConnection;
-import org.jutils.ui.model.IView;
+import org.jutils.core.net.IConnection;
+import org.jutils.core.ui.model.IView;
 
 /*******************************************************************************
  * Defines a view that can create connections.

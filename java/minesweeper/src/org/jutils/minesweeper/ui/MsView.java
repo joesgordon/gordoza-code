@@ -22,17 +22,17 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
-import org.jutils.IconConstants;
-import org.jutils.SwingUtils;
+import org.jutils.core.IconConstants;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.ui.event.updater.IUpdater;
+import org.jutils.core.ui.fields.ComboFormField;
+import org.jutils.core.ui.fields.NamedItemDescriptor;
+import org.jutils.core.ui.model.IView;
 import org.jutils.minesweeper.data.Difficulty;
 import org.jutils.minesweeper.data.GameOptions;
 import org.jutils.minesweeper.data.GameStatus;
 import org.jutils.minesweeper.data.GameStatus.GameResult;
 import org.jutils.minesweeper.data.GridSpace;
-import org.jutils.ui.event.updater.IUpdater;
-import org.jutils.ui.fields.ComboFormField;
-import org.jutils.ui.fields.NamedItemDescriptor;
-import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * 

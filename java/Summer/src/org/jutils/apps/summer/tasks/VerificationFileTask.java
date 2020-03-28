@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.jutils.apps.summer.data.InvalidChecksum;
 import org.jutils.apps.summer.data.SumFile;
-import org.jutils.io.cksum.ChecksumType;
-import org.jutils.task.IStatusTask;
-import org.jutils.task.ITaskStatusHandler;
+import org.jutils.core.io.cksum.ChecksumType;
+import org.jutils.core.task.IStatusTask;
+import org.jutils.core.task.ITaskStatusHandler;
 
 /*******************************************************************************
  * 

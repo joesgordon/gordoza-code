@@ -6,12 +6,12 @@ import java.io.IOException;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import org.jutils.OptionUtils;
-import org.jutils.io.LogUtils;
-import org.jutils.net.*;
-import org.jutils.ui.TitleView;
-import org.jutils.ui.event.updater.IUpdater;
-import org.jutils.ui.net.NetMessagesView;
+import org.jutils.core.OptionUtils;
+import org.jutils.core.io.LogUtils;
+import org.jutils.core.net.*;
+import org.jutils.core.ui.TitleView;
+import org.jutils.core.ui.event.updater.IUpdater;
+import org.jutils.core.ui.net.NetMessagesView;
 import org.mc.ui.BindingFrameView.IBindableView;
 
 /*******************************************************************************

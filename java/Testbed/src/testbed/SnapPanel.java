@@ -5,8 +5,8 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import org.jutils.ui.AltSplitPane;
-import org.jutils.ui.model.IView;
+import org.jutils.core.ui.AltSplitPane;
+import org.jutils.core.ui.model.IView;
 
 /*******************************************************************************
  * 

@@ -4,9 +4,9 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.regex.PatternSyntaxException;
 
-import org.jutils.ValidationException;
-import org.jutils.pattern.StringPattern;
-import org.jutils.utils.Usable;
+import org.jutils.core.ValidationException;
+import org.jutils.core.pattern.StringPattern;
+import org.jutils.core.utils.Usable;
 
 /*******************************************************************************
  * This class defines the parameters of the files to find.

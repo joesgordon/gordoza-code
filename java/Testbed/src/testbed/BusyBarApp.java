@@ -7,9 +7,9 @@ import java.util.Arrays;
 
 import javax.swing.*;
 
-import org.jutils.ui.app.FrameRunner;
-import org.jutils.ui.app.IFrameApp;
-import org.jutils.ui.model.ItemComboBoxModel;
+import org.jutils.core.ui.app.FrameRunner;
+import org.jutils.core.ui.app.IFrameApp;
+import org.jutils.core.ui.model.ItemComboBoxModel;
 
 import testbed.BusyBar.BarColor;
 

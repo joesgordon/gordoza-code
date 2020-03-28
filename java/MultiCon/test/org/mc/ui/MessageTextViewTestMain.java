@@ -4,10 +4,10 @@ import java.awt.Container;
 
 import javax.swing.JFrame;
 
-import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.TextHexView;
-import org.jutils.ui.app.FrameRunner;
-import org.jutils.ui.app.IFrameApp;
+import org.jutils.core.ui.StandardFrameView;
+import org.jutils.core.ui.TextHexView;
+import org.jutils.core.ui.app.FrameRunner;
+import org.jutils.core.ui.app.IFrameApp;
 
 /*******************************************************************************
  *

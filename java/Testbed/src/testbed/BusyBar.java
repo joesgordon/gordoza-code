@@ -8,9 +8,9 @@ import java.util.LinkedList;
 import javax.swing.JComponent;
 import javax.swing.Timer;
 
-import org.jutils.ui.IPaintable;
-import org.jutils.ui.PaintingComponent;
-import org.jutils.ui.model.IView;
+import org.jutils.core.ui.IPaintable;
+import org.jutils.core.ui.PaintingComponent;
+import org.jutils.core.ui.model.IView;
 
 /*******************************************************************************
  * This component represents a bar signifying some indeterminate amount of

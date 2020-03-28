@@ -2,10 +2,10 @@ package org.jutils.apps.jhex.task;
 
 import java.io.IOException;
 
-import org.jutils.datadist.DataDistribution;
-import org.jutils.datadist.DistributionBuilder;
-import org.jutils.io.IStream;
-import org.jutils.task.*;
+import org.jutils.core.datadist.DataDistribution;
+import org.jutils.core.datadist.DistributionBuilder;
+import org.jutils.core.io.IStream;
+import org.jutils.core.task.*;
 
 /*******************************************************************************
  * Defines a task that builds a data distribution for a stream.

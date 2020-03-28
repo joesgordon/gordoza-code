@@ -1,6 +1,6 @@
 package org.duak;
 
-import org.jutils.ui.app.FrameRunner;
+import org.jutils.core.ui.app.FrameRunner;
 
 public class DuakMain
 {

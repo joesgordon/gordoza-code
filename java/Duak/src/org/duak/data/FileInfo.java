@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jutils.task.ITaskStatusHandler;
+import org.jutils.core.task.ITaskStatusHandler;
 
 public class FileInfo implements Comparable<FileInfo>
 {

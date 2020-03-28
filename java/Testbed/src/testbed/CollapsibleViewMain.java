@@ -4,9 +4,9 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import org.jutils.ui.CollapsibleView;
-import org.jutils.ui.app.FrameRunner;
-import org.jutils.ui.app.IFrameApp;
+import org.jutils.core.ui.CollapsibleView;
+import org.jutils.core.ui.app.FrameRunner;
+import org.jutils.core.ui.app.IFrameApp;
 
 public class CollapsibleViewMain implements IFrameApp
 {

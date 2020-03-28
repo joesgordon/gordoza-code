@@ -23,25 +23,25 @@ import javax.swing.JSeparator;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
-import org.jutils.IconConstants;
-import org.jutils.OptionUtils;
-import org.jutils.SwingUtils;
-import org.jutils.Utils;
-import org.jutils.ValidationException;
 import org.jutils.apps.filespy.FileSpyMain;
 import org.jutils.apps.filespy.data.FileSpyData;
 import org.jutils.apps.filespy.data.SearchParams;
 import org.jutils.apps.filespy.search.Searcher;
-import org.jutils.io.XStreamUtils;
-import org.jutils.io.options.OptionsSerializer;
-import org.jutils.licensing.LicenseDialog;
-import org.jutils.time.TimeUtils;
-import org.jutils.ui.JGoodiesToolBar;
-import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.StatusBarPanel;
-import org.jutils.ui.event.ActionAdapter;
-import org.jutils.ui.explorer.AppManagerView;
-import org.jutils.ui.model.IView;
+import org.jutils.core.IconConstants;
+import org.jutils.core.OptionUtils;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.Utils;
+import org.jutils.core.ValidationException;
+import org.jutils.core.io.XStreamUtils;
+import org.jutils.core.io.options.OptionsSerializer;
+import org.jutils.core.licensing.LicenseDialog;
+import org.jutils.core.time.TimeUtils;
+import org.jutils.core.ui.JGoodiesToolBar;
+import org.jutils.core.ui.StandardFrameView;
+import org.jutils.core.ui.StatusBarPanel;
+import org.jutils.core.ui.event.ActionAdapter;
+import org.jutils.core.ui.explorer.AppManagerView;
+import org.jutils.core.ui.model.IView;
 
 /*******************************************************************************
  *

@@ -6,7 +6,7 @@ import java.util.List;
 import javax.swing.*;
 
 import org.jutils.apps.summer.data.InvalidChecksum;
-import org.jutils.ui.model.*;
+import org.jutils.core.ui.model.*;
 
 /*******************************************************************************
  *

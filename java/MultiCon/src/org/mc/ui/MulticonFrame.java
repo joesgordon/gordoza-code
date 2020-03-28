@@ -8,10 +8,10 @@ import java.util.List;
 
 import javax.swing.*;
 
-import org.jutils.OptionUtils;
-import org.jutils.SwingUtils;
-import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.model.IView;
+import org.jutils.core.OptionUtils;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.ui.StandardFrameView;
+import org.jutils.core.ui.model.IView;
 import org.mc.MulticonIcons;
 import org.mc.ui.BindingFrameView.IBindableView;
 import org.mc.ui.net.*;

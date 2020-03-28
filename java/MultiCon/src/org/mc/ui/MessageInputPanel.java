@@ -6,16 +6,16 @@ import java.io.IOException;
 
 import javax.swing.*;
 
-import org.jutils.OptionUtils;
-import org.jutils.SwingUtils;
-import org.jutils.net.IConnection;
-import org.jutils.net.NetMessage;
-import org.jutils.ui.TextHexView;
-import org.jutils.ui.TitleView;
-import org.jutils.ui.event.updater.CheckBoxUpdater;
-import org.jutils.ui.event.updater.IUpdater;
-import org.jutils.ui.fields.DoubleFormField;
-import org.jutils.ui.model.IView;
+import org.jutils.core.OptionUtils;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.net.IConnection;
+import org.jutils.core.net.NetMessage;
+import org.jutils.core.ui.TextHexView;
+import org.jutils.core.ui.TitleView;
+import org.jutils.core.ui.event.updater.CheckBoxUpdater;
+import org.jutils.core.ui.event.updater.IUpdater;
+import org.jutils.core.ui.fields.DoubleFormField;
+import org.jutils.core.ui.model.IView;
 import org.mc.MsgScheduleTask;
 
 /*******************************************************************************

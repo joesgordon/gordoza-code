@@ -10,15 +10,15 @@ import org.duak.*;
 import org.duak.data.FileInfo;
 import org.duak.task.DuakTask;
 import org.duak.utils.HistoryList;
-import org.jutils.IconConstants;
-import org.jutils.io.options.OptionsSerializer;
-import org.jutils.task.TaskView;
-import org.jutils.ui.*;
-import org.jutils.ui.event.*;
-import org.jutils.ui.event.FileChooserListener.IFileSelected;
-import org.jutils.ui.event.FileChooserListener.ILastFile;
-import org.jutils.ui.event.FileDropTarget.IFileDropEvent;
-import org.jutils.ui.model.IView;
+import org.jutils.core.IconConstants;
+import org.jutils.core.io.options.OptionsSerializer;
+import org.jutils.core.task.TaskView;
+import org.jutils.core.ui.*;
+import org.jutils.core.ui.event.*;
+import org.jutils.core.ui.event.FileChooserListener.IFileSelected;
+import org.jutils.core.ui.event.FileChooserListener.ILastFile;
+import org.jutils.core.ui.event.FileDropTarget.IFileDropEvent;
+import org.jutils.core.ui.model.IView;
 
 /*******************************************************************************
  * 

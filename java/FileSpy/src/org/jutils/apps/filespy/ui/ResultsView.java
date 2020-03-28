@@ -19,17 +19,17 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 
-import org.jutils.OptionUtils;
-import org.jutils.Utils;
 import org.jutils.apps.filespy.data.LineMatch;
 import org.jutils.apps.filespy.data.SearchRecord;
-import org.jutils.concurrent.GcThread;
-import org.jutils.io.LogUtils;
-import org.jutils.ui.ScrollableEditorPaneView;
-import org.jutils.ui.explorer.ExplorerTable;
-import org.jutils.ui.explorer.ExplorerTableModel;
-import org.jutils.ui.explorer.IExplorerItem;
-import org.jutils.ui.model.IView;
+import org.jutils.core.OptionUtils;
+import org.jutils.core.Utils;
+import org.jutils.core.concurrent.GcThread;
+import org.jutils.core.io.LogUtils;
+import org.jutils.core.ui.ScrollableEditorPaneView;
+import org.jutils.core.ui.explorer.ExplorerTable;
+import org.jutils.core.ui.explorer.ExplorerTableModel;
+import org.jutils.core.ui.explorer.IExplorerItem;
+import org.jutils.core.ui.model.IView;
 
 /*******************************************************************************
  *

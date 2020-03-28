@@ -6,11 +6,11 @@ import java.net.SocketTimeoutException;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
-import org.jutils.concurrent.*;
-import org.jutils.io.LogUtils;
-import org.jutils.io.options.OptionsSerializer;
-import org.jutils.net.*;
-import org.jutils.ui.net.TcpInputsView;
+import org.jutils.core.concurrent.*;
+import org.jutils.core.io.LogUtils;
+import org.jutils.core.io.options.OptionsSerializer;
+import org.jutils.core.net.*;
+import org.jutils.core.ui.net.TcpInputsView;
 import org.mc.MulticonMain;
 import org.mc.MulticonOptions;
 import org.mc.ui.BindingFrameView.IBindableView;

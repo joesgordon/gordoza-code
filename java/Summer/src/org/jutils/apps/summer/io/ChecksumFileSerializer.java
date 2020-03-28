@@ -4,13 +4,13 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.jutils.Utils;
-import org.jutils.ValidationException;
 import org.jutils.apps.summer.data.ChecksumResult;
 import org.jutils.apps.summer.data.SumFile;
-import org.jutils.io.IOUtils;
-import org.jutils.io.IReader;
-import org.jutils.io.cksum.ChecksumType;
+import org.jutils.core.Utils;
+import org.jutils.core.ValidationException;
+import org.jutils.core.io.IOUtils;
+import org.jutils.core.io.IReader;
+import org.jutils.core.io.cksum.ChecksumType;
 
 /*******************************************************************************
  * 

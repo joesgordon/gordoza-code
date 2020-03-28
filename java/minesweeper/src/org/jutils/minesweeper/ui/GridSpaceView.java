@@ -13,10 +13,10 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
+import org.jutils.core.ui.model.IView;
 import org.jutils.minesweeper.MsIcons;
 import org.jutils.minesweeper.data.GameOptions;
 import org.jutils.minesweeper.data.GridSpace;
-import org.jutils.ui.model.IView;
 
 /*******************************************************************************
  * 

@@ -3,7 +3,7 @@ package org.jutils.apps.filespy;
 import javax.swing.JFrame;
 
 import org.jutils.apps.filespy.ui.FileSpyFrameView;
-import org.jutils.ui.app.IFrameApp;
+import org.jutils.core.ui.app.IFrameApp;
 
 /*******************************************************************************
  *

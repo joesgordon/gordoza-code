@@ -2,8 +2,8 @@ package org.jutils.minesweeper;
 
 import javax.swing.JFrame;
 
+import org.jutils.core.ui.app.FrameRunner;
 import org.jutils.minesweeper.ui.MsFrameView;
-import org.jutils.ui.app.FrameRunner;
 
 /*******************************************************************************
  * 

@@ -8,17 +8,17 @@ import java.util.NoSuchElementException;
 
 import javax.swing.*;
 
-import org.jutils.IconConstants;
-import org.jutils.SwingUtils;
 import org.jutils.chart.data.XYPoint;
 import org.jutils.chart.model.IDataPoint;
 import org.jutils.chart.model.ISeriesData;
 import org.jutils.chart.ui.ChartView;
-import org.jutils.io.ByteCache;
-import org.jutils.io.IStream;
-import org.jutils.ui.JGoodiesToolBar;
-import org.jutils.ui.event.ActionAdapter;
-import org.jutils.ui.model.IView;
+import org.jutils.core.IconConstants;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.io.ByteCache;
+import org.jutils.core.io.IStream;
+import org.jutils.core.ui.JGoodiesToolBar;
+import org.jutils.core.ui.event.ActionAdapter;
+import org.jutils.core.ui.model.IView;
 
 /*******************************************************************************
  * 

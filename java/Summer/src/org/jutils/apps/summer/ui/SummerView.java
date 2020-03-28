@@ -16,26 +16,26 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 
-import org.jutils.IconConstants;
-import org.jutils.SwingUtils;
 import org.jutils.apps.summer.SummerIcons;
 import org.jutils.apps.summer.SummerMain;
 import org.jutils.apps.summer.data.ChecksumResult;
 import org.jutils.apps.summer.data.SummerOptions;
-import org.jutils.io.cksum.ChecksumType;
-import org.jutils.io.options.OptionsSerializer;
-import org.jutils.ui.JGoodiesToolBar;
-import org.jutils.ui.OkDialogView;
-import org.jutils.ui.OkDialogView.OkDialogButtons;
-import org.jutils.ui.StandardFormView;
-import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.event.ActionAdapter;
-import org.jutils.ui.fields.IntegerFormField;
-import org.jutils.ui.model.IView;
-import org.jutils.ui.validation.IValidationField;
-import org.jutils.ui.validation.IValidityChangedListener;
-import org.jutils.ui.validation.Validity;
-import org.jutils.ui.validation.ValidityUtils;
+import org.jutils.core.IconConstants;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.io.cksum.ChecksumType;
+import org.jutils.core.io.options.OptionsSerializer;
+import org.jutils.core.ui.JGoodiesToolBar;
+import org.jutils.core.ui.OkDialogView;
+import org.jutils.core.ui.StandardFormView;
+import org.jutils.core.ui.StandardFrameView;
+import org.jutils.core.ui.OkDialogView.OkDialogButtons;
+import org.jutils.core.ui.event.ActionAdapter;
+import org.jutils.core.ui.fields.IntegerFormField;
+import org.jutils.core.ui.model.IView;
+import org.jutils.core.ui.validation.IValidationField;
+import org.jutils.core.ui.validation.IValidityChangedListener;
+import org.jutils.core.ui.validation.Validity;
+import org.jutils.core.ui.validation.ValidityUtils;
 
 /*******************************************************************************
  * 

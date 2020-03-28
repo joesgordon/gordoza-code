@@ -13,11 +13,11 @@ import javax.swing.table.TableRowSorter;
 
 import org.duak.data.FileInfo;
 import org.duak.utils.FileSize;
-import org.jutils.IconConstants;
-import org.jutils.ui.MessageExceptionView;
-import org.jutils.ui.event.*;
-import org.jutils.ui.model.IDataView;
-import org.jutils.ui.model.ItemsTableModel;
+import org.jutils.core.IconConstants;
+import org.jutils.core.ui.MessageExceptionView;
+import org.jutils.core.ui.event.*;
+import org.jutils.core.ui.model.IDataView;
+import org.jutils.core.ui.model.ItemsTableModel;
 
 /*******************************************************************************
  * 

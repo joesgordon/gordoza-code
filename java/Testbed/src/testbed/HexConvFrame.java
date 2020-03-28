@@ -4,13 +4,13 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import org.jutils.NumberParsingUtils;
-import org.jutils.ValidationException;
-import org.jutils.ui.app.FrameRunner;
-import org.jutils.ui.app.IFrameApp;
-import org.jutils.ui.event.ItemActionListener;
-import org.jutils.ui.validation.ValidationTextField;
-import org.jutils.ui.validators.ITextValidator;
+import org.jutils.core.NumberParsingUtils;
+import org.jutils.core.ValidationException;
+import org.jutils.core.ui.app.FrameRunner;
+import org.jutils.core.ui.app.IFrameApp;
+import org.jutils.core.ui.event.ItemActionListener;
+import org.jutils.core.ui.validation.ValidationTextField;
+import org.jutils.core.ui.validators.ITextValidator;
 
 public class HexConvFrame implements IFrameApp
 {

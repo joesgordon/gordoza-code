@@ -1,6 +1,6 @@
 package org.jutils.apps.filespy;
 
-import org.jutils.io.IOUtils;
+import org.jutils.core.io.IOUtils;
 
 /*******************************************************************************
  * 

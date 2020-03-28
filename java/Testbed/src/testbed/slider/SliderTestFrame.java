@@ -18,14 +18,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 
-import org.jutils.IconConstants;
 import org.jutils.apps.filespy.ui.RegexPanel;
 import org.jutils.apps.filespy.ui.SearchParamsView;
-import org.jutils.ui.DirectoryTree;
-import org.jutils.ui.GradientPanel;
-import org.jutils.ui.JGoodiesToolBar;
-import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.model.IView;
+import org.jutils.core.IconConstants;
+import org.jutils.core.ui.DirectoryTree;
+import org.jutils.core.ui.GradientPanel;
+import org.jutils.core.ui.JGoodiesToolBar;
+import org.jutils.core.ui.StandardFrameView;
+import org.jutils.core.ui.model.IView;
 
 import testbed.SliderPanel;
 

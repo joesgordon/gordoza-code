@@ -5,8 +5,8 @@ import java.awt.Dialog.ModalityType;
 
 import javax.swing.*;
 
-import org.jutils.IconConstants;
-import org.jutils.concurrent.ITaskHandler;
+import org.jutils.core.IconConstants;
+import org.jutils.core.concurrent.ITaskHandler;
 
 public class TxDialog
 {

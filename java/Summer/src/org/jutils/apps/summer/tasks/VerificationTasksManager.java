@@ -5,8 +5,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jutils.apps.summer.data.ChecksumResult;
 import org.jutils.apps.summer.data.InvalidChecksum;
-import org.jutils.task.IMultiTask;
-import org.jutils.task.IStatusTask;
+import org.jutils.core.task.IMultiTask;
+import org.jutils.core.task.IStatusTask;
 
 /*******************************************************************************
  * 

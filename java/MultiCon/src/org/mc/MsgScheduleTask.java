@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.jutils.net.IConnection;
-import org.jutils.net.NetMessage;
-import org.jutils.ui.event.updater.IUpdater;
+import org.jutils.core.net.IConnection;
+import org.jutils.core.net.NetMessage;
+import org.jutils.core.ui.event.updater.IUpdater;
 
 /*******************************************************************************
  * 

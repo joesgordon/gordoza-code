@@ -5,9 +5,9 @@ import java.net.SocketException;
 
 import javax.swing.JComponent;
 
-import org.jutils.io.options.OptionsSerializer;
-import org.jutils.net.*;
-import org.jutils.ui.net.MulticastInputsView;
+import org.jutils.core.io.options.OptionsSerializer;
+import org.jutils.core.net.*;
+import org.jutils.core.ui.net.MulticastInputsView;
 import org.mc.MulticonMain;
 import org.mc.MulticonOptions;
 import org.mc.ui.IConnectionView;

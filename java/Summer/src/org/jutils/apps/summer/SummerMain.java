@@ -6,19 +6,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jutils.ValidationException;
 import org.jutils.apps.summer.data.ChecksumResult;
 import org.jutils.apps.summer.data.SummerOptions;
 import org.jutils.apps.summer.io.ChecksumFileSerializer;
 import org.jutils.apps.summer.ui.CreateView;
-import org.jutils.io.IOUtils;
-import org.jutils.io.LogUtils;
-import org.jutils.io.options.IOptionsCreator;
-import org.jutils.io.options.OptionsSerializer;
-import org.jutils.ui.app.AppRunner;
-import org.jutils.ui.app.FrameRunner;
-import org.jutils.ui.app.IApplication;
-import org.jutils.ui.app.IFrameApp;
+import org.jutils.core.ValidationException;
+import org.jutils.core.io.IOUtils;
+import org.jutils.core.io.LogUtils;
+import org.jutils.core.io.options.IOptionsCreator;
+import org.jutils.core.io.options.OptionsSerializer;
+import org.jutils.core.ui.app.AppRunner;
+import org.jutils.core.ui.app.FrameRunner;
+import org.jutils.core.ui.app.IApplication;
+import org.jutils.core.ui.app.IFrameApp;
 
 /*******************************************************************************
  * 

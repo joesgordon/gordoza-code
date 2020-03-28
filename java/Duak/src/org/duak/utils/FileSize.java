@@ -1,6 +1,6 @@
 package org.duak.utils;
 
-import org.jutils.io.IOUtils;
+import org.jutils.core.io.IOUtils;
 
 /*******************************************************************************
  * 

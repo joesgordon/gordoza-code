@@ -6,18 +6,18 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.concurrent.TimeUnit;
 
-import org.jutils.ValidationException;
 import org.jutils.apps.filespy.data.SearchParams;
 import org.jutils.apps.filespy.data.SearchRecord;
-import org.jutils.concurrent.IConsumer;
-import org.jutils.concurrent.IFinishedHandler;
-import org.jutils.concurrent.ITask;
-import org.jutils.concurrent.ITaskHandler;
-import org.jutils.concurrent.SafeExecutorService;
-import org.jutils.io.LogUtils;
-import org.jutils.pattern.IMatcher;
-import org.jutils.pattern.Match;
-import org.jutils.ui.MessageExceptionView;
+import org.jutils.core.ValidationException;
+import org.jutils.core.concurrent.IConsumer;
+import org.jutils.core.concurrent.IFinishedHandler;
+import org.jutils.core.concurrent.ITask;
+import org.jutils.core.concurrent.ITaskHandler;
+import org.jutils.core.concurrent.SafeExecutorService;
+import org.jutils.core.io.LogUtils;
+import org.jutils.core.pattern.IMatcher;
+import org.jutils.core.pattern.Match;
+import org.jutils.core.ui.MessageExceptionView;
 
 /*******************************************************************************
  *

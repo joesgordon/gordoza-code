@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.swing.Icon;
 
-import org.jutils.io.IconLoader;
+import org.jutils.core.io.IconLoader;
 
 /*******************************************************************************
  * Defines the methods for accessing the icons needed in the JHex application.
