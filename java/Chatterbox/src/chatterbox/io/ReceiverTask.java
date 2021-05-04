@@ -1,14 +1,16 @@
 package chatterbox.io;
 
 import java.io.IOException;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.MulticastSocket;
+import java.net.SocketTimeoutException;
 import java.util.Arrays;
 
-import org.jutils.concurrent.ITask;
-import org.jutils.concurrent.ITaskHandler;
-import org.jutils.net.NetMessage;
-import org.jutils.ui.event.ItemActionEvent;
-import org.jutils.ui.event.ItemActionListener;
+import org.jutils.core.concurrent.ITask;
+import org.jutils.core.concurrent.ITaskHandler;
+import org.jutils.core.net.NetMessage;
+import org.jutils.core.ui.event.ItemActionEvent;
+import org.jutils.core.ui.event.ItemActionListener;
 
 /*******************************************************************************
  * 

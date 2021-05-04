@@ -9,8 +9,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.text.JTextComponent;
 
 import org.budgey.data.Money;
-import org.jutils.data.UIProperty;
-import org.jutils.ui.model.IDataView;
+import org.jutils.core.data.UIProperty;
+import org.jutils.core.ui.model.IDataView;
 
 /*******************************************************************************
  * 

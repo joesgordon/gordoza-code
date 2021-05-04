@@ -1,9 +1,14 @@
 package testbed;
 
-import java.awt.*;
+import java.awt.Container;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.nio.ByteBuffer;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import org.jutils.core.NumberParsingUtils;
 import org.jutils.core.ValidationException;

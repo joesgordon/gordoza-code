@@ -7,11 +7,11 @@ import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-import org.jutils.SwingUtils;
 import org.jutils.appgallery.ui.AppGalleryFrameView;
-import org.jutils.ui.ExitListener;
-import org.jutils.ui.IToolView;
-import org.jutils.ui.app.IFrameApp;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.ui.ExitListener;
+import org.jutils.core.ui.IToolView;
+import org.jutils.core.ui.app.IFrameApp;
 
 /*******************************************************************************
  * Defines the set of functions that displays a frame application.

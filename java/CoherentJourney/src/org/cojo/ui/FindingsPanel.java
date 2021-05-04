@@ -17,12 +17,12 @@ import javax.swing.JTable;
 import org.cojo.data.Finding;
 import org.cojo.data.Project;
 import org.cojo.ui.tableModels.FindingTableModel;
-import org.jutils.IconConstants;
-import org.jutils.SwingUtils;
-import org.jutils.ui.OkDialogView;
-import org.jutils.ui.OkDialogView.OkDialogButtons;
-import org.jutils.ui.model.IView;
-import org.jutils.ui.model.ItemsTableModel;
+import org.jutils.core.IconConstants;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.ui.OkDialogView;
+import org.jutils.core.ui.OkDialogView.OkDialogButtons;
+import org.jutils.core.ui.model.IView;
+import org.jutils.core.ui.model.ItemsTableModel;
 
 /*******************************************************************************
  *

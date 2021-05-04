@@ -1,20 +1,38 @@
 package chatterbox.ui;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dialog.ModalityType;
-import java.awt.event.*;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.BorderFactory;
+import javax.swing.InputMap;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.SimpleAttributeSet;
 
-import org.jutils.IconConstants;
-import org.jutils.data.FontDescription;
-import org.jutils.ui.FontChooserView;
-import org.jutils.ui.OkDialogView;
-import org.jutils.ui.event.*;
-import org.jutils.ui.model.IDataView;
+import org.jutils.core.IconConstants;
+import org.jutils.core.data.FontDescription;
+import org.jutils.core.ui.FontChooserView;
+import org.jutils.core.ui.OkDialogView;
+import org.jutils.core.ui.event.ActionAdapter;
+import org.jutils.core.ui.event.ItemActionList;
+import org.jutils.core.ui.event.ItemActionListener;
+import org.jutils.core.ui.model.IDataView;
 
 import chatterbox.data.DecoratedText;
 

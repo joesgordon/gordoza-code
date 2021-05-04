@@ -16,20 +16,20 @@ import org.budgey.BudgeyIcons;
 import org.budgey.BudgeyMain;
 import org.budgey.data.Budget;
 import org.budgey.data.BudgeyOptions;
-import org.jutils.IconConstants;
-import org.jutils.OptionUtils;
-import org.jutils.SwingUtils;
-import org.jutils.ValidationException;
-import org.jutils.io.XStreamUtils;
-import org.jutils.io.options.OptionsSerializer;
-import org.jutils.ui.JGoodiesToolBar;
-import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.event.ActionAdapter;
-import org.jutils.ui.event.FileChooserListener;
-import org.jutils.ui.event.FileChooserListener.IFileSelected;
-import org.jutils.ui.event.FileChooserListener.ILastFile;
-import org.jutils.ui.model.IDataView;
-import org.jutils.ui.model.IView;
+import org.jutils.core.IconConstants;
+import org.jutils.core.OptionUtils;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.ValidationException;
+import org.jutils.core.io.options.OptionsSerializer;
+import org.jutils.core.io.xs.XsUtils;
+import org.jutils.core.ui.JGoodiesToolBar;
+import org.jutils.core.ui.StandardFrameView;
+import org.jutils.core.ui.event.ActionAdapter;
+import org.jutils.core.ui.event.FileChooserListener;
+import org.jutils.core.ui.event.FileChooserListener.IFileSelected;
+import org.jutils.core.ui.event.FileChooserListener.ILastFile;
+import org.jutils.core.ui.model.IDataView;
+import org.jutils.core.ui.model.IView;
 
 /*******************************************************************************
  * 
@@ -156,7 +156,7 @@ public class BudgeyFrame implements IView<JFrame>
 
         try
         {
-            Budget b = XStreamUtils.readObjectXStream( file );
+            Budget b = XsUtils.readObjectXStream( file );
             budgeyPanel.setData( b );
         }
         catch( ValidationException ex )
@@ -185,7 +185,7 @@ public class BudgeyFrame implements IView<JFrame>
 
         try
         {
-            XStreamUtils.writeObjectXStream( budgeyPanel.getData(), file );
+            XsUtils.writeObjectXStream( budgeyPanel.getData(), file );
         }
         catch( IOException | ValidationException ex )
         {

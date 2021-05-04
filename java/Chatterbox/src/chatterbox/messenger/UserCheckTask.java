@@ -8,8 +8,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jutils.ValidationException;
-import org.jutils.task.*;
+import org.jutils.core.ValidationException;
+import org.jutils.core.task.IStatusTask;
+import org.jutils.core.task.ITaskStatusHandler;
+import org.jutils.core.task.TaskError;
 
 import chatterbox.data.ChatUser;
 import chatterbox.data.messages.UserAvailableMessage;

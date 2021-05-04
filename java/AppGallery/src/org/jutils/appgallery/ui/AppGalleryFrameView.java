@@ -6,8 +6,10 @@ import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 
 import org.jutils.appgallery.AppGalleryIcons;
-import org.jutils.ui.*;
-import org.jutils.ui.model.IView;
+import org.jutils.core.ui.IToolView;
+import org.jutils.core.ui.StandardFrameView;
+import org.jutils.core.ui.ToolsView;
+import org.jutils.core.ui.model.IView;
 
 /*******************************************************************************
  * Defines the window for this application that displays tools in a gallery.

@@ -17,10 +17,10 @@ import javax.swing.JToolBar;
 import org.cojo.CojoIcons;
 import org.cojo.data.Project;
 import org.cojo.data.Task;
-import org.jutils.IconConstants;
-import org.jutils.ui.event.ItemActionEvent;
-import org.jutils.ui.event.ItemActionListener;
-import org.jutils.ui.model.IDataView;
+import org.jutils.core.IconConstants;
+import org.jutils.core.ui.event.ItemActionEvent;
+import org.jutils.core.ui.event.ItemActionListener;
+import org.jutils.core.ui.model.IDataView;
 
 /*******************************************************************************
  * 

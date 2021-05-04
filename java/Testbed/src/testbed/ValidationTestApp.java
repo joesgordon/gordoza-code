@@ -1,9 +1,15 @@
 package testbed;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import org.jutils.core.SwingUtils;
 import org.jutils.core.ValidationException;
@@ -11,7 +17,11 @@ import org.jutils.core.ui.ExitListener;
 import org.jutils.core.ui.StandardFormView;
 import org.jutils.core.ui.app.FrameRunner;
 import org.jutils.core.ui.app.IFrameApp;
-import org.jutils.core.ui.validation.*;
+import org.jutils.core.ui.validation.AggregateValidityChangedManager;
+import org.jutils.core.ui.validation.IValidityChangedListener;
+import org.jutils.core.ui.validation.ValidationTextField;
+import org.jutils.core.ui.validation.Validity;
+import org.jutils.core.ui.validation.ValidityUtils;
 import org.jutils.core.ui.validators.ITextValidator;
 
 public class ValidationTestApp implements IFrameApp

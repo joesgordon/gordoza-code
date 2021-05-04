@@ -2,10 +2,10 @@ package chatterbox.io;
 
 import java.io.IOException;
 
-import org.jutils.data.TextStyleList;
-import org.jutils.io.IDataSerializer;
-import org.jutils.io.IDataStream;
-import org.jutils.io.LengthStringSerializer;
+import org.jutils.core.data.TextStyleList;
+import org.jutils.core.io.IDataSerializer;
+import org.jutils.core.io.IDataStream;
+import org.jutils.core.io.LengthStringSerializer;
 
 import chatterbox.ChatterboxConstants;
 import chatterbox.data.DecoratedText;

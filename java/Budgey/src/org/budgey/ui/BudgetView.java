@@ -1,11 +1,19 @@
 package org.budgey.ui;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import org.budgey.data.Budget;
-import org.jutils.ui.model.IDataView;
+import org.jutils.core.ui.model.IDataView;
 
 /*******************************************************************************
  * 

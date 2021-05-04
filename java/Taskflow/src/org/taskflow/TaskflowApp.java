@@ -1,11 +1,13 @@
 package org.taskflow;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.TrayIcon;
 
 import javax.swing.JFrame;
 
-import org.jutils.SwingUtils;
-import org.jutils.ui.app.IFrameApp;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.ui.app.IFrameApp;
 import org.taskflow.ui.TaskflowFrameView;
 import org.taskflow.ui.TaskflowMenu;
 

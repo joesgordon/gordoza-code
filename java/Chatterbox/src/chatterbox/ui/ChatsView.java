@@ -1,17 +1,26 @@
 package chatterbox.ui;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.DefaultListModel;
+import javax.swing.Icon;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
+import javax.swing.ListCellRenderer;
 import javax.swing.border.EmptyBorder;
 
-import org.jutils.IconConstants;
-import org.jutils.SwingUtils;
-import org.jutils.data.UIProperty;
-import org.jutils.ui.TitleView;
-import org.jutils.ui.event.ActionAdapter;
-import org.jutils.ui.model.IDataView;
+import org.jutils.core.IconConstants;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.data.UIProperty;
+import org.jutils.core.ui.TitleView;
+import org.jutils.core.ui.event.ActionAdapter;
+import org.jutils.core.ui.model.IDataView;
 
 import chatterbox.data.ChatInfo;
 import chatterbox.messenger.ChatterboxHandler;

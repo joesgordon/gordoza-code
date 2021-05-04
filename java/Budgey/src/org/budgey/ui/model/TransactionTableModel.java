@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import org.budgey.data.Money;
 import org.budgey.data.Transaction;
-import org.jutils.ui.model.ITableItemsConfig;
+import org.jutils.core.ui.model.ITableItemsConfig;
 
 /*******************************************************************************
  * 

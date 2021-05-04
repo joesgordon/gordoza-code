@@ -2,8 +2,8 @@ package chatterbox.io;
 
 import java.io.IOException;
 
-import org.jutils.io.IDataSerializer;
-import org.jutils.io.IDataStream;
+import org.jutils.core.io.IDataSerializer;
+import org.jutils.core.io.IDataStream;
 
 import chatterbox.data.ChatUser;
 import chatterbox.data.messages.UserAvailableMessage;

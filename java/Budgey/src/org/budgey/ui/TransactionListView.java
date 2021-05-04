@@ -7,13 +7,19 @@ import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 
 import org.budgey.data.Money;
 import org.budgey.data.Transaction;
-import org.jutils.ui.event.ItemActionList;
-import org.jutils.ui.event.ItemActionListener;
-import org.jutils.ui.model.*;
+import org.jutils.core.ui.event.ItemActionList;
+import org.jutils.core.ui.event.ItemActionListener;
+import org.jutils.core.ui.model.DefaultTableItemsConfig;
+import org.jutils.core.ui.model.IView;
+import org.jutils.core.ui.model.ItemsTableModel;
 
 /*******************************************************************************
  * 

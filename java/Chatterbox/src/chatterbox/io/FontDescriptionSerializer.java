@@ -3,10 +3,10 @@ package chatterbox.io;
 import java.awt.Color;
 import java.io.IOException;
 
-import org.jutils.data.FontDescription;
-import org.jutils.io.IDataSerializer;
-import org.jutils.io.IDataStream;
-import org.jutils.io.LengthStringSerializer;
+import org.jutils.core.data.FontDescription;
+import org.jutils.core.io.IDataSerializer;
+import org.jutils.core.io.IDataStream;
+import org.jutils.core.io.LengthStringSerializer;
 
 /***************************************************************************
  * 

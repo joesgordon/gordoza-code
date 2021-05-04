@@ -6,13 +6,13 @@ import java.util.List;
 
 import org.cojo.data.ProjectManager;
 import org.cojo.data.ProjectUser;
-import org.jutils.ui.ListView;
-import org.jutils.ui.ListView.IItemListModel;
-import org.jutils.ui.OkDialogView;
-import org.jutils.ui.OkDialogView.OkDialogButtons;
-import org.jutils.ui.StandardFormView;
-import org.jutils.ui.fields.StringFormField;
-import org.jutils.ui.model.IDataView;
+import org.jutils.core.ui.ListView;
+import org.jutils.core.ui.ListView.IItemListModel;
+import org.jutils.core.ui.OkDialogView;
+import org.jutils.core.ui.OkDialogView.OkDialogButtons;
+import org.jutils.core.ui.StandardFormView;
+import org.jutils.core.ui.fields.StringFormField;
+import org.jutils.core.ui.model.IDataView;
 
 /**
  *

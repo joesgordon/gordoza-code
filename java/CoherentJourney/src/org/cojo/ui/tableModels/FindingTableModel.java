@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 
 import org.cojo.data.Finding;
 import org.cojo.data.Project;
-import org.jutils.ui.model.DefaultTableItemsConfig;
-import org.jutils.ui.model.ITableItemsConfig;
+import org.jutils.core.ui.model.DefaultTableItemsConfig;
+import org.jutils.core.ui.model.ITableItemsConfig;
 
 /*******************************************************************************
  * 

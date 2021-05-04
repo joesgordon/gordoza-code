@@ -11,17 +11,17 @@ import javax.swing.JFrame;
 import javax.swing.JToolBar;
 
 import org.cojo.data.ProjectManager;
-import org.jutils.IconConstants;
-import org.jutils.SwingUtils;
-import org.jutils.ValidationException;
-import org.jutils.io.XStreamUtils;
-import org.jutils.ui.JGoodiesToolBar;
-import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.event.ActionAdapter;
-import org.jutils.ui.event.FileChooserListener;
-import org.jutils.ui.event.FileChooserListener.IFileSelected;
-import org.jutils.ui.event.FileChooserListener.ILastFile;
-import org.jutils.ui.model.IView;
+import org.jutils.core.IconConstants;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.ValidationException;
+import org.jutils.core.io.xs.XsUtils;
+import org.jutils.core.ui.JGoodiesToolBar;
+import org.jutils.core.ui.StandardFrameView;
+import org.jutils.core.ui.event.ActionAdapter;
+import org.jutils.core.ui.event.FileChooserListener;
+import org.jutils.core.ui.event.FileChooserListener.IFileSelected;
+import org.jutils.core.ui.event.FileChooserListener.ILastFile;
+import org.jutils.core.ui.model.IView;
 
 /*******************************************************************************
  * 
@@ -115,7 +115,7 @@ public class CojoFrame implements IView<JFrame>
         try
         {
             ProjectManager manager = new ProjectManager();
-            manager.project = XStreamUtils.readObjectXStream( file );
+            manager.project = XsUtils.readObjectXStream( file );
             mainPanel.setData( manager );
         }
         catch( FileNotFoundException e )
@@ -145,7 +145,7 @@ public class CojoFrame implements IView<JFrame>
 
         try
         {
-            XStreamUtils.writeObjectXStream( manager.project, file );
+            XsUtils.writeObjectXStream( manager.project, file );
         }
         catch( IOException | ValidationException e )
         {

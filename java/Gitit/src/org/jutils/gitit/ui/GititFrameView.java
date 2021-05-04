@@ -11,29 +11,27 @@ import javax.swing.Icon;
 import javax.swing.JFrame;
 import javax.swing.JToolBar;
 
-import org.jutils.IconConstants;
-import org.jutils.OptionUtils;
-import org.jutils.SwingUtils;
-import org.jutils.Utils;
-import org.jutils.ValidationException;
+import org.jutils.core.IconConstants;
+import org.jutils.core.OptionUtils;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.Utils;
+import org.jutils.core.ValidationException;
+import org.jutils.core.io.options.OptionsSerializer;
+import org.jutils.core.io.xs.XsUtils;
+import org.jutils.core.ui.JGoodiesToolBar;
+import org.jutils.core.ui.OkDialogView;
+import org.jutils.core.ui.OkDialogView.OkDialogButtons;
+import org.jutils.core.ui.RecentFilesViews;
+import org.jutils.core.ui.StandardFrameView;
+import org.jutils.core.ui.event.ActionAdapter;
+import org.jutils.core.ui.event.FileChooserListener;
+import org.jutils.core.ui.event.FileChooserListener.IFileSelected;
+import org.jutils.core.ui.event.FileChooserListener.ILastFile;
+import org.jutils.core.ui.model.IView;
 import org.jutils.gitit.GititIcons;
 import org.jutils.gitit.GititMain;
 import org.jutils.gitit.data.GititConfig;
 import org.jutils.gitit.data.GititOptions;
-import org.jutils.io.XStreamUtils;
-import org.jutils.io.options.OptionsSerializer;
-import org.jutils.ui.JGoodiesToolBar;
-import org.jutils.ui.OkDialogView;
-import org.jutils.ui.OkDialogView.OkDialogButtons;
-import org.jutils.ui.RecentFilesViews;
-import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.event.ActionAdapter;
-import org.jutils.ui.event.FileChooserListener;
-import org.jutils.ui.event.FileChooserListener.IFileSelected;
-import org.jutils.ui.event.FileChooserListener.ILastFile;
-import org.jutils.ui.model.IView;
-
-import com.thoughtworks.xstream.XStreamException;
 
 /*******************************************************************************
  *
@@ -160,13 +158,13 @@ public class GititFrameView implements IView<JFrame>
     {
         try
         {
-            GititConfig config = XStreamUtils.readObjectXStream( file,
-                XStreamUtils.buildDependencyList( GititConfig.class ).toArray(
+            GititConfig config = XsUtils.readObjectXStream( file,
+                XsUtils.buildDependencyList( GititConfig.class ).toArray(
                     new String[] {} ) );
 
             gititView.setData( config );
         }
-        catch( IOException | ValidationException | XStreamException ex )
+        catch( IOException | ValidationException ex )
         {
             OptionUtils.showErrorMessage( getView(),
                 "Unable to read configuration from" + Utils.NEW_LINE +
@@ -182,8 +180,8 @@ public class GititFrameView implements IView<JFrame>
     {
         try
         {
-            XStreamUtils.writeObjectXStream( gititView.getData(), file,
-                XStreamUtils.buildDependencyList( GititConfig.class ).toArray(
+            XsUtils.writeObjectXStream( gititView.getData(), file,
+                XsUtils.buildDependencyList( GititConfig.class ).toArray(
                     new String[] {} ) );
         }
         catch( IOException | ValidationException ex )

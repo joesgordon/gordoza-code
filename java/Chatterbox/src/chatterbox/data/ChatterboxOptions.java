@@ -3,7 +3,7 @@ package chatterbox.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jutils.net.MulticastInputs;
+import org.jutils.core.net.MulticastInputs;
 
 import chatterbox.ChatterboxConstants;
 

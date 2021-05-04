@@ -18,15 +18,15 @@ import javax.swing.SwingUtilities;
 
 import org.cojo.data.ProjectManager;
 import org.cojo.data.Task;
-import org.jutils.IconConstants;
-import org.jutils.SwingUtils;
-import org.jutils.ui.OkDialogView;
-import org.jutils.ui.OkDialogView.OkDialogButtons;
-import org.jutils.ui.event.ActionAdapter;
-import org.jutils.ui.model.DefaultTableItemsConfig;
-import org.jutils.ui.model.IDataView;
-import org.jutils.ui.model.ITableItemsConfig;
-import org.jutils.ui.model.ItemsTableModel;
+import org.jutils.core.IconConstants;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.ui.OkDialogView;
+import org.jutils.core.ui.OkDialogView.OkDialogButtons;
+import org.jutils.core.ui.event.ActionAdapter;
+import org.jutils.core.ui.model.DefaultTableItemsConfig;
+import org.jutils.core.ui.model.IDataView;
+import org.jutils.core.ui.model.ITableItemsConfig;
+import org.jutils.core.ui.model.ItemsTableModel;
 
 /*******************************************************************************
  * 

@@ -1,10 +1,15 @@
 package org.taskflow.ui;
 
-import java.awt.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
-import org.jutils.ui.model.IView;
+import org.jutils.core.ui.model.IView;
 
 /*******************************************************************************
  *

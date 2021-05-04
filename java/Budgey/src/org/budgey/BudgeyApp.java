@@ -3,7 +3,7 @@ package org.budgey;
 import javax.swing.JFrame;
 
 import org.budgey.ui.BudgeyFrame;
-import org.jutils.ui.app.IFrameApp;
+import org.jutils.core.ui.app.IFrameApp;
 
 /*******************************************************************************
  * 

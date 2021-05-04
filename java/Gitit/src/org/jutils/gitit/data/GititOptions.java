@@ -3,7 +3,7 @@ package org.jutils.gitit.data;
 import java.io.File;
 import java.util.List;
 
-import org.jutils.utils.MaxQueue;
+import org.jutils.core.utils.MaxQueue;
 
 /**
  *

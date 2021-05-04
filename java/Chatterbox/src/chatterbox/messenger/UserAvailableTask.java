@@ -3,7 +3,7 @@ package chatterbox.messenger;
 import java.io.IOException;
 import java.util.TimerTask;
 
-import org.jutils.ValidationException;
+import org.jutils.core.ValidationException;
 
 import chatterbox.data.messages.UserAvailableMessage;
 

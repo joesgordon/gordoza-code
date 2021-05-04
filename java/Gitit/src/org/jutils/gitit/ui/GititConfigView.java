@@ -12,18 +12,18 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import org.jutils.OptionUtils;
-import org.jutils.SwingUtils;
+import org.jutils.core.OptionUtils;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.ui.DirectoryChooser;
+import org.jutils.core.ui.ErrorView;
+import org.jutils.core.ui.ItemListView;
+import org.jutils.core.ui.ListView;
+import org.jutils.core.ui.ListView.IItemListModel;
+import org.jutils.core.ui.TitleView;
+import org.jutils.core.ui.event.FileDropTarget;
+import org.jutils.core.ui.model.IDataView;
 import org.jutils.gitit.data.GititConfig;
 import org.jutils.gitit.data.GititConfig.GititCommand;
-import org.jutils.ui.DirectoryChooser;
-import org.jutils.ui.ErrorView;
-import org.jutils.ui.ItemListView;
-import org.jutils.ui.ListView;
-import org.jutils.ui.ListView.IItemListModel;
-import org.jutils.ui.TitleView;
-import org.jutils.ui.event.FileDropTarget;
-import org.jutils.ui.model.IDataView;
 
 /*******************************************************************************
  *

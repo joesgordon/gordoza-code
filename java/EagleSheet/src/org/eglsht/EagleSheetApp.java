@@ -3,7 +3,7 @@ package org.eglsht;
 import javax.swing.JFrame;
 
 import org.eglsht.ui.EagleSheetFrameView;
-import org.jutils.ui.app.IFrameApp;
+import org.jutils.core.ui.app.IFrameApp;
 
 /*******************************************************************************
  * 

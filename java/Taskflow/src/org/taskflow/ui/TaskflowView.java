@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
-import org.jutils.ui.model.IDataView;
+import org.jutils.core.ui.model.IDataView;
 import org.taskflow.data.Project;
 
 /*******************************************************************************

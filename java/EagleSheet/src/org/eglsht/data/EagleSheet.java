@@ -3,7 +3,7 @@ package org.eglsht.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jutils.ui.sheet.ISpreadSheet;
+import org.jutils.core.ui.sheet.ISpreadSheet;
 
 /*******************************************************************************
  * 

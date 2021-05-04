@@ -1,8 +1,12 @@
 package testbed;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Dimension;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+import javax.swing.JViewport;
 import javax.swing.border.EmptyBorder;
 
 import org.jutils.core.ui.AltSplitPane;

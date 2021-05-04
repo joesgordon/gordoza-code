@@ -3,7 +3,7 @@ package org.taskflow.ui;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import org.jutils.ui.model.IView;
+import org.jutils.core.ui.model.IView;
 
 /*******************************************************************************
  *

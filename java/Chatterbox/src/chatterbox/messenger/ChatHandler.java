@@ -1,11 +1,13 @@
 package chatterbox.messenger;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
-import org.jutils.ValidationException;
-import org.jutils.ui.event.ItemActionList;
-import org.jutils.ui.event.ItemActionListener;
+import org.jutils.core.ValidationException;
+import org.jutils.core.ui.event.ItemActionList;
+import org.jutils.core.ui.event.ItemActionListener;
 
 import chatterbox.data.ChatInfo;
 import chatterbox.data.ChatUser;

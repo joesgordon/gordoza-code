@@ -10,8 +10,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.budgey.data.Transaction;
-import org.jutils.ui.fields.StringFormField;
-import org.jutils.ui.model.IDataView;
+import org.jutils.core.ui.fields.StringFormField;
+import org.jutils.core.ui.model.IDataView;
 
 /*******************************************************************************
  * 

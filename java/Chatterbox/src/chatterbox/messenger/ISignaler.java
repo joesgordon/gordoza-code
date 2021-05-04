@@ -1,6 +1,6 @@
 package chatterbox.messenger;
 
-import org.jutils.task.TaskError;
+import org.jutils.core.task.TaskError;
 
 /*******************************************************************************
  * 

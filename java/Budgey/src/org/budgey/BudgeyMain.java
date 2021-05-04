@@ -3,10 +3,11 @@ package org.budgey;
 import java.io.File;
 
 import org.budgey.data.BudgeyOptions;
-import org.jutils.io.IOUtils;
-import org.jutils.io.options.IOptionsCreator;
-import org.jutils.io.options.OptionsSerializer;
-import org.jutils.ui.app.FrameRunner;
+import org.jutils.core.io.IOUtils;
+import org.jutils.core.io.options.IOptionsCreator;
+import org.jutils.core.io.options.OptionsSerializer;
+import org.jutils.core.io.xs.XsOptions;
+import org.jutils.core.ui.app.FrameRunner;
 
 /*******************************************************************************
  * Defines the main method for this application.
@@ -39,8 +40,8 @@ public class BudgeyMain
     {
         if( options == null )
         {
-            options = OptionsSerializer.getOptions( BudgeyOptions.class,
-                OPTIONS_FILE, new BudgeyOptionsCreator() );
+            options = XsOptions.getOptions( BudgeyOptions.class, OPTIONS_FILE,
+                new BudgeyOptionsCreator() );
         }
 
         return options;

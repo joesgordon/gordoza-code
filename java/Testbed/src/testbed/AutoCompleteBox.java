@@ -3,8 +3,14 @@ package testbed;
 import java.awt.Container;
 import java.util.Locale;
 
-import javax.swing.*;
-import javax.swing.text.*;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JTextField;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 
 import org.jutils.core.ui.app.FrameRunner;
 import org.jutils.core.ui.app.IFrameApp;

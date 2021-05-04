@@ -3,7 +3,7 @@ package org.jutils.appgallery;
 import java.awt.Image;
 import java.util.List;
 
-import org.jutils.io.IconLoader;
+import org.jutils.core.io.IconLoader;
 
 /*******************************************************************************
  * Defines methods of returning the icons for this application.

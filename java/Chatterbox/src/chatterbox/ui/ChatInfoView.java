@@ -1,11 +1,17 @@
 package chatterbox.ui;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.time.LocalTime;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
-import org.jutils.ui.model.IDataView;
+import org.jutils.core.ui.model.IDataView;
 
 import chatterbox.data.ChatInfo;
 

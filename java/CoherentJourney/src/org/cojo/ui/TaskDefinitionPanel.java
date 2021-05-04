@@ -18,10 +18,10 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 import org.cojo.data.Task;
-import org.jutils.IconConstants;
-import org.jutils.ui.event.ItemActionList;
-import org.jutils.ui.event.ItemActionListener;
-import org.jutils.ui.model.IView;
+import org.jutils.core.IconConstants;
+import org.jutils.core.ui.event.ItemActionList;
+import org.jutils.core.ui.event.ItemActionListener;
+import org.jutils.core.ui.model.IView;
 
 /*******************************************************************************
  * 

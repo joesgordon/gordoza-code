@@ -9,22 +9,22 @@ import java.util.Map;
 
 import javax.swing.SwingUtilities;
 
-import org.jutils.ValidationException;
-import org.jutils.io.ByteArrayStream;
-import org.jutils.io.DataStream;
-import org.jutils.io.IDataStream;
-import org.jutils.io.LogUtils;
-import org.jutils.io.options.OptionsSerializer;
-import org.jutils.net.ConnectionListener;
-import org.jutils.net.IConnection;
-import org.jutils.net.MulticastConnection;
-import org.jutils.net.MulticastInputs;
-import org.jutils.net.NetMessage;
-import org.jutils.task.TaskError;
-import org.jutils.task.TaskRunner;
-import org.jutils.ui.event.ItemActionList;
-import org.jutils.ui.event.ItemActionListener;
-import org.jutils.ui.event.updater.IUpdater;
+import org.jutils.core.ValidationException;
+import org.jutils.core.io.ByteArrayStream;
+import org.jutils.core.io.DataStream;
+import org.jutils.core.io.IDataStream;
+import org.jutils.core.io.LogUtils;
+import org.jutils.core.io.options.OptionsSerializer;
+import org.jutils.core.net.ConnectionListener;
+import org.jutils.core.net.IConnection;
+import org.jutils.core.net.MulticastConnection;
+import org.jutils.core.net.MulticastInputs;
+import org.jutils.core.net.NetMessage;
+import org.jutils.core.task.TaskError;
+import org.jutils.core.task.TaskRunner;
+import org.jutils.core.ui.event.ItemActionList;
+import org.jutils.core.ui.event.ItemActionListener;
+import org.jutils.core.ui.event.updater.IUpdater;
 
 import chatterbox.ChatterboxConstants;
 import chatterbox.data.ChatInfo;

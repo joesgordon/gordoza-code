@@ -19,13 +19,13 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import org.jutils.OptionUtils;
-import org.jutils.Utils;
-import org.jutils.ui.TitleView;
-import org.jutils.ui.event.ItemActionEvent;
-import org.jutils.ui.event.ItemActionListener;
-import org.jutils.ui.model.IDataView;
-import org.jutils.ui.model.IView;
+import org.jutils.core.OptionUtils;
+import org.jutils.core.Utils;
+import org.jutils.core.ui.TitleView;
+import org.jutils.core.ui.event.ItemActionEvent;
+import org.jutils.core.ui.event.ItemActionListener;
+import org.jutils.core.ui.model.IDataView;
+import org.jutils.core.ui.model.IView;
 
 import chatterbox.data.ChatUser;
 import chatterbox.data.DecoratedText;

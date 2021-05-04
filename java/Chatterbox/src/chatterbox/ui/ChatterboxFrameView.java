@@ -12,16 +12,16 @@ import javax.swing.Icon;
 import javax.swing.JFrame;
 import javax.swing.JToolBar;
 
-import org.jutils.IconConstants;
-import org.jutils.OptionUtils;
-import org.jutils.SwingUtils;
-import org.jutils.io.options.OptionsSerializer;
-import org.jutils.ui.JGoodiesToolBar;
-import org.jutils.ui.OkDialogView;
-import org.jutils.ui.OkDialogView.OkDialogButtons;
-import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.event.ActionAdapter;
-import org.jutils.ui.model.IView;
+import org.jutils.core.IconConstants;
+import org.jutils.core.OptionUtils;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.io.options.OptionsSerializer;
+import org.jutils.core.ui.JGoodiesToolBar;
+import org.jutils.core.ui.OkDialogView;
+import org.jutils.core.ui.OkDialogView.OkDialogButtons;
+import org.jutils.core.ui.StandardFrameView;
+import org.jutils.core.ui.event.ActionAdapter;
+import org.jutils.core.ui.model.IView;
 
 import chatterbox.ChatterboxConstants;
 import chatterbox.data.ChatterboxOptions;

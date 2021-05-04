@@ -1,13 +1,19 @@
 package org.budgey.ui;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 import org.budgey.BudgeyIcons;
-import org.jutils.SwingUtils;
-import org.jutils.ui.model.IView;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.ui.model.IView;
 
 /*******************************************************************************
  * 

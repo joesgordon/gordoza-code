@@ -2,8 +2,8 @@ package org.jutils.gitit;
 
 import javax.swing.JFrame;
 
+import org.jutils.core.ui.app.IFrameApp;
 import org.jutils.gitit.ui.GititFrameView;
-import org.jutils.ui.app.IFrameApp;
 
 /*******************************************************************************
  *

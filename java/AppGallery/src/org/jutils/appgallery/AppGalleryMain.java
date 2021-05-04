@@ -4,14 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.budgey.BudgeyTool;
-import org.duak.DuakTool;
 import org.eglsht.SheetTool;
-import org.jutils.apps.filespy.FileSpyTool;
-import org.jutils.apps.jexplorer.JExplorerTool;
-import org.jutils.apps.jhex.JHexTool;
-import org.jutils.chart.app.JChartTool;
-import org.jutils.ui.IToolView;
-import org.jutils.ui.app.FrameRunner;
+import org.jutils.core.ui.IToolView;
+import org.jutils.core.ui.app.FrameRunner;
+import org.jutils.duak.DuakTool;
+import org.jutils.explorer.ExplorerTool;
+import org.jutils.filespy.FileSpyTool;
+import org.jutils.hexedit.HexeditTool;
+import org.jutils.insomnia.InsomniaTool;
+import org.jutils.mines.MinesTool;
+import org.jutils.plot.app.PlotTool;
+import org.jutils.summer.SummerTool;
 import org.taskflow.TaskflowTool;
 
 import chatterbox.ChatterboxTool;
@@ -40,14 +43,17 @@ public class AppGalleryMain
         List<IToolView> apps = new ArrayList<IToolView>();
 
         apps.add( new FileSpyTool() );
-        apps.add( new JHexTool() );
-        apps.add( new JExplorerTool() );
+        apps.add( new HexeditTool() );
+        apps.add( new ExplorerTool() );
         apps.add( new ChatterboxTool() );
         apps.add( new BudgeyTool() );
         apps.add( new DuakTool() );
         apps.add( new SheetTool() );
-        apps.add( new JChartTool() );
+        apps.add( new PlotTool() );
         apps.add( new TaskflowTool() );
+        apps.add( new InsomniaTool() );
+        apps.add( new MinesTool() );
+        apps.add( new SummerTool() );
 
         return apps;
     }

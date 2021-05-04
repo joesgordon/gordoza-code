@@ -6,10 +6,10 @@ import java.util.List;
 import javax.swing.Icon;
 import javax.swing.JFrame;
 
-import org.jutils.IconConstants;
-import org.jutils.io.IconLoader;
-import org.jutils.ui.IToolView;
-import org.jutils.ui.app.IFrameApp;
+import org.jutils.core.IconConstants;
+import org.jutils.core.io.IconLoader;
+import org.jutils.core.ui.IToolView;
+import org.jutils.core.ui.app.IFrameApp;
 
 import chatterbox.data.ChatUser;
 

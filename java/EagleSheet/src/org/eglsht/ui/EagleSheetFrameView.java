@@ -23,19 +23,19 @@ import org.eglsht.AppConstants;
 import org.eglsht.EagleSheetIcons;
 import org.eglsht.data.EagleSheet;
 import org.eglsht.data.SheetSize;
-import org.jutils.IconConstants;
-import org.jutils.OptionUtils;
-import org.jutils.ui.ExitListener;
-import org.jutils.ui.JGoodiesMenuBar;
-import org.jutils.ui.JGoodiesToolBar;
-import org.jutils.ui.ShadowBorder;
-import org.jutils.ui.StatusBarPanel;
-import org.jutils.ui.TitleView;
-import org.jutils.ui.event.ActionAdapter;
-import org.jutils.ui.event.FileChooserListener;
-import org.jutils.ui.event.FileChooserListener.IFileSelected;
-import org.jutils.ui.model.IView;
-import org.jutils.ui.sheet.SpreadSheetView;
+import org.jutils.core.IconConstants;
+import org.jutils.core.OptionUtils;
+import org.jutils.core.ui.ExitListener;
+import org.jutils.core.ui.JGoodiesMenuBar;
+import org.jutils.core.ui.JGoodiesToolBar;
+import org.jutils.core.ui.ShadowBorder;
+import org.jutils.core.ui.StatusBarPanel;
+import org.jutils.core.ui.TitleView;
+import org.jutils.core.ui.event.ActionAdapter;
+import org.jutils.core.ui.event.FileChooserListener;
+import org.jutils.core.ui.event.FileChooserListener.IFileSelected;
+import org.jutils.core.ui.model.IView;
+import org.jutils.core.ui.sheet.SpreadSheetView;
 
 /*******************************************************************************
  * 

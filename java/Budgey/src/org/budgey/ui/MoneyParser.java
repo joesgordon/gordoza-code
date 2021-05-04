@@ -4,8 +4,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.budgey.data.Money;
-import org.jutils.ValidationException;
-import org.jutils.io.IParser;
+import org.jutils.core.ValidationException;
+import org.jutils.core.io.IParser;
 
 /*******************************************************************************
  * 

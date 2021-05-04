@@ -4,10 +4,10 @@ import java.io.IOException;
 
 import javax.swing.JFrame;
 
-import org.jutils.OptionUtils;
-import org.jutils.io.options.OptionsSerializer;
-import org.jutils.ui.ExitListener;
-import org.jutils.ui.app.IFrameApp;
+import org.jutils.core.OptionUtils;
+import org.jutils.core.io.options.OptionsSerializer;
+import org.jutils.core.ui.ExitListener;
+import org.jutils.core.ui.app.IFrameApp;
 
 import chatterbox.data.ChatUser;
 import chatterbox.data.ChatterboxOptions;

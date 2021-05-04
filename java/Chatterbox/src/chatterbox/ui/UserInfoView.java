@@ -2,9 +2,9 @@ package chatterbox.ui;
 
 import java.awt.Component;
 
-import org.jutils.ui.StandardFormView;
-import org.jutils.ui.fields.StringFormField;
-import org.jutils.ui.model.IDataView;
+import org.jutils.core.ui.StandardFormView;
+import org.jutils.core.ui.fields.StringFormField;
+import org.jutils.core.ui.model.IDataView;
 
 import chatterbox.data.ChatUser;
 

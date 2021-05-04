@@ -1,6 +1,6 @@
 package org.cojo;
 
-import org.jutils.io.IconLoader;
+import org.jutils.core.io.IconLoader;
 
 /*******************************************************************************
  * 

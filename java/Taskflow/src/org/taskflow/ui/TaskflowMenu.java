@@ -2,13 +2,15 @@ package org.taskflow.ui;
 
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.JPopupMenu;
 
-import org.jutils.IconConstants;
-import org.jutils.ui.ExitListener;
-import org.jutils.ui.RecentFilesMenuView;
-import org.jutils.ui.event.ActionAdapter;
-import org.jutils.ui.model.IView;
+import org.jutils.core.IconConstants;
+import org.jutils.core.ui.ExitListener;
+import org.jutils.core.ui.RecentFilesMenuView;
+import org.jutils.core.ui.event.ActionAdapter;
+import org.jutils.core.ui.model.IView;
 
 /*******************************************************************************
  *

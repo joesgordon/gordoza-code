@@ -4,7 +4,7 @@ import javax.swing.JComponent;
 import javax.swing.JTabbedPane;
 
 import org.cojo.data.ProjectManager;
-import org.jutils.ui.model.IDataView;
+import org.jutils.core.ui.model.IDataView;
 
 /*******************************************************************************
  *

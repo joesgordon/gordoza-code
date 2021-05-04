@@ -1,9 +1,11 @@
 package chatterbox.ui;
 
-import javax.swing.*;
+import javax.swing.Icon;
+import javax.swing.JLabel;
+import javax.swing.JList;
 
-import org.jutils.IconConstants;
-import org.jutils.ui.model.LabelListCellRenderer.IListCellLabelDecorator;
+import org.jutils.core.IconConstants;
+import org.jutils.core.ui.model.LabelListCellRenderer.IListCellLabelDecorator;
 
 import chatterbox.data.ChatUser;
 

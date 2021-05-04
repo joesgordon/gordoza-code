@@ -1,19 +1,24 @@
 package org.budgey.ui;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.budgey.data.Account;
-import org.jutils.ValidationException;
-import org.jutils.ui.StandardFormView;
-import org.jutils.ui.event.ItemActionList;
-import org.jutils.ui.event.ItemActionListener;
-import org.jutils.ui.model.IDataView;
-import org.jutils.ui.validation.*;
-import org.jutils.ui.validators.ITextValidator;
+import org.jutils.core.ValidationException;
+import org.jutils.core.ui.StandardFormView;
+import org.jutils.core.ui.event.ItemActionList;
+import org.jutils.core.ui.event.ItemActionListener;
+import org.jutils.core.ui.model.IDataView;
+import org.jutils.core.ui.validation.IValidityChangedListener;
+import org.jutils.core.ui.validation.ValidationTextField;
+import org.jutils.core.ui.validation.Validity;
+import org.jutils.core.ui.validators.ITextValidator;
 
 /*******************************************************************************
  * 

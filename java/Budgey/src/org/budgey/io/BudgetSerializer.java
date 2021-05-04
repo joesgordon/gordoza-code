@@ -10,9 +10,9 @@ import org.budgey.data.Budget;
 import org.budgey.data.LedgerMonth;
 import org.budgey.data.Money;
 import org.budgey.data.Transaction;
-import org.jutils.ValidationException;
-import org.jutils.io.ISerializer;
-import org.jutils.io.XStreamUtils;
+import org.jutils.core.ValidationException;
+import org.jutils.core.io.ISerializer;
+import org.jutils.core.io.xs.XsUtils;
 
 /*******************************************************************************
  * 
@@ -27,7 +27,7 @@ public class BudgetSerializer
     public Budget read( InputStream stream )
         throws IOException, ValidationException
     {
-        Budget budget = ( Budget )XStreamUtils.readObjectXStream( stream );
+        Budget budget = ( Budget )XsUtils.readObjectXStream( stream );
 
         init( budget );
 
@@ -42,7 +42,7 @@ public class BudgetSerializer
     {
         try
         {
-            XStreamUtils.writeObjectXStream( item, stream );
+            XsUtils.writeObjectXStream( item, stream );
         }
         catch( ValidationException ex )
         {

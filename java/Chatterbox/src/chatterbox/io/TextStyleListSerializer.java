@@ -2,11 +2,11 @@ package chatterbox.io;
 
 import java.io.IOException;
 
-import org.jutils.data.FontDescription;
-import org.jutils.data.TextStyleList;
-import org.jutils.data.TextStyleList.TextStyle;
-import org.jutils.io.IDataSerializer;
-import org.jutils.io.IDataStream;
+import org.jutils.core.data.FontDescription;
+import org.jutils.core.data.TextStyleList;
+import org.jutils.core.data.TextStyleList.TextStyle;
+import org.jutils.core.io.IDataSerializer;
+import org.jutils.core.io.IDataStream;
 
 /*******************************************************************************
  * 

@@ -2,7 +2,7 @@ package chatterbox.data;
 
 import java.time.LocalDateTime;
 
-import org.jutils.Utils;
+import org.jutils.core.Utils;
 
 /*******************************************************************************
  * 

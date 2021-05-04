@@ -7,10 +7,10 @@ import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
-import org.jutils.apps.filespy.ui.SearchParamsView;
 import org.jutils.core.ui.StatusBarPanel;
 import org.jutils.core.ui.app.FrameRunner;
 import org.jutils.core.ui.app.IFrameApp;
+import org.jutils.filespy.ui.SearchParamsView;
 
 public class LayeredPaneExample implements IFrameApp
 {

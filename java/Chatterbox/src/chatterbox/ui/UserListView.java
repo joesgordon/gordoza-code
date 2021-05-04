@@ -20,14 +20,14 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
-import org.jutils.OptionUtils;
-import org.jutils.ui.OkDialogView;
-import org.jutils.ui.event.ActionAdapter;
-import org.jutils.ui.event.ItemActionList;
-import org.jutils.ui.event.ItemActionListener;
-import org.jutils.ui.model.CollectionListModel;
-import org.jutils.ui.model.IDataView;
-import org.jutils.ui.model.LabelListCellRenderer;
+import org.jutils.core.OptionUtils;
+import org.jutils.core.ui.OkDialogView;
+import org.jutils.core.ui.event.ActionAdapter;
+import org.jutils.core.ui.event.ItemActionList;
+import org.jutils.core.ui.event.ItemActionListener;
+import org.jutils.core.ui.model.CollectionListModel;
+import org.jutils.core.ui.model.IDataView;
+import org.jutils.core.ui.model.LabelListCellRenderer;
 
 import chatterbox.data.ChatUser;
 

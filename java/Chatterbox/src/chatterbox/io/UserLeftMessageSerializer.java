@@ -2,9 +2,9 @@ package chatterbox.io;
 
 import java.io.IOException;
 
-import org.jutils.io.IDataSerializer;
-import org.jutils.io.IDataStream;
-import org.jutils.io.LengthStringSerializer;
+import org.jutils.core.io.IDataSerializer;
+import org.jutils.core.io.IDataStream;
+import org.jutils.core.io.LengthStringSerializer;
 
 import chatterbox.data.ChatUser;
 import chatterbox.data.messages.UserLeftMessage;

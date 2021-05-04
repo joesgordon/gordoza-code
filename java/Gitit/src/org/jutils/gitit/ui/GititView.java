@@ -16,11 +16,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import org.jutils.OptionUtils;
+import org.jutils.core.OptionUtils;
+import org.jutils.core.ui.ComponentView;
+import org.jutils.core.ui.model.IDataView;
 import org.jutils.gitit.data.GititConfig;
 import org.jutils.gitit.data.GititConfig.GititCommand;
-import org.jutils.ui.ComponentView;
-import org.jutils.ui.model.IDataView;
 
 /***************************************************************************
  *

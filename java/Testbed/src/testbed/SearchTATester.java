@@ -1,10 +1,17 @@
 package testbed;
 
-import java.awt.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
-import org.jutils.core.ui.*;
+import org.jutils.core.ui.FindOptions;
+import org.jutils.core.ui.SearchableTextArea;
+import org.jutils.core.ui.StandardFrameView;
 import org.jutils.core.ui.app.FrameRunner;
 import org.jutils.core.ui.app.IFrameApp;
 import org.jutils.core.ui.model.IView;

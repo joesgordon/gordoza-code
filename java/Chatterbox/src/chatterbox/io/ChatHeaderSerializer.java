@@ -2,9 +2,9 @@ package chatterbox.io;
 
 import java.io.IOException;
 
-import org.jutils.ValidationException;
-import org.jutils.io.IDataSerializer;
-import org.jutils.io.IDataStream;
+import org.jutils.core.ValidationException;
+import org.jutils.core.io.IDataSerializer;
+import org.jutils.core.io.IDataStream;
 
 import chatterbox.data.messages.ChatHeader;
 import chatterbox.data.messages.ChatMessageType;

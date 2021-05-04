@@ -1,11 +1,14 @@
 package chatterbox.ui;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import org.jutils.ui.model.IDataView;
+import org.jutils.core.ui.model.IDataView;
 
 import chatterbox.messenger.ChatHandler;
 import chatterbox.messenger.ChatterboxHandler;

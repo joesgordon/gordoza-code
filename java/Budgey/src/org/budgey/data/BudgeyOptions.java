@@ -2,7 +2,7 @@ package org.budgey.data;
 
 import java.io.File;
 
-import org.jutils.utils.UniqueMaxStack;
+import org.jutils.core.utils.UniqueMaxStack;
 
 /*******************************************************************************
  * 

@@ -18,7 +18,7 @@ import javax.swing.border.TitledBorder;
 
 import org.cojo.data.Finding;
 import org.cojo.data.Project;
-import org.jutils.ui.model.IView;
+import org.jutils.core.ui.model.IView;
 
 /*******************************************************************************
  * 

@@ -3,8 +3,8 @@ package org.cojo;
 import javax.swing.JFrame;
 
 import org.cojo.ui.CojoFrame;
-import org.jutils.ui.app.FrameRunner;
-import org.jutils.ui.app.IFrameApp;
+import org.jutils.core.ui.app.FrameRunner;
+import org.jutils.core.ui.app.IFrameApp;
 
 public class CoJoMain implements IFrameApp
 {

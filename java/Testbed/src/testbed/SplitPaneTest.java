@@ -1,8 +1,13 @@
 package testbed;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JSplitPane;
+import javax.swing.Timer;
 
 import org.jutils.core.ui.IPaintable;
 import org.jutils.core.ui.PaintingComponent;

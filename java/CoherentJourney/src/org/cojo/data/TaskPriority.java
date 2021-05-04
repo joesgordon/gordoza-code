@@ -1,6 +1,6 @@
 package org.cojo.data;
 
-import org.jutils.INamedItem;
+import org.jutils.core.INamedItem;
 
 /*******************************************************************************
  * 

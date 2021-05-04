@@ -1,12 +1,18 @@
 package org.eglsht.ui;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-import javax.swing.*;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 import org.eglsht.data.SheetSize;
-import org.jutils.ui.SpinnerWheelListener;
-import org.jutils.ui.model.IDataView;
+import org.jutils.core.ui.SpinnerWheelListener;
+import org.jutils.core.ui.model.IDataView;
 
 /*******************************************************************************
  * 

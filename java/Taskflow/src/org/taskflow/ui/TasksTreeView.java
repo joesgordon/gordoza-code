@@ -3,7 +3,7 @@ package org.taskflow.ui;
 import java.awt.Component;
 import java.util.List;
 
-import org.jutils.ui.model.IDataView;
+import org.jutils.core.ui.model.IDataView;
 import org.taskflow.model.ITask;
 
 public class TasksTreeView implements IDataView<List<ITask>>

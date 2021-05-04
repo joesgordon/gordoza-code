@@ -3,11 +3,11 @@ package org.budgey.ui;
 import javax.swing.JComponent;
 
 import org.budgey.data.Money;
-import org.jutils.ui.event.updater.IUpdater;
-import org.jutils.ui.fields.IDataFormField;
-import org.jutils.ui.fields.ParserFormField;
-import org.jutils.ui.validation.IValidityChangedListener;
-import org.jutils.ui.validation.Validity;
+import org.jutils.core.ui.event.updater.IUpdater;
+import org.jutils.core.ui.fields.IDataFormField;
+import org.jutils.core.ui.fields.ParserFormField;
+import org.jutils.core.ui.validation.IValidityChangedListener;
+import org.jutils.core.ui.validation.Validity;
 
 /*******************************************************************************
  * 

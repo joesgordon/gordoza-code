@@ -1,6 +1,6 @@
 package chatterbox.data;
 
-import org.jutils.data.TextStyleList;
+import org.jutils.core.data.TextStyleList;
 
 /*******************************************************************************
  * 

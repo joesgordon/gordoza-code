@@ -1,9 +1,9 @@
 package chatterbox.messenger;
 
-import org.jutils.concurrent.TaskHandler;
-import org.jutils.task.ITaskStatusHandler;
-import org.jutils.task.TaskError;
-import org.jutils.ui.event.ItemActionListener;
+import org.jutils.core.concurrent.TaskHandler;
+import org.jutils.core.task.ITaskStatusHandler;
+import org.jutils.core.task.TaskError;
+import org.jutils.core.ui.event.ItemActionListener;
 
 /*******************************************************************************
  * 

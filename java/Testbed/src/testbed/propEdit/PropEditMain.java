@@ -1,13 +1,17 @@
 package testbed.propEdit;
 
 import java.awt.Color;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map.Entry;
 
-import javax.swing.*;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
 
 import org.jutils.core.io.LogUtils;
-import org.jutils.core.ui.app.*;
+import org.jutils.core.ui.app.AppRunner;
+import org.jutils.core.ui.app.IApplication;
 
 public class PropEditMain
 {

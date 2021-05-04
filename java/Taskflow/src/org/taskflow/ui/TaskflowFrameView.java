@@ -15,19 +15,19 @@ import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.JToolBar;
 
-import org.jutils.IconConstants;
-import org.jutils.SwingUtils;
-import org.jutils.ValidationException;
-import org.jutils.io.XStreamUtils;
-import org.jutils.ui.JGoodiesToolBar;
-import org.jutils.ui.OkDialogView;
-import org.jutils.ui.OkDialogView.OkDialogButtons;
-import org.jutils.ui.RecentFilesViews;
-import org.jutils.ui.StandardFrameView;
-import org.jutils.ui.event.ActionAdapter;
-import org.jutils.ui.event.FileChooserListener;
-import org.jutils.ui.event.FileChooserListener.IFileSelected;
-import org.jutils.ui.model.IView;
+import org.jutils.core.IconConstants;
+import org.jutils.core.SwingUtils;
+import org.jutils.core.ValidationException;
+import org.jutils.core.io.xs.XsUtils;
+import org.jutils.core.ui.JGoodiesToolBar;
+import org.jutils.core.ui.OkDialogView;
+import org.jutils.core.ui.OkDialogView.OkDialogButtons;
+import org.jutils.core.ui.RecentFilesViews;
+import org.jutils.core.ui.StandardFrameView;
+import org.jutils.core.ui.event.ActionAdapter;
+import org.jutils.core.ui.event.FileChooserListener;
+import org.jutils.core.ui.event.FileChooserListener.IFileSelected;
+import org.jutils.core.ui.model.IView;
 import org.taskflow.TaskflowIcons;
 import org.taskflow.data.Project;
 
@@ -184,7 +184,7 @@ public class TaskflowFrameView implements IView<JFrame>
         // TODO Auto-generated method stub
         try
         {
-            Project proj = XStreamUtils.readObjectXStream( f );
+            Project proj = XsUtils.readObjectXStream( f );
             mainPanel.setData( proj );
         }
         catch( ValidationException e )

@@ -19,9 +19,9 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 import org.cojo.data.Project;
-import org.cojo.data.Task;
 import org.cojo.data.ProjectUser;
-import org.jutils.ui.model.IView;
+import org.cojo.data.Task;
+import org.jutils.core.ui.model.IView;
 
 /*******************************************************************************
  * 
